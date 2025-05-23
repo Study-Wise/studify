@@ -1,0 +1,116 @@
+---
+import '../styles/globals.scss';
+
+const sTitle = "The Generational Studier - AI Math Study Partner";
+
+var { title } = Astro.props;
+const noTitle = title === "Home" || title === '' || !title;
+const pTitle = `${noTitle ? '' : title} | ${sTitle}`;
+
+const copyrightStart = 2025;
+const copyright = new Date().getFullYear();
+---
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{pTitle}</title>
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <!-- Marked.js -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- MathJax Config & Loader -->
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [
+            ["$", "$"],
+            ["\\(", "\\)"],
+          ],
+          displayMath: [
+            ["$$", "$$"],
+            ["\\[", "\\]"],
+          ],
+          processEscapes: true,
+          tags: "ams",
+        },
+        svg: { fontCache: "global" },
+        options: {
+          skipHtmlTags: [
+            "script",
+            "noscript",
+            "style",
+            "textarea",
+            "pre",
+            "code",
+          ],
+          ignoreHtmlClass: "tex2jax_ignore",
+          processHtmlClass: "tex2jax_process",
+        },
+        startup: {
+          ready: () => {
+            console.log("MathJax loaded.");
+            MathJax.startup.defaultReady();
+          },
+        },
+      };
+    </script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
+      id="MathJax-script"
+      async
+    ></script>
+    <!-- Optional: Add a favicon -->
+    <!-- <link rel="icon" href="images/favicon.ico" type="image/x-icon"> -->
+  </head>
+  <body>
+    <header>
+      <!-- Wrap the logo image in an anchor tag -->
+      <a href="/" title="Go to Homepage" class="header-logo-link">
+        <img
+          src="images/logo.png"
+          alt="The Generational Studier Logo"
+          class="header-logo"
+        />
+      </a>
+
+      <!-- Container wraps text and nav -->
+      <div class="container header-content-wrapper">
+        <div class="header-text-container">
+          <h1>
+            <span class="material-symbols-outlined">school</span> The
+            Generational Studier
+          </h1>
+          <p class="tagline">
+            Your AI-Powered Study Partner - By Rien Gupta and Adarsh R. Kumar
+          </p>
+        </div>
+        <!-- Navigation -->
+        <nav class="header-nav">
+          <a href="/" class={title === "Home" ? "active" : ""}>Home</a>
+          <a href="/about" class={title === "About" ? "active" : ""}>About</a>
+        </nav>
+      </div>
+    </header>
+    
+    <main class="container">
+      <slot />
+    </main>
+
+    <footer>
+      <div class="container">
+        <p>© {copyright === copyrightStart ? copyright : `${copyrightStart}-${copyright}`} The Generational Studier. Powered by AI.</p>
+        <p>
+          <small>Disclaimer: AI-generated content may contain inaccuracies. Always verify critical information.</small>
+        </p>
+      </div>
+    </footer>
+    <script src="https://www.desmos.com/api/v1.10/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
