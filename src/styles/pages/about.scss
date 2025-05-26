@@ -1,3 +1,5 @@
+@use '../variables.scss' as *;
+
 // Styles specific to about.astro page
 
 .about-section .about-content {
@@ -13,8 +15,8 @@
   height: 150px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #eee;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border: 3px solid $profile-border;
+  box-shadow: 0 2px 5px $profile-shadow;
 }
 
 .about-section .about-text {
@@ -28,7 +30,7 @@
 }
 
 .about-section .about-text p a {
-  color: #007bff;
+  color: $about-link;
   text-decoration: none;
   font-weight: 500;
 }

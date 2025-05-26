@@ -1,0 +1,90 @@
+@use '../variables.scss' as *;
+
+@mixin stepsBorder($bor: lightgray, $bdr: 2rem, $pad: 1rem, $depth: 0) {
+  padding: $pad;
+  border: solid 1px $bor;
+  border-radius: #{$bdr - $pad * $depth};
+}
+
+/* Interactive Steps Component */
+.step-by-step {
+  /* Custom properties for consistent styling */
+  --bor: lightgray;
+  --bdr: 2rem;
+  --pad: 1rem;
+
+  box-sizing: border-box;
+
+  @include stepsBorder();
+
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--pad) / 4);
+
+  .divider {
+    border: none;
+    height: 1px;
+    background-color: var(--bor);
+  }
+
+  .step {
+    box-sizing: border-box;
+    background-color: white;
+
+    &:not(:has(.step-question-choices .step-question-radio:checked)) {
+      .correct-explanation {
+        display: none;
+      }
+    }
+
+    .step-question-choices {
+      display: flex;
+      flex-direction: column;
+      gap: 0 !important;
+      @include stepsBorder($depth: 1);
+
+      &:has(.step-question-choice > .step-question-radio:checked) {
+        .step-question:has(.step-question-radio.correct) {
+          background-color: #90ee90;
+          &::before {
+            content: "☑";
+          }
+        }
+
+        .step-question:not(:has(.step-question-radio.correct)) {
+          background-color: #ff9999;
+
+          &::before {
+            content: "☒";
+          }
+        }
+      }
+
+      .step-question-choice {
+        position: relative;
+        background-color: white;
+        cursor: pointer;
+        display: flex;
+        gap: var(--gap, 1rem);
+
+        &:hover {
+          background-color: lightblue;
+        }
+        &::before {
+          content: "☐";
+          place-items: center;
+          place-content: center;
+        }
+
+        .step-question-radio {
+          visibility: hidden;
+          position: absolute;
+          width: 0;
+          height: 0;
+          top: -1px;
+          left: -1px;
+        }
+      }
+    }
+  }
+}

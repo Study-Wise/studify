@@ -1,3 +1,5 @@
+@import '../variables.scss';
+
 // Styles specific to index.astro page
 
 .introduction-section {
@@ -8,7 +10,7 @@
 
   strong {
     font-weight: 600;
-    color: #333;
+    color: $body-text;
   }
 }
 
@@ -17,7 +19,7 @@
     display: block;
     font-weight: 500;
     margin-bottom: 5px;
-    color: #495057;
+    color: $input-border;
   }
 }
 
@@ -25,18 +27,18 @@
   width: 100%;
   min-height: 200px;
   padding: 15px;
-  border: 1px solid #ced4da;
+  border: 1px solid $input-border;
   border-radius: 6px;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
   font-size: 0.95em;
   resize: vertical;
   margin-top: 10px;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: inset 0 1px 3px $card-shadow;
 }
 
 #text-paste:focus {
-  border-color: #80bdff;
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  border-color: $primary-blue;
+  box-shadow: 0 0 0 0.2rem rgba($primary-blue, 0.25);
   outline: none;
 }
 
@@ -46,13 +48,13 @@
   padding: 20px 25px;
   border: 1px solid #e0e0e0;
   border-radius: 6px;
-  background-color: #f8f9fa;
+  background-color: $body-bg;
 
   label {
     display: block;
     margin-bottom: 8px;
     font-weight: 500;
-    color: #495057;
+    color: $input-border;
     font-size: 1.05em;
     text-align: center;
   }
@@ -63,7 +65,7 @@
   width: fit-content;
   margin: 0 auto 15px auto;
   font-weight: 600;
-  color: #0056b3;
+  color: $section-title;
   background-color: #e7f1ff;
   padding: 5px 12px;
   border-radius: 4px;
@@ -78,7 +80,7 @@
   margin-top: 5px;
   margin-bottom: 10px;
   height: 24px;
-  accent-color: #007bff;
+  accent-color: $primary-blue;
   -webkit-appearance: none;
   appearance: none;
   background: transparent;
@@ -88,7 +90,7 @@
     appearance: none;
     height: 20px;
     width: 20px;
-    background: #007bff;
+    background: $primary-blue;
     border-radius: 50%;
     margin-top: -7px;
     cursor: pointer;
@@ -97,7 +99,7 @@
   &::-moz-range-thumb {
     height: 20px;
     width: 20px;
-    background: #007bff;
+    background: $primary-blue;
     border-radius: 50%;
     border: none;
     cursor: pointer;
@@ -124,7 +126,7 @@
 
     &::-webkit-slider-thumb,
     &::-moz-range-thumb {
-      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
+      box-shadow: 0 0 0 3px rgba($primary-blue, 0.5);
     }
   }
 }
@@ -133,7 +135,7 @@
   display: flex;
   justify-content: space-between;
   font-size: 0.9em;
-  color: #6c757d;
+  color: $footer-text;
   padding: 0 5px;
   margin-top: 5px;
 }
@@ -146,7 +148,7 @@
   padding: 14px 20px;
   background-color: #28a745;
   background-image: linear-gradient(180deg, #34b855, #218838);
-  color: white;
+  color: $header-text;
   border: 1px solid #1e7e34;
   border-radius: 6px;
   font-size: 1.18rem;
@@ -155,7 +157,7 @@
   margin-top: 25px;
   transition: all 0.2s ease-in-out;
   position: relative;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 5px $card-shadow;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
 
   &:hover:not(:disabled) {
@@ -187,7 +189,7 @@
   display: inline-block;
   border: 3px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
-  border-top-color: #fff;
+  border-top-color: $header-text;
   width: 1.2em;
   height: 1.2em;
   animation: spin 1s linear infinite;
@@ -214,7 +216,7 @@
   margin-bottom: 25px;
   display: flex;
   gap: 10px;
-  border-bottom: 1px solid #dee2e6;
+  border-bottom: 1px solid $section-title-border;
   padding-bottom: 12px;
   flex-wrap: wrap;
 }
@@ -229,17 +231,17 @@
   transition: all 0.3s ease;
   font-size: 1.05rem;
   font-weight: 500;
-  color: #6c757d;
+  color: $footer-text;
 
   &:hover {
-    background-color: #e9ecef;
+    background-color: $footer-bg;
     color: #343a40;
   }
 
   &.active {
-    color: #007bff;
-    border-bottom: 3px solid #007bff;
-    background-color: #f8f9fa;
+    color: $primary-blue;
+    border-bottom: 3px solid $primary-blue;
+    background-color: $body-bg;
   }
 
   i {
@@ -328,24 +330,6 @@
   }
 }
 
-section {
-  h2 {
-    color: #0056b3;
-    margin-bottom: 25px;
-    border-bottom: 1px solid #dee2e6;
-    padding-bottom: 12px;
-    font-size: 1.6rem;
-    display: flex;
-    align-items: center;
-    font-weight: 600;
-
-    i {
-      margin-right: 12px;
-      color: #007bff;
-    }
-  }
-}
-
 .introduction-section {
   p {
     margin-bottom: 1.2em;
@@ -354,7 +338,7 @@ section {
 
   strong {
     font-weight: 600;
-    color: #333;
+    color: $body-text;
   }
 }
 
@@ -363,18 +347,18 @@ section {
     width: 100%;
     min-height: 200px;
     padding: 15px;
-    border: 1px solid #ced4da;
+    border: 1px solid $input-border;
     border-radius: 6px;
     font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier,
       monospace;
     font-size: 0.95em;
     resize: vertical;
     margin-top: 10px;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
+    box-shadow: inset 0 1px 3px $card-shadow;
 
     &:focus {
-      border-color: #80bdff;
-      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+      border-color: $primary-blue;
+      box-shadow: 0 0 0 0.2rem rgba($primary-blue, 0.25);
       outline: none;
     }
   }
@@ -383,7 +367,7 @@ section {
     display: block;
     font-weight: 500;
     margin-bottom: 5px;
-    color: #495057;
+    color: $input-border;
   }
 }
 
@@ -393,13 +377,13 @@ section {
   padding: 20px 25px;
   border: 1px solid #e0e0e0;
   border-radius: 6px;
-  background-color: #f8f9fa;
+  background-color: $body-bg;
 
   label {
     display: block;
     margin-bottom: 8px;
     font-weight: 500;
-    color: #495057;
+    color: $input-border;
     font-size: 1.05em;
     text-align: center;
   }
@@ -409,7 +393,7 @@ section {
     width: fit-content;
     margin: 0 auto 15px auto;
     font-weight: 600;
-    color: #0056b3;
+    color: $section-title;
     background-color: #e7f1ff;
     padding: 5px 12px;
     border-radius: 4px;
@@ -424,7 +408,7 @@ section {
     margin-top: 5px;
     margin-bottom: 10px;
     height: 24px;
-    accent-color: #007bff;
+    accent-color: $primary-blue;
     -webkit-appearance: none;
     appearance: none;
     background: transparent;
@@ -435,7 +419,7 @@ section {
       margin-top: -7px;
       height: 20px;
       width: 20px;
-      background: #007bff;
+      background: $primary-blue;
       border-radius: 50%;
       border: none;
       cursor: pointer;
@@ -444,7 +428,7 @@ section {
     &::-moz-range-thumb {
       height: 20px;
       width: 20px;
-      background: #007bff;
+      background: $primary-blue;
       border-radius: 50%;
       border: none;
       cursor: pointer;
@@ -473,7 +457,7 @@ section {
 
       &::-webkit-slider-thumb, 
       &::-moz-range-thumb {
-        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
+        box-shadow: 0 0 0 3px rgba($primary-blue, 0.5);
       }
     }
   }
@@ -482,7 +466,7 @@ section {
     display: flex;
     justify-content: space-between;
     font-size: 0.9em;
-    color: #6c757d;
+    color: $footer-text;
     padding: 0 5px;
     margin-top: 5px;
   }
@@ -496,7 +480,7 @@ section {
   padding: 14px 20px;
   background-color: #28a745;
   background-image: linear-gradient(180deg, #34b855, #218838);
-  color: white;
+  color: $header-text;
   border: 1px solid #1e7e34;
   border-radius: 6px;
   font-size: 1.18rem;
@@ -505,7 +489,7 @@ section {
   margin-top: 25px;
   transition: all 0.2s ease-in-out;
   position: relative;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 5px $card-shadow;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
 
   &:hover:not(:disabled) {

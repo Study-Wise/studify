@@ -1,0 +1,30 @@
+@use '../variables.scss' as *;
+
+.settings-section {
+  padding: 2rem;
+  max-width: 500px;
+  margin: 2rem auto;
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  label {
+    flex: 0 0 140px;
+    font-weight: 500;
+  }
+  input, select {
+    flex: 1;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid $input-border;
+    font-size: 1rem;
+  }
+}
+
+#settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+} 

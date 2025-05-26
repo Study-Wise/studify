@@ -10,6 +10,7 @@
   },
   "devDependencies": {
     "@astrojs/ts-plugin": "^1.10.4",
+    "@types/fs-extra": "^11.0.4",
     "astro": "^5.8.0",
     "sass": "^1.89.0",
     "sass-embedded": "^1.89.0"
@@ -21,6 +22,8 @@
     "@ai-sdk/xai": "^1.2.16",
     "@astrojs/vercel": "^8.1.4",
     "ai": "^4.3.16",
-    "dotenv": "^16.5.0"
+    "dotenv": "^16.5.0",
+    "fs-extra": "^11.3.0",
+    "marked": "^15.0.12"
   }
 }

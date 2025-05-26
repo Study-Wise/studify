@@ -1,10 +1,14 @@
 import 'dotenv/config';
 import type { APIRoute } from 'astro';
+
 import { generateText } from 'ai';
+
 import { openai } from '@ai-sdk/openai';
 import { anthropic } from '@ai-sdk/anthropic';
 import { google } from '@ai-sdk/google';
 import { xai } from '@ai-sdk/xai';
+
+import { marked } from 'marked';
 
 const provider_maps = {
   openai: [
@@ -60,7 +64,7 @@ export const POST: APIRoute = async ({ request }) => {
     });
 
     return new Response(
-      JSON.stringify({ generatedText }),
+      JSON.stringify({ generatedText: marked.parse(generatedText) }),
       {
         status: 200,
         headers: { 'Content-Type': 'application/json' },

@@ -1,5 +1,6 @@
 ---
 import '../styles/globals.scss';
+import Header from '../components/Header.astro';
 
 const sTitle = "M.A.T.H.Wise - AI Math Study Partner";
 
@@ -17,13 +18,9 @@ const copyright = new Date().getFullYear();
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{pTitle}</title>
     <!-- Font Awesome -->
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
     />
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
-    <!-- Marked.js -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <!-- MathJax Config & Loader -->
     <script is:inline>
       window.MathJax = {
@@ -65,29 +62,7 @@ const copyright = new Date().getFullYear();
     <!-- <link rel="icon" href="images/favicon.ico" type="image/x-icon"> -->
   </head>
   <body>
-    <header>
-      <!-- Wrap the logo image in an anchor tag -->
-      <a href="/" title="Go to Homepage" class="header-logo-link">
-        <img src="images/logo.png" alt="MATHWise Logo" class="header-logo" />
-      </a>
-
-      <!-- Container wraps text and nav -->
-      <div class="container header-content-wrapper">
-        <div class="header-text-container">
-          <h1>
-            <span class="material-symbols-outlined">school</span> M.A.T.H.Wise
-          </h1>
-          <p class="tagline">
-            Your AI-Powered Study Partner - By Rien Gupta and Adarsh R. Kumar
-          </p>
-        </div>
-        <!-- Navigation -->
-        <nav class="header-nav">
-          <a href="/" class={title === "Home" ? "active" : ""}>Home</a>
-          <a href="/about" class={title === "About" ? "active" : ""}>About</a>
-        </nav>
-      </div>
-    </header>
+    <Header pTitle={title} />
     
     <main class="container">
       <slot />

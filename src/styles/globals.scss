@@ -1,8 +1,10 @@
 /**
  * Main Stylesheet
  * -------------
- * The Generational Studier - AI Math Study Partner
+ * M.A.T.H.Wise - AI Math Study Partner
  */
+
+@use './variables.scss' as *;
 
 // Material Icons Configuration
 .material-symbols-outlined {
@@ -26,8 +28,8 @@ html {
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   line-height: 1.6;
-  color: #444;
-  background-color: #f8f9fa;
+  color: $body-text;
+  background-color: $body-bg;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -86,109 +88,6 @@ body {
   border-width: 0;
 }
 
-/* Header Styles */
-header {
-  background: linear-gradient(120deg, #007bff, #00d4ff);
-  color: #fff;
-  padding: 0.75rem 0;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-  position: relative;
-  min-height: 80px;
-}
-
-/* Style the Link Wrapper for Positioning */
-.header-logo-link {
-  position: absolute;
-  left: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: inline-block;
-  text-decoration: none;
-  border: none;
-  line-height: 0;
-
-  &:focus {
-    outline: none;
-  }
-
-  &:focus-visible {
-    outline: 2px solid white;
-    outline-offset: 2px;
-    border-radius: 4px;
-  }
-
-  .header-logo {
-    height: 70px;
-    width: auto;
-    display: block;
-  }
-}
-
-/* Header content wrapper inside the container */
-.header-content-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding-left: 100px;
-}
-
-/* Text container within the wrapper */
-.header-text-container {
-  text-align: left;
-  min-width: 0;
-}
-
-/* Heading styles */
-header h1 {
-  margin: 0 0 0.1rem 0;
-  font-weight: 600;
-  font-size: 1.8rem;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-  white-space: nowrap;
-}
-
-header h1 i {
-  margin-right: 8px;
-  vertical-align: baseline;
-}
-
-/* Tagline styles */
-header .tagline {
-  margin: 0;
-  font-style: normal;
-  font-weight: 300;
-  color: #e0f7ff;
-  font-size: 1rem;
-  white-space: nowrap;
-}
-
-/* Header Navigation Styles */
-.header-nav {
-  margin-left: auto;
-  display: flex;
-  gap: 15px;
-}
-
-.header-nav a {
-  color: #fff;
-  text-decoration: none;
-  padding: 8px 12px;
-  border-radius: 4px;
-  transition: background-color 0.2s ease;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-.header-nav a:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-.header-nav a.active {
-  background-color: rgba(255, 255, 255, 0.3);
-  font-weight: 600;
-}
-
 /* Main Content Area */
 main {
   flex-grow: 1;
@@ -197,18 +96,18 @@ main {
 
 /* Card Container */
 .card {
-  background-color: #fff;
+  background-color: $card-bg;
   padding: 30px;
   margin-bottom: 35px;
   border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.07);
-  border: 1px solid #e9ecef;
+  box-shadow: 0 5px 15px $card-shadow;
+  border: 1px solid $card-border;
 }
 
 section h2 {
-  color: #0056b3;
+  color: $section-title;
   margin-bottom: 25px;
-  border-bottom: 1px solid #dee2e6;
+  border-bottom: 1px solid $section-title-border;
   padding-bottom: 12px;
   font-size: 1.6rem;
   display: flex;
@@ -235,8 +134,8 @@ section h2 i {
   height: 150px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #eee;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border: 3px solid $profile-border;
+  box-shadow: 0 2px 5px $profile-shadow;
 }
 
 .about-section .about-text {
@@ -250,7 +149,7 @@ section h2 i {
 }
 
 .about-section .about-text p a {
-  color: #007bff;
+  color: $about-link;
   text-decoration: none;
   font-weight: 500;
 }
@@ -270,8 +169,8 @@ footer {
   margin-top: 40px;
   padding: 30px 0;
   border-top: 1px solid #dee2e6;
-  color: #6c757d;
-  background-color: #f1f3f5;
+  color: $footer-text;
+  background-color: $footer-bg;
   font-size: 0.9em;
 }
 
@@ -298,76 +197,7 @@ mjx-container[display="true"] {
 }
 
 /* --- Responsive Design Adjustments --- */
-@media (max-width: 992px) {
-  .header-content-wrapper {
-    padding-left: 90px;
-  }
-
-  .header-logo-link {
-    position: absolute;
-    left: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    display: inline-block;
-    text-decoration: none;
-    border: none;
-    line-height: 0;
-  }
-
-  .header-logo {
-    height: 60px;
-  }
-
-  .header-nav {
-    gap: 10px;
-  }
-
-  .header-nav a {
-    padding: 6px 10px;
-    font-size: 0.95rem;
-  }
-
-  header h1 {
-    font-size: 1.6rem;
-  }
-
-  header .tagline {
-    font-size: 0.95rem;
-  }
-}
-
 @media (max-width: 768px) {
-  .header-logo-link {
-    left: 15px;
-  }
-
-  .header-logo {
-    height: 55px;
-  }
-
-  .header-content-wrapper {
-    padding-left: 75px;
-    padding-right: 15px;
-    gap: 15px;
-  }
-
-  header h1 {
-    font-size: 1.5rem;
-  }
-
-  header .tagline {
-    display: none;
-  }
-
-  .header-nav {
-    gap: 5px;
-  }
-
-  .header-nav a {
-    padding: 5px 8px;
-    font-size: 0.9rem;
-  }
-
   /* Stack About section */
   .about-section .about-content {
     flex-direction: column;
@@ -409,70 +239,6 @@ mjx-container[display="true"] {
   .tab-button {
     padding: 10px 15px;
     font-size: 0.95rem;
-  }
-}
-
-@media (max-width: 600px) {
-  header {
-    min-height: auto;
-    padding: 0.5rem 0;
-  }
-
-  /* Stack header content vertically */
-  .header-logo-link {
-    position: static;
-    transform: none;
-    display: block;
-    text-align: center;
-    margin-bottom: 10px;
-  }
-
-  .header-logo {
-    height: 40px;
-    display: inline-block;
-    vertical-align: middle;
-  }
-
-  .header-content-wrapper {
-    flex-direction: column;
-    padding-left: 15px;
-    padding-right: 15px;
-    gap: 10px;
-  }
-
-  .header-text-container {
-    width: 100%;
-    text-align: center;
-  }
-
-  header h1 {
-    font-size: 1.4rem;
-    margin-bottom: 0.1rem;
-  }
-
-  header .tagline {
-    display: block;
-    font-size: 0.9rem;
-    text-align: center;
-  }
-
-  .header-nav {
-    margin-left: 0;
-    justify-content: center;
-  }
-
-  /* Other adjustments */
-  #generate-button {
-    font-size: 1.05rem;
-    padding: 12px 15px;
-  }
-
-  .output-content h4 {
-    font-size: 1.1rem;
-  }
-
-  #interactive-steps-container {
-    padding: 15px;
   }
 }
 
@@ -674,95 +440,6 @@ mjx-container {
       break-inside: avoid !important;
       break-after: auto !important;
       break-before: auto !important;
-    }
-  }
-}
-
-@mixin stepsBorder($bor: lightgray, $bdr: 2rem, $pad: 1rem, $depth: 0) {
-  padding: $pad;
-  border: solid 1px $bor;
-  border-radius: #{$bdr - $pad * $depth};
-}
-
-/* Interactive Steps Component */
-.step-by-step {
-  /* Custom properties for consistent styling */
-  --bor: lightgray;
-  --bdr: 2rem;
-  --pad: 1rem;
-
-  box-sizing: border-box;
-
-  @include stepsBorder();
-
-  display: flex;
-  flex-direction: column;
-  gap: calc(var(--pad) / 4);
-
-  .divider {
-    border: none;
-    height: 1px;
-    background-color: var(--bor);
-  }
-
-  .step {
-    box-sizing: border-box;
-    background-color: white;
-
-    &:not(:has(.step-question-choices .step-question-radio:checked)) {
-      .correct-explanation {
-        display: none;
-      }
-    }
-
-    .step-question-choices {
-      display: flex;
-      flex-direction: column;
-      gap: 0 !important;
-      @include stepsBorder($depth: 1);
-
-      &:has(.step-question-choice > .step-question-radio:checked) {
-        .step-question:has(.step-question-radio.correct) {
-          background-color: #90ee90;
-          &::before {
-            content: "☑";
-          }
-        }
-
-        .step-question:not(:has(.step-question-radio.correct)) {
-          background-color: #ff9999;
-
-          &::before {
-            content: "☒";
-          }
-        }
-      }
-
-      .step-question-choice {
-        position: relative;
-        background-color: white;
-        cursor: pointer;
-        display: flex;
-        gap: var(--gap, 1rem);
-
-        &:hover {
-          background-color: lightblue;
-        }
-        &::before {
-          content: "☐";
-          place-items: center;
-          place-content: center;
-        }
-
-        .step-question-radio {
-          visibility: hidden;
-          position: absolute;
-          width: 0;
-          height: 0;
-          top: -1px;
-          left: -1px;
-        }
-      }
     }
   }
 }
