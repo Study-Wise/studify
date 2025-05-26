@@ -1,7 +1,7 @@
 ---
 import '../styles/globals.scss';
 
-const sTitle = "The Generational Studier - AI Math Study Partner";
+const sTitle = "M.A.T.H.Wise - AI Math Study Partner";
 
 var { title } = Astro.props;
 const noTitle = title === "Home" || title === '' || !title;
@@ -25,7 +25,7 @@ const copyright = new Date().getFullYear();
     <!-- Marked.js -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <!-- MathJax Config & Loader -->
-    <script>
+    <script is:inline>
       window.MathJax = {
         tex: {
           inlineMath: [
@@ -60,11 +60,7 @@ const copyright = new Date().getFullYear();
         },
       };
     </script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
-      id="MathJax-script"
-      async
-    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script" async></script>
     <!-- Optional: Add a favicon -->
     <!-- <link rel="icon" href="images/favicon.ico" type="image/x-icon"> -->
   </head>
@@ -72,19 +68,14 @@ const copyright = new Date().getFullYear();
     <header>
       <!-- Wrap the logo image in an anchor tag -->
       <a href="/" title="Go to Homepage" class="header-logo-link">
-        <img
-          src="images/logo.png"
-          alt="The Generational Studier Logo"
-          class="header-logo"
-        />
+        <img src="images/logo.png" alt="MATHWise Logo" class="header-logo" />
       </a>
 
       <!-- Container wraps text and nav -->
       <div class="container header-content-wrapper">
         <div class="header-text-container">
           <h1>
-            <span class="material-symbols-outlined">school</span> The
-            Generational Studier
+            <span class="material-symbols-outlined">school</span> M.A.T.H.Wise
           </h1>
           <p class="tagline">
             Your AI-Powered Study Partner - By Rien Gupta and Adarsh R. Kumar
@@ -104,13 +95,12 @@ const copyright = new Date().getFullYear();
 
     <footer>
       <div class="container">
-        <p>© {copyright === copyrightStart ? copyright : `${copyrightStart}-${copyright}`} The Generational Studier. Powered by AI.</p>
+        <p>© {copyright === copyrightStart ? copyright : `${copyrightStart}-${copyright}`} M.A.T.H.Wise. Powered by AI.</p>
         <p>
           <small>Disclaimer: AI-generated content may contain inaccuracies. Always verify critical information.</small>
         </p>
       </div>
     </footer>
     <script src="https://www.desmos.com/api/v1.10/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
-    <script src="script.js"></script>
   </body>
 </html>
