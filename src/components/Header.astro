@@ -8,9 +8,9 @@ const pages = Object.entries(import.meta.glob('/src/pages/*.astro', { eager: tru
     const fileName = path.split('/').pop();
     if (!fileName) return null;
     const name = fileName.replace('.astro', '');
-    let route = '/' + (name === 'index' ? '' : name);
-    const modTyped = mod as Record<string, any>;
-    let pageTitle = modTyped && modTyped.title ? modTyped.title : (name.charAt(0).toUpperCase() + name.slice(1));
+    const route = `/${name === 'index' ? '' : name}`;
+    const modTyped = mod as Record<string, string[]>;
+    let pageTitle = modTyped?.title ? modTyped.title : (name.charAt(0).toUpperCase() + name.slice(1));
     if (name === 'index') pageTitle = 'Home';
     return { name: pageTitle, path: route };
   })
