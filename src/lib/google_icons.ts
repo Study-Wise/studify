@@ -1,4 +1,4 @@
-{
+const icons = {
   "action": [
     "123",
     "3d_rotation",
@@ -2245,3 +2245,5 @@
     "toggle_on"
   ]
 }
+
+export default icons
