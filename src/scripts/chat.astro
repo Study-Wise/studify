@@ -267,37 +267,18 @@
             }
 
             // Clean up and format markdown
-            guideMarkdown = guideMarkdown.replace(/^### Study Guide\s*/i, "").trim();
-            guideMarkdown = `### Study Guide\n\n${guideMarkdown}`;
+            guideMarkdown = guideMarkdown.replace(/^<h3>Study Guide<\/h3>\s*/i, "").trim();
+            guideMarkdown = `<h3>Study Guide</h3><br>${guideMarkdown}`;
 
             sheetMarkdown = sheetMarkdown
-            .replace(/^### Reference Sheet\s*/i, "")
+            .replace(/^<h3>Reference Sheet<\/h3>\s*/i, "")
             .trim();
             sheetMarkdown = sheetMarkdown
-            ? `### Reference Sheet\n\n${sheetMarkdown}`
+            ? `<h3>Reference Sheet</h3><br>${sheetMarkdown}`
             : "";
 
             return { guideMarkdown, sheetMarkdown, stepsData, parseError };
         }
-
-        /**
-          * Safely parses inline markdown with XSS protection
-          * @param {string} markdownText - The markdown text to parse
-          * @returns {string} Sanitized HTML string
-          */
-        function safeParseInline(markdownText) {
-            try {
-            if (typeof markdownText !== "string") return "";
-            const sanitizedText = markdownText
-                .replace(/<script/gi, "<script")
-                .replace(/ onerror/gi, " data-onerror")
-                .replace(/ onload/gi, " data-onload")
-                .replace(/ javascript:/gi, " javascript:");
-            return marked.parseInline(sanitizedText) || "";
-            } catch (err) {
-            console.error("Error in safeParseInline:", err, markdownText);
-            return markdownText.replace(/</g, "<").replace(/>/g, ">");
-            }
         }
 
         /**
@@ -457,10 +438,6 @@
                 errorMessageDiv.style.display = "block";
             }
             }
-            marked.setOptions({
-            breaks: true,
-            gfm: true,
-            });
             try {
             if (
                 !studyGuideContent ||
@@ -479,7 +456,7 @@
                 guideMarkdown &&
                 guideMarkdown.replace(/### Study Guide\s*/i, "").trim()
             ) {
-                studyGuideContent.innerHTML = marked.parse(guideMarkdown);
+                studyGuideContent.innerHTML = guideMarkdown;
                 elementsToTypeset.push(studyGuideContent);
             } else {
                 studyGuideContent.innerHTML = guidePlaceholder;
@@ -511,7 +488,7 @@
                 }
                 }
 
-                let sheetHTML = marked.parse(sheetMarkdown);
+                let sheetHTML = sheetMarkdown;
                 referenceSheetContent.innerHTML = sheetHTML;
                 elementsToTypeset.push(referenceSheetContent);
             } else {

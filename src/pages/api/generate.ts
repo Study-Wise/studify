@@ -63,8 +63,14 @@ export const POST: APIRoute = async ({ request }) => {
       prompt: userPrompt,
     });
 
+    marked.setOptions({
+      breaks: true,
+      gfm: true,
+    });
+    const htmlText = marked.parse(generatedText);
+
     return new Response(
-      JSON.stringify({ generatedText: marked.parse(generatedText) }),
+      JSON.stringify({ generatedText: htmlText }),
       {
         status: 200,
         headers: { 'Content-Type': 'application/json' },
