@@ -32,12 +32,13 @@ const { pTitle } = Astro.props;
       </div>
       <!-- Navigation -->
       <nav class="header-nav">
-        {pages.map(page => (
-          <a href={page.path} class={pTitle === page.name ? 'active nav-btn' : 'nav-btn'}>
+        {pages.map(page => {
+          if (page.path.startsWith('_')) return '';
+          return <a href={page.path} class={pTitle === page.name ? 'active nav-btn' : 'nav-btn'}>
             {hasGoogleIcon(page.name.toLowerCase().replace(/\s+/g, '_')) ? <span class="material-symbols-outlined">{page.name.toLowerCase().replace(/\s+/g, '_')}</span> : ''}
             {page.name}
           </a>
-        ))}
+        })}
       </nav>
     </div>
 </header>
