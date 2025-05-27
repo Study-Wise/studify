@@ -1,8 +1,6 @@
 ---
 import '../styles/components/header.scss';
 
-import { hasGoogleIcon } from '../lib/google-icons';
-
 const pages = Object.entries(import.meta.glob('/src/pages/*.astro', { eager: true }))
   .map(([path, mod]) => {
     const fileName = path.split('/').pop();
@@ -34,8 +32,8 @@ const { pTitle } = Astro.props;
       <nav class="header-nav">
         {pages.map(page => {
           if (page.path.startsWith('_')) return '';
-          return <a href={page.path} class={pTitle === page.name ? 'active nav-btn' : 'nav-btn'}>
-            {hasGoogleIcon(page.name.toLowerCase().replace(/\s+/g, '_')) ? <span class="material-symbols-outlined">{page.name.toLowerCase().replace(/\s+/g, '_')}</span> : ''}
+          <a href={page.path} class={pTitle === page.name ? 'active nav-btn' : 'nav-btn'}>
+            <span class="material-symbols-outlined">{page.name.toLowerCase().replace(/\s+/g, '_')}</span>
             {page.name}
           </a>
         })}
