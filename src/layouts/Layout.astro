@@ -4,7 +4,7 @@ import Header from '../components/Header.astro';
 
 const sTitle = "M.A.T.H.Wise - AI Math Study Partner";
 
-var { title } = Astro.props;
+const { title } = Astro.props;
 const noTitle = title === "Home" || title === '' || !title;
 const pTitle = `${noTitle ? '' : title} | ${sTitle}`;
 
@@ -62,7 +62,7 @@ const copyright = new Date().getFullYear();
     <!-- <link rel="icon" href="images/favicon.ico" type="image/x-icon"> -->
   </head>
   <body>
-    <Header pTitle={title} />
+    <Header pTitle={pTitle} />
     
     <main class="container">
       <slot />
