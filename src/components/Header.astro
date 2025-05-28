@@ -1,7 +1,7 @@
 ---
 import '../styles/components/header.scss';
 
-import { hasGoogleIcon } from '../lib/google-icons';
+import { hasIcon } from '../lib/google-icons';
 
 const pages = Object.entries(import.meta.glob('/src/pages/*.astro', { eager: true }))
   .map(([path, mod]) => {
@@ -32,12 +32,19 @@ const { pTitle } = Astro.props;
       </div>
       <!-- Navigation -->
       <nav class="header-nav">
-        {pages.map(page => (
-          <a href={page.path} class={pTitle === page.name ? 'active nav-btn' : 'nav-btn'}>
-            {hasGoogleIcon(page.name.toLowerCase().replace(/\s+/g, '_')) ? <span class="material-symbols-outlined">{page.name.toLowerCase().replace(/\s+/g, '_')}</span> : ''}
+        {pages.map(page => {
+          const hasAnIcon = hasIcon(page.name.toLowerCase().replace(/\s+/g, '_'));
+          let icon = '';
+          if (hasAnIcon === 'google') {
+            icon = <span class="material-symbols-outlined">{page.name.toLowerCase().replace(/\s+/g, '_')}</span>;
+          } else if (hasAnIcon === 'custom') {
+            icon = <img src={`/assets/icons/${page.name.toLowerCase().replace(/\s+/g, '_')}.svg`} alt={page.name} class="nav-icon" />;
+          }
+          return <a href={page.path} class={pTitle === page.name ? 'active nav-btn' : 'nav-btn'}>
+            {icon}
             {page.name}
           </a>
-        ))}
+        })}
       </nav>
     </div>
 </header>

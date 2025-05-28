@@ -1,4 +1,21 @@
 <script is:inline>
+    let userSettings = {};
+    // Initialize form values from localStorage
+    window.addEventListener('DOMContentLoaded', () => {
+      try {
+        userSettings = JSON.parse(localStorage.getItem('settings')) || {};
+      } catch (e) {}
+      const settingIds = [
+        ...Array.from(document.querySelectorAll('#settings-form [id]')).map(el => el.id)
+      ];
+      for (const setting of settingIds) {
+        if (userSettings[setting]) {
+          const el = document.getElementById(setting);
+          if (el) el.value = userSettings[setting];
+        }
+      }
+    });
+
     /* Main Client-Side JavaScript */
 
     // Application Configuration
@@ -566,31 +583,32 @@
           */
         window.generateOutput = async function () {
             if (!textInput) {
-            displayError("Input field missing!");
-            return;
+                displayError("Input field missing!");
+                return;
             }
             const homeworkText = textInput.value;
             // User requested to remove the empty check for testing: if ((!homeworkText || !homeworkText.trim()) && false)
             if (!homeworkText || !homeworkText.trim()) {
-            // Re-enabled empty check as it's good practice
-            displayError("Please paste homework text.");
-            textInput.focus();
-            return;
+                displayError("Please paste homework text.");
+                textInput.focus();
+                return;
             }
             const understandingLevel = understandingSlider
-            ? understandingSlider.value
-            : "2";
-            setLoadingState(true);
+                ? understandingSlider.value
+                : "2";
+                setLoadingState(true);
             try {
             const response = await fetch(API_ENDPOINT, {
                 method: "POST",
                 headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
                 },
                 body: JSON.stringify({
-                text: homeworkText,
-                understanding: understandingLevel,
+                    provider: userSettings.provider,
+                    model: userSettings.model,
+                    text: homeworkText,
+                    understanding: understandingLevel,
                 }),
             });
             if (!response.ok) {
@@ -603,18 +621,18 @@
                     const txt = await response.text();
                     console.error("API error body:", txt);
                     errorMsg = `API Error (${response.status}): ${
-                    response.statusText || "Server error"
+                        response.statusText || "Server error"
                     }. Check logs: ${txt.substring(0, 100)}`;
                 }
                 } catch (e) {
-                const rawTxt = await response
-                    .text()
-                    .catch(() => "Unreadable error body.");
-                console.error("Error parsing API error:", e);
-                console.error("Raw API error body:", rawTxt);
-                errorMsg = `API Error (${response.status}): ${
-                    response.statusText || "Unreadable error"
-                }. Check logs.`;
+                    const rawTxt = await response
+                        .text()
+                        .catch(() => "Unreadable error body.");
+                    console.error("Error parsing API error:", e);
+                    console.error("Raw API error body:", rawTxt);
+                    errorMsg = `API Error (${response.status}): ${
+                        response.statusText || "Unreadable error"
+                    }. Check logs.`;
                 }
                 throw new Error(errorMsg);
             }
@@ -626,11 +644,11 @@
                 throw new Error("Invalid/empty response from AI.");
             }
             } catch (error) {
-            console.error("Full error caught in generateOutput:", error);
-            alert(error);
-            displayError(error.message || "Unexpected error.");
+                console.error("Full error caught in generateOutput:", error);
+                alert(error);
+                displayError(error.message || "Unexpected error.");
             } finally {
-            setLoadingState(false);
+                setLoadingState(false);
             }
         };
 

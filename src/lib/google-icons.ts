@@ -1,8 +1,15 @@
-import fs from 'fs-extra';
-const icons = fs.readJsonSync(`${import.meta.dirname}/google_icons.json`);
+import { google_icons, custom_icons } from "./icons_list";
 
 function hasGoogleIcon(name: string) {
-  return !!Object.keys(icons).find((category: any) => icons[category].includes(name));
+  return !!Object.keys(google_icons).find(category => (
+    google_icons[category as keyof typeof google_icons].includes(name)
+  ));
 }
 
-export { hasGoogleIcon };
+function hasCustomIcon(name: string) {
+  return !!custom_icons.find(icon => icon.name === name);
+}
+
+const hasIcon = (name: string) => hasGoogleIcon(name) ? 'google' : hasCustomIcon(name) ? 'custom' : false;
+
+export { hasGoogleIcon, hasCustomIcon, hasIcon };

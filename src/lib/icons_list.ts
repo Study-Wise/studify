@@ -1,4 +1,16 @@
-{
+import fs from 'fs';
+import path from 'path';
+const __dirname = new URL('.', import.meta.url).pathname;
+
+let icons_path = path.join(__dirname, '..', '..', 'public', 'assets', 'icons');
+
+if (icons_path.slice(1, 4).endsWith(':\\')) {
+  icons_path = icons_path.slice(1);
+}
+
+// console.info(`Loaded Icons path: ${icons_path}`);
+
+const google_icons = {
   "action": [
     "123",
     "3d_rotation",
@@ -2245,3 +2257,16 @@
     "toggle_on"
   ]
 }
+
+let custom_icons: { name: string; [key: string]: any }[] = []
+const icons = fs.readdirSync(icons_path)
+
+for (let icon of icons) {
+  if (icon.endsWith('.svg')) {
+    icon = icon.replace('.svg', '');
+  }
+  custom_icons.push({ name: icon, path: icon });
+}
+
+
+export { google_icons, custom_icons }

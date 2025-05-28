@@ -2,23 +2,23 @@
 import Layout from '../layouts/Layout.astro';
 import '../styles/pages/settings.scss';
 
+import config from '../lib/config';
 import { providers } from '../lib/models';
 
-const provider = Object.keys(providers)[0];
-
 const settings = [
-    {
-        id: 'provider',
-        name: 'AI Provider',
-        options: providers,
-        default: provider,
-    }, 
-    {
-        id: 'model',
-        name: 'Model',
-        options: providers[provider].models,
-        default: providers[provider].models[0],
-    }
+  {
+    id: 'provider',
+    name: 'AI Provider',
+    options: providers,
+    default: config.provider,
+  }, 
+  {
+    id: 'model',
+    name: 'Model',
+    dependencies: ['provider'],
+    options: providers[config.provider].models,
+    default: config.model,
+  }
 ];
 ---
 <Layout title="Settings">
@@ -29,50 +29,99 @@ const settings = [
         <div class="settings-row">
           <label for={setting.id}>{setting.name}:</label>
           {Array.isArray(setting.options) ? (
-            <select id={setting.id} name={setting.id} onchange={`setSetting('${setting.id}', this.value)`} value={setting.default}>
+            <select id={setting.id} name={setting.id} value={setting.default}>
               {setting.options.map(option => (
                 <option value={option} selected={option === setting.default}>{option.name || option}</option>
               ))}
             </select>
           ) : typeof setting.options === 'object' ? (
-            <select id={setting.id} name={setting.id} onchange={`setSetting('${setting.id}', this.value)`} value={setting.options[setting.default]}>
+            <select id={setting.id} name={setting.id} value={setting.options[setting.default]}>
               {Object.keys(setting.options).map(option => (
                 <option value={option} selected={setting.options[option] === setting.default}>{setting.options[option].name || option}</option>
               ))}
             </select>
           ) : (
-            <input type="text" id={setting.id} name={setting.id} value={setting[1]} onchange={`setSetting('${setting.id}', this.value)`} />
+            <input type="text" id={setting.id} name={setting.id} value={setting[1]} />
           )}
         </div>
       ))}
-      <!-- Add more settings as needed -->
     </form>
   </section>
-  <script is:inline>
-    function setSetting(key, value) {
-      let settings = {};
-      try {
-        settings = JSON.parse(localStorage.getItem('settings')) || {};
-      } catch (e) {
-        settings = {};
+  <script is:inline data-settings={settings && typeof settings === 'object' ? JSON.stringify(settings) : '{}'}>
+    const settings = JSON.parse(document.currentScript.dataset.settings);
+    document.currentScript.removeAttribute('data-settings');
+
+    // Add change listeners for all settings
+    settings.forEach(setting => {
+      const el = document.getElementById(setting.id);
+      if (el) {
+        el.addEventListener('change', function () {
+          setSetting(setting.id, this.value);
+        });
       }
-      settings[key] = value;
-      localStorage.setItem('settings', JSON.stringify(settings));
+    });
+
+    function activateDependencies() {
+      // Dependency logic (if any)
+      settings.forEach(setting => {
+        if (setting.dependencies) {
+          setting.dependencies.forEach(dependency => {
+            const el = document.getElementById(dependency);
+            if (el) {
+              handleDependentChanges(el, dependency)
+            }
+          });
+        }
+      });
     }
-    // Optionally, initialize form values from localStorage
-    window.addEventListener('DOMContentLoaded', () => {
-      let settings = {};
+
+    function handleDependentChanges(el, dep) {
+      el.addEventListener('change', () => {
+        const value = el.value;
+        const setting = settings.find(s => s.id === dep);
+        const dependentSettings = settings.filter(s => s.dependencies && s.dependencies.includes(dep));
+        dependentSettings.forEach(s => {
+          const sEl = document.getElementById(s.id);
+          const id = `${s.id}s`;
+          const options = setting.options[value][id]
+          sEl.querySelectorAll('option').forEach(o => o.remove());
+          Object.keys(options).forEach(o => {
+            const option = document.createElement('option');
+            option.value = o;
+            option.textContent = options[o].name;
+            sEl.appendChild(option);
+          });
+
+          setSetting(s.id, Object.keys(options)[0]);
+        });
+      });
+    }
+
+    function setSetting(key, value) {
+      let userSettings = {};
       try {
-        settings = JSON.parse(localStorage.getItem('settings')) || {};
+        userSettings = JSON.parse(localStorage.getItem('settings')) || {};
+      } catch (e) {
+        userSettings = {};
+      }
+      userSettings[key] = value;
+      localStorage.setItem('settings', JSON.stringify(userSettings));
+    }
+
+    // Initialize form values from localStorage
+    window.addEventListener('DOMContentLoaded', () => {
+      let userSettings = {};
+      try {
+        userSettings = JSON.parse(localStorage.getItem('settings')) || {};
       } catch (e) {}
-      const settingIds = [
-        // Dynamically generated from the settings array
-        ...Array.from(document.querySelectorAll('#settings-form [id]')).map(el => el.id)
-      ];
+      const settingIds = settings.map(s => s.id);
+      
+      activateDependencies()
       for (const setting of settingIds) {
-        if (settings[setting]) {
+        if (userSettings[setting]) {
           const el = document.getElementById(setting);
-          if (el) el.value = settings[setting];
+          console.log(userSettings[setting])
+          if (el) el.value = userSettings[setting];
         }
       }
     });
