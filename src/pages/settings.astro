@@ -4,7 +4,7 @@ import '../styles/pages/settings.scss';
 
 import { providers } from '../lib/models';
 
-const provider = Object.keys(providers)[0];
+const provider = Object.keys(providers)[0] as keyof typeof providers;
 
 const settings = [
     {
@@ -17,7 +17,7 @@ const settings = [
         id: 'model',
         name: 'Model',
         options: providers[provider].models,
-        default: providers[provider].models[0],
+        default: Object.keys(providers[provider].models)[0],
     }
 ];
 ---
@@ -35,13 +35,13 @@ const settings = [
               ))}
             </select>
           ) : typeof setting.options === 'object' ? (
-            <select id={setting.id} name={setting.id} onchange={`setSetting('${setting.id}', this.value)`} value={setting.options[setting.default]}>
-              {Object.keys(setting.options).map(option => (
-                <option value={option} selected={setting.options[option] === setting.default}>{setting.options[option].name || option}</option>
+            <select id={setting.id} name={setting.id} onchange={`setSetting('${setting.id}', this.value)`} value={Object.keys(setting.options)[0]}>
+              {Object.entries(setting.options).map(([key, value]) => (
+                <option value={key} selected={key === setting.default}>{value.name || key}</option>
               ))}
             </select>
           ) : (
-            <input type="text" id={setting.id} name={setting.id} value={setting[1]} onchange={`setSetting('${setting.id}', this.value)`} />
+            <input type="text" id={setting.id} name={setting.id} value={setting.default} onchange={`setSetting('${setting.id}', this.value)`} />
           )}
         </div>
       ))}
