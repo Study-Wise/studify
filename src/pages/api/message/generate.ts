@@ -49,7 +49,7 @@ type ProviderKey = keyof typeof providers;
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const { text: userPrompt} = await request.json();
+    const { text: userPrompt } = await request.json();
 
     // Generate the response using vercel ai-sdk
 

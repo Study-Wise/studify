@@ -1,8 +1,8 @@
 ---
 const { settings } = Astro.props;
 ---
-<script is:inline settings={JSON.stringify(settings)}>
-  const userSettings = JSON.parse(document.currentScript.getAttribute('settings'));
+<script is:inline data-settings={JSON.stringify(settings)}>
+  const userSettings = JSON.parse(document.currentScript.dataset.settings || '{}');
 
   function setSetting(key, value) {
     let settings = {};
