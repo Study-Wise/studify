@@ -7,12 +7,10 @@ import config from '../../../lib/config';
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const { _ } = await request.json();
-
-    const token = uuid();
+    const { token } = await request.json();
 
     return new Response(
-      JSON.stringify({ status: 'success', generated_token: token }),
+      JSON.stringify({ status: 'success', removed_token: uuid() }),
       {
         status: 200,
         headers: { 'Content-Type': 'application/json' },
