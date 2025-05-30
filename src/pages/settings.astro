@@ -2,6 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import '../styles/pages/settings.scss';
 
+import SettingsScript from '../scripts/settings.astro';
+
 import { providers } from '../lib/models';
 
 const provider = Object.keys(providers)[0] as keyof typeof providers;
@@ -48,33 +50,5 @@ const settings = [
       <!-- Add more settings as needed -->
     </form>
   </section>
-  <script is:inline>
-    function setSetting(key, value) {
-      let settings = {};
-      try {
-        settings = JSON.parse(localStorage.getItem('settings')) || {};
-      } catch (e) {
-        settings = {};
-      }
-      settings[key] = value;
-      localStorage.setItem('settings', JSON.stringify(settings));
-    }
-    // Optionally, initialize form values from localStorage
-    window.addEventListener('DOMContentLoaded', () => {
-      let settings = {};
-      try {
-        settings = JSON.parse(localStorage.getItem('settings')) || {};
-      } catch (e) {}
-      const settingIds = [
-        // Dynamically generated from the settings array
-        ...Array.from(document.querySelectorAll('#settings-form [id]')).map(el => el.id)
-      ];
-      for (const setting of settingIds) {
-        if (settings[setting]) {
-          const el = document.getElementById(setting);
-          if (el) el.value = settings[setting];
-        }
-      }
-    });
-  </script>
+  <SettingsScript settings={settings} />
 </Layout> 

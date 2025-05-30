@@ -2,7 +2,7 @@
     /* Main Client-Side JavaScript */
 
     // Application Configuration
-    const API_ENDPOINT = "/api/generate"; // Base endpoint for the generation API
+    const API_ENDPOINT = "/api/message/generate"; // Base endpoint for the generation API
 
     /**
       * Main Initialization
@@ -16,14 +16,10 @@
         const spinner = generateButton?.querySelector(".spinner");
         const outputSection = document.getElementById("output-section");
         const studyGuideContent = document.getElementById("study-guide-content");
-        const referenceSheetContent = document.getElementById(
-            "reference-sheet-content"
-        );
+        const referenceSheetContent = document.getElementById("reference-sheet-content");
         const errorMessageDiv = document.getElementById("error-message");
         const downloadGuideBtn = document.getElementById("download-guide-pdf");
         const downloadSheetBtn = document.getElementById("download-sheet-pdf");
-        const understandingSlider = document.getElementById("understanding-level");
-        const understandingText = document.getElementById("understanding-level-text");
 
         // Verify Essential Elements
         if (
@@ -34,9 +30,7 @@
             !referenceSheetContent ||
             !errorMessageDiv ||
             !downloadGuideBtn ||
-            !downloadSheetBtn ||
-            !understandingSlider ||
-            !understandingText
+            !downloadSheetBtn
         ) {
             console.error(
             "CRITICAL: One or more essential HTML elements not found. Check IDs."
@@ -44,25 +38,23 @@
 
             // Log specific missing elements for debugging
             const missing = [
-            !textInput && "#text-paste",
-            !generateButton && "#generate-button",
-            !outputSection && "#output-section",
-            !studyGuideContent && "#study-guide-content",
-            !referenceSheetContent && "#reference-sheet-content",
-            !errorMessageDiv && "#error-message",
-            !downloadGuideBtn && "#download-guide-pdf",
-            !downloadSheetBtn && "#download-sheet-pdf",
-            !understandingSlider && "#understanding-level",
-            !understandingText && "#understanding-level-text",
+                !textInput && "#text-paste",
+                !generateButton && "#generate-button",
+                !outputSection && "#output-section",
+                !studyGuideContent && "#study-guide-content",
+                !referenceSheetContent && "#reference-sheet-content",
+                !errorMessageDiv && "#error-message",
+                !downloadGuideBtn && "#download-guide-pdf",
+                !downloadSheetBtn && "#download-sheet-pdf"
             ]
             .filter(Boolean)
             .join(", ");
 
             if (errorMessageDiv) {
-            errorMessageDiv.textContent = `Error: UI load failure (missing: ${
-                missing || "unknown essential elements"
-            }).`;
-            errorMessageDiv.style.display = "block";
+                errorMessageDiv.textContent = `Error: UI load failure (missing: ${
+                    missing || "unknown essential elements"
+                }).`;
+                errorMessageDiv.style.display = "block";
             }
             return; // Stop execution if essential elements are missing
         }
@@ -82,50 +74,42 @@
           */
         function showOutput(type) {
             try {
-            const isActive = (el) => el?.classList.contains("active-output");
-            const guideOutputEl = document.getElementById("guide-output");
-            const sheetOutputEl = document.getElementById("sheet-output");
+                const isActive = (el) => el?.classList.contains("active-output");
+                const guideOutputEl = document.getElementById("guide-output");
+                const sheetOutputEl = document.getElementById("sheet-output");
 
-            if (!guideOutputEl || !sheetOutputEl) {
-                console.error(
-                "Error in showOutput: Could not find guide/sheet output elements."
-                );
-                return;
-            }
+                if (!guideOutputEl || !sheetOutputEl) {
+                    console.error("Error in showOutput: Could not find guide/sheet output elements.");
+                    return;
+                }
 
-            const isGuideActive = isActive(guideOutputEl);
-            const isSheetActive = isActive(sheetOutputEl);
+                const isGuideActive = isActive(guideOutputEl);
+                const isSheetActive = isActive(sheetOutputEl);
 
-            if (
-                (type === "guide" && isGuideActive) ||
-                (type === "sheet" && isSheetActive)
-            ) {
-                return;
-            }
+                if (
+                    (type === "guide" && isGuideActive) ||
+                    (type === "sheet" && isSheetActive)
+                ) {
+                    return;
+                }
 
-            document
-                .querySelectorAll(".output-content")
-                .forEach((el) => el.classList.remove("active-output"));
-            document
-                .querySelectorAll(".output-tabs .tab-button")
-                .forEach((el) => el.classList.remove("active"));
+                document.querySelectorAll(".output-content").forEach((el) => el.classList.remove("active-output"));
+                document.querySelectorAll(".output-tabs .tab-button").forEach((el) => el.classList.remove("active"));
 
-            const contentEl = document.getElementById(`${type}-output`);
-            const tabButtonEl = document.getElementById(`${type}-tab-button`);
+                const contentEl = document.getElementById(`${type}-output`);
+                const tabButtonEl = document.getElementById(`${type}-tab-button`);
 
-            if (contentEl) contentEl.classList.add("active-output");
-            else
-                console.error(
-                `showOutput: Could not find content element '#${type}-output'.`
-                );
+                if (contentEl) contentEl.classList.add("active-output");
+                else {
+                    console.error(`showOutput: Could not find content element '#${type}-output'.`);
+                }
 
-            if (tabButtonEl) tabButtonEl.classList.add("active");
-            else
-                console.error(
-                `showOutput: Could not find tab button '#${type}-tab-button'.`
-                );
+                if (tabButtonEl) tabButtonEl.classList.add("active");
+                else {
+                    console.error(`showOutput: Could not find tab button '#${type}-tab-button'.`);
+                }
             } catch (error) {
-            console.error("Error in showOutput function:", error);
+                console.error("Error in showOutput function:", error);
             }
         }
 
@@ -279,7 +263,7 @@
 
             return { guideMarkdown, sheetMarkdown, stepsData, parseError };
         }
-        }
+    }
 
         /**
           * Randomly shuffles an array using the Fisher-Yates algorithm
@@ -287,8 +271,8 @@
           */
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
             }
         }
 
@@ -299,31 +283,31 @@
           */
         function typesetMathJax(elements) {
             try {
-            if ("undefined" != typeof MathJax && MathJax.typesetPromise) {
-                const validElements = (
-                Array.isArray(elements) ? elements : elements ? [elements] : []
-                ).filter((el) => el != null);
-                if (validElements.length === 0) return Promise.resolve();
-                validElements.forEach((el) => el?.classList?.add("mathjax-pending"));
-                return MathJax.typesetPromise(validElements)
-                .then(() => {
-                    validElements.forEach((el) =>
-                    el?.classList?.remove("mathjax-pending")
-                    );
-                })
-                .catch((err) => {
-                    console.error("MathJax typesetting error:", err);
-                    validElements.forEach((el) =>
-                    el?.classList?.remove("mathjax-pending")
-                    );
-                });
-            } else {
-                console.warn("MathJax not ready.");
-                return Promise.resolve();
-            }
+                if ("undefined" != typeof MathJax && MathJax.typesetPromise) {
+                    const validElements = (
+                        Array.isArray(elements) ? elements : elements ? [elements] : []
+                    ).filter((el) => el != null);
+                    if (validElements.length === 0) return Promise.resolve();
+                    validElements.forEach((el) => el?.classList?.add("mathjax-pending"));
+                    return MathJax.typesetPromise(validElements)
+                    .then(() => {
+                        validElements.forEach((el) =>
+                        el?.classList?.remove("mathjax-pending")
+                        );
+                    })
+                    .catch((err) => {
+                        console.error("MathJax typesetting error:", err);
+                        validElements.forEach((el) =>
+                        el?.classList?.remove("mathjax-pending")
+                        );
+                    });
+                } else {
+                    console.warn("MathJax not ready.");
+                    return Promise.resolve();
+                }
             } catch (err) {
-            console.error("Error in typesetMathJax:", err);
-            return Promise.resolve();
+                console.error("Error in typesetMathJax:", err);
+                return Promise.resolve();
             }
         }
 
@@ -341,41 +325,37 @@
           */
         async function downloadViaPrint(contentElementId, buttonElement) {
             if (isPrinting) {
-            console.warn("Print already in progress.");
-            return;
+                console.warn("Print already in progress.");
+                return;
             }
             const elementToPrint = document.getElementById(contentElementId);
             const parentContainer = elementToPrint?.closest(".output-content");
             if (!elementToPrint || !parentContainer) {
-            displayError(
-                `Cannot print: Content/parent area missing for '${contentElementId}'.`
-            );
-            return;
+                displayError(`Cannot print: Content/parent area missing for '${contentElementId}'.`);
+                return;
             }
             const hasRealContent =
             elementToPrint.innerHTML &&
             elementToPrint.innerHTML.trim() !== "" &&
             !elementToPrint.querySelector("p > i");
             if (!hasRealContent) {
-            displayError(`Cannot print: Content empty for '${contentElementId}'.`);
-            return;
+                displayError(`Cannot print: Content empty for '${contentElementId}'.`);
+                return;
             }
             if (!buttonElement) {
-            console.error(`Print Error: Button element missing.`);
-            return;
+                console.error(`Print Error: Button element missing.`);
+                return;
             }
             let originalActiveTabId = null;
             const targetTabId =
             contentElementId === "study-guide-content" ? "guide" : "sheet";
-            const currentActiveButton = document.querySelector(
-            ".output-tabs .tab-button.active"
-            );
+            const currentActiveButton = document.querySelector(".output-tabs .tab-button.active");
             if (currentActiveButton)
             originalActiveTabId = currentActiveButton.id.replace("-tab-button", "");
             const isTargetVisible = parentContainer.classList.contains("active-output");
             if (!isTargetVisible) {
-            showOutput(targetTabId);
-            await new Promise((resolve) => setTimeout(resolve, 150));
+                showOutput(targetTabId);
+                await new Promise((resolve) => setTimeout(resolve, 150));
             }
             isPrinting = true;
             buttonElement.disabled = true;
@@ -385,26 +365,26 @@
             parentContainer.classList.add("print-target-container");
             await new Promise((resolve) => setTimeout(resolve, 100));
             try {
-            window.print();
+                window.print();
             } catch (error) {
-            console.error("Error invoking print:", error);
-            displayError("Could not open print dialog.");
+                console.error("Error invoking print:", error);
+                displayError("Could not open print dialog.");
             } finally {
-            if (parentContainer)
-                parentContainer.classList.remove("print-target-container");
-            if (
-                !isTargetVisible &&
-                originalActiveTabId &&
-                originalActiveTabId !== targetTabId
-            ) {
-                showOutput(originalActiveTabId);
-                await new Promise((resolve) => setTimeout(resolve, 50));
-            }
-            if (buttonElement) {
-                buttonElement.disabled = false;
-                buttonElement.innerHTML = originalButtonHTML;
-            }
-            isPrinting = false;
+                if (parentContainer)
+                    parentContainer.classList.remove("print-target-container");
+                if (
+                    !isTargetVisible &&
+                    originalActiveTabId &&
+                    originalActiveTabId !== targetTabId
+                ) {
+                    showOutput(originalActiveTabId);
+                    await new Promise((resolve) => setTimeout(resolve, 50));
+                }
+                if (buttonElement) {
+                    buttonElement.disabled = false;
+                    buttonElement.innerHTML = originalButtonHTML;
+                }
+                isPrinting = false;
             }
         }
 
@@ -422,114 +402,109 @@
           */
         async function displayResults(aiRawText) {
             if (!aiRawText || typeof aiRawText !== "string") {
-            displayError("Invalid AI response received.");
-            return;
+                displayError("Invalid AI response received.");
+                return;
             }
             if (downloadGuideBtn) downloadGuideBtn.disabled = true;
             if (downloadSheetBtn) downloadSheetBtn.disabled = true;
             let { guideMarkdown, sheetMarkdown, stepsData, parseError } =
             parseAIResponse(aiRawText);
             if (parseError) {
-            console.warn("Parse Error:", parseError);
-            if (errorMessageDiv) {
-                const currentError = errorMessageDiv.textContent;
-                errorMessageDiv.textContent =
-                `Warning: ${parseError}` + (currentError ? ` | ${currentError}` : "");
-                errorMessageDiv.style.display = "block";
-            }
+                console.warn("Parse Error:", parseError);
+                if (errorMessageDiv) {
+                    const currentError = errorMessageDiv.textContent;
+                    errorMessageDiv.textContent =
+                    `Warning: ${parseError}` + (currentError ? ` | ${currentError}` : "");
+                    errorMessageDiv.style.display = "block";
+                }
             }
             try {
-            if (
-                !studyGuideContent ||
-                !referenceSheetContent
-            ) {
-                throw new Error("Output containers missing.");
-            }
-            studyGuideContent.innerHTML = "";
-            referenceSheetContent.innerHTML = "";
-            let elementsToTypeset = [];
-            const guidePlaceholder =
-                "<p><i>No Study Guide content generated/extracted.</i></p>";
-            const sheetPlaceholder =
-                "<p><i>No Reference Sheet content generated/extracted.</i></p>";
-            if (
-                guideMarkdown &&
-                guideMarkdown.replace(/### Study Guide\s*/i, "").trim()
-            ) {
-                studyGuideContent.innerHTML = guideMarkdown;
-                elementsToTypeset.push(studyGuideContent);
-            } else {
-                studyGuideContent.innerHTML = guidePlaceholder;
-            }
-            if (
-                sheetMarkdown &&
-                sheetMarkdown.replace(/### Reference Sheet\s*/i, "").trim()
-            ) {
-                if (sheetMarkdown.includes('```<div class="desmos-graph')) {
-                const desmosGraph = sheetMarkdown.match(
-                    /```<div class="desmos-graph"[^>]*>([\s\S]*?)<\/div>```/g
-                );
-                if (desmosGraph) {
-                    desmosGraph.forEach((graph) => {
-                    const newGraph = graph.slice(3, -3);
-                    sheetMarkdown = sheetMarkdown.replace(graph, newGraph);
-                    });
+                if (!studyGuideContent || !referenceSheetContent) {
+                    throw new Error("Output containers missing.");
                 }
+                studyGuideContent.innerHTML = "";
+                referenceSheetContent.innerHTML = "";
+                let elementsToTypeset = [];
+                const guidePlaceholder = "<p><i>No Study Guide content generated/extracted.</i></p>";
+                const sheetPlaceholder = "<p><i>No Reference Sheet content generated/extracted.</i></p>";
+                if (
+                    guideMarkdown &&
+                    guideMarkdown.replace(/### Study Guide\s*/i, "").trim()
+                ) {
+                    studyGuideContent.innerHTML = guideMarkdown;
+                    elementsToTypeset.push(studyGuideContent);
+                } else {
+                    studyGuideContent.innerHTML = guidePlaceholder;
                 }
-                if (sheetMarkdown.includes('`<div class="desmos-graph"')) {
-                const desmosGraph = sheetMarkdown.match(
-                    /`<div class="desmos-graph"[^>]*>([\s\S]*?)<\/div>`/g
-                );
-                if (desmosGraph) {
-                    desmosGraph.forEach((graph) => {
-                    const newGraph = graph.slice(1, -1);
-                    sheetMarkdown = sheetMarkdown.replace(graph, newGraph);
-                    });
+                if (
+                    sheetMarkdown &&
+                    sheetMarkdown.replace(/### Reference Sheet\s*/i, "").trim()
+                ) {
+                    if (sheetMarkdown.includes('```<div class="desmos-graph')) {
+                        const desmosGraph = sheetMarkdown.match(
+                            /```<div class="desmos-graph"[^>]*>([\s\S]*?)<\/div>```/g
+                        );
+                        if (desmosGraph) {
+                            desmosGraph.forEach((graph) => {
+                                const newGraph = graph.slice(3, -3);
+                                sheetMarkdown = sheetMarkdown.replace(graph, newGraph);
+                            });
+                        }
+                    }
+                    if (sheetMarkdown.includes('`<div class="desmos-graph"')) {
+                        const desmosGraph = sheetMarkdown.match(
+                            /`<div class="desmos-graph"[^>]*>([\s\S]*?)<\/div>`/g
+                        );
+                        if (desmosGraph) {
+                            desmosGraph.forEach((graph) => {
+                                const newGraph = graph.slice(1, -1);
+                                sheetMarkdown = sheetMarkdown.replace(graph, newGraph);
+                            });
+                        }
+                    }
+
+                    let sheetHTML = sheetMarkdown;
+                    referenceSheetContent.innerHTML = sheetHTML;
+                    elementsToTypeset.push(referenceSheetContent);
+                } else {
+                    referenceSheetContent.innerHTML = sheetPlaceholder;
                 }
+                await typesetMathJax(elementsToTypeset);
+
+                // Activate Desmos graphs if any
+                if (typeof activateDesmos === "function") {
+                    try {
+                        activateDesmos();
+                    } catch (e) {
+                        console.warn("Error activating Desmos:", e);
+                    }
                 }
 
-                let sheetHTML = sheetMarkdown;
-                referenceSheetContent.innerHTML = sheetHTML;
-                elementsToTypeset.push(referenceSheetContent);
-            } else {
-                referenceSheetContent.innerHTML = sheetPlaceholder;
-            }
-            await typesetMathJax(elementsToTypeset);
-
-            // Activate Desmos graphs if any
-            if (typeof activateDesmos === "function") {
-                try {
-                activateDesmos();
-                } catch (e) {
-                console.warn("Error activating Desmos:", e);
+                const hasGuideContent = studyGuideContent.innerHTML !== guidePlaceholder;
+                const hasSheetContent =
+                    referenceSheetContent.innerHTML !== sheetPlaceholder;
+                if (downloadGuideBtn) {
+                    downloadGuideBtn.disabled = !hasGuideContent;
                 }
-            }
-
-            const hasGuideContent = studyGuideContent.innerHTML !== guidePlaceholder;
-            const hasSheetContent =
-                referenceSheetContent.innerHTML !== sheetPlaceholder;
-            if (downloadGuideBtn) {
-                downloadGuideBtn.disabled = !hasGuideContent;
-            }
-            if (downloadSheetBtn) {
-                downloadSheetBtn.disabled = !hasSheetContent;
-            }
-            if (outputSection) outputSection.style.display = "block";
-            showOutput("guide"); // Default to showing the guide
-            if (hasGuideContent || hasSheetContent) {
-                setTimeout(() => {
-                outputSection?.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                });
-                }, 150);
-            }
+                if (downloadSheetBtn) {
+                    downloadSheetBtn.disabled = !hasSheetContent;
+                }
+                if (outputSection) outputSection.style.display = "block";
+                showOutput("guide"); // Default to showing the guide
+                if (hasGuideContent || hasSheetContent) {
+                    setTimeout(() => {
+                        outputSection?.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                        });
+                    }, 150);
+                }
             } catch (err) {
-            console.error("ERROR in displayResults:", err);
-            displayError(`Failed to render results. ${err.message}`);
-            if (downloadGuideBtn) downloadGuideBtn.disabled = true;
-            if (downloadSheetBtn) downloadSheetBtn.disabled = true;
-            if (outputSection) outputSection.style.display = "none";
+                console.error("ERROR in displayResults:", err);
+                displayError(`Failed to render results. ${err.message}`);
+                if (downloadGuideBtn) downloadGuideBtn.disabled = true;
+                if (downloadSheetBtn) downloadSheetBtn.disabled = true;
+                if (outputSection) outputSection.style.display = "none";
             }
         }
 
@@ -543,71 +518,65 @@
           */
         window.generateOutput = async function () {
             if (!textInput) {
-            displayError("Input field missing!");
-            return;
+                displayError("Input field missing!");
+                return;
             }
             const homeworkText = textInput.value;
             // User requested to remove the empty check for testing: if ((!homeworkText || !homeworkText.trim()) && false)
             if (!homeworkText || !homeworkText.trim()) {
-            // Re-enabled empty check as it's good practice
-            displayError("Please paste homework text.");
-            textInput.focus();
-            return;
+                // Re-enabled empty check as it's good practice
+                displayError("Please paste homework text.");
+                textInput.focus();
+                return;
             }
-            const understandingLevel = understandingSlider
-            ? understandingSlider.value
-            : "2";
             setLoadingState(true);
             try {
-            const response = await fetch(API_ENDPOINT, {
-                method: "POST",
-                headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-                },
-                body: JSON.stringify({
-                text: homeworkText,
-                understanding: understandingLevel,
-                }),
-            });
-            if (!response.ok) {
-                let errorMsg = `API Error (${response.status} ${response.statusText})`;
-                let errorObj = null;
-                try {
-                errorObj = await response.json();
-                if (errorObj?.error) errorMsg = errorObj.error;
-                else {
-                    const txt = await response.text();
-                    console.error("API error body:", txt);
-                    errorMsg = `API Error (${response.status}): ${
-                    response.statusText || "Server error"
-                    }. Check logs: ${txt.substring(0, 100)}`;
+                const response = await fetch(API_ENDPOINT, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                    },
+                    body: JSON.stringify({
+                        text: homeworkText,
+                    }),
+                });
+                if (!response.ok) {
+                    let errorMsg = `API Error (${response.status} ${response.statusText})`;
+                    let errorObj = null;
+                    try {
+                        errorObj = await response.json();
+                        if (errorObj?.error) errorMsg = errorObj.error;
+                        else {
+                            const txt = await response.text();
+                            console.error("API error body:", txt);
+                            errorMsg = `API Error (${response.status}): ${
+                            response.statusText || "Server error"
+                            }. Check logs: ${txt.substring(0, 100)}`;
+                        }
+                    } catch (e) {
+                        const rawTxt = await response
+                            .text()
+                            .catch(() => "Unreadable error body.");
+                        console.error("Error parsing API error:", e);
+                        console.error("Raw API error body:", rawTxt);
+                        errorMsg = `API Error (${response.status}): ${response.statusText || "Unreadable error"}. Check logs.`;
+                    }
+                    throw new Error(errorMsg);
                 }
-                } catch (e) {
-                const rawTxt = await response
-                    .text()
-                    .catch(() => "Unreadable error body.");
-                console.error("Error parsing API error:", e);
-                console.error("Raw API error body:", rawTxt);
-                errorMsg = `API Error (${response.status}): ${
-                    response.statusText || "Unreadable error"
-                }. Check logs.`;
+                const data = await response.json();
+                if (data?.generatedText) {
+                    await displayResults(data.generatedText);
+                } else {
+                    console.error("Invalid data format:", data);
+                    throw new Error("Invalid/empty response from AI.");
                 }
-                throw new Error(errorMsg);
-            }
-            const data = await response.json();
-            if (data?.generatedText) {
-                await displayResults(data.generatedText);
-            } else {
-                console.error("Invalid data format:", data);
-                throw new Error("Invalid/empty response from AI.");
-            }
             } catch (error) {
-            console.error("Full error caught in generateOutput:", error);
-            alert(error);
-            displayError(error.message || "Unexpected error.");
+                console.error("Full error caught in generateOutput:", error);
+                alert(error);
+                displayError(error.message || "Unexpected error.");
             } finally {
-            setLoadingState(false);
+                setLoadingState(false);
             }
         };
 
@@ -626,20 +595,6 @@
         if (downloadSheetBtn) {
             downloadSheetBtn.addEventListener("click", (event) => {
                 downloadViaPrint("reference-sheet-content", event.currentTarget);
-            });
-        }
-
-        // Understanding Slider Listener
-        if (understandingSlider && understandingText) {
-            const levels = {
-                1: "Beginner",
-                2: "Intermediate",
-                3: "Advanced",
-            };
-            understandingText.textContent = levels[understandingSlider.value];
-            // Set initial text
-            understandingSlider.addEventListener("input", (event) => {
-                understandingText.textContent = levels[event.target.value];
             });
         }
 

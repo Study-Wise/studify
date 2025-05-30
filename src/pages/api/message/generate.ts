@@ -43,16 +43,13 @@ const providers = {
   xai: xai,
 }
 
-import config from '../../lib/config';
+import config from '../../../lib/config';
 
 type ProviderKey = keyof typeof providers;
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const { text, understanding } = await request.json();
-
-    // Compose the prompt
-    const userPrompt = `${config.systemPrompt}\n\n[Understanding Level: ${understanding}]\n\n${text}`;
+    const { text: userPrompt} = await request.json();
 
     // Generate the response using vercel ai-sdk
 

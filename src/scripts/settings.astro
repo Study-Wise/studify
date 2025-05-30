@@ -1,0 +1,34 @@
+---
+const { settings } = Astro.props;
+---
+<script is:inline settings={JSON.stringify(settings)}>
+  const userSettings = JSON.parse(document.currentScript.getAttribute('settings'));
+
+  function setSetting(key, value) {
+    let settings = {};
+    try {
+      settings = JSON.parse(localStorage.getItem('settings')) || {};
+    } catch (e) {
+      settings = {};
+    }
+    settings[key] = value;
+    localStorage.setItem('settings', JSON.stringify(settings));
+  }
+  // Optionally, initialize form values from localStorage
+  window.addEventListener('DOMContentLoaded', () => {
+    let settings = {};
+    try {
+      settings = JSON.parse(localStorage.getItem('settings')) || {};
+    } catch (e) {}
+    const settingIds = [
+      // Dynamically generated from the settings array
+      ...Array.from(document.querySelectorAll('#settings-form [id]')).map(el => el.id)
+    ];
+    for (const setting of settingIds) {
+      if (settings[setting]) {
+        const el = document.getElementById(setting);
+        if (el) el.value = settings[setting];
+      }
+    }
+  });
+</script>

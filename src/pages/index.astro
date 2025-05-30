@@ -11,14 +11,11 @@ import ChatScript from '../scripts/chat.astro';
       <span class="material-symbols-outlined">info</span>&nbsp;How It Works
     </h2>
     <p>
-      Welcome to Mentor.Assistant.Tutor.Helper.Wise! Turn your math homework into powerful learning tools.
+      Welcome to <b>M</b>entor.<b>A</b>ssistant.<b>T</b>utor.<b>H</b>elper.<b>Wise</b>! Turn your math homework into powerful learning tools.
     </p>
     <ol class="steps-list">
       <li>
         <strong>Paste Your Homework:</strong> Copy your math problems (plain text or simple equations like $f(x)=x^2$ into the text box below.
-      </li>
-      <li>
-        <strong>Select Understanding Level:</strong> Adjust the slider to tell the AI how deeply to explain concepts (optional).
       </li>
       <li>
         <strong>Generate Materials:</strong> Click the "Generate Study Materials" button.
@@ -62,27 +59,6 @@ Please note that the AI will not provide the answer for your immediate equation"
         aria-label="Paste math problems here"
       ></textarea>
     </div>
-
-    <!-- Understanding Level Slider -->
-    <div class="understanding-slider-container">
-      <label for="understanding-level">Your Current Understanding Level:</label>
-      <span id="understanding-level-text" class="slider-value">Intermediate</span>
-      <input
-        type="range"
-        id="understanding-level"
-        name="understanding-level"
-        min="1"
-        max="3"
-        value="2"
-        step="1"
-      />
-      <div class="slider-labels">
-        <span>Beginner</span>
-        <span>Intermediate</span>
-        <span>Advanced</span>
-      </div>
-    </div>
-    <!-- End Slider -->
 
     <!-- Generate Button and Error Message -->
     <button id="generate-button" onclick="generateOutput()">
