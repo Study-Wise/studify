@@ -9,9 +9,9 @@ import config from '../../../lib/config';
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const { _ } = await request.json();
+    var { token } = await request.json();
 
-    const token = uuid();
+    if (!token) token = uuid();
 
     const obj = {
       token: token,
