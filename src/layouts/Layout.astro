@@ -2,11 +2,11 @@
 import '../styles/globals.scss';
 import Header from '../components/Header.astro';
 
-const sTitle = "M.A.T.H.Wise - AI Math Study Partner";
-
+const sTitle = "M.A.T.H.Wise";
+const lTitle = `${sTitle} - AI Math Study Partner`;
 const { title } = Astro.props;
 const noTitle = title === "Home" || title === '' || !title;
-const pTitle = `${noTitle ? '' : title} | ${sTitle}`;
+const pTitle = noTitle ? lTitle : `${title} | ${sTitle}`;
 
 const copyrightStart = 2025;
 const copyright = new Date().getFullYear();
@@ -17,7 +17,7 @@ const copyright = new Date().getFullYear();
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{pTitle}</title>
-    <!-- Font Awesome -->
+    <!-- Google Fonts Material Icons -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
     />
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
