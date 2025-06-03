@@ -32,7 +32,7 @@ export const POST: APIRoute = async ({ request }) => {
   } catch (error) {
     console.error('Error in generate.ts:', error);
     return new Response(
-      JSON.stringify({ error: `Invalid request body or server error: ${error}` }),
+      JSON.stringify({ status: 'error', error: `Invalid request body or server error: ${error}` }),
       {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
