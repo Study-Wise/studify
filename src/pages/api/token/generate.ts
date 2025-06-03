@@ -15,6 +15,9 @@ export const POST: APIRoute = async ({ request }) => {
 
     const obj = {
       token: token,
+      thread: {
+        messages: []
+      }
     }
 
     const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });

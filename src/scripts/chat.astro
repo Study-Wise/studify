@@ -1,4 +1,62 @@
 <script is:inline>
+    async function generateToken(existingToken) {
+        var resp = await fetch('/api/token/generate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                token: existingToken || null // Use existing token if provided, otherwise generate a new one
+            }),
+            keepalive: true // Ensure the request is kept alive for the duration of the session
+        });
+
+        var json = await resp.json() || {};
+
+        if (typeof json === 'object' && 'status' in json && json.status === 'success') {
+            // Token generation successful, proceed with the chat functionality
+            window.token = json.token; // Store the token globally for chat functionality
+            console.log('Token generated successfully:', json.token);
+        } else {
+            // Handle error in token generation
+            window.token = null; // Ensure token is null if generation fails
+            console.error('Error generating token:', json);
+            throw new Error('Failed to generate token for chat functionality.');
+        }
+    }
+
+    generateToken()
+    document.addEventListener('visibilitychange', async event => {
+        if (document.visibilityState === "hidden") {
+            // Check if the token is set before proceeding
+            if (window.token) {
+                // Send a request to invalidate the token
+                var resp = await fetch('/api/token/destroy', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        token: window.token
+                    }),
+                    keepalive: true // Ensure the request is kept alive for the duration of the session
+                })
+
+                var json = await resp.json() || {};
+                if (typeof json === 'object' && 'status' in json && json.status === 'success') {
+                    console.log('Token invalidated successfully.');
+                } else {
+                    console.error('Error invalidating token:', json);
+                }
+            }
+        } else {
+            generateToken(window.token)
+        }
+    });
+</script>
+<script is:inline>
     /* Main Client-Side JavaScript */
 
     // Application Configuration
@@ -74,7 +132,7 @@
           */
         function showOutput(type) {
             try {
-                const isActive = (el) => el?.classList.contains("active-output");
+                const isActive = el => el?.classList.contains("active-output");
                 const guideOutputEl = document.getElementById("guide-output");
                 const sheetOutputEl = document.getElementById("sheet-output");
 
@@ -93,8 +151,8 @@
                     return;
                 }
 
-                document.querySelectorAll(".output-content").forEach((el) => el.classList.remove("active-output"));
-                document.querySelectorAll(".output-tabs .tab-button").forEach((el) => el.classList.remove("active"));
+                document.querySelectorAll(".output-content").forEach(el => el.classList.remove("active-output"));
+                document.querySelectorAll(".output-tabs .tab-button").forEach(el => el.classList.remove("active"));
 
                 const contentEl = document.getElementById(`${type}-output`);
                 const tabButtonEl = document.getElementById(`${type}-tab-button`);
@@ -163,62 +221,49 @@
           */
         function displayError(message) {
             try {
-            console.error(
-                "displayError called with message:",
-                message,
-                "(type:",
-                typeof message,
-                ")"
-            );
-            let messageToShow = "An unknown error occurred.";
-            if (typeof message === "string" && message.trim() !== "") {
-                messageToShow = message;
-            } else if (message instanceof Error && message.message) {
-                messageToShow = message.message;
-            } else if (typeof message === "object" && message !== null) {
-                try {
-                messageToShow = JSON.stringify(message);
-                } catch {
-                messageToShow = "[Complex Error Object]";
+                console.error("displayError called with message:", message, "(type:", typeof message, ")");
+                let messageToShow = "An unknown error occurred.";
+                if (typeof message === "string" && message.trim() !== "") {
+                    messageToShow = message;
+                } else if (message instanceof Error && message.message) {
+                    messageToShow = message.message;
+                } else if (typeof message === "object" && message !== null) {
+                    try {
+                        messageToShow = JSON.stringify(message);
+                    } catch {
+                        messageToShow = "[Complex Error Object]";
+                    }
                 }
-            }
-            const errorDiv = document.getElementById("error-message");
-            if (errorDiv) {
-                let showErrorText = "";
-                if (!messageToShow.includes(": ")) {
-                showErrorText = "Error: ";
+                const errorDiv = document.getElementById("error-message");
+                if (errorDiv) {
+                    let showErrorText = "";
+                    if (!messageToShow.includes(": ")) {
+                        showErrorText = "Error: ";
+                    }
+                    errorDiv.textContent = `${showErrorText}${messageToShow}`;
+                    errorDiv.style.display = "block";
+                    console.warn("displayError: Error text set.");
+                } else {
+                    console.error("CRITICAL FAILURE in displayError: #error-message element not found:", messageToShow);
+                    alert("Critical error occurred; error display area missing.\nHint: " + messageToShow);
                 }
-                errorDiv.textContent = `${showErrorText}${messageToShow}`;
-                errorDiv.style.display = "block";
-                console.warn("displayError: Error text set.");
-            } else {
-                console.error(
-                "CRITICAL FAILURE in displayError: #error-message element not found:",
-                messageToShow
-                );
-                alert(
-                "Critical error occurred; error display area missing.\nHint: " +
-                    messageToShow
-                );
-            }
-            const outputSec = document.getElementById("output-section");
-            if (outputSec) outputSec.style.display = "none";
-            console.error("Displayed Error (final):", messageToShow);
-            const guideBtn = document.getElementById("download-guide-pdf");
-            if (guideBtn) guideBtn.disabled = true;
-            const sheetBtn = document.getElementById("download-sheet-pdf");
-            if (sheetBtn) sheetBtn.disabled = true;
+                const outputSec = document.getElementById("output-section");
+                if (outputSec) outputSec.style.display = "none";
+                console.error("Displayed Error (final):", messageToShow);
+                const guideBtn = document.getElementById("download-guide-pdf");
+                if (guideBtn) guideBtn.disabled = true;
+                const sheetBtn = document.getElementById("download-sheet-pdf");
+                if (sheetBtn) sheetBtn.disabled = true;
             } catch (e) {
-            console.error("FATAL ERROR inside displayError function:", e);
-            const errorDiv = document.getElementById("error-message");
-            if (errorDiv) {
-                errorDiv.textContent =
-                "Error: Critical UI failure during error reporting.";
-                errorDiv.style.display = "block";
-            } else {
-                alert("Error: Critical UI failure during error reporting.");
-            }
-            console.error("Original message causing displayError failure:", message);
+                console.error("FATAL ERROR inside displayError function:", e);
+                const errorDiv = document.getElementById("error-message");
+                if (errorDiv) {
+                    errorDiv.textContent = "Error: Critical UI failure during error reporting.";
+                    errorDiv.style.display = "block";
+                } else {
+                    alert("Error: Critical UI failure during error reporting.");
+                }
+                console.error("Original message causing displayError failure:", message);
             }
         }
 
@@ -236,7 +281,6 @@
         function parseAIResponse(aiRawText) {
             let guideMarkdown = aiRawText,
             sheetMarkdown = "",
-            stepsData = [],
             parseError = null;
 
             const sheetHeader = "### Reference Sheet";
@@ -246,8 +290,8 @@
             .toLowerCase()
             .indexOf(sheetHeader.toLowerCase());
             if (sheetIndex !== -1) {
-            guideMarkdown = aiRawText.substring(0, sheetIndex);
-            sheetMarkdown = aiRawText.substring(sheetIndex);
+                guideMarkdown = aiRawText.substring(0, sheetIndex);
+                sheetMarkdown = aiRawText.substring(sheetIndex);
             }
 
             // Clean up and format markdown
@@ -255,26 +299,15 @@
             guideMarkdown = `<h3>Study Guide</h3><br>${guideMarkdown}`;
 
             sheetMarkdown = sheetMarkdown
-            .replace(/^<h3>Reference Sheet<\/h3>\s*/i, "")
-            .trim();
+                .replace(/^<h3>Reference Sheet<\/h3>\s*/i, "")
+                .trim();
             sheetMarkdown = sheetMarkdown
-            ? `<h3>Reference Sheet</h3><br>${sheetMarkdown}`
-            : "";
+                ? `<h3>Reference Sheet</h3><br>${sheetMarkdown}`
+                : "";
 
-            return { guideMarkdown, sheetMarkdown, stepsData, parseError };
+            return { guideMarkdown, sheetMarkdown, parseError };
         }
-    }
-
-        /**
-          * Randomly shuffles an array using the Fisher-Yates algorithm
-          * @param {Array} array - The array to shuffle
-          */
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-        }
+    
 
         /**
           * Renders mathematical notation using MathJax
@@ -284,22 +317,16 @@
         function typesetMathJax(elements) {
             try {
                 if ("undefined" != typeof MathJax && MathJax.typesetPromise) {
-                    const validElements = (
-                        Array.isArray(elements) ? elements : elements ? [elements] : []
-                    ).filter((el) => el != null);
+                    const validElements = (Array.isArray(elements) ? elements : elements ? [elements] : []).filter(el => el != null);
                     if (validElements.length === 0) return Promise.resolve();
-                    validElements.forEach((el) => el?.classList?.add("mathjax-pending"));
+                    validElements.forEach(el => el?.classList?.add("mathjax-pending"));
                     return MathJax.typesetPromise(validElements)
                     .then(() => {
-                        validElements.forEach((el) =>
-                        el?.classList?.remove("mathjax-pending")
-                        );
+                        validElements.forEach(el => el?.classList?.remove("mathjax-pending"));
                     })
-                    .catch((err) => {
+                    .catch(err => {
                         console.error("MathJax typesetting error:", err);
-                        validElements.forEach((el) =>
-                        el?.classList?.remove("mathjax-pending")
-                        );
+                        validElements.forEach(el => el?.classList?.remove("mathjax-pending"));
                     });
                 } else {
                     console.warn("MathJax not ready.");
@@ -347,38 +374,30 @@
                 return;
             }
             let originalActiveTabId = null;
-            const targetTabId =
-            contentElementId === "study-guide-content" ? "guide" : "sheet";
+            const targetTabId = contentElementId === "study-guide-content" ? "guide" : "sheet";
             const currentActiveButton = document.querySelector(".output-tabs .tab-button.active");
-            if (currentActiveButton)
-            originalActiveTabId = currentActiveButton.id.replace("-tab-button", "");
+            if (currentActiveButton) originalActiveTabId = currentActiveButton.id.replace("-tab-button", "");
             const isTargetVisible = parentContainer.classList.contains("active-output");
             if (!isTargetVisible) {
                 showOutput(targetTabId);
-                await new Promise((resolve) => setTimeout(resolve, 150));
+                await new Promise(resolve => setTimeout(resolve, 150));
             }
             isPrinting = true;
             buttonElement.disabled = true;
             const originalButtonHTML = buttonElement.innerHTML;
-            buttonElement.innerHTML =
-            '<span class="material-symbols-outlined" style="animation: spin 1s linear infinite;">progress_activity</span> Preparing...'; // Using Material Symbol for spinner
+            buttonElement.innerHTML = '<span class="material-symbols-outlined" style="animation: spin 1s linear infinite;">progress_activity</span> Preparing...'; // Using Material Symbol for spinner
             parentContainer.classList.add("print-target-container");
-            await new Promise((resolve) => setTimeout(resolve, 100));
+            await new Promise(resolve => setTimeout(resolve, 100));
             try {
                 window.print();
             } catch (error) {
                 console.error("Error invoking print:", error);
                 displayError("Could not open print dialog.");
             } finally {
-                if (parentContainer)
-                    parentContainer.classList.remove("print-target-container");
-                if (
-                    !isTargetVisible &&
-                    originalActiveTabId &&
-                    originalActiveTabId !== targetTabId
-                ) {
+                if (parentContainer) parentContainer.classList.remove("print-target-container");
+                if (!isTargetVisible && originalActiveTabId && originalActiveTabId !== targetTabId ) {
                     showOutput(originalActiveTabId);
-                    await new Promise((resolve) => setTimeout(resolve, 50));
+                    await new Promise(resolve => setTimeout(resolve, 50));
                 }
                 if (buttonElement) {
                     buttonElement.disabled = false;
@@ -407,14 +426,12 @@
             }
             if (downloadGuideBtn) downloadGuideBtn.disabled = true;
             if (downloadSheetBtn) downloadSheetBtn.disabled = true;
-            let { guideMarkdown, sheetMarkdown, stepsData, parseError } =
-            parseAIResponse(aiRawText);
+            let { guideMarkdown, sheetMarkdown, parseError } = parseAIResponse(aiRawText);
             if (parseError) {
                 console.warn("Parse Error:", parseError);
                 if (errorMessageDiv) {
                     const currentError = errorMessageDiv.textContent;
-                    errorMessageDiv.textContent =
-                    `Warning: ${parseError}` + (currentError ? ` | ${currentError}` : "");
+                    errorMessageDiv.textContent = `Warning: ${parseError}` + (currentError ? ` | ${currentError}` : "");
                     errorMessageDiv.style.display = "block";
                 }
             }
@@ -427,36 +444,26 @@
                 let elementsToTypeset = [];
                 const guidePlaceholder = "<p><i>No Study Guide content generated/extracted.</i></p>";
                 const sheetPlaceholder = "<p><i>No Reference Sheet content generated/extracted.</i></p>";
-                if (
-                    guideMarkdown &&
-                    guideMarkdown.replace(/### Study Guide\s*/i, "").trim()
-                ) {
+                if (guideMarkdown && guideMarkdown.replace(/### Study Guide\s*/i, "").trim()) {
                     studyGuideContent.innerHTML = guideMarkdown;
                     elementsToTypeset.push(studyGuideContent);
                 } else {
                     studyGuideContent.innerHTML = guidePlaceholder;
                 }
-                if (
-                    sheetMarkdown &&
-                    sheetMarkdown.replace(/### Reference Sheet\s*/i, "").trim()
-                ) {
+                if (sheetMarkdown && sheetMarkdown.replace(/### Reference Sheet\s*/i, "").trim()) {
                     if (sheetMarkdown.includes('```<div class="desmos-graph')) {
-                        const desmosGraph = sheetMarkdown.match(
-                            /```<div class="desmos-graph"[^>]*>([\s\S]*?)<\/div>```/g
-                        );
+                        const desmosGraph = sheetMarkdown.match(/```<div class="desmos-graph"[^>]*>([\s\S]*?)<\/div>```/g);
                         if (desmosGraph) {
-                            desmosGraph.forEach((graph) => {
+                            desmosGraph.forEach(graph => {
                                 const newGraph = graph.slice(3, -3);
                                 sheetMarkdown = sheetMarkdown.replace(graph, newGraph);
                             });
                         }
                     }
                     if (sheetMarkdown.includes('`<div class="desmos-graph"')) {
-                        const desmosGraph = sheetMarkdown.match(
-                            /`<div class="desmos-graph"[^>]*>([\s\S]*?)<\/div>`/g
-                        );
+                        const desmosGraph = sheetMarkdown.match(/`<div class="desmos-graph"[^>]*>([\s\S]*?)<\/div>`/g);
                         if (desmosGraph) {
-                            desmosGraph.forEach((graph) => {
+                            desmosGraph.forEach(graph => {
                                 const newGraph = graph.slice(1, -1);
                                 sheetMarkdown = sheetMarkdown.replace(graph, newGraph);
                             });
@@ -481,8 +488,7 @@
                 }
 
                 const hasGuideContent = studyGuideContent.innerHTML !== guidePlaceholder;
-                const hasSheetContent =
-                    referenceSheetContent.innerHTML !== sheetPlaceholder;
+                const hasSheetContent = referenceSheetContent.innerHTML !== sheetPlaceholder;
                 if (downloadGuideBtn) {
                     downloadGuideBtn.disabled = !hasGuideContent;
                 }
@@ -539,6 +545,7 @@
                     },
                     body: JSON.stringify({
                         text: homeworkText,
+                        token: window.token || null, // Use the global token if available
                     }),
                 });
                 if (!response.ok) {
@@ -550,9 +557,7 @@
                         else {
                             const txt = await response.text();
                             console.error("API error body:", txt);
-                            errorMsg = `API Error (${response.status}): ${
-                            response.statusText || "Server error"
-                            }. Check logs: ${txt.substring(0, 100)}`;
+                            errorMsg = `API Error (${response.status}): ${response.statusText || "Server error"}. Check logs: ${txt.substring(0, 100)}`;
                         }
                     } catch (e) {
                         const rawTxt = await response
@@ -588,12 +593,12 @@
 
         // Download Button Listeners
         if (downloadGuideBtn) {
-            downloadGuideBtn.addEventListener("click", (event) => {
+            downloadGuideBtn.addEventListener("click", event => {
                 downloadViaPrint("study-guide-content", event.currentTarget);
             });
         }
         if (downloadSheetBtn) {
-            downloadSheetBtn.addEventListener("click", (event) => {
+            downloadSheetBtn.addEventListener("click", event => {
                 downloadViaPrint("reference-sheet-content", event.currentTarget);
             });
         }
@@ -615,12 +620,9 @@
 
         // Final check if generateOutput is globally accessible
         if (!window.generateOutput || typeof window.generateOutput !== "function") {
-            console.error(
-                "CRITICAL: generateOutput function failed to be defined on window!"
-            );
+            console.error("CRITICAL: generateOutput function failed to be defined on window!");
             if (errorMessageDiv) {
-                errorMessageDiv.textContent =
-                    "Error: Core function generateOutput failed to initialize.";
+                errorMessageDiv.textContent = "Error: Core function generateOutput failed to initialize.";
                 errorMessageDiv.style.display = "block";
             }
         }
@@ -632,10 +634,10 @@
       * ----------------------
       * Initializes and configures Desmos graphing calculators for mathematical visualization
       * Handles parsing of LaTeX expressions and calculator setup for each graph container
-      */
-        function activateDesmos() {
+    */
+    function activateDesmos() {
         const graphs = document.querySelectorAll(".desmos-graph");
-        graphs.forEach((graph) => {
+        graphs.forEach(graph => {
             if (!graph) {
                 console.warn("Desmos graph element not valid.");
                 return;
