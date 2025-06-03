@@ -20,7 +20,14 @@ export const POST: APIRoute = async ({ request }) => {
     const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
     const file = new File([blob], `${token}.json`, { type: 'application/json' });
 
-    const upload_response = await utapi.uploadFiles(file);
+    const all_files = await utapi.listFiles();
+    const existing_file = all_files.files.find(file => file.name === `${token}.json`);
+    var upload_response = {}
+    if (existing_file) {
+      upload_response = existing_file;
+    } else {
+      upload_response = await utapi.uploadFiles(file);
+    }
 
     return new Response(
       JSON.stringify({ status: 'success', upload_response: upload_response, generated_token: token }),

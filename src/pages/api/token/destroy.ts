@@ -11,10 +11,10 @@ export const POST: APIRoute = async ({ request }) => {
   try {
     const { token } = await request.json();
 
-    const upload_response = await utapi.deleteFiles(`${token}.json`);
+    const delete_response = await utapi.deleteFiles(`${token}.json`);
 
     return new Response(
-      JSON.stringify({ status: 'success', upload_response: upload_response, removed_token: token }),
+      JSON.stringify({ status: 'success', delete_response: delete_response, removed_token: token }),
       {
         status: 200,
         headers: { 'Content-Type': 'application/json' },
