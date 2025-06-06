@@ -43,27 +43,31 @@ const providers = {
   xai: xai,
 }
 
-import config from '../../lib/config';
+import config from '../../../lib/config';
 
 type ProviderKey = keyof typeof providers;
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const { text, understanding, provider, model } = await request.json();
-
-    // Compose the prompt
-    const userPrompt = `${config.systemPrompt}\n\n[Understanding Level: ${understanding}]\n\n${text}`;
+    const { text: userPrompt } = await request.json();
 
     // Generate the response using vercel ai-sdk
-    const real_provider = Object.keys(provider_maps).find(p => provider_maps[p as ProviderKey].includes(provider as ProviderKey)) as unknown as ProviderKey;
+
+    const provider = Object.keys(provider_maps).find(provider => provider_maps[provider as ProviderKey].includes(config.provider as ProviderKey)) as unknown as ProviderKey;
     const { text: generatedText } = await generateText({
-      model: providers[real_provider](model),
+      model: providers[provider](config.model),
       system: config.systemPrompt,
       prompt: userPrompt,
     });
 
+    marked.setOptions({
+      breaks: true,
+      gfm: true,
+    });
+    const htmlText = marked.parse(generatedText);
+
     return new Response(
-      JSON.stringify({ generatedText: marked.parse(generatedText) }),
+      JSON.stringify({ generatedText: htmlText }),
       {
         status: 200,
         headers: { 'Content-Type': 'application/json' },
