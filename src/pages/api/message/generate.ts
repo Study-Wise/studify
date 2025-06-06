@@ -36,7 +36,7 @@ const provider_maps = {
   ],
 }
 
-const providers = {
+const providerFunctions = {
   openai: openai,
   anthropic: anthropic,
   google: google,
@@ -44,26 +44,28 @@ const providers = {
 }
 
 import config from '../../../lib/config';
+import { providers } from '../../../lib/models';
 
-type ProviderKey = keyof typeof providers;
+type ProviderKey = keyof typeof providerFunctions;
 
 export const POST: APIRoute = async ({ request }) => {
   try {
     const { text: userPrompt, token: user_token, settings: userSettings } = await request.json();
 
     // Generate the response using vercel ai-sdk
+    let userModel = userSettings.model || config.model;
+    let userProvider = (Object.keys(providers) as Array<keyof typeof providers>).find( (provider: keyof typeof providers) => (providers[provider].models as Record<string, { name: string }>)[userModel]) || config.provider;
 
-    let userProvider = userSettings.provider || config.provider;
-    if (!Object.keys(provider_maps).find(provider => provider_maps[provider as ProviderKey].includes(userProvider as ProviderKey)) as unknown as ProviderKey) {
+    if (!Object.keys(provider_maps).find(provider => provider_maps[provider as ProviderKey].includes(userProvider))) {
       userProvider = config.provider;
     }
-    let provider = Object.keys(provider_maps).find(provider => provider_maps[provider as ProviderKey].includes(userProvider as ProviderKey)) as unknown as ProviderKey;
+    let provider = Object.keys(provider_maps).find(provider => provider_maps[provider as ProviderKey].includes(userProvider)) as ProviderKey;
     
-    let userModel = userSettings.model || config.model;
-    if (!providers[provider](userModel)) {
+    if (!providerFunctions[provider](userModel)) {
       userModel = config.model;
     }
-    let model = providers[provider](userModel);
+    
+    let model = providerFunctions[provider](userModel);
 
 
     const { text: generatedText } = await generateText({
