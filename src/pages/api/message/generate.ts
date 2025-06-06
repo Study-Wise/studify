@@ -51,7 +51,6 @@ type ProviderKey = keyof typeof providerFunctions;
 export const POST: APIRoute = async ({ request }) => {
   try {
     const { text: userPrompt, token: user_token, settings: userSettings } = await request.json();
-
     // Generate the response using vercel ai-sdk
     let userModel = userSettings.model || config.model;
     let userProvider = (Object.keys(providers) as Array<keyof typeof providers>).find( (provider: keyof typeof providers) => (providers[provider].models as Record<string, { name: string }>)[userModel]) || config.provider;
