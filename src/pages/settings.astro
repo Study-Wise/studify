@@ -5,19 +5,12 @@ import SettingsScript from '../scripts/settings.astro';
 import '../styles/pages/settings.scss';
 
 import config from '../lib/config';
-import { providers, models } from '../lib/models';
+import { models } from '../lib/models';
 
 const settings = [
   {
-    id: 'provider',
-    name: 'AI Provider',
-    options: providers,
-    default: config.provider,
-  }, 
-  {
     id: 'model',
     name: 'Model',
-    dependencies: ['provider'],
     options: models,
     default: config.model,
   }
@@ -32,9 +25,10 @@ const settings = [
           <label for={setting.id}>{setting.name}:</label>
           {Array.isArray(setting.options) ? (
             <select id={setting.id} name={setting.id} value={setting.default}>
-              {setting.options.map(option => (
-                <option value={option} selected={option === setting.default}>{option.name || option}</option>
-              ))}
+              {setting.options.map(option => {
+                const currKey = Object.keys(setting.options).find(o => setting.options[o] === option);
+                return <option value={currKey} selected={currKey === setting.default}>{option.name || currKey}</option>
+              })}
             </select>
           ) : typeof setting.options === 'object' ? (
             <select id={setting.id} name={setting.id} value={setting.options[setting.default]}>
