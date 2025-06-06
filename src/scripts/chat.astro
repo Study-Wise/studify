@@ -1,4 +1,21 @@
 <script is:inline>
+    let userSettings = {};
+    // Initialize form values from localStorage
+    window.addEventListener('DOMContentLoaded', () => {
+      try {
+        userSettings = JSON.parse(localStorage.getItem('settings')) || {};
+      } catch (e) {}
+      const settingIds = [
+        ...Array.from(document.querySelectorAll('#settings-form [id]')).map(el => el.id)
+      ];
+      for (const setting of settingIds) {
+        if (userSettings[setting]) {
+          const el = document.getElementById(setting);
+          if (el) el.value = userSettings[setting];
+        }
+      }
+    });
+
     async function generateToken(existingToken) {
         var resp = await fetch('/api/token/generate', {
             method: 'POST',
@@ -57,23 +74,6 @@
     });
 </script>
 <script is:inline>
-    let userSettings = {};
-    // Initialize form values from localStorage
-    window.addEventListener('DOMContentLoaded', () => {
-      try {
-        userSettings = JSON.parse(localStorage.getItem('settings')) || {};
-      } catch (e) {}
-      const settingIds = [
-        ...Array.from(document.querySelectorAll('#settings-form [id]')).map(el => el.id)
-      ];
-      for (const setting of settingIds) {
-        if (userSettings[setting]) {
-          const el = document.getElementById(setting);
-          if (el) el.value = userSettings[setting];
-        }
-      }
-    });
-
     /* Main Client-Side JavaScript */
 
     // Application Configuration
