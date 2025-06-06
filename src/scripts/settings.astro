@@ -31,12 +31,18 @@ const { settings } = Astro.props;
 
   function handleDependentChanges(el, dep) {
     el.addEventListener('change', () => {
-      const value = el.value;
+      dependentChangeActions(el, dep);
+    });
+  }
+
+  function dependentChangeActions(el, dep) {
+    const value = el.value;
       const setting = settings.find(s => s.id === dep);
       const dependentSettings = settings.filter(s => s.dependencies && s.dependencies.includes(dep));
       dependentSettings.forEach(s => {
         const sEl = document.getElementById(s.id);
         const id = `${s.id}s`;
+        console.log(setting.options)
         const options = setting.options[value][id]
         sEl.querySelectorAll('option').forEach(o => o.remove());
         Object.keys(options).forEach(o => {
@@ -46,8 +52,7 @@ const { settings } = Astro.props;
           sEl.appendChild(option);
         });
 
-        setSetting(s.id, Object.keys(options)[0]);
-      });
+      setSetting(s.id, Object.keys(options)[0]);
     });
   }
 
@@ -71,12 +76,23 @@ const { settings } = Astro.props;
     const settingIds = settings.map(s => s.id);
     
     activateDependencies()
-    for (const setting of settingIds) {
-      if (userSettings[setting]) {
-        const el = document.getElementById(setting);
-        console.log(userSettings[setting])
+    for (const settingId of settingIds) {
+      if (userSettings[settingId]) {
+        const el = document.getElementById(settingId);
+        console.log(userSettings[settingId])
+
         if (el) el.value = userSettings[setting];
       }
     }
+    settings.forEach(setting => {
+      if (setting.dependencies) {
+        setting.dependencies.forEach(dependency => {
+          const elem = document.getElementById(dependency);
+          if (elem) {
+            dependentChangeActions(elem, dependency)
+          }
+        });
+      }
+    });
   });
 </script>

@@ -35,6 +35,6 @@ const providers = {
     },
 }
 
-const models = Object.values(providers).flatMap(p => p.models);
+const models = Object.values(providers).flatMap(p => Object.values(p.models));
 
 export { providers, models };

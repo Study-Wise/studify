@@ -1,6 +1,5 @@
 <script is:inline>
     let userSettings = {};
-    // Initialize form values from localStorage
     window.addEventListener('DOMContentLoaded', () => {
       try {
         userSettings = JSON.parse(localStorage?.getItem('settings') || '{}') || {};
@@ -18,29 +17,25 @@
                 'Accept': 'application/json'
             },
             body: JSON.stringify({
-                token: existingToken || null // Use existing token if provided, otherwise generate a new one
+                token: existingToken || null
             }),
-            keepalive: true // Ensure the request is kept alive for the duration of the session
+            keepalive: true
         });
 
         var json = await resp.json() || {};
 
         if (typeof json === 'object' && 'status' in json && json.status === 'success') {
-            // Token generation successful, proceed with the chat functionality
-            window.token = json.token; // Store the token globally for chat functionality
+            window.token = json.token;
             console.log('Token generated successfully:', json.token);
         } else {
-            // Handle error in token generation
-            window.token = null; // Ensure token is null if generation fails
+            window.token = null;
             console.error('Error generating token:', json);
             throw new Error('Failed to generate token for thread functionality.');
         }
     }
 
     async function destroyToken(token) {
-        // Check if the token is set before proceeding
         if (window.token) {
-            // Send a request to invalidate the token
             var resp = await fetch('/api/token/destroy', {
                 method: 'POST',
                 headers: {
@@ -50,7 +45,7 @@
                 body: JSON.stringify({
                     token: window.token
                 }),
-                keepalive: true // Ensure the request is kept alive for the duration of the session
+                keepalive: true
             })
 
             var json = await resp.json() || {};
@@ -74,13 +69,7 @@
     // Application Configuration
     const API_ENDPOINT = "/api/message/generate"; // Base endpoint for the generation API
 
-    /*
-      * Main Initialization
-      * -----------------
-      * Sets up all event listeners and UI handlers once the DOM is fully loaded.
-    */
     document.addEventListener("DOMContentLoaded", () => {
-        // Cache DOM Elements
         const textInput = document.getElementById("text-paste");
         const generateButton = document.getElementById("generate-button");
         const spinner = generateButton?.querySelector(".spinner");
@@ -91,14 +80,7 @@
         const downloadGuideBtn = document.getElementById("download-guide-pdf");
         const downloadSheetBtn = document.getElementById("download-sheet-pdf");
 
-        // Application State
         let isPrinting = false;
-
-        /*
-          * UI Control Functions
-          * ------------------
-          * Functions that handle user interface updates and interactions
-        */
 
         /**
           * Shows/hides output sections based on selected tab
@@ -151,7 +133,7 @@
             if (isLoading) {
                 spinner && (spinner.style.display = "inline-block");
                 if (generateButton) generateButton.disabled = true;
-                const icon = generateButton?.querySelector("i.material-symbols-outlined"); // Target the specific icon
+                const icon = generateButton?.querySelector("i.material-symbols-outlined");
                 icon && (icon.style.display = "none");
                 if (errorMessageDiv) {
                     errorMessageDiv.style.display = "none";
@@ -171,8 +153,8 @@
             } else {
                 spinner && (spinner.style.display = "none");
                 if (generateButton) generateButton.disabled = false;
-                const icon = generateButton?.querySelector("i.material-symbols-outlined"); // Target the specific icon
-                icon && (icon.style.display = "inline-block"); // Or "flex" if it was a flex item
+                const icon = generateButton?.querySelector("i.material-symbols-outlined");
+                icon && (icon.style.display = "inline-block");
             }
             } catch (err) {
                 console.error("Error in setLoadingState:", err);
@@ -232,12 +214,6 @@
             }
         }
 
-        /*
-          * Content Processing Functions
-          * -------------------------
-          * Functions that handle parsing and processing of AI-generated content
-        */
-
         /**
           * Parses the raw AI response into separate guide and sheet content
           * @param {string} aiRawText - The raw text response from the AI
@@ -251,9 +227,7 @@
             const sheetHeader = "### Reference Sheet";
 
             // Split guide and sheet content
-            const sheetIndex = aiRawText
-            .toLowerCase()
-            .indexOf(sheetHeader.toLowerCase());
+            const sheetIndex = aiRawText.toLowerCase().indexOf(sheetHeader.toLowerCase());
             if (sheetIndex !== -1) {
                 guideMarkdown = aiRawText.substring(0, sheetIndex);
                 sheetMarkdown = aiRawText.substring(sheetIndex);
@@ -299,12 +273,6 @@
             }
         }
 
-        /*
-          * Print/Export Functions
-          * --------------------
-          * Functions that handle printing and exporting content
-        */
-
         /**
           * Triggers the browser's print dialog for content export
           * @param {string} contentElementId - ID of the element containing content to print
@@ -346,7 +314,7 @@
             isPrinting = true;
             buttonElement.disabled = true;
             const originalButtonHTML = buttonElement.innerHTML;
-            buttonElement.innerHTML = '<span class="material-symbols-outlined" style="animation: spin 1s linear infinite;">progress_activity</span> Preparing...'; // Using Material Symbol for spinner
+            buttonElement.innerHTML = '<span class="material-symbols-outlined" style="animation: spin 1s linear infinite;">progress_activity</span> Preparing...';
             parentContainer.classList.add("print-target-container");
             await new Promise(resolve => setTimeout(resolve, 100));
             try {
@@ -367,12 +335,6 @@
                 isPrinting = false;
             }
         }
-
-        /*
-          * Content Display Functions
-          * ----------------------
-          * Functions that handle rendering and displaying generated content
-        */
 
         /**
           * Processes and displays the AI-generated content
@@ -439,7 +401,6 @@
                 }
                 await typesetMathJax(elementsToTypeset);
 
-                // Activate Desmos graphs if any
                 if (typeof activateDesmos === "function") {
                     try {
                         activateDesmos();
@@ -457,7 +418,7 @@
                     downloadSheetBtn.disabled = !hasSheetContent;
                 }
                 if (outputSection) outputSection.style.display = "block";
-                showOutput("guide"); // Default to showing the guide
+                showOutput("guide");
                 if (hasGuideContent || hasSheetContent) {
                     setTimeout(() => {
                         outputSection?.scrollIntoView({
@@ -475,10 +436,8 @@
             }
         }
 
-        // --- Global function assignments & Event Listeners ---
         /**
           * Main Generation Function
-          * ----------------------
           * Handles the submission of user input and generation of study materials
           * Coordinates the API call, error handling, and result display
           * @returns {Promise<void>}
@@ -489,7 +448,6 @@
                 return;
             }
             const homeworkText = textInput.value;
-            // User requested to remove the empty check for testing: if ((!homeworkText || !homeworkText.trim()) && false)
             if (!homeworkText || !homeworkText.trim()) {
                 displayError("Please paste homework text.");
                 textInput.focus();
@@ -505,7 +463,8 @@
                     },
                     body: JSON.stringify({
                         text: homeworkText,
-                        token: window.token || null, // Use the global token if available
+                        token: window.token || null,
+                        settings: userSettings || {}
                     }),
                 });
                 if (!response.ok) {
@@ -549,13 +508,8 @@
             }
         };
 
-        // Make showOutput globally accessible if needed by HTML onclick (it is needed for tabs)
         window.showOutput = showOutput;
 
-        // --- Setup Event Listeners ---
-        // Generate button is handled by onclick="generateOutput()" in HTML
-
-        // Download Button Listeners
         if (downloadGuideBtn) {
             downloadGuideBtn.addEventListener("click", event => {
                 downloadViaPrint("study-guide-content", event.currentTarget);
@@ -567,22 +521,17 @@
             });
         }
 
-        // ***** ADDED: Command/Ctrl + Enter shortcut for text input *****
         if (textInput && generateButton) {
             textInput.addEventListener("keydown", function (event) {
-            // Check for Command (Mac) or Control (Windows/Linux) + Enter
-            if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
-                event.preventDefault(); // Prevent new line in textarea
-                if (!generateButton.disabled) {
-                    // Check if button is not already processing
-                    window.generateOutput(); // Call the existing generate function
+                if (event.key === "Enter" && !event.shiftKey) {
+                    event.preventDefault();
+                    if (!generateButton.disabled) {
+                        window.generateOutput();
+                    }
                 }
-            }
             });
         }
-        // ***** END ADDED SECTION *****
 
-        // Final check if generateOutput is globally accessible
         if (!window.generateOutput || typeof window.generateOutput !== "function") {
             console.error("CRITICAL: generateOutput function failed to be defined on window!");
             if (errorMessageDiv) {
@@ -591,14 +540,7 @@
             }
         }
     });
-    // End DOMContentLoaded
 
-    /*
-      * Desmos Graph Integration
-      * ----------------------
-      * Initializes and configures Desmos graphing calculators for mathematical visualization
-      * Handles parsing of LaTeX expressions and calculator setup for each graph container
-    */
     function activateDesmos() {
         const graphs = document.querySelectorAll(".desmos-graph");
         graphs.forEach(graph => {
@@ -606,12 +548,6 @@
                 console.warn("Desmos graph element not valid.");
                 return;
             }
-            // graph.dataset might not exist if it's not a valid HTML element or in some rare scenarios
-            // Checking graph.getAttribute('latex') is more direct for this specific use case.
-            // if (!graph.dataset) {
-            //     console.warn("Desmos graph dataset not found.");
-            //     return;
-            // }
             if (!window.Desmos) {
                 console.warn("Desmos calculator not loaded.");
                 return;
@@ -631,7 +567,6 @@
                     if (Array.isArray(LaTeX)) {
                         LaTeX.forEach((l, i) => {
                             if (typeof l === "string") {
-                                // Ensure it's a string before setting
                                 calculator.setExpression({ id: `exp${i + 1}`, latex: l });
                             } else {
                                 console.warn(`Desmos expression at index ${i} is not a string:`, l);
@@ -643,7 +578,7 @@
                     calculator.setDefaultState(newDefaultState);
                 } catch (e) {
                     console.error("Error parsing/setting Desmos graph data:", e);
-                    console.error("Problematic LaTeX string:", graph.getAttribute("latex")); // Log the original problematic string
+                    console.error("Problematic LaTeX string:", graph.getAttribute("latex"));
                     graph.innerHTML = `<p><i>Error loading graph. Check console for details.</i><pre>${e}</pre></p>`;
                 }
             } else {

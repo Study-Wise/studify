@@ -49,13 +49,25 @@ type ProviderKey = keyof typeof providers;
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const { text: userPrompt } = await request.json();
+    const { text: userPrompt, token: user_token, settings: userSettings } = await request.json();
 
     // Generate the response using vercel ai-sdk
 
-    const provider = Object.keys(provider_maps).find(provider => provider_maps[provider as ProviderKey].includes(config.provider as ProviderKey)) as unknown as ProviderKey;
+    let userProvider = userSettings.provider || config.provider;
+    if (!Object.keys(provider_maps).find(provider => provider_maps[provider as ProviderKey].includes(userProvider as ProviderKey)) as unknown as ProviderKey) {
+      userProvider = config.provider;
+    }
+    let provider = Object.keys(provider_maps).find(provider => provider_maps[provider as ProviderKey].includes(userProvider as ProviderKey)) as unknown as ProviderKey;
+    
+    let userModel = userSettings.model || config.model;
+    if (!providers[provider](userModel)) {
+      userModel = config.model;
+    }
+    let model = providers[provider](userModel);
+
+
     const { text: generatedText } = await generateText({
-      model: providers[provider](config.model),
+      model: model,
       system: config.systemPrompt,
       prompt: userPrompt,
     });

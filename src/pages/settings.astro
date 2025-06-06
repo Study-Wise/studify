@@ -1,9 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+import SettingsScript from '../scripts/settings.astro';
 import '../styles/pages/settings.scss';
 
 import config from '../lib/config';
-import { providers } from '../lib/models';
+import { providers, models } from '../lib/models';
 
 const settings = [
   {
@@ -16,7 +18,7 @@ const settings = [
     id: 'model',
     name: 'Model',
     dependencies: ['provider'],
-    options: providers[config.provider].models,
+    options: models,
     default: config.model,
   }
 ];
