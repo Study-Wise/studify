@@ -115,6 +115,10 @@
   border-bottom: 1px solid $section-title-border;
   padding-bottom: 12px;
   flex-wrap: wrap;
+
+  & + .output-content, & + .output-content + .output-content {
+    padding-block-start: 0;
+  }
 }
 
 .tab-button {
@@ -223,5 +227,9 @@
 
   p {
     margin-bottom: 1em;
+
+    &.correct-explanation {
+      margin-top: 1em;
+    }
   }
 }

@@ -1,4 +1,10 @@
-<script is:inline>
+---
+const { page } = Astro.props;
+---
+<script is:inline data-page={page}>
+    const page = document.currentScript.dataset.page;
+    var userToken = '';
+
     let userSettings = {};
     window.addEventListener('DOMContentLoaded', () => {
       try {
@@ -22,20 +28,22 @@
             keepalive: true
         });
 
+        if (!resp.ok) return
+
         var json = await resp.json() || {};
 
         if (typeof json === 'object' && 'status' in json && json.status === 'success') {
-            window.token = json.token;
-            console.log('Token generated successfully:', json.token);
+            console.log('Token generated successfully:', json.generated_token);
+            userToken = json.generated_token;
         } else {
-            window.token = null;
+            userToken = null;
             console.error('Error generating token:', json);
             throw new Error('Failed to generate token for thread functionality.');
         }
     }
 
     async function destroyToken(token) {
-        if (window.token) {
+        if (userToken) {
             var resp = await fetch('/api/token/destroy', {
                 method: 'POST',
                 headers: {
@@ -43,10 +51,12 @@
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
-                    token: window.token
+                    token: userToken
                 }),
                 keepalive: true
             })
+
+            if (!resp.ok) return
 
             var json = await resp.json() || {};
             if (typeof json === 'object' && 'status' in json && json.status === 'success') {
@@ -59,13 +69,12 @@
 
     document.addEventListener('visibilitychange', async event => {
         if (document.visibilityState === "hidden") {
-            destroyToken(window.token)
+            destroyToken(userToken)
         } else {
-            generateToken(window.token)
+            generateToken(userToken)
         }
     });
-</script>
-<script is:inline>
+
     // Application Configuration
     const API_ENDPOINT = "/api/message/generate"; // Base endpoint for the generation API
 
@@ -87,6 +96,18 @@
           * @param {string} type - The type of output to show ('guide' or 'sheet')
           */
         function showOutput(type) {
+            if (page === 'home') {
+                showHomeOutput(type);
+            }
+            if (page === 'chat') {
+                openChatCanvas(type);
+            }
+            else {
+                console.error("Invalid page:", page);
+            }
+        }
+
+        function showHomeOutput(type) {
             try {
                 const isActive = el => el?.classList.contains("active-output");
                 const guideOutputEl = document.getElementById("guide-output");
@@ -122,6 +143,10 @@
             } catch (error) {
                 console.error("Error in showOutput function:", error);
             }
+        }
+
+        function openChatCanvas(type) {
+
         }
 
         /**
@@ -436,6 +461,10 @@
             }
         }
 
+        function addMessage(aiRawText) {
+            
+        }
+
         /**
           * Main Generation Function
           * Handles the submission of user input and generation of study materials
@@ -463,7 +492,7 @@
                     },
                     body: JSON.stringify({
                         text: homeworkText,
-                        token: window.token || null,
+                        token: userToken || null,
                         settings: userSettings || {}
                     }),
                 });
@@ -490,7 +519,12 @@
                 }
                 const data = await response.json();
                 if (data?.generatedText) {
-                    await displayResults(data.generatedText);
+                    if (page === 'home') {
+                        await displayResults(data.generatedText);
+                    }
+                    if (page === 'chat') {
+                        await addMessage(data.generatedText);
+                    }
                 } else {
                     console.error("Invalid data format:", data);
                     throw new Error("Invalid/empty response from AI.");

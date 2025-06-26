@@ -1,6 +1,11 @@
 @use '../variables.scss' as *;
+@use 'sass:math';
 
-@mixin stepsBorder($bor: lightgray, $bdr: 2rem, $pad: 1rem, $depth: 0) {
+$dbor: lightgray;
+$dbdr: 2rem;
+$dpad: 1rem;
+
+@mixin stepsBorder($bor: $dbor, $bdr: $dbdr, $pad: $dpad, $depth: 0) {
   padding: $pad;
   border: solid 1px $bor;
   border-radius: #{$bdr - $pad * $depth};
@@ -9,9 +14,9 @@
 /* Interactive Steps Component */
 .step-by-step {
   /* Custom properties for consistent styling */
-  --bor: lightgray;
-  --bdr: 2rem;
-  --pad: 1rem;
+  --bor: #{$dbor};
+  --bdr: #{$dbdr};
+  --pad: #{$dpad};
 
   box-sizing: border-box;
 
@@ -19,7 +24,7 @@
 
   display: flex;
   flex-direction: column;
-  gap: calc(var(--pad) / 4);
+  gap: var(--pad);
 
   .divider {
     border: none;
@@ -44,19 +49,18 @@
       @include stepsBorder($depth: 1);
 
       &:has(.step-question-choice > .step-question-radio:checked) {
-        .step-question:has(.step-question-radio.correct) {
-          background-color: #90ee90;
-          &::before {
-            content: "☑";
-          }
+        .step-question-choice:has(.step-question-radio.correct:checked) {
+          background-color: hsl(120 73% 75%);
+        }
+        .step-question-choice:has(.step-question-radio.correct) {
+          background-color: hsl(120 73% 75% / 0.5);
         }
 
-        .step-question:not(:has(.step-question-radio.correct)) {
-          background-color: #ff9999;
-
-          &::before {
-            content: "☒";
-          }
+        .step-question-choice:has(.step-question-radio:not(.correct):checked) {
+          background-color: hsl(0 100% 80%);
+        }
+        .step-question-choice:has(.step-question-radio:not(.correct)) {
+          background-color: hsl(0 100% 80% / 0.5);
         }
       }
 
@@ -64,18 +68,14 @@
         position: relative;
         background-color: white;
         cursor: pointer;
-        display: flex;
-        gap: var(--gap, 1rem);
+        // display: flex;
+        // gap: var(--gap, 1rem);
+        border-radius: 100dvw;
+        padding-inline: 1ex;
 
         &:hover {
           background-color: lightblue;
         }
-        &::before {
-          content: "☐";
-          place-items: center;
-          place-content: center;
-        }
-
         .step-question-radio {
           visibility: hidden;
           position: absolute;
