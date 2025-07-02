@@ -61,8 +61,8 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 1rem;
   width: 100%;
-  padding-left: 100px;
 
   .header-text-container {
     text-align: left;
@@ -71,6 +71,7 @@ header {
 }
 
 .header-nav {
+  flex: 1;
   margin-left: auto;
   display: flex;
   gap: 15px;
@@ -166,6 +167,7 @@ header {
 
 @media (max-width: 600px) {
   header {
+    min-height: 0;
     min-height: auto;
     padding-block: 0.5rem;
   }

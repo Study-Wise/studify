@@ -1,0 +1,16 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+import ChatScript from '../scripts/chat.astro';
+import '../styles/pages/chat.scss';
+
+import config from '../lib/config';
+import { models } from '../lib/models';
+
+---
+<Layout title="Chat">
+  <section class="chat-section card">
+    <h2><span class="material-symbols-outlined">chat</span>&nbsp;Chat</h2>
+  </section>
+  <!-- <ChatScript page="chat" /> -->
+</Layout> 

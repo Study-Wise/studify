@@ -3,7 +3,9 @@ const { page } = Astro.props;
 ---
 <script is:inline data-page={page}>
     const page = document.currentScript.dataset.page;
-    var userToken = '';
+    
+    var userToken = localStorage.getItem('userToken') || '';
+    var going2ChatWindow = false;
 
     let userSettings = {};
     window.addEventListener('DOMContentLoaded', () => {
@@ -14,7 +16,7 @@ const { page } = Astro.props;
       }
     });
     
-    generateToken()
+    if (!userToken) generateToken()
     async function generateToken(existingToken) {
         var resp = await fetch('/api/token/generate', {
             method: 'POST',
@@ -35,8 +37,10 @@ const { page } = Astro.props;
         if (typeof json === 'object' && 'status' in json && json.status === 'success') {
             console.log('Token generated successfully:', json.generated_token);
             userToken = json.generated_token;
+            localStorage.setItem('userToken', userToken);
         } else {
             userToken = null;
+            localStorage.removeItem('userToken');
             console.error('Error generating token:', json);
             throw new Error('Failed to generate token for thread functionality.');
         }
@@ -51,7 +55,7 @@ const { page } = Astro.props;
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
-                    token: userToken
+                    token: token
                 }),
                 keepalive: true
             })
@@ -68,10 +72,10 @@ const { page } = Astro.props;
     }
 
     document.addEventListener('visibilitychange', async event => {
-        if (document.visibilityState === "hidden") {
-            destroyToken(userToken)
+        if (document.visibilityState === "hidden" && !going2ChatWindow) {
+            if (userToken) destroyToken(userToken)
         } else {
-            generateToken(userToken)
+            if (!userToken) generateToken()
         }
     });
 
