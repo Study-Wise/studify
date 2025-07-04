@@ -1,7 +1,17 @@
 @use '../variables.scss' as *;
 
 body:has(.chat-page) {
-    max-height: 100dvh;
+    height: 100dvh;
+}
+
+header, footer, .chat-header, .chat-toolbar {
+    position: sticky;
+}
+header, .chat-header {
+    top: 0;
+}
+footer, .chat-toolbar {
+    bottom: 0;
 }
 
 .chat-page {
@@ -10,7 +20,7 @@ body:has(.chat-page) {
     // grid-template-rows: auto 1fr;
     // grid-template-columns: auto 1fr;
     // gap: 20px;
-    max-height: 100cqh;
+    position: relative;
 }
 
 .chat-header {
@@ -18,6 +28,7 @@ body:has(.chat-page) {
     box-sizing: border-box;
     padding: 10px;
     border-bottom: 1px solid $section-title-border;
+    background: linear-gradient(120deg, $primary-blue, $primary-cyan);
 
     h2 {
         background-color: $card-bg;
@@ -40,7 +51,6 @@ body:has(.chat-page) {
 .chat-section {
     grid-area: main;
     background-color: $card-bg;
-    max-height: 100cqh;
 
     display: grid;
     grid-template-rows: 1fr auto;

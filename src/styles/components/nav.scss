@@ -1,0 +1,60 @@
+@use '../variables.scss' as *;
+@use 'sass:color';
+
+.header-nav {
+    flex: 1;
+    margin-left: auto;
+    display: flex;
+    gap: 15px;
+
+    &:not(.lite) .nav-btn {
+        background-color: $section-title;
+        transition: background-color 0.2s ease; 
+        color: $header-text;
+        &:hover, &:focus-visible {
+            background-color: color.adjust($section-title, $lightness: -10%);
+        }
+        &.active {
+            background-color: color.adjust($section-title, $lightness: 10%);
+            font-weight: 600;
+            &:hover, &:focus-visible {
+                background-color: color.adjust($section-title, $lightness: 5%);
+            }
+        }
+    }
+    &.lite .nav-btn {
+        color: $section-title;
+        transition: color 0.2s ease; 
+        &:hover, &:focus-visible {
+            color: color.adjust($section-title, $lightness: -10%);
+        }
+        &.active {
+            color: color.adjust($section-title, $lightness: 10%);
+            font-weight: 600;
+            &:hover, &:focus-visible {
+                color: color.adjust($section-title, $lightness: 5%);
+            }
+        }
+    }
+  
+    .nav-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.25em;
+        text-decoration: none;
+        padding: 8px 12px;
+        border-radius: 0.5em;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+}
+  
+@media (max-width: 768px) {
+    .header-nav {
+        gap: 10px;
+        .nav-btn {
+            padding: 6px 10px;
+            font-size: 0.95rem;
+        }
+    }
+}    

@@ -1,4 +1,3 @@
-@use 'sass:color';
 @use '../variables.scss' as *;
 
 /* Header Styles */
@@ -64,43 +63,21 @@ header {
   gap: 1rem;
   width: 100%;
 
+  &.lite {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    background-color: $card-bg;
+    border-radius: 10px;
+    padding: 10px 20px;
+    box-shadow: 0 5px 15px $card-shadow;
+    border: 1px solid $card-border;
+    width: fit-content;
+  }
+
   .header-text-container {
     text-align: left;
     min-width: 0;
-  }
-}
-
-.header-nav {
-  flex: 1;
-  margin-left: auto;
-  display: flex;
-  gap: 15px;
-
-  .nav-btn {
-    display: flex;
-    align-items: center;
-    gap: 0.25em;
-    color: $header-text;
-    background-color: $section-title;
-    text-decoration: none;
-    padding: 8px 12px;
-    border-radius: 0.5em;
-    transition: background-color 0.2s ease;
-    font-weight: 500;
-    white-space: nowrap;
-
-    &:hover, &:focus-visible {
-      background-color: color.adjust($section-title, $lightness: -10%);
-    }
-
-    &.active {
-      background-color: color.adjust($section-title, $lightness: 10%);
-      font-weight: 600;
-
-      &:hover, &:focus-visible {
-        background-color: color.adjust($section-title, $lightness: 5%);
-      }
-    }
+    color: $section-title;
   }
 }
 
@@ -115,14 +92,6 @@ header {
     line-height: 0;
     .header-logo {
       height: 60px;
-    }
-  }
-
-  .header-nav {
-    gap: 10px;
-    .nav-btn {
-      padding: 6px 10px;
-      font-size: 0.95rem;
     }
   }
 

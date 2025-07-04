@@ -4,7 +4,7 @@ import Header from '../components/Header.astro';
 
 const sTitle = "M.A.T.H.Wise";
 const lTitle = `${sTitle} - AI Math Study Partner`;
-const { title, hideCopyright, container, additionalClasses } = Astro.props;
+const { title, hideCopyright, container, additionalClasses, isChatArea } = Astro.props;
 const noTitle = title === "Home" || title === '' || !title;
 const pTitle = noTitle ? lTitle : `${title} | ${sTitle}`;
 
@@ -71,7 +71,7 @@ additionalClasses.forEach(className => {
     <!-- <link rel="icon" href="images/favicon.ico" type="image/x-icon"> -->
   </head>
   <body data-hide-copyright={hideCopyright}>
-    <Header pTitle={pTitle} />
+    {!isChatArea ? <Header pTitle={pTitle} /> : ''}
     
     <main class={mainClasses.join(' ')}>
       <slot />

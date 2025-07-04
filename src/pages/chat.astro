@@ -1,18 +1,21 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
+import ChatHeader from '../components/ChatHeader.astro';
+
 import ChatScript from '../scripts/chat.astro';
 import '../styles/pages/chat.scss';
 
 import config from '../lib/config';
 import { models } from '../lib/models';
 
-export const hiddenFromNav = true;
+export const inNav = 'hide';
 ---
-<Layout title="Chat" container={false} additionalClasses={['chat-page']} hideCopyright={true}>
-  <section class="chat-header">
+<Layout title="Chat" container={false} isChatArea={true} additionalClasses={['chat-page']} hideCopyright={true}>
+  <header class="chat-header">
     <h2><span class="material-symbols-outlined">chat</span>&nbsp;Chat</h2>
-  </section>
+    <ChatHeader pTitle="Chat" />
+  </header>
   <section class="chat-sidebar">
     <h3>Sidebar</h3>
   </section>

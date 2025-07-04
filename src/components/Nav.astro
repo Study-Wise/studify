@@ -1,0 +1,24 @@
+---
+import { hasIcon,  getIcon } from '../lib/google-icons';
+import '../styles/components/nav.scss';
+const { pages, pTitle, mode } = Astro.props;
+
+const classes = ['header-nav'];
+if (mode === 'lite') classes.push('lite');
+---
+<!-- Navigation -->
+<nav class={classes.join(' ')}>
+    {pages.filter(page => !page.hiddenFromNav).map(page => {
+        const hasAnIcon = hasIcon(page.name.toLowerCase().replace(/\s+/g, '_'));
+        let icon = '';
+        if (hasAnIcon === 'google') {
+            icon = <span class="material-symbols-outlined">{getIcon(page.name.toLowerCase().replace(/\s+/g, '_'))}</span>;
+        } else if (hasAnIcon === 'custom') {
+            icon = <img src={`/assets/icons/${page.name.toLowerCase().replace(/\s+/g, '_')}.svg`} alt={page.name} class="nav-icon" />;
+        }
+        return <a href={page.path} class={pTitle === page.name ? 'active nav-btn' : 'nav-btn'}>
+            {icon}
+            {page.name}
+        </a>
+    })}
+</nav>
