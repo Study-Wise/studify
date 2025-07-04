@@ -35,7 +35,7 @@ body {
   background-color: $body-bg;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: 100dvh;
 
   @media print {
     & {
@@ -104,7 +104,9 @@ body {
 /* Main Content Area */
 main {
   flex-grow: 1;
-  padding: 40px 0;
+  &:not(.chat-page) {
+    padding: 40px 0;
+  }
 }
 
 /* Card Container */
@@ -117,18 +119,24 @@ main {
   border: 1px solid $card-border;
 }
 
-section h2 {
-  color: $section-title;
-  margin-bottom: 25px;
-  border-bottom: 1px solid $section-title-border;
-  padding-bottom: 12px;
-  font-size: 1.6rem;
-  display: flex;
-  align-items: center;
-  font-weight: 600;
+:is(section, .chat-page) {
+  h2 {
+    color: $section-title;
+  
+    font-size: 1.6rem;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    
+    &:not(.chat-header h2) {
+      margin-bottom: 25px;
+      border-bottom: 1px solid $section-title-border;
+      padding-bottom: 12px;
+    }
+  }
 }
 
-section h2 i {
+:is(section, .chat-page) h2 i {
   margin-right: 12px;
   color: #007bff;
 }
@@ -177,17 +185,21 @@ section h2 i {
 }
 
 /* --- Footer --- */
-footer {
+.footer {
   text-align: center;
   margin-top: 40px;
-  padding: 30px 0;
+  padding: 1rem;
   border-top: 1px solid #dee2e6;
   color: $footer-text;
   background-color: $footer-bg;
   font-size: 0.9em;
+
+  [data-hide-copyright="true"] & {
+    margin-top: 0;
+  }
 }
 
-footer p {
+.footer p {
   margin-bottom: 5px;
 }
 
@@ -234,14 +246,16 @@ mjx-container[display="true"] {
   }
 
   main {
-    padding: 30px 0;
+    &:not(.chat-page) {
+      padding: 30px 0;
+    }
   }
 
   .card {
     padding: 25px;
   }
 
-  section h2 {
+  :is(section, .chat-page) h2 {
     font-size: 1.4rem;
   }
 

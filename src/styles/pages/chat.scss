@@ -1,0 +1,68 @@
+@use '../variables.scss' as *;
+
+body:has(.chat-page) {
+    max-height: 100dvh;
+}
+
+.chat-page {
+    display: grid;
+    grid-template-areas: "title title" "main main";
+    // grid-template-rows: auto 1fr;
+    // grid-template-columns: auto 1fr;
+    // gap: 20px;
+    max-height: 100cqh;
+}
+
+.chat-header {
+    grid-area: title;
+    box-sizing: border-box;
+    padding: 10px;
+    border-bottom: 1px solid $section-title-border;
+
+    h2 {
+        background-color: $card-bg;
+        width: fit-content;
+        padding: 10px 20px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px $card-shadow;
+        border: 1px solid $card-border;
+    }
+}
+
+.chat-sidebar {
+    grid-area: sidebar;
+    &:not(.visible) {
+        display: none;
+    }
+}
+
+/* Card Container */
+.chat-section {
+    grid-area: main;
+    background-color: $card-bg;
+    max-height: 100cqh;
+
+    display: grid;
+    grid-template-rows: 1fr auto;
+
+    // Adds space for the scrollbar to prevent layout shift in supporting browsers.
+    // Note: Not supported in Safari or any iOS Browser (WebKit).
+    scrollbar-gutter: stable;
+}
+
+.chat-messages {
+    overflow-y: auto;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 30px;
+}
+
+.chat-toolbar {
+    height: 100px;
+}
+  
+@media (max-width: 768px) {
+    .chat-section {
+        padding: 25px;
+    }
+}

@@ -3,11 +3,11 @@
 
 /* Header Styles */
 header {
+  min-height: 80px;
   background: linear-gradient(120deg, $primary-blue, $primary-cyan);
   color: $header-text;
   padding: 0.75rem;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-  min-height: 80px;
 
   display: flex;
   align-items: center;
@@ -165,10 +165,8 @@ header {
   }
 }
 
-@media (max-width: 600px) {
+@media (width <= 600px) {
   header {
-    min-height: 0;
-    min-height: auto;
     padding-block: 0.5rem;
   }
 

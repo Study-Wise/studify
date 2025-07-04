@@ -10,11 +10,12 @@ const pages = Object.entries(import.meta.glob('/src/pages/*.astro', { eager: tru
     const name = fileName.replace('.astro', '');
     const route = `/${name === 'index' ? '' : name}`;
     const modTyped = mod as Record<string, string[]>;
+    const hiddenFromNav = modTyped?.hiddenFromNav ? modTyped.hiddenFromNav : false;
     let pageTitle = modTyped?.title ? modTyped.title : (name.charAt(0).toUpperCase() + name.slice(1));
     if (name === 'index') pageTitle = 'Home';
-    return { name: pageTitle, path: route };
+    return { name: pageTitle, path: route, hiddenFromNav };
   })
-  .filter((page): page is { name: string; path: string } => !!page)
+  .filter((page): page is { name: string; path: string; hiddenFromNav: boolean } => !!page)
   .sort((a, b) => (a.name === 'Home' ? -1 : (b.name === 'Home' ? 1 : 0)));
 const { pTitle } = Astro.props;
 ---
@@ -32,7 +33,7 @@ const { pTitle } = Astro.props;
       </div>
       <!-- Navigation -->
       <nav class="header-nav">
-        {pages.map(page => {
+        {pages.filter(page => !page.hiddenFromNav).map(page => {
           const hasAnIcon = hasIcon(page.name.toLowerCase().replace(/\s+/g, '_'));
           let icon = '';
           if (hasAnIcon === 'google') {

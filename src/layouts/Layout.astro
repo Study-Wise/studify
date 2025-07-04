@@ -4,12 +4,21 @@ import Header from '../components/Header.astro';
 
 const sTitle = "M.A.T.H.Wise";
 const lTitle = `${sTitle} - AI Math Study Partner`;
-const { title } = Astro.props;
+const { title, hideCopyright, container, additionalClasses } = Astro.props;
 const noTitle = title === "Home" || title === '' || !title;
 const pTitle = noTitle ? lTitle : `${title} | ${sTitle}`;
 
 const copyrightStart = 2025;
 const copyright = new Date().getFullYear();
+
+let mainClasses: string[] = [];
+if (container === false) {}
+else mainClasses.push('container');
+
+additionalClasses.forEach(className => {
+  mainClasses.push(className);
+});
+
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -61,16 +70,16 @@ const copyright = new Date().getFullYear();
     <!-- Optional: Add a favicon -->
     <!-- <link rel="icon" href="images/favicon.ico" type="image/x-icon"> -->
   </head>
-  <body>
+  <body data-hide-copyright={hideCopyright}>
     <Header pTitle={pTitle} />
     
-    <main class="container">
+    <main class={mainClasses.join(' ')}>
       <slot />
     </main>
 
-    <footer>
+    <footer class="footer">
       <div class="container">
-        <p>© {copyright === copyrightStart ? copyright : `${copyrightStart}-${copyright}`} M.A.T.H.Wise. Powered by AI.</p>
+        {hideCopyright ? '' : <p>© {copyright === copyrightStart ? copyright : `${copyrightStart}-${copyright}`} M.A.T.H.Wise. Powered by AI.</p>}
         <p>
           <small>Disclaimer: AI-generated content may contain inaccuracies. Always verify critical information.</small>
         </p>
