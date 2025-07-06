@@ -28,7 +28,15 @@
 html {
     scroll-behavior: smooth;
     scroll-padding-top: 20px;
-    view-transition-name: root;
+    @supports (view-transition-name: root) {
+        view-transition-name: root;
+    }
+}
+
+@supports (view-transition-name: root) {
+    @view-transition {
+        navigation: auto;
+    }
 }
 
 body {
@@ -74,7 +82,7 @@ body {
 }
 
 @media screen {
-    :is(h1, h2, h3, h3, h4, h5, h6, p, ul, ol, li, pre, code, blockquote) {
+    h1, h2, h3, h4, h5, h6, p, ul, ol, li, pre, code, blockquote {
         &:first-child {
             margin-block-start: 0;
         }
@@ -101,9 +109,8 @@ body {
     padding: 0;
     margin: -1px;
     overflow: hidden;
-    clip: rect(0, 0, 0, 0);
+    clip: rect(0 0 0 0);
     white-space: nowrap;
-    border-width: 0;
 }
 
 /* Main Content Area */
