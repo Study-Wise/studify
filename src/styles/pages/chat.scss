@@ -37,6 +37,10 @@ footer, .chat-toolbar {
         box-shadow: 0 5px 15px $card-shadow;
         border: 1px solid $card-border;
     }
+
+    .header-text-container {
+        color: $section-title;
+    }
 }
 
 .chat-container {

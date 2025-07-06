@@ -6,13 +6,16 @@ import Footer from '../components/Footer.astro';
 
 const sTitle = "M.A.T.H.Wise";
 const lTitle = `${sTitle} - AI Math Study Partner`;
-const { title, hideCopyright, container, additionalClasses, isChatArea } = Astro.props;
+const { title, hideCopyright, container, isChatArea } = Astro.props;
+var { additionalClasses } = Astro.props;
 const noTitle = title === "Home" || title === '' || !title;
 const pTitle = noTitle ? lTitle : `${title} | ${sTitle}`;
 
 let mainClasses: string[] = [];
 if (container === false) {}
 else mainClasses.push('container');
+
+if (!additionalClasses) additionalClasses = [];
 
 additionalClasses.forEach(className => {
   mainClasses.push(className);
@@ -64,6 +67,17 @@ additionalClasses.forEach(className => {
           },
         },
       };
+    </script>
+    <script type="speculationrules">
+      {
+        "prerender": [
+          {
+            "where": {
+              "selector_matches": ".header-nav .nav-btn"
+            }
+          }
+        ],
+      }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script" async></script>
     <!-- Optional: Add a favicon -->

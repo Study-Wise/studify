@@ -25,9 +25,12 @@
     }
 }
 
-html {
+:root {
     scroll-behavior: smooth;
     scroll-padding-top: 20px;
+    @supports (scrollbar-gutter: stable) {
+        scrollbar-gutter: stable;
+    }
     @supports (view-transition-name: root) {
         view-transition-name: root;
     }
