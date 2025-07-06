@@ -1,0 +1,10 @@
+---
+import FooterContent from './FooterContent.astro';
+import '../styles/components/footer.scss';
+
+const { hideCopyright } = Astro.props;
+---
+
+<footer class="footer">
+    <FooterContent hideCopyright={hideCopyright} />
+</footer>

@@ -14,7 +14,7 @@ if (mode === 'lite') classes.push('lite');
         if (hasAnIcon === 'google') {
             icon = <span class="material-symbols-outlined">{getIcon(page.name.toLowerCase().replace(/\s+/g, '_'))}</span>;
         } else if (hasAnIcon === 'custom') {
-            icon = <img src={`/assets/icons/${page.name.toLowerCase().replace(/\s+/g, '_')}.svg`} alt={page.name} class="nav-icon" />;
+            icon = <img src={`/assets/icons/${getIcon(page.name.toLowerCase().replace(/\s+/g, '_'))}.svg`} alt={page.name} class="nav-icon" />;
         }
         return <a href={page.path} class={pTitle === page.name ? 'active nav-btn' : 'nav-btn'}>
             {icon}

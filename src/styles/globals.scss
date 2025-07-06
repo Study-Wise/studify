@@ -9,6 +9,8 @@
 // Material Icons Configuration
 .material-symbols-outlined {
   font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+  aspect-ratio: 1;
+  max-height: 1lh;
 }
 
 // Base Styles & CSS Reset
@@ -48,7 +50,9 @@ body {
       > main > .introduction-section,
       > main > .input-section,
       > main > .about-section,
-      > footer {
+      > footer,
+      .chat-toolbar,
+      .header-content-wrapper {
         display: none !important;
         visibility: hidden !important;
       }
@@ -182,25 +186,6 @@ main {
 
 .about-section .about-text p a:hover .text {
   text-decoration: underline;
-}
-
-/* --- Footer --- */
-.footer {
-  text-align: center;
-  margin-top: 40px;
-  padding: 1rem;
-  border-top: 1px solid #dee2e6;
-  color: $footer-text;
-  background-color: $footer-bg;
-  font-size: 0.9em;
-
-  [data-hide-copyright="true"] & {
-    margin-top: 0;
-  }
-}
-
-.footer p {
-  margin-bottom: 5px;
 }
 
 /* --- MathJax Adjustments --- */

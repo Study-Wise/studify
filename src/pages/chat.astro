@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-
+import FooterContent from '../components/FooterContent.astro';
 import ChatHeader from '../components/ChatHeader.astro';
 
 import ChatScript from '../scripts/chat.astro';
@@ -74,7 +74,9 @@ export const inNav = 'hide';
         <div class="message-timestamp">2:33 PM</div>
       </div>
     </div>
-    <div class="chat-toolbar"></div>
+    <div class="chat-toolbar">
+      <FooterContent />
+    </div>
   </section>
   <!-- <ChatScript page="chat" /> -->
 </Layout> 

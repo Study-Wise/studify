@@ -1,15 +1,13 @@
 ---
 import '../styles/globals.scss';
 import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
 
 const sTitle = "M.A.T.H.Wise";
 const lTitle = `${sTitle} - AI Math Study Partner`;
 const { title, hideCopyright, container, additionalClasses, isChatArea } = Astro.props;
 const noTitle = title === "Home" || title === '' || !title;
 const pTitle = noTitle ? lTitle : `${title} | ${sTitle}`;
-
-const copyrightStart = 2025;
-const copyright = new Date().getFullYear();
 
 let mainClasses: string[] = [];
 if (container === false) {}
@@ -77,14 +75,7 @@ additionalClasses.forEach(className => {
       <slot />
     </main>
 
-    <footer class="footer">
-      <div class="container">
-        {hideCopyright ? '' : <p>© {copyright === copyrightStart ? copyright : `${copyrightStart}-${copyright}`} M.A.T.H.Wise. Powered by AI.</p>}
-        <p>
-          <small>Disclaimer: AI-generated content may contain inaccuracies. Always verify critical information.</small>
-        </p>
-      </div>
-    </footer>
+    {!isChatArea ? <Footer hideCopyright={hideCopyright} /> : ''}
     <script src="https://www.desmos.com/api/v1.10/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
   </body>
 </html>

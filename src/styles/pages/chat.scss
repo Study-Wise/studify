@@ -4,10 +4,10 @@ body:has(.chat-page) {
     height: 100dvh;
 }
 
-header, footer, .chat-header, .chat-toolbar {
+footer, .chat-header, .chat-toolbar {
     position: sticky;
 }
-header, .chat-header {
+.chat-header {
     top: 0;
 }
 footer, .chat-toolbar {
@@ -69,6 +69,7 @@ footer, .chat-toolbar {
 
 .chat-toolbar {
     height: 100px;
+    background-color: $card-bg;
 }
   
 @media (max-width: 768px) {

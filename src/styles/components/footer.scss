@@ -1,0 +1,24 @@
+@use '../variables.scss' as *;
+
+/* --- Footer --- */
+.footer {
+    text-align: center;
+    margin-top: 40px;
+    padding: 1rem;
+    border-top: 1px solid #dee2e6;
+    background-color: $footer-bg;
+  
+    [data-hide-copyright="true"] & {
+        margin-top: 0;
+    }
+}
+
+.footer-content {
+    color: $footer-text;
+    font-size: 0.9em;
+}  
+.footer-content p {
+    margin-bottom: 5px;
+}
+  
+  
