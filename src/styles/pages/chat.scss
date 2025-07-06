@@ -1,11 +1,13 @@
 @use '../variables.scss' as *;
+@use 'sass:color';
+@use 'sass:math';
 
 body:has(.chat-page) {
     height: 100dvh;
 }
 
 footer, .chat-header, .chat-toolbar {
-    position: sticky;
+    // position: sticky;
 }
 .chat-header {
     top: 0;
@@ -15,16 +17,13 @@ footer, .chat-toolbar {
 }
 
 .chat-page {
-    display: grid;
-    grid-template-areas: "title title" "main main";
-    // grid-template-rows: auto 1fr;
-    // grid-template-columns: auto 1fr;
-    // gap: 20px;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
     position: relative;
 }
 
 .chat-header {
-    grid-area: title;
     box-sizing: border-box;
     padding: 10px;
     border-bottom: 1px solid $section-title-border;
@@ -40,17 +39,38 @@ footer, .chat-toolbar {
     }
 }
 
+.chat-container {
+    flex: 1;
+
+    display: flex;
+    max-height: 100%;
+
+    overflow-y: auto;
+    
+    position: relative;
+}
+
 .chat-sidebar {
-    grid-area: sidebar;
-    &:not(.visible) {
+    box-sizing: border-box;
+    padding-top: 3.5rem;
+
+    width: 200px;
+
+    &:has( + .chat-section .chat-sidebar-toggle > input[type="checkbox"]:checked) {
         display: none;
+    }
+
+    &.visible {
+         + .chat-section .chat-messages {
+            border-bottom-left-radius: 1rem;
+            overflow-x: clip;
+         }
     }
 }
 
 /* Card Container */
 .chat-section {
-    grid-area: main;
-    background-color: $card-bg;
+    flex: 1;
 
     display: grid;
     grid-template-rows: 1fr auto;
@@ -58,6 +78,44 @@ footer, .chat-toolbar {
     // Adds space for the scrollbar to prevent layout shift in supporting browsers.
     // Note: Not supported in Safari or any iOS Browser (WebKit).
     scrollbar-gutter: stable;
+
+}
+
+.chat-sidebar-toggle {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    overflow: hidden;
+
+    height: 2.5rem;
+    width: 2.5rem;
+
+    // box-sizing: border-box;
+    padding: 0.5rem;
+    background-color: color.adjust($body-bg, $lightness: -5%);
+    border-radius: 0.5rem;
+
+    -webkit-user-select: none;
+    user-select: none;
+
+    cursor: pointer;
+
+    input[type="checkbox"] {
+        visibility: hidden;
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        width: 0;
+        height: 0;
+        display: block;
+    }
+
+    span.material-symbols-outlined {
+        display: block;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+    }
 }
 
 .chat-messages {
@@ -65,11 +123,49 @@ footer, .chat-toolbar {
     height: 100%;
     box-sizing: border-box;
     padding: 30px;
+    background-color: $card-bg;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .message {
+        $_message-space: 1rem;
+
+        display: flex;
+        flex-direction: column;
+        gap: math.div($_message-space, 2);
+        width: fit-content;
+
+        &-content {
+            box-sizing: border-box;
+            padding: $_message-space;
+    
+    
+            background-color: $message-bg;
+    
+            border-radius: 1rem;
+        }
+        &-timestamp {
+            align-self: end;
+            padding-inline: math.div($_message-space, 2);
+        }
+
+        &.user {
+            align-self: end;
+            .message-content {
+                background: linear-gradient(120deg, color.adjust($primary-blue, $lightness: 10%), color.adjust($primary-cyan, $lightness: 10%));
+                color: $header-text;
+            }
+        }
+    }
 }
 
 .chat-toolbar {
-    height: 100px;
-    background-color: $card-bg;
+    box-sizing: border-box;
+    padding: 1rem;
+
+    background-color: $body-bg;
 }
   
 @media (max-width: 768px) {
