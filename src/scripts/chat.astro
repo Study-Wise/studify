@@ -533,6 +533,11 @@ const { page } = Astro.props;
                     console.error("Invalid data format:", data);
                     throw new Error("Invalid/empty response from AI.");
                 }
+                if (data?.generatedTitle) {
+                    if (page === 'chat') {
+                        location.reload();
+                    }
+                }
             } catch (error) {
                 console.error("Full error caught in generateOutput:", error);
                 alert(error);

@@ -6,9 +6,9 @@ body:has(.chat-page) {
     height: 100dvh;
 }
 
-footer, .chat-header, .chat-toolbar {
-    // position: sticky;
-}
+// footer, .chat-header, .chat-toolbar {
+//     position: sticky;
+// }
 .chat-header {
     top: 0;
 }
@@ -63,7 +63,10 @@ footer, .chat-toolbar {
     &.visible {
          + .chat-section .chat-messages {
             border-bottom-left-radius: 1rem;
-            overflow-x: clip;
+            overflow-x: hidden;
+            @supports (overflow-x: clip) {
+                overflow-x: clip;
+            }
          }
     }
 }
@@ -77,7 +80,9 @@ footer, .chat-toolbar {
 
     // Adds space for the scrollbar to prevent layout shift in supporting browsers.
     // Note: Not supported in Safari or any iOS Browser (WebKit).
-    scrollbar-gutter: stable;
+    @supports (scrollbar-gutter: stable) {
+        scrollbar-gutter: stable;
+    }
 
 }
 

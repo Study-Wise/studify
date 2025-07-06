@@ -15,6 +15,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     const obj = {
       token: token,
+      title: '',
       thread: {
         messages: []
       }

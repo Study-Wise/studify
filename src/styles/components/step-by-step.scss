@@ -20,6 +20,8 @@ $dpad: 1rem;
 
   box-sizing: border-box;
 
+  background-color: $card-bg;
+
   @include stepsBorder();
 
   display: flex;
@@ -34,7 +36,7 @@ $dpad: 1rem;
 
   .step {
     box-sizing: border-box;
-    background-color: white;
+    background-color: $card-bg;
 
     &:not(:has(.step-question-choices .step-question-radio:checked)) {
       .correct-explanation {
@@ -66,7 +68,7 @@ $dpad: 1rem;
 
       .step-question-choice {
         position: relative;
-        background-color: white;
+        background-color: $card-bg;
         cursor: pointer;
         // display: flex;
         // gap: var(--gap, 1rem);

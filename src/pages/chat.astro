@@ -6,15 +6,22 @@ import ChatHeader from '../components/ChatHeader.astro';
 import ChatScript from '../scripts/chat.astro';
 import '../styles/pages/chat.scss';
 
+import { marked } from 'marked';
+
 import config from '../lib/config';
 import { models } from '../lib/models';
+import { getMessages } from '../lib/threads';
+
+const token = Astro.url.searchParams.get('token');
+
+const messages = await getMessages(token || '');
 
 export const inNav = 'hide';
 ---
 <Layout title="Chat" container={false} isChatArea={true} additionalClasses={['chat-page']} hideCopyright={true}>
   <header class="chat-header">
     <h2><span class="material-symbols-outlined">chat</span>&nbsp;Chat</h2>
-    <ChatHeader pTitle="Chat" />
+    <ChatHeader pTitle={`${token ? 'Chat' : 'New Chat'}`} />
   </header>
   <section class="chat-container">
     <section class="chat-sidebar">
@@ -26,58 +33,13 @@ export const inNav = 'hide';
         <span class="material-symbols-outlined">chat</span>
       </label>
       <div class="chat-messages">
-        <div class="message user">
-          <div class="message-content">
-            <p>Can you help me solve this quadratic equation: x² + 5x + 6 = 0?</p>
+        {messages.map(async (message) => (
+          <div class={`message ${message.role}`}>
+            <div class="message-content">
+              <p set:html={await marked.parse(message.content)} />
+            </div>
           </div>
-          <div class="message-timestamp">2:30 PM</div>
-        </div>
-        
-        <div class="message ai">
-          <div class="message-content">
-            <p>I'd be happy to help you solve that quadratic equation! Let me break it down step by step.</p>
-            <p>The equation is: x² + 5x + 6 = 0</p>
-            <p>First, let's identify the coefficients:</p>
-            <ul>
-              <li>a = 1 (coefficient of x²)</li>
-              <li>b = 5 (coefficient of x)</li>
-              <li>c = 6 (constant term)</li>
-            </ul>
-            <p>We can solve this by factoring. We need to find two numbers that multiply to 6 and add to 5.</p>
-            <p>Those numbers are 2 and 3, since 2 × 3 = 6 and 2 + 3 = 5.</p>
-            <p>So we can factor the equation as: (x + 2)(x + 3) = 0</p>
-            <p>Setting each factor equal to zero:</p>
-            <p>x + 2 = 0 → x = -2</p>
-            <p>x + 3 = 0 → x = -3</p>
-            <p>Therefore, the solutions are x = -2 and x = -3.</p>
-          </div>
-          <div class="message-timestamp">2:31 PM</div>
-        </div>
-        
-        <div class="message user">
-          <div class="message-content">
-            <p>Thanks! Can you also show me how to use the quadratic formula for this same equation?</p>
-          </div>
-          <div class="message-timestamp">2:32 PM</div>
-        </div>
-        
-        <div class="message ai">
-          <div class="message-content">
-            <p>Absolutely! The quadratic formula is: x = (-b ± √(b² - 4ac)) / (2a)</p>
-            <p>For our equation x² + 5x + 6 = 0:</p>
-            <p>a = 1, b = 5, c = 6</p>
-            <p>Plugging these values into the formula:</p>
-            <p>x = (-5 ± √(5² - 4(1)(6))) / (2(1))</p>
-            <p>x = (-5 ± √(25 - 24)) / 2</p>
-            <p>x = (-5 ± √1) / 2</p>
-            <p>x = (-5 ± 1) / 2</p>
-            <p>So we have two solutions:</p>
-            <p>x = (-5 + 1) / 2 = -4 / 2 = -2</p>
-            <p>x = (-5 - 1) / 2 = -6 / 2 = -3</p>
-            <p>This confirms our earlier answer: x = -2 and x = -3</p>
-          </div>
-          <div class="message-timestamp">2:33 PM</div>
-        </div>
+        ))}
       </div>
       <div class="chat-toolbar">
         <FooterContent />

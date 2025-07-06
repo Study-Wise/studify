@@ -108,9 +108,15 @@ export const POST: APIRoute = async ({ request }) => {
     // --- Append AI response to history ---
     convoHistory.push({ role: 'assistant', content: generatedText });
 
+    let convoTitle = userData?.title;
+    if (!convoTitle) {
+      convoTitle = await generateTitle(convoHistory, userModel, provider);
+    }
+
     // --- Save updated history back to UploadThing ---
     const newUserData = {
       token: user_token,
+      title: convoTitle,
       thread: { messages: convoHistory }
     };
     const blob = new Blob([JSON.stringify(newUserData, null, 2)], { type: 'application/json' });
@@ -122,7 +128,7 @@ export const POST: APIRoute = async ({ request }) => {
     const htmlText = marked.parse(generatedText);
 
     return new Response(
-      JSON.stringify({ generatedText: htmlText }),
+      JSON.stringify({ generatedText: htmlText, generatedTitle: true }),
       {
         status: 200,
         headers: { 'Content-Type': 'application/json' },
@@ -139,5 +145,14 @@ export const POST: APIRoute = async ({ request }) => {
     );
   }
 };
+
+async function generateTitle(convoHistory: any[], userModel: string, provider: ProviderKey) {
+  const { text: generatedText } = await generateText({
+    model: providerFunctions[provider](userModel),
+    system: config.systemPrompt,
+    prompt: 'Please generate a title for the following conversation history: \n\n' + convoHistory.map((m: any) => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`).join('\n'),
+  });
+  return generatedText;
+}
 
 export const prerender = false;
