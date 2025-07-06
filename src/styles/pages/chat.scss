@@ -56,12 +56,12 @@ footer, .chat-toolbar {
 
     width: 200px;
 
-    &:has( + .chat-section .chat-sidebar-toggle > input[type="checkbox"]:checked) {
+    &:has( + .chat-section .chat-sidebar-toggle > input[type="checkbox"]:not(:checked)) {
         display: none;
     }
 
-    &.visible {
-         + .chat-section .chat-messages {
+    &:has( + .chat-section .chat-sidebar-toggle > input[type="checkbox"]:checked) {
+        + .chat-section .chat-messages {
             border-bottom-left-radius: 1rem;
             overflow-x: hidden;
             @supports (overflow-x: clip) {
@@ -150,6 +150,10 @@ footer, .chat-toolbar {
             background-color: $message-bg;
     
             border-radius: 1rem;
+
+            mjx-container {
+                width: fit-content;
+            }
         }
         &-timestamp {
             align-self: end;

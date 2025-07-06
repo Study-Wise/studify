@@ -3,43 +3,43 @@
 // Styles specific to about.astro page
 
 .about-section .about-content {
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
-  align-items: flex-start;
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    align-items: flex-start;
 }
 
 .about-section .profile-picture {
-  flex-shrink: 0;
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid $profile-border;
-  box-shadow: 0 2px 5px $profile-shadow;
+    flex-shrink: 0;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid $profile-border;
+    box-shadow: 0 2px 5px $profile-shadow;
 }
 
 .about-section .about-text {
-  flex-grow: 1;
-  min-width: 0;
+    flex-grow: 1;
+    min-width: 0;
 }
 
 .about-section .about-text p {
-  margin-bottom: 1.2em;
-  font-size: 1.05em;
+    margin-bottom: 1.2em;
+    font-size: 1.05em;
 }
 
 .about-section .about-text p a {
-  color: $about-link;
-  text-decoration: none;
-  font-weight: 500;
+    color: $about-link;
+    text-decoration: none;
+    font-weight: 500;
 }
 
 .about-section .about-text p a i {
-  margin-left: 5px;
-  font-size: 0.9em;
+    margin-left: 5px;
+    font-size: 0.9em;
 }
 
 .about-section .about-text p a:hover .text {
-  text-decoration: underline;
-} 
+    text-decoration: underline;
+}

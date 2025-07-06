@@ -47,7 +47,7 @@ $dpad: 1rem;
     .step-question-choices {
       display: flex;
       flex-direction: column;
-      gap: calc(var(--pad) / 2);
+      gap: $dpad;
       @include stepsBorder($depth: 1);
 
       &:has(.step-question-choice > .step-question-radio:checked) {
