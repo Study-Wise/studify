@@ -1,40 +1,23 @@
 import 'dotenv/config';
 import type { APIRoute } from 'astro';
 
-import { utapi } from '../../../lib/uploadthing';
-
-import { v4 as uuid } from 'uuid';
-
 import config from '../../../lib/config';
+
+import { eq } from 'drizzle-orm';
+import { drizzle } from 'drizzle-orm/vercel-postgres';
+import { threadsTable } from '../../../db/schema';
+
+import { randomInt } from 'crypto';
+const MAX_TOKEN = 281_474_976_710_655; // 2^48 - 1
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    var { token } = await request.json();
+    const { token: user_token } = await request.json();
 
-    if (!token) token = uuid();
-
-    const obj = {
-      token: token,
-      title: '',
-      thread: {
-        messages: []
-      }
-    }
-
-    const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
-    const file = new File([blob], `${token}.json`, { type: 'application/json' });
-
-    const all_files = await utapi.listFiles();
-    const existing_file = all_files.files.find(file => file.name === `${token}.json`);
-    var upload_response = {}
-    if (existing_file) {
-      upload_response = existing_file;
-    } else {
-      upload_response = await utapi.uploadFiles(file);
-    }
-
+    const {token, dbResponse} = await generateToken(user_token);
+  
     return new Response(
-      JSON.stringify({ status: 'success', upload_response: upload_response, generated_token: token }),
+      JSON.stringify({ status: 'success', db_response: dbResponse, generated_token: token, token: token }),
       {
         status: 200,
         headers: { 'Content-Type': 'application/json' },
@@ -52,4 +35,30 @@ export const POST: APIRoute = async ({ request }) => {
   }
 };
 
+async function generateToken(token?: number) {
+  try {
+    if (!token) token = randomInt(0, MAX_TOKEN);
+
+    const obj = {
+      token: token,
+      title: '',
+      thread: {
+        messages: []
+      }
+    }
+
+    const db = drizzle();
+
+    const dbResponse = await db.insert(threadsTable).values(obj);
+    console.log('New thread created!')
+
+    return { token, dbResponse };
+  } catch (error) {
+    console.error('Error in generateToken:', error);
+    throw error;
+  }
+}
+
 export const prerender = false;
+
+export { generateToken };

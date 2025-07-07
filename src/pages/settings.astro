@@ -5,7 +5,7 @@ import SettingsScript from '../scripts/settings.astro';
 import '../styles/pages/settings.scss';
 
 import config from '../lib/config';
-import { models } from '../lib/models';
+import { providers, models } from '../lib/models';
 
 const settings = [
   {
@@ -24,10 +24,24 @@ const settings = [
         <div class="settings-row">
           <label for={setting.id}>{setting.name}:</label>
           {Array.isArray(setting.options) ? (
-            <select id={setting.id} name={setting.id} value={setting.default}>
+            <select class="fancy-select" id={setting.id} name={setting.id} value={setting.default}>
+              <selectedcontent />
               {setting.options.map(option => {
-                const currKey = Object.keys(setting.options).find(o => setting.options[o] === option);
-                return <option value={currKey} selected={currKey === setting.default}>{option.name || currKey}</option>
+                const providerKey = Object.keys(providers).find(p =>
+                  Object.keys(providers[p].models).find(m => providers[p].models[m].name === option.name)
+                );
+                const currKey = providerKey
+                  ? Object.keys(providers[providerKey].models).find(m => providers[providerKey].models[m].name === option.name)
+                  : '';
+                return (
+                  <option value={currKey} selected={currKey === setting.default}>
+                    <img
+                      src={`/images/providers/${providerKey || 'default'}.svg`}
+                      alt={providerKey ? providers[providerKey].name : 'Provider'}
+                    />
+                    {option.name || currKey}
+                  </option>
+                );
               })}
             </select>
           ) : typeof setting.options === 'object' ? (
@@ -43,5 +57,8 @@ const settings = [
       ))}
     </form>
   </section>
+  <script>
+    document.querySelectorAll('select.fancy-select selectedcontent').forEach(sc => sc.outerHTML = `<button>${sc.outerHTML}</button>`)
+  </script>
   <SettingsScript settings={settings} />
 </Layout> 

@@ -1,6 +1,6 @@
 {
   "extends": "astro/tsconfigs/base",
-  "include": [".astro/types.d.ts", "**/*"],
+  "include": [".astro/types.d.ts", "**/*", "src/pages/api/token/destroyIfEmptyConvo.ts"],
   "exclude": ["dist", "**/*.astro"],
   "compilerOptions": {
     "strict": true,

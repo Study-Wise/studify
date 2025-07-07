@@ -1,20 +1,22 @@
-import { utapi } from './uploadthing';
+import { eq } from 'drizzle-orm';
+import { drizzle } from 'drizzle-orm/vercel-postgres';
+import { threadsTable } from '../db/schema';
+import type { InferSelectModel } from "drizzle-orm";
+
+type Thread = InferSelectModel<typeof threadsTable>;
 
 async function getMessages(token: string) {
     try {
-        const allFiles = await utapi.listFiles();
-        const file = allFiles.files.find(f => f.name === `${token}.json`);
-        const url = file ? `https://r72a1v4gs7.ufs.sh/f/${file.key}` : '';
-        if (url) {
-            const resp = await fetch(url);
-            const data = await resp.json();
-            return data.thread.messages;
+        const db = drizzle();
+        const dbResponse: Thread[] = await db.select().from(threadsTable).where(eq(threadsTable.token, Number(token)));
+        if (dbResponse && dbResponse[0] && dbResponse[0].thread) {
+            return (dbResponse[0].thread as { messages: any[] }).messages;
         }
-        else return []
+        return [];
     }
     catch (e) {
         console.error(e);
-        return []
+        return [];
     }
 }
 

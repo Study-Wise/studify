@@ -16,7 +16,7 @@ const { page } = Astro.props;
       }
     });
     
-    if (!userToken) generateToken()
+    // if (!userToken) generateToken()
     async function generateToken(existingToken) {
         var resp = await fetch('/api/token/generate', {
             method: 'POST',
@@ -71,11 +71,38 @@ const { page } = Astro.props;
         }
     }
 
+    async function destroyTokenIfEmptyConvo(token) {
+        if (userToken) {
+            var resp = await fetch('/api/token/destroyIfEmptyConvo', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    token: token
+                }),
+                keepalive: true
+            })
+
+            if (!resp.ok) return
+
+            var json = await resp.json() || {};
+            if (typeof json === 'object' && 'status' in json && json.status === 'success') {
+                console.log('Token invalidated successfully.');
+            } else {
+                console.error('Error invalidating token:', json);
+            }
+        }
+    }
+
+    const state = 'off'
     document.addEventListener('visibilitychange', async event => {
-        if (document.visibilityState === "hidden" && !going2ChatWindow) {
-            if (userToken) destroyToken(userToken)
+        if (document.visibilityState === "hidden" && !going2ChatWindow && state === 'on') {
+            if (userToken) destroyTokenIfEmptyConvo(userToken)
+            state = 'on'
         } else {
-            if (!userToken) generateToken()
+            // if (!userToken) generateToken()
         }
     });
 
@@ -525,6 +552,7 @@ const { page } = Astro.props;
                 if (data?.generatedText) {
                     if (page === 'home') {
                         await displayResults(data.generatedText);
+                        await showOpenInChatBtn(data.token);
                     }
                     if (page === 'chat') {
                         await addMessage(data.generatedText);
@@ -583,6 +611,24 @@ const { page } = Astro.props;
             }
         }
     });
+
+    async function showOpenInChatBtn(token) {
+        const chatButtonContainer = document.querySelector(".chat-button-container");
+        if (chatButtonContainer) {
+            const btn = document.createElement('a');
+            btn.href = `/chat?token=${token}`;
+
+            const icon = document.createElement('span');
+            icon.classList.add('material-symbols-outlined');
+            icon.textContent = 'chat';
+            btn.appendChild(icon);
+            
+            btn.appendChild(document.createTextNode(' Open in Chat'));
+            btn.classList.add('ternary-button');
+            btn.classList.add('chat-button');
+            chatButtonContainer.appendChild(btn);
+        }
+    }
 
     function activateDesmos() {
         const graphs = document.querySelectorAll(".desmos-graph");

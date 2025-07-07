@@ -3,6 +3,8 @@ import '../styles/pages/index.scss';
 import '../styles/components/step-by-step.scss';
 import Layout from '../layouts/Layout.astro';
 import ChatScript from '../scripts/chat.astro';
+import { db } from '../db/initialize';
+
 ---
 <Layout title="Home">
   <!-- Introduction Section -->
@@ -62,7 +64,7 @@ Please note that the AI will not provide the answer for your immediate equation"
     </div>
 
     <!-- Generate Button and Error Message -->
-    <button id="generate-button" onclick="generateOutput()">
+    <button class="ternary-button" id="generate-button" onclick="generateOutput()">
       <span class="material-symbols-outlined">manufacturing</span> Generate Study Materials
       <span class="spinner" style="display: none"></span>
     </button>
@@ -106,6 +108,8 @@ Please note that the AI will not provide the answer for your immediate equation"
         </p>
       </article>
     </div>
+
+    <div class="chat-button-container"></div>
   </section>
   <ChatScript page="home" />
 </Layout>
