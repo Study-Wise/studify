@@ -1,9 +1,13 @@
 ---
 import '../styles/pages/index.scss';
 import '../styles/components/step-by-step.scss';
+
 import Layout from '../layouts/Layout.astro';
+import Button from '../components/Button.astro';
+
+import ModelSelector from '../components/ModelSelector.astro';
+
 import ChatScript from '../scripts/chat.astro';
-import { db } from '../db/initialize';
 
 ---
 <Layout title="Home">
@@ -64,10 +68,10 @@ Please note that the AI will not provide the answer for your immediate equation"
     </div>
 
     <!-- Generate Button and Error Message -->
-    <button class="ternary-button" id="generate-button" onclick="generateOutput()">
-      <span class="material-symbols-outlined">manufacturing</span> Generate Study Materials
-      <span class="spinner" style="display: none"></span>
-    </button>
+    <div class="toolbar">
+      <ModelSelector />
+      <Button id="generate-button" onclick="generateOutput()" variant="primary" icon="manufacturing">Generate Study Materials</Button>
+    </div>
     <div id="error-message" class="error-box" style="display: none" role="alert"></div>
   </section>
 

@@ -1,0 +1,7 @@
+---
+const { variant = 'primary', icon = '', ...props } = Astro.props;
+---
+<button class={`btn bg-${variant}`} {...props}>
+    <span class="material-symbols-outlined">{icon}</span> <slot />
+    <span class="spinner" style="display: none"></span>
+</button>

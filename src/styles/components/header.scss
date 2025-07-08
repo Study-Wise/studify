@@ -1,9 +1,11 @@
-@use '../variables.scss' as *;
+@use '../variables/globals.scss' as *;
+@use 'sass:list';
+@use 'sass:map';
 
 /* Header Styles */
 header {
     min-height: 80px;
-    background: linear-gradient(120deg, $primary-blue, $primary-cyan);
+    background: linear-gradient($gradient-angle, list.nth(map.get($accent-colors, primary), 1), list.nth(map.get($accent-colors, primary), 2));
     color: $header-text;
     padding: 0.75rem;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);

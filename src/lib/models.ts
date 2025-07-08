@@ -33,7 +33,7 @@ const providers = {
             'grok-3-mini': { name: 'Grok 3 Mini' },
         },
     },
-}
+};
 
 const models = Object.values(providers).flatMap(p => Object.values(p.models));
 

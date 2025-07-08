@@ -1,6 +1,8 @@
-@use '../variables.scss' as *;
+@use '../variables/globals.scss' as *;
 @use 'sass:color';
 @use 'sass:math';
+@use 'sass:list';
+@use 'sass:map';
 
 body:has(.chat-page) {
     height: 100dvh;
@@ -27,7 +29,7 @@ footer, .chat-toolbar {
     box-sizing: border-box;
     padding: 10px;
     border-bottom: 1px solid $section-title-border;
-    background: linear-gradient(120deg, $primary-blue, $primary-cyan);
+    background: linear-gradient($gradient-angle, list.nth(map.get($accent-colors, primary), 1), list.nth(map.get($accent-colors, primary), 2));
 
     h2 {
         background-color: $card-bg;
@@ -167,7 +169,7 @@ footer, .chat-toolbar {
         &.user {
             align-self: end;
             .message-content {
-                background: linear-gradient(120deg, color.adjust($primary-blue, $lightness: 10%), color.adjust($primary-cyan, $lightness: 10%));
+                background: linear-gradient(120deg, color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: 10%), color.adjust(list.nth(map.get($accent-colors, primary), 2), $lightness: 10%));
                 color: $header-text;
             }
         }

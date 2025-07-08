@@ -1,4 +1,6 @@
-@use '../variables.scss' as *;
+@use '../variables/globals.scss' as *;
+@use 'sass:list';
+@use 'sass:map';
 
 // Styles specific to index.astro page
 
@@ -29,62 +31,29 @@
         box-shadow: inset 0 1px 3px $card-shadow;
 
         &:focus {
-            border-color: $primary-blue;
-            box-shadow: 0 0 0 0.2rem rgba($primary-blue, 0.25);
+            border-color: list.nth(map.get($accent-colors, primary), 1);
+            box-shadow: 0 0 0 0.2rem rgba(list.nth(map.get($accent-colors, primary), 1), 0.25);
             outline: none;
         }
     }
 }
 
-.ternary-button {
-    box-sizing: border-box;
+.toolbar {
+    margin-top: 0.5rem;
+
     display: flex;
+    gap: 1rem;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    width: 100%;
-    padding: 14px 16px;
-    background-color: #28a745;
-    background-image: linear-gradient(180deg, #34b855, #218838);
-    color: $header-text;
-    border: 1px solid #1e7e34;
-    border-radius: 6px;
-    font-size: 1.18em;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    position: relative;
-    box-shadow: 0 2px 5px $card-shadow;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
 
-    &:hover:not(:disabled) {
-        background-color: #218838;
-        background-image: none;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        transform: translateY(-1px);
+    .settings-row {
+        flex: 1;
+        place-content: end;
     }
-
-    &:active:not(:disabled) {
-        transform: translateY(0px);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-    }
-
-    &:disabled {
-        background-color: #adb5bd;
-        background-image: none;
-        border-color: #999;
-        cursor: not-allowed;
-        opacity: 0.65;
-    }
-}
-
-#generate-button {
-    margin-top: 1rem;
 }
 
 .chat-button {
     margin-inline-start: auto;
-    width: fit-content;
 }
 
 .spinner {
@@ -145,8 +114,8 @@
     }
 
     &.active {
-        color: $primary-blue;
-        border-bottom: 3px solid $primary-blue;
+        color: list.nth(map.get($accent-colors, primary), 1);
+        border-bottom: 3px solid list.nth(map.get($accent-colors, primary), 1);
         background-color: $body-bg;
     }
 

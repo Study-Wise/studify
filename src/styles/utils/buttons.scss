@@ -1,0 +1,74 @@
+@use '../variables/globals.scss' as *;
+@use 'sass:list';
+@use 'sass:map';
+
+$transition-duration: 0.25s;
+$transition: $transition-duration ease-in-out;
+$border-size: 2px;
+
+.btn {
+    --outline-color: var(--bg-clr-1);
+    --box-shadow: 0 2px 5px #{$border-size * 2} rgba(0, 0, 0, 0.25);
+    
+    position: relative;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    margin: #{$border-size * 2};
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    
+    color: $header-text;
+    background-color: var(--bg-clr-1);
+
+    border: none;
+    outline: $border-size solid var(--outline-color);
+    outline-offset: $border-size;
+    border-radius: 6px;
+
+    box-shadow: 
+        0 0 0 4px $card-bg, var(--box-shadow), 
+        inset 0 0 #{$border-size} #{$border-size} var(--bg-clr-2);
+    text-shadow: 0 0 1px rgba(0, 0, 0);
+
+    cursor: pointer;
+    transform: translateY(0);
+    
+    font-size: 1.18em;
+    font-weight: 500;
+
+    isolation: isolate;
+    overflow: hidden;
+    
+    transition: 
+        outline $transition
+        box-shadow $transition
+        border $transition
+        transform $transition
+        text-shadow $transition
+    ;
+
+    &:is(:hover, :focus-visible):not(:disabled) {
+        animation-play-state: paused;
+        --box-shadow: 0 4px 8px #{$border-size * 2} rgba(0, 0, 0, 0.25);
+        transform: translateY(-#{$border-size});
+    }
+    &:focus-visible:not(:disabled) {
+        --outline-color: var(--bg-clr-2);
+    }
+
+    &:active:not(:disabled) {
+        transform: translateY(0);
+        --box-shadow: 0 2px 4px #{$border-size * 2} rgba(0, 0, 0, 0.25);
+    }
+
+    &:disabled {
+        background-color: #adb5bd;
+        background-image: none;
+        border-color: #999;
+        cursor: not-allowed;
+        opacity: 0.65;
+    }
+}
