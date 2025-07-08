@@ -5,20 +5,20 @@ import ChatHeader from '../components/ChatHeader.astro';
 
 import ChatScript from '../scripts/chat.astro';
 import '../styles/pages/chat.scss';
+import '../styles/components/fancy-output.scss';
 
 import { marked } from 'marked';
 
 import config from '../lib/config';
 import { models } from '../lib/models';
 import { getMessages } from '../lib/threads';
+import extract from '../lib/extractPartsofMessage';
 
 const token = Astro.url.searchParams.get('token');
 
 const messages = await getMessages(token || '');
 
 export const inNav = 'hide';
-
-import { db } from '../db/initialize';
 ---
 <Layout title="Chat" container={false} isChatArea={true} additionalClasses={['chat-page']} hideCopyright={true}>
   <header class="chat-header">
@@ -35,13 +35,45 @@ import { db } from '../db/initialize';
         <span class="material-symbols-outlined">chat</span>
       </label>
       <div class="chat-messages">
-        {messages.map(async (message) => (
-          <div class={`message ${message.role}`}>
-            <div class="message-content">
-              <p set:html={await marked.parse(message.content)} />
-            </div>
+        {messages.map(async (message) => {
+          const { obj, generatedText: htmlText } = await extract(message.content);
+          var content = htmlText;
+          if (message.role === 'assistant') {
+            if (obj.studyGuide || obj.referenceSheet) {
+              var fancyOutput = `<dialog class="fancy-output"><div class="tabs">`;
+              if (obj.studyGuide) {
+                fancyOutput += `<label class="tab"><input type="radio" name="tab" checked>Study Guide</label>`;
+              }
+              if (obj.referenceSheet) {
+                fancyOutput += `<label class="tab"><input type="radio" name="tab">Reference Sheet</label>`;
+              }
+              fancyOutput += `<div class="buttons"><button class="open-button button material-symbols-outlined">open_in_full</button></div>`;
+              fancyOutput += `</div>`;
+
+              fancyOutput += `<div class="tab-contents-parent">`;
+              if (obj.studyGuide) {
+                fancyOutput += `<div class="tab-content-container study-guide"><div class="tab-content study-guide">${obj.studyGuide}</div></div>`;
+              }
+              if (obj.referenceSheet) {
+                fancyOutput += `<div class="tab-content-container reference-sheet"><div class="tab-content reference-sheet">${obj.referenceSheet}</div></div>`;
+              }
+              fancyOutput += `</div>`;
+              fancyOutput += `</dialog>`;
+
+              if (obj.precedingText && obj.precedingText !== '' && obj.precedingText.length > 0) {
+                fancyOutput = `${obj.precedingText}${fancyOutput}`;
+              }
+              if (obj.followingText && obj.followingText !== '' && obj.followingText.length > 0) {
+                fancyOutput = `${fancyOutput}${obj.followingText}`;
+              }
+              content = fancyOutput.trim();
+            }
+              
+          }
+          return <div class={`message ${message.role}`}>
+            <div class="message-content" set:html={content} />
           </div>
-        ))}
+        })}
       </div>
       <div class="chat-toolbar">
         <FooterContent />

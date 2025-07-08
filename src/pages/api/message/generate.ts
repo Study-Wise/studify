@@ -9,6 +9,7 @@ import { google } from '@ai-sdk/google';
 import { xai } from '@ai-sdk/xai';
 
 import { marked } from 'marked';
+import jsdom from 'jsdom';
 
 import config from '../../../lib/config';
 import { providers } from '../../../lib/models';
@@ -20,6 +21,7 @@ import { drizzle } from 'drizzle-orm/vercel-postgres';
 import { eq } from 'drizzle-orm';
 import type { InferSelectModel, InferInsertModel } from 'drizzle-orm';
 import { threadsTable } from '../../../db/schema';
+import extract from '../../../lib/extractPartsofMessage';
 
 const provider_maps = {
   openai: [
@@ -191,18 +193,10 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    // --- Markdown rendering (existing code) ---
-    let htmlText: string;
-    try {
-      marked.setOptions({ breaks: true, gfm: true });
-      htmlText = await marked.parse(generatedText);
-    } catch (error) {
-      console.error('Error rendering markdown:', error);
-      htmlText = generatedText; // Fallback to plain text
-    }
+    const { obj, generatedText: htmlText } = await extract(generatedText);
 
     return new Response(
-      JSON.stringify({ generatedText: htmlText, generatedTitle: true, token: user_token }),
+      JSON.stringify({ ...obj, generatedText: htmlText, generatedTitle: true, token: user_token }),
       {
         status: 200,
         headers: { 'Content-Type': 'application/json' },

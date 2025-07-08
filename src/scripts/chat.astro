@@ -3,9 +3,10 @@ const { page } = Astro.props;
 ---
 <script is:inline data-page={page}>
     const page = document.currentScript.dataset.page;
+    const guidePlaceholder = "<p><i>No Study Guide content generated/extracted.</i></p>";
+    const sheetPlaceholder = "<p><i>No Reference Sheet content generated/extracted.</i></p>";
     
     var userToken = localStorage.getItem('userToken') || '';
-    var going2ChatWindow = false;
 
     let userSettings = {};
     window.addEventListener('DOMContentLoaded', () => {
@@ -96,9 +97,9 @@ const { page } = Astro.props;
         }
     }
 
-    const state = 'off'
+    var state = 'off'
     document.addEventListener('visibilitychange', async event => {
-        if (document.visibilityState === "hidden" && !going2ChatWindow && state === 'on') {
+        if (document.visibilityState === "hidden" && state === 'on') {
             if (userToken) destroyTokenIfEmptyConvo(userToken)
             state = 'on'
         } else {
@@ -275,20 +276,12 @@ const { page } = Astro.props;
           * @param {string} aiRawText - The raw text response from the AI
           * @returns {Object} Object containing separated content and any parsing errors
           */
-        function parseAIResponse(aiRawText) {
-            let guideMarkdown = aiRawText,
-            sheetMarkdown = "",
-            parseError = null;
+        function parseAIResponse(guideMarkdown, sheetMarkdown) {
+            !guideMarkdown && (guideMarkdown = guidePlaceholder);
+            !sheetMarkdown && (sheetMarkdown = sheetPlaceholder);
 
-            const sheetHeader = "### Reference Sheet";
 
             // Split guide and sheet content
-            const sheetIndex = aiRawText.toLowerCase().indexOf(sheetHeader.toLowerCase());
-            if (sheetIndex !== -1) {
-                guideMarkdown = aiRawText.substring(0, sheetIndex);
-                sheetMarkdown = aiRawText.substring(sheetIndex);
-            }
-
             // Clean up and format markdown
             guideMarkdown = guideMarkdown.replace(/^<h3>Study Guide<\/h3>\s*/i, "").trim();
             guideMarkdown = `<h3>Study Guide</h3><br>${guideMarkdown}`;
@@ -296,7 +289,27 @@ const { page } = Astro.props;
             sheetMarkdown = sheetMarkdown.replace(/^<h3>Reference Sheet<\/h3>\s*/i, "").trim();
             sheetMarkdown = sheetMarkdown? `<h3>Reference Sheet</h3><br>${sheetMarkdown}`: "";
 
-            return { guideMarkdown, sheetMarkdown, parseError };
+            if (sheetMarkdown.includes('```<div class="desmos-graph')) {
+                const desmosGraph = sheetMarkdown.match(/```<div class="desmos-graph"[^>]*>([\s\S]*?)<\/div>```/g);
+                if (desmosGraph) {
+                    desmosGraph.forEach(graph => {
+                        const newGraph = graph.slice(3, -3);
+                        sheetMarkdown = sheetMarkdown.replace(graph, newGraph);
+                    });
+                }
+            }
+            if (sheetMarkdown.includes('`<div class="desmos-graph"')) {
+                const desmosGraph = sheetMarkdown.match(/`<div class="desmos-graph"[^>]*>([\s\S]*?)<\/div>`/g);
+                if (desmosGraph) {
+                    desmosGraph.forEach(graph => {
+                        const newGraph = graph.slice(1, -1);
+                        sheetMarkdown = sheetMarkdown.replace(graph, newGraph);
+                    });
+                }
+            }
+
+
+            return { guideMarkdown, sheetMarkdown };
         }
     
 
@@ -398,103 +411,140 @@ const { page } = Astro.props;
           * @param {string} aiRawText - The raw text response from the AI
           * @returns {Promise<void>}
           */
-        async function displayResults(aiRawText) {
-            if (!aiRawText || typeof aiRawText !== "string") {
+        async function displayResults(data) {
+            if (!data || typeof data !== "object") {
                 displayError("Invalid AI response received.");
                 return;
             }
             if (downloadGuideBtn) downloadGuideBtn.disabled = true;
             if (downloadSheetBtn) downloadSheetBtn.disabled = true;
-            let { guideMarkdown, sheetMarkdown, parseError } = parseAIResponse(aiRawText);
-            if (parseError) {
-                console.warn("Parse Error:", parseError);
-                if (errorMessageDiv) {
-                    const currentError = errorMessageDiv.textContent;
-                    errorMessageDiv.textContent = `Warning: ${parseError}` + (currentError ? ` | ${currentError}` : "");
-                    errorMessageDiv.style.display = "block";
-                }
-            }
-            try {
-                if (!studyGuideContent || !referenceSheetContent) {
-                    throw new Error("Output containers missing.");
-                }
-                studyGuideContent.innerHTML = "";
-                referenceSheetContent.innerHTML = "";
-                let elementsToTypeset = [];
-                const guidePlaceholder = "<p><i>No Study Guide content generated/extracted.</i></p>";
-                const sheetPlaceholder = "<p><i>No Reference Sheet content generated/extracted.</i></p>";
-                if (guideMarkdown && guideMarkdown.replace(/### Study Guide\s*/i, "").trim()) {
+
+            if (data.studyGuide && data.referenceSheet) {
+                let { guideMarkdown, sheetMarkdown } = parseAIResponse(data.studyGuide, data.referenceSheet);
+
+                try {
+                    let elementsToTypeset = [];
+                    
+                    studyGuideContent.innerHTML = "";
                     studyGuideContent.innerHTML = guideMarkdown;
                     elementsToTypeset.push(studyGuideContent);
-                } else {
-                    studyGuideContent.innerHTML = guidePlaceholder;
-                }
-                if (sheetMarkdown && sheetMarkdown.replace(/### Reference Sheet\s*/i, "").trim()) {
-                    if (sheetMarkdown.includes('```<div class="desmos-graph')) {
-                        const desmosGraph = sheetMarkdown.match(/```<div class="desmos-graph"[^>]*>([\s\S]*?)<\/div>```/g);
-                        if (desmosGraph) {
-                            desmosGraph.forEach(graph => {
-                                const newGraph = graph.slice(3, -3);
-                                sheetMarkdown = sheetMarkdown.replace(graph, newGraph);
-                            });
-                        }
-                    }
-                    if (sheetMarkdown.includes('`<div class="desmos-graph"')) {
-                        const desmosGraph = sheetMarkdown.match(/`<div class="desmos-graph"[^>]*>([\s\S]*?)<\/div>`/g);
-                        if (desmosGraph) {
-                            desmosGraph.forEach(graph => {
-                                const newGraph = graph.slice(1, -1);
-                                sheetMarkdown = sheetMarkdown.replace(graph, newGraph);
-                            });
-                        }
-                    }
-
-                    let sheetHTML = sheetMarkdown;
-                    referenceSheetContent.innerHTML = sheetHTML;
+                    
+                    referenceSheetContent.innerHTML = "";
+                    referenceSheetContent.innerHTML = sheetMarkdown;
                     elementsToTypeset.push(referenceSheetContent);
-                } else {
-                    referenceSheetContent.innerHTML = sheetPlaceholder;
-                }
-                await typesetMathJax(elementsToTypeset);
 
-                if (typeof activateDesmos === "function") {
-                    try {
-                        activateDesmos();
-                    } catch (e) {
-                        console.warn("Error activating Desmos:", e);
+                    await typesetMathJax(elementsToTypeset);
+
+                    if (typeof activateDesmos === "function") {
+                        try {
+                            activateDesmos();
+                        } catch (e) {
+                            console.warn("Error activating Desmos:", e);
+                        }
                     }
-                }
 
-                const hasGuideContent = studyGuideContent.innerHTML !== guidePlaceholder;
-                const hasSheetContent = referenceSheetContent.innerHTML !== sheetPlaceholder;
-                if (downloadGuideBtn) {
-                    downloadGuideBtn.disabled = !hasGuideContent;
+                    const hasGuideContent = studyGuideContent.innerHTML !== guidePlaceholder;
+                    const hasSheetContent = referenceSheetContent.innerHTML !== sheetPlaceholder;
+                    if (downloadGuideBtn) {
+                        downloadGuideBtn.disabled = !hasGuideContent;
+                    }
+                    if (downloadSheetBtn) {
+                        downloadSheetBtn.disabled = !hasSheetContent;
+                    }
+                    if (outputSection) outputSection.style.display = "block";
+                    showOutput("guide");
+                    if (hasGuideContent || hasSheetContent) {
+                        setTimeout(() => {
+                            outputSection?.scrollIntoView({
+                                behavior: "smooth",
+                                block: "start",
+                            });
+                        }, 150);
+                    }
+                } catch (err) {
+                    console.error("ERROR in displayResults:", err);
+                    displayError(`Failed to render results. ${err.message}`);
+                    if (downloadGuideBtn) downloadGuideBtn.disabled = true;
+                    if (downloadSheetBtn) downloadSheetBtn.disabled = true;
+                    if (outputSection) outputSection.style.display = "none";
                 }
-                if (downloadSheetBtn) {
-                    downloadSheetBtn.disabled = !hasSheetContent;
-                }
-                if (outputSection) outputSection.style.display = "block";
-                showOutput("guide");
-                if (hasGuideContent || hasSheetContent) {
-                    setTimeout(() => {
-                        outputSection?.scrollIntoView({
-                            behavior: "smooth",
-                            block: "start",
-                        });
-                    }, 150);
-                }
-            } catch (err) {
-                console.error("ERROR in displayResults:", err);
-                displayError(`Failed to render results. ${err.message}`);
+            }
+            else {
+                console.error('No study guide or reference sheet content generated/extracted.');
+                displayError('No study guide or reference sheet content generated/extracted.');
                 if (downloadGuideBtn) downloadGuideBtn.disabled = true;
                 if (downloadSheetBtn) downloadSheetBtn.disabled = true;
                 if (outputSection) outputSection.style.display = "none";
             }
         }
 
-        function addMessage(aiRawText) {
-            
+        async function addMessage(data) {
+            if (!data || typeof data !== "object") {
+                displayError("Invalid AI response received.");
+                return;
+            }
+            if (downloadGuideBtn) downloadGuideBtn.disabled = true;
+            if (downloadSheetBtn) downloadSheetBtn.disabled = true;
+
+            if (data.studyGuide && data.referenceSheet) {
+                let { guideMarkdown, sheetMarkdown } = parseAIResponse(data.studyGuide, data.referenceSheet);
+
+                try {
+                    let elementsToTypeset = [];
+                    
+                    studyGuideContent.innerHTML = "";
+                    studyGuideContent.innerHTML = guideMarkdown;
+                    elementsToTypeset.push(studyGuideContent);
+                    
+                    referenceSheetContent.innerHTML = "";
+                    referenceSheetContent.innerHTML = sheetMarkdown;
+                    elementsToTypeset.push(referenceSheetContent);
+
+                    await typesetMathJax(elementsToTypeset);
+
+                    if (typeof activateDesmos === "function") {
+                        try {
+                            activateDesmos();
+                        } catch (e) {
+                            console.warn("Error activating Desmos:", e);
+                        }
+                    }
+
+                    const hasGuideContent = studyGuideContent.innerHTML !== guidePlaceholder;
+                    const hasSheetContent = referenceSheetContent.innerHTML !== sheetPlaceholder;
+                    if (downloadGuideBtn) {
+                        downloadGuideBtn.disabled = !hasGuideContent;
+                    }
+                    if (downloadSheetBtn) {
+                        downloadSheetBtn.disabled = !hasSheetContent;
+                    }
+                    if (outputSection) outputSection.style.display = "block";
+                    showOutput("guide");
+                    if (hasGuideContent || hasSheetContent) {
+                        setTimeout(() => {
+                            outputSection?.scrollIntoView({
+                                behavior: "smooth",
+                                block: "start",
+                            });
+                        }, 150);
+                    }
+                } catch (err) {
+                    console.error("ERROR in displayResults:", err);
+                    displayError(`Failed to render results. ${err.message}`);
+                    if (downloadGuideBtn) downloadGuideBtn.disabled = true;
+                    if (downloadSheetBtn) downloadSheetBtn.disabled = true;
+                    if (outputSection) outputSection.style.display = "none";
+                }
+            }
+            else {
+                console.error('No study guide or reference sheet content generated/extracted.');
+                displayError('No study guide or reference sheet content generated/extracted.');
+                if (downloadGuideBtn) downloadGuideBtn.disabled = true;
+                if (downloadSheetBtn) downloadSheetBtn.disabled = true;
+                if (outputSection) outputSection.style.display = "none";
+            }
         }
+
 
         /**
           * Main Generation Function
@@ -551,7 +601,7 @@ const { page } = Astro.props;
                 const data = await response.json();
                 if (data?.generatedText) {
                     if (page === 'home') {
-                        await displayResults(data.generatedText);
+                        await displayResults(data);
                         await showOpenInChatBtn(data.token);
                     }
                     if (page === 'chat') {
@@ -624,7 +674,8 @@ const { page } = Astro.props;
             btn.appendChild(icon);
             
             btn.appendChild(document.createTextNode(' Open in Chat'));
-            btn.classList.add('ternary-button');
+            btn.classList.add('btn');
+            btn.classList.add('bg-primary');
             btn.classList.add('chat-button');
             chatButtonContainer.appendChild(btn);
         }

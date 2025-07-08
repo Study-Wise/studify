@@ -46,9 +46,8 @@
     justify-content: space-between;
     align-items: center;
 
-    .settings-row {
+    .model-selector {
         flex: 1;
-        place-content: end;
     }
 }
 
@@ -122,6 +121,14 @@
     i {
         margin-right: 8px;
     }
+}
+
+.save-pdf-button {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
 }
 
 .output-content {
