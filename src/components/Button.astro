@@ -1,7 +1,12 @@
 ---
-const { variant = 'primary', icon = '', ...props } = Astro.props;
+const { element = 'button', variant = 'primary', icon = '', additionalClasses = '', mode = 'full', ...props } = Astro.props;
 ---
-<button class={`btn bg-${variant}`} {...props}>
-    <span class="material-symbols-outlined">{icon}</span> <slot />
-    <span class="spinner" style="display: none"></span>
-</button>
+{(() => {
+  const Element = element;
+  return (
+    <Element class={`btn bg-${variant} ${mode === 'lite' ? 'lite' : ''} ${additionalClasses}`} {...props}>
+      {icon && <span class="material-symbols-outlined">{icon}</span>} <slot />
+      <span class="spinner" style="display: none"></span>
+    </Element>
+  );
+})()}

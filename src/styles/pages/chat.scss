@@ -68,7 +68,7 @@ footer, .chat-toolbar {
 
     &:has( + .chat-section .chat-sidebar-toggle > input[type="checkbox"]:checked) {
         + .chat-section .chat-messages {
-            border-bottom-left-radius: 1rem;
+            border-bottom-left-radius: 2rem;
             overflow-x: hidden;
             @supports (overflow-x: clip) {
                 overflow-x: clip;

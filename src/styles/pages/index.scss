@@ -72,16 +72,6 @@
     }
 }
 
-.error-box {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-    padding: 15px;
-    border-radius: 6px;
-    margin-top: 20px;
-    font-size: 1em;
-}
-
 .output-tabs {
     margin-bottom: 25px;
     display: flex;
@@ -214,4 +204,9 @@
             margin-top: 1em;
         }
     }
+}
+
+.chat-button-container {
+    display: flex;
+    place-content: end;
 }

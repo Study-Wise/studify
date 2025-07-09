@@ -35,8 +35,10 @@
 :root {
     scroll-behavior: smooth;
     scroll-padding-top: 20px;
-    @supports (scrollbar-gutter: stable) {
-        scrollbar-gutter: stable;
+    &:not(:has(.chat-page)) {
+        @supports (scrollbar-gutter: stable) {
+            scrollbar-gutter: stable;
+        }
     }
     @supports (view-transition-name: root) {
         view-transition-name: root;
@@ -228,6 +230,16 @@ main {
     display: flex;
     align-items: center;
     gap: 10px;
+}
+
+.error-box {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    padding: 15px;
+    border-radius: 6px;
+    margin-top: 20px;
+    font-size: 1em;
 }
 
 /* --- MathJax Adjustments --- */

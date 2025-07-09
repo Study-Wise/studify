@@ -44,7 +44,8 @@ async function generateToken(token?: number) {
       title: '',
       thread: {
         messages: []
-      }
+      },
+      isDev: process.env.NODE_ENV === 'development' ? true : false
     }
 
     const db = drizzle();

@@ -1,6 +1,8 @@
 @use "../variables/globals.scss" as *;
 @use "sass:color";
 @use "sass:math";
+@use "sass:list";
+@use "sass:map";
 
 $max-width: 500px;
 $max-height: 250px;
@@ -13,24 +15,51 @@ $max-height: 250px;
 
     max-width: $max-width;
     overflow: hidden;
-
 }
 
 .tabs {
     position: sticky;
     left: 0;
     display: flex;
-    gap: 10px;
+    gap: 1rem;
+
+    .tab {
+        position: relative;
+        cursor: pointer;
+
+        input[type="radio"] {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            width: 0;
+            height: 0;
+            opacity: 0;
+            z-index: -1;
+            outline: none;
+        }
+    }
 
     .buttons {
         flex: 1;
         justify-self: end;
         display: grid;
         place-items: end;
+
+        .button {
+            height: 100%;
+        }
     }
 
-    .button {
-        height: 100%;
+}
+
+.fancy-output:not([open]):has(.tabs > .tab:first-of-type > input[type="radio"]:checked) {
+    .tab-contents-parent .tab-content-container {
+        translate: 0 0;
+    }
+}
+.fancy-output:not([open]):has(.tabs > .tab:last-of-type > input[type="radio"]:checked) {
+    .tab-contents-parent .tab-content-container {
+        translate: -100% 0;
     }
 }
 

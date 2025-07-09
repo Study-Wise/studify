@@ -1,9 +1,11 @@
-import { bigint, pgTable, varchar, timestamp, jsonb } from 'drizzle-orm/pg-core';
+import { bigint, pgTable, varchar, timestamp, jsonb, boolean } from 'drizzle-orm/pg-core';
 
 export const threadsTable = pgTable('threads', {
-  token: bigint('token', { mode: 'number' }).primaryKey().notNull(),
+  id: bigint('id', { mode: 'number' }).primaryKey().generatedAlwaysAsIdentity(),
+  token: bigint('token', { mode: 'number' }).notNull(),
   title: varchar({ length: 255 }).notNull(),
   thread: jsonb().notNull(),
   createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp().notNull().defaultNow(),
+  isDev: boolean().notNull().default(true),
 });

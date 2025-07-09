@@ -67,8 +67,11 @@ export const POST: APIRoute = async ({ request }) => {
 
     if (!user_token) {
       try {
-        const { token } = await generateToken();
+        const { token, dbResponse } = await generateToken();
         user_token = token;
+        if (dbResponse) {
+          console.log('Token generated successfully:', dbResponse);
+        }
       } catch (error) {
         console.error('Error generating token:', error);
         return new Response(
@@ -172,6 +175,7 @@ export const POST: APIRoute = async ({ request }) => {
             title: convoTitle,
             thread: { messages: convoHistory },
             updatedAt: new Date(),
+            isDev: process.env.NODE_ENV === 'development' ? true : false
           })
           .where(eq(threadsTable.token, user_token));
       } else if (user_token) {
