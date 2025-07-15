@@ -2259,6 +2259,7 @@ const google_icons = {
 }
 
 let custom_icons: { name: string; [key: string]: any }[] = []
+if (!fs.existsSync(icons_path)) fs.mkdirSync(icons_path)
 const icons = fs.readdirSync(icons_path)
 
 for (let icon of icons) {

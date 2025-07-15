@@ -8,7 +8,7 @@ type Thread = InferSelectModel<typeof threadsTable>;
 async function getMessages(token: string) {
     try {
         const db = drizzle();
-        const dbResponse: Thread[] = await db.select().from(threadsTable).where(eq(threadsTable.token, Number(token)));
+        const dbResponse: Thread[] = await db.select().from(threadsTable).where(eq(threadsTable.token, token));
         if (dbResponse && dbResponse[0] && dbResponse[0].thread) {
             return (dbResponse[0].thread as { messages: any[] }).messages;
         }
