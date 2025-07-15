@@ -142,6 +142,7 @@ footer, .chat-toolbar {
 
     .message {
         $_message-space: 1rem;
+        --pad: #{$_message-space};
 
         display: flex;
         flex-direction: column;

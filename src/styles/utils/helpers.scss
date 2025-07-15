@@ -4,6 +4,8 @@
 @use 'sass:list';
 @use 'sass:map';
 
+$shadow-alpha: 0.5;
+
 @each $variant, $colors in $accent-colors {
     .bg-#{$variant} {
         --bg-clr-1: #{list.nth($colors, 1)};
@@ -18,28 +20,42 @@
         --text-clr-1: #{list.nth($colors, 3)};
         --text-clr-2: #{list.nth($colors, 4)};
 
-        color: var(--clr, var(--color, var(--text, list.nth($colors, 3))));
+        color: var(--clr, var(--color, var(--text, var(--text-clr-1))));
         &:hover {
-            color: var(--clr, var(--color, var(--text, list.nth($colors, 4))));
+            color: var(--clr, var(--color, var(--text, var(--text-clr-2))));
         }
     }
 
     .bs-#{$variant} {
-        --box-shadow-clr-1: #{list.nth($colors, 1)};
-        --box-shadow-clr-2: #{list.nth($colors, 2)};
+        --box-shadow-clr-1: #{color.adjust(list.nth($colors, 1), $alpha: -$shadow-alpha)};
+        --box-shadow-clr-2: #{color.adjust(list.nth($colors, 2), $alpha: -$shadow-alpha)};
+        
+        @supports (hsl(from var(--bg-clr-1) h s l / #{$shadow-alpha})) {
+            --box-shadow-clr-1: hsl(from var(--bg-clr-1) h s l / #{$shadow-alpha});
+        }
+        @supports (hsl(from var(--bg-clr-2) h s l / #{$shadow-alpha})) {
+            --box-shadow-clr-2: hsl(from var(--bg-clr-2) h s l / #{$shadow-alpha});
+        }
 
-        box-shadow: var(--box-shadow, 0 1px 0 0) var(--bg, var(--background, color.adjust(list.nth($colors, 1), $alpha: -0.5)));
+        box-shadow: var(--box-shadow, 0 1px 0 0) var(--bg, var(--background, var(--box-shadow-clr-1)));
         &:hover {
-            box-shadow: var(--box-shadow, 0 1px 0 0) var(--bg, var(--background, color.adjust(list.nth($colors, 2), $alpha: -0.5)));
+            box-shadow: var(--box-shadow, 0 1px 0 0) var(--bg, var(--background, var(--box-shadow-clr-2)));
         }
     }
     .ts-#{$variant} {
-        --text-shadow-clr-1: #{list.nth($colors, 3)};
-        --text-shadow-clr-2: #{list.nth($colors, 4)};
+        --text-shadow-clr-1: #{color.adjust(list.nth($colors, 3), $alpha: -$shadow-alpha)};
+        --text-shadow-clr-2: #{color.adjust(list.nth($colors, 4), $alpha: -$shadow-alpha)};
 
-        text-shadow: var(--text-shadow, 0 1px 0 0) var(--clr, var(--color, var(--text, color.adjust(list.nth($colors, 3), $alpha: -0.5))));
+        @supports (hsl(from var(--text-clr-1) h s l / #{$shadow-alpha})) {
+            --text-shadow-clr-1: hsl(from var(--text-clr-1) h s l / #{$shadow-alpha});
+        }
+        @supports (hsl(from var(--text-clr-2) h s l / #{$shadow-alpha})) {
+            --text-shadow-clr-2: hsl(from var(--text-clr-2) h s l / #{$shadow-alpha});
+        }
+
+        text-shadow: var(--text-shadow, 0 1px 0 0) var(--clr, var(--color, var(--text, var(--text-shadow-clr-1))));
         &:hover {
-            text-shadow: var(--text-shadow, 0 1px 0 0) var(--clr, var(--color, var(--text, color.adjust(list.nth($colors, 4), $alpha: -0.5))));
+            text-shadow: var(--text-shadow, 0 1px 0 0) var(--clr, var(--color, var(--text, var(--text-shadow-clr-2))));
         }
     }
 }

@@ -1,0 +1,87 @@
+@use '../variables/globals.scss' as *;
+
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:color';
+@use 'sass:math';
+
+$spacing: 0.5rem;
+$border-size: 2px;
+
+select.fancy-select,
+::picker(select) {
+    box-sizing: border-box;
+    appearance: base-select;
+    width: clamp(250px, 18%, 500px);
+    box-sizing: border-box;
+    max-height: 100%;
+
+    padding: $spacing;
+}
+
+select.fancy-select {
+    &, option, selectedcontent {
+        cursor: pointer;
+    }
+}
+
+::picker(select) {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: calc($spacing + #{$border-size*2});
+
+    margin-block: $spacing;
+    border-radius: $spacing;
+
+    background: linear-gradient(30deg, list.nth(map.get($accent-colors, primary), 1), list.nth(map.get($accent-colors, primary), 2));
+    cursor: default
+}
+
+select.fancy-select {
+    padding: 0 $spacing;
+    selectedcontent,
+    option {
+        box-sizing: border-box;
+        padding: $spacing;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: $spacing;
+        
+        outline: $border-size solid color.adjust($card-bg, $alpha: -0.75);
+        background-color: color.adjust($card-bg, $alpha: -0.5);
+        border-radius: math.div($spacing, 2);
+        
+        &::checkmark {
+            content: unset;
+        }
+
+        &:first-child {
+            margin-block-start: 0;
+        }
+        &:last-child {
+            margin-block-end: 0;
+        }
+
+        &[disabled] {
+            display: none;
+        }
+
+        .model-name {
+            max-width: 100%;
+            word-wrap: break-word;
+            text-align: center;
+            line-height: 1;
+            @supports (text-wrap: wrap) {
+                text-wrap: wrap;
+            }
+        }
+    }
+
+    img {
+        aspect-ratio: 1;
+        height: 0.8lh;
+    }
+}
