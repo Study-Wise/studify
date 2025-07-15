@@ -15,7 +15,7 @@ const { page } = Astro.props;
     const guidePlaceholder = '<p><i>No Study Guide content generated/extracted.</i></p>';
     const sheetPlaceholder = '<p><i>No Reference Sheet content generated/extracted.</i></p>';
     
-    var userToken = '';
+    var userToken = page === 'chat' ? window.cookies.get('userToken') || '' : '';
 
     let userSettings = {};
     document.addEventListener('DOMContentLoaded', () => {
@@ -47,18 +47,16 @@ const { page } = Astro.props;
         if (typeof json === 'object' && 'status' in json && json.status === 'success') {
             console.log('Token generated successfully:', json.generated_token);
             userToken = json.generated_token;
-            localStorage.setItem('userToken', userToken);
             window.cookies.set('userToken', userToken);
         } else {
             userToken = null;
-            localStorage.removeItem('userToken');
             window.cookies.delete('userToken');
             console.error('Error generating token:', json);
             throw new Error('Failed to generate token for thread functionality.');
         }
     }
 
-    async function destroyToken(token=localStorage.getItem('userToken')) {
+    async function destroyToken(token=window.cookies.get('userToken')) {
         if (token) {
             var resp = await fetch('/api/token/destroy', {
                 method: 'POST',
@@ -78,7 +76,6 @@ const { page } = Astro.props;
             if (typeof json === 'object' && 'status' in json && json.status === 'success') {
                 console.log('Token invalidated successfully.');
                 userToken = null;
-                localStorage.removeItem('userToken');
                 window.cookies.delete('userToken');
             } else {
                 console.error('Error invalidating token:', json);
@@ -86,7 +83,7 @@ const { page } = Astro.props;
         }
     }
 
-    async function destroyTokenIfEmptyConvo(token=localStorage.getItem('userToken')) {
+    async function destroyTokenIfEmptyConvo(token=window.cookies.get('userToken')) {
         if (token) {
             var resp = await fetch('/api/token/destroyIfEmptyConvo', {
                 method: 'POST',
@@ -106,7 +103,6 @@ const { page } = Astro.props;
             if (typeof json === 'object' && 'status' in json && json.status === 'success') {
                 console.log('Token invalidated successfully.');
                 userToken = null;
-                localStorage.removeItem('userToken');
                 window.cookies.delete('userToken');
             } else {
                 console.error('Error invalidating token:', json);
@@ -182,7 +178,6 @@ const { page } = Astro.props;
                     await displayResults(data);
                     await showOpenInChatBtn(data.token);
                     userToken = data.token;
-                    localStorage.setItem('userToken', data.token);
                     window.cookies.set('userToken', data.token);
                 }
                 if (page === 'chat') {
@@ -600,11 +595,11 @@ const { page } = Astro.props;
         }
     }
 
-    async function showOpenInChatBtn(token=localStorage.getItem('userToken')) {
+    async function showOpenInChatBtn(token=window.cookies.get('userToken')) {
         const chatButtonContainer = document.querySelector('.chat-button-container');
         if (chatButtonContainer) {
             const btn = document.createElement('a');
-            btn.href = `/chat`;
+            btn.href = `/chat/${token}`;
 
             const icon = document.createElement('span');
             icon.classList.add('material-symbols-outlined');
@@ -667,8 +662,6 @@ const { page } = Astro.props;
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        userToken = localStorage.getItem('userToken') || window.cookies.get('userToken') || '';
-
         textInput = document.getElementById('text-paste');
         generateButton = document.getElementById('generate-button');
         spinner = generateButton?.querySelector('.spinner');
