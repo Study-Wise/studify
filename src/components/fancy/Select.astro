@@ -1,0 +1,7 @@
+---
+import '../../styles/components/fancy-select.scss';
+const { additionalClasses = '', ...props } = Astro.props;
+---
+<select class={`fancy-select ${additionalClasses}`} {...props}>
+    <slot />
+</select>

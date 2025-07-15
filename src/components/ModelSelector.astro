@@ -1,6 +1,7 @@
 ---
 // import '../styles/pages/settings.scss';
 import SettingsScript from '../scripts/settings.astro';
+import FancySelect from './fancy/Select.astro';
 
 import { models, providers } from '../lib/models';
 import config from '../lib/config';
@@ -27,7 +28,7 @@ providers['mathwise'] = {
 <div class="model-selector">
     <label for={selectorSettings.id}>{selectorSettings.name}:</label>
     {Array.isArray(selectorSettings.options) ? (
-        <select class="fancy-select" id={selectorSettings.id} name={selectorSettings.id} value={selectorSettings.default}>
+        <FancySelect id={selectorSettings.id} name={selectorSettings.id} value={selectorSettings.default}>
             {/* <selectedcontent /> */}
             {selectorSettings.options.map(option => {
                 const providerKey = option.name === 'Select A Model' ? 'mathwise' : Object.keys(providers).find(p =>
@@ -40,17 +41,17 @@ providers['mathwise'] = {
                 return (
                     <option value={currKey} selected={currKey === selectorSettings.default} disabled={option.name === 'Select A Model'}>
                         {option.name === 'Select A Model' ? '' : <img src={`/images/providers/${providerKey || 'default'}.svg`} alt={providerKey ? providers[providerKey].name : 'Provider'} />}
-                        {option.name || currKey}
+                        <span class="model-name">{option.name || currKey}</span>
                     </option>
                 );
             })}
-        </select>
+        </FancySelect>
     ) : typeof selectorSettings.options === 'object' ? (
-        <select id={selectorSettings.id} name={selectorSettings.id} value={selectorSettings.options[selectorSettings.default]}>
+        <FancySelect id={selectorSettings.id} name={selectorSettings.id} value={selectorSettings.options[selectorSettings.default]}>
             {Object.keys(selectorSettings.options).map(option => (
                 <option value={option} selected={selectorSettings.options[option] === selectorSettings.default}>{selectorSettings.options[option].name || option}</option>
             ))}
-        </select>
+        </FancySelect>
     ) : (
         <input type="text" id={selectorSettings.id} name={selectorSettings.id} value={selectorSettings[1]} />
     )}

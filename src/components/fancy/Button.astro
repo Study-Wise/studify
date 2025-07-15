@@ -1,10 +1,11 @@
 ---
 const { element = 'button', variant = 'primary', icon = '', additionalClasses = '', mode = 'full', ...props } = Astro.props;
+const className = `btn bg-${variant} ${mode === 'lite' ? 'lite' : ''} ${additionalClasses}`.replaceAll('  ', ' ').trim()
 ---
 {(() => {
   const Element = element;
   return (
-    <Element class={`btn bg-${variant} ${mode === 'lite' ? 'lite' : ''} ${additionalClasses}`} {...props}>
+    <Element class={className} {...props}>
       {icon && <span class="material-symbols-outlined">{icon}</span>} <slot />
       <span class="spinner" style="display: none"></span>
     </Element>
