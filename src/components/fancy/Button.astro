@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream:src/components/fancy/Button.astro
 ---
 const { element = 'button', variant = 'primary', icon = '', additionalClasses = '', mode = 'full', ...props } = Astro.props;
 const className = `btn bg-${variant} ${mode === 'lite' ? 'lite' : ''} ${additionalClasses}`.replaceAll('  ', ' ').trim()
@@ -10,4 +11,17 @@ const className = `btn bg-${variant} ${mode === 'lite' ? 'lite' : ''} ${addition
       <span class="spinner" style="display: none"></span>
     </Element>
   );
+=======
+---
+const { element = 'button', variant = 'primary', icon = '', additionalClasses = '', mode = 'full', ...props } = Astro.props;
+---
+{(() => {
+  const Element = element;
+  return (
+    <Element class={`btn bg-${variant} ${mode === 'lite' ? 'lite' : ''} ${additionalClasses}`} {...props}>
+      {icon && <span class="material-symbols-outlined">{icon}</span>} <slot />
+      <span class="spinner" style="display: none"></span>
+    </Element>
+  );
+>>>>>>> Stashed changes:src/components/Button.astro
 })()}

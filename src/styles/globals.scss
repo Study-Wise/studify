@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 @use './variables/globals.scss' as *;
 @use './utils/helpers.scss' as *;
 @use 'sass:color';
@@ -453,4 +454,516 @@ mjx-container {
             break-before: auto !important;
         }
     }
+=======
+@use './variables/globals.scss' as *;
+@use './utils/helpers.scss' as *;
+@use 'sass:color';
+@use 'sass:list';
+@use 'sass:map';
+
+// Material Icons Configuration
+.material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+    aspect-ratio: 1;
+    max-height: calc(1lh + var(--padding, 0)*2);
+
+    &:is(button) {
+        padding: var(--padding, 0);
+        margin: 0;
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+        color: inherit;
+    }
+}
+
+// Base Styles & CSS Reset
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    &:is(ul, ol) {
+        padding-inline-start: 1.5em;
+    }
+}
+
+:root {
+    scroll-behavior: smooth;
+    scroll-padding-top: 20px;
+    &:not(:has(.chat-page)) {
+        @supports (scrollbar-gutter: stable) {
+            scrollbar-gutter: stable;
+        }
+    }
+    @supports (view-transition-name: root) {
+        view-transition-name: root;
+    }
+}
+
+@supports (view-transition-name: root) {
+    @view-transition {
+        navigation: auto;
+    }
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    line-height: 1.6;
+    color: $body-text;
+    background-color: $body-bg;
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+
+    @media print {
+        & {
+            font-size: 10pt;
+            color: #000 !important;
+            background-color: #fff !important;
+            line-height: 1.4;
+    
+            > header,
+            > main > .introduction-section,
+            > main > .input-section,
+            > main > .about-section,
+            > footer,
+            .chat-toolbar,
+            .header-content-wrapper {
+                display: none !important;
+                visibility: hidden !important;
+            }
+    
+            > main,
+            > main > #output-section {
+                display: block !important;
+                visibility: visible !important;
+                box-shadow: none !important;
+                border: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                max-width: none !important;
+            }
+        }
+    }
+}
+
+@media screen {
+    h1, h2, h3, h4, h5, h6, p, ul, ol, li, pre, code, blockquote {
+        &:first-child {
+            margin-block-start: 0;
+        }
+        &:last-child {
+            margin-block-end: 0;
+        }
+    }
+}
+
+.container {
+    box-sizing: border-box;
+    max-width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 100%;
+}
+
+select.fancy-select,
+::picker(select) {
+    box-sizing: border-box;
+    appearance: base-select;
+    width: clamp(250px, 18%, 500px);
+    box-sizing: border-box;
+    max-height: 100%;
+
+    padding: 0.25rem;
+    gap: 0.5rem;
+
+}
+
+::picker(select) {
+    margin-block: 0.5rem;
+    border-radius: 0.5rem;
+
+    background: linear-gradient(30deg, list.nth(map.get($accent-colors, primary), 1), list.nth(map.get($accent-colors, primary), 2));
+}
+
+select.fancy-select {
+    padding: 0 0.5rem;
+    selectedcontent,
+    option {
+        box-sizing: border-box;
+        margin-block: 0.25rem;
+        padding: 0.25rem 0.5rem;
+
+        height: 1.25lh;
+
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        
+        background-color: color.adjust($card-bg, $alpha: -0.5);
+        border-radius: 0.25rem;
+        
+        &::checkmark {
+            content: unset;
+        }
+
+        &:first-child {
+            margin-block-start: 0;
+        }
+        &:last-child {
+            margin-block-end: 0;
+        }
+    }
+
+    img {
+        aspect-ratio: 1;
+        height: 0.8lh;
+    }
+}
+
+img {
+    max-height: 100%;
+}
+
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+/* Main Content Area */
+main {
+    flex-grow: 1;
+    &:not(.chat-page) {
+        padding: 40px 0;
+    }
+}
+
+/* Card Container */
+.card {
+    background-color: $card-bg;
+    padding: 30px;
+    margin-bottom: 35px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px $card-shadow;
+    border: 1px solid $card-border;
+}
+
+:is(section, .chat-page) {
+    h2 {
+        color: $section-title;
+    
+        font-size: 1.6rem;
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+        
+        &:not(.chat-header h2) {
+            margin-bottom: 25px;
+            border-bottom: 1px solid $section-title-border;
+            padding-bottom: 12px;
+        }
+    }
+}
+
+:is(section, .chat-page) h2 i {
+    margin-right: 12px;
+    color: list.nth(map.get($accent-colors, primary), 1);
+}
+
+.model-selector {
+    place-content: end;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.error-box {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    padding: 15px;
+    border-radius: 6px;
+    margin-top: 20px;
+    font-size: 1em;
+}
+
+/* --- MathJax Adjustments --- */
+mjx-container {
+    display: inline-block !important;
+    line-height: normal !important;
+    vertical-align: middle !important;
+    text-align: left !important;
+    // overflow-x: auto;
+    max-width: 100%;
+}
+
+mjx-container[display="true"] {
+    display: block !important;
+    height: fit-content !important;
+    /* margin-top: 0.8em !important; */
+    /* margin-bottom: 0.8em !important; */
+    text-align: center !important;
+}
+
+/* --- Responsive Design Adjustments --- */
+@media (max-width: 768px) {
+    /* Stack About section */
+    .about-section .about-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .about-section .profile-picture {
+        margin-bottom: 20px;
+        width: 120px;
+        height: 120px;
+    }
+
+    .about-section .about-text {
+        text-align: center;
+    }
+
+    /* Other adjustments */
+    .container {
+        padding: 0 15px;
+    }
+
+    main {
+        &:not(.chat-page) {
+            padding: 30px 0;
+        }
+    }
+
+    .card {
+        padding: 25px;
+    }
+
+    :is(section, .chat-page) h2 {
+        font-size: 1.4rem;
+    }
+
+    .output-tabs {
+        gap: 5px;
+    }
+
+    .tab-button {
+        padding: 10px 15px;
+        font-size: 0.95rem;
+    }
+}
+
+/* Print-Specific Styles */
+@media print {
+    /* Hide elements not meant for printing */
+    body > header,
+    body > main > .introduction-section,
+    body > main > .input-section,
+    body > main > .about-section,
+    body > footer,
+    .output-tabs,
+    .download-buttons,
+    #interactive-steps-container,
+    button,
+    #error-message {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    /* Ensure main container and output section are potentially visible */
+    body,
+    body > main,
+    body > main > #output-section {
+        display: block !important;
+        visibility: visible !important;
+        box-shadow: none !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+    }
+
+    /* Hide all output content divs by default */
+    .output-section-title,
+    .output-content {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    /* ONLY show the output content div that has the 'print-target-container' class */
+    .output-content.print-target-container,
+    .output-section:not(:has(.output-content.print-target-container))
+        .output-content {
+        display: block !important;
+        visibility: visible !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 1cm !important;
+        border: none !important;
+        box-shadow: none !important;
+        page-break-before: auto;
+        page-break-after: auto;
+        animation: none !important;
+
+        > article {
+            visibility: visible !important;
+            display: block !important;
+            margin-block-start: 0 !important;
+
+            > :first-child {
+                margin-block-start: 0 !important;
+            }
+            :last-child {
+                margin-block-end: 0 !important;
+            }
+        }
+    }
+
+    /* General print typography */
+    body {
+        font-size: 10pt;
+        color: #000 !important;
+        background-color: #fff !important;
+        line-height: 1.4;
+    }
+
+    /* Page break control */
+    h2,
+    h3,
+    h4,
+    pre {
+        page-break-before: auto !important;
+        page-break-after: avoid !important;
+    }
+
+    ul,
+    ol,
+    p,
+    li,
+    pre,
+    code,
+    mjx-container {
+        page-break-inside: avoid !important;
+    }
+
+    code {
+        font-size: 9pt;
+        word-wrap: break-word;
+    }
+
+    pre {
+        white-space: pre-wrap;
+    }
+
+    /* MathJax print visibility */
+    mjx-container {
+        visibility: visible !important;
+    }
+
+    .mathjax-pending {
+        visibility: hidden !important;
+    }
+
+    .desmos-graph {
+        page-break-inside: avoid !important;
+        page-break-after: auto !important;
+        page-break-before: auto !important;
+        break-inside: avoid !important;
+        break-after: auto !important;
+        break-before: auto !important;
+    }
+}
+
+.desmos-graph {
+    &[latex*="["][latex*="]"] {
+        width: 600px;
+        height: 400px;
+    }
+}
+
+/* Typography elements */
+h2,
+h3,
+h4,
+pre {
+    @media print {
+        & {
+            page-break-before: auto !important;
+            page-break-after: avoid !important;
+        }
+    }
+}
+
+ul,
+ol,
+p,
+li,
+pre,
+code,
+mjx-container {
+    @media print {
+        & {
+            page-break-inside: avoid !important;
+        }
+    }
+}
+
+code {
+    @media print {
+        & {
+            font-size: 9pt;
+            word-wrap: break-word;
+        }
+    }
+}
+
+pre {
+    @media print {
+        & {
+            white-space: pre-wrap;
+        }
+    }
+}
+
+mjx-container {
+    @media print {
+        & {
+            visibility: visible !important;
+        }
+    }
+}
+
+.mathjax-pending {
+    @media print {
+        & {
+            visibility: hidden !important;
+        }
+    }
+}
+
+.desmos-graph {
+    @media print {
+        & {
+            page-break-inside: avoid !important;
+            page-break-after: auto !important;
+            page-break-before: auto !important;
+            break-inside: avoid !important;
+            break-after: auto !important;
+            break-before: auto !important;
+        }
+    }
+>>>>>>> Stashed changes
 }

@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 @use '../variables/globals.scss' as *;
 @use 'sass:color';
 @use 'sass:math';
@@ -188,4 +189,195 @@ footer, .chat-toolbar {
     .chat-section {
         padding: 25px;
     }
+=======
+@use '../variables/globals.scss' as *;
+@use 'sass:color';
+@use 'sass:math';
+@use 'sass:list';
+@use 'sass:map';
+
+body:has(.chat-page) {
+    height: 100dvh;
+}
+
+// footer, .chat-header, .chat-toolbar {
+//     position: sticky;
+// }
+.chat-header {
+    top: 0;
+}
+footer, .chat-toolbar {
+    bottom: 0;
+}
+
+.chat-page {
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.chat-header {
+    box-sizing: border-box;
+    padding: 10px;
+    border-bottom: 1px solid $section-title-border;
+    background: linear-gradient($gradient-angle, list.nth(map.get($accent-colors, primary), 1), list.nth(map.get($accent-colors, primary), 2));
+
+    h2 {
+        background-color: $card-bg;
+        width: fit-content;
+        padding: 10px 20px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px $card-shadow;
+        border: 1px solid $card-border;
+    }
+
+    .header-text-container {
+        color: $section-title;
+    }
+}
+
+.chat-container {
+    flex: 1;
+
+    display: flex;
+    max-height: 100%;
+
+    overflow-y: auto;
+    
+    position: relative;
+}
+
+.chat-sidebar {
+    box-sizing: border-box;
+    padding-top: 3.5rem;
+
+    width: 200px;
+
+    &:has( + .chat-section .chat-sidebar-toggle > input[type="checkbox"]:not(:checked)) {
+        display: none;
+    }
+
+    &:has( + .chat-section .chat-sidebar-toggle > input[type="checkbox"]:checked) {
+        + .chat-section .chat-messages {
+            border-bottom-left-radius: 2rem;
+            overflow-x: hidden;
+            @supports (overflow-x: clip) {
+                overflow-x: clip;
+            }
+         }
+    }
+}
+
+/* Card Container */
+.chat-section {
+    flex: 1;
+
+    display: grid;
+    grid-template-rows: 1fr auto;
+
+    // Adds space for the scrollbar to prevent layout shift in supporting browsers.
+    // Note: Not supported in Safari or any iOS Browser (WebKit).
+    @supports (scrollbar-gutter: stable) {
+        scrollbar-gutter: stable;
+    }
+
+}
+
+.chat-sidebar-toggle {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    overflow: hidden;
+
+    height: 2.5rem;
+    width: 2.5rem;
+
+    // box-sizing: border-box;
+    padding: 0.5rem;
+    background-color: color.adjust($body-bg, $lightness: -5%);
+    border-radius: 0.5rem;
+
+    -webkit-user-select: none;
+    user-select: none;
+
+    cursor: pointer;
+
+    input[type="checkbox"] {
+        visibility: hidden;
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        width: 0;
+        height: 0;
+        display: block;
+    }
+
+    span.material-symbols-outlined {
+        display: block;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+    }
+}
+
+.chat-messages {
+    overflow-y: auto;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 30px;
+    background-color: $card-bg;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .message {
+        $_message-space: 1rem;
+
+        display: flex;
+        flex-direction: column;
+        gap: math.div($_message-space, 2);
+        width: fit-content;
+
+        &-content {
+            box-sizing: border-box;
+            padding: $_message-space;
+    
+    
+            background-color: $message-bg;
+    
+            border-radius: 1rem;
+
+            mjx-container {
+                width: fit-content;
+            }
+        }
+        &-timestamp {
+            align-self: end;
+            padding-inline: math.div($_message-space, 2);
+        }
+
+        &.user {
+            align-self: end;
+            .message-content {
+                background: linear-gradient(120deg, color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: 10%), color.adjust(list.nth(map.get($accent-colors, primary), 2), $lightness: 10%));
+                color: $header-text;
+            }
+        }
+    }
+}
+
+.chat-toolbar {
+    box-sizing: border-box;
+    padding: 1rem;
+
+    background-color: $body-bg;
+}
+  
+@media (max-width: 768px) {
+    .chat-section {
+        padding: 25px;
+    }
+>>>>>>> Stashed changes
 }

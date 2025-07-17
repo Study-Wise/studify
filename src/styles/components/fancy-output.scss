@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 @use "../variables/globals.scss" as *;
 @use "sass:color";
 @use "sass:math";
@@ -116,4 +117,104 @@ $spacing: 1rem;
         //     linear-gradient(transparent $gradient-y, color.adjust($footer-text, $alpha: -0.9) $gradient-y, color.adjust($footer-text, $alpha: -0.5));
     }
 
+=======
+@use "../variables/globals.scss" as *;
+@use "sass:color";
+@use "sass:math";
+@use "sass:list";
+@use "sass:map";
+
+$max-width: 500px;
+$max-height: 250px;
+
+.fancy-output:not([open]) {
+    display: block;
+    border: none;
+    background-color: transparent;
+    position: relative;
+
+    max-width: $max-width;
+    overflow: hidden;
+}
+
+.tabs {
+    position: sticky;
+    left: 0;
+    display: flex;
+    gap: 1rem;
+
+    .tab {
+        position: relative;
+        cursor: pointer;
+
+        input[type="radio"] {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            width: 0;
+            height: 0;
+            opacity: 0;
+            z-index: -1;
+            outline: none;
+        }
+    }
+
+    .buttons {
+        flex: 1;
+        justify-self: end;
+        display: grid;
+        place-items: end;
+
+        .button {
+            height: 100%;
+        }
+    }
+
+}
+
+.fancy-output:not([open]):has(.tabs > .tab:first-of-type > input[type="radio"]:checked) {
+    .tab-contents-parent .tab-content-container {
+        translate: 0 0;
+    }
+}
+.fancy-output:not([open]):has(.tabs > .tab:last-of-type > input[type="radio"]:checked) {
+    .tab-contents-parent .tab-content-container {
+        translate: -100% 0;
+    }
+}
+
+.tab-contents-parent {
+    display: flex;
+    width: 200%;
+}
+
+.tab-content-container {
+    max-width: $max-width;
+    max-height: $max-height;
+    overflow: hidden;
+}
+
+.tab-content {
+    width: 200%;
+    height: auto;
+
+    position: relative;
+    &::after {
+        $gradient-size: 2px;
+        $gradient-x: #{100% - math.div($gradient-size * 2, $max-width) * 100%};
+        $gradient-y: #{100% - math.div($gradient-size * 2, $max-height) * 100%};
+
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: $max-height;
+        width: $max-width;
+
+        background-image:
+            linear-gradient(90deg, transparent $gradient-x, color.adjust($footer-text, $alpha: -0.9) $gradient-x, color.adjust($footer-text, $alpha: -0.5)),
+            linear-gradient(transparent $gradient-y, color.adjust($footer-text, $alpha: -0.9) $gradient-y, color.adjust($footer-text, $alpha: -0.5));
+    }
+
+>>>>>>> Stashed changes
 }
