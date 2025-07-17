@@ -7,11 +7,20 @@ import '../styles/pages/settings.scss';
 import config from '../lib/config';
 import { providers, models } from '../lib/models';
 
-const settings = [
+interface ModelOption {
+  name: string;
+}
+
+const settings: {
+  id: string;
+  name: string;
+  options: ModelOption[];
+  default: string;
+}[] = [
   {
     id: 'model',
     name: 'Model',
-    options: models,
+    options: models as ModelOption[],
     default: config.model,
   }
 ];

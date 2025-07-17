@@ -1,7 +1,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
+const __dirname = new URL('.', import.meta.url).pathname;
 
-let icons_path = path.join(process.cwd(), 'public', 'assets', 'icons');
+let icons_dir = path.join(__dirname, '..', '..', 'public', 'assets');
+let icons_path = path.join(icons_dir, 'icons');
 
 if (icons_path.slice(1, 4).endsWith(':\\')) {
   icons_path = icons_path.slice(1);
@@ -484,6 +486,7 @@ const google_icons = {
 };
 
 let custom_icons: { name: string; [key: string]: any }[] = [];
+if (!fs.existsSync(icons_dir)) fs.mkdirSync(icons_dir);
 if (!fs.existsSync(icons_path)) fs.mkdirSync(icons_path);
 const icons = fs.readdirSync(icons_path);
 
