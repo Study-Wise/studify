@@ -1,0 +1,17 @@
+---
+import FancyButton from './Button.astro';
+import '../../styles/components/fancy-output.scss';
+
+const { obj } = Astro.props;
+---
+<dialog class="fancy-output">
+    <div class="tabs">
+        {obj.studyGuide && <FancyButton element="label" additionalClasses="tab" variant="tertiary" mode="lite"><input type="radio" name="tab" />Study Guide</FancyButton>}
+        {obj.referenceSheet && <FancyButton element="label" additionalClasses="tab" variant="tertiary" mode="lite"><input type="radio" name="tab" />Reference Sheet</FancyButton>}
+        <div class="buttons"><button class="open-button button material-symbols-outlined">open_in_full</button></div>
+    </div>
+    <div class="tab-contents-parent">
+        {obj.studyGuide && <div class="tab-content-container study-guide"><div class="tab-content study-guide" set:html={obj.studyGuide} /></div>}
+        {obj.referenceSheet && <div class="tab-content-container reference-sheet"><div class="tab-content reference-sheet" set:html={obj.referenceSheet} /></div>}
+    </div>
+</dialog>

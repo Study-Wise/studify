@@ -3,11 +3,11 @@ import '../styles/pages/index.scss';
 import '../styles/components/step-by-step.scss';
 
 import Layout from '../layouts/Layout.astro';
-import Button from '../components/Button.astro';
+import FancyButton from '../components/fancy/Button.astro';
 
 import ModelSelector from '../components/ModelSelector.astro';
 
-import ChatScript from '../scripts/chat.astro';
+import MessagesScript from '../scripts/messages.astro';
 
 ---
 <Layout title="Home">
@@ -70,7 +70,7 @@ Please note that the AI will not provide the answer for your immediate equation"
     <!-- Generate Button and Error Message -->
     <div class="toolbar">
       <ModelSelector />
-      <Button id="generate-button" onclick="generateOutput()" variant="primary" icon="manufacturing">Generate Study Materials</Button>
+      <FancyButton id="generate-button" onclick="generateOutput()" variant="primary" icon="manufacturing">Generate Study Materials</Button>
     </div>
     <div id="error-message" class="error-box" style="display: none" role="alert"></div>
   </section>
@@ -115,5 +115,5 @@ Please note that the AI will not provide the answer for your immediate equation"
 
     <div class="chat-button-container"></div>
   </section>
-  <ChatScript page="home" />
+  <MessagesScript page="home" />
 </Layout>

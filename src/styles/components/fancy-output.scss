@@ -6,22 +6,33 @@
 
 $max-width: 500px;
 $max-height: 250px;
+$spacing: 1rem;
 
-.fancy-output:not([open]) {
-    display: block;
-    border: none;
-    background-color: transparent;
-    position: relative;
+.fancy-output {
+    overflow-x: hidden;
 
-    max-width: $max-width;
-    overflow: hidden;
+    &[open] {
+        margin: auto;
+        box-sizing: border-box;
+        padding: $spacing;
+        border: none;
+        border-radius: $spacing;
+    }
+    &:not([open]) {
+        display: block;
+        border: none;
+        background-color: transparent;
+        position: relative;
+    
+        max-width: $max-width;
+    }
 }
 
 .tabs {
     position: sticky;
     left: 0;
     display: flex;
-    gap: 1rem;
+    gap: $spacing;
 
     .tab {
         position: relative;
@@ -52,12 +63,12 @@ $max-height: 250px;
 
 }
 
-.fancy-output:not([open]):has(.tabs > .tab:first-of-type > input[type="radio"]:checked) {
+.fancy-output:has(.tabs > .tab:first-of-type > input[type="radio"]:checked) {
     .tab-contents-parent .tab-content-container {
         translate: 0 0;
     }
 }
-.fancy-output:not([open]):has(.tabs > .tab:last-of-type > input[type="radio"]:checked) {
+.fancy-output:has(.tabs > .tab:last-of-type > input[type="radio"]:checked) {
     .tab-contents-parent .tab-content-container {
         translate: -100% 0;
     }
@@ -68,13 +79,19 @@ $max-height: 250px;
     width: 200%;
 }
 
-.tab-content-container {
+.fancy-output:not([open]) .tab-content-container {
     max-width: $max-width;
     max-height: $max-height;
     overflow: hidden;
 }
 
-.tab-content {
+.fancy-output[open] .tab-content-container {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.fancy-output:not([open]) .tab-content {
     width: 200%;
     height: auto;
 
@@ -91,9 +108,12 @@ $max-height: 250px;
         height: $max-height;
         width: $max-width;
 
-        background-image:
-            linear-gradient(90deg, transparent $gradient-x, color.adjust($footer-text, $alpha: -0.9) $gradient-x, color.adjust($footer-text, $alpha: -0.5)),
-            linear-gradient(transparent $gradient-y, color.adjust($footer-text, $alpha: -0.9) $gradient-y, color.adjust($footer-text, $alpha: -0.5));
+        box-shadow: inset #{-$gradient-size} #{-$gradient-size} #{$gradient-size} 0 color.adjust($footer-text, $alpha: -0.5);
+        border-bottom-right-radius: calc(var(--pad) / 2);
+
+        // background-image:
+        //     linear-gradient(90deg, transparent $gradient-x, color.adjust($footer-text, $alpha: -0.9) $gradient-x, color.adjust($footer-text, $alpha: -0.5)),
+        //     linear-gradient(transparent $gradient-y, color.adjust($footer-text, $alpha: -0.9) $gradient-y, color.adjust($footer-text, $alpha: -0.5));
     }
 
 }

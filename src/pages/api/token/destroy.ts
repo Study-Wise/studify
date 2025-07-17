@@ -1,10 +1,6 @@
 import 'dotenv/config';
 import type { APIRoute } from 'astro';
 
-import config from '../../../lib/config';
-
-import { v4 as uuid } from 'uuid';
-
 import { eq } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/vercel-postgres';
 import { threadsTable } from '../../../db/schema';
@@ -41,7 +37,7 @@ async function destroyToken(token: string | undefined) {
     }
 
     const db = drizzle();
-    const dbResponse = await db.delete(threadsTable).where(eq(threadsTable.token, Number(token)));
+    const dbResponse = await db.delete(threadsTable).where(eq(threadsTable.token, token));
     console.log('Thread deleted!')
 
     return { dbResponse, token };

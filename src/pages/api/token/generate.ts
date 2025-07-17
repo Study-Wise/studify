@@ -1,14 +1,10 @@
 import 'dotenv/config';
 import type { APIRoute } from 'astro';
 
-import config from '../../../lib/config';
-
-import { eq } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/vercel-postgres';
 import { threadsTable } from '../../../db/schema';
 
-import { randomInt } from 'crypto';
-const MAX_TOKEN = 281_474_976_710_655; // 2^48 - 1
+import { v4 as uuid } from 'uuid';
 
 export const POST: APIRoute = async ({ request }) => {
   try {
@@ -35,9 +31,9 @@ export const POST: APIRoute = async ({ request }) => {
   }
 };
 
-async function generateToken(token?: number) {
+async function generateToken(token?: string) {
   try {
-    if (!token) token = randomInt(0, MAX_TOKEN);
+    if (!token) token = uuid();
 
     const obj = {
       token: token,
