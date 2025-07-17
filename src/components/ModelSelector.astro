@@ -1,8 +1,7 @@
-<<<<<<< Updated upstream
 ---
 // import '../styles/pages/settings.scss';
 import SettingsScript from '../scripts/settings.astro';
-import FancySelect from './fancy/Select.astro';
+
 import { models, providers } from '../lib/models';
 import config from '../lib/config';
 
@@ -21,67 +20,6 @@ const selectorSettings: {
     options: models as ModelOption[],
     default: '',
 };
-
-if (selectorSettings.options.length > 0 && selectorSettings.options[0].name !== 'Select A Model') {
-    selectorSettings.options.unshift({ name: 'Select A Model' });
-}
-providers['mathwise'] = {
-    name: 'MW',
-    models: {
-        '': { name: 'Select A Model' },
-    },
-};
-
----
-<div class="model-selector">
-    <label for={selectorSettings.id}>{selectorSettings.name}:</label>
-    {Array.isArray(selectorSettings.options) ? (
-        <FancySelect id={selectorSettings.id} name={selectorSettings.id} value={selectorSettings.default}>
-            {/* <selectedcontent /> */}
-            {selectorSettings.options.map(option => {
-                const providerKey = option.name === 'Select A Model' ? 'mathwise' : Object.keys(providers).find(p =>
-                    Object.keys(providers[p].models).find(m => providers[p].models[m].name === option.name)
-                );
-                const currKey = providerKey
-                    ? Object.keys(providers[providerKey].models).find(m => providers[providerKey].models[m].name === option.name)
-                    : '';
-                return (
-                    <option value={currKey} selected={currKey === selectorSettings.default} disabled={option.name === 'Select A Model'}>
-                        {option.name === 'Select A Model' ? '' : <img src={`/images/providers/${providerKey || 'default'}.svg`} alt={providerKey ? providers[providerKey].name : 'Provider'} />}
-                        <span class="model-name">{option.name || currKey}</span>
-                    </option>
-                );
-            })}
-        </FancySelect>
-    ) : typeof selectorSettings.options === 'object' ? (
-        <FancySelect id={selectorSettings.id} name={selectorSettings.id} value={selectorSettings.options[selectorSettings.default]}>
-            {Object.keys(selectorSettings.options).map(option => (
-                <option value={option} selected={selectorSettings.options[option] === selectorSettings.default}>{selectorSettings.options[option].name || option}</option>
-            ))}
-        </FancySelect>
-    ) : (
-        <input type="text" id={selectorSettings.id} name={selectorSettings.id} value={selectorSettings[1]} />
-    )}
-</div>
-<script>
-    document.querySelectorAll('select.fancy-select selectedcontent').forEach(sc => sc.outerHTML = `<button>${sc.outerHTML}</button>`)
-</script>
-<script is:inline>
-    window.addEventListener('DOMContentLoaded', () => activateLocalStorageInput('model'));
-=======
----
-// import '../styles/pages/settings.scss';
-import SettingsScript from '../scripts/settings.astro';
-
-import { models, providers } from '../lib/models';
-import config from '../lib/config';
-
-const selectorSettings = {
-    id: 'model',
-    name: 'Model',
-    options: models,
-    default: '',
-}
 
 if (selectorSettings.options.length > 0 && selectorSettings.options[0].name !== 'Select A Model') {
     selectorSettings.options.unshift({ name: 'Select A Model' });
@@ -131,5 +69,4 @@ providers['mathwise'] = {
 </script>
 <script is:inline>
     window.addEventListener('DOMContentLoaded', () => activateLocalStorageInput('model'));
->>>>>>> Stashed changes
 </script>
