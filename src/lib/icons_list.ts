@@ -1,5 +1,3 @@
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 import fs from 'fs';
 import path from 'path';
 const __dirname = new URL('.', import.meta.url).pathname;
@@ -4536,6 +4534,7 @@ const google_icons = {
 }
 
 let custom_icons: { name: string; [key: string]: any }[] = []
+if (!fs.existsSync(icons_path)) fs.mkdirSync(icons_path)
 const icons = fs.readdirSync(icons_path)
 
 for (let icon of icons) {
@@ -4545,9 +4544,4 @@ for (let icon of icons) {
   custom_icons.push({ name: icon, path: icon });
 }
 
-
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 export { google_icons, custom_icons }
