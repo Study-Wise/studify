@@ -1,7 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
+const __dirname = new URL('.', import.meta.url).pathname;
 
-let icons_path = path.join(process.cwd(), 'public', 'assets', 'icons');
+let icons_path = path.join(__dirname, '..', '..', 'public', 'assets', 'icons');
 
 if (icons_path.slice(1, 4).endsWith(':\\')) {
   icons_path = icons_path.slice(1);
