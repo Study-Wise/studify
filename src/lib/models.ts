@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 const providers = {
     openai: {
         name: 'OpenAI',
@@ -39,6 +40,8 @@ const providers = {
 const models = Object.values(providers).flatMap(p => Object.values(p.models));
 
 =======
+=======
+>>>>>>> Stashed changes
 const providers = {
     openai: {
         name: 'OpenAI',
@@ -78,5 +81,8 @@ const providers = {
 
 const models = Object.values(providers).flatMap(p => Object.values(p.models));
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 export { providers, models };

@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import 'dotenv/config';
 import type { APIRoute } from 'astro';
 
@@ -60,6 +61,8 @@ async function generateToken(token?: string) {
 export const prerender = false;
 
 =======
+=======
+>>>>>>> Stashed changes
 import 'dotenv/config';
 import type { APIRoute } from 'astro';
 
@@ -124,5 +127,8 @@ async function generateToken(token?: number) {
 
 export const prerender = false;
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 export { generateToken };

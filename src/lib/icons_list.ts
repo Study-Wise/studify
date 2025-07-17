@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import fs from 'fs';
 import path from 'path';
 const __dirname = new URL('.', import.meta.url).pathname;
@@ -2272,6 +2273,8 @@ for (let icon of icons) {
 
 
 =======
+=======
+>>>>>>> Stashed changes
 import fs from 'fs';
 import path from 'path';
 const __dirname = new URL('.', import.meta.url).pathname;
@@ -4543,5 +4546,8 @@ for (let icon of icons) {
 }
 
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 export { google_icons, custom_icons }

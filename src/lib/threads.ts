@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import { eq } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/vercel-postgres';
 import { threadsTable } from '../db/schema';
@@ -22,6 +23,8 @@ async function getMessages(token: string) {
 }
 
 =======
+=======
+>>>>>>> Stashed changes
 import { eq } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/vercel-postgres';
 import { threadsTable } from '../db/schema';
@@ -44,5 +47,8 @@ async function getMessages(token: string) {
     }
 }
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 export { getMessages };
