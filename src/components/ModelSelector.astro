@@ -5,10 +5,19 @@ import FancySelect from './fancy/Select.astro';
 import { models, providers } from '../lib/models';
 import config from '../lib/config';
 
-const selectorSettings = {
+interface ModelOption {
+    name: string;
+}
+
+const selectorSettings: {
+    id: string;
+    name: string;
+    options: ModelOption[];
+    default: string;
+} = {
     id: 'model',
     name: 'Model',
-    options: models,
+    options: models as ModelOption[],
     default: '',
 };
 

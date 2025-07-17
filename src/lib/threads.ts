@@ -5,13 +5,20 @@ import type { InferSelectModel } from "drizzle-orm";
 
 type Thread = InferSelectModel<typeof threadsTable>;
 
+interface ThreadData {
+    title: string;
+    isDev: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+    messages: any[];
+}
+
 async function getMessages(token: string) {
     try {
         const db = drizzle();
-        // Accept both string and number tokens
-        const whereToken = isNaN(Number(token)) ? token : Number(token);
-        const dbResponse: Thread[] = await db.select().from(threadsTable).where(eq(threadsTable.token, whereToken));
-        return dbResponse?.[0]?.thread?.messages ?? [];
+        const dbResponse: Thread[] = await db.select().from(threadsTable).where(eq(threadsTable.token, token));
+        const threadData = dbResponse?.[0]?.thread as ThreadData;
+        return threadData?.messages ?? [];
     } catch (e) {
         console.error(e);
         return [];
