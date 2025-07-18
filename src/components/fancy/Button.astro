@@ -5,7 +5,7 @@ const className = `btn bg-${variant} ${mode === 'lite' ? 'lite' : ''} ${addition
 {(() => {
   const Element = element;
   return (
-    <Element class={className} {...props}>
+    <Element tabindex="0" class={className} {...props}>
       {icon && <span class="material-symbols-outlined">{icon}</span>} <slot />
       <span class="spinner" style="display: none"></span>
     </Element>

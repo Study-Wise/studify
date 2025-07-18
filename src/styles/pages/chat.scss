@@ -111,6 +111,8 @@ footer, .chat-toolbar {
 
     cursor: pointer;
 
+    box-shadow: 0 0 5px $chat-message-shadow;
+
     input[type="checkbox"] {
         visibility: hidden;
         position: absolute;
@@ -147,6 +149,9 @@ footer, .chat-toolbar {
         flex-direction: column;
         gap: math.div($_message-space, 2);
         width: fit-content;
+        box-shadow: 0 0 5px $chat-message-shadow;
+        border-radius: 1rem;
+
 
         &-content {
             box-sizing: border-box;
@@ -154,8 +159,7 @@ footer, .chat-toolbar {
     
     
             background-color: $message-bg;
-    
-            border-radius: 1rem;
+            border-radius: inherit;
 
             mjx-container {
                 width: fit-content;
@@ -176,13 +180,6 @@ footer, .chat-toolbar {
     }
 }
 
-.chat-toolbar {
-    box-sizing: border-box;
-    padding: 1rem;
-
-    background-color: $body-bg;
-}
-  
 @media (max-width: 768px) {
     .chat-section {
         padding: 25px;

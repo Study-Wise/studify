@@ -1,10 +1,17 @@
 ---
-import FooterContent from './FooterContent.astro';
 import '../styles/components/footer.scss';
 
-const { hideCopyright } = Astro.props;
+const copyrightStart = 2025;
+const copyright = new Date().getFullYear();
+
+const { hideCopyright = false } = Astro.props;
 ---
 
 <footer class="footer">
-    <FooterContent hideCopyright={hideCopyright} />
+    <div class="container footer-content">
+        {hideCopyright ? '' : <p>© {copyright === copyrightStart ? copyright : `${copyrightStart}-${copyright}`} M.A.T.H.Wise. Powered by AI.</p>}
+        <p>
+            <small>Disclaimer: AI-generated content may contain inaccuracies. Always verify critical information.</small>
+        </p>
+    </div>
 </footer>

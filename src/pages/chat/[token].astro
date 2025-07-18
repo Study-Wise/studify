@@ -10,6 +10,7 @@ import '../../styles/pages/chat.scss';
 
 import { getMessages } from '../../lib/threads';
 import extract from '../../lib/extractPartsofMessage';
+import Footer from '../../components/Footer.astro';
 
 let token = Astro.params.token || Astro.cookies.get('userToken')?.value || '';
 
@@ -58,6 +59,7 @@ export const inNav = 'hide';
       <ChatToolbar />
     </section>
   </section>
+  <Footer />
   <script is:inline>
     window.onFancyOutput = () => {
       const allOutputs = document.querySelectorAll('.fancy-output');
