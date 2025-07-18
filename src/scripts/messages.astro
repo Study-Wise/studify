@@ -9,7 +9,7 @@ const { page } = Astro.props;
     let userSettings = {};
 
     // DOM element references
-    let textInput, generateButton, spinner, outputSection, studyGuideContent, referenceSheetContent, errorMessageDiv, downloadGuideBtn, downloadSheetBtn;
+    let messageInput, sendButton, spinner, outputSection, studyGuideContent, referenceSheetContent, errorMessageDiv, downloadGuideBtn, downloadSheetBtn;
     let isPrinting = false;
 
     // Placeholders
@@ -28,104 +28,68 @@ const { page } = Astro.props;
     }
 
     // Token management
-    async function generateToken(existingToken) {
+    async function makeTokenRequest(endpoint, data, operationName) {
         try {
-            const resp = await fetch('/api/token/generate', {
+            const resp = await fetch(`/api/token/${endpoint}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
-                body: JSON.stringify({
-                    token: existingToken || null
-                }),
+                body: JSON.stringify(data),
                 keepalive: true
             });
 
             if (!resp.ok) {
-                console.error("generateToken: Response not OK", resp.status, resp.statusText);
+                console.error(`${operationName}: Response not OK`, resp.status, resp.statusText);
                 return;
             }
 
             const json = await resp.json() || {};
             if (typeof json === 'object' && 'status' in json && json.status === 'success') {
-                console.log('Token generated successfully:', json.generated_token);
-                userToken = json.generated_token;
-                localStorage.setItem('userToken', userToken);
-                window.cookies.set('userToken', userToken);
+                console.log(`${operationName} successful.`);
+                return json;
             } else {
-                userToken = null;
-                localStorage.removeItem('userToken');
-                window.cookies.delete('userToken');
-                console.error('Error generating token:', json);
-                throw new Error('Failed to generate token for thread functionality.');
+                console.error(`Error in ${operationName}:`, json);
+                return null;
             }
         } catch (err) {
-            console.error("generateToken error:", err);
+            console.error(`${operationName} error:`, err);
+            return null;
+        }
+    }
+
+    async function generateToken(existingToken) {
+        const result = await makeTokenRequest('generate', { token: existingToken || null }, 'generateToken');
+        if (result?.generated_token) {
+            userToken = result.generated_token;
+            localStorage.setItem('userToken', userToken);
+            window.cookies.set('userToken', userToken);
+        } else {
+            userToken = null;
+            localStorage.removeItem('userToken');
+            window.cookies.delete('userToken');
+            throw new Error('Failed to generate token for thread functionality.');
         }
     }
 
     async function destroyToken(token = localStorage.getItem('userToken')) {
         if (!token) return;
-        try {
-            const resp = await fetch('/api/token/destroy', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({ token }),
-                keepalive: true
-            });
-
-            if (!resp.ok) {
-                console.error("destroyToken: Response not OK", resp.status, resp.statusText);
-                return;
-            }
-
-            const json = await resp.json() || {};
-            if (typeof json === 'object' && 'status' in json && json.status === 'success') {
-                console.log('Token invalidated successfully.');
-                userToken = null;
-                localStorage.removeItem('userToken');
-                window.cookies.delete('userToken');
-            } else {
-                console.error('Error invalidating token:', json);
-            }
-        } catch (err) {
-            console.error("destroyToken error:", err);
+        const result = await makeTokenRequest('destroy', { token }, 'destroyToken');
+        if (result) {
+            userToken = null;
+            localStorage.removeItem('userToken');
+            window.cookies.delete('userToken');
         }
     }
 
     async function destroyTokenIfEmptyConvo(token = localStorage.getItem('userToken')) {
         if (!token) return;
-        try {
-            const resp = await fetch('/api/token/destroyIfEmptyConvo', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({ token }),
-                keepalive: true
-            });
-
-            if (!resp.ok) {
-                console.error("destroyTokenIfEmptyConvo: Response not OK", resp.status, resp.statusText);
-                return;
-            }
-
-            const json = await resp.json() || {};
-            if (typeof json === 'object' && 'status' in json && json.status === 'success') {
-                console.log('Token invalidated successfully.');
-                userToken = null;
-                localStorage.removeItem('userToken');
-                window.cookies.delete('userToken');
-            } else {
-                console.error('Error invalidating token:', json);
-            }
-        } catch (err) {
-            console.error("destroyTokenIfEmptyConvo error:", err);
+        const result = await makeTokenRequest('destroyIfEmptyConvo', { token }, 'destroyTokenIfEmptyConvo');
+        if (result) {
+            userToken = null;
+            localStorage.removeItem('userToken');
+            window.cookies.delete('userToken');
         }
     }
 
@@ -141,23 +105,60 @@ const { page } = Astro.props;
     // API endpoint
     const API_ENDPOINT = '/api/message/generate';
 
+    // Shared event handlers
+    function handleEnterKey(event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            if (!sendButton.disabled) {
+                generateOutput();
+            }
+        }
+    }
+
+    function setupDownloadButtons() {
+        if (downloadGuideBtn) {
+            downloadGuideBtn.addEventListener('click', event => {
+                downloadViaPrint('study-guide-content', event.currentTarget);
+            });
+        }
+        if (downloadSheetBtn) {
+            downloadSheetBtn.addEventListener('click', event => {
+                downloadViaPrint('reference-sheet-content', event.currentTarget);
+            });
+        }
+    }
+
+
+
     // Main output generation
-    async function generateOutput(message) {
-        if (!textInput && !message) {
+    async function generateOutput() {
+        if (!messageInput) {
             displayError('Input field missing!');
             return;
         }
+        if (!messageInput.value || !messageInput.value.trim()) {
+            displayError('Please paste homework text.');
+            messageInput.focus();
+            return;
+        }
+
+        // Common validation
         if (typeof localStorage.getItem !== 'function' || !(localStorage.getItem('model') || '')) {
             displayError('Model not selected!');
             return;
         }
-        const homeworkText = message || textInput.value;
-        if (!homeworkText || !homeworkText.trim()) {
-            displayError('Please paste homework text.');
-            textInput.focus();
-            return;
+
+        // Get text based on page
+        const userMessage = messageInput.value;
+        
+        // For chat page, add user message first
+        if (page === 'chat') {
+            await addMessage('user', userMessage);
         }
-        setLoadingState(true);
+        
+        if (page === 'home') {
+            setLoadingState(true);
+        }
         try {
             const response = await fetch(API_ENDPOINT, {
                 method: 'POST',
@@ -166,11 +167,12 @@ const { page } = Astro.props;
                     Accept: 'application/json',
                 },
                 body: JSON.stringify({
-                    text: homeworkText,
+                    text: userMessage,
                     token: userToken || null,
                     settings: userSettings || {}
                 }),
             });
+            
             if (!response.ok) {
                 let errorMsg = `API Error (${response.status} ${response.statusText})`;
                 let errorObj = null;
@@ -192,24 +194,19 @@ const { page } = Astro.props;
                 }
                 throw new Error(errorMsg);
             }
+            
             const data = await response.json();
-            if (data?.generatedText) {
-                if (page === 'home') {
-                    await displayResults(data);
-                    await showOpenInChatBtn(data.token);
-                    userToken = data.token;
-                    localStorage.setItem('userToken', data.token);
-                    window.cookies.set('userToken', data.token);
-                }
-                if (page === 'chat') {
-                    // For chat, you may want to call addMessage(data) or reload
-                    // Uncomment as needed:
-                    // await addMessage(data);
-                    // location.reload();
-                }
-            } else {
+            if (!data?.generatedText) {
                 console.error('Invalid data format:', data);
                 throw new Error('Invalid/empty response from AI.');
+            }
+
+            // Page-specific result handling
+            await displayResults(data);
+            if (page === 'home') {
+                await showOpenInChatBtn(data.token);
+                userToken = data.token;
+                localStorage.setItem('userToken', data.token);
             }
         } catch (error) {
             console.error('Full error caught in generateOutput:', error);
@@ -221,17 +218,7 @@ const { page } = Astro.props;
 
     // Output display helpers
     function showOutput(type) {
-        if (page === 'home') {
-            showHomeOutput(type);
-        } else if (page === 'chat') {
-            // In chat, addMessage expects a data object, not a type string
-            // This is likely a bug in the original code
-            // You may want to implement chat message display differently
-            // For now, log a warning
-            console.warn("showOutput called with type in chat page, but addMessage expects data object.");
-        } else {
-            console.error('Invalid page:', page);
-        }
+        showHomeOutput(type);
     }
 
     function showHomeOutput(type) {
@@ -276,8 +263,8 @@ const { page } = Astro.props;
         try {
             if (isLoading) {
                 spinner && (spinner.style.display = 'inline-block');
-                if (generateButton) generateButton.disabled = true;
-                const icon = generateButton?.querySelector('i.material-symbols-outlined');
+                if (sendButton) sendButton.disabled = true;
+                const icon = sendButton?.querySelector('i.material-symbols-outlined');
                 icon && (icon.style.display = 'none');
                 if (errorMessageDiv) {
                     errorMessageDiv.style.display = 'none';
@@ -296,8 +283,8 @@ const { page } = Astro.props;
                 if (downloadSheetBtn) downloadSheetBtn.disabled = true;
             } else {
                 spinner && (spinner.style.display = 'none');
-                if (generateButton) generateButton.disabled = false;
-                const icon = generateButton?.querySelector('i.material-symbols-outlined');
+                if (sendButton) sendButton.disabled = false;
+                const icon = sendButton?.querySelector('i.material-symbols-outlined');
                 icon && (icon.style.display = 'inline-block');
             }
         } catch (err) {
@@ -476,7 +463,7 @@ const { page } = Astro.props;
         if (downloadGuideBtn) downloadGuideBtn.disabled = true;
         if (downloadSheetBtn) downloadSheetBtn.disabled = true;
 
-        if (data.studyGuide && data.referenceSheet) {
+        if (data.studyGuide && data.referenceSheet && page === 'home') {
             let { guideMarkdown, sheetMarkdown } = parseAIResponse(data.studyGuide, data.referenceSheet);
 
             try {
@@ -525,6 +512,8 @@ const { page } = Astro.props;
                 if (downloadSheetBtn) downloadSheetBtn.disabled = true;
                 if (outputSection) outputSection.style.display = 'none';
             }
+        } else if (page === 'chat') {
+            await addMessage('assistant', data);
         } else {
             console.error('No study guide or reference sheet content generated/extracted.');
             displayError('No study guide or reference sheet content generated/extracted.');
@@ -534,70 +523,238 @@ const { page } = Astro.props;
         }
     }
 
+    // Extract fancy output parts from AI response (similar to server-side extract function)
+    async function extractFancyOutput(generatedText) {
+        const obj = {
+            precedingText: '',
+            studyGuide: '',
+            referenceSheet: '',
+            followingText: '',
+        };
+
+        // Create a temporary DOM element to parse the HTML
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = generatedText;
+
+        const fancyOutput = tempDiv.querySelector('.fancy-output');
+        if (fancyOutput) {
+            const fancyStart = `<${fancyOutput.tagName.toLowerCase()}${fancyOutput.className !== '' ? ` class="${fancyOutput.className}"` : ''}${fancyOutput.id !== '' ? ` id="${fancyOutput.id}"` : ''}>`;
+            const fancyEnd = `</${fancyOutput.tagName.toLowerCase()}>`;
+            
+            let precedingText = generatedText.trim()?.split(fancyStart)[0] || '';
+            precedingText = precedingText.trim();
+
+            let followingText = generatedText.trim()?.split(fancyEnd).pop() || '';
+            followingText = followingText.trim();
+            
+            obj.precedingText = precedingText;
+            obj.followingText = followingText;
+
+            const studyGuide = tempDiv.querySelector('.study-guide')?.innerHTML || '';
+            obj.studyGuide = studyGuide;
+
+            const referenceSheet = tempDiv.querySelector('.reference-sheet')?.innerHTML || '';
+            obj.referenceSheet = referenceSheet;
+        }
+
+        return obj;
+    }
+
+    async function addMessage(role, data) {
+        if (role === 'assistant') {
+            await addAssistantMessage(data);
+        } else if (role === 'user') {
+            createPlainMessage(role, data);
+        }
+    }
+
+    // Create a plain text/markdown chat message
+    async function createPlainMessage(role, content) {
+        const chatMessages = document.querySelector('.chat-messages');
+        if (!chatMessages) {
+            console.error('Chat messages container not found');
+            return;
+        }
+
+        try {
+            // Create message container
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}`;
+
+            const messageContent = document.createElement('div');
+            messageContent.className = `message-content ${role === 'user' ? 'bg-primary' : ''}`;
+            
+            // Set the content (could be plain text or markdown)
+            messageContent.innerHTML = content;
+
+            messageDiv.appendChild(messageContent);
+            chatMessages.appendChild(messageDiv);
+
+            // Typeset MathJax for the new message
+            await typesetMathJax([messageContent]);
+
+            // Activate Desmos if available
+            if (typeof activateDesmos === 'function') {
+                try {
+                    activateDesmos();
+                } catch (e) {
+                    console.warn('Error activating Desmos:', e);
+                }
+            }
+
+            // Scroll to bottom smoothly
+            chatMessages.scrollTo({
+                top: chatMessages.scrollHeight,
+                behavior: 'smooth'
+            });
+
+        } catch (err) {
+            console.error('ERROR in createPlainMessage:', err);
+            displayError(`Failed to render message. ${err.message}`);
+        }
+    }
+
     // Chat message display (for chat page)
-    async function addMessage(data) {
+    async function addAssistantMessage(data) {
         if (!data || typeof data !== 'object') {
             displayError('Invalid AI response received.');
             return;
         }
-        if (downloadGuideBtn) downloadGuideBtn.disabled = true;
-        if (downloadSheetBtn) downloadSheetBtn.disabled = true;
 
-        if (data.studyGuide && data.referenceSheet) {
-            let { guideMarkdown, sheetMarkdown } = parseAIResponse(data.studyGuide, data.referenceSheet);
+        const chatMessages = document.querySelector('.chat-messages');
+        if (!chatMessages) {
+            console.error('Chat messages container not found');
+            return;
+        }
 
-            try {
-                let elementsToTypeset = [];
+        try {
+            // Extract fancy output parts
+            const obj = await extractFancyOutput(data.generatedText);
+            
+            // Create message container
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message assistant';
 
-                studyGuideContent.innerHTML = '';
-                studyGuideContent.innerHTML = guideMarkdown;
-                elementsToTypeset.push(studyGuideContent);
+            const messageContent = document.createElement('div');
+            messageContent.className = 'message-content';
 
-                referenceSheetContent.innerHTML = '';
-                referenceSheetContent.innerHTML = sheetMarkdown;
-                elementsToTypeset.push(referenceSheetContent);
-
-                await typesetMathJax(elementsToTypeset);
-
-                if (typeof activateDesmos === 'function') {
-                    try {
-                        activateDesmos();
-                    } catch (e) {
-                        console.warn('Error activating Desmos:', e);
-                    }
+            // Check if this is a fancy output message
+            if (obj.studyGuide || obj.referenceSheet) {
+                // Add preceding text if exists
+                if (obj.precedingText) {
+                    const precedingDiv = document.createElement('div');
+                    precedingDiv.className = 'message-content-inner';
+                    precedingDiv.innerHTML = obj.precedingText;
+                    messageContent.appendChild(precedingDiv);
                 }
 
-                const hasGuideContent = studyGuideContent.innerHTML !== guidePlaceholder;
-                const hasSheetContent = referenceSheetContent.innerHTML !== sheetPlaceholder;
-                if (downloadGuideBtn) {
-                    downloadGuideBtn.disabled = !hasGuideContent;
+                // Create fancy output dialog
+                const fancyOutput = document.createElement('dialog');
+                fancyOutput.className = 'fancy-output';
+
+                // Create tabs
+                const tabsDiv = document.createElement('div');
+                tabsDiv.className = 'tabs';
+
+                if (obj.studyGuide) {
+                    const studyGuideTab = document.createElement('label');
+                    studyGuideTab.className = 'btn bg-tertiary lite tab';
+                    studyGuideTab.innerHTML = '<input type="radio" name="tab" />Study Guide';
+                    tabsDiv.appendChild(studyGuideTab);
                 }
-                if (downloadSheetBtn) {
-                    downloadSheetBtn.disabled = !hasSheetContent;
+
+                if (obj.referenceSheet) {
+                    const referenceSheetTab = document.createElement('label');
+                    referenceSheetTab.className = 'btn bg-tertiary lite tab';
+                    referenceSheetTab.innerHTML = '<input type="radio" name="tab" />Reference Sheet';
+                    tabsDiv.appendChild(referenceSheetTab);
                 }
-                if (outputSection) outputSection.style.display = 'block';
-                showOutput('guide');
-                if (hasGuideContent || hasSheetContent) {
-                    setTimeout(() => {
-                        outputSection?.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start',
+
+                // Add open button
+                const buttonsDiv = document.createElement('div');
+                buttonsDiv.className = 'buttons';
+                const openButton = document.createElement('button');
+                openButton.className = 'open-button button material-symbols-outlined';
+                openButton.textContent = 'open_in_full';
+                buttonsDiv.appendChild(openButton);
+                tabsDiv.appendChild(buttonsDiv);
+
+                fancyOutput.appendChild(tabsDiv);
+
+                // Create tab contents
+                const tabContentsParent = document.createElement('div');
+                tabContentsParent.className = 'tab-contents-parent';
+
+                if (obj.studyGuide) {
+                    const studyGuideContainer = document.createElement('div');
+                    studyGuideContainer.className = 'tab-content-container study-guide';
+                    const studyGuideContent = document.createElement('div');
+                    studyGuideContent.className = 'tab-content study-guide';
+                    studyGuideContent.innerHTML = obj.studyGuide;
+                    studyGuideContainer.appendChild(studyGuideContent);
+                    tabContentsParent.appendChild(studyGuideContainer);
+                }
+
+                if (obj.referenceSheet) {
+                    const referenceSheetContainer = document.createElement('div');
+                    referenceSheetContainer.className = 'tab-content-container reference-sheet';
+                    const referenceSheetContent = document.createElement('div');
+                    referenceSheetContent.className = 'tab-content reference-sheet';
+                    referenceSheetContent.innerHTML = obj.referenceSheet;
+                    referenceSheetContainer.appendChild(referenceSheetContent);
+                    tabContentsParent.appendChild(referenceSheetContainer);
+                }
+
+                fancyOutput.appendChild(tabContentsParent);
+                messageContent.appendChild(fancyOutput);
+
+                // Add following text if exists
+                if (obj.followingText) {
+                    const followingDiv = document.createElement('div');
+                    followingDiv.className = 'message-content-inner';
+                    followingDiv.innerHTML = obj.followingText;
+                    messageContent.appendChild(followingDiv);
+                }
+
+                // Set up fancy output functionality
+                setTimeout(() => {
+                    const openBtn = fancyOutput.querySelector('.buttons .button.open-button');
+                    if (openBtn) {
+                        openBtn.addEventListener('click', () => {
+                            fancyOutput.showModal();
                         });
-                    }, 150);
-                }
-            } catch (err) {
-                console.error('ERROR in addMessage:', err);
-                displayError(`Failed to render results. ${err.message}`);
-                if (downloadGuideBtn) downloadGuideBtn.disabled = true;
-                if (downloadSheetBtn) downloadSheetBtn.disabled = true;
-                if (outputSection) outputSection.style.display = 'none';
+                    }
+                }, 100);
+
+            } else {
+                // Regular message - use the full generated text
+                messageContent.innerHTML = data.generatedText;
             }
-        } else {
-            console.error('No study guide or reference sheet content generated/extracted.');
-            displayError('No study guide or reference sheet content generated/extracted.');
-            if (downloadGuideBtn) downloadGuideBtn.disabled = true;
-            if (downloadSheetBtn) downloadSheetBtn.disabled = true;
-            if (outputSection) outputSection.style.display = 'none';
+
+            messageDiv.appendChild(messageContent);
+            chatMessages.appendChild(messageDiv);
+
+            // Typeset MathJax for the new message
+            await typesetMathJax([messageContent]);
+
+            // Activate Desmos if available
+            if (typeof activateDesmos === 'function') {
+                try {
+                    activateDesmos();
+                } catch (e) {
+                    console.warn('Error activating Desmos:', e);
+                }
+            }
+
+            // Scroll to bottom smoothly
+            chatMessages.scrollTo({
+                top: chatMessages.scrollHeight,
+                behavior: 'smooth'
+            });
+
+        } catch (err) {
+            console.error('ERROR in addMessage:', err);
+            displayError(`Failed to render message. ${err.message}`);
         }
     }
 
@@ -621,7 +778,7 @@ const { page } = Astro.props;
 
     // Activate Desmos graphs
     function activateDesmos() {
-        const graphs = document.querySelectorAll('.desmos-graph');
+        const graphs = document.querySelectorAll('.desmos-graph:not([done])');
         graphs.forEach(graph => {
             if (!graph) {
                 console.warn('Desmos graph element not valid.');
@@ -654,6 +811,7 @@ const { page } = Astro.props;
 
                     const newDefaultState = calculator.getState();
                     calculator.setDefaultState(newDefaultState);
+                    graph.setAttribute('done', true);
                 } catch (e) {
                     console.error('Error parsing/setting Desmos graph data:', e);
                     console.error('Problematic LaTeX string:', graph.getAttribute('latex'));
@@ -666,16 +824,26 @@ const { page } = Astro.props;
         });
     }
 
-    // DOMContentLoaded handler
-    function onDomLoad() {
+    // Shared initialization function
+    function initializeCommon() {
         // Load user token and settings
         userToken = localStorage.getItem('userToken') || '';
         loadUserSettings();
+        
+        // Check core function
+        if (!generateOutput || typeof generateOutput !== 'function') {
+            displayError('Error: Core function generateOutput failed to initialize.');
+        }
+    }
 
-        // Get DOM elements
-        textInput = document.getElementById('text-paste');
-        generateButton = document.getElementById('generate-button');
-        spinner = generateButton?.querySelector('.spinner');
+    // DOMContentLoaded handler for home page
+    function onDomLoadHome() {
+        initializeCommon();
+        
+        // Initialize DOM elements for home page
+        messageInput = document.getElementById('text-paste');
+        sendButton = document.getElementById('generate-button');
+        spinner = sendButton?.querySelector('.spinner');
         outputSection = document.getElementById('output-section');
         studyGuideContent = document.getElementById('study-guide-content');
         referenceSheetContent = document.getElementById('reference-sheet-content');
@@ -683,81 +851,67 @@ const { page } = Astro.props;
         downloadGuideBtn = document.getElementById('download-guide-pdf');
         downloadSheetBtn = document.getElementById('download-sheet-pdf');
 
-        // Debug: Log DOM elements
-        console.debug("textInput:", textInput);
-        console.debug("generateButton:", generateButton);
+        // Set up download button event listeners
+        setupDownloadButtons();
 
-        // Download buttons
-        if (downloadGuideBtn) {
-            downloadGuideBtn.addEventListener('click', event => {
-                downloadViaPrint('study-guide-content', event.currentTarget);
-            });
-        }
-        if (downloadSheetBtn) {
-            downloadSheetBtn.addEventListener('click', event => {
-                downloadViaPrint('reference-sheet-content', event.currentTarget);
-            });
-        }
-
-        // Enter key triggers generate
-        if (textInput && generateButton) {
-            textInput.addEventListener('keydown', function (event) {
-                if (event.key === 'Enter' && !event.shiftKey) {
-                    event.preventDefault();
-                    if (!generateButton.disabled) {
-                        generateOutput();
-                    }
-                }
-            });
-        }
-
-        // Chat page: handle send button and input
-        if (page === 'chat') {
-            const sendButton = document.querySelector('.send-button');
-            const messageInput = document.querySelector('#message-input');
-
-            
-            if (sendButton && messageInput) {
-                // Handle form submission
-                sendButton.addEventListener('click', (e) => {
-                    const message = messageInput.value.trim();
-                    if (message) {
-                        generateOutput(message);
-                        messageInput.value = '';
-                        messageInput.style.height = 'auto';
-                    }
-                });
-
-                // Enable/disable send button based on input
-                messageInput.addEventListener('input', () => {
-                    sendButton.disabled = !messageInput.value.trim();
-                });
-            } else {
-                if (!sendButton) console.warn("Send button not found on chat page.");
-                if (!messageInput) console.warn("Chat input not found on chat page.");
-            }
-        }
-
-        // Check core function
-        if (!generateOutput || typeof generateOutput !== 'function') {
-            displayError('Error: Core function generateOutput failed to initialize.');
+        // Set up input event listeners
+        if (messageInput && sendButton) {
+            messageInput.addEventListener('keydown', handleEnterKey);
         }
     }
 
-    // Initial setup
-    document.addEventListener('DOMContentLoaded', onDomLoad);
+    // DOMContentLoaded handler for chat page
+    function onDomLoadChat() {
+        initializeCommon();
 
-    // MathJax/Desmos typesetting for chat page
-    document.addEventListener('DOMContentLoaded', async () => {
-        if (page === 'chat') {
+        // Extract token from URL path for chat page
+        const pathSegments = location.pathname;
+        if (pathSegments.endsWith('/')) pathSegments = pathSegments.slice(0, -1);
+        const tokenFromUrl = pathSegments.split('/').pop();
+        if (tokenFromUrl && tokenFromUrl !== 'chat') {
+            userToken = tokenFromUrl;
+            localStorage.setItem('userToken', userToken);
+        }
+
+        sendButton = document.querySelector('.send-button');
+        messageInput = document.querySelector('#message-input');
+
+        if (messageInput) {
+            messageInput.addEventListener('keydown', handleEnterKey);
+            messageInput.addEventListener('input', () => {
+                sendButton.disabled = !messageInput.value.trim();
+            });
+        }
+
+        if (sendButton && messageInput) {
+            sendButton.addEventListener('click', (e) => {
+                generateOutput();
+                messageInput.value = '';
+                messageInput.style.height = 'auto';
+                messageInput.focus();
+            });
+        }
+    }
+
+    // Main initialization function with page-specific logic
+    async function initializePage() {
+        if (page === 'home') {
+            onDomLoadHome();
+        } else if (page === 'chat') {
+            onDomLoadChat();
+            
+            // Chat-specific MathJax and Desmos initialization
             const elementsToTypeset = document.querySelectorAll('.chat-messages .message-content');
             await typesetMathJax(elementsToTypeset);
             activateDesmos();
         }
-    });
-
-    // Also call onDomLoad immediately in case DOM is already loaded
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
-        onDomLoad();
     }
-</script>
+
+    // DOMContentLoaded handler
+    document.addEventListener('DOMContentLoaded', initializePage);
+
+    // Also call appropriate handler immediately in case DOM is already loaded
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        initializePage();
+    }
+</script> 
