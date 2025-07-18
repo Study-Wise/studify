@@ -6,94 +6,115 @@
 
 $max-width: 500px;
 $max-height: 250px;
+$spacing: 1rem;
 
-.fancy-output:not([open]) {
+.fancy-output {
+  overflow-x: hidden;
+
+  &[open] {
+    margin: auto;
+    box-sizing: border-box;
+    padding: $spacing;
+    border: none;
+    border-radius: $spacing;
+  }
+  &:not([open]) {
     display: block;
     border: none;
     background-color: transparent;
     position: relative;
-
     max-width: $max-width;
     overflow: hidden;
-}
 
-.tabs {
-    position: sticky;
-    left: 0;
-    display: flex;
-    gap: 1rem;
-
-    .tab {
-        position: relative;
-        cursor: pointer;
-
-        input[type="radio"] {
-            position: absolute;
-            top: -10px;
-            left: -10px;
-            width: 0;
-            height: 0;
-            opacity: 0;
-            z-index: -1;
-            outline: none;
-        }
+    .tab-content-container {
+        max-width: $max-width;
+        max-height: $max-height;
     }
-
-    .buttons {
-        flex: 1;
-        justify-self: end;
-        display: grid;
-        place-items: end;
-
-        .button {
-            height: 100%;
-        }
-    }
-
-}
-
-.fancy-output:not([open]):has(.tabs > .tab:first-of-type > input[type="radio"]:checked) {
-    .tab-contents-parent .tab-content-container {
-        translate: 0 0;
-    }
-}
-.fancy-output:not([open]):has(.tabs > .tab:last-of-type > input[type="radio"]:checked) {
-    .tab-contents-parent .tab-content-container {
-        translate: -100% 0;
-    }
-}
-
-.tab-contents-parent {
-    display: flex;
-    width: 200%;
-}
-
-.tab-content-container {
-    max-width: $max-width;
-    max-height: $max-height;
-    overflow: hidden;
-}
-
-.tab-content {
-    width: 200%;
-    height: auto;
-
-    position: relative;
-    &::after {
+    .tab-content::after {
         $gradient-size: 2px;
         $gradient-x: #{100% - math.div($gradient-size * 2, $max-width) * 100%};
         $gradient-y: #{100% - math.div($gradient-size * 2, $max-height) * 100%};
-
+        
         content: '';
         position: absolute;
         top: 0;
         left: 0;
         height: $max-height;
         width: $max-width;
-
+        
+        box-shadow: inset #{-$gradient-size} #{-$gradient-size} #{$gradient-size} 0 color.adjust($footer-text, $alpha: -0.5);
+        border-bottom-right-radius: calc(var(--pad) / 2);
+        
         background-image:
-            linear-gradient(90deg, transparent $gradient-x, color.adjust($footer-text, $alpha: -0.9) $gradient-x, color.adjust($footer-text, $alpha: -0.5)),
-            linear-gradient(transparent $gradient-y, color.adjust($footer-text, $alpha: -0.9) $gradient-y, color.adjust($footer-text, $alpha: -0.5));
+        linear-gradient(90deg, transparent $gradient-x, color.adjust($footer-text, $alpha: -0.9) $gradient-x, color.adjust($footer-text, $alpha: -0.5)),
+        linear-gradient(transparent $gradient-y, color.adjust($footer-text, $alpha: -0.9) $gradient-y, color.adjust($footer-text, $alpha: -0.5));
     }
+  }
 
+
+  // Tab movement (merged selector for open and not open)
+  &:has(.tabs > .tab:first-of-type > input[type="radio"]:checked) .tab-contents-parent .tab-content-container {
+    translate: 0 0;
+  }
+  &:has(.tabs > .tab:last-of-type > input[type="radio"]:checked) .tab-contents-parent .tab-content-container {
+    translate: -100% 0;
+  }
+
+  // Tab content container sizing
+  .tab-content-container {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+
+    // If open, allow visible overflow
+    :is(.fancy-output[open] &) {
+      overflow: visible;
+    }
+  }
+
+  // Tab content gradient and sizing
+  .tab-content {
+    width: 200%;
+    height: auto;
+    position: relative;
+  }
+}
+
+.tabs {
+  position: sticky;
+  left: 0;
+  display: flex;
+  gap: $spacing;
+
+  .tab {
+    position: relative;
+    cursor: pointer;
+
+    input[type="radio"] {
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      width: 0;
+      height: 0;
+      opacity: 0;
+      z-index: -1;
+      outline: none;
+    }
+  }
+
+  .buttons {
+    flex: 1;
+    justify-self: end;
+    display: grid;
+    place-items: end;
+
+    .button {
+      height: 100%;
+    }
+  }
+}
+
+.tab-contents-parent {
+  display: flex;
+  width: 200%;
 }

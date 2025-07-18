@@ -1,0 +1,87 @@
+@use '../variables/globals.scss' as *;
+@use 'sass:map';
+@use 'sass:color';
+
+$color: nth(map.get($accent-colors, primary), 1);
+
+.chat-toolbar {
+  .chat-input-container {
+    padding: 1rem;
+    background: white;
+  }
+  
+  .chat-form {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  
+  .input-wrapper {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: flex-end;
+    gap: 0.5rem;
+    background: #f9fafb;
+    border: 1px solid #d1d5db;
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    transition: border-color 0.2s;
+    
+    &:focus-within {
+      border-color: $color;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+  }
+  
+  .message-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    resize: none;
+    outline: none;
+    font-family: inherit;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    min-height: 1.25rem;
+    overflow-y: auto;
+    min-height: 100%;
+    field-sizing: content;
+    
+    &::placeholder {
+      color: #9ca3af;
+    }
+  }
+  
+  .send-button {
+    box-sizing: border-box;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1;
+    height: 100%;
+    background: $color;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    flex-shrink: 0;
+
+    place-items: center;
+    place-content: center;
+    
+    &:hover {
+      background: color.adjust($color, $alpha: -0.1);
+    }
+    
+    &:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    svg {
+        height: 100%;
+        aspect-ratio: 1;
+    }
+  }
+}
