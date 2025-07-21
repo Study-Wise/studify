@@ -865,7 +865,7 @@ const { page } = Astro.props;
         initializeCommon();
 
         // Extract token from URL path for chat page
-        const pathSegments = location.pathname;
+        let pathSegments = location.pathname;
         if (pathSegments.endsWith('/')) pathSegments = pathSegments.slice(0, -1);
         const tokenFromUrl = pathSegments.split('/').pop();
         if (tokenFromUrl && tokenFromUrl !== 'chat') {
