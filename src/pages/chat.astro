@@ -1,0 +1,80 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+import FooterContent from '../components/FooterContent.astro';
+import ChatHeader from '../components/ChatHeader.astro';
+import Button from '../components/fancy/Button.astro';
+
+import ChatScript from '../scripts/chat.astro';
+import '../styles/pages/chat.scss';
+import '../styles/components/fancy-output.scss';
+
+import { marked } from 'marked';
+
+import config from '../lib/config';
+import { models } from '../lib/models';
+import { getMessages } from '../lib/threads';
+import extract from '../lib/extractPartsofMessage';
+
+let token = Astro.cookies.get('userToken')?.value || '';
+
+const messages = await getMessages(token);
+
+export const inNav = 'hide';
+---
+<Layout title="Chat" container={false} isChatArea={true} additionalClasses={['chat-page']} hideCopyright={true}>
+  <header class="chat-header">
+    <h2><span class="material-symbols-outlined">chat</span>&nbsp;Chat</h2>
+    <ChatHeader pTitle={`${token ? 'Chat' : 'New Chat'}`} />
+  </header>
+  <section class="chat-container">
+    <section class="chat-sidebar">
+      <h3>Sidebar</h3>
+    </section>
+    <section class="chat-section">
+      <label class="chat-sidebar-toggle">
+        <input type="checkbox" />
+        <span class="material-symbols-outlined">chat</span>
+      </label>
+      <div class="chat-messages">
+        {messages.map(async (message) => {
+          const { obj, generatedText: htmlText } = await extract(message.content);
+          var content = htmlText;
+          if (!(message.role === 'assistant' && obj.studyGuide || obj.referenceSheet)) {
+            return <div class={`message ${message.role}`}>
+              <div class={`message-content ${message.role === 'user' ? 'bg-primary' : ''}`} set:html={content} />
+            </div>
+          }
+
+
+          if (message.role === 'assistant') {
+            if (obj.studyGuide || obj.referenceSheet) {
+              return <div class={`message ${message.role}`}>
+                <div class="message-content">
+                  { obj.precedingText && <div class="message-content-inner" set:html={obj.precedingText} /> }
+                  <dialog class="fancy-output">
+                    <div class="tabs">
+                      {obj.studyGuide && <Button element="label" additionalClasses="tab" variant="tertiary" mode="lite"><input type="radio" name="tab" />Study Guide</Button>}
+                      {obj.referenceSheet && <Button element="label" additionalClasses="tab" variant="tertiary" mode="lite"><input type="radio" name="tab" />Reference Sheet</Button>}
+                      <div class="buttons"><button class="open-button button material-symbols-outlined">open_in_full</button></div>
+                    </div>
+                    <div class="tab-contents-parent">
+                      {obj.studyGuide && <div class="tab-content-container study-guide"><div class="tab-content study-guide" set:html={obj.studyGuide} /></div>}
+                      {obj.referenceSheet && <div class="tab-content-container reference-sheet"><div class="tab-content reference-sheet" set:html={obj.referenceSheet} /></div>}
+                    </div>
+                  </dialog>
+                  { obj.followingText && <div class="message-content-inner" set:html={obj.followingText} /> }
+                </div>
+              </div>              
+            }
+          }
+        })}
+      </div>
+      <div class="chat-toolbar">
+        <div id="error-message" class="error-box" style="display: none" role="alert"></div>
+        <FooterContent />
+      </div>
+    </section>
+  </section>
+  <!-- <ChatScript page="chat" /> -->
+</Layout> 
