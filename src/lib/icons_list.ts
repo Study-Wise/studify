@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
-const __dirname = new URL('.', import.meta.url).pathname;
+let __dirname = new URL('.', import.meta.url).pathname;
+if (__dirname.startsWith('/')) __dirname = __dirname.slice(1);
 
 let icons_dir = path.join(__dirname, '..', '..', 'public', 'assets');
 let icons_path = path.join(icons_dir, 'icons');

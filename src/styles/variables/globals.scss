@@ -1,23 +1,43 @@
 @use "./colors/accent/colors.scss" as colors;
 
-// Other Colors
+// Header
 $header-text: #fff;
 $header-tagline: #e0f7ff;
+
+// Card
 $card-bg: #fff;
 $card-border: #e9ecef;
 $card-shadow: rgba(0, 0, 0, 0.07);
+
+// Section
 $section-title: #0056b3;
 $section-title-border: #dee2e6;
+
+// Footer
 $footer-bg: #f1f3f5;
 $footer-text: #6c757d;
+
+// Body
 $body-bg: #f8f9fa;
-$message-bg: #ebeef1;
 $body-text: #444;
-$input-border: #ccc;
-$profile-border: #eee;
-$profile-shadow: rgba(0, 0, 0, 0.1);
-$about-link: #007bff; 
-$gradient-angle: 210deg;
+
+// Message
+$message-bg: #ebeef1;
 $chat-message-shadow: rgba(0, 0, 0, 0.5);
 
+// Input
+$input-border: #ccc;
+
+// Profile
+$profile-border: #eee;
+$profile-shadow: rgba(0, 0, 0, 0.1);
+
+// About
+$about-link: #007bff; 
+
+// Fancy Section
+$fancy-section-border: 1px solid $card-border;
+
+// Misc
+$gradient-angle: 210deg;
 $accent-colors: colors.$accent-colors;
