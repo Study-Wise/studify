@@ -45,7 +45,7 @@
     }
 }
 
-@supports (view-transition-name: root) {
+@supports (view-transition-name: root) and (navigation: auto) {
     @view-transition {
         navigation: auto;
     }
@@ -198,7 +198,7 @@ main {
     margin-bottom: 35px;
     border-radius: 10px;
     box-shadow: 0 5px 15px $card-shadow;
-    border: $fancy-section-border;
+    border: solid 1px $card-border;
 }
 
 :is(section, .chat-page) {

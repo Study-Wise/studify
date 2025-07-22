@@ -19,7 +19,8 @@ $spacing: 1rem;
     border-radius: $spacing;
   }
   &:not([open]) {
-    display: block;
+    display: flex;
+    flex-direction: column;
     border: none;
     background-color: transparent;
     position: relative;
@@ -49,6 +50,12 @@ $spacing: 1rem;
         linear-gradient(90deg, transparent $gradient-x, color.adjust($footer-text, $alpha: -0.9) $gradient-x, color.adjust($footer-text, $alpha: -0.5)),
         linear-gradient(transparent $gradient-y, color.adjust($footer-text, $alpha: -0.9) $gradient-y, color.adjust($footer-text, $alpha: -0.5));
     }
+    // Tab content gradient and sizing
+    .tab-content {
+        width: 200%;
+        height: auto;
+        position: relative;
+    }
   }
 
 
@@ -70,13 +77,6 @@ $spacing: 1rem;
     :is(.fancy-output[open] &) {
       overflow: visible;
     }
-  }
-
-  // Tab content gradient and sizing
-  .tab-content {
-    width: 200%;
-    height: auto;
-    position: relative;
   }
 }
 
