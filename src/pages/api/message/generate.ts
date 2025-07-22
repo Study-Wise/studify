@@ -139,7 +139,13 @@ export const POST: APIRoute = async ({ request }) => {
       const result = await generateText({
         model: model,
         system: config.systemPrompt,
-        prompt: aiPrompt,
+        messages: [
+          {
+            role: 'system',
+            content: config.systemPrompt,
+          },
+          ...convoHistory,
+        ],
       });
       generatedText = result.text;
     } catch (error) {

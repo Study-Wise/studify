@@ -4,6 +4,7 @@ import Layout from '../../layouts/Layout.astro';
 import ChatHeader from '../../components/ChatHeader.astro';
 import FancyOutput from '../../components/fancy/Output.astro';
 import ChatToolbar from '../../components/ChatToolbar.astro';
+import ChatSidebar from '../../components/ChatSidebar.astro';
 
 import MessagesScript from '../../scripts/messages.astro';
 import '../../styles/pages/chat.scss';
@@ -24,9 +25,7 @@ export const inNav = 'hide';
     <ChatHeader pTitle={`${token ? 'Chat' : 'New Chat'}`} />
   </header>
   <section class="chat-container">
-    <section class="chat-sidebar">
-      <h3>Sidebar</h3>
-    </section>
+    <ChatSidebar />
     <section class="chat-section">
       <label class="chat-sidebar-toggle">
         <input type="checkbox" />
@@ -57,9 +56,9 @@ export const inNav = 'hide';
         })}
       </div>
       <ChatToolbar />
+      <Footer />
     </section>
   </section>
-  <Footer />
   <script is:inline>
     window.onFancyOutput = () => {
       const allOutputs = document.querySelectorAll('.fancy-output');
@@ -67,12 +66,43 @@ export const inNav = 'hide';
         const openBtn = output.querySelector('.buttons .button.open-button');
         if (openBtn) {
           openBtn.addEventListener('click', () => {
-            output.showModal();
+            if (!output.getAttribute('open')) {
+              output.showModal();
+            }
+            if (output.getAttribute('open')) {
+              output.close();
+            }
           });
         }
+        output.addEventListener('click', (e) => {
+            if (!output.getAttribute('open')) {
+                e.preventDefault();
+                output.showModal();
+            }
+        });
+
       });
     }
     window.addEventListener('load', window.onFancyOutput);
+    window.addEventListener('load', () => {
+      const chatMessages = document.querySelector('.chat-messages');
+      const chatToolbar = document.querySelector('.chat-toolbar');
+      
+      chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
+
+      chatMessages.addEventListener('scroll', () => {
+        const scrollPosition = chatMessages.scrollTop;
+        const chatMessagesHeight = chatMessages.clientHeight;
+        const chatMessagesScrollHeight = chatMessages.scrollHeight;
+        const isAtBottom = scrollPosition + chatMessagesHeight >= chatMessagesScrollHeight;
+
+        if (isAtBottom) {
+          chatToolbar.classList.add('at-bottom');
+        } else {
+          chatToolbar.classList.remove('at-bottom');
+        }
+      });
+    });
   </script>
   <MessagesScript page="chat" />
 </Layout> 

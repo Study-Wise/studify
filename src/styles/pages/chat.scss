@@ -56,27 +56,6 @@ footer, .chat-toolbar {
     position: relative;
 }
 
-.chat-sidebar {
-    box-sizing: border-box;
-    padding-top: 3.5rem;
-
-    width: 200px;
-
-    &:has( + .chat-section .chat-sidebar-toggle > input[type="checkbox"]:not(:checked)) {
-        display: none;
-    }
-
-    &:has( + .chat-section .chat-sidebar-toggle > input[type="checkbox"]:checked) {
-        + .chat-section .chat-messages {
-            border-bottom-left-radius: 2rem;
-            overflow-x: hidden;
-            @supports (overflow-x: clip) {
-                overflow-x: clip;
-            }
-         }
-    }
-}
-
 /* Card Container */
 .chat-section {
     flex: 1;

@@ -4,31 +4,38 @@
 @use 'sass:list';
 
 $color: list.nth(map.get($accent-colors, primary), 1);
+$padding: 1rem;
 
 .chat-toolbar {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: $padding;
     background: $card-bg;
+    box-shadow: 0 0 0.5rem transparent;
+    transition: box-shadow 0.2s;
+
+    &:not(.at-bottom, .scrolling-down) {
+        box-shadow: 0 0 0.5rem $chat-message-shadow;
+    }
 
     .chat-input-container {
-        padding: 1rem;
+        padding: $padding;
 
         min-width: min(1000px, 100%);
         margin: 0 auto;
 
-        border-radius: 1.5rem;
+        border-radius: $padding * 1.5;
     }
         
     .input-wrapper {
         display: grid;
         grid-template-columns: 1fr auto;
         align-items: flex-end;
-        gap: 0.5rem;
+        gap: $padding * 0.5;
         background: #f9fafb;
         border: 1px solid #d1d5db;
-        border-radius: 0.75rem;
-        padding: 0.75rem;
+        border-radius: $padding * 0.75;
+        padding: $padding * 0.75;
         transition: border-color 0.2s;
         
         &:focus-within {
@@ -46,10 +53,11 @@ $color: list.nth(map.get($accent-colors, primary), 1);
         font-family: inherit;
         font-size: 0.875rem;
         line-height: 1.25rem;
-        min-height: 1.25rem;
+        min-height: 2lh;
         overflow-y: auto;
-        min-height: 100%;
-        field-sizing: content;
+        @supports (field-sizing: content) {
+            field-sizing: content;
+        }
         
         &::placeholder {
             color: #9ca3af;
@@ -63,7 +71,7 @@ $color: list.nth(map.get($accent-colors, primary), 1);
         align-items: center;
         justify-content: center;
         aspect-ratio: 1;
-        height: 100%;
+        width:2.5lh;
         background: $color;
         color: white;
         border: none;

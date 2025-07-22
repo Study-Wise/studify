@@ -107,7 +107,7 @@ const { page } = Astro.props;
 
     // Shared event handlers
     function handleEnterKey(event) {
-        if (event.key === 'Enter' && !event.shiftKey) {
+        if (event.key === 'Enter' && !event.shiftKey && event.target.value.trim() !== '') {
             event.preventDefault();
             if (!sendButton.disabled) {
                 generateOutput();
@@ -718,11 +718,8 @@ const { page } = Astro.props;
 
                 // Set up fancy output functionality
                 setTimeout(() => {
-                    const openBtn = fancyOutput.querySelector('.buttons .button.open-button');
-                    if (openBtn) {
-                        openBtn.addEventListener('click', () => {
-                            fancyOutput.showModal();
-                        });
+                    if (window.onFancyOutput && typeof window.onFancyOutput === 'function') {
+                        window.onFancyOutput();
                     }
                 }, 100);
 
