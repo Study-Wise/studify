@@ -8,66 +8,66 @@ import config from '../lib/config';
 import { providers, models } from '../lib/models';
 
 interface ModelOption {
-  name: string;
+    name: string;
 }
 
 const settings: {
-  id: string;
-  name: string;
-  options: ModelOption[];
-  default: string;
+    id: string;
+    name: string;
+    options: ModelOption[];
+    default: string;
 }[] = [
-  {
-    id: 'model',
-    name: 'Model',
-    options: models as ModelOption[],
-    default: config.model,
-  }
+    {
+        id: 'model',
+        name: 'Model',
+        options: models as ModelOption[],
+        default: config.model,
+    }
 ];
 ---
 <Layout title="Settings">
-  <section class="settings-section card">
-    <h2><span class="material-symbols-outlined">settings</span>&nbsp;Settings</h2>
-    <form id="settings-form" onsubmit="event.preventDefault();">
-      {settings.map(setting => (
-        <div class="settings-row">
-          <label for={setting.id}>{setting.name}:</label>
-          {Array.isArray(setting.options) ? (
-            <select class="fancy-select" id={setting.id} name={setting.id} value={setting.default}>
-              <selectedcontent />
-              {setting.options.map(option => {
-                const providerKey = Object.keys(providers).find(p =>
-                  Object.keys(providers[p].models).find(m => providers[p].models[m].name === option.name)
-                );
-                const currKey = providerKey
-                  ? Object.keys(providers[providerKey].models).find(m => providers[providerKey].models[m].name === option.name)
-                  : '';
-                return (
-                  <option value={currKey} selected={currKey === setting.default}>
-                    <img
-                      src={`/images/providers/${providerKey || 'default'}.svg`}
-                      alt={providerKey ? providers[providerKey].name : 'Provider'}
-                    />
-                    {option.name || currKey}
-                  </option>
-                );
-              })}
-            </select>
-          ) : typeof setting.options === 'object' ? (
-            <select id={setting.id} name={setting.id} value={setting.options[setting.default]}>
-              {Object.keys(setting.options).map(option => (
-                <option value={option} selected={setting.options[option] === setting.default}>{setting.options[option].name || option}</option>
-              ))}
-            </select>
-          ) : (
-            <input type="text" id={setting.id} name={setting.id} value={setting[1]} />
-          )}
-        </div>
-      ))}
-    </form>
-  </section>
-  <script>
-    document.querySelectorAll('select.fancy-select selectedcontent').forEach(sc => sc.outerHTML = `<button>${sc.outerHTML}</button>`)
-  </script>
-  <SettingsScript settings={settings} />
+    <section class="settings-section card">
+        <h2><span class="material-symbols-outlined">settings</span>&nbsp;Settings</h2>
+        <form id="settings-form" onsubmit="event.preventDefault();">
+            {settings.map(setting => (
+                <div class="settings-row">
+                <label for={setting.id}>{setting.name}:</label>
+                    {Array.isArray(setting.options) ? (
+                        <select class="fancy-select" id={setting.id} name={setting.id} value={setting.default}>
+                            <selectedcontent />
+                            {setting.options.map(option => {
+                                const providerKey = Object.keys(providers).find(p =>
+                                    Object.keys(providers[p].models).find(m => providers[p].models[m].name === option.name)
+                                );
+                                const currKey = providerKey
+                                    ? Object.keys(providers[providerKey].models).find(m => providers[providerKey].models[m].name === option.name)
+                                    : '';
+                                return (
+                                    <option value={currKey} selected={currKey === setting.default}>
+                                        <img
+                                            src={`/images/providers/${providerKey || 'default'}.svg`}
+                                            alt={providerKey ? providers[providerKey].name : 'Provider'}
+                                        />
+                                        {option.name || currKey}
+                                    </option>
+                                );
+                            })}
+                        </select>
+                    ) : typeof setting.options === 'object' ? (
+                        <select id={setting.id} name={setting.id} value={setting.options[setting.default]}>
+                            {Object.keys(setting.options).map(option => (
+                                <option value={option} selected={setting.options[option] === setting.default}>{setting.options[option].name || option}</option>
+                            ))}
+                        </select>
+                    ) : (
+                        <input type="text" id={setting.id} name={setting.id} value={setting[1]} />
+                    )}
+                </div>
+            ))}
+        </form>
+    </section>
+    <script>
+        document.querySelectorAll('select.fancy-select selectedcontent').forEach(sc => sc.outerHTML = `<button>${sc.outerHTML}</button>`)
+    </script>
+    <SettingsScript settings={settings} />
 </Layout> 

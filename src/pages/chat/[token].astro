@@ -13,96 +13,103 @@ import { getMessages } from '../../lib/threads';
 import extract from '../../lib/extractPartsofMessage';
 import Footer from '../../components/Footer.astro';
 
+import { checkAuthState } from '../../lib/auth/state';
+
 let token = Astro.params.token || Astro.cookies.get('userToken')?.value || '';
 
 const messages = await getMessages(token);
 
+const isAuthed = await checkAuthState(Astro);
+
+if (!isAuthed) {
+    return Astro.redirect("/user/sign-in");
+}
+
 export const inNav = 'hide';
 ---
 <Layout title="Chat" container={false} isChatArea={true} additionalClasses={['chat-page']} hideCopyright={true}>
-  <header class="chat-header">
-    <h2><span class="material-symbols-outlined">chat</span>&nbsp;Chat</h2>
-    <ChatHeader pTitle={`${token ? 'Chat' : 'New Chat'}`} />
-  </header>
-  <section class="chat-container">
-    <ChatSidebar />
-    <section class="chat-section">
-      <label class="chat-sidebar-toggle">
-        <input type="checkbox" />
-        <span class="material-symbols-outlined">chat</span>
-      </label>
-      <div class="chat-messages">
-        {messages.map(async (message) => {
-          const { obj, generatedText: htmlText } = await extract(message.content);
-          var content = htmlText;
-          if (!(message.role === 'assistant' && obj.studyGuide || obj.referenceSheet)) {
-            return <div class={`message ${message.role}`}>
-              <div class={`message-content ${message.role === 'user' ? 'bg-primary' : ''}`} set:html={content} />
+    <header class="chat-header">
+        <h2><span class="material-symbols-outlined">chat</span>&nbsp;Chat</h2>
+        <ChatHeader pTitle={`${token ? 'Chat' : 'New Chat'}`} />
+    </header>
+    <section class="chat-container">
+        <ChatSidebar />
+        <section class="chat-section">
+            <label class="chat-sidebar-toggle">
+                <input type="checkbox" />
+                <span class="material-symbols-outlined">chat</span>
+            </label>
+            <div class="chat-messages">
+                {messages.map(async (message) => {
+                    const { obj, generatedText: htmlText } = await extract(message.content);
+                    var content = htmlText;
+                    if (!(message.role === 'assistant' && obj.studyGuide || obj.referenceSheet)) {
+                        return <div class={`message ${message.role}`}>
+                            <div class={`message-content ${message.role === 'user' ? 'bg-primary' : ''}`} set:html={content} />
+                        </div>
+                    }
+
+                    if (message.role === 'assistant') {
+                        if (obj.studyGuide || obj.referenceSheet) {
+                            return <div class={`message ${message.role}`}>
+                                <div class="message-content">
+                                    { obj.precedingText && <div class="message-content-inner" set:html={obj.precedingText} /> }
+                                    <FancyOutput obj={obj} />
+                                    { obj.followingText && <div class="message-content-inner" set:html={obj.followingText} /> }
+                                </div>
+                            </div>              
+                        }
+                    }
+                })}
             </div>
-          }
-
-
-          if (message.role === 'assistant') {
-            if (obj.studyGuide || obj.referenceSheet) {
-              return <div class={`message ${message.role}`}>
-                <div class="message-content">
-                  { obj.precedingText && <div class="message-content-inner" set:html={obj.precedingText} /> }
-                  <FancyOutput obj={obj} />
-                  { obj.followingText && <div class="message-content-inner" set:html={obj.followingText} /> }
-                </div>
-              </div>              
-            }
-          }
-        })}
-      </div>
-      <ChatToolbar />
-      <Footer />
+            <ChatToolbar />
+            <Footer />
+        </section>
     </section>
-  </section>
-  <script is:inline>
-    window.onFancyOutput = () => {
-      const allOutputs = document.querySelectorAll('.fancy-output');
-      allOutputs.forEach(output => {
-        const openBtn = output.querySelector('.buttons .button.open-button');
-        if (openBtn) {
-          openBtn.addEventListener('click', () => {
-            if (!output.getAttribute('open')) {
-              output.showModal();
-            }
-            if (output.getAttribute('open')) {
-              output.close();
-            }
-          });
+    <script is:inline>
+        window.onFancyOutput = () => {
+            const allOutputs = document.querySelectorAll('.fancy-output');
+            allOutputs.forEach(output => {
+                const openBtn = output.querySelector('.buttons .button.open-button');
+                if (openBtn) {
+                    openBtn.addEventListener('click', () => {
+                        if (!output.getAttribute('open')) {
+                            output.showModal();
+                        }
+                        if (output.getAttribute('open')) {
+                            output.close();
+                        }
+                    });
+                }
+                output.addEventListener('click', (e) => {
+                    if (!output.getAttribute('open')) {
+                        e.preventDefault();
+                        output.showModal();
+                    }
+                });
+
+            });
         }
-        output.addEventListener('click', (e) => {
-            if (!output.getAttribute('open')) {
-                e.preventDefault();
-                output.showModal();
-            }
+        window.addEventListener('load', window.onFancyOutput);
+        window.addEventListener('load', () => {
+            const chatMessages = document.querySelector('.chat-messages');
+            const chatToolbar = document.querySelector('.chat-toolbar');
+            
+            chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
+
+            chatMessages.addEventListener('scroll', () => {
+                const scrollPosition = chatMessages.scrollTop;
+                const chatMessagesHeight = chatMessages.clientHeight;
+                const chatMessagesScrollHeight = chatMessages.scrollHeight;
+                const isAtBottom = scrollPosition + chatMessagesHeight >= chatMessagesScrollHeight;
+
+                if (isAtBottom) {
+                    chatToolbar.classList.add('at-bottom');
+                } else {
+                    chatToolbar.classList.remove('at-bottom');
+                }
+            });
         });
-
-      });
-    }
-    window.addEventListener('load', window.onFancyOutput);
-    window.addEventListener('load', () => {
-      const chatMessages = document.querySelector('.chat-messages');
-      const chatToolbar = document.querySelector('.chat-toolbar');
-      
-      chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
-
-      chatMessages.addEventListener('scroll', () => {
-        const scrollPosition = chatMessages.scrollTop;
-        const chatMessagesHeight = chatMessages.clientHeight;
-        const chatMessagesScrollHeight = chatMessages.scrollHeight;
-        const isAtBottom = scrollPosition + chatMessagesHeight >= chatMessagesScrollHeight;
-
-        if (isAtBottom) {
-          chatToolbar.classList.add('at-bottom');
-        } else {
-          chatToolbar.classList.remove('at-bottom');
-        }
-      });
-    });
-  </script>
-  <MessagesScript page="chat" />
+    </script>
+    <MessagesScript page="chat" />
 </Layout> 
