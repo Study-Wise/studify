@@ -41,7 +41,7 @@ async function destroyTokenIfEmptyConvo(token: string | undefined) {
         }
 
         const db = drizzle();
-        const threads = await db.select().from(threadsTable).where(eq(threadsTable.token, Number(token)));
+        const threads = await db.select().from(threadsTable).where(eq(threadsTable.token, token));
         
         if (threads.length === 0) {
             return { dbResponse: null, token: null };
@@ -49,7 +49,7 @@ async function destroyTokenIfEmptyConvo(token: string | undefined) {
         
         const userData = threads[0];
         if (!userData.thread || typeof userData.thread !== 'object' || !Array.isArray((userData.thread as any).messages) || (userData.thread as any).messages.length < 1) {
-            const dbResponse = await db.delete(threadsTable).where(eq(threadsTable.token, Number(token)));
+            const dbResponse = await db.delete(threadsTable).where(eq(threadsTable.token, token));
             return { dbResponse, token };
         }
         
