@@ -1,0 +1,12 @@
+@use '../variables/globals' as *;
+@use 'sass:math';
+
+/* Card Container */
+.card {
+    background-color: $card-bg;
+    padding: $card-spacing;
+    margin-bottom: #{$card-spacing * math.div(5, 6)};
+    border-radius: 10px;
+    box-shadow: 0 5px 15px $card-shadow;
+    border: solid 1px $card-border;
+}

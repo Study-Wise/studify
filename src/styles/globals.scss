@@ -136,6 +136,7 @@ select.fancy-select,
 
 select.fancy-select {
     padding: 0 0.5rem;
+    
     selectedcontent,
     option {
         box-sizing: border-box;
@@ -187,19 +188,9 @@ img {
 /* Main Content Area */
 main {
     flex-grow: 1;
-    &:not(.chat-page) {
+    &:not(.chat-page, .auth-page) {
         padding: 40px 0;
     }
-}
-
-/* Card Container */
-.card {
-    background-color: $card-bg;
-    padding: 30px;
-    margin-bottom: 35px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px $card-shadow;
-    border: solid 1px $card-border;
 }
 
 :is(section, .chat-page) {
