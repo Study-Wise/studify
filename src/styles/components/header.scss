@@ -29,10 +29,14 @@ header {
 
     .tagline {
         margin: 0;
+        margin-inline: auto;
+        max-width: 40dvw;
+
+        font-size: 1rem;
         font-style: normal;
         font-weight: 300;
         color: $header-tagline;
-        font-size: 1rem;
+
         word-wrap: normal;
         overflow-wrap: normal;
     }
