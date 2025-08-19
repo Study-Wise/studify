@@ -10,10 +10,11 @@
     box-shadow: 0 5px 15px $card-shadow;
     border: solid 1px $card-border;
 
-    &:first-child {
+    &:first-of-type {
         margin-block-start: 0;
     }
-    &:last-child {
+    &:last-of-type,
+    & + :last-child[style*="display: none"] {
         margin-block-end: 0;
     }
 }
