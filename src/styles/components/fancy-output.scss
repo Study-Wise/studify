@@ -5,6 +5,7 @@
 @use "sass:map";
 
 $max-height: min(500px, 100%);
+$max-width: 250px;
 $spacing: 1rem;
 
 .fancy-output {
@@ -28,7 +29,7 @@ $spacing: 1rem;
 
     .tab-content-container {
         max-width: $max-width;
-        max-height: $max-height;
+        max-height: min(500px, 100%);
     }
     .tab-content::after {
         $gradient-size: 2px;
