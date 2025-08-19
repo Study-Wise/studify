@@ -4,8 +4,9 @@
 @use "sass:list";
 @use "sass:map";
 
-$max-height: min(500px, 100%);
-$max-width: 250px;
+$max-height: 250px;
+$o-max-width: 500px;
+$max-width: min($o-max-width, 100%);
 $spacing: 1rem;
 
 .fancy-output {
@@ -33,7 +34,7 @@ $spacing: 1rem;
     }
     .tab-content::after {
         $gradient-size: 2px;
-        $gradient-x: #{100% - math.div($gradient-size * 2, $max-width) * 100%};
+        $gradient-x: #{100% - math.div($gradient-size * 2, $o-max-width) * 100%};
         $gradient-y: #{100% - math.div($gradient-size * 2, $max-height) * 100%};
         
         content: '';
