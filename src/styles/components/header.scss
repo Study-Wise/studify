@@ -53,7 +53,8 @@ header {
 
     .header-logo {
         height: 70px;
-        width: auto;
+        aspect-ratio: 1;
+        object-fit: contain;
         display: block;
     }
 }
