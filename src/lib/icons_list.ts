@@ -1,16 +1,3 @@
-import * as fs from 'fs';
-import * as path from 'path';
-
-let __dirname = new URL('.', import.meta.url).pathname;
-if (__dirname.startsWith('/')) __dirname = __dirname.slice(1);
-
-let icons_dir = path.join(__dirname, '..', '..', 'public', 'assets');
-let icons_path = path.join(icons_dir, 'icons');
-
-if (icons_path.slice(1, 4).endsWith(':\\')) {
-    icons_path = icons_path.slice(1);
-}
-
 const google_icons = {
     "action": [
         "123",
@@ -485,16 +472,12 @@ const google_icons = {
     ]
 };
 
-let custom_icons: { name: string; [key: string]: any }[] = [];
-if (!fs.existsSync(icons_dir)) fs.mkdirSync(icons_dir);
-if (!fs.existsSync(icons_path)) fs.mkdirSync(icons_path);
-const icons = fs.readdirSync(icons_path);
+// Use import.meta.glob to get all SVGs in public/assets/icons
+const iconModules = import.meta.glob('/public/assets/icons/*.svg', { query: '?url', eager: true });
 
-for (let icon of icons) {
-    if (icon.endsWith('.svg')) {
-        icon = icon.replace('.svg', '');
-    }
-    custom_icons.push({ name: icon, path: icon });
-}
+const custom_icons: { name: string; path: string }[] = Object.entries(iconModules).map(([file, url]) => {
+    const name = file.split('/').pop()!.replace('.svg', '');
+    return { name, path: url as string };
+});
 
 export { google_icons, custom_icons };

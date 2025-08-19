@@ -1,4 +1,4 @@
-import { pgTable, varchar, timestamp, jsonb, boolean, bigint, text, integer } from 'drizzle-orm/pg-core';
+import { pgTable, varchar, timestamp, jsonb, boolean, bigint, text } from 'drizzle-orm/pg-core';
 
 const threadsTable = pgTable('threads', {
     id: bigint('id', { mode: 'number' }).primaryKey().generatedAlwaysAsIdentity(),

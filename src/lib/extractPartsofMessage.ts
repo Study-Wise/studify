@@ -1,8 +1,7 @@
 import { marked } from "marked";
 import jsdom from 'jsdom';
-import fs from 'fs';
 
-export default async function extract(generatedText: string) {
+async function extract(generatedText: string) {
     const obj = {
         precedingText: '',
         studyGuide: '',
@@ -48,3 +47,5 @@ export default async function extract(generatedText: string) {
 
     return { obj, generatedText: htmlText };
 }
+
+export default extract;
