@@ -130,6 +130,7 @@ footer, .chat-toolbar {
         width: fit-content;
         box-shadow: 0 0 5px $chat-message-shadow;
         border-radius: 1rem;
+        max-width: min(calc(500px + 4 * $_message-space), 100%);
 
 
         &-content {

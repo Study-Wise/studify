@@ -4,8 +4,7 @@
 @use "sass:list";
 @use "sass:map";
 
-$max-width: 500px;
-$max-height: 250px;
+$max-height: min(500px, 100%);
 $spacing: 1rem;
 
 .fancy-output {
