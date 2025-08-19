@@ -21,7 +21,8 @@ const messages = await getMessages(token);
 
 const isAuthed = await checkAuthState(Astro);
 
-if (!isAuthed) {
+const useAuth = false;
+if (!isAuthed && useAuth) {
     return Astro.redirect("/user/sign-in");
 }
 
