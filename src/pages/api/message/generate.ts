@@ -8,9 +8,6 @@ import { anthropic } from '@ai-sdk/anthropic';
 import { google } from '@ai-sdk/google';
 import { xai } from '@ai-sdk/xai';
 
-import { marked } from 'marked';
-import jsdom from 'jsdom';
-
 import config from '../../../lib/config';
 import { providers } from '../../../lib/models';
 
@@ -62,7 +59,7 @@ type ThreadInsert = InferInsertModel<typeof threadsTable>;
 
 export const POST: APIRoute = async ({ request }) => {
     try {
-        const { text: userPrompt, token: orig_token, settings: userSettings } = await request.json();
+        const { text: userPrompt, token: orig_token, model: reqModel, settings: userSettings } = await request.json();
         let user_token = orig_token;
 
         if (!user_token) {
@@ -118,7 +115,7 @@ export const POST: APIRoute = async ({ request }) => {
         convoHistory.push({ role: 'user', content: userPrompt });
 
         // --- Model/Provider selection (existing code) ---
-        let userModel = userSettings.model || config.model;
+        let userModel = reqModel || userSettings.model || config.model;
         let userProvider =
             (Object.keys(providers) as Array<keyof typeof providers>).find(
                 (provider: keyof typeof providers) =>

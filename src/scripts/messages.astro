@@ -168,6 +168,7 @@ const { page } = Astro.props;
                 },
                 body: JSON.stringify({
                     text: userMessage,
+                    model: localStorage.getItem('model'),
                     token: userToken || null,
                     settings: userSettings || {}
                 }),
