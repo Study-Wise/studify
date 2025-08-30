@@ -5,6 +5,9 @@ import '../styles/pages/auth.scss'
 
 const { page } = Astro.props;
 
+// Get the redirect URL from query parameters or referrer, fallback to home
+const redirectUrl = Astro.url.searchParams.get('redirect_url') || Astro.request.headers.get('referer') || '/';
+
 const appearance = {
     elements: {
         formButtonPrimary: 'auth-button',
@@ -21,24 +24,21 @@ const appearance = {
 ---
 
 <Layout title={page} additionalClasses={['auth-page']}>
-    <section class="card auth-area">
-        <h2 class="auth-title">{page}</h2>
-        {page === 'Sign In' ? (
-            <SignIn 
-                appearance={appearance}
-                routing="path"
-                path="/user/sign-in"
-                signUpUrl="/user/sign-up"
-                fallbackRedirectUrl="/"
-            />
-        ) : (
-            <SignUp 
-                appearance={appearance}
-                routing="path"
-                path="/user/sign-up"
-                signInUrl="/user/sign-in"
-                fallbackRedirectUrl="/"
-            />
-        )}
-    </section>
+    {page === 'Sign In' ? (
+        <SignIn 
+            appearance={appearance}
+            routing="path"
+            path="/user/sign-in"
+            signUpUrl="/user/sign-up"
+            forceRedirectUrl={`/user/sign-in/sso-callback?redirect_url=${encodeURIComponent(redirectUrl)}`}
+        />
+    ) : (
+        <SignUp 
+            appearance={appearance}
+            routing="path"
+            path="/user/sign-up"
+            signInUrl="/user/sign-in"
+            forceRedirectUrl={`/user/sign-in/sso-callback?redirect_url=${encodeURIComponent(redirectUrl)}`}
+        />
+    )}
 </Layout>

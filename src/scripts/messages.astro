@@ -5,7 +5,7 @@ const { page } = Astro.props;
     const page = document.currentScript.dataset.page;
     
     // Use let for variables that may be reassigned
-    let userToken = '';
+    let threadToken = '';
     let userSettings = {};
 
     // DOM element references
@@ -62,34 +62,26 @@ const { page } = Astro.props;
     async function generateToken(existingToken) {
         const result = await makeTokenRequest('generate', { token: existingToken || null }, 'generateToken');
         if (result?.generated_token) {
-            userToken = result.generated_token;
-            localStorage.setItem('userToken', userToken);
-            window.cookies.set('userToken', userToken);
+            threadToken = result.generated_token;
         } else {
-            userToken = null;
-            localStorage.removeItem('userToken');
-            window.cookies.delete('userToken');
+            threadToken = null;
             throw new Error('Failed to generate token for thread functionality.');
         }
     }
 
-    async function destroyToken(token = localStorage.getItem('userToken')) {
+    async function destroyToken(token = threadToken) {
         if (!token) return;
         const result = await makeTokenRequest('destroy', { token }, 'destroyToken');
         if (result) {
-            userToken = null;
-            localStorage.removeItem('userToken');
-            window.cookies.delete('userToken');
+            threadToken = null;
         }
     }
 
-    async function destroyTokenIfEmptyConvo(token = localStorage.getItem('userToken')) {
+    async function destroyTokenIfEmptyConvo(token = threadToken) {
         if (!token) return;
         const result = await makeTokenRequest('destroyIfEmptyConvo', { token }, 'destroyTokenIfEmptyConvo');
         if (result) {
-            userToken = null;
-            localStorage.removeItem('userToken');
-            window.cookies.delete('userToken');
+            threadToken = null;
         }
     }
 
@@ -97,7 +89,7 @@ const { page } = Astro.props;
     let state = 'off';
     document.addEventListener('visibilitychange', async () => {
         if (document.visibilityState === 'hidden' && state === 'on') {
-            if (userToken) await destroyTokenIfEmptyConvo(userToken);
+            if (threadToken) await destroyTokenIfEmptyConvo(threadToken);
             state = 'on';
         }
     });
@@ -160,6 +152,10 @@ const { page } = Astro.props;
             setLoadingState(true);
         }
         try {
+            // Get user email from page data attribute
+            const userEmailElement = document.getElementById('user-email');
+            const user_email = userEmailElement?.getAttribute('data-email') || null;
+            
             const response = await fetch(API_ENDPOINT, {
                 method: 'POST',
                 headers: {
@@ -169,8 +165,9 @@ const { page } = Astro.props;
                 body: JSON.stringify({
                     text: userMessage,
                     model: localStorage.getItem('model'),
-                    token: userToken || null,
-                    settings: userSettings || {}
+                    token: page === 'home' ? null : (threadToken || null),
+                    settings: userSettings || {},
+                    email: user_email
                 }),
             });
             
@@ -205,9 +202,8 @@ const { page } = Astro.props;
             // Page-specific result handling
             await displayResults(data);
             if (page === 'home') {
-                await showOpenInChatBtn(data.token);
-                userToken = data.token;
-                localStorage.setItem('userToken', data.token);
+                threadToken = data.token;
+                await showOpenInChatBtn(threadToken);
             }
         } catch (error) {
             console.error('Full error caught in generateOutput:', error);
@@ -757,7 +753,7 @@ const { page } = Astro.props;
     }
 
     // Show "Open in Chat" button
-    async function showOpenInChatBtn(token = localStorage.getItem('userToken')) {
+    async function showOpenInChatBtn(token = threadToken) {
         const chatButtonContainer = document.querySelector('.chat-button-container');
         if (chatButtonContainer) {
             const btn = document.createElement('a');
@@ -824,8 +820,7 @@ const { page } = Astro.props;
 
     // Shared initialization function
     function initializeCommon() {
-        // Load user token and settings
-        userToken = localStorage.getItem('userToken') || '';
+        // Load user settings
         loadUserSettings();
         
         // Check core function
@@ -867,8 +862,7 @@ const { page } = Astro.props;
         if (pathSegments.endsWith('/')) pathSegments = pathSegments.slice(0, -1);
         const tokenFromUrl = pathSegments.split('/').pop();
         if (tokenFromUrl && tokenFromUrl !== 'chat') {
-            userToken = tokenFromUrl;
-            localStorage.setItem('userToken', userToken);
+            threadToken = tokenFromUrl;
         }
 
         sendButton = document.querySelector('.send-button');
