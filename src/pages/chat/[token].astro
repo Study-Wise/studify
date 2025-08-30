@@ -17,7 +17,9 @@ import { db } from '../../db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '../../db/schema';
 
-let token = Astro.params.token || '';
+// let token = Astro.params.token || '';
+let idParam = Astro.params.token || '';
+let threadId = Number(idParam) || 0;
 
 // Use Clerk authentication
 const auth = (Astro.locals as any).auth;
@@ -36,9 +38,10 @@ const isUserAdmin = userRole === 'admin';
 // Check thread ownership
 let threadOwner: string | null = null;
 let isPublicThread = false;
-if (token) {
+if (threadId) {
     try {
-        const threads = await db.select().from(threadsTable).where(eq(threadsTable.token, token));
+        // const threads = await db.select().from(threadsTable).where(eq(threadsTable.token, token));
+        const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
         if (threads.length > 0) {
             threadOwner = threads[0].email;
             isPublicThread = threads[0].isPublic;
@@ -47,7 +50,7 @@ if (token) {
                 try {
                     await db.update(threadsTable)
                         .set({ email: user_email, updatedAt: new Date() })
-                        .where(eq(threadsTable.token, token));
+                        .where(eq(threadsTable.id, threadId));
                     threadOwner = user_email;
                 } catch (e) {
                     console.error('Error claiming thread ownership:', e);
@@ -60,10 +63,10 @@ if (token) {
 }
 
 // Check if user owns the thread or is admin
-const isAuthorized = token && threadOwner && threadOwner === user_email && !isUserAdmin;
+const isAuthorized = threadId && threadOwner && threadOwner === user_email && !isUserAdmin;
 const isPublic = !isAuthorized && isPublicThread;
 
-const messages = !isAuthorized ? [] : await getMessages(token, user_email);
+const messages = !isAuthorized ? [] : await getMessages(threadId, user_email);
 
 export const inNav = 'hide';
 ---
@@ -71,7 +74,7 @@ export const inNav = 'hide';
     <div id="user-email" data-email={user_email} style="display: none;"></div>
     <header class="chat-header">
         <h2><span class="material-symbols-outlined">chat</span>&nbsp;Chat</h2>
-        <ChatHeader pTitle={`${token ? 'Chat' : 'New Chat'}`} />
+        <ChatHeader pTitle={`${threadId ? 'Chat' : 'New Chat'}`} />
     </header>
     <section class="chat-container">
         <ChatSidebar />

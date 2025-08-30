@@ -60,8 +60,9 @@ type ThreadInsert = InferInsertModel<typeof threadsTable>;
 
 export const POST: APIRoute = async ({ request, locals }) => {
     try {
-        const { text: userPrompt, token: thread_token, model: reqModel, settings: userSettings } = await request.json();
+        const { text: userPrompt, token: thread_token, id: thread_id, model: reqModel, settings: userSettings } = await request.json();
         let current_thread_token = thread_token;
+        let current_thread_id: number | undefined = thread_id;
         const auth = (locals as any)?.auth;
         const { userId, sessionClaims } = auth ? auth() : ({} as any);
         const user_email = userId ? ((sessionClaims?.email as string) || null) : null;
@@ -77,10 +78,13 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        if (!current_thread_token) {
+        // Create a new thread if none provided (prefer id-based)
+        if (!current_thread_id) {
             try {
-                const { token, dbResponse } = await generateToken(undefined, user_email);
+                const { token, id, dbResponse } = await generateToken(undefined, user_email);
+                // current_thread_token = token; // token is now a constant truthy value
                 current_thread_token = token;
+                current_thread_id = id;
                 if (dbResponse) {
                     console.log('Token generated successfully:', dbResponse);
                 }
@@ -101,9 +105,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
         // --- Conversation History Fetch from DB ---
         let convoHistory: any[] = [];
         let userData: Thread | undefined = undefined;
-        if (current_thread_token) {
+        if (current_thread_id) {
             try {
-                const threads = await db.select().from(threadsTable).where(eq(threadsTable.token, current_thread_token));
+                // const threads = await db.select().from(threadsTable).where(eq(threadsTable.token, current_thread_token));
+                const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, current_thread_id));
                 if (threads.length > 0) {
                     userData = threads[0];
                     
@@ -205,7 +210,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
         // --- Save updated history back to DB ---
         try {
-            if (current_thread_token && userData) {
+            if (current_thread_id && userData) {
                 // Update existing thread
                 await db
                     .update(threadsTable)
@@ -215,11 +220,12 @@ export const POST: APIRoute = async ({ request, locals }) => {
                         updatedAt: new Date(),
                         isDev: process.env.NODE_ENV === 'development' ? true : false,
                     })
-                    .where(eq(threadsTable.token, current_thread_token));
-            } else if (current_thread_token) {
+                    .where(eq(threadsTable.id, current_thread_id));
+            } else if (current_thread_id) {
                 // Insert new thread
                 await db.insert(threadsTable).values({
-                    token: current_thread_token,
+                    // token: current_thread_token,
+                    token: 'true',
                     title: convoTitle || '',
                     thread: { messages: convoHistory },
                 } as ThreadInsert);
@@ -242,7 +248,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
                 ...obj,
                 generatedText: htmlText,
                 generatedTitle: true,
-                token: current_thread_token,
+                // token: current_thread_token,
+                id: current_thread_id,
             }),
             {
                 status: 200,

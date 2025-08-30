@@ -13,10 +13,29 @@ interface ThreadData {
     messages: any[];
 }
 
-async function getMessages(token: string, user_email?: string | null) {
+// async function getMessages(token: string, user_email?: string | null) {
+//     try {
+//         const db = drizzle();
+//         const dbResponse: Thread[] = await db.select().from(threadsTable).where(eq(threadsTable.token, token));
+//         if (dbResponse.length === 0) {
+//             return [];
+//         }
+//         const thread = dbResponse[0];
+//         if (user_email && thread.email && thread.email !== user_email) {
+//             return []
+//         }
+//         const threadData = thread?.thread as ThreadData;
+//         return threadData?.messages ?? [];
+//     } catch (e) {
+//         console.error(e);
+//         return [];
+//     }
+// }
+async function getMessages(id: number, user_email?: string | null) {
     try {
         const db = drizzle();
-        const dbResponse: Thread[] = await db.select().from(threadsTable).where(eq(threadsTable.token, token));
+        // const dbResponse: Thread[] = await db.select().from(threadsTable).where(eq(threadsTable.token, token));
+        const dbResponse: Thread[] = await db.select().from(threadsTable).where(eq(threadsTable.id, id));
         
         if (dbResponse.length === 0) {
             return [];
@@ -37,10 +56,28 @@ async function getMessages(token: string, user_email?: string | null) {
     }
 }
 
-async function getThreadByToken(token: string, user_email?: string | null) {
+// async function getThreadByToken(token: string, user_email?: string | null) {
+//     try {
+//         const db = drizzle();
+//         const dbResponse: Thread[] = await db.select().from(threadsTable).where(eq(threadsTable.token, token));
+//         if (dbResponse.length === 0) {
+//             return null;
+//         }
+//         const thread = dbResponse[0];
+//         if (user_email && thread.email && thread.email !== user_email) {
+//             return null;
+//         }
+//         return thread;
+//     } catch (e) {
+//         console.error(e);
+//         return null;
+//     }
+// }
+async function getThreadByToken(id: number, user_email?: string | null) {
     try {
         const db = drizzle();
-        const dbResponse: Thread[] = await db.select().from(threadsTable).where(eq(threadsTable.token, token));
+        // const dbResponse: Thread[] = await db.select().from(threadsTable).where(eq(threadsTable.token, token));
+        const dbResponse: Thread[] = await db.select().from(threadsTable).where(eq(threadsTable.id, id));
         
         if (dbResponse.length === 0) {
             return null;
