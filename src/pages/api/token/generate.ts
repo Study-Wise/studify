@@ -3,12 +3,14 @@ import type { APIRoute } from 'astro';
 import { drizzle } from 'drizzle-orm/vercel-postgres';
 import { threadsTable } from '../../../db/schema';
 import { v4 as uuid } from 'uuid';
-import { clerkClient } from '@clerk/astro/server';
 import { isValidEmail } from '../../../lib/validation';
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
     try {
-        const { token: user_token, email: user_email } = await request.json();
+        const { token: user_token } = await request.json();
+        const auth = (locals as any)?.auth;
+        const { userId, sessionClaims } = auth ? auth() : ({} as any);
+        const user_email = userId ? ((sessionClaims?.email as string) || null) : null;
         
         // Validate email
         if (!isValidEmail(user_email)) {

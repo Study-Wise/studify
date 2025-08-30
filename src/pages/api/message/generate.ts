@@ -19,7 +19,6 @@ import { eq } from 'drizzle-orm';
 import type { InferSelectModel, InferInsertModel } from 'drizzle-orm';
 import { threadsTable } from '../../../db/schema';
 import extract from '../../../lib/extractPartsofMessage';
-import { clerkClient } from '@clerk/astro/server';
 import { isValidEmail } from '../../../lib/validation';
 
 const provider_maps = {
@@ -59,10 +58,13 @@ type ProviderKey = keyof typeof providerFunctions;
 type Thread = InferSelectModel<typeof threadsTable>;
 type ThreadInsert = InferInsertModel<typeof threadsTable>;
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
     try {
-        const { text: userPrompt, token: orig_token, model: reqModel, settings: userSettings, email: user_email } = await request.json();
+        const { text: userPrompt, token: orig_token, model: reqModel, settings: userSettings } = await request.json();
         let user_token = orig_token;
+        const auth = (locals as any)?.auth;
+        const { userId, sessionClaims } = auth ? auth() : ({} as any);
+        const user_email = userId ? ((sessionClaims?.email as string) || null) : null;
 
         // Validate email
         if (!isValidEmail(user_email)) {
