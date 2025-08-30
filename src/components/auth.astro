@@ -1,97 +1,44 @@
 ---
 import Layout from '../layouts/Layout.astro';
-
-import Button from './fancy/Button.astro'
-
+import { SignIn, SignUp } from '@clerk/astro/components';
 import '../styles/pages/auth.scss'
-
-import { authClient } from "../lib/auth-client";
-import { authProviders } from "../lib/auth";
 
 const { page } = Astro.props;
 
-let error = "";
-async function handleEmailAuthentication(e) {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const email = String(formData.get('email') || '');
-    const password = String(formData.get('password') || '');
-    try {
-        if (page === 'Sign In') {
-            await authClient.signIn.email({ email, password });
-        } else {
-            const name = String(formData.get('name') || '');
-            await authClient.signUp.email({ email, password, name });
-        }
-        window.location.href = '/';
-    } catch (err) {
-        error = (err && err.message) || "Sign in failed";
+const appearance = {
+    elements: {
+        formButtonPrimary: 'auth-button',
+        card: 'auth-card',
+        headerTitle: 'auth-title',
+        headerSubtitle: 'auth-subtitle',
+        socialButtonsBlockButton: 'social-button',
+        socialButtonsBlockButtonText: 'social-button-text',
+        formFieldInput: 'form-input',
+        formFieldLabel: 'form-label',
+        footerActionLink: 'footer-link'
     }
-}
-
-async function handleProviderAuthentication(e, providerKey) {
-    e.preventDefault();
-    await authClient.signIn.social(providerKey);
-}
-
+};
 ---
+
 <Layout title={page} additionalClasses={['auth-page']}>
     <section class="card auth-area">
         <h2 class="auth-title">{page}</h2>
-        <form onsubmit="handleEmailAuthentication(event)">
-            <!-- <input name="email" type="email" required placeholder="Email" />
-            {page === 'sign-up' && <input name="name" type="text" placeholder="Full Name" required />}
-            <input name="password" type="password" required placeholder="Password" /> -->
-            <div class="form-btns">
-                <!-- <Button mode="lite" type="submit">Sign in</Button> -->
-                {authProviders.map(provider => {
-                    return (
-                        <Button mode="lite" data-provider-key={provider.key} type="button">
-                            Continue with {provider.name}
-                        </Button>
-                    )
-                })}
-            </div>
-        </form>
         {page === 'Sign In' ? (
-            <p>No Account? <a href="/user/sign-up">Sign Up</a></p>
+            <SignIn 
+                appearance={appearance}
+                routing="path"
+                path="/user/sign-in"
+                signUpUrl="/user/sign-up"
+                fallbackRedirectUrl="/"
+            />
         ) : (
-            <p>Already have an account? <a href="/user/sign-in">Sign In</a></p>
+            <SignUp 
+                appearance={appearance}
+                routing="path"
+                path="/user/sign-up"
+                signInUrl="/user/sign-in"
+                fallbackRedirectUrl="/"
+            />
         )}
     </section>
-    <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            // Import and create the client-side auth client
-            const { createAuthClient } = await import('better-auth/client');
-            const authClient = createAuthClient({
-                baseURL: window.location.origin + '/auth'
-            });
-            
-            const providerButtons = document.querySelectorAll('[data-provider-key]');
-            
-            providerButtons.forEach(button => {
-                button.addEventListener('click', async (e) => {
-                    e.preventDefault();
-                    const providerKey = (button as HTMLElement).dataset.providerKey;
-                    if (providerKey) {
-                        try {
-                            // Use the proper better-auth client method
-                            const response = await authClient.signIn.social({
-                                provider: providerKey,
-                                callbackURL: "/",
-                                disableRedirect: true
-                           });
-                           console.log(response);
-                           if (response && response.data && response.data.url) {
-                            prompt('', response.data.url);
-                            // location.href = response.data.url;
-                           }
-                        } catch (err) {
-                            console.error('Provider authentication failed:', err);
-                        }
-                    }
-                });
-            });
-        });
-    </script>
 </Layout>

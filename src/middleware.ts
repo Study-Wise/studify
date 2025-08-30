@@ -1,19 +1,30 @@
-import { auth } from "./lib/auth";
-import { defineMiddleware } from "astro/middleware";
- 
-export const onRequest = defineMiddleware(async (context, next) => {
-    const isAuthed = await auth.api
-        .getSession({
-            headers: context.request.headers,
-        })
- 
-    if (isAuthed) {
-        context.locals.user = isAuthed.user;
-        context.locals.session = isAuthed.session;
-    } else {
-        context.locals.user = null;
-        context.locals.session = null;
+import { clerkMiddleware, createRouteMatcher } from '@clerk/astro/server';
+
+// Define protected routes
+const isProtectedRoute = createRouteMatcher(['/chat(.*)', '/settings(.*)', '/admin(.*)']);
+const isMFARoute = createRouteMatcher(['/account/manage-mfa(.*)']);
+const isSignInRoute = createRouteMatcher(['/user/sign-in(.*)', '/user/sign-up(.*)']);
+
+export const onRequest = clerkMiddleware((auth, context) => {
+  const { userId, sessionClaims, redirectToSignIn } = auth();
+
+  // Redirect signed-in users away from auth pages
+  if (userId && isSignInRoute(context.request)) {
+    return Response.redirect(new URL('/', context.request.url));
+  }
+
+  // Protect routes that require authentication
+  if (isProtectedRoute(context.request) && !userId) {
+    return redirectToSignIn();
+  }
+
+  // Optional: Enforce MFA for protected routes
+  // Uncomment the following code to require MFA
+  /*
+  if (userId && isProtectedRoute(context.request) && !isMFARoute(context.request)) {
+    if (sessionClaims?.isMfa === false) {
+      return Response.redirect(new URL('/account/manage-mfa/add', context.request.url));
     }
- 
-    return next();
+  }
+  */
 });
