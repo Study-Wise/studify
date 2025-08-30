@@ -17,12 +17,27 @@
         width: 100%;
         
         .message-content {
+            $brdr: 15px;
             background: linear-gradient($gradient-angle, list.nth(map.get($accent-colors, primary), 1), list.nth(map.get($accent-colors, primary), 2));
-            border-radius: 15px;
+            border-radius: $brdr;
             padding: 2rem;
             text-align: center;
             box-shadow: 0 10px 30px $card-shadow;
             border: 1px solid $card-border;
+
+            isolation: isolate;
+            position: relative;
+
+            &::before {
+                $space: 10px;
+                content: '';
+                position: absolute;
+                inset: $space;
+                background-color: $body-bg;
+                z-index: -1;
+
+                border-radius: #{$brdr - $space};
+            }
             
             .unauthorized-content {
                 h3 {
