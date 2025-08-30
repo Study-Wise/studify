@@ -23,9 +23,9 @@ function shouldPromoteToAdmin(email: string): boolean {
   return ADMIN_DOMAINS.some(domain => emailLower.endsWith(domain));
 }
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async (context) => {
   try {
-    const body = await request.json();
+    const body = await context.request.json();
     const { type, data } = body;
 
     // Handle user.created webhook
@@ -35,7 +35,8 @@ export const POST: APIRoute = async ({ request }) => {
       
       if (email && shouldPromoteToAdmin(email)) {
         // Promote user to admin
-        await clerkClient.users.updateUserMetadata(user.id, {
+        const client = clerkClient(context);
+        await client.users.updateUserMetadata(user.id, {
           publicMetadata: {
             role: 'admin',
             promotedAt: new Date().toISOString(),

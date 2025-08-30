@@ -3,7 +3,8 @@ import Layout from '../layouts/Layout.astro';
 import { getUserRole, getUserMetadata } from '../lib/auth-utils';
 
 // Use Clerk authentication
-const { userId } = Astro.locals.auth();
+const auth = (Astro.locals as any).auth;
+const { userId } = auth();
 
 // Redirect to sign-in if not authenticated
 if (!userId) {
@@ -11,9 +12,9 @@ if (!userId) {
 }
 
 // Check if user is admin
-const userRole = getUserRole(Astro.locals.auth());
+const userRole = getUserRole(auth);
 const isUserAdmin = userRole === 'admin';
-const userMetadata = getUserMetadata(Astro.locals.auth());
+const userMetadata = getUserMetadata(auth);
 
 // Redirect non-admins away from admin page
 if (!isUserAdmin) {
