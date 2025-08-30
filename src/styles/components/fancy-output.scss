@@ -11,6 +11,7 @@ $spacing: 1rem;
 
 .fancy-output {
     overflow-x: hidden;
+    isolation: isolate;
 
     &[open] {
         margin: auto;
