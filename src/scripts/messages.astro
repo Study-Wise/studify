@@ -6,6 +6,7 @@ const { page } = Astro.props;
     
     // Use let for variables that may be reassigned
     let threadToken = '';
+    let threadId = 0;
     let userSettings = {};
 
     // DOM element references
@@ -59,15 +60,7 @@ const { page } = Astro.props;
         }
     }
 
-    async function generateToken(existingToken) {
-        const result = await makeTokenRequest('generate', { token: existingToken || null }, 'generateToken');
-        if (result?.generated_token) {
-            threadToken = result.generated_token;
-        } else {
-            threadToken = null;
-            throw new Error('Failed to generate token for thread functionality.');
-        }
-    }
+    
 
     async function destroyToken(token = threadToken) {
         if (!token) return;
@@ -165,7 +158,8 @@ const { page } = Astro.props;
                 body: JSON.stringify({
                     text: userMessage,
                     model: localStorage.getItem('model'),
-                    token: page === 'home' ? null : (threadToken || null),
+                    // token: page === 'home' ? null : (threadToken || null),
+                    id: page === 'home' ? null : (threadId || null),
                     settings: userSettings || {},
                     email: user_email
                 }),
@@ -202,8 +196,9 @@ const { page } = Astro.props;
             // Page-specific result handling
             await displayResults(data);
             if (page === 'home') {
-                threadToken = data.token;
-                await showOpenInChatBtn(threadToken);
+                // threadToken = data.token;
+                if (data?.id) threadId = data.id;
+                await showOpenInChatBtn(/*threadToken*/ threadId);
             }
         } catch (error) {
             console.error('Full error caught in generateOutput:', error);
@@ -753,11 +748,12 @@ const { page } = Astro.props;
     }
 
     // Show "Open in Chat" button
-    async function showOpenInChatBtn(token = threadToken) {
+    async function showOpenInChatBtn(tokenOrId = threadToken) {
         const chatButtonContainer = document.querySelector('.chat-button-container');
         if (chatButtonContainer) {
             const btn = document.createElement('a');
-            btn.href = `/chat/${token}`;
+            // btn.href = `/chat/${token}`;
+            btn.href = `/chat/${tokenOrId}`;
 
             const icon = document.createElement('span');
             icon.classList.add('material-symbols-outlined');
@@ -862,7 +858,9 @@ const { page } = Astro.props;
         if (pathSegments.endsWith('/')) pathSegments = pathSegments.slice(0, -1);
         const tokenFromUrl = pathSegments.split('/').pop();
         if (tokenFromUrl && tokenFromUrl !== 'chat') {
-            threadToken = tokenFromUrl;
+            // threadToken = tokenFromUrl;
+            const maybeId = Number(tokenFromUrl);
+            if (!Number.isNaN(maybeId)) threadId = maybeId;
         }
 
         sendButton = document.querySelector('.send-button');

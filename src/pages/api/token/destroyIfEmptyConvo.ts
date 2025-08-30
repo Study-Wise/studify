@@ -11,12 +11,13 @@ import { threadsTable } from '../../../db/schema';
 
 export const POST: APIRoute = async ({ request }) => {
     try {
-        const { token: user_token } = await request.json();
+        const { id } = await request.json();
+        // const { token: thread_token } = await request.json();
 
-        const { dbResponse, token: destroyed_token } = await destroyTokenIfEmptyConvo(user_token);
+        const { dbResponse, id: destroyed_id } = await destroyTokenIfEmptyConvoById(id);
 
         return new Response(
-            JSON.stringify({ status: 'success', db_response: dbResponse, removed_token: destroyed_token }),
+            JSON.stringify({ status: 'success', db_response: dbResponse, removed_id: destroyed_id }),
             {
                 status: 200,
                 headers: { 'Content-Type': 'application/json' },
@@ -34,26 +35,52 @@ export const POST: APIRoute = async ({ request }) => {
     }
 };
 
-async function destroyTokenIfEmptyConvo(token: string | undefined) {
+// async function destroyTokenIfEmptyConvo(token: string | undefined) {
+//     try {
+//         if (!token) {
+//             return { dbResponse: null, token: null };
+//         }
+//
+//         const db = drizzle();
+//         const threads = await db.select().from(threadsTable).where(eq(threadsTable.token, token));
+//         
+//         if (threads.length === 0) {
+//             return { dbResponse: null, token: null };
+//         }
+//         
+//         const userData = threads[0];
+//         if (!userData.thread || typeof userData.thread !== 'object' || !Array.isArray((userData.thread as any).messages) || (userData.thread as any).messages.length < 1) {
+//             const dbResponse = await db.delete(threadsTable).where(eq(threadsTable.token, token));
+//             return { dbResponse, token };
+//         }
+//         
+//         return { dbResponse: null, token: token };
+//     } catch (error) {
+//         console.error('Error in destroyTokenIfEmptyConvo function:', error);
+//         throw error;
+//     }
+// }
+
+async function destroyTokenIfEmptyConvoById(id: number | undefined) {
     try {
-        if (!token) {
-            return { dbResponse: null, token: null };
+        if (!id) {
+            return { dbResponse: null, id: null };
         }
 
         const db = drizzle();
-        const threads = await db.select().from(threadsTable).where(eq(threadsTable.token, token));
+        const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, id));
         
         if (threads.length === 0) {
-            return { dbResponse: null, token: null };
+            return { dbResponse: null, id: null };
         }
         
         const userData = threads[0];
         if (!userData.thread || typeof userData.thread !== 'object' || !Array.isArray((userData.thread as any).messages) || (userData.thread as any).messages.length < 1) {
-            const dbResponse = await db.delete(threadsTable).where(eq(threadsTable.token, token));
-            return { dbResponse, token };
+            const dbResponse = await db.delete(threadsTable).where(eq(threadsTable.id, id));
+            return { dbResponse, id };
         }
         
-        return { dbResponse: null, token: token };
+        return { dbResponse: null, id };
     } catch (error) {
         console.error('Error in destroyTokenIfEmptyConvo function:', error);
         throw error;
@@ -61,4 +88,4 @@ async function destroyTokenIfEmptyConvo(token: string | undefined) {
 }
 
 export const prerender = false;
-export { destroyTokenIfEmptyConvo };
+export { destroyTokenIfEmptyConvoById };
