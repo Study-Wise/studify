@@ -7,7 +7,7 @@ import { isValidEmail } from '../../../lib/validation';
 
 export const POST: APIRoute = async ({ request, locals }) => {
     try {
-        const { token: user_token } = await request.json();
+        const { token: thread_token } = await request.json();
         const auth = (locals as any)?.auth;
         const { userId, sessionClaims } = auth ? auth() : ({} as any);
         const user_email = userId ? ((sessionClaims?.email as string) || null) : null;
@@ -22,7 +22,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
                 }
             );
         }
-        const { token, dbResponse } = await generateToken(user_token, user_email);
+        const { token, dbResponse } = await generateToken(thread_token, user_email);
         return new Response(
             JSON.stringify({ status: 'success', db_response: dbResponse, generated_token: token, token }),
             {

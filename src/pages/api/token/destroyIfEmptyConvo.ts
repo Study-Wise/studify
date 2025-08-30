@@ -11,12 +11,12 @@ import { threadsTable } from '../../../db/schema';
 
 export const POST: APIRoute = async ({ request }) => {
     try {
-        const { token: user_token } = await request.json();
+        const { token: thread_token } = await request.json();
 
-        const { dbResponse, token: destroyed_token } = await destroyTokenIfEmptyConvo(user_token);
+        const { dbResponse, token: destroyed_thread_token } = await destroyTokenIfEmptyConvo(thread_token);
 
         return new Response(
-            JSON.stringify({ status: 'success', db_response: dbResponse, removed_token: destroyed_token }),
+            JSON.stringify({ status: 'success', db_response: dbResponse, removed_thread_token: destroyed_thread_token }),
             {
                 status: 200,
                 headers: { 'Content-Type': 'application/json' },
