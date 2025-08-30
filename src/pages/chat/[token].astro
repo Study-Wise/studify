@@ -42,6 +42,17 @@ if (token) {
         if (threads.length > 0) {
             threadOwner = threads[0].email;
             isPublicThread = threads[0].isPublic;
+            // If unclaimed and user is authenticated, claim ownership
+            if (!threadOwner && user_email) {
+                try {
+                    await db.update(threadsTable)
+                        .set({ email: user_email, updatedAt: new Date() })
+                        .where(eq(threadsTable.token, token));
+                    threadOwner = user_email;
+                } catch (e) {
+                    console.error('Error claiming thread ownership:', e);
+                }
+            }
         }
     } catch (error) {
         console.error('Error fetching thread:', error);
