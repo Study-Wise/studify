@@ -110,8 +110,7 @@ body {
     max-width: 960px;
     margin-left: auto;
     margin-right: auto;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding: $container-padding;
     width: 100%;
 }
 
@@ -188,9 +187,6 @@ img {
 /* Main Content Area */
 main {
     flex-grow: 1;
-    &:not(.chat-page, .auth-page) {
-        padding: 40px 0;
-    }
 }
 
 :is(section, .chat-page) {

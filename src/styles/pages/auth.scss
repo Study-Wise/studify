@@ -2,21 +2,9 @@
 
 $border-size: 0.1em;
 
-.auth-area {
-    box-sizing: border-box;
-    margin: $card-spacing;
-
-    .auth-title {
-        line-height: 1;
-    }
-
-    > :first-child {
-        margin-block-start: 0;
-    }
-
-    > :last-child {
-        margin-block-end: 0;
-    }
+.auth-page {
+    place-content: center;
+    place-items: center;
 }
 
 .form-btns {

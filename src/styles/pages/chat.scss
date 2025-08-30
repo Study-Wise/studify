@@ -4,6 +4,60 @@
 @use 'sass:list';
 @use 'sass:map';
 
+// Unauthorized message styling
+.unauthorized-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 2rem;
+    
+    .message.assistant {
+        max-width: 500px;
+        width: 100%;
+        
+        .message-content {
+            background: linear-gradient($gradient-angle, list.nth(map.get($accent-colors, primary), 1), list.nth(map.get($accent-colors, primary), 2));
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px $card-shadow;
+            border: 1px solid $card-border;
+            
+            .unauthorized-content {
+                h3 {
+                    color: $section-title;
+                    margin-bottom: 1rem;
+                    font-size: 1.5rem;
+                }
+                
+                p {
+                    color: $text-color;
+                    margin-bottom: 1.5rem;
+                    line-height: 1.6;
+                }
+                
+                .btn-primary {
+                    display: inline-block;
+                    background: $card-bg;
+                    color: $text-color;
+                    padding: 0.75rem 1.5rem;
+                    border-radius: 8px;
+                    text-decoration: none;
+                    border: 1px solid $card-border;
+                    transition: all 0.3s ease;
+                    
+                    &:hover {
+                        background: color.adjust($card-bg, $lightness: -5%);
+                        transform: translateY(-2px);
+                        box-shadow: 0 5px 15px $card-shadow;
+                    }
+                }
+            }
+        }
+    }
+}
+
 body:has(.chat-page) {
     height: 100dvh;
 }

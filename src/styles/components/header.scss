@@ -7,7 +7,7 @@ header {
     min-height: 80px;
     background: linear-gradient($gradient-angle, list.nth(map.get($accent-colors, primary), 1), list.nth(map.get($accent-colors, primary), 2));
     color: $header-text;
-    padding: 0.75rem;
+    padding: 0.75rem 1.5rem;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 
     display: flex;
@@ -66,11 +66,17 @@ header {
 }
 
 .header-content-wrapper {
+    width: max-content;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    width: 100%;
+    // width: 100%;
+
+    &:not(.lite) {
+        margin-inline: auto;
+    }
 
     &.lite {
         display: grid;
@@ -80,7 +86,6 @@ header {
         padding: 10px 20px;
         box-shadow: 0 5px 15px $card-shadow;
         border: 1px solid $card-border;
-        width: fit-content;
     }
 
     .header-text-container {
