@@ -59,15 +59,7 @@ const { page } = Astro.props;
         }
     }
 
-    async function generateToken(existingToken) {
-        const result = await makeTokenRequest('generate', { token: existingToken || null }, 'generateToken');
-        if (result?.generated_token) {
-            threadToken = result.generated_token;
-        } else {
-            threadToken = null;
-            throw new Error('Failed to generate token for thread functionality.');
-        }
-    }
+    
 
     async function destroyToken(token = threadToken) {
         if (!token) return;
