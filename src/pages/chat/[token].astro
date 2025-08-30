@@ -12,19 +12,23 @@ import '../../styles/pages/chat.scss';
 import { getMessages } from '../../lib/threads';
 import extract from '../../lib/extractPartsofMessage';
 import Footer from '../../components/Footer.astro';
-
-import { checkAuthState } from '../../lib/auth/state';
+import { getUserRole } from '../../lib/auth-utils';
 
 let token = Astro.params.token || Astro.cookies.get('userToken')?.value || '';
 
 const messages = await getMessages(token);
 
-const isAuthed = await checkAuthState(Astro);
+// Use Clerk authentication
+const { userId } = Astro.locals.auth();
 
-const useAuth = false;
-if (!isAuthed && useAuth) {
+// Redirect to sign-in if not authenticated
+if (!userId) {
     return Astro.redirect("/user/sign-in");
 }
+
+// Get user role and check if admin
+const userRole = getUserRole(Astro.locals.auth());
+const isUserAdmin = userRole === 'admin';
 
 export const inNav = 'hide';
 ---
