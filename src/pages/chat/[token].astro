@@ -13,14 +13,16 @@ import { getMessages } from '../../lib/threads';
 import extract from '../../lib/extractPartsofMessage';
 import Footer from '../../components/Footer.astro';
 import { getUserRole } from '../../lib/auth-utils';
+import { db } from '../../db/initialize';
+import { eq } from 'drizzle-orm';
+import { threadsTable } from '../../db/schema';
 
-let token = Astro.params.token || Astro.cookies.get('userToken')?.value || '';
-
-const messages = await getMessages(token);
+let token = Astro.params.token || '';
 
 // Use Clerk authentication
 const auth = (Astro.locals as any).auth;
-const { userId } = auth();
+const { userId, sessionClaims } = auth();
+const user_email = sessionClaims?.email as string || null;
 
 // Redirect to sign-in if not authenticated
 if (!userId) {
@@ -31,9 +33,31 @@ if (!userId) {
 const userRole = getUserRole(auth);
 const isUserAdmin = userRole === 'admin';
 
+// Check thread ownership
+let threadOwner: string | null = null;
+let isPublicThread = false;
+if (token) {
+    try {
+        const threads = await db.select().from(threadsTable).where(eq(threadsTable.token, token));
+        if (threads.length > 0) {
+            threadOwner = threads[0].email;
+            isPublicThread = threads[0].isPublic;
+        }
+    } catch (error) {
+        console.error('Error fetching thread:', error);
+    }
+}
+
+// Check if user owns the thread or is admin
+const isAuthorized = token && threadOwner && threadOwner === user_email && !isUserAdmin;
+const isPublic = !isAuthorized && isPublicThread;
+
+const messages = !isAuthorized ? [] : await getMessages(token, user_email);
+
 export const inNav = 'hide';
 ---
 <Layout title="Chat" container={false} isChatArea={true} additionalClasses={['chat-page']} hideCopyright={true}>
+    <div id="user-email" data-email={user_email} style="display: none;"></div>
     <header class="chat-header">
         <h2><span class="material-symbols-outlined">chat</span>&nbsp;Chat</h2>
         <ChatHeader pTitle={`${token ? 'Chat' : 'New Chat'}`} />
@@ -46,29 +70,43 @@ export const inNav = 'hide';
                 <span class="material-symbols-outlined">chat</span>
             </label>
             <div class="chat-messages">
-                {messages.map(async (message) => {
-                    const { obj, generatedText: htmlText } = await extract(message.content);
-                    var content = htmlText;
-                    if (!(message.role === 'assistant' && obj.studyGuide || obj.referenceSheet)) {
-                        return <div class={`message ${message.role}`}>
-                            <div class={`message-content ${message.role === 'user' ? 'bg-primary' : ''}`} set:html={content} />
-                        </div>
-                    }
-
-                    if (message.role === 'assistant') {
-                        if (obj.studyGuide || obj.referenceSheet) {
+                {isAuthorized || isPublic ? (
+                    messages.map(async message => {
+                        const { obj, generatedText: htmlText } = await extract(message.content);
+                        var content = htmlText;
+                        if (!(message.role === 'assistant' && obj.studyGuide || obj.referenceSheet)) {
                             return <div class={`message ${message.role}`}>
-                                <div class="message-content">
-                                    { obj.precedingText && <div class="message-content-inner" set:html={obj.precedingText} /> }
-                                    <FancyOutput obj={obj} />
-                                    { obj.followingText && <div class="message-content-inner" set:html={obj.followingText} /> }
-                                </div>
-                            </div>              
+                                <div class={`message-content ${message.role === 'user' ? 'bg-primary' : ''}`} set:html={content} />
+                            </div>
                         }
-                    }
-                })}
+
+                        if (message.role === 'assistant') {
+                            if (obj.studyGuide || obj.referenceSheet) {
+                                return <div class={`message ${message.role}`}>
+                                    <div class="message-content">
+                                        { obj.precedingText && <div class="message-content-inner" set:html={obj.precedingText} /> }
+                                        <FancyOutput obj={obj} />
+                                        { obj.followingText && <div class="message-content-inner" set:html={obj.followingText} /> }
+                                    </div>
+                                </div>              
+                            }
+                        }
+                    })
+                ) : (
+                    <div class="unauthorized-message">
+                        <div class="message assistant">
+                            <div class="message-content">
+                                <div class="unauthorized-content">
+                                    <h3>Access Denied</h3>
+                                    <p>You don't have permission to view this conversation. This thread belongs to another user.</p>
+                                    <a href="/" class="btn-primary">Go Home</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
-            <ChatToolbar />
+            {isAuthorized && <ChatToolbar />}
             <Footer />
         </section>
     </section>

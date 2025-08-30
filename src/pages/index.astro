@@ -7,8 +7,14 @@ import FancyButton from '../components/fancy/Button.astro';
 import Button from '../components/fancy/Button.astro';
 import ModelSelector from '../components/ModelSelector.astro';
 import MessagesScript from '../scripts/messages.astro';
+
+// Use Clerk authentication
+const auth = (Astro.locals as any).auth;
+const { sessionClaims } = auth();
+const user_email = sessionClaims?.email as string || null;
 ---
 <Layout title="Home">
+    <div id="user-email" data-email={user_email} style="display: none"></div>
     <!-- Introduction Section -->
     <section class="introduction-section card">
         <h2>
