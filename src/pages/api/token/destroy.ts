@@ -6,10 +6,11 @@ import { threadsTable } from '../../../db/schema';
 
 export const POST: APIRoute = async ({ request }) => {
     try {
-        const { token: user_token } = await request.json();
-        const { dbResponse, token: destroyed_token } = await destroyToken(user_token);
+        const { id } = await request.json();
+        // const { token: thread_token } = await request.json();
+        const { dbResponse, id: destroyed_id } = await destroyTokenById(id);
         return new Response(
-            JSON.stringify({ status: 'success', db_response: dbResponse, removed_token: destroyed_token }),
+            JSON.stringify({ status: 'success', db_response: dbResponse, removed_id: destroyed_id }),
             {
                 status: 200,
                 headers: { 'Content-Type': 'application/json' },
@@ -27,15 +28,30 @@ export const POST: APIRoute = async ({ request }) => {
     }
 };
 
-async function destroyToken(token: string | undefined) {
+// async function destroyToken(token: string | undefined) {
+//     try {
+//         if (!token) {
+//             return { dbResponse: null, token: null };
+//         }
+//         const db = drizzle();
+//         const dbResponse = await db.delete(threadsTable).where(eq(threadsTable.token, token));
+//         console.log('Thread deleted!');
+//         return { dbResponse, token };
+//     } catch (error) {
+//         console.error('Error in destroyToken function:', error);
+//         throw error;
+//     }
+// }
+
+async function destroyTokenById(id: number | undefined) {
     try {
-        if (!token) {
-            return { dbResponse: null, token: null };
+        if (!id) {
+            return { dbResponse: null, id: null };
         }
         const db = drizzle();
-        const dbResponse = await db.delete(threadsTable).where(eq(threadsTable.token, token));
+        const dbResponse = await db.delete(threadsTable).where(eq(threadsTable.id, id));
         console.log('Thread deleted!');
-        return { dbResponse, token };
+        return { dbResponse, id };
     } catch (error) {
         console.error('Error in destroyToken function:', error);
         throw error;
@@ -43,4 +59,4 @@ async function destroyToken(token: string | undefined) {
 }
 
 export const prerender = false;
-export { destroyToken };
+export { destroyTokenById };

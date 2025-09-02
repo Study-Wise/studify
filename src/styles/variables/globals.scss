@@ -4,8 +4,11 @@
 $header-text: #fff;
 $header-tagline: #e0f7ff;
 
+// Container
+$container-padding: 20px;
+
 // Card
-$card-spacing: 30px;
+$card-spacing: #{$container-padding * 1.5};
 $card-bg: #fff;
 $card-border: #e9ecef;
 $card-shadow: rgba(0, 0, 0, 0.07);
