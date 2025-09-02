@@ -56,23 +56,23 @@ const { settings } = Astro.props;
     });
   }
 
-  function setSetting(key, value) {
-    let userSettings = {};
+  function getSettings() {
     try {
-      userSettings = JSON.parse(localStorage.getItem('settings')) || {};
+      return JSON.parse(localStorage.getItem('settings')) || {};
     } catch (e) {
-      userSettings = {};
+      return {};
     }
+  }
+
+  function setSetting(key, value) {
+    const userSettings = getSettings();
     userSettings[key] = value;
     localStorage.setItem('settings', JSON.stringify(userSettings));
   }
 
   // Initialize form values from localStorage
   window.addEventListener('DOMContentLoaded', () => {
-    let userSettings = {};
-    try {
-      userSettings = JSON.parse(localStorage.getItem('settings')) || {};
-    } catch (e) {}
+    const userSettings = getSettings();
     const settingIds = settings.map(s => s.id);
     
     activateDependencies()

@@ -3,59 +3,38 @@ const { page } = Astro.props;
 ---
 <script is:inline data-page={page}>
     const page = document.currentScript.dataset.page;
-    
-    // Use let for variables that may be reassigned
     let threadToken = '';
     let threadId = 0;
     let userSettings = {};
+    let userToken = null;
 
-    // DOM element references
     let messageInput, sendButton, spinner, outputSection, studyGuideContent, referenceSheetContent, errorMessageDiv, downloadGuideBtn, downloadSheetBtn;
     let isPrinting = false;
 
-    // Placeholders
     const guidePlaceholder = '<p><i>No Study Guide content generated/extracted.</i></p>';
     const sheetPlaceholder = '<p><i>No Reference Sheet content generated/extracted.</i></p>';
 
-    // Utility: Parse settings from localStorage
     function loadUserSettings() {
         try {
             userSettings = JSON.parse(localStorage?.getItem('settings') || '{}') || {};
-            console.debug("Loaded userSettings:", userSettings);
-        } catch (e) {
-            console.error('Error parsing settings from localStorage:', e);
+        } catch {
             userSettings = {};
         }
     }
 
-    // Token management
     async function makeTokenRequest(endpoint, data, operationName) {
         try {
             const resp = await fetch(`/api/token/${endpoint}`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                 body: JSON.stringify(data),
                 keepalive: true
             });
-
-            if (!resp.ok) {
-                console.error(`${operationName}: Response not OK`, resp.status, resp.statusText);
-                return;
-            }
-
+            if (!resp.ok) return;
             const json = await resp.json() || {};
-            if (typeof json === 'object' && 'status' in json && json.status === 'success') {
-                console.log(`${operationName} successful.`);
-                return json;
-            } else {
-                console.error(`Error in ${operationName}:`, json);
-                return null;
-            }
-        } catch (err) {
-            console.error(`${operationName} error:`, err);
+            if (json.status === 'success') return json;
+            return null;
+        } catch {
             return null;
         }
     }
@@ -77,20 +56,15 @@ const { page } = Astro.props;
     async function destroyToken(token = localStorage.getItem('userToken')) {
         if (!token) return;
         const result = await makeTokenRequest('destroy', { token }, 'destroyToken');
-        if (result) {
-            threadToken = null;
-        }
+        if (result) threadToken = null;
     }
 
     async function destroyTokenIfEmptyConvo(token = threadToken) {
         if (!token) return;
         const result = await makeTokenRequest('destroyIfEmptyConvo', { token }, 'destroyTokenIfEmptyConvo');
-        if (result) {
-            threadToken = null;
-        }
+        if (result) threadToken = null;
     }
 
-    // Visibility state for token cleanup
     let state = 'off';
     document.addEventListener('visibilitychange', async () => {
         if (document.visibilityState === 'hidden' && state === 'on') {
@@ -99,20 +73,22 @@ const { page } = Astro.props;
         }
     });
 
-    // API endpoint
     const API_ENDPOINT = '/api/message/generate';
 
-    // Shared event handlers
     function handleEnterKey(event) {
         if (event.key === 'Enter' && !event.shiftKey && event.target.value.trim() !== '') {
             event.preventDefault();
-            if (!sendButton.disabled) {
-                generateOutput();
-            }
+            if (!sendButton.disabled) generateOutput();
         }
     }
 
     function setupDownloadButtons() {
+        if (downloadGuideBtn) downloadGuideBtn.addEventListener('click', e => downloadViaPrint('study-guide-content', e.currentTarget));
+        if (downloadSheetBtn) downloadSheetBtn.addEventListener('click', e => downloadViaPrint('reference-sheet-content', e.currentTarget));
+    }
+
+    async function generateOutput() {
+        if (!messageInput) { displayError('Input field missing!'); return; }
         if (downloadGuideBtn) {
             downloadGuideBtn.addEventListener('click', event => {
                 downloadViaPrint('study-guide-content', event.currentTarget);

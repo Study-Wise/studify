@@ -5,7 +5,6 @@ import { threadsTable } from '../../../db/schema';
 import { v4 as uuid } from 'uuid';
 import { clerkClient } from '@clerk/astro/server';
 import { isValidEmail } from '../../../lib/validation';
-import { isValidEmail } from '../../../lib/validation';
 
 export const POST: APIRoute = async ({ request, locals }) => {
     try {

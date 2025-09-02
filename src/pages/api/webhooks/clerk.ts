@@ -1,27 +1,6 @@
 import type { APIRoute } from 'astro';
 import { clerkClient } from '@clerk/astro/server';
-
-// Admin promotion configuration
-const ADMIN_EMAILS = [
-  'adarshravikumar2@gmail.com',
-  'admin@conversaition.online'
-];
-
-const ADMIN_DOMAINS = [
-  '@conversaition.online',
-];
-
-function shouldPromoteToAdmin(email: string): boolean {
-  const emailLower = email.toLowerCase();
-  
-  // Check specific admin emails
-  if (ADMIN_EMAILS.includes(emailLower)) {
-    return true;
-  }
-  
-  // Check admin domains
-  return ADMIN_DOMAINS.some(domain => emailLower.endsWith(domain));
-}
+import { shouldPromoteToAdmin } from '../../../lib/auth-utils';
 
 export const POST: APIRoute = async (context) => {
   try {

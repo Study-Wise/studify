@@ -35,7 +35,7 @@ async function extract(generatedText: string) {
         obj.referenceSheet = referenceSheet;
     }
 
-    // --- Markdown rendering (existing code) ---
+    // --- Markdown rendering ---
     let htmlText: string;
     try {
         marked.setOptions({ breaks: true, gfm: true });
