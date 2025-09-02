@@ -19,6 +19,8 @@ import { eq } from 'drizzle-orm';
 import type { InferSelectModel, InferInsertModel } from 'drizzle-orm';
 import { threadsTable } from '../../../db/schema';
 import extract from '../../../lib/extractPartsofMessage';
+import { clerkClient } from '@clerk/astro/server';
+import { isValidEmail } from '../../../lib/validation';
 
 const provider_maps = {
     openai: [
@@ -59,12 +61,23 @@ type ThreadInsert = InferInsertModel<typeof threadsTable>;
 
 export const POST: APIRoute = async ({ request }) => {
     try {
-        const { text: userPrompt, token: orig_token, model: reqModel, settings: userSettings } = await request.json();
+        const { text: userPrompt, token: orig_token, model: reqModel, settings: userSettings, email: user_email } = await request.json();
         let user_token = orig_token;
+
+        // Validate email
+        if (!isValidEmail(user_email)) {
+            return new Response(
+                JSON.stringify({ status: 'error', error: 'Invalid email' }),
+                {
+                    status: 400,
+                    headers: { 'Content-Type': 'application/json' },
+                }
+            );
+        }
 
         if (!user_token) {
             try {
-                const { token, dbResponse } = await generateToken();
+                const { token, dbResponse } = await generateToken(undefined, user_email);
                 user_token = token;
                 if (dbResponse) {
                     console.log('Token generated successfully:', dbResponse);
@@ -91,10 +104,20 @@ export const POST: APIRoute = async ({ request }) => {
                 const threads = await db.select().from(threadsTable).where(eq(threadsTable.token, user_token));
                 if (threads.length > 0) {
                     userData = threads[0];
+                    
+                    // Check thread ownership
+                    if (userData.email && userData.email !== user_email) {
+                        return new Response(
+                            JSON.stringify({ error: 'Unauthorized access to thread' }),
+                            {
+                                status: 403,
+                                headers: { 'Content-Type': 'application/json' },
+                            }
+                        );
+                    }
+                    
                     if (
-                        userData.thread &&
-                        typeof userData.thread === 'object' &&
-                        Array.isArray((userData.thread as any).messages)
+                        userData.thread && typeof userData.thread === 'object' && Array.isArray((userData.thread as any).messages)
                     ) {
                         convoHistory = (userData.thread as any).messages;
                     }
@@ -118,20 +141,15 @@ export const POST: APIRoute = async ({ request }) => {
         let userModel = reqModel || userSettings.model || config.model;
         let userProvider =
             (Object.keys(providers) as Array<keyof typeof providers>).find(
-                (provider: keyof typeof providers) =>
-                    (providers[provider].models as Record<string, { name: string }>)[userModel]
+                (provider: keyof typeof providers) => (providers[provider].models as Record<string, { name: string }>)[userModel]
             ) || config.provider;
 
         if (
-            !Object.keys(provider_maps).find((provider) =>
-                provider_maps[provider as ProviderKey].includes(userProvider)
-            )
+            !Object.keys(provider_maps).find((provider) => provider_maps[provider as ProviderKey].includes(userProvider))
         ) {
             userProvider = config.provider;
         }
-        let provider = Object.keys(provider_maps).find((provider) =>
-            provider_maps[provider as ProviderKey].includes(userProvider)
-        ) as ProviderKey;
+        let provider = Object.keys(provider_maps).find((provider) => provider_maps[provider as ProviderKey].includes(userProvider)) as ProviderKey;
 
         if (!providerFunctions[provider](userModel)) {
             userModel = config.model;

@@ -1,0 +1,140 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getUserRole, getUserMetadata } from '../lib/auth-utils';
+
+// Use Clerk authentication
+const auth = (Astro.locals as any).auth;
+const { userId } = auth();
+
+// Redirect to sign-in if not authenticated
+if (!userId) {
+    return Astro.redirect("/user/sign-in");
+}
+
+// Check if user is admin
+const userRole = getUserRole(auth);
+const isUserAdmin = userRole === 'admin';
+const userMetadata = getUserMetadata(auth);
+
+// Redirect non-admins away from admin page
+if (!isUserAdmin) {
+    return Astro.redirect("/");
+}
+---
+
+<Layout title="Admin Dashboard" additionalClasses={['admin-page']}>
+    <div class="admin-container">
+        <h1>Admin Dashboard</h1>
+        
+        <div class="user-info">
+            <h2>Your Account</h2>
+            <p><strong>User ID:</strong> {userId}</p>
+            <p><strong>Role:</strong> {userRole}</p>
+            <p><strong>Promoted At:</strong> {userMetadata.promotedAt || 'Not available'}</p>
+        </div>
+
+        <div class="admin-features">
+            <h2>Admin Features</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>User Management</h3>
+                    <p>Manage all users in the system</p>
+                    <button class="btn">Manage Users</button>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>Analytics</h3>
+                    <p>View system analytics and reports</p>
+                    <button class="btn">View Analytics</button>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>System Settings</h3>
+                    <p>Configure system-wide settings</p>
+                    <button class="btn">Settings</button>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>Content Management</h3>
+                    <p>Manage quizzes and educational content</p>
+                    <button class="btn">Manage Content</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="auto-promotion-info">
+            <h2>Auto-Promotion Status</h2>
+            <p>This page is only accessible to users with admin role.</p>
+            <p>Users are automatically promoted to admin if they register with:</p>
+            <ul>
+                <li>Specific admin emails: adarsh@mathwise.com, admin@mathwise.com, owner@mathwise.com</li>
+                <li>Admin domains: @mathwise.com, @yourcompany.com</li>
+            </ul>
+        </div>
+    </div>
+</Layout>
+
+<style>
+    .admin-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .user-info {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+    }
+
+    .admin-features {
+        margin-bottom: 2rem;
+    }
+
+    .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1rem;
+    }
+
+    .feature-card {
+        background: white;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .feature-card h3 {
+        margin-top: 0;
+        color: #495057;
+    }
+
+    .btn {
+        background: #6366f1;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 1rem;
+    }
+
+    .btn:hover {
+        background: #5855eb;
+    }
+
+    .auto-promotion-info {
+        background: #e3f2fd;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+    }
+
+    .auto-promotion-info ul {
+        margin-top: 0.5rem;
+        padding-left: 1.5rem;
+    }
+</style>

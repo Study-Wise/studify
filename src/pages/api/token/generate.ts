@@ -3,11 +3,24 @@ import type { APIRoute } from 'astro';
 import { drizzle } from 'drizzle-orm/vercel-postgres';
 import { threadsTable } from '../../../db/schema';
 import { v4 as uuid } from 'uuid';
+import { clerkClient } from '@clerk/astro/server';
+import { isValidEmail } from '../../../lib/validation';
 
 export const POST: APIRoute = async ({ request }) => {
     try {
-        const { token: user_token } = await request.json();
-        const { token, dbResponse } = await generateToken(user_token);
+        const { token: user_token, email: user_email } = await request.json();
+        
+        // Validate email
+        if (!isValidEmail(user_email)) {
+            return new Response(
+                JSON.stringify({ status: 'error', error: 'Invalid email' }),
+                {
+                    status: 400,
+                    headers: { 'Content-Type': 'application/json' },
+                }
+            );
+        }
+        const { token, dbResponse } = await generateToken(user_token, user_email);
         return new Response(
             JSON.stringify({ status: 'success', db_response: dbResponse, generated_token: token, token }),
             {
@@ -27,13 +40,14 @@ export const POST: APIRoute = async ({ request }) => {
     }
 };
 
-async function generateToken(token?: string) {
+async function generateToken(token?: string, email?: string | null) {
     try {
         if (!token) token = uuid();
         const obj = {
             token,
             title: '',
             thread: { messages: [] },
+            email,
             isDev: process.env.NODE_ENV === 'development'
         };
         const db = drizzle();
