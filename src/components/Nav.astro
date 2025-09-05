@@ -2,7 +2,7 @@
 import { hasIcon,  getIcon } from '../lib/google-icons';
 import '../styles/components/nav.scss';
 const { pages, pTitle, mode } = Astro.props;
-
+import { UserButton } from '@clerk/astro/components';
 const classes = ['header-nav'];
 if (mode === 'lite') classes.push('lite');
 ---
@@ -21,4 +21,5 @@ if (mode === 'lite') classes.push('lite');
             {page.name}
         </a>
     })}
+    <UserButton />
 </nav>

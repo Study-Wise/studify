@@ -20,35 +20,16 @@ const { page } = Astro.props;
         }
     }
 
-    async function makeIdRequest(endpoint, data, operationName) {
-        try {
-            const resp = await fetch(`/api/id/${endpoint}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                body: JSON.stringify(data),
-                keepalive: true
-            });
-            if (!resp.ok) return;
-            const json = await resp.json() || {};
-            if (json.status === 'success') return json;
-            return null;
-        } catch {
-            return null;
-        }
-    }
-
-
     async function destroyIdIfEmptyConvo(id = threadId) {
-        if (!id) return;
-        const result = await makeIdRequest('destroyIfEmptyConvo', { id }, 'destroyIdIfEmptyConvo');
-        if (result) threadId = null;
+        // Thread cleanup is now handled server-side automatically
+        // No need for client-side cleanup calls
+        if (id) threadId = null;
     }
 
     let state = 'off';
     document.addEventListener('visibilitychange', async () => {
         if (document.visibilityState === 'hidden' && state === 'on') {
             if (threadId) await destroyIdIfEmptyConvo(threadId);
-            // removed threadToken/token logic
             state = 'on';
         }
     });

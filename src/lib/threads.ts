@@ -13,7 +13,7 @@ interface ThreadData {
     messages: any[];
 }
 
-async function getMessages(id: number, user_email?: string | null) {
+async function getMessages(id: string, user_email?: string | null) {
     try {
         const db = drizzle();
         const dbResponse: Thread[] = await db.select().from(threadsTable).where(eq(threadsTable.id, id));
@@ -37,7 +37,26 @@ async function getMessages(id: number, user_email?: string | null) {
     }
 }
 
-async function getThreadByToken(id: number, user_email?: string | null) {
+async function getMessagesLength(id: string) {
+    try {
+        const db = drizzle();
+        const dbResponse: Thread[] = await db.select().from(threadsTable).where(eq(threadsTable.id, id));
+        
+        if (dbResponse.length === 0) {
+            return 0;
+        }
+        
+        const thread = dbResponse[0];
+        
+        const threadData = thread?.thread as ThreadData;
+        return threadData?.messages?.length ?? 0;
+    } catch (e) {
+        console.error(e);
+        return 0;
+    }
+}
+
+async function getThreadByToken(id: string, user_email?: string | null) {
     try {
         const db = drizzle();
         const dbResponse: Thread[] = await db.select().from(threadsTable).where(eq(threadsTable.id, id));
@@ -60,4 +79,4 @@ async function getThreadByToken(id: number, user_email?: string | null) {
     }
 }
 
-export { getMessages, getThreadByToken };
+export { getMessages, getMessagesLength, getThreadByToken };

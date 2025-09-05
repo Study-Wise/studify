@@ -1,7 +1,7 @@
 import { pgTable, varchar, timestamp, jsonb, boolean, bigint, text } from 'drizzle-orm/pg-core';
 
 const threadsTable = pgTable('threads', {
-    id: bigint('id', { mode: 'number' }).primaryKey().generatedAlwaysAsIdentity(),
+    id: text('id').primaryKey(),
     title: varchar({ length: 255 }).notNull(),
     thread: jsonb().notNull(),
     email: text('email'),

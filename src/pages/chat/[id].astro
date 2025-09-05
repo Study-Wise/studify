@@ -9,7 +9,7 @@ import ChatSidebar from '../../components/ChatSidebar.astro';
 import MessagesScript from '../../scripts/messages.astro';
 import '../../styles/pages/chat.scss';
 
-import { getMessages } from '../../lib/threads';
+import { getMessages, getMessagesLength } from '../../lib/threads';
 import extract from '../../lib/extractPartsofMessage';
 import Footer from '../../components/Footer.astro';
 import { getUserRole } from '../../lib/auth-utils';
@@ -17,9 +17,7 @@ import { db } from '../../db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '../../db/schema';
 
-// let token = Astro.params.token || '';
-let idParam = Astro.params.id || '';
-let threadId = Number(idParam) || 0;
+let threadId = Astro.params.id || '';
 
 // Use Clerk authentication
 const auth = (Astro.locals as any).auth;
@@ -40,7 +38,6 @@ let threadOwner: string | null = null;
 let isPublicThread = false;
 if (threadId) {
     try {
-        // const threads = await db.select().from(threadsTable).where(eq(threadsTable.token, token));
         const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
         if (threads.length > 0) {
             threadOwner = threads[0].email;
@@ -63,10 +60,11 @@ if (threadId) {
 }
 
 // Check if user owns the thread or is admin
-const isAuthorized = threadId && threadOwner && threadOwner === user_email && !isUserAdmin;
+const messagesLength = await getMessagesLength(threadId);
+const isAuthorized = threadId && messagesLength > 0 && ((threadOwner && threadOwner === user_email) || !threadOwner || isUserAdmin);
+const messages = !isAuthorized ? [] : await getMessages(threadId, user_email);
 const isPublic = !isAuthorized && isPublicThread;
 
-const messages = !isAuthorized ? [] : await getMessages(threadId, user_email);
 
 export const inNav = 'hide';
 ---

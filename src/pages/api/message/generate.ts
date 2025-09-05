@@ -11,15 +11,15 @@ import { xai } from '@ai-sdk/xai';
 import config from '../../../lib/config';
 import { providers } from '../../../lib/models';
 
-import { generateToken } from '../token/generate';
-// import { destroyToken } from '../token/destroy';
+import { clerkClient } from '@clerk/astro/server';
+import { nanoid } from 'nanoid';
 
 import { drizzle } from 'drizzle-orm/vercel-postgres';
 import { eq } from 'drizzle-orm';
 import type { InferSelectModel, InferInsertModel } from 'drizzle-orm';
+
 import { threadsTable } from '../../../db/schema';
 import extract from '../../../lib/extractPartsofMessage';
-import { clerkClient } from '@clerk/astro/server';
 import { isValidEmail } from '../../../lib/validation';
 
 const provider_maps = {
@@ -61,9 +61,8 @@ type ThreadInsert = InferInsertModel<typeof threadsTable>;
 
 export const POST: APIRoute = async ({ request, locals }) => {
     try {
-        const { text: userPrompt, token: thread_token, id: thread_id, model: reqModel, settings: userSettings } = await request.json();
-        let current_thread_token = thread_token;
-        let current_thread_id: number | undefined = thread_id;
+        const { text: userPrompt, id: thread_id, model: reqModel, settings: userSettings } = await request.json();
+        let current_thread_id: string | undefined = thread_id;
         const auth = (locals as any)?.auth;
         const { userId, sessionClaims } = auth ? auth() : ({} as any);
         const user_email = userId ? ((sessionClaims?.email as string) || null) : null;
@@ -79,20 +78,32 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        // Create a new thread if none provided (prefer id-based)
+        // Create a new thread if none provided
+        let isNewThread = false;
         if (!current_thread_id) {
             try {
-                const { token, id, dbResponse } = await generateToken(undefined, user_email);
-                // current_thread_token = token; // token is now a constant truthy value
-                current_thread_token = token;
-                current_thread_id = id;
+                const db = drizzle();
+                const newThreadId = nanoid();
+                if (!newThreadId) {
+                    throw new Error('Failed to generate thread ID');
+                }
+                const newThread = {
+                    id: newThreadId,
+                    title: '',
+                    thread: { messages: [] },
+                    email: user_email,
+                    isDev: process.env.NODE_ENV === 'development'
+                };
+                const dbResponse = await db.insert(threadsTable).values(newThread);
+                current_thread_id = newThreadId;
+                isNewThread = true;
                 if (dbResponse) {
-                    console.log('Token generated successfully:', dbResponse);
+                    console.log('Thread generated successfully:', dbResponse);
                 }
             } catch (error) {
-                console.error('Error generating token:', error);
+                console.error('Error generating thread:', error);
                 return new Response(
-                    JSON.stringify({ error: `Failed to generate token: ${error}` }),
+                    JSON.stringify({ error: `Failed to generate thread: ${error}` }),
                     {
                         status: 500,
                         headers: { 'Content-Type': 'application/json' },
@@ -108,7 +119,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
         let userData: Thread | undefined = undefined;
         if (current_thread_id) {
             try {
-                // const threads = await db.select().from(threadsTable).where(eq(threadsTable.token, current_thread_token));
                 const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, current_thread_id));
                 if (threads.length > 0) {
                     userData = threads[0];
@@ -222,14 +232,29 @@ export const POST: APIRoute = async ({ request, locals }) => {
                         isDev: process.env.NODE_ENV === 'development' ? true : false,
                     })
                     .where(eq(threadsTable.id, current_thread_id));
-            } else if (current_thread_id) {
-                // Insert new thread
+            } else if (current_thread_id && !userData && !isNewThread) {
+                // Insert new thread with the provided ID (this should rarely happen)
+                if (!current_thread_id) {
+                    throw new Error('Thread ID is null or undefined');
+                }
                 await db.insert(threadsTable).values({
-                    // token: current_thread_token,
-                    token: 'true',
+                    id: current_thread_id,
                     title: convoTitle || '',
                     thread: { messages: convoHistory },
+                    email: user_email,
+                    isDev: process.env.NODE_ENV === 'development'
                 } as ThreadInsert);
+            } else if (isNewThread) {
+                // Update the newly created thread with the conversation data
+                await db
+                    .update(threadsTable)
+                    .set({
+                        title: convoTitle,
+                        thread: { messages: convoHistory },
+                        updatedAt: new Date(),
+                        isDev: process.env.NODE_ENV === 'development' ? true : false,
+                    })
+                    .where(eq(threadsTable.id, current_thread_id));
             }
         } catch (error) {
             console.error('Error saving conversation to database:', error);
@@ -249,7 +274,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
                 ...obj,
                 generatedText: htmlText,
                 generatedTitle: true,
-                // token: current_thread_token,
                 id: current_thread_id,
             }),
             {

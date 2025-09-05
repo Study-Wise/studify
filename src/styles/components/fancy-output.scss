@@ -5,8 +5,7 @@
 @use "sass:map";
 
 $max-height: 250px;
-$o-max-width: 500px;
-$max-width: min($o-max-width, 100%);
+$max-width: 500px;
 $spacing: 1rem;
 
 .fancy-output {
@@ -26,31 +25,13 @@ $spacing: 1rem;
         border: none;
         background-color: transparent;
         position: relative;
-        max-width: $max-width;
+        max-width: min($max-width, 100%);
+        max-height: min($max-height, 100%);
         overflow: hidden;
 
         .tab-content-container {
-            max-width: $max-width;
-            max-height: min(500px, 100%);
-        }
-        .tab-content::after {
-            $gradient-size: 2px;
-            $gradient-x: #{100% - math.div($gradient-size * 2, $o-max-width) * 100%};
-            $gradient-y: #{100% - math.div($gradient-size * 2, $max-height) * 100%};
-
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: $max-height;
-            width: $max-width;
-
-            box-shadow: inset #{-$gradient-size} #{-$gradient-size} #{$gradient-size} 0 color.adjust($footer-text, $alpha: -0.5);
-            border-bottom-right-radius: calc(var(--pad) / 2);
-
-            background-image:
-                linear-gradient(90deg, transparent $gradient-x, color.adjust($footer-text, $alpha: -0.9) $gradient-x, color.adjust($footer-text, $alpha: -0.5)),
-                linear-gradient(transparent $gradient-y, color.adjust($footer-text, $alpha: -0.9) $gradient-y, color.adjust($footer-text, $alpha: -0.5));
+            max-width: min($max-width, 100%);
+            // max-height: min($max-height, 100%);
         }
         // Tab content gradient and sizing
         .tab-content {
