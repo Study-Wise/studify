@@ -43,6 +43,7 @@ if (threadId) {
             threadOwner = threads[0].email;
             isPublicThread = threads[0].isPublic;
             // If unclaimed and user is authenticated, claim ownership
+            // TODO: Fix claiming unclaimed threads
             if (!threadOwner && user_email) {
                 try {
                     await db.update(threadsTable)

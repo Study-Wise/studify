@@ -61,7 +61,8 @@ type ThreadInsert = InferInsertModel<typeof threadsTable>;
 
 export const POST: APIRoute = async ({ request, locals }) => {
     try {
-        const { text: userPrompt, id: thread_id, model: reqModel, settings: userSettings } = await request.json();
+        const { text: userPrompt, id: thread_id, model: reqModel, settings: userSettings, isPublic = false } = await request.json();
+        // TODO: Add UI toggle for making threads public
         let current_thread_id: string | undefined = thread_id;
         const auth = (locals as any)?.auth;
         const { userId, sessionClaims } = auth ? auth() : ({} as any);
@@ -83,6 +84,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
         if (!current_thread_id) {
             try {
                 const db = drizzle();
+                
+                // Check thread limit for user
+                // TODO: Add user-friendly error message display in frontend
+                
                 const newThreadId = nanoid();
                 if (!newThreadId) {
                     throw new Error('Failed to generate thread ID');
@@ -92,6 +97,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
                     title: '',
                     thread: { messages: [] },
                     email: user_email,
+                    isPublic: isPublic,
                     isDev: process.env.NODE_ENV === 'development'
                 };
                 const dbResponse = await db.insert(threadsTable).values(newThread);
@@ -242,6 +248,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
                     title: convoTitle || '',
                     thread: { messages: convoHistory },
                     email: user_email,
+                    isPublic: isPublic,
                     isDev: process.env.NODE_ENV === 'development'
                 } as ThreadInsert);
             } else if (isNewThread) {
