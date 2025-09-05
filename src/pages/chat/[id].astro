@@ -18,7 +18,7 @@ import { eq } from 'drizzle-orm';
 import { threadsTable } from '../../db/schema';
 
 // let token = Astro.params.token || '';
-let idParam = Astro.params.token || '';
+let idParam = Astro.params.id || '';
 let threadId = Number(idParam) || 0;
 
 // Use Clerk authentication

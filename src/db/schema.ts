@@ -2,7 +2,6 @@ import { pgTable, varchar, timestamp, jsonb, boolean, bigint, text } from 'drizz
 
 const threadsTable = pgTable('threads', {
     id: bigint('id', { mode: 'number' }).primaryKey().generatedAlwaysAsIdentity(),
-    token: varchar('token', { length: 255 }).notNull(),
     title: varchar({ length: 255 }).notNull(),
     thread: jsonb().notNull(),
     email: text('email'),
