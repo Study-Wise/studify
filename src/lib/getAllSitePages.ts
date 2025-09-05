@@ -1,4 +1,4 @@
-const pagesToHide = ['chat', 'admin'];
+const pagesToHide = ['chat', 'settings', 'admin'];
 
 const pages = Object.entries(import.meta.glob('/src/pages/*.astro', { eager: true }))
     .map(([path, mod]) => {
