@@ -62,7 +62,6 @@ type ThreadInsert = InferInsertModel<typeof threadsTable>;
 export const POST: APIRoute = async ({ request, locals }) => {
     try {
         const { text: userPrompt, id: thread_id, model: reqModel, settings: userSettings, isPublic = false } = await request.json();
-        // TODO: Add UI toggle for making threads public
         let current_thread_id: string | undefined = thread_id;
         const auth = (locals as any)?.auth;
         const { userId, sessionClaims } = auth ? auth() : ({} as any);
@@ -86,7 +85,21 @@ export const POST: APIRoute = async ({ request, locals }) => {
                 const db = drizzle();
                 
                 // Check thread limit for user
-                // TODO: Add user-friendly error message display in frontend
+                if (user_email) {
+                    const userThreads = await db.select().from(threadsTable).where(eq(threadsTable.email, user_email));
+                    if (userThreads.length >= config.maxThreadsPerUser) {
+                        return new Response(
+                            JSON.stringify({ 
+                                status: 'error', 
+                                error: `You have reached the maximum limit of ${config.maxThreadsPerUser} threads. Please delete some threads before creating new ones.` 
+                            }),
+                            {
+                                status: 400,
+                                headers: { 'Content-Type': 'application/json' },
+                            }
+                        );
+                    }
+                }
                 
                 const newThreadId = nanoid();
                 if (!newThreadId) {

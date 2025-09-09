@@ -3,6 +3,7 @@ const { page } = Astro.props;
 ---
 <script is:inline data-page={page}>
     const page = document.currentScript.dataset.page;
+
     let threadId = 0;
     let userSettings = {};
 
@@ -98,6 +99,10 @@ const { page } = Astro.props;
             const userEmailElement = document.getElementById('user-email');
             const user_email = userEmailElement?.getAttribute('data-email') || null;
             
+            // Get share button state
+            const shareButton = document.getElementById('share-button');
+            const isPublic = shareButton ? shareButton.classList.contains('active') : false;
+
             const response = await fetch(API_ENDPOINT, {
                 method: 'POST',
                 headers: {
@@ -108,7 +113,8 @@ const { page } = Astro.props;
                     text: userMessage,
                     model: localStorage.getItem('model'),
                     id: threadId || null,
-                    settings: userSettings || {}
+                    settings: userSettings || {},
+                    isPublic: isPublic
                 }),
             });
             
@@ -824,6 +830,24 @@ const { page } = Astro.props;
                 messageInput.value = '';
                 messageInput.style.height = 'auto';
                 messageInput.focus();
+            });
+        }
+
+        // Set up share button functionality
+        const shareButton = document.getElementById('share-button');
+        if (shareButton) {
+            shareButton.addEventListener('click', () => {
+                shareButton.classList.toggle('active');
+                const isActive = shareButton.classList.contains('active');
+                const shareText = shareButton.querySelector('.share-text');
+                const shareIcon = shareButton.querySelector('.material-symbols-outlined');
+                
+                if (shareText) {
+                    shareText.textContent = isActive ? 'Shared' : 'Share';
+                }
+                if (shareIcon) {
+                    shareIcon.textContent = isActive ? 'public' : 'share';
+                }
             });
         }
     }

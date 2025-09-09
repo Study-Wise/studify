@@ -6,7 +6,8 @@ const className = `btn bg-${variant} ${mode === 'lite' ? 'lite' : ''} ${addition
     const Element = element;
     return (
         <Element tabindex="0" class={className} {...props}>
-            {icon && <span class="material-symbols-outlined">{icon}</span>} <slot />
+            {icon && <span class="material-symbols-outlined">{icon}</span>}
+            {mode === 'tab' ? <span class="text"><slot /></span> : <slot />}
             <span class="spinner" style="display: none"></span>
         </Element>
     );

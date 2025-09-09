@@ -7,90 +7,107 @@
 $max-height: 250px;
 $max-width: 500px;
 $spacing: 1rem;
+$shadow-size: 5px;
 // TODO: FIX IT ALL
+
+.message, .message-content {
+    &:has(.fancy-output:not([open])) {
+        max-height: min(calc($max-height + #{$spacing*2}), 100%);
+    }
+}
 
 .fancy-output {
     overflow-x: hidden;
     isolation: isolate;
+    background-color: var(--bg-color, $message-bg);
+
 
     &[open] {
-        margin: auto;
+        --bg-color: #{$card-bg};
+
         box-sizing: border-box;
+        margin: auto;
         padding: $spacing;
+
         border: none;
         border-radius: $spacing;
+
+        .tab-contents-parent {
+            width: calc(200% + $spacing);
+            display: flex;
+            gap: $spacing;
+            .tab-content-container {
+                flex: 1;
+            }
+        }
+
+        &[style*="--tab-shown:"] {
+            .tab-contents-parent {
+                translate: calc(-1 * var(--tab-shown) * (50% + #{math.div($spacing, 2)})) 0;
+                transition: translate 0.5s ease-in-out;
+            }
+        }
+        
     }
     &:not([open]) {
+        --bg-color: #{$message-bg};
+
+        all: unset;
+
+        // max-width: min($max-width, 100%);
+        max-height: min($max-height, 100%);
+        
+        overflow: hidden;
         display: flex;
         flex-direction: column;
+
         border: none;
-        background-color: transparent;
         position: relative;
-        max-width: min($max-width, 100%);
-        max-height: min($max-height, 100%);
-        overflow: hidden;
 
-        .tab-content-container {
-            max-width: min($max-width, 100%);
-            // max-height: min($max-height, 100%);
-        }
-        // Tab content gradient and sizing
         .tab-content {
-            width: 200%;
-            height: auto;
-            position: relative;
-        }
-    }
-
-
-    // Tab movement (merged selector for open and not open)
-    &:has(.tabs > .tab:first-of-type > input[type="radio"]:checked) .tab-contents-parent .tab-content-container {
-        translate: 0 0;
-    }
-    &:has(.tabs > .tab:last-of-type > input[type="radio"]:checked) .tab-contents-parent .tab-content-container {
-        translate: -100% 0;
-    }
-
-    // Tab content container sizing
-    .tab-content-container {
-        overflow: hidden;
-        width: 100%;
-        height: 100%;
-
-        // If open, allow visible overflow
-        :is(.fancy-output[open] &) {
-            overflow: visible;
+            padding-block-start: #{math.div($spacing, 2)};
         }
     }
 }
 
 .tabs {
     position: sticky;
-    left: 0;
+    top: 0;
+
+    padding-inline-start: $spacing;
+
     display: flex;
+    align-items: end;
     gap: $spacing;
 
-    .tab {
-        position: relative;
-        cursor: pointer;
+    background-color: var(--bg-color, $message-bg);
 
-        input[type="radio"] {
-            position: absolute;
-            top: -10px;
-            left: -10px;
-            width: 0;
-            height: 0;
-            opacity: 0;
-            z-index: -1;
-            outline: none;
-        }
+    border-bottom: solid $tab-border-size $card-bg-dark;
+
+    isolation: isolate;
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: #{-1 * $spacing};
+        background-color: inherit;
+        z-index: -1;
+
+        box-shadow: 0 0 0.5rem $message-bg;
     }
 
+    .tab {
+        cursor: pointer;
+    }
+
+    
     .buttons {
         flex: 1;
+
         justify-self: end;
         display: grid;
         place-items: end;
+        padding-bottom: 0.5rem;
 
         .button {
             height: 100%;
@@ -98,7 +115,18 @@ $spacing: 1rem;
     }
 }
 
+.tab-content {
+    box-sizing: border-box;
+    padding-block-start: #{math.div($spacing, 2)};
+}
+
+.fancy-output {
+    &:is(&) {
+        // border-bottom: solid $tab-border-size $card-bg-dark;
+    }
+}
+
 .tab-contents-parent {
-    display: flex;
-    width: 200%;
+    // border-left: solid $tab-border-size $card-bg-dark;
+    // border-right: solid $tab-border-size $card-bg-dark;
 }

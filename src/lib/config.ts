@@ -9,7 +9,6 @@ const config = {
     model: 'gpt-4.1',
     systemPrompt: prompt,
     maxThreadsPerUser: 5, // Maximum number of threads a user can create
-    // TODO: Make thread limit configurable via config
 };
 
 export default config;

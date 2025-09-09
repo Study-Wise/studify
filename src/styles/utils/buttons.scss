@@ -5,30 +5,52 @@
 $transition-duration: 0.25s;
 $transition: $transition-duration ease-in-out;
 $border-size: 0.125rem; // 2px = 0.125rem
+$border-radius: $button-border-radius; // 6px
 
 .btn {
     --border-size: #{$border-size};
+    --border-radius: #{$border-radius};
     --outline-color: var(--bg-clr-1);
     --box-shadow: 0 0.125rem 0.3125rem calc(var(--border-size) * 2) rgba(0, 0, 0, 0.25); // 2px 5px
 
     position: relative;
     box-sizing: border-box;
-    padding: 0.875rem 1rem; // 14px 16px
-    margin: calc(var(--border-size) * 3);
-    margin-block: calc(var(--border-size) * 7);
 
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
 
+    background-color: inherit;
+
+    border: none;
+    border-color: transparent;
+
+    cursor: pointer;
+    text-decoration: none;
+
+    isolation: isolate;
+
+    transition: color $transition;
+
+    &:disabled {
+        color: #adb5bd;
+        cursor: not-allowed;
+        opacity: 0.65;
+    }
+}
+
+.btn:not(.tab) {
+    padding: 0.875rem 1rem; // 14px 16px
+    margin: calc(var(--border-size) * 3);
+    margin-block: calc(var(--border-size) * 7);
+
     color: $header-text;
     background-color: var(--bg-clr-1);
 
-    border: none;
     outline: var(--border-size) solid var(--outline-color);
     outline-offset: var(--border-size);
-    border-radius: 0.375rem; // 6px
+    border-radius: var(--border-radius);
 
     box-shadow: 
         0 0 0 0.25rem $card-bg, // 4px
@@ -36,7 +58,6 @@ $border-size: 0.125rem; // 2px = 0.125rem
         inset 0 0 var(--border-size) var(--border-size) var(--bg-clr-2);
     text-shadow: 0 0 0.0625rem rgba(0, 0, 0); // 1px
 
-    cursor: pointer;
     translate: 0 0;
     text-decoration: none;
 
@@ -75,5 +96,26 @@ $border-size: 0.125rem; // 2px = 0.125rem
 
     &.lite {
         padding: 0 0.25rem;
+    }
+}
+
+.btn.tab {
+    padding: 0.5em 0.75em;
+
+    border: solid $tab-border-size $card-bg-dark;
+
+    font-size: var(--font-size, 1rem);
+
+    position: relative;
+
+    $skew-deg: 10deg;
+    transform: skew(#{-1 * $skew-deg});
+
+    .text {
+        transform: skew(#{$skew-deg});
+    }
+
+    .tabs > &.tab {
+        margin-bottom: #{-1 * $tab-border-size};
     }
 }

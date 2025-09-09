@@ -1,0 +1,7 @@
+---
+import FancyButton from './Button.astro';
+
+const { mode, ...props } = Astro.props;
+
+---
+<FancyButton mode="tab" {...props}><slot /></FancyButton>
