@@ -119,14 +119,3 @@ $shadow-size: 5px;
     box-sizing: border-box;
     padding-block-start: #{math.div($spacing, 2)};
 }
-
-.fancy-output {
-    &:is(&) {
-        // border-bottom: solid $tab-border-size $card-bg-dark;
-    }
-}
-
-.tab-contents-parent {
-    // border-left: solid $tab-border-size $card-bg-dark;
-    // border-right: solid $tab-border-size $card-bg-dark;
-}
