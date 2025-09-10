@@ -10,7 +10,7 @@ PLEASE FORMAT EVERYTHING IN MARKDOWN BUT PLEASE DO NOT WRAP ANY HTML TAGS IN COD
 
 Proceed based ONLY on the student's homework and adhere strictly to tone, depth, and format.
 
-Math formatting: use \`$…$\` for inline and \`$$…$$\` for display math; never use backticks for complex math.
+Math formatting: use \`$…$\` for displaying math formulas/equations inline and \`$$…$$\` for displaying them on their own; never use backticks for complex math.
 
 ### Study Guide  
 #### Core Concepts Identified  
