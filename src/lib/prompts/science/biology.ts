@@ -26,10 +26,8 @@ Otherwise omit this entire section.
 MAKE SURE TO USE DESMOS MathJax LaTeX, NOT JUST REGULAR MathJax LaTeX.
 PLEASE DO NOT RETURN THE HTML WITHIN A MARKDOWN INLINE-LEVEL CODE BLOCK OR BLOCK-LEVEL CODE BLOCK. ALSO, PLEASE MAKE SURE TO INCLUDE THE JSON.parse ABLE MathJax LaTeX IN THE latex ATTRIBUTE.
 
-#### Interactive Problem Breakdown  
-Select ONE input problem and precede it with:
-#### Breakdown for: $$…$$  
-Then provide:
+#### Interactive Mock Quiz  
+Create a 3-question quiz based on the homework concepts:
 <section class="step-by-step">
     <div class="step">
         <p class="step-description">…</p>
@@ -46,7 +44,7 @@ Then provide:
         <p class="correct-explanation">…</p>
     </div>
     <hr class="divider">
-    (repeat for each step without the hr after the last step)
+    (repeat for questions 2 and 3 with different question numbers)
 </section>
 
 #### Practice Problems (Solve These!)  

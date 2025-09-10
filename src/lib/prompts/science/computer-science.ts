@@ -19,10 +19,8 @@ Computer Science formatting: use <code class="code" language="$[language-here]">
 #### Explanation: What is this about?  
 (brief, level-appropriate)  
 
-#### Interactive Problem Breakdown  
-Select ONE input problem and precede it with:
-#### Breakdown for: $$…$$  
-Then provide:
+#### Interactive Mock Quiz  
+Create a 3-question quiz based on the homework concepts:
 <section class="step-by-step">
     <div class="step">
         <p class="step-description">…</p>
@@ -39,7 +37,7 @@ Then provide:
         <p class="correct-explanation">…</p>
     </div>
     <hr class="divider">
-    (repeat for each step without the hr after the last step)
+    (repeat for questions 2 and 3 with different question numbers)
 </section>
 
 #### Practice Problems (Solve These!)  
