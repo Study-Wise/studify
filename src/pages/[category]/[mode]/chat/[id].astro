@@ -1,23 +1,23 @@
 ---
-import Layout from '../../layouts/Layout.astro';
+import Layout from '../../../../layouts/Layout.astro';
 
-import ChatHeader from '../../components/ChatHeader.astro';
-import FancyOutput from '../../components/fancy/Output.astro';
-import ChatToolbar from '../../components/ChatToolbar.astro';
-import ChatSidebar from '../../components/ChatSidebar.astro';
+import ChatHeader from '../../../../components/ChatHeader.astro';
+import FancyOutput from '../../../../components/fancy/Output.astro';
+import ChatToolbar from '../../../../components/ChatToolbar.astro';
+import ChatSidebar from '../../../../components/ChatSidebar.astro';
 
-import MessagesScript from '../../scripts/messages.astro';
+import MessagesScript from '../../../../scripts/messages.astro';
 import '../../styles/pages/chat.scss';
 
-import { getMessages, getMessagesLength } from '../../lib/threads';
-import extract from '../../lib/extractPartsofMessage';
-import Footer from '../../components/Footer.astro';
-import { getUserRole } from '../../lib/auth-utils';
-import { db } from '../../db/initialize';
+import { getMessages, getMessagesLength } from '../../../../lib/threads';
+import extract from '../../../../lib/extractPartsofMessage';
+import Footer from '../../../../components/Footer.astro';
+import { getUserRole } from '../../../../lib/auth-utils';
+import { db } from '../../../../db/initialize';
 import { eq } from 'drizzle-orm';
-import { threadsTable } from '../../db/schema';
+import { threadsTable } from '../../../../db/schema';
 
-let threadId = Astro.params.id || '';
+let { category, mode, id } = Astro.params || { category: '', mode: '', id: '' };
 
 // Use Clerk authentication
 const auth = (Astro.locals as any).auth;
@@ -36,9 +36,9 @@ const isUserAdmin = userRole === 'admin';
 // Check thread ownership
 let threadOwner: string | null = null;
 let isPublicThread = false;
-if (threadId) {
+if (id) {
     try {
-        const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
+        const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, id));
         if (threads.length > 0) {
             threadOwner = threads[0].email;
             isPublicThread = threads[0].isPublic;
@@ -48,7 +48,7 @@ if (threadId) {
                 try {
                     await db.update(threadsTable)
                         .set({ email: user_email, updatedAt: new Date() })
-                        .where(eq(threadsTable.id, threadId));
+                        .where(eq(threadsTable.id, id));
                     threadOwner = user_email;
                 } catch (e) {
                     console.error('Error claiming thread ownership:', e);
@@ -61,9 +61,9 @@ if (threadId) {
 }
 
 // Check if user owns the thread or is admin
-const messagesLength = await getMessagesLength(threadId);
-const isAuthorized = threadId && messagesLength > 0 && ((threadOwner && threadOwner === user_email) || !threadOwner || isUserAdmin);
-const messages = !isAuthorized ? [] : await getMessages(threadId, user_email);
+const messagesLength = await getMessagesLength(id || '');
+const isAuthorized = id && messagesLength > 0 && ((threadOwner && threadOwner === user_email) || !threadOwner || isUserAdmin);
+const messages = !isAuthorized ? [] : await getMessages(id, user_email);
 const isPublic = !isAuthorized && isPublicThread;
 
 
@@ -73,13 +73,13 @@ export const inNav = 'hide';
     <div id="user-email" data-email={user_email} style="display: none;"></div>
     <header class="chat-header">
         <div class="chat-title-container">
-            <h2><span class="material-symbols-outlined">chat</span>&nbsp;Chat</h2>
+            <h2><span class="material-symbols-outlined">chat</span>&nbsp;Chat: {category} {mode}</h2>
             <button id="share-button" class="share-button" title="Toggle thread visibility">
                 <span class="material-symbols-outlined">share</span>
                 <span class="share-text">Share</span>
             </button>
         </div>
-        <ChatHeader pTitle={`${threadId ? 'Chat' : 'New Chat'}`} />
+        <ChatHeader pTitle={`${id ? 'Chat' : 'New Chat'}`} />
     </header>
     <section class="chat-container">
         <ChatSidebar />

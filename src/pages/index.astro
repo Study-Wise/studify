@@ -3,10 +3,7 @@ import '../styles/pages/index.scss';
 import '../styles/components/step-by-step.scss';
 
 import Layout from '../layouts/Layout.astro';
-import FancyButton from '../components/fancy/Button.astro';
-import Button from '../components/fancy/Button.astro';
-import ModelSelector from '../components/ModelSelector.astro';
-import MessagesScript from '../scripts/messages.astro';
+import categories from '../lib/modes';
 
 // Use Clerk authentication
 const auth = (Astro.locals as any).auth;
@@ -21,17 +18,17 @@ const user_email = sessionClaims?.email as string || null;
             <span class="material-symbols-outlined">info</span>&nbsp;How It Works
         </h2>
         <p>
-            Welcome to <b>M</b>entor.<b>A</b>ssistant.<b>T</b>utor.<b>H</b>elper.<b>Wise</b>! Turn your math homework into powerful learning tools.
+            Welcome to <b>Study</b>Wise! Turn your homework into powerful learning tools.
         </p>
         <ol class="steps-list">
             <li>
-                <strong>Paste Your Homework:</strong> Copy your math problems (plain text or simple equations like $f(x)=x^2$ into the text box below.
+                <strong>Paste Your Homework:</strong> First select a mode, then enter your homework into that mode's text box.
             </li>
             <li>
-                <strong>Generate Materials:</strong> Click the "Generate Study Materials" button.
+                <strong>Generate Materials:</strong> Click the "Generate Study Materials" button. This will generate the study materials for your homework.
             </li>
             <li>
-                <strong>Receive AI Insights:</strong> Our AI will analyze your problems and instantly create:
+                <strong>Receive AI Insights:</strong> Our AI will analyze your homework and instantly create:
                 <ul>
                     <li>
                         A personalized <strong>Study Guide</strong> explaining concepts, showing worked examples, providing practice problems, and defining key terms.
@@ -50,75 +47,35 @@ const user_email = sessionClaims?.email as string || null;
         </ol>
         <p>Get ready to understand your homework better and study smarter!</p>
     </section>
-
-    <!-- Input Homework Section -->
-    <section class="input-section card">
+    <section class="categories-section card">
         <h2>
-            <label for="text-paste">
-                <span class="material-symbols-outlined">edit</span>&nbsp;Input Homework & Options
-            </label>
+            <span class="material-symbols-outlined">school</span>&nbsp;Choose Your Subject
         </h2>
-        <div id="text-input" class="input-area active-input">
-            <textarea
-                id="text-paste"
-                placeholder="Paste your math problems here... For example:
-1. Solve for x: 2x + 5 = 11
-2. Evaluate the limit: limit(from x to 0) for [(sin(x))/(x)]
-3. Find the integral: integral(x^2 + 3)dx 
-Please note that the AI will not provide the answer for your immediate equation"
-                rows="12"
-                aria-label="Paste math problems here"
-            ></textarea>
-        </div>
 
-        <!-- Generate Button and Error Message -->
-        <div class="toolbar">
-            <ModelSelector />
-            <FancyButton id="generate-button" onclick="generateOutput()" variant="primary" icon="manufacturing">Generate Study Materials</FancyButton>
-            <Button id="generate-button-alt" onclick="generateOutput()" variant="primary" icon="manufacturing" style="display:none;">Generate Study Materials</Button>
+        <div class="categories-grid">
+            {Object.entries(categories).map(([categoryKey, category]) => {
+                if (Object.entries(category.modes).find(([modeKey, mode]) => mode.show)) {
+                    return (
+                        <div class="category-card">
+                            <h3 class="category-title">{category.name}</h3>
+                            <p class="category-description">{category.description}</p>
+                            <div class="modes-grid">
+                                {Object.entries(category.modes).map(([modeKey, mode]) => {
+                                    if (mode.show) {
+                                        return (
+                                            <a href={`/${categoryKey}/${modeKey}`} class="mode-card">
+                                                <div class="mode-icon">{mode.icon}</div>
+                                                <h4>{mode.name}</h4>
+                                                <p>{mode.description}</p>
+                                            </a>
+                                        )
+                                    }
+                                })}
+                            </div>
+                        </div>
+                    )
+                }
+            })}
         </div>
-        <div id="error-message" class="error-box" style="display: none" role="alert"></div>
     </section>
-
-    <!-- Output Section -->
-    <section class="output-section card" id="output-section" style="display: none" aria-live="polite">
-        <h2 class="output-section-title">
-            <span class="material-symbols-outlined">lightbulb</span>&nbsp;Your Generated Materials
-        </h2>
-        <div class="output-tabs">
-            <button id="guide-tab-button" class="tab-button active" onclick="showOutput('guide')" aria-controls="guide-output">
-                <span class="material-symbols-outlined">import_contacts</span> Study Guide
-            </button>
-            <button id="sheet-tab-button" class="tab-button" onclick="showOutput('sheet')" aria-controls="sheet-output">
-                <span class="material-symbols-outlined">assignment</span> Reference Sheet
-            </button>
-        </div>
-
-        <!-- Study Guide Tab Panel -->
-        <div id="guide-output" class="output-content active-output" role="tabpanel" aria-labelledby="guide-tab-button">
-            <div class="download-buttons">
-                <button id="download-guide-pdf" class="save-pdf-button material-symbols-outlined" title="Save Study Guide as PDF">print</button>
-            </div>
-            <article id="study-guide-content">
-                <p>
-                    <i>Click "Generate Study Materials" above to create your personalized study guide.</i>
-                </p>
-            </article>
-        </div>
-
-        <!-- Reference Sheet Tab Panel -->
-        <div id="sheet-output" class="output-content" role="tabpanel" aria-labelledby="sheet-tab-button">
-            <div class="download-buttons">
-                <button id="download-sheet-pdf" class="save-pdf-button material-symbols-outlined" title="Save Reference Sheet as PDF">print</button>
-            </div>
-            <article id="reference-sheet-content">
-                <p>
-                    <i>Click "Generate Study Materials" above to create your personalized reference sheet.</i>
-                </p>
-            </article>
-        </div>
-
-        <div class="chat-button-container"></div>
-    </section>
-    <MessagesScript page="home" />
 </Layout>
