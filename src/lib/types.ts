@@ -12,4 +12,11 @@ interface Category {
     modes: Record<string, Mode>;
 }
 
-export type { Mode, Category };
+interface Tool {
+    name: string;
+    description: string;
+    parameters: any;
+    execute: (params: any) => Promise<any>;
+}
+
+export type { Mode, Category, Tool };
