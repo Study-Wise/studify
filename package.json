@@ -12,6 +12,7 @@
     "@astrojs/ts-plugin": "^1.10.4",
     "@types/jsdom": "^21.1.7",
     "@types/uuid": "^10.0.0",
+    "@vite-pwa/astro": "^1.1.0",
     "astro": "^5.13.5",
     "drizzle-kit": "^0.31.4",
     "sass": "^1.89.0",
