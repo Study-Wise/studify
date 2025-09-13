@@ -61,7 +61,7 @@ export default defineConfig({
       manifest: {
         name: 'StudyWise',
         short_name: 'StudyWise',
-        description: 'AI Math Study Partner',
+        description: 'AI Study Partner',
         start_url: '/',
         scope: '/',
         display: 'standalone',
