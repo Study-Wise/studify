@@ -42,15 +42,15 @@ export default defineConfig({
       localization: {
         signUp: {
           start: {
-            subtitle: 'to access MathWise',
+            subtitle: 'to access StudyWise',
           },
           emailCode: {
-            subtitle: 'to access MathWise',
+            subtitle: 'to access StudyWise',
           },
         },
         signIn: {
           start: {
-            subtitle: 'to access MathWise',
+            subtitle: 'to access StudyWise',
           },
         },
       },
@@ -59,8 +59,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['/favicon.svg', '/favicon.ico'],
       manifest: {
-        name: 'M.A.T.H.Wise',
-        short_name: 'MathWise',
+        name: 'StudyWise',
+        short_name: 'StudyWise',
         description: 'AI Math Study Partner',
         start_url: '/',
         scope: '/',
