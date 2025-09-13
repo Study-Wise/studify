@@ -1,10 +1,4 @@
-interface Mode {
-    name: string;
-    description: string;
-    icon?: string;
-    prompt?: Promise<any>;
-    show?: true | false;
-}
+import type { Tool } from 'ai';
 
 interface Category {
     name: string;
@@ -12,11 +6,27 @@ interface Category {
     modes: Record<string, Mode>;
 }
 
-interface Tool {
+interface Mode {
     name: string;
     description: string;
-    parameters: any;
+    icon?: string;
+    prompt?: Promise<any>;
+    tools?: Record<string, Tool>;
+    show?: true | false;
+}    
+
+// Legacy Tool interface for backward compatibility
+interface LegacyTool {
+    type: 'function';
+    ready: boolean;
+    name: string;
+    description: string;
+    parameters: {
+        type: 'object';
+        properties: Record<string, any>;
+        required?: string[];
+    };
     execute: (params: any) => Promise<any>;
 }
 
-export type { Mode, Category, Tool };
+export type { Mode, Category, LegacyTool, Tool };

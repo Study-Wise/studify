@@ -1,4 +1,6 @@
 import type { Category } from './types';
+import tools from './tools';
+
 
 const categories: Record<string, Category> = {
     science: {
@@ -220,6 +222,10 @@ for (const topicKey of Object.keys(categories)) {
             mode.prompt = Promise.resolve(module.default);
         } catch(e) {
             mode.show = false;
+        }
+
+        if (!mode.tools) {
+            mode.tools = tools;
         }
 
         modes[modeKey as keyof typeof modes] = mode;

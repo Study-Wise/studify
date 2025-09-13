@@ -1,8 +1,10 @@
 ---
-const { page } = Astro.props;
+const { page, category, mode } = Astro.props;
 ---
-<script is:inline data-page={page}>
+<script is:inline data-page={page} data-category={category} data-mode={mode}>
     const page = document.currentScript.dataset.page;
+    const category = document.currentScript.dataset.category;
+    const mode = document.currentScript.dataset.mode;
 
     let threadId = 0;
     let userSettings = {};
@@ -114,7 +116,9 @@ const { page } = Astro.props;
                     model: localStorage.getItem('model'),
                     id: threadId || null,
                     settings: userSettings || {},
-                    isPublic: isPublic
+                    isPublic: isPublic,
+                    category: category,
+                    mode: mode
                 }),
             });
             

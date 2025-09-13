@@ -73,7 +73,7 @@ export const inNav = 'hide';
     <div id="user-email" data-email={user_email} style="display: none;"></div>
     <header class="chat-header">
         <div class="chat-title-container">
-            <h2><span class="material-symbols-outlined">chat</span>&nbsp;Chat: {category} {mode}</h2>
+            <h2><span class="material-symbols-outlined">chat</span>&nbsp;{id ? 'Chat' : 'New Chat'}</h2>
             <button id="share-button" class="share-button" title="Toggle thread visibility">
                 <span class="material-symbols-outlined">share</span>
                 <span class="share-text">Share</span>
@@ -217,5 +217,5 @@ export const inNav = 'hide';
             });
         });
     </script>
-    <MessagesScript page="chat" />
+    <MessagesScript page="chat" category={category} mode={mode} />
 </Layout> 

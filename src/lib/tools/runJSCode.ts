@@ -1,4 +1,5 @@
-import type { Tool } from '../types';
+import { tool } from 'ai';
+import { z } from 'zod';
 
 const lineReplacements = [
     {
@@ -11,17 +12,13 @@ const lineReplacements = [
     }
 ]
 
-const tool: Tool = {
-    name: 'runJSCode',
-    description: 'Run JavaScript code',
-    parameters: {
-        type: 'object',
-        properties: {
-            code: { type: 'string', description: 'The JavaScript code to run' },
-        },
-    },
-    execute: async (params: any) => {
-        const code = params.code;
+const runJSCodeTool = {
+    ...tool({
+        description: 'Run JavaScript code',
+        parameters: z.object({
+            code: z.string().describe('The JavaScript code to run'),
+        }),
+        execute: async ({ code }) => {
 
         let ranCode = (code.includes('\n') ? code.split('\n') : [code])
             .map((line: string) => (
@@ -48,6 +45,8 @@ const tool: Tool = {
 
         return { message: 'JavaScript code executed', result };
     },
-}
+    }),
+    ready: true,
+};
 
-export default tool;
+export default runJSCodeTool;

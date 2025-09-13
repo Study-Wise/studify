@@ -1,20 +1,16 @@
-import type { Tool } from '../types';
-
+import { tool } from 'ai';
+import { z } from 'zod';
 import Exa from "exa-js";
+
 const exa = new Exa(process.env.EXA_SEARCH_API_KEY);
 
-
-const tool: Tool = {
-    name: 'search',
-    description: 'Search the web for information',
-    parameters: {
-        type: 'object',
-        properties: {
-            query: { type: 'string', description: 'The query to search for' },
-        },
-    },
-    execute: async (params: any) => {
-        const query = params.query;
+const searchTool = {
+    ...tool({
+        description: 'Search the web for information',
+        parameters: z.object({
+            query: z.string().describe('The query to search for'),
+        }),
+        execute: async ({ query }) => {
 
         const searchResult = await exa.getContents(
             [query],
@@ -25,8 +21,10 @@ const tool: Tool = {
             searchResult,
         }
 
-        return { message: 'JavaScript code executed', result };
+        return { message: 'Search completed', result };
     },
-}
+    }),
+    ready: true,
+};
 
-export default tool;
+export default searchTool;

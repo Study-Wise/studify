@@ -1,22 +1,24 @@
 import 'dotenv/config';
 import type { APIRoute } from 'astro';
 
-import { generateText } from 'ai';
+import { generateText, type LanguageModelV1 } from 'ai';
 
 import { openai } from '@ai-sdk/openai';
 import { anthropic } from '@ai-sdk/anthropic';
 import { google } from '@ai-sdk/google';
 import { xai } from '@ai-sdk/xai';
+import { vercel } from '@ai-sdk/vercel';
 
 import config from '../../../lib/config';
 import { providers } from '../../../lib/models';
+import categories from '../../../lib/modes';
 
-import { clerkClient } from '@clerk/astro/server';
 import { nanoid } from 'nanoid';
 
-import { drizzle } from 'drizzle-orm/vercel-postgres';
+import { db } from '../../../db/initialize';
 import { eq } from 'drizzle-orm';
 import type { InferSelectModel, InferInsertModel } from 'drizzle-orm';
+import type { Mode } from '../../../lib/types';
 
 import { threadsTable } from '../../../db/schema';
 import extract from '../../../lib/extractPartsofMessage';
@@ -46,6 +48,10 @@ const provider_maps = {
         'x',
         'grok',
     ],
+    vercel: [
+        'vercel',
+        'v0',
+    ],
 };
 
 const providerFunctions = {
@@ -53,6 +59,7 @@ const providerFunctions = {
     anthropic: anthropic,
     google: google,
     xai: xai,
+    vercel: vercel,
 };
 
 type ProviderKey = keyof typeof providerFunctions;
@@ -61,10 +68,27 @@ type ThreadInsert = InferInsertModel<typeof threadsTable>;
 
 export const POST: APIRoute = async ({ request, locals }) => {
     try {
-        const { text: userPrompt, id: thread_id, model: reqModel, settings: userSettings, isPublic = false } = await request.json();
+        const { text: userPrompt, id: thread_id, model, settings: userSettings, isPublic = false, category, mode } = await request.json();
+        
+        // Get mode object for context-specific prompts
+        let modeObj: Mode = {name: '', description: ''};
+        if (category && mode) {
+            modeObj = categories[category]?.modes?.[mode];
+        }
+        
+        // TODO: Use category and mode for context-specific prompts
         let current_thread_id: string | undefined = thread_id;
         const auth = (locals as any)?.auth;
-        const { userId, sessionClaims } = auth ? auth() : ({} as any);
+        if (!auth) {
+            return new Response(
+                JSON.stringify({ status: 'error', error: 'Authentication required' }),
+                {
+                    status: 401,
+                    headers: { 'Content-Type': 'application/json' },
+                }
+            );
+        }
+        const { userId, sessionClaims } = auth();
         const user_email = userId ? ((sessionClaims?.email as string) || null) : null;
 
         // Validate email
@@ -80,9 +104,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
         // Create a new thread if none provided
         let isNewThread = false;
+        
         if (!current_thread_id) {
             try {
-                const db = drizzle();
                 
                 // Check thread limit for user
                 if (user_email) {
@@ -131,8 +155,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
             }
         }
 
-        const db = drizzle();
-
         // --- Conversation History Fetch from DB ---
         let convoHistory: any[] = [];
         let userData: Thread | undefined = undefined;
@@ -154,9 +176,12 @@ export const POST: APIRoute = async ({ request, locals }) => {
                     }
                     
                     if (
-                        userData.thread && typeof userData.thread === 'object' && Array.isArray((userData.thread as any).messages)
+                        userData.thread && 
+                        typeof userData.thread === 'object' && 
+                        'messages' in userData.thread &&
+                        Array.isArray((userData.thread as { messages: any[] }).messages)
                     ) {
-                        convoHistory = (userData.thread as any).messages;
+                        convoHistory = (userData.thread as { messages: any[] }).messages;
                     }
                 }
             } catch (error) {
@@ -175,7 +200,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         convoHistory.push({ role: 'user', content: userPrompt });
 
         // --- Model/Provider selection (existing code) ---
-        let userModel = reqModel || userSettings.model || config.model;
+        let userModel = model || userSettings.model || config.model;
         let userProvider =
             (Object.keys(providers) as Array<keyof typeof providers>).find(
                 (provider: keyof typeof providers) => (providers[provider].models as Record<string, { name: string }>)[userModel]
@@ -188,30 +213,29 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
         let provider = Object.keys(provider_maps).find((provider) => provider_maps[provider as ProviderKey].includes(userProvider)) as ProviderKey;
 
-        if (!providerFunctions[provider](userModel)) {
+        if (!provider || !providerFunctions[provider](userModel)) {
             userModel = config.model;
+            provider = config.provider as ProviderKey;
         }
 
-        let model = providerFunctions[provider](userModel);
+        let aiModel = providerFunctions[provider](userModel) as LanguageModelV1;
 
-        // --- Prepare prompt for AI ---
-        let aiPrompt = convoHistory
-            .map((m: any) => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`)
-            .join('\n');
-
+        const tools = modeObj.tools || {};
+        const systemPrompt = await (modeObj.prompt || Promise.resolve(config.systemPrompt));
+        
         // --- AI Generation ---
         let generatedText: string;
         try {
             const result = await generateText({
-                model: model,
-                system: config.systemPrompt,
+                model: aiModel,
                 messages: [
                     {
                         role: 'system',
-                        content: config.systemPrompt,
+                        content: systemPrompt,
                     },
                     ...convoHistory,
                 ],
+                tools: tools,
             });
             generatedText = result.text;
         } catch (error) {
@@ -316,13 +340,18 @@ export const POST: APIRoute = async ({ request, locals }) => {
 async function generateTitle(convoHistory: any[], userModel: string, provider: ProviderKey) {
     try {
         const { text: generatedText } = await generateText({
-            model: providerFunctions[provider](userModel),
-            system: config.systemPrompt,
-            prompt:
-                'Please generate a title for the following conversation history: \n\n' +
-                convoHistory
-                    .map((m: any) => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`)
-                    .join('\n'),
+            model: providerFunctions[provider](userModel) as LanguageModelV1,
+            messages: [
+                {
+                    role: 'system',
+                    content: 'You are a helpful assistant that generates concise, descriptive titles for conversations.',
+                },
+                ...convoHistory,
+                {
+                    role: 'user',
+                    content: 'Please generate a concise title for this conversation.',
+                },
+            ],
         });
         return generatedText;
     } catch (error) {
