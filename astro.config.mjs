@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import VitePWA from '@vite-pwa/astro';
 import vercel from '@astrojs/vercel';
 import clerk from '@clerk/astro';
 
@@ -53,6 +54,24 @@ export default defineConfig({
           },
         },
       },
+    }),
+    VitePWA({
+      registerType: 'autoUpdate',
+      includeAssets: ['/favicon.svg', '/favicon.ico'],
+      manifest: {
+        name: 'M.A.T.H.Wise',
+        short_name: 'MathWise',
+        description: 'AI Math Study Partner',
+        start_url: '/',
+        scope: '/',
+        display: 'standalone',
+        theme_color: '#6366f1',
+        background_color: '#ffffff',
+        icons: []
+      },
+      devOptions: {
+        enabled: true
+      }
     }),
   ],
 });
