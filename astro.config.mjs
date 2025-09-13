@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import VitePWA from '@vite-pwa/astro';
 import vercel from '@astrojs/vercel';
 import clerk from '@clerk/astro';
 
@@ -41,18 +42,36 @@ export default defineConfig({
       localization: {
         signUp: {
           start: {
-            subtitle: 'to access MathWise',
+            subtitle: 'to access StudyWise',
           },
           emailCode: {
-            subtitle: 'to access MathWise',
+            subtitle: 'to access StudyWise',
           },
         },
         signIn: {
           start: {
-            subtitle: 'to access MathWise',
+            subtitle: 'to access StudyWise',
           },
         },
       },
+    }),
+    VitePWA({
+      registerType: 'autoUpdate',
+      includeAssets: ['/favicon.svg', '/favicon.ico'],
+      manifest: {
+        name: 'StudyWise',
+        short_name: 'StudyWise',
+        description: 'AI Study Partner',
+        start_url: '/',
+        scope: '/',
+        display: 'standalone',
+        theme_color: '#6366f1',
+        background_color: '#ffffff',
+        icons: []
+      },
+      devOptions: {
+        enabled: true
+      }
     }),
   ],
 });
