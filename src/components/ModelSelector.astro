@@ -48,7 +48,7 @@ providers['mathwise'] = {
                 
                 return (
                     <option value={currKey} selected={currKey === selectorSettings.default} disabled={option.name === 'Select A Model'}>
-                        {option.name === 'Select A Model' ? '' : <img src={`/images/providers/${providerKey || 'default'}.svg`} alt={providerKey ? providers[providerKey].name : 'Provider'} />}
+                        {option.name === 'Select A Model' ? '' : <img src={`/assets/providers/${providerKey || 'default'}.svg`} alt={providerKey ? providers[providerKey].name : 'Provider'} />}
                         {option.name || currKey}
                     </option>
                 );

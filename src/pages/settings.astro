@@ -45,7 +45,7 @@ const settings: {
                                 return (
                                     <option value={currKey} selected={currKey === setting.default}>
                                         <img
-                                            src={`/images/providers/${providerKey || 'default'}.svg`}
+                                            src={`/assets/providers/${providerKey || 'default'}.svg`}
                                             alt={providerKey ? providers[providerKey].name : 'Provider'}
                                         />
                                         {option.name || currKey}
