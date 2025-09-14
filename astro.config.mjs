@@ -4,6 +4,12 @@ import AstroPWA from '@vite-pwa/astro';
 import vercel from '@astrojs/vercel';
 import clerk from '@clerk/astro';
 
+import fs from 'fs-extra';
+import path from 'path';
+
+const manifestPath = path.join(process.cwd(), 'public', 'manifest.webmanifest');
+const manifest = fs.readJSONSync(manifestPath);
+
 // https://astro.build/config
 export default defineConfig({
     output: 'server',
@@ -61,17 +67,7 @@ export default defineConfig({
                 '/favicon.svg',
                 '/favicon.ico'
             ],
-            manifest: {
-                name: 'StudyWise',
-                short_name: 'StudyWise',
-                description: 'AI Study Partner',
-                start_url: '/',
-                scope: '/',
-                display: 'standalone',
-                background_color: '#ffffff',
-                theme_color: '#6366f1',
-                icons: []
-            },
+            manifest,
         }),
     ],
 });
