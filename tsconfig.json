@@ -1,9 +1,12 @@
 {
-  "extends": "astro/tsconfigs/base",
-  "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist", "**/*.astro"],
   "compilerOptions": {
     "strict": true,
-    "plugins": [{ "name": "@astrojs/ts-plugin" }]
-  }
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true
+  },
+  "include": ["src", "astro.config.mjs", "pwa-assets.config.ts"],
+  "exclude": ["dist"]
 }
