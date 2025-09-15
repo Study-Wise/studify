@@ -11,18 +11,17 @@ const searchTool = {
             query: z.string().describe('The query to search for'),
         }),
         execute: async ({ query }) => {
-
-        const searchResult = await exa.getContents(
-            [query],
-            { text: true }
-          );
-          
-        const result = {
-            searchResult,
-        }
-
-        return { message: 'Search completed', result };
-    },
+            const searchResult = await exa.getContents(
+                [query],
+                { text: true }
+              );
+              
+            const result = {
+                searchResult,
+            }
+    
+            return { message: 'Search completed', result };
+        },
     }),
     ready: true,
 };
