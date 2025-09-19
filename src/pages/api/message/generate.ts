@@ -221,9 +221,30 @@ export const POST: APIRoute = async ({ request, locals }) => {
             console.log(`🔄 [${requestId}] Using existing thread ID:`, current_thread_id);
         }
 
+        // --- Load System Prompt and Initialize Conversation History ---
+        console.log(`🎯 [${requestId}] Loading system prompt for mode:`, {
+            category,
+            mode,
+            hasModePrompt: !!modeObj.prompt,
+            hasConfigPrompt: !!config.systemPrompt
+        });
+        
+        const systemPrompt = await (modeObj.prompt || Promise.resolve(config.systemPrompt));
+        console.log(`📝 [${requestId}] System prompt loaded:`, {
+            promptLength: systemPrompt.length,
+            promptPreview: systemPrompt.substring(0, 200) + '...'
+        });
+        
+        const systemObj = {
+            role: 'system',
+            content: systemPrompt,
+        }
+        
+        let convoHistory: any[] = [systemObj];
+        console.log(`🔄 [${requestId}] Initialized conversation history with system message`);
+
         // --- Conversation History Fetch from DB ---
         console.log(`📚 [${requestId}] Fetching conversation history for thread:`, current_thread_id);
-        let convoHistory: any[] = [];
         let userData: Thread | undefined = undefined;
         if (current_thread_id) {
             try {
@@ -267,16 +288,18 @@ export const POST: APIRoute = async ({ request, locals }) => {
                         'messages' in userData.thread &&
                         Array.isArray((userData.thread as { messages: any[] }).messages)
                     ) {
-                        convoHistory = (userData.thread as { messages: any[] }).messages;
-                        console.log(`💬 [${requestId}] Conversation history loaded:`, {
-                            messageCount: convoHistory.length,
+                        convoHistory = [systemObj, ...(userData.thread as { messages: any[] }).messages];
+                        console.log(`💬 [${requestId}] Conversation history loaded with system message:`, {
+                            totalMessageCount: convoHistory.length,
+                            systemMessageIncluded: true,
+                            userMessagesCount: (userData.thread as { messages: any[] }).messages.length,
                             lastMessageRole: convoHistory[convoHistory.length - 1]?.role || 'none'
                         });
                     } else {
-                        console.log(`⚠️ [${requestId}] No valid conversation history found in thread data`);
+                        console.log(`⚠️ [${requestId}] No valid conversation history found in thread data, keeping system message only`);
                     }
                 } else {
-                    console.log(`⚠️ [${requestId}] Thread not found in database:`, current_thread_id);
+                    console.log(`⚠️ [${requestId}] Thread not found in database, using system message only:`, current_thread_id);
                 }
             } catch (error) {
                 console.error(`❌ [${requestId}] Error fetching conversation history:`, error);
@@ -288,6 +311,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
                     }
                 );
             }
+        } else {
+            console.log(`🆕 [${requestId}] No thread ID provided, using system message only`);
         }
 
         // --- Append new user message ---
@@ -337,30 +362,33 @@ export const POST: APIRoute = async ({ request, locals }) => {
         let aiModel = providerFunctions[provider](userModel) as LanguageModelV1;
 
         const tools = modeObj.tools || {};
-        const systemPrompt = await (modeObj.prompt || Promise.resolve(config.systemPrompt));
         
         console.log(`🛠️ [${requestId}] AI generation setup:`, {
             toolsCount: Object.keys(tools).length,
             toolsList: Object.keys(tools),
             systemPromptLength: systemPrompt.length,
             systemPromptPreview: systemPrompt.substring(0, 200) + '...',
-            conversationHistoryLength: convoHistory.length
+            conversationHistoryLength: convoHistory.length,
+            systemMessageIncluded: convoHistory[0]?.role === 'system'
         });
         
         // --- AI Generation ---
-        console.log(`🧠 [${requestId}] Starting AI text generation`);
+        console.log(`🧠 [${requestId}] Starting AI text generation with pre-built conversation history`);
         const aiStartTime = Date.now();
         let generatedText: string;
         try {
+            console.log(`📤 [${requestId}] Sending to AI model:`, {
+                model: userModel,
+                provider: provider,
+                messageCount: convoHistory.length,
+                firstMessageRole: convoHistory[0]?.role,
+                lastMessageRole: convoHistory[convoHistory.length - 1]?.role,
+                toolsEnabled: Object.keys(tools).length > 0
+            });
+            
             const result = await generateText({
                 model: aiModel,
-                messages: [
-                    {
-                        role: 'system',
-                        content: systemPrompt,
-                    },
-                    ...convoHistory,
-                ],
+                messages: convoHistory,
                 tools: tools,
             });
             generatedText = result.text;
