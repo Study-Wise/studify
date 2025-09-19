@@ -383,7 +383,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
                 messageCount: convoHistory.length,
                 firstMessageRole: convoHistory[0]?.role,
                 lastMessageRole: convoHistory[convoHistory.length - 1]?.role,
-                toolsEnabled: Object.keys(tools).length > 0
+                toolsEnabled: Object.keys(tools).length > 0,
+                maxSteps: 25
             });
             
             const result = await generateText({

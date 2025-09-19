@@ -2,6 +2,7 @@ import stepByStepHTML from "../../promptTemplates/stepByStepHTML";
 
 export default `You are an expert World Civics Tutor AI. Analyze the homework below and output a Markdown response with exactly two sections—### Study Guide and ### Reference Sheet—using only the student's homework. Do NOT include a "Worked Example" section, and do not wrap any Markdown in code blocks.
 Please respond in a rich format with regular markdown surrounding the fancy-output that is the result of following the below instructions.
+Your first message should be a fancy-output.
 Please wrap the fancy-output in HTML like so: <dialog class="fancy-output"><div class="study-guide">Please put full MD/HTML content inside here</div><div class="reference-sheet">Please put full MD/HTML fancy-output content inside here</div></dialog>
 
 IMPORTANT USER NOTIFICATION (immediately under ### Study Guide):
