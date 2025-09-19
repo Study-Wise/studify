@@ -67,19 +67,54 @@ type Thread = InferSelectModel<typeof threadsTable>;
 type ThreadInsert = InferInsertModel<typeof threadsTable>;
 
 export const POST: APIRoute = async ({ request, locals }) => {
+    const requestId = nanoid();
+    const startTime = Date.now();
+    
+    console.log(`🚀 [${requestId}] Starting message generation request`);
+    console.log(`📊 [${requestId}] Request metadata:`, {
+        timestamp: new Date().toISOString(),
+        userAgent: request.headers.get('user-agent'),
+        contentType: request.headers.get('content-type'),
+        origin: request.headers.get('origin'),
+        referer: request.headers.get('referer')
+    });
+
     try {
+        console.log(`📥 [${requestId}] Parsing request body`);
         const { text: userPrompt, id: thread_id, model, settings: userSettings, isPublic = false, category, mode } = await request.json();
+        
+        console.log(`📝 [${requestId}] Request payload:`, {
+            userPromptLength: userPrompt?.length || 0,
+            userPromptPreview: userPrompt?.substring(0, 100) + (userPrompt?.length > 100 ? '...' : ''),
+            threadId: thread_id || 'none',
+            model: model || 'default',
+            settingsKeys: Object.keys(userSettings || {}),
+            isPublic,
+            category: category || 'none',
+            mode: mode || 'none'
+        });
         
         // Get mode object for context-specific prompts
         let modeObj: Mode = {name: '', description: ''};
         if (category && mode) {
             modeObj = categories[category]?.modes?.[mode];
+            console.log(`🎯 [${requestId}] Mode object loaded:`, {
+                category,
+                mode,
+                modeName: modeObj.name,
+                modeDescription: modeObj.description?.substring(0, 100) + '...',
+                hasTools: !!modeObj.tools,
+                toolsCount: Object.keys(modeObj.tools || {}).length
+            });
+        } else {
+            console.log(`⚠️ [${requestId}] No category/mode specified, using default mode`);
         }
         
         // TODO: Use category and mode for context-specific prompts
         let current_thread_id: string | undefined = thread_id;
         const auth = (locals as any)?.auth;
         if (!auth) {
+            console.error(`❌ [${requestId}] Authentication required but not provided`);
             return new Response(
                 JSON.stringify({ status: 'error', error: 'Authentication required' }),
                 {
@@ -88,11 +123,22 @@ export const POST: APIRoute = async ({ request, locals }) => {
                 }
             );
         }
+        
+        console.log(`🔐 [${requestId}] Authentication found, extracting user info`);
         const { userId, sessionClaims } = auth();
         const user_email = userId ? ((sessionClaims?.email as string) || null) : null;
+        
+        console.log(`👤 [${requestId}] User info:`, {
+            userId: userId || 'none',
+            userEmail: user_email || 'none',
+            hasSessionClaims: !!sessionClaims,
+            sessionClaimsKeys: Object.keys(sessionClaims || {})
+        });
 
         // Validate email
+        console.log(`✅ [${requestId}] Validating user email`);
         if (!isValidEmail(user_email)) {
+            console.error(`❌ [${requestId}] Invalid email format:`, user_email);
             return new Response(
                 JSON.stringify({ status: 'error', error: 'Invalid email' }),
                 {
@@ -101,17 +147,23 @@ export const POST: APIRoute = async ({ request, locals }) => {
                 }
             );
         }
+        console.log(`✅ [${requestId}] Email validation passed`);
 
         // Create a new thread if none provided
         let isNewThread = false;
         
         if (!current_thread_id) {
+            console.log(`🆕 [${requestId}] No thread ID provided, creating new thread`);
             try {
                 
                 // Check thread limit for user
                 if (user_email) {
+                    console.log(`🔍 [${requestId}] Checking thread limit for user:`, user_email);
                     const userThreads = await db.select().from(threadsTable).where(eq(threadsTable.email, user_email));
+                    console.log(`📊 [${requestId}] User thread count:`, userThreads.length, '/', config.maxThreadsPerUser);
+                    
                     if (userThreads.length >= config.maxThreadsPerUser) {
+                        console.error(`❌ [${requestId}] Thread limit exceeded for user:`, user_email);
                         return new Response(
                             JSON.stringify({ 
                                 status: 'error', 
@@ -125,10 +177,13 @@ export const POST: APIRoute = async ({ request, locals }) => {
                     }
                 }
                 
+                console.log(`🆔 [${requestId}] Generating new thread ID`);
                 const newThreadId = nanoid();
                 if (!newThreadId) {
+                    console.error(`❌ [${requestId}] Failed to generate thread ID`);
                     throw new Error('Failed to generate thread ID');
                 }
+                
                 const newThread = {
                     id: newThreadId,
                     title: '',
@@ -137,14 +192,23 @@ export const POST: APIRoute = async ({ request, locals }) => {
                     isPublic: isPublic,
                     isDev: process.env.NODE_ENV === 'development'
                 };
+                
+                console.log(`💾 [${requestId}] Inserting new thread into database:`, {
+                    threadId: newThreadId,
+                    isPublic,
+                    isDev: newThread.isDev
+                });
+                
                 const dbResponse = await db.insert(threadsTable).values(newThread);
                 current_thread_id = newThreadId;
                 isNewThread = true;
-                if (dbResponse) {
-                    console.log('Thread generated successfully:', dbResponse);
-                }
+                
+                console.log(`✅ [${requestId}] Thread created successfully:`, {
+                    threadId: newThreadId,
+                    dbResponse: !!dbResponse
+                });
             } catch (error) {
-                console.error('Error generating thread:', error);
+                console.error(`❌ [${requestId}] Error generating thread:`, error);
                 return new Response(
                     JSON.stringify({ error: `Failed to generate thread: ${error}` }),
                     {
@@ -153,19 +217,41 @@ export const POST: APIRoute = async ({ request, locals }) => {
                     }
                 );
             }
+        } else {
+            console.log(`🔄 [${requestId}] Using existing thread ID:`, current_thread_id);
         }
 
         // --- Conversation History Fetch from DB ---
+        console.log(`📚 [${requestId}] Fetching conversation history for thread:`, current_thread_id);
         let convoHistory: any[] = [];
         let userData: Thread | undefined = undefined;
         if (current_thread_id) {
             try {
+                console.log(`🔍 [${requestId}] Querying database for thread data`);
                 const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, current_thread_id));
+                console.log(`📊 [${requestId}] Database query result:`, {
+                    threadCount: threads.length,
+                    foundThread: threads.length > 0
+                });
+                
                 if (threads.length > 0) {
                     userData = threads[0];
+                    console.log(`📋 [${requestId}] Thread data loaded:`, {
+                        threadId: userData.id,
+                        title: userData.title || 'untitled',
+                        email: userData.email || 'none',
+                        isPublic: userData.isPublic,
+                        hasThreadData: !!userData.thread,
+                        createdAt: userData.createdAt,
+                        updatedAt: userData.updatedAt
+                    });
                     
                     // Check thread ownership
                     if (userData.email && userData.email !== user_email) {
+                        console.error(`❌ [${requestId}] Unauthorized access attempt:`, {
+                            threadOwner: userData.email,
+                            requestingUser: user_email
+                        });
                         return new Response(
                             JSON.stringify({ error: 'Unauthorized access to thread' }),
                             {
@@ -182,10 +268,18 @@ export const POST: APIRoute = async ({ request, locals }) => {
                         Array.isArray((userData.thread as { messages: any[] }).messages)
                     ) {
                         convoHistory = (userData.thread as { messages: any[] }).messages;
+                        console.log(`💬 [${requestId}] Conversation history loaded:`, {
+                            messageCount: convoHistory.length,
+                            lastMessageRole: convoHistory[convoHistory.length - 1]?.role || 'none'
+                        });
+                    } else {
+                        console.log(`⚠️ [${requestId}] No valid conversation history found in thread data`);
                     }
+                } else {
+                    console.log(`⚠️ [${requestId}] Thread not found in database:`, current_thread_id);
                 }
             } catch (error) {
-                console.error('Error fetching conversation history:', error);
+                console.error(`❌ [${requestId}] Error fetching conversation history:`, error);
                 return new Response(
                     JSON.stringify({ error: `Failed to fetch conversation history: ${error}` }),
                     {
@@ -197,33 +291,65 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
 
         // --- Append new user message ---
+        console.log(`➕ [${requestId}] Adding user message to conversation history`);
         convoHistory.push({ role: 'user', content: userPrompt });
+        console.log(`📊 [${requestId}] Updated conversation history:`, {
+            totalMessages: convoHistory.length,
+            userMessageLength: userPrompt.length
+        });
 
-        // --- Model/Provider selection (existing code) ---
+        // --- Model/Provider selection ---
+        console.log(`🤖 [${requestId}] Selecting AI model and provider`);
         let userModel = model || userSettings.model || config.model;
         let userProvider =
             (Object.keys(providers) as Array<keyof typeof providers>).find(
                 (provider: keyof typeof providers) => (providers[provider].models as Record<string, { name: string }>)[userModel]
             ) || config.provider;
 
+        console.log(`🔍 [${requestId}] Initial model/provider selection:`, {
+            requestedModel: model,
+            settingsModel: userSettings.model,
+            configModel: config.model,
+            selectedModel: userModel,
+            selectedProvider: userProvider
+        });
+
         if (
             !Object.keys(provider_maps).find((provider) => provider_maps[provider as ProviderKey].includes(userProvider))
         ) {
+            console.log(`⚠️ [${requestId}] Provider not found in maps, falling back to config provider`);
             userProvider = config.provider;
         }
         let provider = Object.keys(provider_maps).find((provider) => provider_maps[provider as ProviderKey].includes(userProvider)) as ProviderKey;
 
         if (!provider || !providerFunctions[provider](userModel)) {
+            console.log(`⚠️ [${requestId}] Provider/model validation failed, using defaults`);
             userModel = config.model;
             provider = config.provider as ProviderKey;
         }
+
+        console.log(`✅ [${requestId}] Final model/provider selection:`, {
+            model: userModel,
+            provider: provider,
+            providerFunctionExists: !!providerFunctions[provider]
+        });
 
         let aiModel = providerFunctions[provider](userModel) as LanguageModelV1;
 
         const tools = modeObj.tools || {};
         const systemPrompt = await (modeObj.prompt || Promise.resolve(config.systemPrompt));
         
+        console.log(`🛠️ [${requestId}] AI generation setup:`, {
+            toolsCount: Object.keys(tools).length,
+            toolsList: Object.keys(tools),
+            systemPromptLength: systemPrompt.length,
+            systemPromptPreview: systemPrompt.substring(0, 200) + '...',
+            conversationHistoryLength: convoHistory.length
+        });
+        
         // --- AI Generation ---
+        console.log(`🧠 [${requestId}] Starting AI text generation`);
+        const aiStartTime = Date.now();
         let generatedText: string;
         try {
             const result = await generateText({
@@ -238,8 +364,30 @@ export const POST: APIRoute = async ({ request, locals }) => {
                 tools: tools,
             });
             generatedText = result.text;
+            
+            const aiEndTime = Date.now();
+            const aiDuration = aiEndTime - aiStartTime;
+            
+            console.log(`✅ [${requestId}] AI generation completed:`, {
+                duration: `${aiDuration}ms`,
+                generatedTextLength: generatedText.length,
+                generatedTextPreview: generatedText.substring(0, 200) + (generatedText.length > 200 ? '...' : ''),
+                hasUsage: !!result.usage,
+                usageTokens: result.usage ? {
+                    promptTokens: result.usage.promptTokens,
+                    completionTokens: result.usage.completionTokens,
+                    totalTokens: result.usage.totalTokens
+                } : 'none'
+            });
         } catch (error) {
-            console.error('Error generating AI response:', error);
+            const aiEndTime = Date.now();
+            const aiDuration = aiEndTime - aiStartTime;
+            console.error(`❌ [${requestId}] AI generation failed after ${aiDuration}ms:`, error);
+            console.error(`❌ [${requestId}] AI error details:`, {
+                errorName: error instanceof Error ? error.name : 'Unknown',
+                errorMessage: error instanceof Error ? error.message : String(error),
+                errorStack: error instanceof Error ? error.stack : 'No stack trace'
+            });
             return new Response(
                 JSON.stringify({ error: `Failed to generate AI response: ${error}` }),
                 {
@@ -250,22 +398,40 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
 
         // --- Append AI response to history ---
+        console.log(`➕ [${requestId}] Adding AI response to conversation history`);
         convoHistory.push({ role: 'assistant', content: generatedText });
+        console.log(`📊 [${requestId}] Final conversation history:`, {
+            totalMessages: convoHistory.length,
+            aiResponseLength: generatedText.length
+        });
 
+        // --- Generate conversation title ---
         let convoTitle = userData?.title;
         if (!convoTitle) {
+            console.log(`🏷️ [${requestId}] Generating conversation title`);
+            const titleStartTime = Date.now();
             try {
                 convoTitle = await generateTitle(convoHistory, userModel, provider);
+                const titleEndTime = Date.now();
+                const titleDuration = titleEndTime - titleStartTime;
+                console.log(`✅ [${requestId}] Title generated successfully:`, {
+                    title: convoTitle,
+                    duration: `${titleDuration}ms`
+                });
             } catch (error) {
-                console.error('Error generating title:', error);
+                console.error(`❌ [${requestId}] Error generating title:`, error);
                 convoTitle = 'Untitled Conversation';
             }
+        } else {
+            console.log(`🏷️ [${requestId}] Using existing title:`, convoTitle);
         }
 
         // --- Save updated history back to DB ---
+        console.log(`💾 [${requestId}] Saving conversation to database`);
+        const saveStartTime = Date.now();
         try {
             if (current_thread_id && userData) {
-                // Update existing thread
+                console.log(`🔄 [${requestId}] Updating existing thread`);
                 await db
                     .update(threadsTable)
                     .set({
@@ -275,8 +441,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
                         isDev: process.env.NODE_ENV === 'development' ? true : false,
                     })
                     .where(eq(threadsTable.id, current_thread_id));
+                console.log(`✅ [${requestId}] Thread updated successfully`);
             } else if (current_thread_id && !userData && !isNewThread) {
-                // Insert new thread with the provided ID (this should rarely happen)
+                console.log(`🆕 [${requestId}] Inserting new thread with provided ID`);
                 if (!current_thread_id) {
                     throw new Error('Thread ID is null or undefined');
                 }
@@ -288,8 +455,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
                     isPublic: isPublic,
                     isDev: process.env.NODE_ENV === 'development'
                 } as ThreadInsert);
+                console.log(`✅ [${requestId}] New thread inserted successfully`);
             } else if (isNewThread) {
-                // Update the newly created thread with the conversation data
+                console.log(`🔄 [${requestId}] Updating newly created thread`);
                 await db
                     .update(threadsTable)
                     .set({
@@ -299,9 +467,14 @@ export const POST: APIRoute = async ({ request, locals }) => {
                         isDev: process.env.NODE_ENV === 'development' ? true : false,
                     })
                     .where(eq(threadsTable.id, current_thread_id));
+                console.log(`✅ [${requestId}] New thread updated successfully`);
             }
+            
+            const saveEndTime = Date.now();
+            const saveDuration = saveEndTime - saveStartTime;
+            console.log(`💾 [${requestId}] Database save completed in ${saveDuration}ms`);
         } catch (error) {
-            console.error('Error saving conversation to database:', error);
+            console.error(`❌ [${requestId}] Error saving conversation to database:`, error);
             return new Response(
                 JSON.stringify({ error: `Failed to save conversation: ${error}` }),
                 {
@@ -311,7 +484,35 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
+        // --- Extract and format response ---
+        console.log(`🔧 [${requestId}] Extracting and formatting response`);
+        const extractStartTime = Date.now();
         const { obj, generatedText: htmlText } = await extract(generatedText);
+        const extractEndTime = Date.now();
+        const extractDuration = extractEndTime - extractStartTime;
+        
+        console.log(`✅ [${requestId}] Response extraction completed:`, {
+            duration: `${extractDuration}ms`,
+            extractedKeys: Object.keys(obj),
+            htmlTextLength: htmlText.length,
+            hasStudyGuide: !!obj.studyGuide,
+            hasReferenceSheet: !!obj.referenceSheet,
+            studyGuideLength: obj.studyGuide?.length || 0,
+            referenceSheetLength: obj.referenceSheet?.length || 0
+        });
+
+        const totalDuration = Date.now() - startTime;
+        console.log(`🎉 [${requestId}] Request completed successfully:`, {
+            totalDuration: `${totalDuration}ms`,
+            threadId: current_thread_id,
+            finalTitle: convoTitle,
+            responseSize: JSON.stringify({
+                ...obj,
+                generatedText: htmlText,
+                generatedTitle: true,
+                id: current_thread_id,
+            }).length
+        });
 
         return new Response(
             JSON.stringify({
@@ -326,7 +527,14 @@ export const POST: APIRoute = async ({ request, locals }) => {
             }
         );
     } catch (error) {
-        console.error('Error in generate.ts:', error);
+        const totalDuration = Date.now() - startTime;
+        console.error(`💥 [${requestId}] Fatal error in generate.ts after ${totalDuration}ms:`, error);
+        console.error(`💥 [${requestId}] Error details:`, {
+            errorName: error instanceof Error ? error.name : 'Unknown',
+            errorMessage: error instanceof Error ? error.message : String(error),
+            errorStack: error instanceof Error ? error.stack : 'No stack trace',
+            errorType: typeof error
+        });
         return new Response(
             JSON.stringify({ error: `Invalid request body or server error: ${error}` }),
             {
@@ -338,7 +546,15 @@ export const POST: APIRoute = async ({ request, locals }) => {
 };
 
 async function generateTitle(convoHistory: any[], userModel: string, provider: ProviderKey) {
+    const titleRequestId = nanoid();
+    console.log(`🏷️ [${titleRequestId}] Starting title generation:`, {
+        conversationLength: convoHistory.length,
+        model: userModel,
+        provider: provider
+    });
+    
     try {
+        const titleStartTime = Date.now();
         const { text: generatedText } = await generateText({
             model: providerFunctions[provider](userModel) as LanguageModelV1,
             messages: [
@@ -353,9 +569,26 @@ async function generateTitle(convoHistory: any[], userModel: string, provider: P
                 },
             ],
         });
+        
+        const titleEndTime = Date.now();
+        const titleDuration = titleEndTime - titleStartTime;
+        
+        console.log(`✅ [${titleRequestId}] Title generation completed:`, {
+            duration: `${titleDuration}ms`,
+            generatedTitle: generatedText,
+            titleLength: generatedText.length
+        });
+        
         return generatedText;
     } catch (error) {
-        console.error('Error in generateTitle:', error);
+        console.error(`❌ [${titleRequestId}] Error in generateTitle:`, error);
+        console.error(`❌ [${titleRequestId}] Title generation error details:`, {
+            errorName: error instanceof Error ? error.name : 'Unknown',
+            errorMessage: error instanceof Error ? error.message : String(error),
+            conversationLength: convoHistory.length,
+            model: userModel,
+            provider: provider
+        });
         throw error;
     }
 }
