@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /wp-admin/setup-config.php
+
+User-agent: *
+Allow: /
