@@ -390,6 +390,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
                 model: aiModel,
                 messages: convoHistory,
                 tools: tools,
+                maxSteps: 100,
             });
             generatedText = result.text;
             
