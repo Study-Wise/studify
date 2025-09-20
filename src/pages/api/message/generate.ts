@@ -112,7 +112,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         
         // TODO: Use category and mode for context-specific prompts
         let current_thread_id: string | undefined = thread_id;
-        const auth = (locals as any)?.auth;
+        const auth = locals?.auth;
         if (!auth) {
             console.error(`❌ [${requestId}] Authentication required but not provided`);
             return new Response(

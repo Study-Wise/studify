@@ -12,7 +12,7 @@ import MessagesScript from '../../../scripts/messages.astro';
 import categories from '../../../lib/modes';
 
 // Use Clerk authentication
-const auth = (Astro.locals as any).auth;
+const { auth } = Astro.locals;
 const { sessionClaims } = auth();
 const user_email = sessionClaims?.email as string || null;
 

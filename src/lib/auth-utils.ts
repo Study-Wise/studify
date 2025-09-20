@@ -7,7 +7,9 @@ export function hasPermission(auth: any, permission: string): boolean {
 // User metadata utilities
 export function getUserRole(auth: any): string | null {
     const { sessionClaims } = auth();
-    return (sessionClaims?.metadata as any)?.role || null;
+    return typeof sessionClaims?.metadata === 'object' && sessionClaims?.metadata !== null && 'role' in sessionClaims.metadata
+        ? (sessionClaims.metadata as { role?: string }).role ?? null
+        : null;
 }
 
 export function getUserMetadata(auth: any): any {
@@ -19,11 +21,11 @@ export function getUserMetadata(auth: any): any {
 export const ADMIN_EMAILS = [
     'adarshravikumar2@gmail.com',
     'riengupta@gmail.com',
-    'admin@conversaition.online'
+    'admin@studywise.onl'
 ];
 
 export const ADMIN_DOMAINS = [
-    '@conversaition.online',
+    '@studywise.onl',
 ];
 
 export function shouldPromoteToAdmin(email: string): boolean {

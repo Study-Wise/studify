@@ -8,7 +8,7 @@ if (mode === 'lite') classes.push('lite');
 ---
 <!-- Navigation -->
 <nav class={classes.join(' ')}>
-    {pages.filter(page => !page.hiddenFromNav).map(page => {
+    {pages.filter((page: any) => !page.hiddenFromNav).map((page: any) => {
         const hasAnIcon = hasIcon(page.name.toLowerCase().replace(/\s+/g, '_'));
         let icon = '';
         if (hasAnIcon === 'google') {

@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import { getUserRole, getUserMetadata } from '../lib/auth-utils';
 
 // Use Clerk authentication
-const auth = (Astro.locals as any).auth;
+const { auth } = Astro.locals;
 const { userId } = auth();
 
 // Redirect to sign-in if not authenticated
@@ -67,8 +67,8 @@ if (!isUserAdmin) {
             <p>This page is only accessible to users with admin role.</p>
             <p>Users are automatically promoted to admin if they register with:</p>
             <ul>
-                <li>Specific admin emails: adarsh@mathwise.com, admin@mathwise.com, owner@mathwise.com</li>
-                <li>Admin domains: @mathwise.com, @yourcompany.com</li>
+                <li>Specific admin emails: adarsh@studywise.onl, admin@studywise.onl, owner@studywise.onl</li>
+                <li>Admin domains: @studywise.onl, @yourcompany.com</li>
             </ul>
         </div>
     </div>
