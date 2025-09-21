@@ -11,7 +11,14 @@ const { sessionClaims } = auth();
 const user_email = sessionClaims?.email as string || null;
 
 // TODO: WHEN READY, REMOVE MATH ONLY MODE
-return Astro.redirect('/math/math');
+const mathOnlyHostnames = ['studywise.onl', 'studywise.guru'];
+
+const hostname = Astro.url.hostname;
+const isMathOnlyMode = mathOnlyHostnames.some(h => hostname === h || hostname === `www.${h}`);
+
+if (isMathOnlyMode) {
+    return Astro.redirect('/math/math');
+}
 ---
 <Layout title="Home">
     <div id="user-email" data-email={user_email} style="display: none"></div>
