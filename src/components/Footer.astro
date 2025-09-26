@@ -7,7 +7,7 @@ const copyright = new Date().getFullYear();
 const { hideCopyright = false } = Astro.props;
 ---
 
-<footer class="footer">
+<footer class="footer" role="contentinfo">
     <div class="footer-content">
         {hideCopyright ? '' : <p>© {copyright === copyrightStart ? copyright : `${copyrightStart}-${copyright}`} StudyWise. Powered by AI.</p>}
         <p>

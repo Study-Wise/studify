@@ -15,7 +15,8 @@ export const onRequest = clerkMiddleware((auth, context) => {
 
   // Protect routes that require authentication
   if (isProtectedRoute(context.request) && !userId) {
-    return redirectToSignIn();
+    const currentUrl = new URL(context.request.url);
+    return redirectToSignIn({ returnBackUrl: currentUrl.pathname + currentUrl.search });
   }
 
   // Optional: Enforce MFA for protected routes

@@ -4,7 +4,8 @@ import Layout from '../../../layouts/Layout.astro';
 import '../../../styles/pages/auth.scss';
 
 // Get the redirect URL from query parameters, fallback to home
-const redirectUrl = Astro.url.searchParams.get('redirect_url') || '/';
+const redirectUrl = Astro.url.searchParams.get('redirect_url') || 
+                    Astro.url.searchParams.get('returnBackUrl') || '/';
 ---
 
 <Layout title="Sign In" additionalClasses={['auth-page']}>

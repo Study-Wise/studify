@@ -7,16 +7,16 @@ const classes = ['header-nav'];
 if (mode === 'lite') classes.push('lite');
 ---
 <!-- Navigation -->
-<nav class={classes.join(' ')}>
-    {pages.filter(page => !page.hiddenFromNav).map(page => {
+<nav class={classes.join(' ')} role="navigation" aria-label="Main navigation" id="main-navigation">
+    {pages.filter((page: { name: string; path: string; hiddenFromNav: boolean }) => !page.hiddenFromNav).map((page: { name: string; path: string; hiddenFromNav: boolean }) => {
         const hasAnIcon = hasIcon(page.name.toLowerCase().replace(/\s+/g, '_'));
         let icon = '';
         if (hasAnIcon === 'google') {
-            icon = <span class="material-symbols-outlined">{getIcon(page.name.toLowerCase().replace(/\s+/g, '_'))}</span>;
+            icon = <span class="material-symbols-outlined" aria-hidden="true">{getIcon(page.name.toLowerCase().replace(/\s+/g, '_'))}</span>;
         } else if (hasAnIcon === 'custom') {
-            icon = <img src={`/assets/icons/${getIcon(page.name.toLowerCase().replace(/\s+/g, '_'))}.svg`} alt={page.name} class="nav-icon" />;
+            icon = <img src={`/assets/icons/${getIcon(page.name.toLowerCase().replace(/\s+/g, '_'))}.svg`} alt={page.name} class="nav-icon" aria-hidden="true" />;
         }
-        return <a href={page.path} class={pTitle === page.name ? 'active nav-btn' : 'nav-btn'}>
+        return <a href={page.path} class={pTitle === page.name ? 'active nav-btn' : 'nav-btn'} aria-current={pTitle === page.name ? 'page' : undefined}>
             {icon}
             {page.name}
         </a>

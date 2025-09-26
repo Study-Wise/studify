@@ -1,0 +1,383 @@
+---
+// Keyboard navigation component for accessibility
+---
+
+<script>
+    class KeyboardNavigation {
+        constructor() {
+            this.focusableElements = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+            this.skipLinks = [];
+            this.init();
+        }
+
+        init() {
+            this.createSkipLinks();
+            this.setupKeyboardHandlers();
+            this.setupFocusManagement();
+            this.setupTabNavigation();
+        }
+
+        createSkipLinks() {
+            // Create skip to main content link
+            const skipToMain = document.createElement('a');
+            skipToMain.href = '#main-content';
+            skipToMain.textContent = 'Skip to main content';
+            skipToMain.className = 'skip-link';
+            skipToMain.style.cssText = `
+                position: absolute;
+                top: -40px;
+                left: 6px;
+                background: #000;
+                color: #fff;
+                padding: 8px;
+                text-decoration: none;
+                z-index: 1000;
+                border-radius: 4px;
+                transition: top 0.3s;
+            `;
+            
+            skipToMain.addEventListener('focus', () => {
+                skipToMain.style.top = '6px';
+            });
+            
+            skipToMain.addEventListener('blur', () => {
+                skipToMain.style.top = '-40px';
+            });
+
+            document.body.insertBefore(skipToMain, document.body.firstChild);
+
+            // Create skip to navigation link
+            const skipToNav = document.createElement('a');
+            skipToNav.href = '#main-navigation';
+            skipToNav.textContent = 'Skip to navigation';
+            skipToNav.className = 'skip-link';
+            skipToNav.style.cssText = skipToMain.style.cssText;
+            
+            skipToNav.addEventListener('focus', () => {
+                skipToNav.style.top = '6px';
+            });
+            
+            skipToNav.addEventListener('blur', () => {
+                skipToNav.style.top = '-40px';
+            });
+
+            document.body.insertBefore(skipToNav, document.body.firstChild);
+        }
+
+        setupKeyboardHandlers() {
+            // Global keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                // Alt + M: Focus main content
+                if (e.altKey && e.key === 'm') {
+                    e.preventDefault();
+                    const main = document.querySelector('main');
+                    if (main) {
+                        main.focus();
+                        main.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+
+                // Alt + N: Focus navigation
+                if (e.altKey && e.key === 'n') {
+                    e.preventDefault();
+                    const nav = document.querySelector('nav');
+                    if (nav) {
+                        nav.focus();
+                        nav.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+
+                // Escape: Close modals, dropdowns, etc.
+                if (e.key === 'Escape') {
+                    this.handleEscapeKey();
+                }
+
+                // Enter/Space on custom elements
+                if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('keyboard-activatable')) {
+                    e.preventDefault();
+                    e.target.click();
+                }
+            });
+        }
+
+        setupFocusManagement() {
+            // Add focus indicators
+            const style = document.createElement('style');
+            style.textContent = `
+                *:focus {
+                    outline: 2px solid #4F46E5 !important;
+                    outline-offset: 2px !important;
+                }
+                
+                .skip-link:focus {
+                    outline: 2px solid #fff !important;
+                }
+                
+                /* Custom focus styles for specific elements */
+                .nav-btn:focus,
+                .fancy-button:focus {
+                    box-shadow: 0 0 0 2px #4F46E5, 0 0 0 4px rgba(79, 70, 229, 0.2);
+                }
+                
+                /* Remove focus outline for mouse users */
+                .js-focus-visible *:focus:not(.focus-visible) {
+                    outline: none;
+                }
+            `;
+            document.head.appendChild(style);
+
+            // Add focus-visible polyfill behavior
+            document.addEventListener('mousedown', () => {
+                document.body.classList.add('using-mouse');
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Tab') {
+                    document.body.classList.remove('using-mouse');
+                }
+            });
+        }
+
+        setupTabNavigation() {
+            // Enhanced tab navigation for complex components
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Tab') {
+                    this.handleTabNavigation(e);
+                }
+            });
+
+            // Arrow key navigation for tab lists
+            document.addEventListener('keydown', (e) => {
+                const tabList = e.target.closest('[role="tablist"]');
+                if (tabList && ['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) {
+                    e.preventDefault();
+                    this.handleTabListNavigation(e, tabList);
+                }
+            });
+        }
+
+        handleTabNavigation(e) {
+            const focusableElements = this.getFocusableElements();
+            const currentIndex = focusableElements.indexOf(document.activeElement);
+
+            if (e.shiftKey) {
+                // Shift + Tab: Move backwards
+                if (currentIndex <= 0) {
+                    e.preventDefault();
+                    focusableElements[focusableElements.length - 1].focus();
+                }
+            } else {
+                // Tab: Move forwards
+                if (currentIndex >= focusableElements.length - 1) {
+                    e.preventDefault();
+                    focusableElements[0].focus();
+                }
+            }
+        }
+
+        handleTabListNavigation(e, tabList) {
+            const tabs = Array.from(tabList.querySelectorAll('[role="tab"]'));
+            const currentIndex = tabs.indexOf(document.activeElement);
+
+            switch (e.key) {
+                case 'ArrowLeft':
+                    const prevIndex = currentIndex > 0 ? currentIndex - 1 : tabs.length - 1;
+                    tabs[prevIndex].focus();
+                    break;
+                case 'ArrowRight':
+                    const nextIndex = currentIndex < tabs.length - 1 ? currentIndex + 1 : 0;
+                    tabs[nextIndex].focus();
+                    break;
+                case 'Home':
+                    tabs[0].focus();
+                    break;
+                case 'End':
+                    tabs[tabs.length - 1].focus();
+                    break;
+            }
+        }
+
+        handleEscapeKey() {
+            // Close any open modals, dropdowns, or overlays
+            const modals = document.querySelectorAll('.modal, .dropdown, .overlay');
+            modals.forEach(modal => {
+                if (modal.style.display !== 'none') {
+                    modal.style.display = 'none';
+                    // Return focus to trigger element if available
+                    const trigger = document.querySelector(`[aria-controls="${modal.id}"]`);
+                    if (trigger) {
+                        trigger.focus();
+                    }
+                }
+            });
+
+            // Close any open sidebars
+            const sidebars = document.querySelectorAll('.sidebar, .chat-sidebar');
+            sidebars.forEach(sidebar => {
+                if (sidebar.classList.contains('open')) {
+                    sidebar.classList.remove('open');
+                }
+            });
+        }
+
+        getFocusableElements() {
+            return Array.from(document.querySelectorAll(this.focusableElements))
+                .filter(el => {
+                    return !el.disabled && 
+                           !el.hidden && 
+                           el.offsetParent !== null &&
+                           !el.hasAttribute('aria-hidden');
+                });
+        }
+
+        // Public method to trap focus within a container
+        trapFocus(container) {
+            const focusableElements = container.querySelectorAll(this.focusableElements);
+            const firstElement = focusableElements[0];
+            const lastElement = focusableElements[focusableElements.length - 1];
+
+            const handleTabKey = (e) => {
+                if (e.key === 'Tab') {
+                    if (e.shiftKey) {
+                        if (document.activeElement === firstElement) {
+                            e.preventDefault();
+                            lastElement.focus();
+                        }
+                    } else {
+                        if (document.activeElement === lastElement) {
+                            e.preventDefault();
+                            firstElement.focus();
+                        }
+                    }
+                }
+            };
+
+            container.addEventListener('keydown', handleTabKey);
+            firstElement.focus();
+
+            // Return cleanup function
+            return () => {
+                container.removeEventListener('keydown', handleTabKey);
+            };
+        }
+    }
+
+    // Initialize keyboard navigation when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        window.keyboardNavigation = new KeyboardNavigation();
+    });
+
+    // Add keyboard support for custom interactive elements
+    document.addEventListener('DOMContentLoaded', () => {
+        // Make divs with onclick keyboard accessible
+        const clickableDivs = document.querySelectorAll('div[onclick]');
+        clickableDivs.forEach(div => {
+            div.setAttribute('tabindex', '0');
+            div.setAttribute('role', 'button');
+            div.classList.add('keyboard-activatable');
+            
+            div.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    div.click();
+                }
+            });
+        });
+
+        // Enhance form elements
+        const formElements = document.querySelectorAll('input, select, textarea');
+        formElements.forEach(element => {
+            // Add proper labels if missing
+            if (!element.getAttribute('aria-label') && !element.getAttribute('aria-labelledby')) {
+                const label = document.querySelector(`label[for="${element.id}"]`);
+                if (label) {
+                    element.setAttribute('aria-labelledby', label.id || `label-${element.id}`);
+                    if (!label.id) {
+                        label.id = `label-${element.id}`;
+                    }
+                }
+            }
+
+            // Add error handling
+            element.addEventListener('invalid', () => {
+                element.setAttribute('aria-invalid', 'true');
+            });
+
+            element.addEventListener('input', () => {
+                if (element.checkValidity()) {
+                    element.removeAttribute('aria-invalid');
+                }
+            });
+        });
+    });
+</script>
+
+<style>
+    /* Skip links */
+    .skip-link {
+        position: absolute;
+        top: -40px;
+        left: 6px;
+        background: #000;
+        color: #fff;
+        padding: 8px;
+        text-decoration: none;
+        z-index: 1000;
+        border-radius: 4px;
+        transition: top 0.3s;
+        font-size: 14px;
+    }
+
+    .skip-link:focus {
+        top: 6px;
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+
+    /* Focus management */
+    .using-mouse *:focus {
+        outline: none;
+    }
+
+    /* Enhanced focus styles */
+    .nav-btn:focus,
+    .fancy-button:focus,
+    button:focus {
+        box-shadow: 0 0 0 2px #4F46E5, 0 0 0 4px rgba(79, 70, 229, 0.2);
+    }
+
+    /* Keyboard activatable elements */
+    .keyboard-activatable {
+        cursor: pointer;
+    }
+
+    .keyboard-activatable:focus {
+        outline: 2px solid #4F46E5;
+        outline-offset: 2px;
+    }
+
+    /* Form validation styles */
+    [aria-invalid="true"] {
+        border-color: #ef4444;
+        box-shadow: 0 0 0 1px #ef4444;
+    }
+
+    /* High contrast mode support */
+    @media (prefers-contrast: high) {
+        *:focus {
+            outline: 3px solid;
+            outline-offset: 2px;
+        }
+    }
+
+    /* Reduced motion support */
+    @media (prefers-reduced-motion: reduce) {
+        .skip-link {
+            transition: none;
+        }
+        
+        * {
+            scroll-behavior: auto !important;
+        }
+    }
+</style>

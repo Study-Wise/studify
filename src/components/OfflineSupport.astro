@@ -1,0 +1,202 @@
+---
+// Offline support component for PWA functionality
+---
+
+<div id="offline-indicator" class="offline-indicator" style="display: none;">
+    <span class="material-symbols-outlined">wifi_off</span>
+    <span>You're offline. Some features may be limited.</span>
+</div>
+
+<div id="update-available" class="update-indicator" style="display: none;">
+    <span class="material-symbols-outlined">system_update</span>
+    <span>Update available!</span>
+    <button id="update-button" class="update-button">Update Now</button>
+</div>
+
+<script>
+    // Offline/Online detection
+    function updateOnlineStatus() {
+        const indicator = document.getElementById('offline-indicator');
+        if (indicator) {
+            indicator.style.display = navigator.onLine ? 'none' : 'flex';
+        }
+    }
+
+    // Listen for online/offline events
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+
+    // Check initial status
+    updateOnlineStatus();
+
+    // Service Worker registration and update handling
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', async () => {
+            try {
+                const registration = await navigator.serviceWorker.register('/sw.js');
+                console.log('Service Worker registered successfully:', registration);
+
+                // Handle updates
+                registration.addEventListener('updatefound', () => {
+                    const newWorker = registration.installing;
+                    if (newWorker) {
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                // New version available
+                                const updateIndicator = document.getElementById('update-available');
+                                const updateButton = document.getElementById('update-button');
+                                
+                                if (updateIndicator) {
+                                    updateIndicator.style.display = 'flex';
+                                }
+                                
+                                if (updateButton) {
+                                    updateButton.addEventListener('click', () => {
+                                        newWorker.postMessage({ action: 'skipWaiting' });
+                                        window.location.reload();
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+
+                // Handle service worker messages
+                navigator.serviceWorker.addEventListener('message', (event) => {
+                    if (event.data && event.data.action === 'reload') {
+                        window.location.reload();
+                    }
+                });
+
+            } catch (error) {
+                console.error('Service Worker registration failed:', error);
+            }
+        });
+    }
+
+    // Cache management for offline support
+    class OfflineCache {
+        cacheName: string;
+        
+        constructor() {
+            this.cacheName = 'studywise-offline-v1';
+        }
+
+        async cacheStudyMaterials(data: any) {
+            if ('caches' in window) {
+                try {
+                    const cache = await caches.open(this.cacheName);
+                    const response = new Response(JSON.stringify(data), {
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    await cache.put('/offline-study-materials', response);
+                } catch (error) {
+                    console.error('Failed to cache study materials:', error);
+                }
+            }
+        }
+
+        async getCachedStudyMaterials() {
+            if ('caches' in window) {
+                try {
+                    const cache = await caches.open(this.cacheName);
+                    const response = await cache.match('/offline-study-materials');
+                    if (response) {
+                        return await response.json();
+                    }
+                } catch (error) {
+                    console.error('Failed to retrieve cached study materials:', error);
+                }
+            }
+            return null;
+        }
+    }
+
+    // Initialize offline cache
+    (window as any).offlineCache = new OfflineCache();
+
+    // Enhanced error handling for offline scenarios
+    const originalFetch = window.fetch;
+    window.fetch = async function(...args) {
+        try {
+            return await originalFetch.apply(this, args);
+        } catch (error) {
+            if (!navigator.onLine) {
+                // Handle offline scenarios
+                console.warn('Network request failed - offline mode');
+                
+                // Try to return cached data if available
+                if (args[0] && String(args[0]).includes('/api/message/generate')) {
+                    const cachedData = await (window as any).offlineCache?.getCachedStudyMaterials();
+                    if (cachedData) {
+                        return new Response(JSON.stringify(cachedData), {
+                            status: 200,
+                            headers: { 'Content-Type': 'application/json' }
+                        });
+                    }
+                }
+                
+                throw new Error('Network request failed - you appear to be offline');
+            }
+            throw error;
+        }
+    };
+</script>
+
+<style>
+    .offline-indicator {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: #f59e0b;
+        color: white;
+        padding: 8px 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        z-index: 1000;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .update-indicator {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: #10b981;
+        color: white;
+        padding: 8px 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        z-index: 1000;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .update-button {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+        margin-left: auto;
+    }
+
+    .update-button:hover {
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Adjust body padding when indicators are shown */
+    body:has(.offline-indicator[style*="flex"]) {
+        padding-top: 40px;
+    }
+
+    body:has(.update-indicator[style*="flex"]) {
+        padding-top: 40px;
+    }
+</style>

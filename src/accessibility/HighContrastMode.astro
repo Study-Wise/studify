@@ -1,0 +1,308 @@
+---
+// High contrast mode component for better visibility
+---
+
+<div id="contrast-toggle" class="contrast-toggle" aria-label="Toggle high contrast mode" role="button" tabindex="0">
+    <span class="material-symbols-outlined" aria-hidden="true">contrast</span>
+    <span class="contrast-label">High Contrast</span>
+</div>
+
+<script>
+    class HighContrastMode {
+        constructor() {
+            this.isEnabled = false;
+            this.storageKey = 'studywise-high-contrast';
+            this.init();
+        }
+
+        init() {
+            // Check for saved preference
+            const savedPreference = localStorage.getItem(this.storageKey);
+            if (savedPreference === 'true') {
+                this.enable();
+            }
+
+            // Check for system preference
+            if (window.matchMedia && window.matchMedia('(prefers-contrast: high)').matches) {
+                this.enable();
+            }
+
+            // Setup toggle button
+            const toggle = document.getElementById('contrast-toggle');
+            if (toggle) {
+                toggle.addEventListener('click', () => this.toggle());
+                toggle.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.toggle();
+                    }
+                });
+            }
+
+            // Listen for system preference changes
+            if (window.matchMedia) {
+                const mediaQuery = window.matchMedia('(prefers-contrast: high)');
+                mediaQuery.addEventListener('change', (e) => {
+                    if (e.matches) {
+                        this.enable();
+                    } else {
+                        this.disable();
+                    }
+                });
+            }
+
+            this.updateToggleState();
+        }
+
+        toggle() {
+            if (this.isEnabled) {
+                this.disable();
+            } else {
+                this.enable();
+            }
+        }
+
+        enable() {
+            this.isEnabled = true;
+            document.body.classList.add('high-contrast');
+            localStorage.setItem(this.storageKey, 'true');
+            this.updateToggleState();
+            this.announceChange('High contrast mode enabled');
+        }
+
+        disable() {
+            this.isEnabled = false;
+            document.body.classList.remove('high-contrast');
+            localStorage.setItem(this.storageKey, 'false');
+            this.updateToggleState();
+            this.announceChange('High contrast mode disabled');
+        }
+
+        updateToggleState() {
+            const toggle = document.getElementById('contrast-toggle');
+            if (toggle) {
+                toggle.setAttribute('aria-pressed', this.isEnabled.toString());
+                toggle.classList.toggle('active', this.isEnabled);
+            }
+        }
+
+        announceChange(message) {
+            // Create or update announcement element
+            let announcement = document.getElementById('contrast-announcement');
+            if (!announcement) {
+                announcement = document.createElement('div');
+                announcement.id = 'contrast-announcement';
+                announcement.setAttribute('aria-live', 'polite');
+                announcement.setAttribute('aria-atomic', 'true');
+                announcement.style.cssText = `
+                    position: absolute;
+                    left: -10000px;
+                    width: 1px;
+                    height: 1px;
+                    overflow: hidden;
+                `;
+                document.body.appendChild(announcement);
+            }
+            announcement.textContent = message;
+        }
+    }
+
+    // Initialize high contrast mode when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        new HighContrastMode();
+    });
+</script>
+
+<style>
+    .contrast-toggle {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: #ffffff;
+        border: 2px solid #000000;
+        border-radius: 8px;
+        padding: 12px 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        z-index: 1000;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transition: all 0.2s ease;
+        user-select: none;
+    }
+
+    .contrast-toggle:hover {
+        background: #f5f5f5;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .contrast-toggle:focus {
+        outline: 3px solid #4F46E5;
+        outline-offset: 2px;
+    }
+
+    .contrast-toggle.active {
+        background: #000000;
+        color: #ffffff;
+    }
+
+    .contrast-toggle.active:hover {
+        background: #333333;
+    }
+
+    .contrast-toggle .material-symbols-outlined {
+        font-size: 20px;
+    }
+
+    /* High contrast mode styles */
+    .high-contrast {
+        --body-bg: #ffffff;
+        --body-text: #000000;
+        --card-bg: #ffffff;
+        --card-border: #000000;
+        --accent-primary: #0000ff;
+        --accent-secondary: #ff0000;
+        --button-bg: #000000;
+        --button-text: #ffffff;
+        --button-hover: #333333;
+        --link-color: #0000ff;
+        --link-visited: #800080;
+        --error-color: #ff0000;
+        --success-color: #008000;
+        --warning-color: #ff8c00;
+    }
+
+    .high-contrast * {
+        background-color: var(--body-bg) !important;
+        color: var(--body-text) !important;
+        border-color: var(--card-border) !important;
+    }
+
+    .high-contrast .card,
+    .high-contrast .fancy-output,
+    .high-contrast .output-content {
+        background-color: var(--card-bg) !important;
+        border: 2px solid var(--card-border) !important;
+        box-shadow: none !important;
+    }
+
+    .high-contrast button,
+    .high-contrast .fancy-button,
+    .high-contrast .nav-btn {
+        background-color: var(--button-bg) !important;
+        color: var(--button-text) !important;
+        border: 2px solid var(--card-border) !important;
+        box-shadow: none !important;
+    }
+
+    .high-contrast button:hover,
+    .high-contrast .fancy-button:hover,
+    .high-contrast .nav-btn:hover {
+        background-color: var(--button-hover) !important;
+    }
+
+    .high-contrast a {
+        color: var(--link-color) !important;
+        text-decoration: underline !important;
+    }
+
+    .high-contrast a:visited {
+        color: var(--link-visited) !important;
+    }
+
+    .high-contrast .error-box {
+        background-color: var(--error-color) !important;
+        color: var(--body-bg) !important;
+        border: 2px solid var(--card-border) !important;
+    }
+
+    .high-contrast .offline-indicator {
+        background-color: var(--warning-color) !important;
+        color: var(--body-bg) !important;
+        border: 2px solid var(--card-border) !important;
+    }
+
+    .high-contrast .update-indicator {
+        background-color: var(--success-color) !important;
+        color: var(--body-bg) !important;
+        border: 2px solid var(--card-border) !important;
+    }
+
+    .high-contrast input,
+    .high-contrast textarea,
+    .high-contrast select {
+        background-color: var(--body-bg) !important;
+        color: var(--body-text) !important;
+        border: 2px solid var(--card-border) !important;
+    }
+
+    .high-contrast input:focus,
+    .high-contrast textarea:focus,
+    .high-contrast select:focus {
+        outline: 3px solid var(--accent-primary) !important;
+        outline-offset: 2px !important;
+    }
+
+    .high-contrast .tab-button.active {
+        background-color: var(--accent-primary) !important;
+        color: var(--body-bg) !important;
+    }
+
+    .high-contrast .material-symbols-outlined {
+        color: inherit !important;
+    }
+
+    /* Ensure text is always readable */
+    .high-contrast h1,
+    .high-contrast h2,
+    .high-contrast h3,
+    .high-contrast h4,
+    .high-contrast h5,
+    .high-contrast h6 {
+        color: var(--body-text) !important;
+    }
+
+    .high-contrast p,
+    .high-contrast span,
+    .high-contrast div {
+        color: var(--body-text) !important;
+    }
+
+    /* Remove gradients and shadows in high contrast mode */
+    .high-contrast * {
+        background-image: none !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    /* Ensure borders are always visible */
+    .high-contrast * {
+        border-width: 1px !important;
+        border-style: solid !important;
+    }
+
+    /* Mobile responsiveness for contrast toggle */
+    @media (max-width: 768px) {
+        .contrast-toggle {
+            bottom: 10px;
+            right: 10px;
+            padding: 10px 12px;
+            font-size: 12px;
+        }
+
+        .contrast-toggle .material-symbols-outlined {
+            font-size: 18px;
+        }
+    }
+
+    /* Hide toggle in print mode */
+    @media print {
+        .contrast-toggle {
+            display: none !important;
+        }
+    }
+</style>

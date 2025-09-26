@@ -5,8 +5,10 @@ import '../styles/pages/auth.scss'
 
 const { page } = Astro.props;
 
-// Get the redirect URL from query parameters or referrer, fallback to home
-const redirectUrl = Astro.url.searchParams.get('redirect_url') || Astro.request.headers.get('referer') || '/';
+// Get the redirect URL from query parameters, returnBackUrl, or referrer, fallback to home
+const redirectUrl = Astro.url.searchParams.get('redirect_url') || 
+                    Astro.url.searchParams.get('returnBackUrl') || 
+                    Astro.request.headers.get('referer') || '/';
 
 const appearance = {
     elements: {

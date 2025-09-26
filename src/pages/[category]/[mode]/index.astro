@@ -25,9 +25,9 @@ const modeObj = categoryObj?.modes?.[mode || ''];
 <Layout title="Home">
     <div id="user-email" data-email={user_email} style="display: none"></div>
     <!-- Introduction Section -->
-    <section class="introduction-section card">
-        <h2>
-            <span class="material-symbols-outlined">info</span>&nbsp;How It Works
+    <section class="introduction-section card" aria-labelledby="how-it-works-heading">
+        <h2 id="how-it-works-heading">
+            <span class="material-symbols-outlined" aria-hidden="true">info</span>&nbsp;How It Works
         </h2>
         <p>
             Welcome to <b>{modeObj?.name || 'Study'}</b>Wise! Turn your {modeObj?.name || ''} homework into powerful learning tools.
@@ -61,10 +61,10 @@ const modeObj = categoryObj?.modes?.[mode || ''];
     </section>
 
     <!-- Input Homework Section -->
-    <section class="input-section card">
-        <h2>
+    <section class="input-section card" aria-labelledby="input-heading">
+        <h2 id="input-heading">
             <label for="text-paste">
-                <span class="material-symbols-outlined">edit</span>&nbsp;Input Homework & Options
+                <span class="material-symbols-outlined" aria-hidden="true">edit</span>&nbsp;Input Homework & Options
             </label>
         </h2>
         <div id="text-input" class="input-area active-input">
@@ -81,32 +81,32 @@ Please note that the AI will not provide the answer for your immediate equation`
         </div>
 
         <!-- Generate Button and Error Message -->
-        <div class="toolbar">
+        <div class="toolbar" role="toolbar" aria-label="Generation controls">
             <ModelSelector />
-            <FancyButton id="generate-button" onclick="generateOutput()" variant="primary" icon="manufacturing">Generate Study Materials</FancyButton>
-            <Button id="generate-button-alt" onclick="generateOutput()" variant="primary" icon="manufacturing" style="display:none;">Generate Study Materials</Button>
+            <FancyButton id="generate-button" onclick="generateOutput()" variant="primary" icon="manufacturing" aria-describedby="error-message">Generate Study Materials</FancyButton>
+            <Button id="generate-button-alt" onclick="generateOutput()" variant="primary" icon="manufacturing" style="display:none;" aria-describedby="error-message">Generate Study Materials</Button>
         </div>
-        <div id="error-message" class="error-box" style="display: none" role="alert"></div>
+        <div id="error-message" class="error-box" style="display: none" role="alert" aria-live="polite"></div>
     </section>
 
     <!-- Output Section -->
-    <section class="output-section card" id="output-section" style="display: none" aria-live="polite">
-        <h2 class="output-section-title">
-            <span class="material-symbols-outlined">lightbulb</span>&nbsp;Your Generated Materials
+    <section class="output-section card" id="output-section" style="display: none" aria-live="polite" aria-labelledby="output-heading">
+        <h2 id="output-heading" class="output-section-title">
+            <span class="material-symbols-outlined" aria-hidden="true">lightbulb</span>&nbsp;Your Generated Materials
         </h2>
-        <div class="output-tabs">
-            <button id="guide-tab-button" class="tab-button active" onclick="showOutput('guide')" aria-controls="guide-output">
-                <span class="material-symbols-outlined">import_contacts</span> Study Guide
+        <div class="output-tabs" role="tablist" aria-label="Generated content tabs">
+            <button id="guide-tab-button" class="tab-button active" onclick="showOutput('guide')" aria-controls="guide-output" role="tab" aria-selected="true" tabindex="0">
+                <span class="material-symbols-outlined" aria-hidden="true">import_contacts</span> Study Guide
             </button>
-            <button id="sheet-tab-button" class="tab-button" onclick="showOutput('sheet')" aria-controls="sheet-output">
-                <span class="material-symbols-outlined">assignment</span> Reference Sheet
+            <button id="sheet-tab-button" class="tab-button" onclick="showOutput('sheet')" aria-controls="sheet-output" role="tab" aria-selected="false" tabindex="-1">
+                <span class="material-symbols-outlined" aria-hidden="true">assignment</span> Reference Sheet
             </button>
         </div>
 
         <!-- Study Guide Tab Panel -->
-        <div id="guide-output" class="output-content active-output" role="tabpanel" aria-labelledby="guide-tab-button">
+        <div id="guide-output" class="output-content active-output" role="tabpanel" aria-labelledby="guide-tab-button" aria-hidden="false">
             <div class="download-buttons">
-                <button id="download-guide-pdf" class="save-pdf-button material-symbols-outlined" title="Save Study Guide as PDF">print</button>
+                <button id="download-guide-pdf" class="save-pdf-button material-symbols-outlined" title="Save Study Guide as PDF" aria-label="Save Study Guide as PDF">print</button>
             </div>
             <article id="study-guide-content">
                 <p>
@@ -116,9 +116,9 @@ Please note that the AI will not provide the answer for your immediate equation`
         </div>
 
         <!-- Reference Sheet Tab Panel -->
-        <div id="sheet-output" class="output-content" role="tabpanel" aria-labelledby="sheet-tab-button">
+        <div id="sheet-output" class="output-content" role="tabpanel" aria-labelledby="sheet-tab-button" aria-hidden="true">
             <div class="download-buttons">
-                <button id="download-sheet-pdf" class="save-pdf-button material-symbols-outlined" title="Save Reference Sheet as PDF">print</button>
+                <button id="download-sheet-pdf" class="save-pdf-button material-symbols-outlined" title="Save Reference Sheet as PDF" aria-label="Save Reference Sheet as PDF">print</button>
             </div>
             <article id="reference-sheet-content">
                 <p>

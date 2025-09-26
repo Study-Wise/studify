@@ -1,0 +1,284 @@
+---
+// Touch gestures component for mobile navigation
+---
+
+<script>
+    class TouchGestures {
+        startX: number;
+        startY: number;
+        endX: number;
+        endY: number;
+        minSwipeDistance: number;
+        maxVerticalDistance: number;
+        isScrolling: boolean;
+
+        constructor() {
+            this.startX = 0;
+            this.startY = 0;
+            this.endX = 0;
+            this.endY = 0;
+            this.minSwipeDistance = 50;
+            this.maxVerticalDistance = 100;
+            this.isScrolling = false;
+            
+            this.init();
+        }
+
+        init() {
+            // Only enable on touch devices
+            if ('ontouchstart' in window) {
+                document.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: true });
+                document.addEventListener('touchmove', this.handleTouchMove.bind(this), { passive: true });
+                document.addEventListener('touchend', this.handleTouchEnd.bind(this), { passive: true });
+            }
+        }
+
+        handleTouchStart(e: TouchEvent) {
+            const touch = e.touches[0];
+            this.startX = touch.clientX;
+            this.startY = touch.clientY;
+            this.isScrolling = false;
+        }
+
+        handleTouchMove(e: TouchEvent) {
+            if (!this.startX || !this.startY) return;
+
+            const touch = e.touches[0];
+            const deltaX = touch.clientX - this.startX;
+            const deltaY = touch.clientY - this.startY;
+
+            // Check if this is a vertical scroll
+            if (Math.abs(deltaY) > Math.abs(deltaX)) {
+                this.isScrolling = true;
+            }
+        }
+
+        handleTouchEnd(e: TouchEvent) {
+            if (!this.startX || !this.startY || this.isScrolling) return;
+
+            const touch = e.changedTouches[0];
+            this.endX = touch.clientX;
+            this.endY = touch.clientY;
+
+            const deltaX = this.endX - this.startX;
+            const deltaY = this.endY - this.startY;
+
+            // Check if it's a valid swipe
+            if (Math.abs(deltaX) > this.minSwipeDistance && Math.abs(deltaY) < this.maxVerticalDistance) {
+                if (deltaX > 0) {
+                    this.handleSwipeRight();
+                } else {
+                    this.handleSwipeLeft();
+                }
+            }
+
+            // Reset values
+            this.startX = 0;
+            this.startY = 0;
+            this.endX = 0;
+            this.endY = 0;
+        }
+
+        handleSwipeLeft() {
+            // Navigate to next page or close sidebar
+            const sidebar = document.querySelector('.chat-sidebar');
+            if (sidebar && sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
+                return;
+            }
+
+            // Navigate to next page if available
+            const nextLink = document.querySelector('a[rel="next"]') as HTMLAnchorElement;
+            if (nextLink) {
+                nextLink.click();
+            }
+        }
+
+        handleSwipeRight() {
+            // Navigate to previous page or open sidebar
+            const sidebar = document.querySelector('.chat-sidebar');
+            if (sidebar && !sidebar.classList.contains('open')) {
+                sidebar.classList.add('open');
+                return;
+            }
+
+            // Navigate to previous page if available
+            const prevLink = document.querySelector('a[rel="prev"]') as HTMLAnchorElement;
+            if (prevLink) {
+                prevLink.click();
+            }
+        }
+    }
+
+    // Initialize touch gestures when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        new TouchGestures();
+    });
+
+    // Add pull-to-refresh functionality
+    class PullToRefresh {
+        startY: number;
+        currentY: number;
+        pullDistance: number;
+        isPulling: boolean;
+        threshold: number;
+        maxPull: number;
+        indicator!: HTMLElement;
+
+        constructor() {
+            this.startY = 0;
+            this.currentY = 0;
+            this.pullDistance = 0;
+            this.isPulling = false;
+            this.threshold = 100;
+            this.maxPull = 150;
+            
+            this.createRefreshIndicator();
+            this.init();
+        }
+
+        createRefreshIndicator() {
+            this.indicator = document.createElement('div');
+            this.indicator.className = 'pull-to-refresh-indicator';
+            this.indicator.innerHTML = `
+                <div class="refresh-content">
+                    <span class="material-symbols-outlined">refresh</span>
+                    <span class="refresh-text">Pull to refresh</span>
+                </div>
+            `;
+            document.body.appendChild(this.indicator);
+        }
+
+        init() {
+            if ('ontouchstart' in window) {
+                document.addEventListener('touchstart', this.handleStart.bind(this), { passive: true });
+                document.addEventListener('touchmove', this.handleMove.bind(this), { passive: true });
+                document.addEventListener('touchend', this.handleEnd.bind(this), { passive: true });
+            }
+        }
+
+        handleStart(e: TouchEvent) {
+            if (window.scrollY === 0) {
+                this.startY = e.touches[0].clientY;
+                this.isPulling = true;
+            }
+        }
+
+        handleMove(e: TouchEvent) {
+            if (!this.isPulling) return;
+
+            this.currentY = e.touches[0].clientY;
+            this.pullDistance = Math.max(0, this.currentY - this.startY);
+
+            if (this.pullDistance > 0) {
+                e.preventDefault();
+                this.updateIndicator();
+            }
+        }
+
+        handleEnd() {
+            if (!this.isPulling) return;
+
+            if (this.pullDistance > this.threshold) {
+                this.triggerRefresh();
+            } else {
+                this.resetIndicator();
+            }
+
+            this.isPulling = false;
+            this.pullDistance = 0;
+        }
+
+        updateIndicator() {
+            const progress = Math.min(this.pullDistance / this.threshold, 1);
+            const translateY = Math.min(this.pullDistance * 0.5, this.maxPull);
+            
+            this.indicator.style.transform = `translateY(${translateY}px)`;
+            this.indicator.style.opacity = progress.toString();
+            
+            const refreshText = this.indicator.querySelector('.refresh-text');
+            if (refreshText) {
+                refreshText.textContent = this.pullDistance > this.threshold ? 'Release to refresh' : 'Pull to refresh';
+            }
+        }
+
+        resetIndicator() {
+            this.indicator.style.transform = 'translateY(-100%)';
+            this.indicator.style.opacity = '0';
+        }
+
+        async triggerRefresh() {
+            this.indicator.querySelector('.refresh-text')!.textContent = 'Refreshing...';
+            (this.indicator.querySelector('.material-symbols-outlined') as HTMLElement)!.style.animation = 'spin 1s linear infinite';
+            
+            try {
+                // Trigger a page refresh or API call
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                window.location.reload();
+            } catch (error) {
+                console.error('Refresh failed:', error);
+            }
+        }
+    }
+
+    // Initialize pull-to-refresh
+    document.addEventListener('DOMContentLoaded', () => {
+        new PullToRefresh();
+    });
+</script>
+
+<style>
+    .pull-to-refresh-indicator {
+        position: fixed;
+        top: -60px;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+
+    .refresh-content {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+    }
+
+    .refresh-content .material-symbols-outlined {
+        font-size: 20px;
+    }
+
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    /* Touch feedback for buttons */
+    @media (hover: none) and (pointer: coarse) {
+        button, .nav-btn, .fancy-button {
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+            transition: background-color 0.1s ease;
+        }
+
+        button:active, .nav-btn:active, .fancy-button:active {
+            background-color: rgba(0, 0, 0, 0.1);
+            transform: scale(0.98);
+        }
+    }
+
+    /* Improve touch targets */
+    @media (hover: none) and (pointer: coarse) {
+        button, .nav-btn, input, select, textarea {
+            min-height: 44px;
+            min-width: 44px;
+        }
+    }
+</style>
