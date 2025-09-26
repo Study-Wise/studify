@@ -6,19 +6,9 @@ import Layout from '../layouts/Layout.astro';
 import categories from '../lib/modes';
 
 // Use Clerk authentication
-const { auth } = Astro.locals;
+const auth = (Astro.locals as any).auth;
 const { sessionClaims } = auth();
 const user_email = sessionClaims?.email as string || null;
-
-// TODO: WHEN READY, REMOVE MATH ONLY MODE
-const mathOnlyHostnames = ['studywise.onl', 'studywise.guru'];
-
-const hostname = Astro.url.hostname;
-const isMathOnlyMode = mathOnlyHostnames.some(h => hostname === h || hostname === `www.${h}`);
-
-if (isMathOnlyMode) {
-    return Astro.redirect('/math/math');
-}
 ---
 <Layout title="Home">
     <div id="user-email" data-email={user_email} style="display: none"></div>

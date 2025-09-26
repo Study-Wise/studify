@@ -709,7 +709,7 @@ const { page, category, mode } = Astro.props;
         const chatButtonContainer = document.querySelector('.chat-button-container');
         if (chatButtonContainer) {
             const btn = document.createElement('a');
-            btn.href = `/${category}/${mode}/chat/${id}`;
+            btn.href = `/chat/${id}`;
 
             const icon = document.createElement('span');
             icon.classList.add('material-symbols-outlined');

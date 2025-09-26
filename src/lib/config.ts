@@ -2,7 +2,7 @@
  * Application Configuration
  */
 
-import prompt from './prompts/math/math';
+import prompt from './prompts/math/math.ts';
 
 const config = {
     provider: 'openai',

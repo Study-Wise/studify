@@ -210,7 +210,7 @@ const categories: Record<string, Category> = {
 }
 
 // Use Vite's glob import to safely resolve prompt modules at build time
-const promptModules: Record<string, { default: unknown }> = (import.meta as ImportMeta).glob('./prompts/**/*.ts', { eager: true });
+const promptModules = (import.meta as any).glob('./prompts/**/*.ts', { eager: true });
 
 for (const topicKey of Object.keys(categories)) {
     const topic = categories[topicKey as keyof typeof categories];
@@ -220,9 +220,9 @@ for (const topicKey of Object.keys(categories)) {
         const mode = modes[modeKey as keyof typeof modes];
 
         const promptPath = `./prompts/${topicKey}/${modeKey}.ts`;
-        const module = promptModules[promptPath] as { default: unknown } | undefined;
+        const module = promptModules[promptPath] as any | undefined;
         if (module) {
-            mode.prompt = Promise.resolve((module as { default: unknown }).default);
+            mode.prompt = Promise.resolve((module as any).default);
         } else {
             mode.show = false;
         }

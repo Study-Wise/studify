@@ -6,7 +6,7 @@ const tools: Record<string, Tool> = {};
 const toolModules = import.meta.glob('./tools/*.ts', { eager: true });
 
 for (const [path, module] of Object.entries(toolModules)) {
-    const tool = (module as { default: Tool }).default;
+    const tool = (module as any).default;
     // if (tool.ready) {
         const toolName = path.replace('./tools/', '').replace('.ts', '');
         tools[toolName] = tool;
