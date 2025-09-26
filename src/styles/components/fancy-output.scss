@@ -21,6 +21,8 @@ $shadow-size: 5px;
     isolation: isolate;
     background-color: var(--bg-color, $message-bg);
 
+    display: flex;
+    flex-direction: column;
 
     &[open] {
         --bg-color: #{$card-bg};
@@ -31,6 +33,8 @@ $shadow-size: 5px;
 
         border: none;
         border-radius: $spacing;
+
+        gap: #{$spacing*1.5};
 
         .tab-contents-parent {
             width: calc(200% + $spacing);
@@ -58,8 +62,6 @@ $shadow-size: 5px;
         max-height: min($max-height, 100%);
         
         overflow: hidden;
-        display: flex;
-        flex-direction: column;
 
         border: none;
         position: relative;
@@ -117,5 +119,4 @@ $shadow-size: 5px;
 
 .tab-content {
     box-sizing: border-box;
-    padding-block-start: #{math.div($spacing, 2)};
 }
