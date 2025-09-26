@@ -1,5 +1,21 @@
 // Keyboard navigation styles
 
+/* Focus indicators */
+*:focus-visible {
+    outline: 2px solid #4F46E5 !important;
+    outline-offset: 2px !important;
+}
+
+.skip-link:focus-visible {
+    outline: 2px solid #fff !important;
+}
+
+/* Custom focus styles for specific elements */
+.nav-btn:focus-visible,
+.fancy-button:focus-visible {
+    box-shadow: 0 0 0 2px #4F46E5, 0 0 0 4px rgba(79, 70, 229, 0.2);
+}
+
 /* Skip links */
 .skip-link {
     position: absolute;

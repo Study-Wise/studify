@@ -3,6 +3,10 @@
 import '../styles/accessibility/keyboard-navigation.scss';
 ---
 
+<!-- Skip Links -->
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<a href="#main-navigation" class="skip-link">Skip to navigation</a>
+
 <script>
     class KeyboardNavigation {
         focusableElements: string;
@@ -15,131 +19,7 @@ import '../styles/accessibility/keyboard-navigation.scss';
         }
 
         init() {
-            this.createSkipLinks();
-            this.setupKeyboardHandlers();
-            this.setupFocusManagement();
             this.setupTabNavigation();
-        }
-
-        createSkipLinks() {
-            // Create skip to main content link
-            const skipToMain = document.createElement('a');
-            skipToMain.href = '#main-content';
-            skipToMain.textContent = 'Skip to main content';
-            skipToMain.className = 'skip-link';
-            skipToMain.style.cssText = `
-                position: absolute;
-                top: -40px;
-                left: 6px;
-                background: #000;
-                color: #fff;
-                padding: 8px;
-                text-decoration: none;
-                z-index: 1000;
-                border-radius: 4px;
-                transition: top 0.3s;
-            `;
-            
-            skipToMain.addEventListener('focus', () => {
-                skipToMain.style.top = '6px';
-            });
-            
-            skipToMain.addEventListener('blur', () => {
-                skipToMain.style.top = '-40px';
-            });
-
-            document.body.insertBefore(skipToMain, document.body.firstChild);
-
-            // Create skip to navigation link
-            const skipToNav = document.createElement('a');
-            skipToNav.href = '#main-navigation';
-            skipToNav.textContent = 'Skip to navigation';
-            skipToNav.className = 'skip-link';
-            skipToNav.style.cssText = skipToMain.style.cssText;
-            
-            skipToNav.addEventListener('focus', () => {
-                skipToNav.style.top = '6px';
-            });
-            
-            skipToNav.addEventListener('blur', () => {
-                skipToNav.style.top = '-40px';
-            });
-
-            document.body.insertBefore(skipToNav, document.body.firstChild);
-        }
-
-        setupKeyboardHandlers() {
-            // Global keyboard shortcuts
-            document.addEventListener('keydown', (e) => {
-                // Alt + M: Focus main content
-                if (e.altKey && e.key === 'm') {
-                    e.preventDefault();
-                    const main = document.querySelector('main');
-                    if (main) {
-                        main.focus();
-                        main.scrollIntoView({ behavior: 'smooth' });
-                    }
-                }
-
-                // Alt + N: Focus navigation
-                if (e.altKey && e.key === 'n') {
-                    e.preventDefault();
-                    const nav = document.querySelector('nav');
-                    if (nav) {
-                        nav.focus();
-                        nav.scrollIntoView({ behavior: 'smooth' });
-                    }
-                }
-
-                // Escape: Close modals, dropdowns, etc.
-                if (e.key === 'Escape') {
-                    this.handleEscapeKey();
-                }
-
-                // Enter/Space on custom elements
-                if ((e.key === 'Enter' || e.key === ' ') && e.target && (e.target as HTMLElement).classList.contains('keyboard-activatable')) {
-                    e.preventDefault();
-                    (e.target as HTMLElement).click();
-                }
-            });
-        }
-
-        setupFocusManagement() {
-            // Add focus indicators
-            const style = document.createElement('style');
-            style.textContent = `
-                *:focus {
-                    outline: 2px solid #4F46E5 !important;
-                    outline-offset: 2px !important;
-                }
-                
-                .skip-link:focus {
-                    outline: 2px solid #fff !important;
-                }
-                
-                /* Custom focus styles for specific elements */
-                .nav-btn:focus,
-                .fancy-button:focus {
-                    box-shadow: 0 0 0 2px #4F46E5, 0 0 0 4px rgba(79, 70, 229, 0.2);
-                }
-                
-                /* Remove focus outline for mouse users */
-                .js-focus-visible *:focus:not(.focus-visible) {
-                    outline: none;
-                }
-            `;
-            document.head.appendChild(style);
-
-            // Add focus-visible polyfill behavior
-            document.addEventListener('mousedown', () => {
-                document.body.classList.add('using-mouse');
-            });
-
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Tab') {
-                    document.body.classList.remove('using-mouse');
-                }
-            });
         }
 
         setupTabNavigation() {
@@ -201,29 +81,6 @@ import '../styles/accessibility/keyboard-navigation.scss';
             }
         }
 
-        handleEscapeKey() {
-            // Close any open modals, dropdowns, or overlays
-            const modals = document.querySelectorAll('.modal, .dropdown, .overlay');
-            modals.forEach(modal => {
-                if ((modal as HTMLElement).style.display !== 'none') {
-                    (modal as HTMLElement).style.display = 'none';
-                    // Return focus to trigger element if available
-                    const trigger = document.querySelector(`[aria-controls="${modal.id}"]`) as HTMLElement;
-                    if (trigger) {
-                        trigger.focus();
-                    }
-                }
-            });
-
-            // Close any open sidebars
-            const sidebars = document.querySelectorAll('.sidebar, .chat-sidebar');
-            sidebars.forEach(sidebar => {
-                if (sidebar.classList.contains('open')) {
-                    sidebar.classList.remove('open');
-                }
-            });
-        }
-
         getFocusableElements() {
             return Array.from(document.querySelectorAll(this.focusableElements))
                 .filter((el) => {
@@ -234,62 +91,12 @@ import '../styles/accessibility/keyboard-navigation.scss';
                            !el.hasAttribute('aria-hidden');
                 });
         }
-
-        // Public method to trap focus within a container
-        trapFocus(container: HTMLElement) {
-            const focusableElements = container.querySelectorAll(this.focusableElements);
-            const firstElement = focusableElements[0] as HTMLElement;
-            const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
-
-            const handleTabKey = (e: KeyboardEvent) => {
-                if (e.key === 'Tab') {
-                    if (e.shiftKey) {
-                        if (document.activeElement === firstElement) {
-                            e.preventDefault();
-                            lastElement.focus();
-                        }
-                    } else {
-                        if (document.activeElement === lastElement) {
-                            e.preventDefault();
-                            firstElement.focus();
-                        }
-                    }
-                }
-            };
-
-            container.addEventListener('keydown', handleTabKey);
-            firstElement.focus();
-
-            // Return cleanup function
-            return () => {
-                container.removeEventListener('keydown', handleTabKey);
-            };
-        }
     }
 
     // Initialize keyboard navigation when DOM is loaded
     document.addEventListener('DOMContentLoaded', () => {
         (window as any).keyboardNavigation = new KeyboardNavigation();
-    });
-
-    // Add keyboard support for custom interactive elements
-    document.addEventListener('DOMContentLoaded', () => {
-        // Make divs with onclick keyboard accessible
-        const clickableDivs = document.querySelectorAll('div[onclick]');
-        clickableDivs.forEach((div) => {
-            const htmlDiv = div as HTMLElement;
-            htmlDiv.setAttribute('tabindex', '0');
-            htmlDiv.setAttribute('role', 'button');
-            htmlDiv.classList.add('keyboard-activatable');
-            
-            htmlDiv.addEventListener('keydown', (e: KeyboardEvent) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    htmlDiv.click();
-                }
-            });
-        });
-
+        
         // Enhance form elements
         const formElements = document.querySelectorAll('input, select, textarea');
         formElements.forEach(element => {

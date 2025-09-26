@@ -16,7 +16,11 @@ $shadow-size: 5px;
     }
 }
 
-.fancy-output {
+.fancy-output:not([open]) {
+    all: unset;
+}
+
+.fancy-output:is(.fancy-output) {
     overflow-x: hidden;
     isolation: isolate;
     background-color: var(--bg-color, $message-bg);
@@ -55,8 +59,6 @@ $shadow-size: 5px;
     }
     &:not([open]) {
         --bg-color: #{$message-bg};
-
-        all: unset;
 
         // max-width: min($max-width, 100%);
         max-height: min($max-height, 100%);
@@ -115,6 +117,10 @@ $shadow-size: 5px;
             height: 100%;
         }
     }
+}
+
+.tab-contents-parent {
+    z-index: -1;
 }
 
 .tab-content {
