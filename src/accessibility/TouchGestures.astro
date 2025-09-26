@@ -1,5 +1,6 @@
 ---
 // Touch gestures component for mobile navigation
+import '../styles/accessibility/touch-gestures.scss';
 ---
 
 <script>
@@ -227,58 +228,3 @@
     });
 </script>
 
-<style>
-    .pull-to-refresh-indicator {
-        position: fixed;
-        top: -60px;
-        left: 0;
-        right: 0;
-        height: 60px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 1000;
-        transition: transform 0.3s ease, opacity 0.3s ease;
-        transform: translateY(-100%);
-        opacity: 0;
-    }
-
-    .refresh-content {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 14px;
-    }
-
-    .refresh-content .material-symbols-outlined {
-        font-size: 20px;
-    }
-
-    @keyframes spin {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-    }
-
-    /* Touch feedback for buttons */
-    @media (hover: none) and (pointer: coarse) {
-        button, .nav-btn, .fancy-button {
-            -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
-            transition: background-color 0.1s ease;
-        }
-
-        button:active, .nav-btn:active, .fancy-button:active {
-            background-color: rgba(0, 0, 0, 0.1);
-            transform: scale(0.98);
-        }
-    }
-
-    /* Improve touch targets */
-    @media (hover: none) and (pointer: coarse) {
-        button, .nav-btn, input, select, textarea {
-            min-height: 44px;
-            min-width: 44px;
-        }
-    }
-</style>

@@ -1,0 +1,69 @@
+// Keyboard navigation styles
+
+/* Skip links */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 6px;
+    background: #000;
+    color: #fff;
+    padding: 8px;
+    text-decoration: none;
+    z-index: 1000;
+    border-radius: 4px;
+    transition: top 0.3s;
+    font-size: 14px;
+
+    &:focus {
+        top: 6px;
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+}
+
+/* Focus management */
+.using-mouse *:focus {
+    outline: none;
+}
+
+/* Enhanced focus styles */
+.nav-btn:focus,
+.fancy-button:focus,
+button:focus {
+    box-shadow: 0 0 0 2px #4F46E5, 0 0 0 4px rgba(79, 70, 229, 0.2);
+}
+
+/* Keyboard activatable elements */
+.keyboard-activatable {
+    cursor: pointer;
+
+    &:focus {
+        outline: 2px solid #4F46E5;
+        outline-offset: 2px;
+    }
+}
+
+/* Form validation styles */
+[aria-invalid="true"] {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 1px #ef4444;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    *:focus {
+        outline: 3px solid;
+        outline-offset: 2px;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .skip-link {
+        transition: none;
+    }
+    
+    * {
+        scroll-behavior: auto !important;
+    }
+}
