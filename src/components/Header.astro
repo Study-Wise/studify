@@ -9,7 +9,6 @@ const sTitle = shouldBeMathOnly ? "MathWise" : "StudyWise";
 
 const imgAriaLabel = `${sTitle} Homepage`;
 const imgAlt= `${sTitle} Logo`;
-import ThemeSwitcher from '../accessibility/ThemeSwitcher.astro';
 
 const { pTitle } = Astro.props;
 ---
@@ -27,6 +26,4 @@ const { pTitle } = Astro.props;
       </div>
       <Nav pages={pages} />
     </div>
-    
-    <ThemeSwitcher />
 </header>

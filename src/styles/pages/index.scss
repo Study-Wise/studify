@@ -27,7 +27,7 @@
         border-radius: #{$mode-card-border-radius + $mode-spacing};   
 
         padding: $mode-spacing;
-        box-shadow: 0 5px 15px $card-shadow;
+        box-shadow: 0 5px 15px var(--card-shadow);
 
         display: flex;
         flex-direction: column;
@@ -39,7 +39,7 @@
 
         .category-description {
             padding-bottom: $mode-spacing;
-            border-bottom: 1px solid $card-border;
+            border-bottom: 1px solid var(--card-border);
         }
 
         .modes-grid {
@@ -51,7 +51,7 @@
                 background-color: var(--card-bg);
                 padding: $mode-spacing;
                 border-radius: #{$mode-card-border-radius};
-                box-shadow: 0 5px 15px $card-shadow;
+                box-shadow: 0 5px 15px var(--card-shadow);
 
                 text-decoration: none;
                 color: inherit;

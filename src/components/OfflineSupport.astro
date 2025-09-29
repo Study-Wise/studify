@@ -1,7 +1,8 @@
 ---
 // Offline support component for PWA functionality
----
 
+import shouldBeMathOnly from '../lib/shouldBeMathOnly';
+---
 <div id="offline-indicator" class="offline-indicator" style="display: none;">
     <span class="material-symbols-outlined">wifi_off</span>
     <span>You're offline. Some features may be limited.</span>
@@ -13,7 +14,7 @@
     <button id="update-button" class="update-button">Update Now</button>
 </div>
 
-<script>
+<script define:vars={{ shouldBeMathOnly }}>
     // Offline/Online detection
     function updateOnlineStatus() {
         const indicator = document.getElementById('offline-indicator');
@@ -32,57 +33,61 @@
     // Service Worker registration and update handling
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', async () => {
-            try {
-                const registration = await navigator.serviceWorker.register('/sw.js');
-                console.log('Service Worker registered successfully:', registration);
+            if (shouldBeMathOnly) {
+                try {
+                    await swRegistration();
 
-                // Handle updates
-                registration.addEventListener('updatefound', () => {
-                    const newWorker = registration.installing;
-                    if (newWorker) {
-                        newWorker.addEventListener('statechange', () => {
-                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                // New version available
-                                const updateIndicator = document.getElementById('update-available');
-                                const updateButton = document.getElementById('update-button');
-                                
-                                if (updateIndicator) {
-                                    updateIndicator.style.display = 'flex';
-                                }
-                                
-                                if (updateButton) {
-                                    updateButton.addEventListener('click', () => {
-                                        newWorker.postMessage({ action: 'skipWaiting' });
-                                        window.location.reload();
-                                    });
-                                }
-                            }
-                        });
+                } catch (error) {
+                    console.error('Service Worker registration failed:', error);
+                }
+            }
+        });
+    }
+
+    async function swRegistration() {
+        const registration = await navigator.serviceWorker.register('/sw.js');
+        console.log('Service Worker registered successfully:', registration);
+
+        // Handle updates
+        registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing;
+            if (newWorker) {
+                newWorker.addEventListener('statechange', () => {
+                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                        // New version available
+                        const updateIndicator = document.getElementById('update-available');
+                        const updateButton = document.getElementById('update-button');
+                        
+                        if (updateIndicator) {
+                            updateIndicator.style.display = 'flex';
+                        }
+                        
+                        if (updateButton) {
+                            updateButton.addEventListener('click', () => {
+                                newWorker.postMessage({ action: 'skipWaiting' });
+                                window.location.reload();
+                            });
+                        }
                     }
                 });
+            }
+        });
 
-                // Handle service worker messages
-                navigator.serviceWorker.addEventListener('message', (event) => {
-                    if (event.data && event.data.action === 'reload') {
-                        window.location.reload();
-                    }
-                });
-
-            } catch (error) {
-                console.error('Service Worker registration failed:', error);
+        // Handle service worker messages
+        navigator.serviceWorker.addEventListener('message', (event) => {
+            if (event.data && event.data.action === 'reload') {
+                window.location.reload();
             }
         });
     }
 
     // Cache management for offline support
     class OfflineCache {
-        cacheName: string;
-        
         constructor() {
             this.cacheName = 'studywise-offline-v1';
         }
 
-        async cacheStudyMaterials(data: any) {
+        async cacheStudyMaterials(data) {
             if ('caches' in window) {
                 try {
                     const cache = await caches.open(this.cacheName);
@@ -113,7 +118,7 @@
     }
 
     // Initialize offline cache
-    (window as any).offlineCache = new OfflineCache();
+    window.offlineCache = new OfflineCache();
 
     // Enhanced error handling for offline scenarios
     const originalFetch = window.fetch;
@@ -127,7 +132,7 @@
                 
                 // Try to return cached data if available
                 if (args[0] && String(args[0]).includes('/api/message/generate')) {
-                    const cachedData = await (window as any).offlineCache?.getCachedStudyMaterials();
+                    const cachedData = await window.offlineCache?.getCachedStudyMaterials();
                     if (cachedData) {
                         return new Response(JSON.stringify(cachedData), {
                             status: 200,

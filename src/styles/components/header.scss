@@ -4,15 +4,18 @@
 
 /* Header Styles */
 header {
+    $spacing: 1rem;
+    
     min-height: 80px;
     background: linear-gradient($gradient-angle, list.nth(map.get($accent-colors, primary), 1), list.nth(map.get($accent-colors, primary), 2));
     color: var(--header-text);
-    padding: 0.75rem 1.5rem;
+    padding: #{$spacing * 0.75} $spacing;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: $spacing;
 
     h1 {
         margin: 0 0 0.1rem 0;
@@ -21,6 +24,7 @@ header {
         text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         word-wrap: normal;
         overflow-wrap: normal;
+
         i {
             margin-right: 8px;
             vertical-align: baseline;
@@ -30,7 +34,6 @@ header {
     .tagline {
         margin: 0;
         margin-inline: auto;
-        max-width: 40dvw;
 
         font-size: 1rem;
         font-style: normal;
@@ -66,8 +69,6 @@ header {
 }
 
 .header-content-wrapper {
-    width: max-content;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -76,16 +77,18 @@ header {
 
     &:not(.lite) {
         margin-inline: auto;
+        flex: 1;
     }
 
     &.lite {
         display: grid;
         grid-template-columns: 1fr auto;
-        background-color: var(--card-bg);
+        background-color: $card-bg-light;
         border-radius: 10px;
         padding: 10px 20px;
         box-shadow: 0 5px 15px var(--card-shadow);
         border: 1px solid var(--card-border);
+        width: fit-content;
     }
 
     .header-text-container {

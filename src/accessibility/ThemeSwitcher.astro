@@ -3,115 +3,63 @@
 import '../styles/accessibility/theme-switcher.scss';
 ---
 
-<div id="theme-switcher" class="theme-switcher" aria-label="Toggle high contrast mode" role="button" tabindex="0">
-    <span class="material-symbols-outlined" aria-hidden="true">sunny</span>
-</div>
+<button id="theme-switcher" class="theme-switcher" aria-label="Toggle high contrast mode" role="button" tabindex="0">
+    <span class="material-symbols-outlined" aria-hidden="true">contrast</span>
+</button>
+
+<style>
+    .theme-switcher {
+        display: none;
+        display: if(
+                style(--nothing: "here"): block;
+                else: block
+            );
+    }
+</style>
 
 <script>
-    class ThemeSwitcher {
-        isEnabled: boolean;
-        storageKey: string;
+    let userTheme = localStorage.getItem('user-theme') || 'system'
+    
+    const themeSwitcher = document.querySelector('.theme-switcher') || document.createElement('div');
+    const switcherIcon = themeSwitcher.querySelector('.material-symbols-outlined') || document.createElement('span');
 
-        constructor() {
-            this.isEnabled = false;
-            this.storageKey = 'studywise-theme-switcher';
-            this.init();
+    const themes = {
+        'system': {
+            icon: 'contrast',
+            ariaLabel: 'System theme',
+        }, 
+        'light': {
+            icon: 'light_mode',
+            ariaLabel: 'Light theme',
+        }, 
+        'dark': {
+            icon: 'dark_mode',
+            ariaLabel: 'Dark theme',
         }
+    };
 
-        init() {
-            // Check for saved preference
-            const savedPreference = localStorage.getItem(this.storageKey);
-            if (savedPreference === 'true') {
-                this.enable();
-            }
+    document.addEventListener('DOMContentLoaded', () => {
+        setTheme(userTheme);
 
-            // Check for system preference
-            if (window.matchMedia && window.matchMedia('(prefers-contrast: theme-switcher)').matches) {
-                this.enable();
-            }
+        addListener();
+    });
 
-            // Setup toggle button
-            const toggle = document.getElementById('theme-switcher');
-            if (toggle) {
-                toggle.addEventListener('click', () => this.toggle());
-                toggle.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        this.toggle();
-                    }
-                });
-            }
-
-            // Listen for system preference changes
-            if (window.matchMedia) {
-                const mediaQuery = window.matchMedia('(prefers-contrast: theme-switcher)');
-                mediaQuery.addEventListener('change', (e) => {
-                    if (e.matches) {
-                        this.enable();
-                    } else {
-                        this.disable();
-                    }
-                });
-            }
-
-            this.updateToggleState();
-        }
-
-        toggle() {
-            if (this.isEnabled) {
-                this.disable();
-            } else {
-                this.enable();
-            }
-        }
-
-        enable() {
-            this.isEnabled = true;
-            document.body.classList.add('theme-switcher');
-            localStorage.setItem(this.storageKey, 'true');
-            this.updateToggleState();
-            this.announceChange('High contrast mode enabled');
-        }
-
-        disable() {
-            this.isEnabled = false;
-            document.body.classList.remove('theme-switcher');
-            localStorage.setItem(this.storageKey, 'false');
-            this.updateToggleState();
-            this.announceChange('High contrast mode disabled');
-        }
-
-        updateToggleState() {
-            const toggle = document.getElementById('theme-switcher');
-            if (toggle) {
-                toggle.setAttribute('aria-pressed', this.isEnabled.toString());
-                toggle.classList.toggle('active', this.isEnabled);
-            }
-        }
-
-        announceChange(message: string) {
-            // Create or update announcement element
-            let announcement = document.getElementById('theme-switcher-announcement');
-            if (!announcement) {
-                announcement = document.createElement('div');
-                announcement.id = 'theme-switcher-announcement';
-                announcement.setAttribute('aria-live', 'polite');
-                announcement.setAttribute('aria-atomic', 'true');
-                announcement.style.cssText = `
-                    position: absolute;
-                    left: -10000px;
-                    width: 1px;
-                    height: 1px;
-                    overflow: hidden;
-                `;
-                document.body.appendChild(announcement);
-            }
-            announcement.textContent = message;
-        }
+    function setTheme(t: string) {
+        const theme = themes[t as keyof typeof themes];
+        switcherIcon.textContent = theme.icon;
+        document.documentElement.setAttribute('data-theme', t);
+        themeSwitcher.setAttribute('aria-label', theme.ariaLabel);
+        localStorage.setItem('user-theme', t);
     }
 
-    // Initialize high contrast mode when DOM is loaded
-    document.addEventListener('DOMContentLoaded', () => {
-        new ThemeSwitcher();
-    });
+    function addListener() {
+        themeSwitcher.addEventListener('click', () => {
+            let newIndex = Object.keys(themes).indexOf(userTheme) + 1;
+            if (newIndex >= Object.keys(themes).length) {
+                newIndex = 0;
+            }
+            userTheme = Object.keys(themes)[newIndex];
+            setTheme(userTheme);
+        });
+    }
 </script>

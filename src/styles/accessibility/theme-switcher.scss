@@ -1,42 +1,70 @@
+@use '../variables/globals.scss' as *;
+
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:math';
+
+@property --g-angle {
+  syntax: '<angle>';
+  initial-value: 240deg;
+  inherits: false;
+}
+
 // High contrast mode styles
 .theme-switcher {
+    --g-angle: 240deg;
+
+    $spacing: 1rem;
+    position: fixed;
+    bottom: $spacing;
+    left: $spacing;
+
+    box-sizing: content-box;
+
+    padding: math.div($spacing, 2);
     
-    // background: #ffffff;
-    // border: 2px solid #000000;
-    // border-radius: 8px;
-    // padding: 12px 16px;
-    // cursor: pointer;
-    // display: flex;
-    // align-items: center;
-    // gap: 8px;
-    // font-size: 14px;
-    // font-weight: 500;
-    // box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    aspect-ratio: 1;
+    width: #{$spacing * 1.25};
+    height: #{$spacing * 1.25};
+    
+    background: linear-gradient(var(--g-angle), list.nth(map.get($accent-colors, primary), 1), list.nth(map.get($accent-colors, primary), 2));
+    color: var(--body-bg);
+
+    border: none;
+    border-radius: 50%;
+   
+    display: grid;
+    place-items: center;
+
+    font-size: 14px;
+    box-shadow: 0 0 10px hsl(from var(--body-text) h s l / 0.5);
+    
+    cursor: pointer;
+    z-index: 99990;
+
     // transition: all 0.2s ease;
     // user-select: none;
 
     &:hover {
-        background: #f5f5f5;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        --g-angle: 60deg;
     }
 
-    &:focus {
-        outline: 3px solid #4F46E5;
+    &:focus-visible {
+        outline: 3px solid var(--section-title, #4F46E5);
         outline-offset: 2px;
     }
 
-    &.active {
-        background: #000000;
-        color: #ffffff;
+    &:active {
+        background: var(--card-text);
 
         &:hover {
-            background: #333333;
+            background: var(--card-text);
         }
     }
 
     .material-symbols-outlined {
         font-size: 20px;
+        aspect-ratio: 1;
     }
 }
 

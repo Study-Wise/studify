@@ -10,18 +10,18 @@
         --bg-clr-1: #{list.nth($colors, 1)};
         --bg-clr-2: #{list.nth($colors, 2)};
 
-        background-color: var(--body-bg, var(--background, list.nth($colors, 1)));
+        background-color: var(--background, list.nth($colors, 1));
         &:hover {
-            background-color: var(--body-bg, var(--background, list.nth($colors, 2)));
+            background-color: var(--background, list.nth($colors, 2));
         }
     }
     .bg-#{$variant}.btn.tab {
         --bg-clr-1: #{list.nth($colors, 1)};
         --bg-clr-2: #{list.nth($colors, 2)};
 
-        color: var(--body-bg, var(--background, list.nth($colors, 1)));
+        color: var(--background, list.nth($colors, 1));
         &:hover {
-            color: var(--body-bg, var(--background, list.nth($colors, 2)));
+            color: var(--background, list.nth($colors, 2));
         }
     }
     .clr-#{$variant} {

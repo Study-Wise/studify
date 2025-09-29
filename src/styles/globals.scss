@@ -1,5 +1,6 @@
 @use './variables/globals.scss' as *;
 @use './utils/helpers.scss' as *;
+
 @use 'sass:color';
 @use 'sass:list';
 @use 'sass:map';
@@ -36,24 +37,70 @@
 :root {
     scroll-behavior: smooth;
     scroll-padding-top: 20px;
+
+    --theme: attr(data-theme);
     
     // Global background and foreground variables
-    --body-bg: #{$body-bg};
-    --body-text: #{$body-text};
-    
-    // CSS Custom Properties referencing Sass color variables (for reference only)
+    --body-bg-light: #{$body-bg-light};
+    --body-bg-dark: #{$body-bg-dark};
+    --body-bg: light-dark(var(--body-bg-light), var(--body-bg-dark));
+    --body-bg: if(
+        style(--theme: "light"): var(--body-bg-light);
+        style(--theme: "dark"): var(--body-bg-dark);
+        else: light-dark(var(--body-bg-light), var(--body-bg-dark))
+    );
+
+
+    --body-text-ld: #{$body-text};
+    --body-text: light-dark(var(--body-text-ld), var(--body-bg-light));
+    --body-text: if(
+        style(--theme: "light"): var(--body-text-ld);
+        style(--theme: "dark"): var(--body-bg-light);
+        else: light-dark(var(--body-text-ld), var(--body-bg-light))
+    );
+
+    // CSS Custom Properties referencing SCSS color variables 
     // Header Colors
     --header-text: #{$header-text};
     --header-tagline: #{$header-tagline};
     
     // Card Colors
-    --card-bg: #{$card-bg};
-    --card-border: #{$card-border};
-    --card-shadow: #{$card-shadow};
+    --card-bg-light: #{$card-bg-light};
     --card-bg-dark: #{$card-bg-dark};
+    --card-bg: light-dark(var(--card-bg-light), var(--card-bg-dark));
+    --card-bg: if(
+        style(--theme: "light"): var(--card-bg-light);
+        style(--theme: "dark"): var(--card-bg-dark);
+        else: light-dark(var(--card-bg-light), var(--card-bg-dark))
+    );
     
+    --card-text-ld: #{$card-text};
+    --card-text: light-dark(var(--card-text-ld), var(--card-bg-light));
+    --card-text: if(
+        style(--theme: "light"): var(--card-text-ld);
+        style(--theme: "dark"): var(--card-bg-light);
+        else: light-dark(var(--card-text-ld), var(--card-bg-light))
+    );
+
+    --card-shadow-light: #{$card-shadow-light};
+    --card-shadow-dark: #{$card-shadow-dark};
+    --card-shadow: light-dark(var(--card-shadow-light), var(--card-shadow-dark));
+    --card-shadow: if(
+        style(--theme: "light"): var(--card-shadow-light);
+        style(--theme: "dark"): var(--card-shadow-dark);
+        else: light-dark(var(--card-shadow-light), var(--card-shadow-dark))
+    );
+
     // Section Colors
-    --section-title: #{$section-title};
+    --section-title-light: #{$section-title-light};
+    --section-title-dark: #{$section-title-dark};
+    --section-title: light-dark(var(--section-title-light), var(--section-title-dark));
+    --section-title: if(
+        style(--theme: "light"): var(--section-title-light);
+        style(--theme: "dark"): var(--section-title-dark);
+        else: light-dark(var(--section-title-light), var(--section-title-dark))
+    );
+
     --section-title-border: #{$section-title-border};
     
     // Footer Colors
@@ -61,7 +108,15 @@
     --footer-text: #{$footer-text};
     
     // Message Colors
-    --message-bg: #{$message-bg};
+    --message-bg-light: #{$message-bg-light};
+    --message-bg-dark: #{$message-bg-dark};
+    --message-bg: light-dark(var(--message-bg-light), var(--message-bg-dark));
+    --message-bg: if(
+        style(--theme: "light"): var(--message-bg-light);
+        style(--theme: "dark"): var(--message-bg-dark);
+        else: light-dark(var(--message-bg-light), var(--message-bg-dark))
+    );
+
     --chat-message-shadow: #{$chat-message-shadow};
     
     // Input Colors
