@@ -8,8 +8,11 @@ import TouchGestures from '../accessibility/TouchGestures.astro';
 import KeyboardNavigation from '../accessibility/KeyboardNavigation.astro';
 import HighContrastMode from '../accessibility/HighContrastMode.astro';
 
-const sTitle = "StudyWise";
-const lTitle = `${sTitle} - AI Study Partner`;
+import shouldBeMathOnly from '../lib/shouldBeMathOnly';
+
+
+const sTitle = shouldBeMathOnly ? "MathWise" : "StudyWise";
+const lTitle = `${sTitle} - AI${shouldBeMathOnly ? ' Math' : ''} Study Partner`;
 const { title, hideCopyright, container, isChatArea } = Astro.props;
 var { additionalClasses } = Astro.props;
 const noTitle = title === "Home" || title === '' || !title;
@@ -34,7 +37,7 @@ additionalClasses.forEach((className: string) => {
         <!-- PWA meta -->
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-        <meta name="apple-mobile-web-app-title" content="StudyWise">
+        <meta name="apple-mobile-web-app-title" content={sTitle}>
         <link rel="apple-touch-icon" href="/assets/logos/apple-touch-icon.png">
         <link rel="icon" type="image/png" href="/assets/logos/favicon.png">
         <link rel="manifest" href="/manifest.webmanifest">
