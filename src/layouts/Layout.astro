@@ -6,7 +6,6 @@ import Footer from '../components/Footer.astro';
 import OfflineSupport from '../components/OfflineSupport.astro';
 import TouchGestures from '../accessibility/TouchGestures.astro';
 import KeyboardNavigation from '../accessibility/KeyboardNavigation.astro';
-import HighContrastMode from '../accessibility/HighContrastMode.astro';
 
 import shouldBeMathOnly from '../lib/shouldBeMathOnly';
 
@@ -34,6 +33,7 @@ additionalClasses.forEach((className: string) => {
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="/view-transitions.css" />
         <!-- PWA meta -->
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -103,7 +103,6 @@ additionalClasses.forEach((className: string) => {
         <OfflineSupport />
         <TouchGestures />
         <KeyboardNavigation />
-        <HighContrastMode />
         {!isChatArea ? <Header pTitle={pTitle} /> : ''}
         
         <main class={mainClasses.join(' ')} id="main-content">

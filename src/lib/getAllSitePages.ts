@@ -6,6 +6,10 @@ const pages = Object.entries(import.meta.glob('/src/pages/*.astro', { eager: tru
         if (!fileName) return null;
 
         const name = fileName.replace('.astro', '');
+        
+        // Skip pages that start with underscore
+        if (name.startsWith('_')) return null;
+        
         const route = `/${name === 'index' ? '' : name}`;
         const modTyped = mod as Record<string, string[]>;
         const hiddenFromNav = modTyped?.inNav ? modTyped.inNav[0] === 'hide' : false;

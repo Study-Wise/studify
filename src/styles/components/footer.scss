@@ -5,7 +5,7 @@
     text-align: center;
     padding: 1rem;
     border-top: 1px solid #dee2e6;
-    background-color: $footer-bg;
+    background-color: var(--body-bg);
   
     [data-hide-copyright="true"] & {
         margin-top: 0;
@@ -13,7 +13,7 @@
 }
 
 .footer-content {
-    color: $footer-text;
+    color: var(--body-text);
     font-size: 0.9em;
 }  
 .footer-content p {

@@ -9,31 +9,31 @@
     flex-wrap: wrap;
 
     &:not(.lite) .nav-btn {
-        background-color: $section-title;
+        background-color: var(--section-title);
         transition: background-color 0.2s ease; 
-        color: $header-text;
+        color: var(--header-text);
         &:hover, &:focus-visible {
-            background-color: color.adjust($section-title, $lightness: -10%);
+            background-color: hsl(from var(--section-title) h s calc(l - 10%));
         }
         &.active {
-            background-color: color.adjust($section-title, $lightness: 10%);
+            background-color: hsl(from var(--section-title) h s calc(l + 10%));
             font-weight: 600;
             &:hover, &:focus-visible {
-                background-color: color.adjust($section-title, $lightness: 5%);
+                background-color: hsl(from var(--section-title) h s calc(l + 5%));
             }
         }
     }
     &.lite .nav-btn {
-        color: $section-title;
+        color: var(--section-title);
         transition: color 0.2s ease; 
         &:hover, &:focus-visible {
-            color: color.adjust($section-title, $lightness: -10%);
+            color: hsl(from var(--section-title) h s calc(l - 10%));
         }
         &.active {
-            color: color.adjust($section-title, $lightness: 10%);
+            color: hsl(from var(--section-title) h s calc(l + 10%));
             font-weight: 600;
             &:hover, &:focus-visible {
-                color: color.adjust($section-title, $lightness: 5%);
+                color: hsl(from var(--section-title) h s calc(l + 5%));
             }
         }
     }

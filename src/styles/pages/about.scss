@@ -15,8 +15,8 @@
     height: 150px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid $profile-border;
-    box-shadow: 0 2px 5px $profile-shadow;
+    border: 3px solid var(--profile-border);
+    box-shadow: 0 2px 5px var(--profile-shadow);
 }
 
 .about-section .about-text {
@@ -30,7 +30,7 @@
 }
 
 .about-section .about-text p a {
-    color: $about-link;
+    color: var(--about-link);
     text-decoration: none;
     font-weight: 500;
 }

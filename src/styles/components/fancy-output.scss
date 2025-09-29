@@ -23,13 +23,13 @@ $shadow-size: 5px;
 .fancy-output:is(.fancy-output) {
     overflow-x: hidden;
     isolation: isolate;
-    background-color: var(--bg-color, $message-bg);
+    background-color: var(--bg-color, var(--message-bg));
 
     display: flex;
     flex-direction: column;
 
     &[open] {
-        --bg-color: #{$card-bg};
+        --bg-color: var(--card-bg);
 
         box-sizing: border-box;
         margin: auto;
@@ -58,7 +58,7 @@ $shadow-size: 5px;
         
     }
     &:not([open]) {
-        --bg-color: #{$message-bg};
+        --bg-color: var(--message-bg);
 
         // max-width: min($max-width, 100%);
         max-height: min($max-height, 100%);
@@ -84,9 +84,9 @@ $shadow-size: 5px;
     align-items: end;
     gap: $spacing;
 
-    background-color: var(--bg-color, $message-bg);
+    background-color: var(--bg-color, var(--message-bg));
 
-    border-bottom: solid $tab-border-size $card-bg-dark;
+    border-bottom: solid $tab-border-size var(--card-bg-dark);
 
     isolation: isolate;
 
@@ -97,7 +97,7 @@ $shadow-size: 5px;
         background-color: inherit;
         z-index: -1;
 
-        box-shadow: 0 0 0.5rem $message-bg;
+        box-shadow: 0 0 0.5rem var(--message-bg);
     }
 
     .tab {

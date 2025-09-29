@@ -36,6 +36,44 @@
 :root {
     scroll-behavior: smooth;
     scroll-padding-top: 20px;
+    
+    // Global background and foreground variables
+    --body-bg: #{$body-bg};
+    --body-text: #{$body-text};
+    
+    // CSS Custom Properties referencing Sass color variables (for reference only)
+    // Header Colors
+    --header-text: #{$header-text};
+    --header-tagline: #{$header-tagline};
+    
+    // Card Colors
+    --card-bg: #{$card-bg};
+    --card-border: #{$card-border};
+    --card-shadow: #{$card-shadow};
+    --card-bg-dark: #{$card-bg-dark};
+    
+    // Section Colors
+    --section-title: #{$section-title};
+    --section-title-border: #{$section-title-border};
+    
+    // Footer Colors
+    --footer-bg: #{$footer-bg};
+    --footer-text: #{$footer-text};
+    
+    // Message Colors
+    --message-bg: #{$message-bg};
+    --chat-message-shadow: #{$chat-message-shadow};
+    
+    // Input Colors
+    --input-border: #{$input-border};
+    
+    // Profile Colors
+    --profile-border: #{$profile-border};
+    --profile-shadow: #{$profile-shadow};
+    
+    // About Colors
+    --about-link: #{$about-link};
+    
     &:not(:has(.chat-page)) {
         @supports (scrollbar-gutter: stable) {
             scrollbar-gutter: stable;
@@ -46,17 +84,11 @@
     }
 }
 
-@supports (view-transition-name: root) and (navigation: auto) {
-    @view-transition {
-        navigation: auto;
-    }
-}
-
 body {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
     line-height: 1.6;
-    color: $body-text;
-    background-color: $body-bg;
+    color: var(--body-text);
+    background-color: var(--body-bg);
     display: flex;
     flex-direction: column;
     min-height: 100dvh;
@@ -148,7 +180,7 @@ select.fancy-select {
         align-items: center;
         gap: 0.5rem;
         
-        background-color: color.adjust($card-bg, $alpha: -0.5);
+        background-color: hsl(from var(--body-bg) h s l / 0.5);
         border-radius: 0.25rem;
         
         &::checkmark {
@@ -191,7 +223,7 @@ main {
 
 :is(section, .chat-page) {
     h2 {
-        color: $section-title;
+        color: var(--section-title);
     
         font-size: 1.6rem;
         display: flex;
@@ -200,7 +232,7 @@ main {
         
         &:not(.chat-header h2) {
             margin-bottom: 25px;
-            border-bottom: 1px solid $section-title-border;
+            border-bottom: 1px solid var(--section-title-border);
             padding-bottom: 12px;
         }
     }

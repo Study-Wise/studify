@@ -14,6 +14,9 @@ const manifest = fs.readJSONSync(manifestPath);
 export default defineConfig({
     output: 'server',
     adapter: vercel(),
+    build: {
+        inlineStylesheets: 'never',
+    },
     integrations: [
         clerk({
             // Authentication configuration

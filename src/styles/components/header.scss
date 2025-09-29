@@ -6,7 +6,7 @@
 header {
     min-height: 80px;
     background: linear-gradient($gradient-angle, list.nth(map.get($accent-colors, primary), 1), list.nth(map.get($accent-colors, primary), 2));
-    color: $header-text;
+    color: var(--header-text);
     padding: 0.75rem 1.5rem;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 
@@ -35,7 +35,7 @@ header {
         font-size: 1rem;
         font-style: normal;
         font-weight: 300;
-        color: $header-tagline;
+        color: var(--header-tagline);
 
         word-wrap: normal;
         overflow-wrap: normal;
@@ -81,11 +81,11 @@ header {
     &.lite {
         display: grid;
         grid-template-columns: 1fr auto;
-        background-color: $card-bg;
+        background-color: var(--card-bg);
         border-radius: 10px;
         padding: 10px 20px;
-        box-shadow: 0 5px 15px $card-shadow;
-        border: 1px solid $card-border;
+        box-shadow: 0 5px 15px var(--card-shadow);
+        border: 1px solid var(--card-border);
     }
 
     .header-text-container {

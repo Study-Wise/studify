@@ -50,8 +50,8 @@ select.fancy-select {
         justify-content: center;
         gap: $spacing;
         
-        outline: $border-size solid color.adjust($card-bg, $alpha: -0.75);
-        background-color: color.adjust($card-bg, $alpha: -0.5);
+        outline: $border-size solid hsl(from var(--body-bg) h s l / 0.25);
+        background-color: hsl(from var(--body-bg) h s l / 0.5);
         border-radius: math.div($spacing, 2);
         
         &::checkmark {

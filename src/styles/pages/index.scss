@@ -13,7 +13,7 @@
 
     strong {
         font-weight: 600;
-        color: $body-text;
+        color: var(--body-text);
     }
 }
 
@@ -23,7 +23,7 @@
     gap: $mode-spacing;
 
     .category-card {
-        background-color: $body-bg;
+        background-color: var(--card-bg);
         border-radius: #{$mode-card-border-radius + $mode-spacing};   
 
         padding: $mode-spacing;
@@ -48,7 +48,7 @@
             gap: #{math.div($mode-spacing, 2)};
 
             .mode-card {
-                background-color: $card-bg;
+                background-color: var(--card-bg);
                 padding: $mode-spacing;
                 border-radius: #{$mode-card-border-radius};
                 box-shadow: 0 5px 15px $card-shadow;

@@ -9,14 +9,14 @@
         width: 100%;
         min-height: 200px;
         padding: 15px;
-        border: 1px solid $input-border;
+        border: 1px solid var(--input-border);
         border-radius: 6px;
         font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier,
             monospace;
         font-size: 0.95em;
         resize: vertical;
         margin-top: 10px;
-        box-shadow: inset 0 1px 3px $card-shadow;
+        box-shadow: inset 0 1px 3px var(--card-shadow);
 
         &:focus {
             border-color: list.nth(map.get($accent-colors, primary), 1);
@@ -47,7 +47,7 @@
     display: inline-block;
     border: 3px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
-    border-top-color: $header-text;
+    border-top-color: var(--header-text);
     width: 1.2em;
     height: 1.2em;
     animation: spin 1s linear infinite;
@@ -64,7 +64,7 @@
     margin-bottom: 25px;
     display: flex;
     gap: 10px;
-    border-bottom: 1px solid $section-title-border;
+    border-bottom: 1px solid var(--section-title-border);
     padding-bottom: 12px;
     flex-wrap: wrap;
 
@@ -83,17 +83,17 @@
     transition: all 0.3s ease;
     font-size: 1.05rem;
     font-weight: 500;
-    color: $footer-text;
+    color: var(--footer-text);
 
     &:hover {
-        background-color: $footer-bg;
+        background-color: var(--footer-bg);
         color: #343a40;
     }
 
     &.active {
         color: list.nth(map.get($accent-colors, primary), 1);
         border-bottom: 3px solid list.nth(map.get($accent-colors, primary), 1);
-        background-color: $body-bg;
+        background-color: var(--card-bg);
     }
 
     i {

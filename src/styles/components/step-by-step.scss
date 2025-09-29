@@ -1,7 +1,7 @@
 @use '../variables/globals.scss' as *;
 @use 'sass:math';
 
-$dbor: $card-border;
+$dbor: var(--card-border);
 $dbdr: 2rem;
 $dpad: 1rem;
 
@@ -20,7 +20,7 @@ $dpad: 1rem;
 
   box-sizing: border-box;
 
-  background-color: $card-bg;
+  background-color: var(--card-bg);
 
   @include stepsBorder();
 
@@ -36,7 +36,7 @@ $dpad: 1rem;
 
   .step {
     box-sizing: border-box;
-    background-color: $card-bg;
+    background-color: var(--card-bg);
 
     &:not(:has(.step-question-choices .step-question-radio:checked)) {
       .correct-explanation {
@@ -68,7 +68,7 @@ $dpad: 1rem;
 
       .step-question-choice {
         position: relative;
-        background-color: $card-bg;
+        background-color: var(--card-bg);
         cursor: pointer;
         // display: flex;
         // gap: var(--gap, 1rem);

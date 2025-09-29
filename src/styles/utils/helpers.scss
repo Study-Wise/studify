@@ -10,18 +10,18 @@
         --bg-clr-1: #{list.nth($colors, 1)};
         --bg-clr-2: #{list.nth($colors, 2)};
 
-        background-color: var(--bg, var(--background, list.nth($colors, 1)));
+        background-color: var(--body-bg, var(--background, list.nth($colors, 1)));
         &:hover {
-            background-color: var(--bg, var(--background, list.nth($colors, 2)));
+            background-color: var(--body-bg, var(--background, list.nth($colors, 2)));
         }
     }
     .bg-#{$variant}.btn.tab {
         --bg-clr-1: #{list.nth($colors, 1)};
         --bg-clr-2: #{list.nth($colors, 2)};
 
-        color: var(--bg, var(--background, list.nth($colors, 1)));
+        color: var(--body-bg, var(--background, list.nth($colors, 1)));
         &:hover {
-            color: var(--bg, var(--background, list.nth($colors, 2)));
+            color: var(--body-bg, var(--background, list.nth($colors, 2)));
         }
     }
     .clr-#{$variant} {
@@ -38,9 +38,9 @@
         --box-shadow-clr-1: #{list.nth($colors, 1)};
         --box-shadow-clr-2: #{list.nth($colors, 2)};
 
-        box-shadow: var(--box-shadow, 0 1px 0 0) var(--bg, var(--background, color.adjust(list.nth($colors, 1), $alpha: -0.5)));
+        box-shadow: var(--box-shadow, 0 1px 0 0) var(--body-bg, var(--background, color.adjust(list.nth($colors, 1), $alpha: -0.5)));
         &:hover {
-            box-shadow: var(--box-shadow, 0 1px 0 0) var(--bg, var(--background, color.adjust(list.nth($colors, 2), $alpha: -0.5)));
+            box-shadow: var(--box-shadow, 0 1px 0 0) var(--body-bg, var(--background, color.adjust(list.nth($colors, 2), $alpha: -0.5)));
         }
     }
     .ts-#{$variant} {

@@ -10,7 +10,7 @@
 
     strong {
         font-weight: 600;
-        color: $body-text;
+        color: var(--body-text);
     }
 }
 
@@ -18,7 +18,7 @@
     display: inline-block;
     border: 3px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
-    border-top-color: $header-text;
+    border-top-color: var(--header-text);
     width: 1.2em;
     height: 1.2em;
     animation: spin 1s linear infinite;

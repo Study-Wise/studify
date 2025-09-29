@@ -1,21 +1,20 @@
 ---
 // High contrast mode component for better visibility
-import '../styles/accessibility/high-contrast.scss';
+import '../styles/accessibility/theme-switcher.scss';
 ---
 
-<div id="contrast-toggle" class="contrast-toggle" aria-label="Toggle high contrast mode" role="button" tabindex="0">
-    <span class="material-symbols-outlined" aria-hidden="true">contrast</span>
-    <span class="contrast-label">High Contrast</span>
+<div id="theme-switcher" class="theme-switcher" aria-label="Toggle high contrast mode" role="button" tabindex="0">
+    <span class="material-symbols-outlined" aria-hidden="true">sunny</span>
 </div>
 
 <script>
-    class HighContrastMode {
+    class ThemeSwitcher {
         isEnabled: boolean;
         storageKey: string;
 
         constructor() {
             this.isEnabled = false;
-            this.storageKey = 'studywise-high-contrast';
+            this.storageKey = 'studywise-theme-switcher';
             this.init();
         }
 
@@ -27,12 +26,12 @@ import '../styles/accessibility/high-contrast.scss';
             }
 
             // Check for system preference
-            if (window.matchMedia && window.matchMedia('(prefers-contrast: high)').matches) {
+            if (window.matchMedia && window.matchMedia('(prefers-contrast: theme-switcher)').matches) {
                 this.enable();
             }
 
             // Setup toggle button
-            const toggle = document.getElementById('contrast-toggle');
+            const toggle = document.getElementById('theme-switcher');
             if (toggle) {
                 toggle.addEventListener('click', () => this.toggle());
                 toggle.addEventListener('keydown', (e) => {
@@ -45,7 +44,7 @@ import '../styles/accessibility/high-contrast.scss';
 
             // Listen for system preference changes
             if (window.matchMedia) {
-                const mediaQuery = window.matchMedia('(prefers-contrast: high)');
+                const mediaQuery = window.matchMedia('(prefers-contrast: theme-switcher)');
                 mediaQuery.addEventListener('change', (e) => {
                     if (e.matches) {
                         this.enable();
@@ -68,7 +67,7 @@ import '../styles/accessibility/high-contrast.scss';
 
         enable() {
             this.isEnabled = true;
-            document.body.classList.add('high-contrast');
+            document.body.classList.add('theme-switcher');
             localStorage.setItem(this.storageKey, 'true');
             this.updateToggleState();
             this.announceChange('High contrast mode enabled');
@@ -76,14 +75,14 @@ import '../styles/accessibility/high-contrast.scss';
 
         disable() {
             this.isEnabled = false;
-            document.body.classList.remove('high-contrast');
+            document.body.classList.remove('theme-switcher');
             localStorage.setItem(this.storageKey, 'false');
             this.updateToggleState();
             this.announceChange('High contrast mode disabled');
         }
 
         updateToggleState() {
-            const toggle = document.getElementById('contrast-toggle');
+            const toggle = document.getElementById('theme-switcher');
             if (toggle) {
                 toggle.setAttribute('aria-pressed', this.isEnabled.toString());
                 toggle.classList.toggle('active', this.isEnabled);
@@ -92,10 +91,10 @@ import '../styles/accessibility/high-contrast.scss';
 
         announceChange(message: string) {
             // Create or update announcement element
-            let announcement = document.getElementById('contrast-announcement');
+            let announcement = document.getElementById('theme-switcher-announcement');
             if (!announcement) {
                 announcement = document.createElement('div');
-                announcement.id = 'contrast-announcement';
+                announcement.id = 'theme-switcher-announcement';
                 announcement.setAttribute('aria-live', 'polite');
                 announcement.setAttribute('aria-atomic', 'true');
                 announcement.style.cssText = `
@@ -113,7 +112,6 @@ import '../styles/accessibility/high-contrast.scss';
 
     // Initialize high contrast mode when DOM is loaded
     document.addEventListener('DOMContentLoaded', () => {
-        new HighContrastMode();
+        new ThemeSwitcher();
     });
 </script>
-

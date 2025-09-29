@@ -85,8 +85,8 @@ import '../styles/accessibility/keyboard-navigation.scss';
             return Array.from(document.querySelectorAll(this.focusableElements))
                 .filter((el) => {
                     const htmlEl = el as HTMLElement;
-                    return !el.hasAttribute('disabled') && 
-                           !el.hasAttribute('hidden') && 
+                    return !el.hasAttribute('disabled') &&
+                           !el.hasAttribute('hidden') &&
                            htmlEl.offsetParent !== null &&
                            !el.hasAttribute('aria-hidden');
                 });
@@ -96,7 +96,7 @@ import '../styles/accessibility/keyboard-navigation.scss';
     // Initialize keyboard navigation when DOM is loaded
     document.addEventListener('DOMContentLoaded', () => {
         (window as any).keyboardNavigation = new KeyboardNavigation();
-        
+
         // Enhance form elements
         const formElements = document.querySelectorAll('input, select, textarea');
         formElements.forEach(element => {
@@ -125,4 +125,3 @@ import '../styles/accessibility/keyboard-navigation.scss';
         });
     });
 </script>
-

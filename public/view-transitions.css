@@ -1,0 +1,6 @@
+/* View Transitions */
+@supports (view-transition-name: root) and (navigation: auto) {
+    @view-transition {
+        navigation: auto;
+    }
+}

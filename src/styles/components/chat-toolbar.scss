@@ -10,12 +10,12 @@ $padding: 1rem;
     display: flex;
     flex-direction: column;
     gap: $padding;
-    background: $card-bg;
+    background: var(--body-bg);
     box-shadow: 0 0 0.5rem transparent;
     transition: box-shadow 0.2s;
 
     &:not(.at-bottom, .scrolling-down) {
-        box-shadow: 0 0 0.5rem $chat-message-shadow;
+        box-shadow: 0 0 0.5rem var(--chat-message-shadow);
     }
 
     .chat-input-container {

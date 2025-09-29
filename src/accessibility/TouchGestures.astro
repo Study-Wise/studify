@@ -1,6 +1,5 @@
 ---
 // Touch gestures component for mobile navigation
-import '../styles/accessibility/touch-gestures.scss';
 ---
 
 <script>
@@ -9,105 +8,117 @@ import '../styles/accessibility/touch-gestures.scss';
         startY: number;
         endX: number;
         endY: number;
-        minSwipeDistance: number;
-        maxVerticalDistance: number;
-        isScrolling: boolean;
+        isPulling: boolean;
+        pullThreshold: number;
+        refreshIndicator: HTMLElement | null;
 
         constructor() {
             this.startX = 0;
             this.startY = 0;
             this.endX = 0;
             this.endY = 0;
-            this.minSwipeDistance = 50;
-            this.maxVerticalDistance = 100;
-            this.isScrolling = false;
-            
+            this.isPulling = false;
+            this.pullThreshold = 80;
+            this.refreshIndicator = null;
             this.init();
         }
 
         init() {
-            // Only enable on touch devices
-            if ('ontouchstart' in window) {
-                document.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: true });
-                document.addEventListener('touchmove', this.handleTouchMove.bind(this), { passive: true });
-                document.addEventListener('touchend', this.handleTouchEnd.bind(this), { passive: true });
-            }
+            this.createRefreshIndicator();
+            this.setupTouchEvents();
+        }
+
+        createRefreshIndicator() {
+            this.refreshIndicator = document.createElement('div');
+            this.refreshIndicator.className = 'pull-to-refresh-indicator';
+            this.refreshIndicator.innerHTML = `
+                <div class="refresh-content">
+                    <span class="material-symbols-outlined">refresh</span>
+                    <span>Pull to refresh</span>
+                </div>
+            `;
+            document.body.appendChild(this.refreshIndicator);
+        }
+
+        setupTouchEvents() {
+            document.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: false });
+            document.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: false });
+            document.addEventListener('touchend', (e) => this.handleTouchEnd(e), { passive: false });
         }
 
         handleTouchStart(e: TouchEvent) {
-            const touch = e.touches[0];
-            this.startX = touch.clientX;
-            this.startY = touch.clientY;
-            this.isScrolling = false;
+            if (window.scrollY === 0) {
+                this.startX = e.touches[0].clientX;
+                this.startY = e.touches[0].clientY;
+                this.isPulling = true;
+            }
         }
 
         handleTouchMove(e: TouchEvent) {
-            if (!this.startX || !this.startY) return;
+            if (!this.isPulling || window.scrollY > 0) return;
 
-            const touch = e.touches[0];
-            const deltaX = touch.clientX - this.startX;
-            const deltaY = touch.clientY - this.startY;
+            this.endX = e.touches[0].clientX;
+            this.endY = e.touches[0].clientY;
 
-            // Check if this is a vertical scroll
-            if (Math.abs(deltaY) > Math.abs(deltaX)) {
-                this.isScrolling = true;
+            const deltaY = this.endY - this.startY;
+            
+            if (deltaY > 0) {
+                e.preventDefault();
+                const progress = Math.min(deltaY / this.pullThreshold, 1);
+                this.updateRefreshIndicator(progress);
             }
         }
 
         handleTouchEnd(e: TouchEvent) {
-            if (!this.startX || !this.startY || this.isScrolling) return;
+            if (!this.isPulling) return;
 
-            const touch = e.changedTouches[0];
-            this.endX = touch.clientX;
-            this.endY = touch.clientY;
-
-            const deltaX = this.endX - this.startX;
             const deltaY = this.endY - this.startY;
-
-            // Check if it's a valid swipe
-            if (Math.abs(deltaX) > this.minSwipeDistance && Math.abs(deltaY) < this.maxVerticalDistance) {
-                if (deltaX > 0) {
-                    this.handleSwipeRight();
-                } else {
-                    this.handleSwipeLeft();
-                }
+            
+            if (deltaY >= this.pullThreshold) {
+                this.triggerRefresh();
+            } else {
+                this.hideRefreshIndicator();
             }
 
-            // Reset values
-            this.startX = 0;
-            this.startY = 0;
-            this.endX = 0;
-            this.endY = 0;
+            this.isPulling = false;
         }
 
-        handleSwipeLeft() {
-            // Navigate to next page or close sidebar
-            const sidebar = document.querySelector('.chat-sidebar');
-            if (sidebar && sidebar.classList.contains('open')) {
-                sidebar.classList.remove('open');
-                return;
-            }
+        updateRefreshIndicator(progress: number) {
+            if (!this.refreshIndicator) return;
 
-            // Navigate to next page if available
-            const nextLink = document.querySelector('a[rel="next"]') as HTMLAnchorElement;
-            if (nextLink) {
-                nextLink.click();
+            const translateY = (progress * 60) - 60;
+            this.refreshIndicator.style.transform = `translateY(${translateY}px)`;
+            this.refreshIndicator.style.opacity = progress.toString();
+
+            if (progress >= 1) {
+                (this.refreshIndicator.querySelector('.material-symbols-outlined') as HTMLElement)!.style.animation = 'spin 1s linear infinite';
+            } else {
+                (this.refreshIndicator.querySelector('.material-symbols-outlined') as HTMLElement)!.style.animation = 'none';
             }
         }
 
-        handleSwipeRight() {
-            // Navigate to previous page or open sidebar
-            const sidebar = document.querySelector('.chat-sidebar');
-            if (sidebar && !sidebar.classList.contains('open')) {
-                sidebar.classList.add('open');
-                return;
-            }
+        hideRefreshIndicator() {
+            if (!this.refreshIndicator) return;
 
-            // Navigate to previous page if available
-            const prevLink = document.querySelector('a[rel="prev"]') as HTMLAnchorElement;
-            if (prevLink) {
-                prevLink.click();
-            }
+            this.refreshIndicator.style.transform = 'translateY(-100%)';
+            this.refreshIndicator.style.opacity = '0';
+            (this.refreshIndicator.querySelector('.material-symbols-outlined') as HTMLElement)!.style.animation = 'none';
+        }
+
+        triggerRefresh() {
+            if (!this.refreshIndicator) return;
+
+            this.refreshIndicator.innerHTML = `
+                <div class="refresh-content">
+                    <span class="material-symbols-outlined" style="animation: spin 1s linear infinite;">refresh</span>
+                    <span>Refreshing...</span>
+                </div>
+            `;
+
+            // Simulate refresh
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
         }
     }
 
@@ -115,116 +126,4 @@ import '../styles/accessibility/touch-gestures.scss';
     document.addEventListener('DOMContentLoaded', () => {
         new TouchGestures();
     });
-
-    // Add pull-to-refresh functionality
-    class PullToRefresh {
-        startY: number;
-        currentY: number;
-        pullDistance: number;
-        isPulling: boolean;
-        threshold: number;
-        maxPull: number;
-        indicator!: HTMLElement;
-
-        constructor() {
-            this.startY = 0;
-            this.currentY = 0;
-            this.pullDistance = 0;
-            this.isPulling = false;
-            this.threshold = 100;
-            this.maxPull = 150;
-            
-            this.createRefreshIndicator();
-            this.init();
-        }
-
-        createRefreshIndicator() {
-            this.indicator = document.createElement('div');
-            this.indicator.className = 'pull-to-refresh-indicator';
-            this.indicator.innerHTML = `
-                <div class="refresh-content">
-                    <span class="material-symbols-outlined">refresh</span>
-                    <span class="refresh-text">Pull to refresh</span>
-                </div>
-            `;
-            document.body.appendChild(this.indicator);
-        }
-
-        init() {
-            if ('ontouchstart' in window) {
-                document.addEventListener('touchstart', this.handleStart.bind(this), { passive: true });
-                document.addEventListener('touchmove', this.handleMove.bind(this), { passive: true });
-                document.addEventListener('touchend', this.handleEnd.bind(this), { passive: true });
-            }
-        }
-
-        handleStart(e: TouchEvent) {
-            if (window.scrollY === 0) {
-                this.startY = e.touches[0].clientY;
-                this.isPulling = true;
-            }
-        }
-
-        handleMove(e: TouchEvent) {
-            if (!this.isPulling) return;
-
-            this.currentY = e.touches[0].clientY;
-            this.pullDistance = Math.max(0, this.currentY - this.startY);
-
-            if (this.pullDistance > 0) {
-                e.preventDefault();
-                this.updateIndicator();
-            }
-        }
-
-        handleEnd() {
-            if (!this.isPulling) return;
-
-            if (this.pullDistance > this.threshold) {
-                this.triggerRefresh();
-            } else {
-                this.resetIndicator();
-            }
-
-            this.isPulling = false;
-            this.pullDistance = 0;
-        }
-
-        updateIndicator() {
-            const progress = Math.min(this.pullDistance / this.threshold, 1);
-            const translateY = Math.min(this.pullDistance * 0.5, this.maxPull);
-            
-            this.indicator.style.transform = `translateY(${translateY}px)`;
-            this.indicator.style.opacity = progress.toString();
-            
-            const refreshText = this.indicator.querySelector('.refresh-text');
-            if (refreshText) {
-                refreshText.textContent = this.pullDistance > this.threshold ? 'Release to refresh' : 'Pull to refresh';
-            }
-        }
-
-        resetIndicator() {
-            this.indicator.style.transform = 'translateY(-100%)';
-            this.indicator.style.opacity = '0';
-        }
-
-        async triggerRefresh() {
-            this.indicator.querySelector('.refresh-text')!.textContent = 'Refreshing...';
-            (this.indicator.querySelector('.material-symbols-outlined') as HTMLElement)!.style.animation = 'spin 1s linear infinite';
-            
-            try {
-                // Trigger a page refresh or API call
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                window.location.reload();
-            } catch (error) {
-                console.error('Refresh failed:', error);
-            }
-        }
-    }
-
-    // Initialize pull-to-refresh
-    document.addEventListener('DOMContentLoaded', () => {
-        new PullToRefresh();
-    });
 </script>
-
