@@ -1,0 +1,75 @@
+---
+// High contrast mode component for better visibility
+import '../styles/accessibility/high-contrast.scss';
+---
+
+<div id="high-contrast-toggle" class="high-contrast-toggle" aria-label="Toggle high contrast mode" role="button" tabindex="0">
+    <span class="material-symbols-outlined" aria-hidden="true">contrast</span>
+</div>
+
+<script>
+    class HighContrastMode {
+        isEnabled: boolean;
+        storageKey: string;
+
+        constructor() {
+            this.isEnabled = false;
+            this.storageKey = 'studywise-high-contrast';
+            this.init();
+        }
+
+        init() {
+            // Load saved state
+            const saved = localStorage.getItem(this.storageKey);
+            if (saved !== null) {
+                this.isEnabled = JSON.parse(saved);
+            }
+
+            // Apply initial state
+            this.updateUI();
+            this.toggleHighContrast(this.isEnabled);
+
+            // Add event listeners
+            const toggle = document.getElementById('high-contrast-toggle');
+            if (toggle) {
+                toggle.addEventListener('click', () => this.toggle());
+                toggle.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.toggle();
+                    }
+                });
+            }
+        }
+
+        toggle() {
+            this.isEnabled = !this.isEnabled;
+            this.toggleHighContrast(this.isEnabled);
+            this.updateUI();
+            localStorage.setItem(this.storageKey, JSON.stringify(this.isEnabled));
+        }
+
+        toggleHighContrast(enabled: boolean) {
+            if (enabled) {
+                document.documentElement.classList.add('high-contrast');
+            } else {
+                document.documentElement.classList.remove('high-contrast');
+            }
+        }
+
+        updateUI() {
+            const toggle = document.getElementById('high-contrast-toggle');
+            if (toggle) {
+                toggle.setAttribute('aria-pressed', this.isEnabled.toString());
+                toggle.classList.toggle('active', this.isEnabled);
+            }
+        }
+    }
+
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => new HighContrastMode());
+    } else {
+        new HighContrastMode();
+    }
+</script>
