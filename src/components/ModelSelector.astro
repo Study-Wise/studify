@@ -9,10 +9,17 @@ interface ModelOption {
     name: string;
 }
 
+interface Provider {
+    name: string;
+    models: Record<string, { name: string }>;
+}
+
+type Providers = Record<string, Provider>;
+
 const selectorSettings: {
     id: string;
     name: string;
-    options: ModelOption[];
+    options: ModelOption[] | Record<string, ModelOption>;
     default: string;
 } = {
     id: 'model',
@@ -21,10 +28,10 @@ const selectorSettings: {
     default: '',
 };
 
-if (selectorSettings.options.length > 0 && selectorSettings.options[0].name !== 'Select A Model') {
+if (Array.isArray(selectorSettings.options) && selectorSettings.options.length > 0 && selectorSettings.options[0].name !== 'Select A Model') {
     selectorSettings.options.unshift({ name: 'Select A Model' });
 }
-providers['mathwise'] = {
+(providers as Providers)['mathwise'] = {
     name: 'MW',
     models: {
         '': { name: 'Select A Model' },
@@ -40,28 +47,30 @@ providers['mathwise'] = {
             {/* <selectedcontent /> */}
             {selectorSettings.options.map(option => {
                 const providerKey = option.name === 'Select A Model' ? 'mathwise' : Object.keys(providers).find(p =>
-                    Object.keys(providers[p].models).find(m => providers[p].models[m].name === option.name)
+                    Object.keys((providers as Providers)[p].models).find(m => (providers as Providers)[p].models[m].name === option.name)
                 );
                 const currKey = providerKey
-                    ? Object.keys(providers[providerKey].models).find(m => providers[providerKey].models[m].name === option.name)
+                    ? Object.keys((providers as Providers)[providerKey].models).find(m => (providers as Providers)[providerKey].models[m].name === option.name)
                     : '';
                 
                 return (
                     <option value={currKey} selected={currKey === selectorSettings.default} disabled={option.name === 'Select A Model'}>
-                        {option.name === 'Select A Model' ? '' : <img src={`/assets/providers/${providerKey || 'default'}.svg`} alt={providerKey ? providers[providerKey].name : 'Provider'} />}
+                        {option.name === 'Select A Model' ? '' : <img src={`/assets/providers/${providerKey || 'default'}.svg`} alt={providerKey ? (providers as Providers)[providerKey].name : 'Provider'} />}
                         {option.name || currKey}
                     </option>
                 );
             })}
         </select>
     ) : typeof selectorSettings.options === 'object' ? (
-        <select id={selectorSettings.id} name={selectorSettings.id} value={selectorSettings.options[selectorSettings.default]}>
-            {Object.keys(selectorSettings.options).map(option => (
-                <option value={option} selected={selectorSettings.options[option] === selectorSettings.default}>{selectorSettings.options[option].name || option}</option>
-            ))}
+        <>
+            <select id={selectorSettings.id} name={selectorSettings.id} value={selectorSettings.options[selectorSettings.default]?.name}>
+                {Object.keys(selectorSettings.options).map(option => (
+                    <option value={option} selected={(selectorSettings.options[option]) === selectorSettings.default}>{(selectorSettings.options[option] as Record<string, ModelOption>).name || option}</option>
+                ))}
         </select>
+        </>
     ) : (
-        <input type="text" id={selectorSettings.id} name={selectorSettings.id} value={selectorSettings[1]} />
+        <input type="text" id={selectorSettings.id} name={selectorSettings.id} value={selectorSettings.options[selectorSettings.default]?.name} />
     )}
 </div>
 <script>
