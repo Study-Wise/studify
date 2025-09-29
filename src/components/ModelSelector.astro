@@ -38,6 +38,8 @@ if (Array.isArray(selectorSettings.options) && selectorSettings.options.length >
     },
 }
 
+const modelOptionRecord = selectorSettings.options as Record<string, ModelOption>;
+
 
 ---
 <div class="model-selector">
@@ -65,12 +67,12 @@ if (Array.isArray(selectorSettings.options) && selectorSettings.options.length >
         <>
             <select id={selectorSettings.id} name={selectorSettings.id} value={selectorSettings.options[selectorSettings.default]?.name}>
                 {Object.keys(selectorSettings.options).map(option => (
-                    <option value={option} selected={(selectorSettings.options[option]) === selectorSettings.default}>{(selectorSettings.options[option] as Record<string, ModelOption>).name || option}</option>
+                    <option value={option} selected={option === selectorSettings.default}>{modelOptionRecord[option].name || option}</option>
                 ))}
-        </select>
+            </select>
         </>
     ) : (
-        <input type="text" id={selectorSettings.id} name={selectorSettings.id} value={selectorSettings.options[selectorSettings.default]?.name} />
+        <input type="text" id={selectorSettings.id} name={selectorSettings.id} value={modelOptionRecord[selectorSettings.default]?.name} />
     )}
 </div>
 <script>

@@ -1,0 +1,21 @@
+---
+import Layout from '../layouts/Layout.astro';
+import shouldBeMathOnly from '../lib/shouldBeMathOnly';
+import '../styles/pages/features.scss';
+
+// Import the appropriate markdown file based on math-only mode
+let markdownContent = '';
+if (shouldBeMathOnly) {
+    const mathOnlyModule = await import('../lib/features/mathOnly.md');
+    markdownContent = await mathOnlyModule.compiledContent();
+} else {
+    const generalModule = await import('../lib/features/general.md');
+    markdownContent = await generalModule.compiledContent();
+}
+---
+
+<Layout title="Features">
+    <main class="features-container">
+        <div class="features-content" set:html={markdownContent} />
+    </main>
+</Layout>
