@@ -1,7 +1,9 @@
 ---
 // Offline support component for PWA functionality
+import 'dotenv/config';
 
-import shouldBeMathOnly from '../lib/shouldBeMathOnly';
+const isDev = (import.meta.env.NODE_ENV === 'development' || import.meta.env.NODE_ENV === 'dev') || (import.meta.env.vercel?.toString() === '1' && (import.meta.env.VERCEL_ENV === 'development' || import.meta.env.VERCEL_ENV === 'dev'))
+
 ---
 <div id="offline-indicator" class="offline-indicator" style="display: none;">
     <span class="material-symbols-outlined">wifi_off</span>
@@ -14,7 +16,7 @@ import shouldBeMathOnly from '../lib/shouldBeMathOnly';
     <button id="update-button" class="update-button">Update Now</button>
 </div>
 
-<script define:vars={{ shouldBeMathOnly }}>
+<script define:vars={{ isDev }}>
     // Offline/Online detection
     function updateOnlineStatus() {
         const indicator = document.getElementById('offline-indicator');
@@ -33,10 +35,10 @@ import shouldBeMathOnly from '../lib/shouldBeMathOnly';
     // Service Worker registration and update handling
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', async () => {
-            if (shouldBeMathOnly) {
+            if (isDev) {
                 try {
                     await swRegistration();
-
+    
                 } catch (error) {
                     console.error('Service Worker registration failed:', error);
                 }

@@ -4,16 +4,11 @@ import '../styles/components/step-by-step.scss';
 
 import Layout from '../layouts/Layout.astro';
 import categories from '../lib/modes';
-import shouldBeMathOnly from '../lib/shouldBeMathOnly';
 
 // Use Clerk authentication
 const auth = (Astro.locals as any).auth;
 const { sessionClaims } = auth();
 const user_email = sessionClaims?.email as string || null;
-
-if (shouldBeMathOnly) {
-    Astro.redirect('/math/math');
-}
 
 ---
 <Layout title="Home">

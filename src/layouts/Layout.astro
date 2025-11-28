@@ -8,11 +8,9 @@ import TouchGestures from '../accessibility/TouchGestures.astro';
 import KeyboardNavigation from '../accessibility/KeyboardNavigation.astro';
 import ThemeSwitcher from '../accessibility/ThemeSwitcher.astro';
 
-import shouldBeMathOnly from '../lib/shouldBeMathOnly';
 
-
-const sTitle = shouldBeMathOnly ? "MathWise" : "StudyWise";
-const lTitle = `${sTitle} - AI${shouldBeMathOnly ? ' Math' : ''} Study Partner`;
+const sTitle = "StudyWise";
+const lTitle = `${sTitle} - AI Study Partner`;
 const { title, hideCopyright, container, isChatArea } = Astro.props;
 var { additionalClasses } = Astro.props;
 const noTitle = title === "Home" || title === '' || !title;
