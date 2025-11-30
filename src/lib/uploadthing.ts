@@ -1,0 +1,50 @@
+import { UTApi } from 'uploadthing/server';
+
+// Initialize UTApi
+export const utapi = new UTApi();
+
+// Get app ID from environment
+const APP_ID = process.env.UPLOADTHING_APP_ID || '06kq2k6jjh';
+
+// Upload options
+interface UploadOptions {
+    metadata?: Record<string, string>;
+    contentDisposition?: 'inline' | 'attachment';
+    acl?: 'public-read' | 'private';
+}
+
+// Upload a single file
+export async function uploadFile(file: File, options?: UploadOptions) {
+    return await utapi.uploadFiles(file, options);
+}
+
+// Upload multiple files
+export async function uploadFiles(files: File[], options?: UploadOptions & { concurrency?: number }) {
+    return await utapi.uploadFiles(files, options);
+}
+
+// Upload file from URL
+export async function uploadFileFromUrl(url: string, options?: UploadOptions) {
+    return await utapi.uploadFilesFromUrl(url, options);
+}
+
+// Upload multiple files from URLs
+export async function uploadFilesFromUrls(urls: string[], options?: UploadOptions & { concurrency?: number }) {
+    return await utapi.uploadFilesFromUrl(urls, options);
+}
+
+// Delete files
+export async function deleteFiles(fileKeys: string | string[]) {
+    return await utapi.deleteFiles(fileKeys);
+}
+
+// List all files
+export async function listFiles(options?: { limit?: number; offset?: number }) {
+    const result = await utapi.listFiles(options);
+    return result.files.map(file => ({
+        key: file.key,
+        name: file.name,
+        size: file.size,
+        ufsUrl: `https://${APP_ID}.ufs.sh/f/${file.key}`
+    }));
+}
