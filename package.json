@@ -30,6 +30,7 @@
     "@astrojs/vercel": "^8.2.8",
     "@clerk/astro": "^2.11.8",
     "@clerk/clerk-js": "^5.90.0",
+    "@google/genai": "^1.30.0",
     "@vercel/analytics": "^1.5.0",
     "@vercel/postgres": "^0.10.0",
     "@vite-pwa/assets-generator": "^1.0.1",
