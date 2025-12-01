@@ -73,6 +73,12 @@ const categories: Record<string, Category> = {
                 description: 'Understand global governments, international relations, and civic responsibilities',
                 icon: '🌐',
             },
+        },
+    },
+    'decision-sciences': {
+        name: 'Decision Sciences',
+        description: 'Apply analytical thinking to business, economics, and strategic decision-making',
+        modes: {
             business: {
                 show: true,
                 name: 'Business',
@@ -84,6 +90,12 @@ const categories: Record<string, Category> = {
                 name: 'Economics',
                 description: 'Study supply and demand, markets, money, and economic decision-making',
                 icon: '💰',
+            },
+            finance: {
+                show: true,
+                name: 'Finance',
+                description: 'Master financial analysis, investment strategies, and money management principles',
+                icon: '📊',
             },
         },
     },
