@@ -258,8 +258,8 @@ main {
 :is(section, .chat-page) {
     h2 {
         color: var(--section-title);
-    
-        font-size: 1.6rem;
+
+        font-size: clamp(1.4rem, 4vw, 1.6rem);
         display: flex;
         align-items: center;
         font-weight: 600;
@@ -312,45 +312,8 @@ mjx-container[display="true"] {
     text-align: center !important;
 }
 
-/* --- Responsive Design Adjustments --- */
-@media (max-width: 768px) {
-    /* Stack About section */
-    .about-section .about-content {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-
-    .about-section .profile-picture {
-        margin-bottom: 20px;
-        width: 120px;
-        height: 120px;
-    }
-
-    .about-section .about-text {
-        text-align: center;
-    }
-
-    /* Other adjustments */
-    .card {
-        padding: 25px;
-    }
-
-    :is(section, .chat-page) h2 {
-        font-size: 1.4rem;
-    }
-
-    .output-tabs {
-        gap: 5px;
-    }
-
-    .tab-button {
-        padding: 10px 15px;
-        font-size: 0.95rem;
-    }
-}
-
-// Print styles now consolidated in utils/print.scss
+// All responsive styles now use fluid design with clamp() and auto-wrapping
+// Print styles consolidated in utils/print.scss
 
 .desmos-graph {
     &[latex*="["][latex*="]"] {

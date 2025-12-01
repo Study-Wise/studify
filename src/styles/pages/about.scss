@@ -4,15 +4,16 @@
 
 .about-section .about-content {
     display: flex;
-    flex-direction: row;
+    flex-wrap: wrap;
     gap: 30px;
     align-items: flex-start;
+    justify-content: center;
 }
 
 .about-section .profile-picture {
     flex-shrink: 0;
-    width: 150px;
-    height: 150px;
+    width: clamp(120px, 20vw, 150px);
+    height: clamp(120px, 20vw, 150px);
     border-radius: 50%;
     object-fit: cover;
     border: 3px solid var(--profile-border);
@@ -21,7 +22,8 @@
 
 .about-section .about-text {
     flex-grow: 1;
-    min-width: 0;
+    min-width: min(300px, 100%);
+    text-align: center;
 }
 
 .about-section .about-text p {

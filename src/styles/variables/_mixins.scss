@@ -11,7 +11,7 @@
 @mixin focus-ring($color: var(--section-title), $width: 2px, $offset: 2px) {
     outline: $width solid $color;
     outline-offset: $offset;
-    border-radius: $radius-sm;
+    border-radius: $border-radius-small;
 }
 
 // Remove focus outline for mouse users, keep for keyboard
@@ -197,7 +197,7 @@
 
     &::-webkit-scrollbar-thumb {
         background: $thumb-color;
-        border-radius: $radius-full;
+        border-radius: $border-radius-full;
 
         &:hover {
             background: hsl(from var(--section-title) h s l / 0.5);
@@ -210,53 +210,6 @@
     }
     @supports(scrollbar-color: $thumb-color $track-color) {
         scrollbar-color: $thumb-color $track-color;
-    }
-}
-
-// ============================================
-// RESPONSIVE BREAKPOINTS
-// ============================================
-
-@mixin screen-mobile-only {
-    @media (max-width: $breakpoint-mobile) {
-        @content;
-    }
-}
-
-@mixin screen-tablet-only {
-    @media (min-width: calc($breakpoint-mobile + 1px)) and (max-width: $breakpoint-tablet) {
-        @content;
-    }
-}
-
-@mixin screen-tablet-up {
-    @media (min-width: calc($breakpoint-mobile + 1px)) {
-        @content;
-    }
-}
-
-@mixin screen-desktop-up {
-    @media (min-width: calc($breakpoint-tablet + 1px)) {
-        @content;
-    }
-}
-
-@mixin screen-large-desktop-up {
-    @media (min-width: $breakpoint-desktop) {
-        @content;
-    }
-}
-
-@mixin screen-wide {
-    @media (min-width: $breakpoint-wide) {
-        @content;
-    }
-}
-
-// Custom media query
-@mixin screen-min($size) {
-    @media (min-width: $size) {
-        @content;
     }
 }
 
@@ -312,9 +265,6 @@
 //
 // .card {
 //     @include gradient-overlay(0.05);
-//     @include screen-mobile-only {
-//         padding: $spacing-sm;
-//     }
 // }
 //
 // .scrollable-area {

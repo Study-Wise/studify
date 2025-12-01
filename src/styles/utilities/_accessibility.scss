@@ -136,7 +136,7 @@ textarea:focus-visible {
 // Ensure interactive elements meet minimum touch target size (44x44px)
 // Based on WCAG 2.5.5 Target Size
 button,
-a,
+a:not(.skip-link),
 input[type="button"],
 input[type="submit"],
 input[type="reset"],
@@ -147,7 +147,9 @@ input[type="reset"],
 
     // Exception for inline text links
     &:is(a:not([class])) {
-        min-height: auto;
+        @supports(min-height: auto) {
+            min-height: auto;
+        }
         min-width: auto;
     }
 }

@@ -63,7 +63,7 @@
 .output-tabs {
     margin-bottom: 25px;
     display: flex;
-    gap: 10px;
+    gap: clamp(5px, 1.5vw, 10px);
     border-bottom: 1px solid var(--section-title-border);
     padding-bottom: 12px;
     flex-wrap: wrap;
@@ -74,14 +74,14 @@
 }
 
 .tab-button {
-    padding: 12px 20px;
+    padding: clamp(10px, 2vw, 12px) clamp(15px, 3vw, 20px);
     cursor: pointer;
     border: none;
     background-color: transparent;
     border-bottom: 3px solid transparent;
     border-radius: 6px 6px 0 0;
     transition: all 0.3s ease;
-    font-size: 1.05rem;
+    font-size: clamp(0.95rem, 2vw, 1.05rem);
     font-weight: 500;
     color: var(--footer-text);
 
@@ -137,26 +137,7 @@
         padding: 0 5px;
     }
 
-    @media print {
-        & {
-            display: none !important;
-            visibility: hidden !important;
-
-            &.print-target-container,
-            .output-section:not(:has(.output-content.print-target-container)) & {
-                display: block !important;
-                visibility: visible !important;
-                width: 100% !important;
-                margin: 0 !important;
-                padding: 1cm !important;
-                border: none !important;
-                box-shadow: none !important;
-                page-break-before: auto;
-                page-break-after: auto;
-                animation: none !important;
-            }
-        }
-    }
+    // Print styles consolidated in utils/print.scss
 
     h3, h4 {
         color: #0056b3;
