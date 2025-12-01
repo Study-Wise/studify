@@ -22,31 +22,38 @@
     box-sizing: content-box;
 
     padding: math.div($spacing, 2);
-    
+
     aspect-ratio: 1;
     width: #{$spacing * 1.25};
     height: #{$spacing * 1.25};
-    
+
     background: linear-gradient(var(--g-angle), list.nth(map.get($accent-colors, primary), 1), list.nth(map.get($accent-colors, primary), 2));
     color: var(--body-bg);
 
     border: none;
     border-radius: 50%;
-   
+
     display: grid;
     place-items: center;
 
     font-size: 14px;
     box-shadow: 0 0 10px hsl(from var(--body-text) h s l / 0.5);
-    
+
     cursor: pointer;
     z-index: 99990;
 
-    // transition: all 0.2s ease;
-    // user-select: none;
+    // Smooth transitions
+    transition: scale 250ms cubic-bezier(0, 0, 0.2, 1),
+                rotate 250ms cubic-bezier(0, 0, 0.2, 1),
+                box-shadow 250ms cubic-bezier(0, 0, 0.2, 1);
+    user-select: none;
 
+    // Enhanced hover effect
     &:hover {
         --g-angle: 60deg;
+        scale: 1.1;
+        rotate: 10deg;
+        box-shadow: 0 0 15px hsl(from var(--body-text) h s l / 0.7);
     }
 
     &:focus-visible {
@@ -56,15 +63,46 @@
 
     &:active {
         background: var(--card-text);
+        scale: 0.95;
 
         &:hover {
             background: var(--card-text);
         }
     }
 
+    // Tooltip
+    &::before {
+        content: attr(aria-label);
+        position: absolute;
+        bottom: calc(100% + 0.5rem);
+        left: 50%;
+        translate: -50% 0;
+        scale: 0.8;
+        padding: 0.5rem 0.75rem;
+        background: var(--card-bg);
+        color: var(--card-text);
+        border-radius: 0.5rem;
+        font-size: 0.75rem;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 250ms cubic-bezier(0, 0, 0.2, 1),
+                    translate 250ms cubic-bezier(0, 0, 0.2, 1),
+                    scale 250ms cubic-bezier(0, 0, 0.2, 1);
+        box-shadow: 0 4px 8px hsl(from var(--body-text) h s l / 0.2);
+        z-index: 1;
+    }
+
+    &:hover::before {
+        opacity: 1;
+        translate: -50% 0;
+        scale: 1;
+    }
+
     .material-symbols-outlined {
         font-size: 20px;
         aspect-ratio: 1;
+        transition: scale 500ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
 }
 

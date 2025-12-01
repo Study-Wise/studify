@@ -237,6 +237,24 @@ footer, .chat-toolbar {
     flex-direction: column;
     gap: 1rem;
 
+    // Custom scrollbar styling
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: hsl(from var(--section-title) h s l / 0.3);
+        border-radius: 9999px;
+
+        &:hover {
+            background: hsl(from var(--section-title) h s l / 0.5);
+        }
+    }
+
     .message {
         $_message-space: 1rem;
 
@@ -248,12 +266,14 @@ footer, .chat-toolbar {
         border-radius: 1rem;
         max-width: min(calc(500px + 4 * $_message-space), 100%);
 
+        // Slide-in animation from left (assistant messages)
+        animation: slideInFromLeft 0.3s cubic-bezier(0, 0, 0.2, 1);
 
         &-content {
             box-sizing: border-box;
             padding: $_message-space;
-    
-    
+
+
             background-color: var(--message-bg);
             border-radius: inherit;
 
@@ -264,10 +284,21 @@ footer, .chat-toolbar {
         &-timestamp {
             align-self: end;
             padding-inline: math.div($_message-space, 2);
+            opacity: 0.6;
+            font-size: 0.75rem;
+            transition: opacity 250ms cubic-bezier(0, 0, 0.2, 1);
+
+            &:hover {
+                opacity: 1;
+            }
         }
 
         &.user {
             align-self: end;
+
+            // Slide-in animation from right (user messages)
+            animation: slideInFromRight 0.3s cubic-bezier(0, 0, 0.2, 1);
+
             .message-content {
                 background: linear-gradient(120deg, color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: 10%), color.adjust(list.nth(map.get($accent-colors, primary), 2), $lightness: 10%));
                 color: var(--header-text);
