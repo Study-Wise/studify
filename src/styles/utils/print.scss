@@ -1,0 +1,167 @@
+// Print Styles for StudyWise v2
+// Consolidated print styles from globals.scss and mode.scss
+// Ensures clean PDF generation for study materials
+
+@media print {
+    // ============================================
+    // GENERAL PRINT SETTINGS
+    // ============================================
+
+    body {
+        font-size: 10pt;
+        color: #000 !important;
+        background-color: #fff !important;
+        line-height: 1.4;
+    }
+
+    // ============================================
+    // HIDE NON-PRINTABLE ELEMENTS
+    // ============================================
+
+    // Hide navigation, headers, footers
+    body > header,
+    body > footer,
+    .chat-toolbar,
+    .header-content-wrapper,
+    .output-tabs,
+    .download-buttons,
+    button,
+    #error-message {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    // Hide input/introduction sections
+    body > main > .introduction-section,
+    body > main > .input-section,
+    body > main > .about-section,
+    #interactive-steps-container {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    // Theme switcher
+    .theme-switcher {
+        display: none !important;
+    }
+
+    // ============================================
+    // SHOW PRINTABLE CONTENT
+    // ============================================
+
+    // Ensure main container and output section are visible
+    body,
+    body > main,
+    body > main > #output-section {
+        display: block !important;
+        visibility: visible !important;
+        box-shadow: none !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+    }
+
+    // ============================================
+    // OUTPUT CONTENT VISIBILITY
+    // ============================================
+
+    // Hide all output content by default
+    .output-section-title,
+    .output-content {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    // ONLY show the output content with 'print-target-container' class
+    .output-content.print-target-container,
+    .output-section:not(:has(.output-content.print-target-container)) .output-content {
+        display: block !important;
+        visibility: visible !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 1cm !important;
+        border: none !important;
+        box-shadow: none !important;
+        page-break-before: auto;
+        page-break-after: auto;
+        animation: none !important;
+
+        > article {
+            visibility: visible !important;
+            display: block !important;
+            margin-block-start: 0 !important;
+
+            > :first-child {
+                margin-block-start: 0 !important;
+            }
+
+            :last-child {
+                margin-block-end: 0 !important;
+            }
+        }
+    }
+
+    // ============================================
+    // PAGE BREAK CONTROL
+    // ============================================
+
+    // Avoid breaking these elements
+    h2,
+    h3,
+    h4,
+    pre {
+        page-break-before: auto !important;
+        page-break-after: avoid !important;
+    }
+
+    // Prevent breaking inside these elements
+    ul,
+    ol,
+    p,
+    li,
+    pre,
+    code,
+    mjx-container {
+        page-break-inside: avoid !important;
+    }
+
+    // ============================================
+    // TYPOGRAPHY ADJUSTMENTS
+    // ============================================
+
+    code {
+        font-size: 9pt;
+        word-wrap: break-word;
+    }
+
+    pre {
+        white-space: pre-wrap;
+    }
+
+    // ============================================
+    // MATHJAX PRINT HANDLING
+    // ============================================
+
+    mjx-container {
+        visibility: visible !important;
+    }
+
+    .mathjax-pending {
+        visibility: hidden !important;
+    }
+
+    // ============================================
+    // DESMOS GRAPH HANDLING
+    // ============================================
+
+    .desmos-graph {
+        page-break-inside: avoid !important;
+        page-break-after: auto !important;
+        page-break-before: auto !important;
+        break-inside: avoid !important;
+        break-after: auto !important;
+        break-before: auto !important;
+    }
+}
