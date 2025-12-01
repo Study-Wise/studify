@@ -12,8 +12,8 @@
     align-items: center;
     justify-content: center;
     z-index: 1000;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-    transform: translateY(-100%);
+    transition: translate 0.3s ease, opacity 0.3s ease;
+    translate: 0 -100%;
     opacity: 0;
 }
 
@@ -29,8 +29,8 @@
 }
 
 @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    from { rotate: 0deg; }
+    to { rotate: 360deg; }
 }
 
 /* Touch feedback for buttons */
@@ -41,7 +41,7 @@
 
         &:active {
             background-color: rgba(0, 0, 0, 0.1);
-            transform: scale(0.98);
+            scale: 0.98;
         }
     }
 }

@@ -21,11 +21,11 @@ $transition-bounce: 500ms;
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        translate: 0 10px;
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        translate: 0 0;
     }
 }
 
@@ -33,11 +33,11 @@ $transition-bounce: 500ms;
 @keyframes slideInFromLeft {
     from {
         opacity: 0;
-        transform: translateX(-20px);
+        translate: -20px 0;
     }
     to {
         opacity: 1;
-        transform: translateX(0);
+        translate: 0 0;
     }
 }
 
@@ -45,11 +45,11 @@ $transition-bounce: 500ms;
 @keyframes slideInFromRight {
     from {
         opacity: 0;
-        transform: translateX(20px);
+        translate: 20px 0;
     }
     to {
         opacity: 1;
-        transform: translateX(0);
+        translate: 0 0;
     }
 }
 
@@ -92,10 +92,10 @@ $transition-bounce: 500ms;
 // Spin for spinners
 @keyframes spin {
     from {
-        transform: rotate(0deg);
+        rotate: 0deg;
     }
     to {
-        transform: rotate(360deg);
+        rotate: 360deg;
     }
 }
 
