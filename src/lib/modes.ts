@@ -141,6 +141,48 @@ const categories: Record<string, Category> = {
             },
         },
     },
+    engineering: {
+        name: 'Engineering',
+        description: 'Apply scientific and mathematical principles to design, build, and solve real-world problems',
+        modes: {
+            mechanical: {
+                show: true,
+                name: 'Mechanical Engineering',
+                description: 'Study mechanics, thermodynamics, materials, and mechanical system design',
+                icon: '⚙️',
+            },
+            electrical: {
+                show: true,
+                name: 'Electrical Engineering',
+                description: 'Explore circuits, electronics, signals, and electrical system design',
+                icon: '⚡',
+            },
+            civil: {
+                show: true,
+                name: 'Civil Engineering',
+                description: 'Design infrastructure, structures, transportation systems, and public works',
+                icon: '🏗️',
+            },
+            chemical: {
+                show: true,
+                name: 'Chemical Engineering',
+                description: 'Apply chemistry to industrial processes, materials, and chemical systems',
+                icon: '⚗️',
+            },
+            computer: {
+                show: true,
+                name: 'Computer Engineering',
+                description: 'Design hardware, embedded systems, and computer architecture',
+                icon: '🖥️',
+            },
+            industrial: {
+                show: true,
+                name: 'Industrial Engineering',
+                description: 'Optimize processes, systems, and operations for efficiency and productivity',
+                icon: '🏭',
+            },
+        },
+    },
     english: {
         name: 'English',
         description: 'Master communication skills through reading, writing, speaking, and literary analysis',
