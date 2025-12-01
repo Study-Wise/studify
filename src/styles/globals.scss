@@ -94,6 +94,15 @@
         else: light-dark(var(--card-shadow-light), var(--card-shadow-dark))
     );
 
+    --card-border-light: #{$card-border-light};
+    --card-border-dark: #{$card-border-dark};
+    --card-border: light-dark(var(--card-border-light), var(--card-border-dark));
+    --card-border: if(
+        style(--theme: "light"): var(--card-border-light);
+        style(--theme: "dark"): var(--card-border-dark);
+        else: light-dark(var(--card-border-light), var(--card-border-dark))
+    );
+
     // Section Colors
     --section-title-light: #{$section-title-light};
     --section-title-dark: #{$section-title-dark};
@@ -165,11 +174,10 @@ body {
 
 .container {
     box-sizing: border-box;
-    max-width: 960px;
+    width: min(clamp(960px, 75vw, 1020px), 100%);
     margin-left: auto;
     margin-right: auto;
     padding: $container-padding;
-    width: 100%;
 }
 
 select.fancy-select,
@@ -324,16 +332,6 @@ mjx-container[display="true"] {
     }
 
     /* Other adjustments */
-    .container {
-        padding: 0 15px;
-    }
-
-    main {
-        &:not(.chat-page) {
-            padding: 30px 0;
-        }
-    }
-
     .card {
         padding: 25px;
     }
