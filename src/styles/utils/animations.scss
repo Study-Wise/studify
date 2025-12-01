@@ -1,0 +1,163 @@
+// Animation utilities for StudyWise v2
+// Provides reusable animations and utility classes for consistent micro-interactions
+
+// Easing curves
+$ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+$ease-out: cubic-bezier(0, 0, 0.2, 1);
+$ease-in: cubic-bezier(0.4, 0, 1, 1);
+$ease-spring: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+// Transition speeds
+$transition-fast: 150ms;
+$transition-base: 250ms;
+$transition-slow: 350ms;
+$transition-bounce: 500ms;
+
+// ============================================
+// ENTRANCE ANIMATIONS
+// ============================================
+
+// Fade in from slightly below
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// Slide in from left
+@keyframes slideInFromLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+// Slide in from right
+@keyframes slideInFromRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+// Scale in
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        scale: 0.95;
+    }
+    to {
+        opacity: 1;
+        scale: 1;
+    }
+}
+
+// ============================================
+// LOADING ANIMATIONS
+// ============================================
+
+// Shimmer effect for loading states
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+// Pulse for notifications or loading
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+// Spin for spinners
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+// Blinking cursor for typing indicator
+@keyframes blink {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+}
+
+// ============================================
+// UTILITY CLASSES
+// ============================================
+
+// Apply fade-in animation
+.animate-fade-in {
+    animation: fadeIn 0.5s $ease-out;
+}
+
+// Apply slide-in from left
+.animate-slide-in-left {
+    animation: slideInFromLeft 0.4s $ease-out;
+}
+
+// Apply slide-in from right
+.animate-slide-in-right {
+    animation: slideInFromRight 0.4s $ease-out;
+}
+
+// Apply scale-in animation
+.animate-scale-in {
+    animation: scaleIn 0.3s $ease-out;
+}
+
+// Stagger children animations
+// Apply to parent container to have children fade in sequentially
+.stagger-children > * {
+    opacity: 0;
+    animation: fadeIn 0.5s $ease-out forwards;
+
+    // Stagger delay for first 10 children
+    @for $i from 1 through 10 {
+        &:nth-child(#{$i}) {
+            animation-delay: #{$i * 0.05}s;
+        }
+    }
+}
+
+// ============================================
+// ACCESSIBILITY
+// ============================================
+
+// Respect user's motion preferences
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
