@@ -18,6 +18,9 @@ $card-text: #000;
 $card-shadow-light: rgba(0, 0, 0, 0.07);
 $card-shadow-dark: rgba(255, 255, 255, 0.15);
 
+$card-border-light: #e0e0e0;
+$card-border-dark: #555;
+
 // Section
 $section-title-light: #0056b3;
 $section-title-dark: color.adjust($section-title-light, $lightness: 25%);
