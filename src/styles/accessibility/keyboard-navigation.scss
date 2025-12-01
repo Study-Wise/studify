@@ -6,10 +6,6 @@
     outline-offset: 2px !important;
 }
 
-.skip-link:focus-visible {
-    outline: 2px solid #fff !important;
-}
-
 /* Custom focus styles for specific elements */
 .nav-btn:focus-visible,
 .fancy-button:focus-visible {
@@ -18,20 +14,29 @@
 
 /* Skip links */
 .skip-link {
+    $_pos: 6px;
+
     position: absolute;
-    top: -40px;
-    left: 6px;
+    left: $_pos;
+
+    padding: 0.75rem;
+
     background: #000;
     color: #fff;
-    padding: 8px;
-    text-decoration: none;
-    z-index: 1000;
-    border-radius: 4px;
-    transition: top 0.3s;
-    font-size: 14px;
 
-    &:focus {
-        top: 6px;
+    border-radius: 4px;
+
+    font-size: 14px;
+    text-decoration: none;
+    line-height: 1;
+    
+    z-index: 1000;
+
+    transition: translate 0.3s;
+    translate: 0 -100%;
+
+    &:focus-visible {
+        translate: 0 $_pos;
         outline: 2px solid #fff;
         outline-offset: 2px;
     }
@@ -43,9 +48,9 @@
 }
 
 /* Enhanced focus styles */
-.nav-btn:focus,
-.fancy-button:focus,
-button:focus {
+.nav-btn:focus-visible,
+.fancy-button:focus-visible,
+button:focus-visible {
     box-shadow: 0 0 0 2px #4F46E5, 0 0 0 4px rgba(79, 70, 229, 0.2);
 }
 
@@ -53,7 +58,7 @@ button:focus {
 .keyboard-activatable {
     cursor: pointer;
 
-    &:focus {
+    &:focus-visible {
         outline: 2px solid #4F46E5;
         outline-offset: 2px;
     }
@@ -67,7 +72,7 @@ button:focus {
 
 /* High contrast mode support */
 @media (prefers-contrast: high) {
-    *:focus {
+    *:focus-visible {
         outline: 3px solid;
         outline-offset: 2px;
     }
