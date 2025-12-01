@@ -37,9 +37,9 @@ const categories: Record<string, Category> = {
         name: 'Math',
         description: 'Develop problem-solving skills through numbers, patterns, and mathematical reasoning',
         modes: {
-            math: {
+            general: {
                 show: true,
-                name: 'Math',
+                name: 'General',
                 description: 'Algebra, geometry, calculus, statistics, and mathematical problem-solving',
                 icon: '📐',
             },
