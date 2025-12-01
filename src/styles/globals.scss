@@ -1,6 +1,7 @@
 @use './variables/globals.scss' as *;
 @use './utils/helpers.scss' as *;
 @use './utils/animations.scss' as *;
+@use './utilities/accessibility' as *;
 
 @use 'sass:color';
 @use 'sass:list';
