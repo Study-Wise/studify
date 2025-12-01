@@ -1,6 +1,7 @@
 @use './variables/globals.scss' as *;
 @use './utils/helpers.scss' as *;
 @use './utils/animations.scss' as *;
+@use './utils/print.scss' as *;
 @use './utilities/accessibility' as *;
 
 @use 'sass:color';
@@ -149,38 +150,6 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100dvh;
-
-    @media print {
-        & {
-            font-size: 10pt;
-            color: #000 !important;
-            background-color: #fff !important;
-            line-height: 1.4;
-    
-            > header,
-            > main > .introduction-section,
-            > main > .input-section,
-            > main > .about-section,
-            > footer,
-            .chat-toolbar,
-            .header-content-wrapper {
-                display: none !important;
-                visibility: hidden !important;
-            }
-    
-            > main,
-            > main > #output-section {
-                display: block !important;
-                visibility: visible !important;
-                box-shadow: none !important;
-                border: none !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                width: 100% !important;
-                max-width: none !important;
-            }
-        }
-    }
 }
 
 @media screen {
@@ -383,127 +352,7 @@ mjx-container[display="true"] {
     }
 }
 
-/* Print-Specific Styles */
-@media print {
-    /* Hide elements not meant for printing */
-    body > header,
-    body > main > .introduction-section,
-    body > main > .input-section,
-    body > main > .about-section,
-    body > footer,
-    .output-tabs,
-    .download-buttons,
-    #interactive-steps-container,
-    button,
-    #error-message {
-        display: none !important;
-        visibility: hidden !important;
-    }
-
-    /* Ensure main container and output section are potentially visible */
-    body,
-    body > main,
-    body > main > #output-section {
-        display: block !important;
-        visibility: visible !important;
-        box-shadow: none !important;
-        border: none !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        width: 100% !important;
-        max-width: none !important;
-    }
-
-    /* Hide all output content divs by default */
-    .output-section-title,
-    .output-content {
-        display: none !important;
-        visibility: hidden !important;
-    }
-
-    /* ONLY show the output content div that has the 'print-target-container' class */
-    .output-content.print-target-container,
-    .output-section:not(:has(.output-content.print-target-container))
-        .output-content {
-        display: block !important;
-        visibility: visible !important;
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 1cm !important;
-        border: none !important;
-        box-shadow: none !important;
-        page-break-before: auto;
-        page-break-after: auto;
-        animation: none !important;
-
-        > article {
-            visibility: visible !important;
-            display: block !important;
-            margin-block-start: 0 !important;
-
-            > :first-child {
-                margin-block-start: 0 !important;
-            }
-            :last-child {
-                margin-block-end: 0 !important;
-            }
-        }
-    }
-
-    /* General print typography */
-    body {
-        font-size: 10pt;
-        color: #000 !important;
-        background-color: #fff !important;
-        line-height: 1.4;
-    }
-
-    /* Page break control */
-    h2,
-    h3,
-    h4,
-    pre {
-        page-break-before: auto !important;
-        page-break-after: avoid !important;
-    }
-
-    ul,
-    ol,
-    p,
-    li,
-    pre,
-    code,
-    mjx-container {
-        page-break-inside: avoid !important;
-    }
-
-    code {
-        font-size: 9pt;
-        word-wrap: break-word;
-    }
-
-    pre {
-        white-space: pre-wrap;
-    }
-
-    /* MathJax print visibility */
-    mjx-container {
-        visibility: visible !important;
-    }
-
-    .mathjax-pending {
-        visibility: hidden !important;
-    }
-
-    .desmos-graph {
-        page-break-inside: avoid !important;
-        page-break-after: auto !important;
-        page-break-before: auto !important;
-        break-inside: avoid !important;
-        break-after: auto !important;
-        break-before: auto !important;
-    }
-}
+// Print styles now consolidated in utils/print.scss
 
 .desmos-graph {
     &[latex*="["][latex*="]"] {
@@ -512,75 +361,4 @@ mjx-container[display="true"] {
     }
 }
 
-/* Typography elements */
-h2,
-h3,
-h4,
-pre {
-    @media print {
-        & {
-            page-break-before: auto !important;
-            page-break-after: avoid !important;
-        }
-    }
-}
-
-ul,
-ol,
-p,
-li,
-pre,
-code,
-mjx-container {
-    @media print {
-        & {
-            page-break-inside: avoid !important;
-        }
-    }
-}
-
-code {
-    @media print {
-        & {
-            font-size: 9pt;
-            word-wrap: break-word;
-        }
-    }
-}
-
-pre {
-    @media print {
-        & {
-            white-space: pre-wrap;
-        }
-    }
-}
-
-mjx-container {
-    @media print {
-        & {
-            visibility: visible !important;
-        }
-    }
-}
-
-.mathjax-pending {
-    @media print {
-        & {
-            visibility: hidden !important;
-        }
-    }
-}
-
-.desmos-graph {
-    @media print {
-        & {
-            page-break-inside: avoid !important;
-            page-break-after: auto !important;
-            page-break-before: auto !important;
-            break-inside: avoid !important;
-            break-after: auto !important;
-            break-before: auto !important;
-        }
-    }
-}
+// All print styles consolidated in utils/print.scss
