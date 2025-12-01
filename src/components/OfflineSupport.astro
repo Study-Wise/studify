@@ -2,7 +2,7 @@
 // Offline support component for PWA functionality
 import 'dotenv/config';
 
-const isDev = (import.meta.env.NODE_ENV === 'development' || import.meta.env.NODE_ENV === 'dev') || (import.meta.env.vercel?.toString() === '1' && (import.meta.env.VERCEL_ENV === 'development' || import.meta.env.VERCEL_ENV === 'dev'))
+const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MODE === 'production') || (import.meta.env.VERCEL_ENV === 'production')
 
 ---
 <div id="offline-indicator" class="offline-indicator" style="display: none;">
@@ -16,7 +16,7 @@ const isDev = (import.meta.env.NODE_ENV === 'development' || import.meta.env.NOD
     <button id="update-button" class="update-button">Update Now</button>
 </div>
 
-<script define:vars={{ isDev }}>
+<script define:vars={{ isProd }}>
     // Offline/Online detection
     function updateOnlineStatus() {
         const indicator = document.getElementById('offline-indicator');
@@ -35,10 +35,10 @@ const isDev = (import.meta.env.NODE_ENV === 'development' || import.meta.env.NOD
     // Service Worker registration and update handling
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', async () => {
-            if (isDev) {
+            if (isProd) {
                 try {
                     await swRegistration();
-    
+
                 } catch (error) {
                     console.error('Service Worker registration failed:', error);
                 }
