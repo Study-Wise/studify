@@ -273,12 +273,49 @@ footer, .chat-toolbar {
             box-sizing: border-box;
             padding: $_message-space;
 
-
             background-color: var(--message-bg);
             border-radius: inherit;
 
+            // Enhanced shadows (Phase 3)
+            box-shadow:
+                inset 0 1px 2px rgba(from var(--header-text) r g b / 0.05),
+                0 0 5px $chat-message-shadow;
+
             mjx-container {
                 width: fit-content;
+            }
+
+            // Better code block styling (Phase 3)
+            pre,
+            code {
+                background: rgba(from var(--card-text) r g b / 0.08);
+                padding: 0.25rem 0.5rem;
+                border-radius: 4px;
+                font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+                font-size: 0.9em;
+            }
+
+            pre {
+                padding: 0.75rem;
+                margin: 0.5rem 0;
+                overflow-x: auto;
+                border-left: 3px solid rgba(from var(--section-title) r g b / 0.3);
+
+                code {
+                    background: none;
+                    padding: 0;
+                }
+            }
+
+            // Better link styling
+            a {
+                color: list.nth(map.get($accent-colors, primary), 1);
+                text-decoration: underline;
+                transition: opacity 250ms cubic-bezier(0, 0, 0.2, 1);
+
+                &:hover {
+                    opacity: 0.8;
+                }
             }
         }
         &-timestamp {
@@ -304,6 +341,53 @@ footer, .chat-toolbar {
                 color: var(--header-text);
             }
         }
+    }
+
+    // ============================================
+    // TYPING INDICATOR (Phase 3)
+    // ============================================
+    // Add class "typing" to message when AI is generating
+    .message.typing {
+        .message-content {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+        }
+
+        // Animated dots
+        .typing-dots {
+            display: flex;
+            gap: 0.25rem;
+
+            span {
+                width: 8px;
+                height: 8px;
+                background: var(--card-text);
+                border-radius: 50%;
+                opacity: 0.4;
+                animation: typing-dot 1.4s infinite;
+
+                &:nth-child(2) {
+                    animation-delay: 0.2s;
+                }
+
+                &:nth-child(3) {
+                    animation-delay: 0.4s;
+                }
+            }
+        }
+    }
+}
+
+@keyframes typing-dot {
+    0%, 60%, 100% {
+        opacity: 0.4;
+        scale: 1;
+    }
+    30% {
+        opacity: 1;
+        scale: 1.2;
     }
 }
 

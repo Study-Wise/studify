@@ -15,6 +15,89 @@
         font-weight: 600;
         color: var(--body-text);
     }
+
+    // ============================================
+    // NUMBERED STEPS (Phase 3 enhancement)
+    // ============================================
+    .steps-list {
+        counter-reset: step-counter;
+        list-style: none;
+        padding-left: 0;
+        margin: 1.5rem 0;
+
+        > li {
+            counter-increment: step-counter;
+            position: relative;
+            padding-left: 3.5rem;
+            margin-bottom: 2rem;
+
+            &:last-child {
+                margin-bottom: 1rem;
+            }
+
+            // Gradient numbered circle
+            &::before {
+                content: counter(step-counter);
+                position: absolute;
+                left: 0;
+                top: 0;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                width: 2.5rem;
+                height: 2.5rem;
+
+                background: linear-gradient(135deg,
+                    list.nth(map.get($accent-colors, primary), 1),
+                    list.nth(map.get($accent-colors, primary), 2)
+                );
+                color: var(--header-text);
+                border-radius: 50%;
+
+                font-weight: 700;
+                font-size: 1.125rem;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+
+                transition: scale 250ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            }
+
+            // Connecting line
+            &:not(:last-child)::after {
+                content: '';
+                position: absolute;
+                left: 1.25rem;
+                top: 2.5rem;
+                width: 2px;
+                height: calc(100% - 1.5rem);
+
+                background: linear-gradient(180deg,
+                    rgba(list.nth(map.get($accent-colors, primary), 1), 0.4),
+                    rgba(list.nth(map.get($accent-colors, primary), 2), 0.1)
+                );
+            }
+
+            // Hover effect on number
+            &:hover::before {
+                scale: 1.1;
+            }
+
+            // Nested list styling
+            ul {
+                margin-top: 0.75rem;
+                margin-left: 1.5rem;
+
+                li {
+                    margin-bottom: 0.5rem;
+
+                    &::marker {
+                        color: list.nth(map.get($accent-colors, primary), 1);
+                    }
+                }
+            }
+        }
+    }
 }
 
 .categories-grid {

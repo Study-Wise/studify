@@ -31,4 +31,40 @@
             }
         }
     }
+
+    // ============================================
+    // CARD VARIANTS (Phase 3 enhancements)
+    // ============================================
+
+    // Interactive variant - adds hover effect
+    &--interactive {
+        cursor: pointer;
+        transition: translate 250ms cubic-bezier(0, 0, 0.2, 1),
+                    box-shadow 250ms cubic-bezier(0, 0, 0.2, 1);
+
+        &:hover {
+            translate: 0 -4px;
+            box-shadow: 0 8px 20px var(--card-shadow);
+        }
+
+        &:active {
+            translate: 0 -2px;
+        }
+    }
+
+    // Compact variant - less padding
+    &--compact {
+        padding: math.div($card-spacing, 1.5);
+        border-radius: 8px;
+    }
+
+    // Bordered variant - adds visible border
+    &--bordered {
+        border: 1px solid var(--card-border);
+    }
+
+    // Elevated variant - stronger shadow for emphasis
+    &--elevated {
+        box-shadow: 0 8px 20px var(--card-shadow);
+    }
 }
