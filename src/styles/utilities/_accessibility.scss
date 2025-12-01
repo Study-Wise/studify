@@ -1,0 +1,237 @@
+// Accessibility Utilities for StudyWise v2
+// Ensures the application is usable for all users including those using
+// assistive technologies, keyboard navigation, and motion preferences
+
+// ============================================
+// FOCUS STATES
+// ============================================
+
+// Apply consistent focus styles to all interactive elements
+:focus-visible {
+    outline: 2px solid var(--section-title);
+    outline-offset: 2px;
+    border-radius: 0.25rem;
+}
+
+// Remove default outline for mouse users (keyboard users still get focus-visible)
+:focus:not(:focus-visible) {
+    outline: none;
+}
+
+// Ensure buttons and links have visible focus states
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid var(--section-title);
+    outline-offset: 2px;
+}
+
+// ============================================
+// SKIP TO MAIN CONTENT
+// ============================================
+
+// Skip link for keyboard navigation
+// Allows keyboard users to skip repetitive navigation
+.skip-to-main {
+    position: absolute;
+    top: -100%;
+    left: 0;
+    padding: 1rem 1.5rem;
+    background: var(--section-title);
+    color: var(--header-text);
+    text-decoration: none;
+    font-weight: 600;
+    z-index: 9999;
+    border-radius: 0 0 0.5rem 0;
+
+    &:focus {
+        top: 0;
+        outline: 3px solid var(--header-text);
+        outline-offset: 2px;
+    }
+}
+
+// ============================================
+// SCREEN READER ONLY
+// ============================================
+
+// Hide visually but keep accessible to screen readers
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+// Make screen reader only element focusable when focused
+.sr-only-focusable {
+    @extend .sr-only;
+
+    &:active,
+    &:focus {
+        position: static;
+        width: auto;
+        height: auto;
+        overflow: visible;
+        clip: auto;
+        white-space: normal;
+    }
+}
+
+// ============================================
+// REDUCED MOTION
+// ============================================
+
+// Respect user preference for reduced motion
+// Disables animations for users who have motion sensitivity
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+// ============================================
+// HIGH CONTRAST MODE
+// ============================================
+
+// Support for high contrast mode (Windows High Contrast Mode)
+@media (prefers-contrast: high) {
+    // Ensure borders are visible
+    .card,
+    .button,
+    input,
+    select,
+    textarea {
+        border: 2px solid currentColor;
+    }
+
+    // Ensure sufficient contrast
+    a {
+        text-decoration: underline;
+    }
+
+    // Remove subtle shadows that may not be visible
+    * {
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+}
+
+// ============================================
+// TOUCH TARGET SIZE
+// ============================================
+
+// Ensure interactive elements meet minimum touch target size (44x44px)
+// Based on WCAG 2.5.5 Target Size
+button,
+a,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+.clickable,
+.interactive {
+    min-height: 44px;
+    min-width: 44px;
+
+    // Exception for inline text links
+    &:is(a:not([class])) {
+        min-height: auto;
+        min-width: auto;
+    }
+}
+
+// ============================================
+// KEYBOARD NAVIGATION INDICATORS
+// ============================================
+
+// Add a visual indicator for keyboard navigation
+// Shows which element is currently focused
+.keyboard-navigation-active {
+    *:focus {
+        outline: 3px solid var(--section-title);
+        outline-offset: 3px;
+    }
+}
+
+// ============================================
+// ARIA LIVE REGIONS
+// ============================================
+
+// Styles for live regions (announcements)
+[aria-live="polite"],
+[aria-live="assertive"] {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+
+    // Make visible when there's content
+    &:not(:empty) {
+        position: static;
+        width: auto;
+        height: auto;
+        overflow: visible;
+        padding: 1rem;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 0.5rem;
+        margin-block: 1rem;
+    }
+}
+
+// ============================================
+// COLOR CONTRAST
+// ============================================
+
+// Ensure disabled states maintain sufficient contrast
+:disabled,
+[aria-disabled="true"] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+// ============================================
+// FOCUS TRAPPING
+// ============================================
+
+// When a modal or dialog is open, prevent focus on background content
+body:has([role="dialog"][aria-modal="true"]) {
+    // Prevent background scroll
+    overflow: hidden;
+
+    // Reduce visibility of background
+    > *:not([role="dialog"]) {
+        filter: blur(2px);
+        pointer-events: none;
+    }
+}
+
+// ============================================
+// USAGE NOTES
+// ============================================
+//
+// Import this file in globals.scss:
+// @use './utilities/accessibility' as *;
+//
+// This file provides baseline accessibility improvements.
+// Always ensure:
+// - Semantic HTML (use button, not div with onClick)
+// - Proper ARIA labels where needed
+// - Keyboard navigation support (Tab, Enter, Escape)
+// - Sufficient color contrast (WCAG AA: 4.5:1 for text)
+// - Alternative text for images
+// - Form labels and error messages

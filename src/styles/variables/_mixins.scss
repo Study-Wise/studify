@@ -1,0 +1,326 @@
+// SCSS Mixins for StudyWise v2
+// Reusable patterns for common CSS needs
+// Import tokens for use in mixins
+@use './tokens.scss' as *;
+
+// ============================================
+// FOCUS STATES
+// ============================================
+
+// Consistent focus ring for accessibility
+@mixin focus-ring($color: var(--section-title), $width: 2px, $offset: 2px) {
+    outline: $width solid $color;
+    outline-offset: $offset;
+    border-radius: $radius-sm;
+}
+
+// Remove focus outline for mouse users, keep for keyboard
+@mixin focus-visible-only {
+    &:focus-visible {
+        @include focus-ring;
+    }
+
+    &:focus:not(:focus-visible) {
+        outline: none;
+    }
+}
+
+// ============================================
+// TEXT UTILITIES
+// ============================================
+
+// Single line text overflow with ellipsis
+@mixin text-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+// Multi-line text overflow
+@mixin text-overflow-lines($lines: 2) {
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+// Visually hide but keep for screen readers
+@mixin visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+// ============================================
+// LAYOUT UTILITIES
+// ============================================
+
+// Flexbox centering
+@mixin flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+// Absolute centering
+@mixin absolute-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+}
+
+// Content wrapper with max width and padding
+@mixin content-wrapper($max-width: $container-max-width, $padding: $container-padding) {
+    max-width: $max-width;
+    margin-inline: auto;
+    padding-inline: $padding;
+}
+
+// Full viewport height (accounting for mobile address bars)
+@mixin full-viewport-height {
+    height: 100vh;
+    height: 100dvh; // Dynamic viewport height for mobile
+}
+
+// ============================================
+// INTERACTIVE EFFECTS
+// ============================================
+
+// Lift effect on hover (common for cards and buttons)
+@mixin interactive-lift($lift: -2px, $shadow: $shadow-lg) {
+    transition: translate $transition-base $ease-out,
+                box-shadow $transition-base $ease-out;
+
+    &:hover:not(:disabled) {
+        translate: 0 $lift;
+        box-shadow: $shadow;
+    }
+
+    &:active:not(:disabled) {
+        translate: 0 0;
+    }
+}
+
+// Scale effect on hover
+@mixin interactive-scale($scale: 1.05) {
+    transition: scale $transition-base $ease-out;
+
+    &:hover:not(:disabled) {
+        scale: $scale;
+    }
+
+    &:active:not(:disabled) {
+        scale: 0.98;
+    }
+}
+
+// Ripple effect (requires pseudo-element)
+@mixin ripple($color: rgba(255, 255, 255, 0.3)) {
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: $color;
+        border-radius: inherit;
+        scale: 0;
+        opacity: 0;
+    }
+
+    &:active::after {
+        scale: 2;
+        opacity: 1;
+        transition: scale $transition-slower $ease-out,
+                    opacity $transition-base;
+    }
+}
+
+// ============================================
+// VISUAL EFFECTS
+// ============================================
+
+// Glassmorphism effect
+@mixin glass($blur: 10px, $opacity: 0.8) {
+    background: rgba(from var(--card-bg) r g b / $opacity);
+    backdrop-filter: blur($blur);
+    -webkit-backdrop-filter: blur($blur);
+}
+
+// Gradient overlay (useful for hover effects)
+@mixin gradient-overlay($opacity: 0.1, $angle: 135deg) {
+    position: relative;
+    isolation: isolate;
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient($angle,
+            rgba(from var(--section-title) r g b / $opacity),
+            transparent
+        );
+        border-radius: inherit;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity $transition-base $ease-out;
+        z-index: -1;
+    }
+
+    &:hover::before {
+        opacity: 1;
+    }
+}
+
+// Custom scrollbar
+@mixin custom-scrollbar(
+    $width: 8px,
+    $track-color: transparent,
+    $thumb-color: hsl(from var(--section-title) h s l / 0.3)
+) {
+    &::-webkit-scrollbar {
+        width: $width;
+        height: $width;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: $track-color;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: $thumb-color;
+        border-radius: $radius-full;
+
+        &:hover {
+            background: hsl(from var(--section-title) h s l / 0.5);
+        }
+    }
+
+    // Firefox
+    @supports(scrollbar-width: thin) {
+        scrollbar-width: thin;
+    }
+    @supports(scrollbar-color: $thumb-color $track-color) {
+        scrollbar-color: $thumb-color $track-color;
+    }
+}
+
+// ============================================
+// RESPONSIVE BREAKPOINTS
+// ============================================
+
+@mixin screen-mobile-only {
+    @media (max-width: $breakpoint-mobile) {
+        @content;
+    }
+}
+
+@mixin screen-tablet-only {
+    @media (min-width: calc($breakpoint-mobile + 1px)) and (max-width: $breakpoint-tablet) {
+        @content;
+    }
+}
+
+@mixin screen-tablet-up {
+    @media (min-width: calc($breakpoint-mobile + 1px)) {
+        @content;
+    }
+}
+
+@mixin screen-desktop-up {
+    @media (min-width: calc($breakpoint-tablet + 1px)) {
+        @content;
+    }
+}
+
+@mixin screen-large-desktop-up {
+    @media (min-width: $breakpoint-desktop) {
+        @content;
+    }
+}
+
+@mixin screen-wide {
+    @media (min-width: $breakpoint-wide) {
+        @content;
+    }
+}
+
+// Custom media query
+@mixin screen-min($size) {
+    @media (min-width: $size) {
+        @content;
+    }
+}
+
+// ============================================
+// ASPECT RATIO
+// ============================================
+
+// Maintain aspect ratio (useful for images and videos)
+@mixin aspect-ratio($width, $height) {
+    aspect-ratio: #{$width} / #{$height};
+
+    // Fallback for older browsers
+    @supports not (aspect-ratio: 1) {
+        &::before {
+            content: '';
+            display: block;
+            padding-bottom: calc(($height / $width) * 100%);
+        }
+    }
+}
+
+// ============================================
+// ANIMATIONS
+// ============================================
+
+// Fade in animation
+@mixin fade-in($duration: $transition-base, $delay: 0s) {
+    animation: fadeIn $duration $ease-out $delay;
+}
+
+// Slide in from direction
+@mixin slide-in($direction: 'left', $duration: $transition-base, $delay: 0s) {
+    @if $direction == 'left' {
+        animation: slideInFromLeft $duration $ease-out $delay;
+    } @else if $direction == 'right' {
+        animation: slideInFromRight $duration $ease-out $delay;
+    }
+}
+
+// ============================================
+// USAGE EXAMPLES
+// ============================================
+//
+// Import this file in any SCSS file:
+// @use '../variables/mixins' as *;
+//
+// Examples:
+//
+// .button {
+//     @include interactive-lift;
+//     @include focus-visible-only;
+// }
+//
+// .card {
+//     @include gradient-overlay(0.05);
+//     @include screen-mobile-only {
+//         padding: $spacing-sm;
+//     }
+// }
+//
+// .scrollable-area {
+//     @include custom-scrollbar;
+// }
+//
+// .description {
+//     @include text-overflow-lines(3);
+// }
