@@ -4,7 +4,8 @@
       "WebFetch(domain:docs.uploadthing.com)",
       "Bash(npm run build:*)",
       "Bash(git add:*)",
-      "Bash(git rm:*)"
+      "Bash(git rm:*)",
+      "WebFetch(domain:ai.google.dev)"
     ],
     "deny": [],
     "ask": []

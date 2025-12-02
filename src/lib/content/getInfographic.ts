@@ -6,7 +6,11 @@ export async function getInfographic(threadId: string): Promise<any | null> {
     try {
         const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
         if (threads.length > 0) {
-            return threads[0].generatedInfographic || null;
+            const infographic = threads[0].generatedInfographic;
+            // Check if infographic has actual data (imageUrl property indicates it's been generated)
+            if (infographic && typeof infographic === 'object' && 'imageUrl' in infographic) {
+                return infographic;
+            }
         }
     } catch (error) {
         console.error('Error fetching infographic:', error);

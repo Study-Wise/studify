@@ -86,6 +86,11 @@ export const inNav = 'hide';
                             if (obj.precedingText) parts.push(obj.precedingText);
                             if (obj.followingText) parts.push(obj.followingText);
                             content = parts.join('\n\n');
+
+                            // Skip rendering if there's no content (fancy output only)
+                            if (!content.trim()) {
+                                return null;
+                            }
                         }
 
                         // Render as simple message
@@ -108,7 +113,7 @@ export const inNav = 'hide';
                 )}
             </div>
             {isAuthorized && <Toolbar />}
-            <Footer />
+            <Footer hideCopyright={true} />
         </section>
         <RightSidebar
             hasReferenceSheet={hasReferenceSheet}

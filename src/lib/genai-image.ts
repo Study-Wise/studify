@@ -1,12 +1,14 @@
 import { GoogleGenAI } from '@google/genai';
 import { uploadFile } from './uploadthing';
 
-const ai = new GoogleGenAI({});
+const ai = new GoogleGenAI({
+    apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY || '',
+});
 
 // Generate image and return buffer
 async function generateImageBuffer(prompt: string) {
     const response = await ai.models.generateContent({
-        model: 'Gemini 3 Pro Image Preview (Nano Banana Pro Preview)',
+        model: 'gemini-3-pro-image-preview',
         contents: prompt,
     });
 
