@@ -13,10 +13,7 @@ import '../../../../styles/pages/chat.scss';
 import { getMessages, getMessagesLength } from '../../../../lib/threads';
 import extract from '../../../../lib/extractPartsofMessage';
 import Footer from '../../../../components/Footer.astro';
-import { getUserRole } from '../../../../lib/auth-utils';
-import { db } from '../../../../db/initialize';
-import { eq } from 'drizzle-orm';
-import { threadsTable } from '../../../../db/schema';
+import { checkThreadAccess } from '../../../../lib/auth/checkThreadAccess';
 
 let { category, mode, id } = Astro.params || { category: '', mode: '', id: '' };
 
@@ -30,42 +27,12 @@ if (!userId) {
     return Astro.redirect("/user/sign-in");
 }
 
-// Get user role and check if admin
-const userRole = getUserRole(auth);
-const isUserAdmin = userRole === 'admin';
+// Check thread access
+const { isAuthorized, isPublic } = await checkThreadAccess(id || '', user_email, auth);
 
-// Check thread ownership
-let threadOwner: string | null = null;
-let isPublicThread = false;
-if (id) {
-    try {
-        const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, id));
-        if (threads.length > 0) {
-            threadOwner = threads[0].email;
-            isPublicThread = threads[0].isPublic;
-            // If unclaimed and user is authenticated, claim ownership
-            // TODO: Fix claiming unclaimed threads
-            if (!threadOwner && user_email) {
-                try {
-                    await db.update(threadsTable)
-                        .set({ email: user_email, updatedAt: new Date() })
-                        .where(eq(threadsTable.id, id));
-                    threadOwner = user_email;
-                } catch (e) {
-                    console.error('Error claiming thread ownership:', e);
-                }
-            }
-        }
-    } catch (error) {
-        console.error('Error fetching thread:', error);
-    }
-}
-
-// Check if user owns the thread or is admin
+// Get messages only if authorized or public
 const messagesLength = await getMessagesLength(id || '');
-const isAuthorized = id && messagesLength > 0 && ((threadOwner && threadOwner === user_email) || !threadOwner || isUserAdmin);
-const messages = !isAuthorized ? [] : await getMessages(id, user_email);
-const isPublic = !isAuthorized && isPublicThread;
+const messages = (isAuthorized || isPublic) && messagesLength > 0 ? await getMessages(id ?? '', user_email) : [];
 
 
 export const inNav = 'hide';
