@@ -108,13 +108,6 @@ $border-radius: $button-border-radius; // 6px
 
     position: relative;
 
-    $skew-deg: 10deg;
-    transform: skew(#{-1 * $skew-deg});
-
-    .text {
-        transform: skew(#{$skew-deg});
-    }
-
     .tabs > &.tab {
         margin-bottom: #{-1 * $tab-border-size};
     }
