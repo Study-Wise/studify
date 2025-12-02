@@ -1,11 +1,6 @@
 import { getMessages } from '../threads';
 import extract from '../extractPartsofMessage';
-
-export interface StudyGuideResult {
-    content: string | null;
-    precedingText: string;
-    followingText: string;
-}
+import type { StudyGuideResult } from '../types';
 
 export async function getLatestStudyGuide(
     threadId: string,

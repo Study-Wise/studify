@@ -1,5 +1,11 @@
 ---
 import '../../styles/components/chat/right-sidebar.scss';
+import type { ChatRightSidebarProps } from '../../lib/types';
+
+const { hasReferenceSheet, hasStudyGuide, threadId, category, mode } = Astro.props as ChatRightSidebarProps;
+
+const referenceSheetUrl = `/${category}/${mode}/reference-sheet/${threadId}`;
+const studyGuideUrl = `/${category}/${mode}/study-guide/${threadId}`;
 ---
 <aside class="chat-right-sidebar">
     <div class="chat-right-sidebar-content">
@@ -23,7 +29,14 @@ import '../../styles/components/chat/right-sidebar.scss';
                     </button>
                 </div>
                 <div class="tab-body">
-                    <p class="empty-message">No reference sheet generated yet. Send a message to generate one.</p>
+                    {hasReferenceSheet ? (
+                        <a href={referenceSheetUrl} class="view-full-btn" target="_blank">
+                            <span class="material-symbols-outlined">open_in_new</span>
+                            <span>View Full Reference Sheet</span>
+                        </a>
+                    ) : (
+                        <p class="empty-message">No reference sheet generated yet. Send a message to generate one.</p>
+                    )}
                 </div>
             </div>
 
@@ -35,7 +48,14 @@ import '../../styles/components/chat/right-sidebar.scss';
                     </button>
                 </div>
                 <div class="tab-body">
-                    <p class="empty-message">No study guide generated yet. Send a message to generate one.</p>
+                    {hasStudyGuide ? (
+                        <a href={studyGuideUrl} class="view-full-btn" target="_blank">
+                            <span class="material-symbols-outlined">open_in_new</span>
+                            <span>View Full Study Guide</span>
+                        </a>
+                    ) : (
+                        <p class="empty-message">No study guide generated yet. Send a message to generate one.</p>
+                    )}
                 </div>
             </div>
         </div>

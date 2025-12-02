@@ -1,11 +1,6 @@
 import { getMessages } from '../threads';
 import extract from '../extractPartsofMessage';
-
-export interface ReferenceSheetResult {
-    content: string | null;
-    precedingText: string;
-    followingText: string;
-}
+import type { ReferenceSheetResult } from '../types';
 
 export async function getLatestReferenceSheet(
     threadId: string,

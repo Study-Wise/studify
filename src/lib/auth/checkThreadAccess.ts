@@ -2,12 +2,7 @@ import { db } from '../../db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '../../db/schema';
 import { getUserRole } from '../auth-utils';
-
-export interface ThreadAccessResult {
-    isAuthorized: boolean;
-    isPublic: boolean;
-    threadOwner: string | null;
-}
+import type { ThreadAccessResult } from '../types';
 
 export async function checkThreadAccess(
     threadId: string,

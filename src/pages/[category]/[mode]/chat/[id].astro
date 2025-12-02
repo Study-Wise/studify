@@ -14,6 +14,8 @@ import { getMessages, getMessagesLength } from '../../../../lib/threads';
 import extract from '../../../../lib/extractPartsofMessage';
 import Footer from '../../../../components/Footer.astro';
 import { checkThreadAccess } from '../../../../lib/auth/checkThreadAccess';
+import { getLatestReferenceSheet } from '../../../../lib/content/getLatestReferenceSheet';
+import { getLatestStudyGuide } from '../../../../lib/content/getLatestStudyGuide';
 
 let { category, mode, id } = Astro.params || { category: '', mode: '', id: '' };
 
@@ -33,6 +35,18 @@ const { isAuthorized, isPublic } = await checkThreadAccess(id || '', user_email,
 // Get messages only if authorized or public
 const messagesLength = await getMessagesLength(id || '');
 const messages = (isAuthorized || isPublic) && messagesLength > 0 ? await getMessages(id ?? '', user_email) : [];
+
+// Check if reference sheet and study guide exist
+let hasReferenceSheet = false;
+let hasStudyGuide = false;
+
+if ((isAuthorized || isPublic) && id) {
+    const referenceSheetResult = await getLatestReferenceSheet(id, user_email);
+    const studyGuideResult = await getLatestStudyGuide(id, user_email);
+
+    hasReferenceSheet = !!referenceSheetResult.content;
+    hasStudyGuide = !!studyGuideResult.content;
+}
 
 
 export const inNav = 'hide';
@@ -92,7 +106,13 @@ export const inNav = 'hide';
             {isAuthorized && <Toolbar />}
             <Footer />
         </section>
-        <RightSidebar />
+        <RightSidebar
+            hasReferenceSheet={hasReferenceSheet}
+            hasStudyGuide={hasStudyGuide}
+            threadId={id || ''}
+            category={category || ''}
+            mode={mode || ''}
+        />
     </section>
     <script is:inline>
         const messages = []
