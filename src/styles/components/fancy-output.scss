@@ -15,20 +15,15 @@ $shadow-size: 5px;
     }
 }
 
-.fancy-output:not([open]) {
-    all: unset;
-}
-
 .fancy-output:is(.fancy-output) {
-    overflow-x: hidden;
-    isolation: isolate;
-    background-color: var(--bg-color, var(--message-bg));
-
     display: flex;
     flex-direction: column;
+    border: none;
 
     &[open] {
-        --bg-color: var(--card-bg);
+        overflow-x: hidden;
+        isolation: isolate;
+        background-color: var(--card-bg);
 
         box-sizing: border-box;
         margin: auto;
@@ -63,10 +58,24 @@ $shadow-size: 5px;
             opacity: 1;
         }
 
+        .tabs {
+            box-sizing: border-box;
+            padding-inline: math.div($spacing, 2);
+            border-radius: 100vw;
+            @supports (overflow: clip) {
+                overflow: clip;
+            }
+
+            .buttons .button {
+                margin-right: math.div($spacing, 2);
+            }
+        }
+
         .tab-contents-parent {
             width: calc(200% + $spacing);
             display: flex;
             gap: $spacing;
+            z-index: -1;
             .tab-content-container {
                 flex: 1;
             }
@@ -81,16 +90,18 @@ $shadow-size: 5px;
 
     }
     &:not([open]) {
-        --bg-color: var(--message-bg);
+        background-color: var(--message-bg);
 
         // max-width: min($max-width, 100%);
         max-height: min($max-height, 100%);
 
         overflow: hidden;
-
-        border: none;
         position: relative;
         cursor: pointer;
+
+        .tab-contents-parent {
+            display: block;
+        }
 
         .tab-content {
             padding-block-start: #{math.div($spacing, 2)};
@@ -115,7 +126,7 @@ $shadow-size: 5px;
     &::after {
         content: '';
         position: absolute;
-        inset: #{-1 * $spacing};
+        inset: 0;
         background-color: inherit;
         z-index: -1;
 
@@ -169,17 +180,17 @@ $shadow-size: 5px;
         justify-self: end;
         display: grid;
         place-items: end;
-        padding-bottom: 0.5rem;
 
         .button {
             height: 100%;
-            padding: 0.5rem 0.75rem;
+            padding: 0.25rem 0.5rem;
             background-color: rgba(from $card-bg-light r g b / 0.95);
             color: var(--card-text);
             border: 1px solid rgba(from var(--card-border) r g b / 0.6);
             border-radius: 0.5rem;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 0.5rem;
             font-size: 0.875rem;
             font-weight: 500;
@@ -205,10 +216,6 @@ $shadow-size: 5px;
             }
         }
     }
-}
-
-.tab-contents-parent {
-    z-index: -1;
 }
 
 .tab-content {
