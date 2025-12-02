@@ -1,0 +1,38 @@
+---
+import Layout from '../../../../layouts/Layout.astro';
+import { getLatestReferenceSheet } from '../../../../lib/content/getLatestReferenceSheet';
+import '../../../../styles/pages/reference-sheet.scss';
+
+const { id } = Astro.params;
+
+// Get user authentication
+const { auth } = Astro.locals;
+const { userId, sessionClaims } = auth();
+const user_email = sessionClaims?.email as string || null;
+
+// Redirect if not authenticated
+if (!userId) {
+    return Astro.redirect("/user/sign-in");
+}
+
+// Get the latest reference sheet
+const { content: latestReferenceSheet, precedingText, followingText } = await getLatestReferenceSheet(id || '', user_email);
+---
+
+<Layout title="Reference Sheet" container={true}>
+    <div class="reference-sheet-page">
+        {latestReferenceSheet ? (
+            <div class="content-container">
+                {precedingText && <div class="preceding-text" set:html={precedingText} />}
+                <div class="reference-sheet-content" set:html={latestReferenceSheet} />
+                {followingText && <div class="following-text" set:html={followingText} />}
+            </div>
+        ) : (
+            <div class="empty-state">
+                <span class="material-symbols-outlined">description</span>
+                <h2>No Reference Sheet Found</h2>
+                <p>There is no reference sheet generated for this conversation yet.</p>
+            </div>
+        )}
+    </div>
+</Layout>

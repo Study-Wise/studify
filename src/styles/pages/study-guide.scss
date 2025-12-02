@@ -1,0 +1,40 @@
+@use '../variables/globals' as *;
+
+.study-guide-page {
+    min-height: 60vh;
+    padding: 2rem 0;
+
+    .content-container {
+        background-color: var(--card-bg);
+        border-radius: 1rem;
+        padding: 2rem;
+        box-shadow: 0 4px 12px var(--card-shadow);
+        border: 1px solid var(--card-border);
+    }
+
+    .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 4rem 2rem;
+        text-align: center;
+        opacity: 0.7;
+
+        .material-symbols-outlined {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        h2 {
+            margin: 1rem 0 0.5rem;
+            color: var(--section-title);
+        }
+
+        p {
+            color: var(--body-text);
+            opacity: 0.8;
+        }
+    }
+}
