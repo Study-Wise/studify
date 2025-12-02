@@ -8,7 +8,6 @@ $max-height: 250px;
 $max-width: 500px;
 $spacing: 1rem;
 $shadow-size: 5px;
-// TODO: FIX IT ALL
 
 .message, .message-content {
     &:has(.fancy-output:not([open])) {
@@ -35,10 +34,34 @@ $shadow-size: 5px;
         margin: auto;
         padding: $spacing;
 
-        border: none;
-        border-radius: $spacing;
+        border: 1px solid rgba(from var(--card-border) r g b / 0.3);
+        border-radius: 1.25rem;
 
         gap: #{$spacing*1.5};
+
+        // Modern layered shadows matching chat.scss
+        box-shadow:
+            0 1px 3px rgba(from var(--card-shadow) r g b / 0.08),
+            0 4px 12px rgba(from var(--card-shadow) r g b / 0.06),
+            inset 0 1px 0 rgba(from var(--header-text) r g b / 0.02);
+
+        // Subtle gradient overlay for depth
+        position: relative;
+
+        &::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(from var(--header-text) r g b / 0.02) 0%, transparent 50%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: inherit;
+        }
+
+        &:hover::before {
+            opacity: 1;
+        }
 
         .tab-contents-parent {
             width: calc(200% + $spacing);
@@ -52,17 +75,17 @@ $shadow-size: 5px;
         &[style*="--tab-shown:"] {
             .tab-contents-parent {
                 translate: calc(-1 * var(--tab-shown) * (50% + #{math.div($spacing, 2)})) 0;
-                transition: translate 0.5s ease-in-out;
+                transition: translate 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             }
         }
-        
+
     }
     &:not([open]) {
         --bg-color: var(--message-bg);
 
         // max-width: min($max-width, 100%);
         max-height: min($max-height, 100%);
-        
+
         overflow: hidden;
 
         border: none;
@@ -86,7 +109,7 @@ $shadow-size: 5px;
 
     background-color: var(--bg-color, var(--message-bg));
 
-    border-bottom: solid $tab-border-size var(--card-bg-dark);
+    border-bottom: 1px solid rgba(from var(--card-border) r g b / 0.3);
 
     isolation: isolate;
 
@@ -97,14 +120,50 @@ $shadow-size: 5px;
         background-color: inherit;
         z-index: -1;
 
-        box-shadow: 0 0 0.5rem var(--message-bg);
+        box-shadow:
+            0 2px 8px rgba(from var(--card-shadow) r g b / 0.08),
+            0 4px 12px rgba(from var(--card-shadow) r g b / 0.06);
+        border-radius: 0.5rem 0.5rem 0 0;
     }
 
     .tab {
         cursor: pointer;
+        padding: 0.5rem 0.75rem;
+        border: none;
+        background: transparent;
+        color: var(--card-text);
+        font-weight: 500;
+        font-size: 0.875rem;
+        border-radius: 0.5rem 0.5rem 0 0;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        opacity: 0.7;
+
+        &:hover {
+            opacity: 1;
+            background: rgba(from var(--card-text) r g b / 0.05);
+        }
+
+        &.active {
+            opacity: 1;
+            color: list.nth(map.get($accent-colors, primary), 1);
+
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: -1px;
+                left: 0;
+                right: 0;
+                height: 2px;
+                background: linear-gradient(90deg,
+                    list.nth(map.get($accent-colors, primary), 1),
+                    list.nth(map.get($accent-colors, primary), 2));
+                border-radius: 2px 2px 0 0;
+            }
+        }
     }
 
-    
+
     .buttons {
         flex: 1;
 
@@ -115,6 +174,36 @@ $shadow-size: 5px;
 
         .button {
             height: 100%;
+            padding: 0.5rem 0.75rem;
+            background-color: rgba(from $card-bg-light r g b / 0.95);
+            color: var(--card-text);
+            border: 1px solid rgba(from var(--card-border) r g b / 0.6);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow:
+                0 2px 6px rgba(from var(--card-shadow) r g b / 0.08),
+                0 1px 3px rgba(from var(--card-shadow) r g b / 0.05);
+
+            &:hover {
+                background-color: rgba(from $card-bg-light r g b / 1);
+                translate: 0 -2px;
+                box-shadow:
+                    0 4px 12px rgba(from var(--card-shadow) r g b / 0.12),
+                    0 2px 6px rgba(from var(--card-shadow) r g b / 0.08);
+            }
+
+            &:active {
+                translate: 0 0;
+                box-shadow:
+                    0 2px 6px rgba(from var(--card-shadow) r g b / 0.08),
+                    0 1px 3px rgba(from var(--card-shadow) r g b / 0.05);
+            }
         }
     }
 }
