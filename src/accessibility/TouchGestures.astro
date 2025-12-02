@@ -24,8 +24,19 @@
         }
 
         init() {
+            // Only initialize on touch-enabled devices
+            if (!this.isTouchDevice()) return;
+
             this.createRefreshIndicator();
             this.setupTouchEvents();
+        }
+
+        isTouchDevice() {
+            return (
+                'ontouchstart' in window ||
+                navigator.maxTouchPoints > 0 ||
+                (window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches)
+            );
         }
 
         createRefreshIndicator() {

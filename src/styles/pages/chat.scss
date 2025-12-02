@@ -96,9 +96,15 @@ footer, .chat-toolbar {
 
 .chat-header {
     box-sizing: border-box;
-    padding: 10px;
-    border-bottom: 1px solid var(--section-title-border);
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid rgba(from var(--section-title) r g b / 0.1);
     background: linear-gradient($gradient-angle, list.nth(map.get($accent-colors, primary), 1), list.nth(map.get($accent-colors, primary), 2));
+    
+    --bd: blur(10px);
+    -webkit-backdrop-filter: var(--bd);
+    backdrop-filter: var(--bd);
+
+    box-shadow: 0 2px 20px rgba(from var(--card-shadow) r g b / 0.1);
 
     .chat-title-container {
         display: flex;
@@ -107,49 +113,79 @@ footer, .chat-toolbar {
     }
 
     h2 {
-        background-color: $card-bg-light;
+        background-color: rgba(from $card-bg-light r g b / 0.95);
         color: $section-title-light;
         width: fit-content;
-        padding: 10px 20px;
-        border-radius: 10px;
-        box-shadow: 0 5px 15px var(--card-shadow);
-        border: 1px solid var(--card-border);
+        padding: 12px 24px;
+        border-radius: 12px;
+        box-shadow:
+            0 8px 24px rgba(from var(--card-shadow) r g b / 0.12),
+            0 2px 8px rgba(from var(--card-shadow) r g b / 0.08);
+        border: 1px solid rgba(from var(--card-border) r g b / 0.6);
         margin: 0;
-    }
-
-    .share-button {
-        padding: 8px 12px;
-
-        background-color: $card-bg-light;
-        color: $section-title-light;
-
-        border: 1px solid var(--card-border);
-        border-radius: 8px;
-
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        
-        font-size: 0.875rem;
-        box-shadow: 0 2px 8px var(--card-shadow);
-
-        cursor: pointer;
-        transition: all 0.2s ease;
+        font-size: 1.125rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
         &:hover {
-            background-color: hsl(from var(--card-bg) h s calc(l - 3%));
+            box-shadow:
+                0 12px 32px rgba(from var(--card-shadow) r g b / 0.15),
+                0 4px 12px rgba(from var(--card-shadow) r g b / 0.1);
             translate: 0 -1px;
-            box-shadow: 0 4px 12px var(--card-shadow);
+        }
+
+        .material-symbols-outlined {
+            font-size: 1.25rem;
+        }
+    }
+
+    .share-button {
+        padding: 10px 16px;
+        background-color: rgba(from $card-bg-light r g b / 0.95);
+        color: $section-title-light;
+        border: 1px solid rgba(from var(--card-border) r g b / 0.6);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        box-shadow:
+            0 4px 12px rgba(from var(--card-shadow) r g b / 0.08),
+            0 2px 6px rgba(from var(--card-shadow) r g b / 0.05);
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+        &:hover {
+            background-color: rgba(from $card-bg-light r g b / 1);
+            translate: 0 -2px;
+            box-shadow:
+                0 8px 20px rgba(from var(--card-shadow) r g b / 0.12),
+                0 4px 8px rgba(from var(--card-shadow) r g b / 0.08);
+        }
+
+        &:active {
+            translate: 0 0;
+            box-shadow:
+                0 4px 12px rgba(from var(--card-shadow) r g b / 0.08),
+                0 2px 6px rgba(from var(--card-shadow) r g b / 0.05);
         }
 
         &.active {
             background: linear-gradient(120deg, color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: 10%), color.adjust(list.nth(map.get($accent-colors, primary), 2), $lightness: 10%));
             color: var(--header-text);
-            border-color: color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: 20%);
+            border-color: transparent;
+            box-shadow:
+                0 6px 16px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 0.3),
+                0 2px 8px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 0.2);
         }
 
         .material-symbols-outlined {
-            font-size: 1rem;
+            font-size: 1.125rem;
         }
 
         .share-text {
@@ -188,98 +224,87 @@ footer, .chat-toolbar {
 
 }
 
-.chat-sidebar-toggle {
-    position: absolute;
-    top: 0.5rem;
-    left: 0.5rem;
-    overflow: hidden;
-
-    height: 2.5rem;
-    width: 2.5rem;
-
-    // box-sizing: border-box;
-    padding: 0.5rem;
-    background-color: hsl(from var(--body-bg) h s calc(l - 5%));
-    border-radius: 0.5rem;
-
-    -webkit-user-select: none;
-    user-select: none;
-
-    cursor: pointer;
-
-    box-shadow: 0 0 5px $chat-message-shadow;
-
-    input[type="checkbox"] {
-        visibility: hidden;
-        position: absolute;
-        top: -10px;
-        left: -10px;
-        width: 0;
-        height: 0;
-        display: block;
-    }
-
-    span.material-symbols-outlined {
-        display: block;
-        width: 100%;
-        height: 100%;
-        text-align: center;
-    }
-}
-
 .chat-messages {
     overflow-y: auto;
     height: 100%;
     box-sizing: border-box;
-    padding: 30px;
-
+    padding: 2rem;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.25rem;
+    position: relative;
+
+    // Subtle background pattern
+    background-image:
+        radial-gradient(circle at 20% 50%, rgba(from var(--section-title) r g b / 0.015) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(from var(--section-title) r g b / 0.015) 0%, transparent 50%);
 
     // Custom scrollbar styling
     &::-webkit-scrollbar {
-        width: 8px;
+        width: 10px;
     }
 
     &::-webkit-scrollbar-track {
         background: transparent;
+        margin: 0.5rem 0;
     }
 
     &::-webkit-scrollbar-thumb {
-        background: hsl(from var(--section-title) h s l / 0.3);
+        background: rgba(from var(--section-title) r g b / 0.15);
         border-radius: 9999px;
+        border: 2px solid transparent;
+        background-clip: padding-box;
+        transition: background 0.2s ease;
 
         &:hover {
-            background: hsl(from var(--section-title) h s l / 0.5);
+            background: rgba(from var(--section-title) r g b / 0.3);
+            background-clip: padding-box;
         }
     }
 
     .message {
-        $_message-space: 1rem;
+        $_message-space: 1.25rem;
 
         display: flex;
         flex-direction: column;
         gap: math.div($_message-space, 2);
         width: fit-content;
-        box-shadow: 0 0 5px $chat-message-shadow;
-        border-radius: 1rem;
-        max-width: min(calc(500px + 4 * $_message-space), 100%);
+        border-radius: 1.25rem;
+        max-width: min(calc(600px + 4 * $_message-space), 100%);
+        position: relative;
 
         // Slide-in animation from left (assistant messages)
-        animation: slideInFromLeft 0.3s cubic-bezier(0, 0, 0.2, 1);
+        animation: slideInFromLeft 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 
         &-content {
             box-sizing: border-box;
-            padding: $_message-space;
-
+            padding: $_message-space 1.5rem;
             background-color: var(--message-bg);
             border-radius: inherit;
+            border: 1px solid rgba(from var(--card-border) r g b / 0.3);
+            position: relative;
+            overflow: hidden;
 
-            // Enhanced shadows (Phase 3)
+            // Modern layered shadows
             box-shadow:
-                inset 0 1px 2px rgba(from var(--header-text) r g b / 0.05),
-                0 0 5px $chat-message-shadow;
+                0 1px 3px rgba(from var(--card-shadow) r g b / 0.08),
+                0 4px 12px rgba(from var(--card-shadow) r g b / 0.06),
+                inset 0 1px 0 rgba(from var(--header-text) r g b / 0.02);
+
+            // Subtle gradient overlay for depth
+            &::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(135deg, rgba(from var(--header-text) r g b / 0.02) 0%, transparent 50%);
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+
+            &:hover::before {
+                opacity: 1;
+            }
 
             mjx-container {
                 width: fit-content;
@@ -334,11 +359,32 @@ footer, .chat-toolbar {
             align-self: end;
 
             // Slide-in animation from right (user messages)
-            animation: slideInFromRight 0.3s cubic-bezier(0, 0, 0.2, 1);
+            animation: slideInFromRight 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 
             .message-content {
-                background: linear-gradient(120deg, color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: 10%), color.adjust(list.nth(map.get($accent-colors, primary), 2), $lightness: 10%));
+                background: linear-gradient(135deg,
+                    color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: 10%),
+                    color.adjust(list.nth(map.get($accent-colors, primary), 2), $lightness: 10%));
                 color: var(--header-text);
+                border-color: rgba(from var(--header-text) r g b / 0.15);
+                box-shadow:
+                    0 2px 8px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 0.25),
+                    0 8px 24px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 0.15),
+                    inset 0 1px 0 rgba(from var(--header-text) r g b / 0.15);
+
+                // Glossy effect for user messages
+                &::before {
+                    background: linear-gradient(135deg,
+                        rgba(from var(--header-text) r g b / 0.15) 0%,
+                        transparent 40%);
+                }
+
+                &:hover {
+                    box-shadow:
+                        0 4px 12px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 0.3),
+                        0 12px 32px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 0.2),
+                        inset 0 1px 0 rgba(from var(--header-text) r g b / 0.15);
+                }
             }
         }
     }
@@ -391,8 +437,39 @@ footer, .chat-toolbar {
     }
 }
 
+// Enhanced slide-in animations
+@keyframes slideInFromLeft {
+    from {
+        opacity: 0;
+        translate: -20px 10px;
+        scale: 0.95;
+    }
+    to {
+        opacity: 1;
+        translate: 0 0;
+        scale: 1;
+    }
+}
+
+@keyframes slideInFromRight {
+    from {
+        opacity: 0;
+        translate: 20px 10px;
+        scale: 0.95;
+    }
+    to {
+        opacity: 1;
+        translate: 0 0;
+        scale: 1;
+    }
+}
+
 @media (max-width: 768px) {
     .chat-section {
         padding: 25px;
+    }
+
+    .chat-messages .message {
+        max-width: 100%;
     }
 }
