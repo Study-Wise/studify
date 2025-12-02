@@ -19,11 +19,11 @@ export function getUserMetadata(auth: any): any {
 export const ADMIN_EMAILS = [
     'adarshravikumar2@gmail.com',
     'riengupta@gmail.com',
-    'admin@conversaition.online'
+    'admin@studywise.onl'
 ];
 
 export const ADMIN_DOMAINS = [
-    '@conversaition.online',
+    '@studywise.onl',
 ];
 
 export function shouldPromoteToAdmin(email: string): boolean {

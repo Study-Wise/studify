@@ -1,6 +1,7 @@
 ---
 import Layout from '../../../../layouts/Layout.astro';
 import { getLatestStudyGuide } from '../../../../lib/content/getLatestStudyGuide';
+import { checkThreadAccess } from '../../../../lib/auth/checkThreadAccess';
 import '../../../../styles/pages/study-guide.scss';
 
 const { id } = Astro.params;
@@ -15,13 +16,25 @@ if (!userId) {
     return Astro.redirect("/user/sign-in");
 }
 
-// Get the latest study guide
-const { content: latestStudyGuide, precedingText, followingText } = await getLatestStudyGuide(id || '', user_email);
+// Check thread access
+const { isAuthorized, isPublic } = await checkThreadAccess(id || '', user_email, auth);
+
+// Get the latest study guide only if authorized or public
+const { content: latestStudyGuide, precedingText, followingText } = (isAuthorized || isPublic)
+    ? await getLatestStudyGuide(id || '', user_email)
+    : { content: null, precedingText: '', followingText: '' };
 ---
 
 <Layout title="Study Guide" container={true}>
     <div class="study-guide-page">
-        {latestStudyGuide ? (
+        {!isAuthorized && !isPublic ? (
+            <div class="empty-state">
+                <span class="material-symbols-outlined">lock</span>
+                <h2>Access Denied</h2>
+                <p>You don't have permission to view this study guide. This thread belongs to another user.</p>
+                <a href="/" class="btn-primary">Go Home</a>
+            </div>
+        ) : latestStudyGuide ? (
             <div class="content-container">
                 {precedingText && <div class="preceding-text" set:html={precedingText} />}
                 <div class="study-guide-content" set:html={latestStudyGuide} />

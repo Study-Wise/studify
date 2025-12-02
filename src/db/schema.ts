@@ -4,6 +4,7 @@ const threadsTable = pgTable('threads', {
     id: text('id').primaryKey(),
     title: varchar({ length: 255 }).notNull(),
     thread: jsonb().notNull(),
+    uploadedFiles: text('uploadedFiles').array().default([]),
     email: text('email'),
     isPublic: boolean().notNull().default(false),
     createdAt: timestamp().notNull().defaultNow(),
