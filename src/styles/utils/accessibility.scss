@@ -95,10 +95,10 @@ textarea:focus-visible {
     *,
     *::before,
     *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
+        animation-duration: 0.01ms;
+        animation-iteration-count: 1;
+        transition-duration: 0.01ms;
+        scroll-behavior: auto;
     }
 }
 
@@ -124,8 +124,8 @@ textarea:focus-visible {
 
     // Remove subtle shadows that may not be visible
     * {
-        box-shadow: none !important;
-        text-shadow: none !important;
+        box-shadow: none;
+        text-shadow: none;
     }
 }
 
@@ -227,7 +227,7 @@ body:has([role="dialog"][aria-modal="true"]) {
 // ============================================
 //
 // Import this file in globals.scss:
-// @use './utilities/accessibility' as *;
+// @use './utils/accessibility' as *;
 //
 // This file provides baseline accessibility improvements.
 // Always ensure:

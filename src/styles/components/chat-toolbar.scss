@@ -16,7 +16,7 @@ $padding: 1rem;
     --bd: blur(8px);
     -webkit-backdrop-filter: var(--bd);
     backdrop-filter: var(--bd);
-    
+
     box-shadow: 0 -2px 20px rgba(from var(--card-shadow) r g b / 0);
     transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border-top: 1px solid rgba(from var(--card-border) r g b / 0.2);
@@ -47,7 +47,7 @@ $padding: 1rem;
             0 2px 8px rgba(from var(--card-shadow) r g b / 0.06),
             inset 0 1px 2px rgba(from var(--header-text) r g b / 0.02);
 
-        &:focus-within {
+        &:has(:focus-visible) {
             border-color: $color;
             box-shadow:
                 0 4px 16px rgba(from $color r g b / 0.12),
@@ -56,7 +56,7 @@ $padding: 1rem;
             background: rgba(from var(--card-bg) r g b / 1);
         }
 
-        &:hover:not(:focus-within) {
+        &:hover:not(:has(:focus-visible)) {
             border-color: rgba(from var(--card-border) r g b / 0.6);
             box-shadow:
                 0 4px 12px rgba(from var(--card-shadow) r g b / 0.08),
@@ -82,6 +82,11 @@ $padding: 1rem;
 
         &::placeholder {
             color: rgba(from var(--card-text) r g b / 0.4);
+        }
+
+        &:focus,
+        &:focus-visible {
+            outline: none;
         }
     }
 
