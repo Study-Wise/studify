@@ -28,7 +28,7 @@
 
                         // Remove all previous selections from this step
                         choices.forEach(c => {
-                            c.removeAttribute('data-state');
+                            delete c.dataset.state;
                         });
 
                         // Check if correct or incorrect
@@ -36,23 +36,23 @@
 
                         if (isCorrect) {
                             // Mark clicked choice as selected-correct
-                            choice.setAttribute('data-state', 'selected-correct');
+                            choice.dataset.state = 'selected-correct';
                             // Show all other correct answers as hint
                             choices.forEach(c => {
                                 if (c !== choice && c.classList.contains('correct')) {
-                                    c.setAttribute('data-state', 'hint-correct');
+                                    c.dataset.state = 'hint-correct';
                                 }
                             });
                         } else {
                             // Mark clicked choice as selected-incorrect
-                            choice.setAttribute('data-state', 'selected-incorrect');
+                            choice.dataset.state = 'selected-incorrect';
                             // Show correct answers as hint and incorrect as dimmed
                             choices.forEach(c => {
                                 if (c !== choice) {
                                     if (c.classList.contains('correct')) {
-                                        c.setAttribute('data-state', 'hint-correct');
+                                        c.dataset.state = 'hint-correct';
                                     } else {
-                                        c.setAttribute('data-state', 'hint-incorrect');
+                                        c.dataset.state = 'hint-incorrect';
                                     }
                                 }
                             });
