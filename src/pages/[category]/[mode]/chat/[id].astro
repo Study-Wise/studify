@@ -1,11 +1,11 @@
 ---
 import Layout from '../../../../layouts/Layout.astro';
 
-import ChatHeader from '../../../../components/ChatHeader.astro';
+import Header from '../../../../components/chat/Header.astro';
 import FancyOutput from '../../../../components/fancy/Output.astro';
-import ChatToolbar from '../../../../components/ChatToolbar.astro';
-import ChatLeftSidebar from '../../../../components/ChatLeftSidebar.astro';
-import ChatRightSidebar from '../../../../components/ChatRightSidebar.astro';
+import Toolbar from '../../../../components/chat/Toolbar.astro';
+import LeftSidebar from '../../../../components/chat/LeftSidebar.astro';
+import RightSidebar from '../../../../components/chat/RightSidebar.astro';
 
 import MessagesScript from '../../../../scripts/messages.astro';
 import '../../../../styles/pages/chat.scss';
@@ -80,10 +80,10 @@ export const inNav = 'hide';
                 <span class="share-text">Share</span>
             </button>
         </div>
-        <ChatHeader pTitle={`${id ? 'Chat' : 'New Chat'}`} />
+        <Header pTitle={`${id ? 'Chat' : 'New Chat'}`} />
     </header>
     <section class="chat-container">
-        <ChatLeftSidebar />
+        <LeftSidebar />
         <section class="chat-section">
             <label class="chat-left-sidebar-toggle">
                 <input type="checkbox" />
@@ -126,10 +126,10 @@ export const inNav = 'hide';
                     </div>
                 )}
             </div>
-            {isAuthorized && <ChatToolbar />}
+            {isAuthorized && <Toolbar />}
             <Footer />
         </section>
-        <ChatRightSidebar />
+        <RightSidebar />
     </section>
     <script is:inline>
         const messages = []
