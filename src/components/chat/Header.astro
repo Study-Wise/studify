@@ -1,0 +1,14 @@
+---
+import '../../styles/components/header.scss';
+
+import Nav from '../Nav.astro';
+import pages from '../../lib/getAllSitePages';
+import ThemeSwitcher from '../../accessibility/ThemeSwitcher.astro';
+---
+<!-- Container wraps text and nav -->
+<div class="header-content-wrapper lite">
+    <div class="header-text-container">
+        <h1><span class="material-symbols-outlined">school</span> StudyWise</h1>
+    </div>
+    <Nav mode="lite" pages={pages} />
+</div>

@@ -8,6 +8,7 @@ import FancyButton from '../../../components/fancy/Button.astro';
 import Button from '../../../components/fancy/Button.astro';
 import ModelSelector from '../../../components/ModelSelector.astro';
 import MessagesScript from '../../../scripts/messages.astro';
+import StepByStepScript from '../../../scripts/step-by-step.astro';
 
 import categories from '../../../lib/modes';
 
@@ -130,4 +131,5 @@ Please note that the AI will not provide the answer for your immediate equation`
         <div class="chat-button-container"></div>
     </section>
     <MessagesScript page="home" category={category} mode={mode} />
+    <StepByStepScript />
 </Layout>

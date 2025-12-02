@@ -1,21 +1,23 @@
 ---
 import Layout from '../../../../layouts/Layout.astro';
 
-import ChatHeader from '../../../../components/ChatHeader.astro';
+import Header from '../../../../components/chat/Header.astro';
 import FancyOutput from '../../../../components/fancy/Output.astro';
-import ChatToolbar from '../../../../components/ChatToolbar.astro';
-import ChatSidebar from '../../../../components/ChatSidebar.astro';
+import Toolbar from '../../../../components/chat/Toolbar.astro';
+import LeftSidebar from '../../../../components/chat/LeftSidebar.astro';
+import RightSidebar from '../../../../components/chat/RightSidebar.astro';
 
 import MessagesScript from '../../../../scripts/messages.astro';
+import StepByStepScript from '../../../../scripts/step-by-step.astro';
 import '../../../../styles/pages/chat.scss';
 
 import { getMessages, getMessagesLength } from '../../../../lib/threads';
 import extract from '../../../../lib/extractPartsofMessage';
 import Footer from '../../../../components/Footer.astro';
-import { getUserRole } from '../../../../lib/auth-utils';
-import { db } from '../../../../db/initialize';
-import { eq } from 'drizzle-orm';
-import { threadsTable } from '../../../../db/schema';
+import { checkThreadAccess } from '../../../../lib/auth/checkThreadAccess';
+import { getLatestReferenceSheet } from '../../../../lib/content/getLatestReferenceSheet';
+import { getLatestStudyGuide } from '../../../../lib/content/getLatestStudyGuide';
+import { getInfographic } from '../../../../lib/content/getInfographic';
 
 let { category, mode, id } = Astro.params || { category: '', mode: '', id: '' };
 
@@ -24,47 +26,32 @@ const { auth } = Astro.locals;
 const { userId, sessionClaims } = auth();
 const user_email = sessionClaims?.email as string || null;
 
-// Redirect to sign-in if not authenticated
-if (!userId) {
+// Check thread access first
+const { isAuthorized, isPublic } = await checkThreadAccess(id || '', user_email, auth);
+
+// Redirect to sign-in only if not authenticated AND thread is not public
+if (!userId && !isPublic) {
     return Astro.redirect("/user/sign-in");
 }
 
-// Get user role and check if admin
-const userRole = getUserRole(auth);
-const isUserAdmin = userRole === 'admin';
-
-// Check thread ownership
-let threadOwner: string | null = null;
-let isPublicThread = false;
-if (id) {
-    try {
-        const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, id));
-        if (threads.length > 0) {
-            threadOwner = threads[0].email;
-            isPublicThread = threads[0].isPublic;
-            // If unclaimed and user is authenticated, claim ownership
-            // TODO: Fix claiming unclaimed threads
-            if (!threadOwner && user_email) {
-                try {
-                    await db.update(threadsTable)
-                        .set({ email: user_email, updatedAt: new Date() })
-                        .where(eq(threadsTable.id, id));
-                    threadOwner = user_email;
-                } catch (e) {
-                    console.error('Error claiming thread ownership:', e);
-                }
-            }
-        }
-    } catch (error) {
-        console.error('Error fetching thread:', error);
-    }
-}
-
-// Check if user owns the thread or is admin
+// Get messages only if authorized or public
 const messagesLength = await getMessagesLength(id || '');
-const isAuthorized = id && messagesLength > 0 && ((threadOwner && threadOwner === user_email) || !threadOwner || isUserAdmin);
-const messages = !isAuthorized ? [] : await getMessages(id, user_email);
-const isPublic = !isAuthorized && isPublicThread;
+const messages = (isAuthorized || isPublic) && messagesLength > 0 ? await getMessages(id ?? '', user_email) : [];
+
+// Check if reference sheet, study guide, and infographic exist
+let hasReferenceSheet = false;
+let hasStudyGuide = false;
+let hasInfographic = false;
+
+if ((isAuthorized || isPublic) && id) {
+    const referenceSheetResult = await getLatestReferenceSheet(id, user_email);
+    const studyGuideResult = await getLatestStudyGuide(id, user_email);
+    const infographic = await getInfographic(id);
+
+    hasReferenceSheet = !!referenceSheetResult.content;
+    hasStudyGuide = !!studyGuideResult.content;
+    hasInfographic = !!infographic;
+}
 
 
 export const inNav = 'hide';
@@ -79,37 +66,32 @@ export const inNav = 'hide';
                 <span class="share-text">Share</span>
             </button>
         </div>
-        <ChatHeader pTitle={`${id ? 'Chat' : 'New Chat'}`} />
+        <Header pTitle={`${id ? 'Chat' : 'New Chat'}`} />
     </header>
     <section class="chat-container">
-        <ChatSidebar />
+        <LeftSidebar />
         <section class="chat-section">
-            <label class="chat-sidebar-toggle">
-                <input type="checkbox" />
-                <span class="material-symbols-outlined">chat</span>
-            </label>
             <div class="chat-messages">
                 {isAuthorized || isPublic ? (
-                    messages.map(async message => {
+                    messages
+                        .filter(message => message.role !== 'system')
+                        .map(async message => {
                         const { obj, generatedText: htmlText } = await extract(message.content);
-                        var content = htmlText;
-                        if (!(message.role === 'assistant' && obj.studyGuide || obj.referenceSheet)) {
-                            return <div class={`message ${message.role}`}>
-                                <div class={`message-content ${message.role === 'user' ? 'bg-primary' : ''}`} set:html={content} />
-                            </div>
+
+                        // For assistant messages with fancy output, show preceding/following text only
+                        let content = htmlText;
+                        if (message.role === 'assistant' && (obj.studyGuide || obj.referenceSheet)) {
+                            // Combine preceding and following text, excluding the fancy output
+                            const parts = [];
+                            if (obj.precedingText) parts.push(obj.precedingText);
+                            if (obj.followingText) parts.push(obj.followingText);
+                            content = parts.join('\n\n');
                         }
 
-                        if (message.role === 'assistant') {
-                            if (obj.studyGuide || obj.referenceSheet) {
-                                return <div class={`message ${message.role}`}>
-                                    <div class="message-content">
-                                        { obj.precedingText && <div class="message-content-inner" set:html={obj.precedingText} /> }
-                                        <FancyOutput obj={obj} />
-                                        { obj.followingText && <div class="message-content-inner" set:html={obj.followingText} /> }
-                                    </div>
-                                </div>              
-                            }
-                        }
+                        // Render as simple message
+                        return <div class={`message ${message.role}`}>
+                            <div class={`message-content ${message.role === 'user' ? 'bg-primary' : ''}`} set:html={content} />
+                        </div>
                     })
                 ) : (
                     <div class="unauthorized-message">
@@ -125,9 +107,17 @@ export const inNav = 'hide';
                     </div>
                 )}
             </div>
-            {isAuthorized && <ChatToolbar />}
+            {isAuthorized && <Toolbar />}
             <Footer />
         </section>
+        <RightSidebar
+            hasReferenceSheet={hasReferenceSheet}
+            hasStudyGuide={hasStudyGuide}
+            hasInfographic={hasInfographic}
+            threadId={id || ''}
+            category={category || ''}
+            mode={mode || ''}
+        />
     </section>
     <script is:inline>
         const messages = []
@@ -200,7 +190,7 @@ export const inNav = 'hide';
         window.addEventListener('load', () => {
             const chatMessages = document.querySelector('.chat-messages');
             const chatToolbar = document.querySelector('.chat-toolbar');
-            
+
             chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
 
             chatMessages.addEventListener('scroll', () => {
@@ -218,4 +208,5 @@ export const inNav = 'hide';
         });
     </script>
     <MessagesScript page="chat" category={category} mode={mode} />
+    <StepByStepScript />
 </Layout> 

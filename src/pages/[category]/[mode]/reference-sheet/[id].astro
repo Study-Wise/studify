@@ -1,0 +1,53 @@
+---
+import Layout from '../../../../layouts/Layout.astro';
+import { getLatestReferenceSheet } from '../../../../lib/content/getLatestReferenceSheet';
+import { checkThreadAccess } from '../../../../lib/auth/checkThreadAccess';
+import StepByStepScript from '../../../../scripts/step-by-step.astro';
+import '../../../../styles/pages/reference-sheet.scss';
+
+const { id } = Astro.params;
+
+// Get user authentication
+const { auth } = Astro.locals;
+const { userId, sessionClaims } = auth();
+const user_email = sessionClaims?.email as string || null;
+
+// Check thread access first
+const { isAuthorized, isPublic } = await checkThreadAccess(id || '', user_email, auth);
+
+// Redirect to sign-in only if not authenticated AND thread is not public
+if (!userId && !isPublic) {
+    return Astro.redirect("/user/sign-in");
+}
+
+// Get the latest reference sheet only if authorized or public
+const { content: latestReferenceSheet, precedingText, followingText } = (isAuthorized || isPublic)
+    ? await getLatestReferenceSheet(id || '', user_email)
+    : { content: null, precedingText: '', followingText: '' };
+---
+
+<Layout title="Reference Sheet" container={true}>
+    <div class="reference-sheet-page">
+        {!isAuthorized && !isPublic ? (
+            <div class="empty-state">
+                <span class="material-symbols-outlined">lock</span>
+                <h2>Access Denied</h2>
+                <p>You don't have permission to view this reference sheet. This thread belongs to another user.</p>
+                <a href="/" class="btn-primary">Go Home</a>
+            </div>
+        ) : latestReferenceSheet ? (
+            <div class="content-container">
+                {precedingText && <div class="preceding-text" set:html={precedingText} />}
+                <div class="reference-sheet-content" set:html={latestReferenceSheet} />
+                {followingText && <div class="following-text" set:html={followingText} />}
+            </div>
+        ) : (
+            <div class="empty-state">
+                <span class="material-symbols-outlined">description</span>
+                <h2>No Reference Sheet Found</h2>
+                <p>There is no reference sheet generated for this conversation yet.</p>
+            </div>
+        )}
+    </div>
+    <StepByStepScript />
+</Layout>

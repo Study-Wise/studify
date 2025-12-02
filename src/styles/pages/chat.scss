@@ -201,11 +201,12 @@ footer, .chat-toolbar {
 .chat-container {
     flex: 1;
 
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
     max-height: 100%;
 
-    overflow-y: auto;
-    
+    overflow: hidden;
+
     position: relative;
 }
 
@@ -464,7 +465,31 @@ footer, .chat-toolbar {
     }
 }
 
+// Responsive design for tablets
+@media (max-width: 1200px) {
+    .chat-container {
+        grid-template-columns: auto 1fr;
+
+        .chat-right-sidebar {
+            display: none;
+        }
+    }
+}
+
+// Responsive design for mobile
 @media (max-width: 768px) {
+    .chat-container {
+        grid-template-columns: 1fr;
+
+        .chat-left-sidebar {
+            display: none;
+        }
+
+        .chat-right-sidebar {
+            display: none;
+        }
+    }
+
     .chat-section {
         padding: 25px;
     }

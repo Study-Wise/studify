@@ -1,0 +1,79 @@
+@use '../../variables/globals' as *;
+
+.chat-left-sidebar {
+    box-sizing: border-box;
+
+    width: $chat-left-sidebar-width;
+
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr;
+
+    background-color: var(--card-bg);
+    border-right: 1px solid rgba(from var(--card-border) r g b / 0.3);
+
+    .chat-left-sidebar-content {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(from var(--card-border) r g b / 0.3);
+
+            h3 {
+                margin: 0;
+                font-size: 1rem;
+                font-weight: 600;
+                color: var(--section-title);
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+
+                .material-symbols-outlined {
+                    font-size: 1.25rem;
+                }
+            }
+        }
+
+        .sidebar-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+
+            // Custom scrollbar styling
+            &::-webkit-scrollbar {
+                width: 8px;
+            }
+
+            &::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background: rgba(from var(--section-title) r g b / 0.15);
+                border-radius: 9999px;
+                transition: background 0.2s ease;
+
+                &:hover {
+                    background: rgba(from var(--section-title) r g b / 0.3);
+                }
+            }
+
+            .file-list {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+
+                .empty-message {
+                    color: var(--card-text);
+                    opacity: 0.6;
+                    text-align: center;
+                    padding: 2rem 1rem;
+                    font-size: 0.875rem;
+                }
+            }
+        }
+    }
+}

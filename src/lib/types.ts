@@ -29,4 +29,31 @@ interface LegacyTool {
     execute: (params: any) => Promise<any>;
 }
 
-export type { Mode, Category, LegacyTool, Tool };
+interface ReferenceSheetResult {
+    content: string | null;
+    precedingText: string;
+    followingText: string;
+}
+
+interface StudyGuideResult {
+    content: string | null;
+    precedingText: string;
+    followingText: string;
+}
+
+interface ThreadAccessResult {
+    isAuthorized: boolean;
+    isPublic: boolean;
+    threadOwner: string | null;
+}
+
+interface ChatRightSidebarProps {
+    hasReferenceSheet: boolean;
+    hasStudyGuide: boolean;
+    hasInfographic: boolean;
+    threadId: string;
+    category: string;
+    mode: string;
+}
+
+export type { Mode, Category, LegacyTool, Tool, ReferenceSheetResult, StudyGuideResult, ThreadAccessResult, ChatRightSidebarProps };

@@ -1,0 +1,192 @@
+---
+import '../../styles/components/chat/right-sidebar.scss';
+import type { ChatRightSidebarProps } from '../../lib/types';
+
+const { hasReferenceSheet, hasStudyGuide, hasInfographic, threadId, category, mode } = Astro.props as ChatRightSidebarProps;
+
+const referenceSheetUrl = `/${category}/${mode}/reference-sheet/${threadId}`;
+const studyGuideUrl = `/${category}/${mode}/study-guide/${threadId}`;
+const infographicUrl = `/${category}/${mode}/infographic/${threadId}`;
+---
+<aside class="chat-right-sidebar">
+    <div class="chat-right-sidebar-content">
+        <div class="sidebar-section">
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="material-symbols-outlined">description</span>
+                    <h3>Reference Sheet</h3>
+                </div>
+                <button class="regenerate-btn" title="Regenerate reference sheet">
+                    <span class="material-symbols-outlined">refresh</span>
+                </button>
+            </div>
+            <div class="section-body">
+                {hasReferenceSheet ? (
+                    <a href={referenceSheetUrl} class="view-full-btn" target="_blank">
+                        <span class="material-symbols-outlined">open_in_new</span>
+                        <span>View Full Reference Sheet</span>
+                    </a>
+                ) : (
+                    <p class="empty-message">No reference sheet generated yet.</p>
+                )}
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="material-symbols-outlined">menu_book</span>
+                    <h3>Study Guide</h3>
+                </div>
+                <button class="regenerate-btn" title="Regenerate study guide">
+                    <span class="material-symbols-outlined">refresh</span>
+                </button>
+            </div>
+            <div class="section-body">
+                {hasStudyGuide ? (
+                    <a href={studyGuideUrl} class="view-full-btn" target="_blank">
+                        <span class="material-symbols-outlined">open_in_new</span>
+                        <span>View Full Study Guide</span>
+                    </a>
+                ) : (
+                    <p class="empty-message">No study guide generated yet.</p>
+                )}
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="material-symbols-outlined">image</span>
+                    <h3>Infographic</h3>
+                </div>
+                {hasInfographic && (
+                    <button class="regenerate-btn" id="regenerate-infographic-btn" title="Regenerate infographic" data-thread-id={threadId}>
+                        <span class="material-symbols-outlined">refresh</span>
+                    </button>
+                )}
+            </div>
+            <div class="section-body">
+                {hasInfographic ? (
+                    <a href={infographicUrl} class="view-full-btn" target="_blank">
+                        <span class="material-symbols-outlined">open_in_new</span>
+                        <span>View Infographic</span>
+                    </a>
+                ) : (
+                    <div class="empty-state">
+                        <p class="empty-message">No infographic generated yet.</p>
+                        <button class="generate-btn" id="generate-infographic-btn" data-thread-id={threadId}>
+                            <span class="material-symbols-outlined">add_photo_alternate</span>
+                            <span>Generate Infographic</span>
+                        </button>
+                    </div>
+                )}
+            </div>
+        </div>
+    </div>
+</aside>
+
+<script>
+    const generateBtn = document.getElementById('generate-infographic-btn');
+    const regenerateBtn = document.getElementById('regenerate-infographic-btn');
+
+    async function generateInfographic(threadId: string, isRegenerate: boolean = false) {
+        const btn = isRegenerate ? regenerateBtn : generateBtn;
+        if (!btn) return;
+
+        // Disable button and show loading state
+        btn.setAttribute('disabled', 'true');
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = `<span class="material-symbols-outlined spinning">progress_activity</span><span>${isRegenerate ? 'Regenerating...' : 'Generating...'}</span>`;
+
+        try {
+            const response = await fetch('/api/infographic/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ threadId }),
+            });
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                // Reload the page to show the new infographic
+                window.location.reload();
+            } else {
+                throw new Error(data.error || 'Failed to generate infographic');
+            }
+        } catch (error) {
+            console.error('Error generating infographic:', error);
+            alert(error instanceof Error ? error.message : 'Failed to generate infographic. Please try again.');
+
+            // Restore button state
+            btn.removeAttribute('disabled');
+            btn.innerHTML = originalContent;
+        }
+    }
+
+    if (generateBtn) {
+        generateBtn.addEventListener('click', () => {
+            const threadId = generateBtn.getAttribute('data-thread-id');
+            if (threadId) {
+                generateInfographic(threadId, false);
+            }
+        });
+    }
+
+    if (regenerateBtn) {
+        regenerateBtn.addEventListener('click', () => {
+            const threadId = regenerateBtn.getAttribute('data-thread-id');
+            if (threadId) {
+                if (confirm('Are you sure you want to regenerate the infographic? This will replace the existing one.')) {
+                    generateInfographic(threadId, true);
+                }
+            }
+        });
+    }
+</script>
+
+<style>
+    .generate-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+        background: var(--primary-color, #007bff);
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: background 0.2s ease;
+        margin-top: 0.5rem;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .generate-btn:hover:not([disabled]) {
+        background: var(--primary-hover, #0056b3);
+    }
+
+    .generate-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .empty-state {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .spinning {
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+</style>
