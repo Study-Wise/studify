@@ -1,0 +1,139 @@
+@use '../variables/globals' as *;
+
+.chat-left-sidebar-toggle {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    overflow: hidden;
+
+    height: 2.5rem;
+    width: 2.5rem;
+
+    // box-sizing: border-box;
+    padding: 0.5rem;
+    background-color: var(--body-bg);
+    border-radius: 0.5rem;
+
+    -webkit-user-select: none;
+    user-select: none;
+
+    cursor: pointer;
+
+    box-shadow: 0 0 5px $chat-message-shadow;
+
+    z-index: 9999;
+
+    input[type="checkbox"] {
+        visibility: hidden;
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        width: 0;
+        height: 0;
+        display: block;
+    }
+
+    span.material-symbols-outlined {
+        display: block;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+    }
+}
+
+.chat-left-sidebar {
+    box-sizing: border-box;
+    padding-top: 3.5rem;
+
+    width: $chat-left-sidebar-width;
+    transition: width 0.2s;
+
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr;
+
+    background-color: var(--card-bg);
+    border-right: 1px solid rgba(from var(--card-border) r g b / 0.3);
+
+    &:has( + .chat-section .chat-left-sidebar-toggle > input[type="checkbox"]:not(:checked)) {
+        width: 0;
+        .chat-left-sidebar-content {
+            translate: -100% 0;
+            transition: translate 0.2s;
+        }
+    }
+
+    &:has( + .chat-section .chat-left-sidebar-toggle > input[type="checkbox"]:checked) {
+        + .chat-section .chat-messages {
+            overflow-x: hidden;
+            @supports (overflow-x: clip) {
+                overflow-x: clip;
+            }
+         }
+    }
+
+    .chat-left-sidebar-content {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(from var(--card-border) r g b / 0.3);
+
+            h3 {
+                margin: 0;
+                font-size: 1rem;
+                font-weight: 600;
+                color: var(--section-title);
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+
+                .material-symbols-outlined {
+                    font-size: 1.25rem;
+                }
+            }
+        }
+
+        .sidebar-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+
+            // Custom scrollbar styling
+            &::-webkit-scrollbar {
+                width: 8px;
+            }
+
+            &::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background: rgba(from var(--section-title) r g b / 0.15);
+                border-radius: 9999px;
+                transition: background 0.2s ease;
+
+                &:hover {
+                    background: rgba(from var(--section-title) r g b / 0.3);
+                }
+            }
+
+            .file-list {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+
+                .empty-message {
+                    color: var(--card-text);
+                    opacity: 0.6;
+                    text-align: center;
+                    padding: 2rem 1rem;
+                    font-size: 0.875rem;
+                }
+            }
+        }
+    }
+}

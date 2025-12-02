@@ -1,0 +1,43 @@
+---
+import '../styles/components/chat-right-sidebar.scss';
+---
+<aside class="chat-right-sidebar">
+    <div class="chat-right-sidebar-content">
+        <div class="sidebar-tabs">
+            <button class="sidebar-tab active" data-tab="reference-sheet">
+                <span class="material-symbols-outlined">description</span>
+                <span class="tab-text">Reference Sheet</span>
+            </button>
+            <button class="sidebar-tab" data-tab="study-guide">
+                <span class="material-symbols-outlined">menu_book</span>
+                <span class="tab-text">Study Guide</span>
+            </button>
+        </div>
+
+        <div class="sidebar-tab-contents">
+            <div class="sidebar-tab-content active" data-content="reference-sheet">
+                <div class="tab-header">
+                    <h3>Reference Sheet</h3>
+                    <button class="regenerate-btn" title="Regenerate reference sheet">
+                        <span class="material-symbols-outlined">refresh</span>
+                    </button>
+                </div>
+                <div class="tab-body">
+                    <p class="empty-message">No reference sheet generated yet. Send a message to generate one.</p>
+                </div>
+            </div>
+
+            <div class="sidebar-tab-content" data-content="study-guide">
+                <div class="tab-header">
+                    <h3>Study Guide</h3>
+                    <button class="regenerate-btn" title="Regenerate study guide">
+                        <span class="material-symbols-outlined">refresh</span>
+                    </button>
+                </div>
+                <div class="tab-body">
+                    <p class="empty-message">No study guide generated yet. Send a message to generate one.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</aside>
