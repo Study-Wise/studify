@@ -2,6 +2,7 @@
 import Layout from '../../../../layouts/Layout.astro';
 import { getLatestReferenceSheet } from '../../../../lib/content/getLatestReferenceSheet';
 import { checkThreadAccess } from '../../../../lib/auth/checkThreadAccess';
+import StepByStepScript from '../../../../scripts/step-by-step.astro';
 import '../../../../styles/pages/reference-sheet.scss';
 
 const { id } = Astro.params;
@@ -11,13 +12,13 @@ const { auth } = Astro.locals;
 const { userId, sessionClaims } = auth();
 const user_email = sessionClaims?.email as string || null;
 
-// Redirect if not authenticated
-if (!userId) {
+// Check thread access first
+const { isAuthorized, isPublic } = await checkThreadAccess(id || '', user_email, auth);
+
+// Redirect to sign-in only if not authenticated AND thread is not public
+if (!userId && !isPublic) {
     return Astro.redirect("/user/sign-in");
 }
-
-// Check thread access
-const { isAuthorized, isPublic } = await checkThreadAccess(id || '', user_email, auth);
 
 // Get the latest reference sheet only if authorized or public
 const { content: latestReferenceSheet, precedingText, followingText } = (isAuthorized || isPublic)
@@ -48,4 +49,5 @@ const { content: latestReferenceSheet, precedingText, followingText } = (isAutho
             </div>
         )}
     </div>
+    <StepByStepScript />
 </Layout>

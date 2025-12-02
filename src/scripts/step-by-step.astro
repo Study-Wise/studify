@@ -1,0 +1,76 @@
+---
+// Step-by-step interactive quiz script
+---
+<script is:inline>
+    function initializeStepByStep() {
+        const stepByStepSections = document.querySelectorAll('.step-by-step');
+
+        stepByStepSections.forEach(section => {
+            const steps = section.querySelectorAll('.step');
+
+            steps.forEach(step => {
+                const choices = step.querySelectorAll('.step-question-choice');
+                const correctExplanation = step.querySelector('.correct-explanation');
+
+                // Hide explanation initially
+                if (correctExplanation) {
+                    correctExplanation.style.display = 'none';
+                }
+
+                choices.forEach(choice => {
+                    const radio = choice.querySelector('.step-question-radio');
+
+                    choice.addEventListener('click', () => {
+                        // Check the radio button
+                        if (radio) {
+                            radio.checked = true;
+                        }
+
+                        // Remove all previous selections from this step
+                        choices.forEach(c => {
+                            c.removeAttribute('data-state');
+                        });
+
+                        // Check if correct or incorrect
+                        const isCorrect = choice.classList.contains('correct');
+
+                        if (isCorrect) {
+                            // Mark clicked choice as selected-correct
+                            choice.setAttribute('data-state', 'selected-correct');
+                            // Show all other correct answers as hint
+                            choices.forEach(c => {
+                                if (c !== choice && c.classList.contains('correct')) {
+                                    c.setAttribute('data-state', 'hint-correct');
+                                }
+                            });
+                        } else {
+                            // Mark clicked choice as selected-incorrect
+                            choice.setAttribute('data-state', 'selected-incorrect');
+                            // Show correct answers as hint and incorrect as dimmed
+                            choices.forEach(c => {
+                                if (c !== choice) {
+                                    if (c.classList.contains('correct')) {
+                                        c.setAttribute('data-state', 'hint-correct');
+                                    } else {
+                                        c.setAttribute('data-state', 'hint-incorrect');
+                                    }
+                                }
+                            });
+                        }
+
+                        // Show the explanation
+                        if (correctExplanation) {
+                            correctExplanation.style.display = 'block';
+                        }
+                    });
+                });
+            });
+        });
+    }
+
+    // Initialize on page load
+    window.addEventListener('load', initializeStepByStep);
+
+    // Also expose globally for dynamic content
+    window.initializeStepByStep = initializeStepByStep;
+</script>

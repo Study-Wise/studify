@@ -413,53 +413,11 @@ const { page, category, mode } = Astro.props;
         if (downloadSheetBtn) downloadSheetBtn.disabled = true;
 
         if (data.studyGuide && data.referenceSheet && page === 'home') {
-            let { guideMarkdown, sheetMarkdown } = parseAIResponse(data.studyGuide, data.referenceSheet);
-
-            try {
-                let elementsToTypeset = [];
-
-                studyGuideContent.innerHTML = '';
-                studyGuideContent.innerHTML = guideMarkdown;
-                elementsToTypeset.push(studyGuideContent);
-
-                referenceSheetContent.innerHTML = '';
-                referenceSheetContent.innerHTML = sheetMarkdown;
-                elementsToTypeset.push(referenceSheetContent);
-
-                await typesetMathJax(elementsToTypeset);
-
-                if (typeof activateDesmos === 'function') {
-                    try {
-                        activateDesmos();
-                    } catch (e) {
-                        console.warn('Error activating Desmos:', e);
-                    }
-                }
-
-                const hasGuideContent = studyGuideContent.innerHTML !== guidePlaceholder;
-                const hasSheetContent = referenceSheetContent.innerHTML !== sheetPlaceholder;
-                if (downloadGuideBtn) {
-                    downloadGuideBtn.disabled = !hasGuideContent;
-                }
-                if (downloadSheetBtn) {
-                    downloadSheetBtn.disabled = !hasSheetContent;
-                }
-                if (outputSection) outputSection.style.display = 'block';
-                showOutput('guide');
-                if (hasGuideContent || hasSheetContent) {
-                    setTimeout(() => {
-                        outputSection?.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start',
-                        });
-                    }, 150);
-                }
-            } catch (err) {
-                console.error('ERROR in displayResults:', err);
-                displayError(`Failed to render results. ${err.message}`);
-                if (downloadGuideBtn) downloadGuideBtn.disabled = true;
-                if (downloadSheetBtn) downloadSheetBtn.disabled = true;
-                if (outputSection) outputSection.style.display = 'none';
+            // Redirect to chat page immediately when fancy output is generated
+            if (data.id && category && mode) {
+                window.location.href = `/${category}/${mode}/chat/${data.id}`;
+            } else {
+                displayError('Failed to redirect to chat page.');
             }
         } else if (page === 'chat') {
             await addMessage('assistant', data);
@@ -548,6 +506,15 @@ const { page, category, mode } = Astro.props;
                     activateDesmos();
                 } catch (e) {
                     console.warn('Error activating Desmos:', e);
+                }
+            }
+
+            // Initialize step-by-step quizzes if available
+            if (typeof window.initializeStepByStep === 'function') {
+                try {
+                    window.initializeStepByStep();
+                } catch (e) {
+                    console.warn('Error initializing step-by-step:', e);
                 }
             }
 
@@ -689,6 +656,15 @@ const { page, category, mode } = Astro.props;
                     activateDesmos();
                 } catch (e) {
                     console.warn('Error activating Desmos:', e);
+                }
+            }
+
+            // Initialize step-by-step quizzes if available
+            if (typeof window.initializeStepByStep === 'function') {
+                try {
+                    window.initializeStepByStep();
+                } catch (e) {
+                    console.warn('Error initializing step-by-step:', e);
                 }
             }
 

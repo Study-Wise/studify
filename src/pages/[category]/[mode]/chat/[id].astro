@@ -8,6 +8,7 @@ import LeftSidebar from '../../../../components/chat/LeftSidebar.astro';
 import RightSidebar from '../../../../components/chat/RightSidebar.astro';
 
 import MessagesScript from '../../../../scripts/messages.astro';
+import StepByStepScript from '../../../../scripts/step-by-step.astro';
 import '../../../../styles/pages/chat.scss';
 
 import { getMessages, getMessagesLength } from '../../../../lib/threads';
@@ -16,6 +17,7 @@ import Footer from '../../../../components/Footer.astro';
 import { checkThreadAccess } from '../../../../lib/auth/checkThreadAccess';
 import { getLatestReferenceSheet } from '../../../../lib/content/getLatestReferenceSheet';
 import { getLatestStudyGuide } from '../../../../lib/content/getLatestStudyGuide';
+import { getInfographic } from '../../../../lib/content/getInfographic';
 
 let { category, mode, id } = Astro.params || { category: '', mode: '', id: '' };
 
@@ -24,28 +26,31 @@ const { auth } = Astro.locals;
 const { userId, sessionClaims } = auth();
 const user_email = sessionClaims?.email as string || null;
 
-// Redirect to sign-in if not authenticated
-if (!userId) {
+// Check thread access first
+const { isAuthorized, isPublic } = await checkThreadAccess(id || '', user_email, auth);
+
+// Redirect to sign-in only if not authenticated AND thread is not public
+if (!userId && !isPublic) {
     return Astro.redirect("/user/sign-in");
 }
-
-// Check thread access
-const { isAuthorized, isPublic } = await checkThreadAccess(id || '', user_email, auth);
 
 // Get messages only if authorized or public
 const messagesLength = await getMessagesLength(id || '');
 const messages = (isAuthorized || isPublic) && messagesLength > 0 ? await getMessages(id ?? '', user_email) : [];
 
-// Check if reference sheet and study guide exist
+// Check if reference sheet, study guide, and infographic exist
 let hasReferenceSheet = false;
 let hasStudyGuide = false;
+let hasInfographic = false;
 
 if ((isAuthorized || isPublic) && id) {
     const referenceSheetResult = await getLatestReferenceSheet(id, user_email);
     const studyGuideResult = await getLatestStudyGuide(id, user_email);
+    const infographic = await getInfographic(id);
 
     hasReferenceSheet = !!referenceSheetResult.content;
     hasStudyGuide = !!studyGuideResult.content;
+    hasInfographic = !!infographic;
 }
 
 
@@ -68,26 +73,25 @@ export const inNav = 'hide';
         <section class="chat-section">
             <div class="chat-messages">
                 {isAuthorized || isPublic ? (
-                    messages.map(async message => {
+                    messages
+                        .filter(message => message.role !== 'system')
+                        .map(async message => {
                         const { obj, generatedText: htmlText } = await extract(message.content);
-                        var content = htmlText;
-                        if (!(message.role === 'assistant' && obj.studyGuide || obj.referenceSheet)) {
-                            return <div class={`message ${message.role}`}>
-                                <div class={`message-content ${message.role === 'user' ? 'bg-primary' : ''}`} set:html={content} />
-                            </div>
+
+                        // For assistant messages with fancy output, show preceding/following text only
+                        let content = htmlText;
+                        if (message.role === 'assistant' && (obj.studyGuide || obj.referenceSheet)) {
+                            // Combine preceding and following text, excluding the fancy output
+                            const parts = [];
+                            if (obj.precedingText) parts.push(obj.precedingText);
+                            if (obj.followingText) parts.push(obj.followingText);
+                            content = parts.join('\n\n');
                         }
 
-                        if (message.role === 'assistant') {
-                            if (obj.studyGuide || obj.referenceSheet) {
-                                return <div class={`message ${message.role}`}>
-                                    <div class="message-content">
-                                        { obj.precedingText && <div class="message-content-inner" set:html={obj.precedingText} /> }
-                                        <FancyOutput obj={obj} />
-                                        { obj.followingText && <div class="message-content-inner" set:html={obj.followingText} /> }
-                                    </div>
-                                </div>              
-                            }
-                        }
+                        // Render as simple message
+                        return <div class={`message ${message.role}`}>
+                            <div class={`message-content ${message.role === 'user' ? 'bg-primary' : ''}`} set:html={content} />
+                        </div>
                     })
                 ) : (
                     <div class="unauthorized-message">
@@ -109,6 +113,7 @@ export const inNav = 'hide';
         <RightSidebar
             hasReferenceSheet={hasReferenceSheet}
             hasStudyGuide={hasStudyGuide}
+            hasInfographic={hasInfographic}
             threadId={id || ''}
             category={category || ''}
             mode={mode || ''}
@@ -200,28 +205,8 @@ export const inNav = 'hide';
                     chatToolbar.classList.remove('at-bottom');
                 }
             });
-
-            // Right sidebar tab switching
-            const sidebarTabs = document.querySelectorAll('.sidebar-tab');
-            const sidebarContents = document.querySelectorAll('.sidebar-tab-content');
-
-            sidebarTabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const targetTab = tab.dataset.tab;
-
-                    // Remove active class from all tabs and contents
-                    sidebarTabs.forEach(t => t.classList.remove('active'));
-                    sidebarContents.forEach(c => c.classList.remove('active'));
-
-                    // Add active class to clicked tab and corresponding content
-                    tab.classList.add('active');
-                    const targetContent = document.querySelector(`.sidebar-tab-content[data-content="${targetTab}"]`);
-                    if (targetContent) {
-                        targetContent.classList.add('active');
-                    }
-                });
-            });
         });
     </script>
     <MessagesScript page="chat" category={category} mode={mode} />
+    <StepByStepScript />
 </Layout> 

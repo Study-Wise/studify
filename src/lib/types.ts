@@ -50,6 +50,7 @@ interface ThreadAccessResult {
 interface ChatRightSidebarProps {
     hasReferenceSheet: boolean;
     hasStudyGuide: boolean;
+    hasInfographic: boolean;
     threadId: string;
     category: string;
     mode: string;
