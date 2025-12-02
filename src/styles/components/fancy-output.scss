@@ -90,6 +90,7 @@ $shadow-size: 5px;
 
         border: none;
         position: relative;
+        cursor: pointer;
 
         .tab-content {
             padding-block-start: #{math.div($spacing, 2)};
@@ -100,8 +101,6 @@ $shadow-size: 5px;
 .tabs {
     position: sticky;
     top: 0;
-
-    padding-inline-start: $spacing;
 
     display: flex;
     align-items: end;
