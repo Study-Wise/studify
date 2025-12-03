@@ -97,4 +97,21 @@ interface SettingItem {
     default: string;
 }
 
-export type { Mode, Category, LegacyTool, Tool, ReferenceSheetResult, StudyGuideResult, ThreadAccessResult, ChatRightSidebarProps, ImageSize, ModelOption, Provider, Providers, SelectorSettings, ThreadData, UploadOptions, SettingItem };
+export type { 
+    Mode, 
+    Category, 
+    LegacyTool, 
+    Tool, 
+    ReferenceSheetResult, 
+    StudyGuideResult, 
+    ThreadAccessResult, 
+    ChatRightSidebarProps, 
+    ImageSize, 
+    ModelOption, 
+    Provider, 
+    Providers, 
+    SelectorSettings, 
+    ThreadData, 
+    UploadOptions, 
+    SettingItem 
+};
