@@ -108,8 +108,10 @@ footer, .chat-toolbar {
 
     .chat-title-container {
         display: flex;
-        align-items: center;
+        flex-wrap: wrap;
         gap: 1rem;
+        align-items: center;
+        justify-content: center;
     }
 
     h2 {

@@ -1,99 +1,68 @@
-import { uploadImageByUrl } from './uploadthing';
+import { uploadImageByUrl, uploadImageFromBase64 } from './uploadthing';
 import config from './config';
-import type { IdeogramResponse } from './types';
+import OpenAI from 'openai';
 
-const IDEOGRAM_API_KEY = process.env.IDEOGRAM_API_KEY || '';
-const IDEOGRAM_API_URL = 'https://api.ideogram.ai/v1/ideogram-v3/generate';
+const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+});
 
-// Generate image and return URL
-async function generateImageUrl(prompt: string) {
-    const formData = new FormData();
-    formData.append('prompt', prompt);
-    formData.append('aspect_ratio', '1x1');
-    formData.append('rendering_speed', config.infographicSpeed);
+// Generate image and return base64
+async function generateImageBase64(prompt: string) {
+    try {
+        const response = await openai.images.generate({
+            model: config.imageModel,
+            prompt: prompt,
+            n: 1,
+            size: config.imageSize,
+        });
 
-    const response = await fetch(IDEOGRAM_API_URL, {
-        method: 'POST',
-        headers: {
-            'Api-Key': IDEOGRAM_API_KEY,
-        },
-        body: formData,
-    });
+        if (response.data && response.data.length > 0 && response.data[0].b64_json) {
+            return response.data[0].b64_json;
+        }
 
-    if (!response.ok) {
-        let errorMessage = `Ideogram API error (${response.status} ${response.statusText})`;
+        throw new Error(`OpenAI API returned no base64 image data`);
+    } catch (error: any) {
+        let errorMessage = 'OpenAI image generation error';
 
-        // Handle specific error codes
-        if (response.status === 524) {
-            errorMessage = 'Ideogram API timeout - The image generation took too long. Please try again.';
-        } else if (response.status === 429) {
-            errorMessage = 'Ideogram API rate limit exceeded - Please wait a moment and try again.';
-        } else if (response.status === 401 || response.status === 403) {
-            errorMessage = 'Ideogram API authentication failed - Please check your API key.';
-        } else {
-            try {
-                const errorText = await response.text();
-                if (errorText) {
-                    // Check if response is HTML (error page)
-                    if (errorText.trim().startsWith('<!DOCTYPE') || errorText.trim().startsWith('<html')) {
-                        // Don't include the full HTML, just the status
-                        errorMessage = `Ideogram API error (${response.status}): Server returned an error page`;
-                    } else {
-                        // Try to parse as JSON
-                        try {
-                            const errorData = JSON.parse(errorText);
-                            if (errorData.error || errorData.message) {
-                                errorMessage += `: ${errorData.error || errorData.message}`;
-                            }
-                        } catch {
-                            // Use the raw text if it's not too long
-                            if (errorText.length < 200) {
-                                errorMessage += `: ${errorText}`;
-                            }
-                        }
-                    }
-                }
-            } catch {
-                // Couldn't read response body
-            }
+        if (error.status === 429) {
+            errorMessage = 'OpenAI API rate limit exceeded - Please wait a moment and try again.';
+        } else if (error.status === 401 || error.status === 403) {
+            errorMessage = 'OpenAI API authentication failed - Please check your API key.';
+        } else if (error.message) {
+            errorMessage = `OpenAI API error: ${error.message}`;
         }
 
         throw new Error(errorMessage);
     }
+}
 
-    const data: IdeogramResponse = await response.json();
-
-    if (data.data && data.data.length > 0) {
-        return data.data[0].url;
-    }
-
-    throw new Error('Ideogram API returned no images in response');
+// Generate image and return URL (deprecated, kept for backwards compatibility)
+async function generateImageUrl(prompt: string) {
+    const base64 = await generateImageBase64(prompt);
+    // For now, we'll need to upload and return the URL
+    const uploadResult = await uploadImageFromBase64(base64, 'generated-image.png');
+    return uploadResult.data?.url || null;
 }
 
 // Generate image and return buffer
 async function generateImageBuffer(prompt: string) {
-    const imageUrl = await generateImageUrl(prompt);
-
-    if (imageUrl) {
-        // Fetch the image from the URL
-        const imageResponse = await fetch(imageUrl);
-        const arrayBuffer = await imageResponse.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
-
+    const base64 = await generateImageBase64(prompt);
+    if (base64) {
+        const buffer = Buffer.from(base64, 'base64');
         return buffer;
     }
-
     return null;
 }
 
 // Generate image and upload to UploadThing
 async function generateImage(prompt: string) {
-    const imageUrl = await generateImageUrl(prompt);
-    if (imageUrl) {
-        const uploadResult = await uploadImageByUrl(imageUrl);
+    const base64 = await generateImageBase64(prompt);
+    if (base64) {
+        const uploadResult = await uploadImageFromBase64(base64, 'infographic.png');
+        const imageUrl = uploadResult.data?.url || null;
         return { imageUrl, uploadResult };
     }
     return { imageUrl: null, uploadResult: null };
 }
 
-export { generateImageUrl, generateImageBuffer, generateImage }
+export { generateImageUrl, generateImageBuffer, generateImage, generateImageBase64 }
