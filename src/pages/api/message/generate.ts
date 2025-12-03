@@ -23,6 +23,8 @@ import type { Mode } from '../../../lib/types';
 import { threadsTable } from '../../../db/schema';
 import extract from '../../../lib/extractPartsofMessage';
 import { isValidEmail } from '../../../lib/validation';
+import { generateReferenceSheet } from '../../../lib/content/generateReferenceSheet';
+import { generateStudyGuide } from '../../../lib/content/generateStudyGuide';
 
 const provider_maps = {
     openai: [
@@ -322,6 +324,72 @@ export const POST: APIRoute = async ({ request, locals }) => {
             totalMessages: convoHistory.length,
             userMessageLength: userPrompt.length
         });
+
+        // --- Special handling for first message: Generate study materials directly ---
+        if (convoHistory.length === 2) {
+            console.log(`🎯 [${requestId}] First message detected, generating study materials directly`);
+
+            try {
+                // Save the conversation to database first
+                console.log(`💾 [${requestId}] Saving initial conversation to database`);
+                const convoHistoryWithoutSystem = convoHistory.filter(msg => msg.role !== 'system');
+                await db.insert(threadsTable).values({
+                    id: current_thread_id,
+                    title: '',
+                    thread: { messages: convoHistoryWithoutSystem },
+                    email: user_email,
+                    category: category || 'math',
+                    mode: mode || 'general',
+                    isPublic: isPublic,
+                    isDev: process.env.NODE_ENV === 'development'
+                } as ThreadInsert);
+                console.log(`✅ [${requestId}] Initial conversation saved`);
+
+                // Generate study materials using the conversation
+                console.log(`📚 [${requestId}] Generating study guide and reference sheet`);
+                const [studyGuideContent, referenceSheetContent] = await Promise.all([
+                    generateStudyGuide(current_thread_id!, user_email, category || 'math', mode || 'general'),
+                    generateReferenceSheet(current_thread_id!, user_email, category || 'math', mode || 'general')
+                ]);
+                console.log(`✅ [${requestId}] Study materials generated successfully`);
+
+                // Generate title
+                console.log(`🏷️ [${requestId}] Generating conversation title`);
+                const convoTitle = await generateTitle(convoHistory, userModel, config.provider as ProviderKey);
+                console.log(`✅ [${requestId}] Title generated: ${convoTitle}`);
+
+                // Update thread with title
+                await db.update(threadsTable)
+                    .set({ title: convoTitle, updatedAt: new Date() })
+                    .where(eq(threadsTable.id, current_thread_id!));
+
+                const totalDuration = Date.now() - startTime;
+                console.log(`🎉 [${requestId}] Request completed successfully:`, {
+                    totalDuration: `${totalDuration}ms`,
+                    threadId: current_thread_id,
+                    finalTitle: convoTitle,
+                    hasStudyGuide: !!studyGuideContent,
+                    hasReferenceSheet: !!referenceSheetContent
+                });
+
+                return new Response(
+                    JSON.stringify({
+                        studyGuide: studyGuideContent,
+                        referenceSheet: referenceSheetContent,
+                        generatedText: '', // Empty for first message
+                        generatedTitle: true,
+                        id: current_thread_id,
+                    }),
+                    {
+                        status: 200,
+                        headers: { 'Content-Type': 'application/json' },
+                    }
+                );
+            } catch (error) {
+                console.error(`❌ [${requestId}] Error generating study materials:`, error);
+                throw error;
+            }
+        }
 
         // --- Model/Provider selection ---
         console.log(`🤖 [${requestId}] Selecting AI model and provider`);

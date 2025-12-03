@@ -1,15 +1,12 @@
 import 'dotenv/config';
 import type { APIRoute } from 'astro';
 import { nanoid } from 'nanoid';
-import { generateText } from 'ai';
-import { openai } from '@ai-sdk/openai';
 
 import { db } from '../../../db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '../../../db/schema';
-import { checkThreadAccess } from '../../../lib/auth/checkThreadAccess';
-import categories from '../../../lib/modes';
-import config from '../../../lib/config';
+import { isValidEmail } from '../../../lib/validation';
+import { generateReferenceSheet } from '../../../lib/content/generateReferenceSheet';
 
 export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();
@@ -48,18 +45,22 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
+        console.log(`🔐 [${requestId}] Authentication found, extracting user info`);
         const { userId, sessionClaims } = auth();
         const user_email = userId ? ((sessionClaims?.email as string) || null) : null;
 
-        // Check thread access
-        const { isAuthorized, isPublic } = await checkThreadAccess(threadId, user_email, auth);
+        console.log(`👤 [${requestId}] User info:`, {
+            userId: userId || 'none',
+            userEmail: user_email || 'none'
+        });
 
-        if (!isAuthorized && !isPublic) {
-            console.error(`❌ [${requestId}] Unauthorized access to thread:`, threadId);
+        // Validate email
+        if (!isValidEmail(user_email)) {
+            console.error(`❌ [${requestId}] Invalid email format:`, user_email);
             return new Response(
-                JSON.stringify({ status: 'error', error: 'Unauthorized' }),
+                JSON.stringify({ status: 'error', error: 'Invalid email' }),
                 {
-                    status: 403,
+                    status: 400,
                     headers: { 'Content-Type': 'application/json' },
                 }
             );
@@ -82,84 +83,28 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
         const thread = threads[0];
 
-        // Get the thread messages
-        const threadData = thread?.thread as any;
-        const messages = threadData?.messages ?? [];
-
-        if (messages.length === 0) {
-            console.error(`❌ [${requestId}] No messages found in thread`);
+        // Check if user owns the thread or if it's public
+        if (thread.email !== user_email && !thread.isPublic) {
+            console.error(`❌ [${requestId}] Unauthorized access to thread:`, threadId);
             return new Response(
-                JSON.stringify({ status: 'error', error: 'No messages found in thread' }),
+                JSON.stringify({ status: 'error', error: 'Unauthorized' }),
                 {
-                    status: 400,
+                    status: 403,
                     headers: { 'Content-Type': 'application/json' },
                 }
             );
         }
 
-        // Get the first user message
-        const firstUserMessage = messages.find((msg: any) => msg.role === 'user');
-
-        if (!firstUserMessage) {
-            console.error(`❌ [${requestId}] No user messages found in thread`);
-            return new Response(
-                JSON.stringify({ status: 'error', error: 'No user messages found' }),
-                {
-                    status: 400,
-                    headers: { 'Content-Type': 'application/json' },
-                }
-            );
-        }
-
-        // Get the mode object for the thread's category and mode
-        const category = thread.category || 'math';
-        const mode = thread.mode || 'general';
-        const modeObj = categories[category]?.modes?.[mode];
-
-        // Get the base system prompt
-        const baseSystemPrompt = modeObj?.prompt ? await modeObj.prompt : config.systemPrompt;
-
-        // Create a reference sheet specific prompt
-        const referenceSheetPrompt = `${baseSystemPrompt}
-
-IMPORTANT: Generate ONLY a Reference Sheet based on the user's homework. Do NOT include a Study Guide section.
-
-Your response should be wrapped in HTML like so:
-<dialog class="fancy-output"><div class="reference-sheet">Please put full MD/HTML content inside here</div></dialog>
-
-### Reference Sheet
-#### Formulas & Theorems
-(list with \`$…$\`/\`$$…$$\`, explain variables)
-
-#### Key Definitions
-(2-3 concise definitions)
-
-#### Important Concepts
-(brief summary of key concepts)
-
-Math formatting: use \`$…$\` for displaying math formulas/equations inline and \`$$…$$\` for displaying them on their own; never use backticks for complex math.`;
-
+        // Generate the reference sheet
         console.log(`🤖 [${requestId}] Generating reference sheet`);
-        const result = await generateText({
-            model: openai(config.model),
-            messages: [
-                {
-                    role: 'system',
-                    content: referenceSheetPrompt
-                },
-                {
-                    role: 'user',
-                    content: firstUserMessage.content
-                }
-            ],
-        });
+        const content = await generateReferenceSheet(threadId, user_email, thread.category, thread.mode);
 
         console.log(`🎉 [${requestId}] Reference sheet generation completed successfully`);
 
         return new Response(
             JSON.stringify({
                 status: 'success',
-                content: result.text
+                content: content
             }),
             {
                 status: 200,
