@@ -191,6 +191,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
                     title: '',
                     thread: { messages: [] },
                     email: user_email,
+                    category: category || config.defaultCategory,
+                    mode: mode || config.defaultMode,
                     isPublic: isPublic,
                     isDev: process.env.NODE_ENV === 'development'
                 };
@@ -338,8 +340,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
                     title: '',
                     thread: { messages: convoHistoryWithoutSystem },
                     email: user_email,
-                    category: category || 'math',
-                    mode: mode || 'general',
+                    category: category || config.defaultCategory,
+                    mode: mode || config.defaultMode,
                     isPublic: isPublic,
                     isDev: process.env.NODE_ENV === 'development'
                 } as ThreadInsert);
@@ -348,14 +350,14 @@ export const POST: APIRoute = async ({ request, locals }) => {
                 // Generate study materials using the conversation
                 console.log(`📚 [${requestId}] Generating study guide and reference sheet`);
                 const [studyGuideContent, referenceSheetContent] = await Promise.all([
-                    generateStudyGuide(current_thread_id!, user_email, category || 'math', mode || 'general'),
-                    generateReferenceSheet(current_thread_id!, user_email, category || 'math', mode || 'general')
+                    generateStudyGuide(current_thread_id!, user_email, category || config.defaultCategory, mode || config.defaultMode),
+                    generateReferenceSheet(current_thread_id!, user_email, category || config.defaultCategory, mode || config.defaultMode)
                 ]);
                 console.log(`✅ [${requestId}] Study materials generated successfully`);
 
                 // Generate title
                 console.log(`🏷️ [${requestId}] Generating conversation title`);
-                const convoTitle = await generateTitle(convoHistory, userModel, config.provider as ProviderKey);
+                const convoTitle = await generateTitle(convoHistory, config.model, config.provider as ProviderKey);
                 console.log(`✅ [${requestId}] Title generated: ${convoTitle}`);
 
                 // Update thread with title
@@ -550,6 +552,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
                     title: convoTitle || '',
                     thread: { messages: convoHistory },
                     email: user_email,
+                    category: category || config.defaultCategory,
+                    mode: mode || config.defaultMode,
                     isPublic: isPublic,
                     isDev: process.env.NODE_ENV === 'development'
                 } as ThreadInsert);
