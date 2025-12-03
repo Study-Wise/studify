@@ -46,8 +46,10 @@
         overflow-wrap: normal;
     }
 
-    .cl-userButtonBox.cl-internal-1erfakr {
-        &, .cl-avatarBox.cl-userButtonAvatarBox.cl-internal-14s4tiz {
+    .lite .cl-userButtonBox.cl-internal-1erfakr {
+        &, 
+        .cl-userButtonBox.cl-internal-1erfakr,
+        .cl-avatarBox.cl-userButtonAvatarBox.cl-internal-14s4tiz {
             height: 100%;
             aspect-ratio: 1;
         }
