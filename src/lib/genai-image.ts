@@ -14,7 +14,6 @@ async function generateImageUrl(prompt: string) {
             prompt: prompt,
             n: 1,
             size: config.imageSize,
-            response_format: 'url',
         });
 
         if (response.data && response.data.length > 0 && response.data[0].url) {
