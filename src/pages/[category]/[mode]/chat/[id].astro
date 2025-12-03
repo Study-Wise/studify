@@ -121,63 +121,16 @@ export const inNav = 'hide';
                 const classes = [...message.classList].filter(cls => !classesToIgnore.includes(cls));
                 const type = classes.join(',')
                 const content = message.querySelector('.message-content').innerHTML.trim();
-                const fancyOutput = message.querySelector('.fancy-output');
-                const hasFancyOutput = fancyOutput !== null;
                 const tabShown = outputTabs[0]
-                const tabsAmt = fancyOutput ? fancyOutput.querySelectorAll('.tab-content-container').length : null;
-
-                if (tabsAmt) {
-                    fancyOutput.style.setProperty('--tabs-amt', tabsAmt);
-                }
 
                 messages.push({
                     type,
                     content,
-                    hasFancyOutput,
                     tabShown,
-                    tabsAmt,
                 });
             });
         }, 1000);
 
-        window.onFancyOutput = () => {
-            const allOutputs = document.querySelectorAll('.fancy-output');
-            allOutputs.forEach(output => {
-                const openBtn = output.querySelector('.buttons .button.open-button');
-                if (openBtn) {
-                    openBtn.addEventListener('click', () => {
-                        // const content = output.outerHTML.trim()
-                        // const item = messages.filter(m => m.hasFancyOutput).find(m => m.content.trim().replace(' open=""', '') === content.trim().replace(' open=""', ''));
-                        if (!output.hasAttribute('open')) {
-                            output.showModal();
-                        }
-                        else if (output.hasAttribute('open')) {
-                            output.style.removeProperty('--tab-shown');
-                            setTimeout(() => {
-                                output.close();
-                            });
-                        }
-                    });
-                }
-                output.addEventListener('click', (e) => {
-                    if (!output.hasAttribute('open')) {
-                        e.preventDefault();
-                        output.showModal();
-                    }
-                });
-
-                const tabbBtns = output.querySelectorAll('.tabs > .btn.tab');
-                tabbBtns.forEach((btn, index) => {
-                    btn.addEventListener('click', () => {
-                        if (output.hasAttribute('open')) {
-                            output.style.setProperty('--tab-shown', index);
-                        }
-                    });
-                });
-
-            });
-        }
-        window.addEventListener('load', window.onFancyOutput);
         window.addEventListener('load', () => {
             const chatMessages = document.querySelector('.chat-messages');
 
