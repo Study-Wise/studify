@@ -25,6 +25,7 @@ import extract from '../../../lib/extractPartsofMessage';
 import { isValidEmail } from '../../../lib/validation';
 import { generateReferenceSheet } from '../../../lib/content/generateReferenceSheet';
 import { generateStudyGuide } from '../../../lib/content/generateStudyGuide';
+import { clerkClient } from '@clerk/astro/server';
 
 const provider_maps = {
     openai: [
@@ -68,10 +69,10 @@ type ProviderKey = keyof typeof providerFunctions;
 type Thread = InferSelectModel<typeof threadsTable>;
 type ThreadInsert = InferInsertModel<typeof threadsTable>;
 
-export const POST: APIRoute = async ({ request, locals }) => {
+export const POST: APIRoute = async ({ request, locals, ...context }) => {
     const requestId = nanoid();
     const startTime = Date.now();
-    
+
     console.log(`🚀 [${requestId}] Starting message generation request`);
     console.log(`📊 [${requestId}] Request metadata:`, {
         timestamp: new Date().toISOString(),
@@ -127,14 +128,24 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
         
         console.log(`🔐 [${requestId}] Authentication found, extracting user info`);
-        const { userId, sessionClaims } = auth();
-        const user_email = userId ? ((sessionClaims?.email as string) || null) : null;
-        
+        const { userId } = auth();
+
+        // Fetch user from Clerk to get email properly
+        let user_email: string | null = null;
+        if (userId) {
+            try {
+                const client = clerkClient({ request, locals, ...context });
+                const user = await client.users.getUser(userId);
+                user_email = user.emailAddresses?.[0]?.emailAddress || null;
+                console.log(`✅ [${requestId}] Successfully fetched user email from Clerk`);
+            } catch (error) {
+                console.error(`❌ [${requestId}] Error fetching user from Clerk:`, error);
+            }
+        }
+
         console.log(`👤 [${requestId}] User info:`, {
             userId: userId || 'none',
-            userEmail: user_email || 'none',
-            hasSessionClaims: !!sessionClaims,
-            sessionClaimsKeys: Object.keys(sessionClaims || {})
+            userEmail: user_email || 'none'
         });
 
         // Validate email
@@ -335,25 +346,33 @@ export const POST: APIRoute = async ({ request, locals }) => {
                 // Save the conversation to database first
                 console.log(`💾 [${requestId}] Saving initial conversation to database`);
                 const convoHistoryWithoutSystem = convoHistory.filter(msg => msg.role !== 'system');
-                await db.insert(threadsTable).values({
-                    id: current_thread_id,
-                    title: '',
-                    thread: { messages: convoHistoryWithoutSystem },
-                    email: user_email,
-                    category: category || config.defaultCategory,
-                    mode: mode || config.defaultMode,
-                    isPublic: isPublic,
-                    isDev: process.env.NODE_ENV === 'development'
-                } as ThreadInsert);
-                console.log(`✅ [${requestId}] Initial conversation saved`);
 
-                // Generate study materials using the conversation
-                console.log(`📚 [${requestId}] Generating study guide and reference sheet`);
-                const [studyGuideContent, referenceSheetContent] = await Promise.all([
-                    generateStudyGuide(current_thread_id!, user_email, category || config.defaultCategory, mode || config.defaultMode),
-                    generateReferenceSheet(current_thread_id!, user_email, category || config.defaultCategory, mode || config.defaultMode)
-                ]);
-                console.log(`✅ [${requestId}] Study materials generated successfully`);
+                if (isNewThread) {
+                    // Thread was already created, just update it
+                    console.log(`🔄 [${requestId}] Updating newly created thread with first message`);
+                    await db.update(threadsTable)
+                        .set({
+                            thread: { messages: convoHistoryWithoutSystem },
+                            category: category || config.defaultCategory,
+                            mode: mode || config.defaultMode,
+                            updatedAt: new Date()
+                        })
+                        .where(eq(threadsTable.id, current_thread_id!));
+                } else {
+                    // Thread doesn't exist yet, insert it
+                    console.log(`🆕 [${requestId}] Inserting new thread with first message`);
+                    await db.insert(threadsTable).values({
+                        id: current_thread_id,
+                        title: '',
+                        thread: { messages: convoHistoryWithoutSystem },
+                        email: user_email,
+                        category: category || config.defaultCategory,
+                        mode: mode || config.defaultMode,
+                        isPublic: isPublic,
+                        isDev: process.env.NODE_ENV === 'development'
+                    } as ThreadInsert);
+                }
+                console.log(`✅ [${requestId}] Initial conversation saved`);
 
                 // Generate title
                 console.log(`🏷️ [${requestId}] Generating conversation title`);
@@ -362,22 +381,21 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
                 // Update thread with title
                 await db.update(threadsTable)
-                    .set({ title: convoTitle, updatedAt: new Date() })
+                    .set({
+                        title: convoTitle,
+                        updatedAt: new Date()
+                    })
                     .where(eq(threadsTable.id, current_thread_id!));
 
                 const totalDuration = Date.now() - startTime;
                 console.log(`🎉 [${requestId}] Request completed successfully:`, {
                     totalDuration: `${totalDuration}ms`,
                     threadId: current_thread_id,
-                    finalTitle: convoTitle,
-                    hasStudyGuide: !!studyGuideContent,
-                    hasReferenceSheet: !!referenceSheetContent
+                    finalTitle: convoTitle
                 });
 
                 return new Response(
                     JSON.stringify({
-                        studyGuide: studyGuideContent,
-                        referenceSheet: referenceSheetContent,
                         generatedText: '', // Empty for first message
                         generatedTitle: true,
                         id: current_thread_id,

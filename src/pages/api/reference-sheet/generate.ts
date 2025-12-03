@@ -99,6 +99,15 @@ export const POST: APIRoute = async ({ request, locals }) => {
         console.log(`🤖 [${requestId}] Generating reference sheet`);
         const content = await generateReferenceSheet(threadId, user_email, thread.category, thread.mode);
 
+        // Save the generated reference sheet to the database
+        console.log(`💾 [${requestId}] Saving reference sheet to database`);
+        await db.update(threadsTable)
+            .set({
+                generatedReferenceSheet: content,
+                updatedAt: new Date()
+            })
+            .where(eq(threadsTable.id, threadId));
+
         console.log(`🎉 [${requestId}] Reference sheet generation completed successfully`);
 
         return new Response(
