@@ -6,7 +6,8 @@
       "Bash(git add:*)",
       "Bash(git rm:*)",
       "WebFetch(domain:ai.google.dev)",
-      "WebFetch(domain:developer.ideogram.ai)"
+      "WebFetch(domain:developer.ideogram.ai)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []
