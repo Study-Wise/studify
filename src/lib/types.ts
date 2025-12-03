@@ -13,20 +13,6 @@ interface Mode {
     prompt?: Promise<any>;
     tools?: Record<string, Tool>;
     show?: true | false;
-}    
-
-// Legacy Tool interface for backward compatibility
-interface LegacyTool {
-    type: 'function';
-    ready: boolean;
-    name: string;
-    description: string;
-    parameters: {
-        type: 'object';
-        properties: Record<string, any>;
-        required?: string[];
-    };
-    execute: (params: any) => Promise<any>;
 }
 
 interface ReferenceSheetResult {
@@ -107,7 +93,6 @@ interface SettingItem {
 export type {
     Mode,
     Category,
-    LegacyTool,
     Tool,
     ReferenceSheetResult,
     StudyGuideResult,
