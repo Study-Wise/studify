@@ -22,8 +22,6 @@ import type { Mode } from '../../../lib/types';
 
 import { threadsTable } from '../../../db/schema';
 import { isValidEmail } from '../../../lib/validation';
-import { generateReferenceSheet } from '../../../lib/content/generateReferenceSheet';
-import { generateStudyGuide } from '../../../lib/content/generateStudyGuide';
 import { clerkClient } from '@clerk/astro/server';
 
 const provider_maps = {
