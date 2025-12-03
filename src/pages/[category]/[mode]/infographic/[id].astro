@@ -25,7 +25,7 @@ const infographic = (isAuthorized || isPublic) && id
     : null;
 
 // Extract URL from uploadthing response
-const infographicUrl = infographic?.url || null;
+const infographicUrl = infographic?.imageUrl || null;
 ---
 
 <Layout title="Infographic" container={true}>
