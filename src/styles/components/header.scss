@@ -72,9 +72,11 @@
 
 .header-content-wrapper {
     display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+
     align-items: center;
     justify-content: space-between;
-    gap: 1rem;
     // width: 100%;
 
     &:not(.lite) {
@@ -83,19 +85,23 @@
     }
 
     &.lite {
-        display: grid;
-        grid-template-columns: 1fr auto;
+        flex-direction: row;
+        justify-content: center;
+        
         background-color: $card-bg-light;
         border-radius: 10px;
         padding: 10px 20px;
         box-shadow: 0 5px 15px var(--card-shadow);
         border: 1px solid var(--card-border);
         width: fit-content;
+
+        &:last-child {
+            flex: 1;
+        }
     }
 
     .header-text-container {
         text-align: left;
-        min-width: 0;
     }
 }
 
