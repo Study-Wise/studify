@@ -13,7 +13,7 @@ const { userId, sessionClaims } = auth();
 const user_email = sessionClaims?.email as string || null;
 
 // Check thread access first
-const { isAuthorized, isPublic } = await checkThreadAccess(id || '', user_email, auth, category, mode, Astro);
+const { isAuthorized, isPublic } = await checkThreadAccess(id || '', auth, category, mode, Astro);
 
 // Redirect to sign-in only if not authenticated AND thread is not public
 if (!userId && !isPublic) {
