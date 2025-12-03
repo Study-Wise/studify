@@ -3,13 +3,15 @@ import { eq, and } from 'drizzle-orm';
 import { threadsTable } from '../../db/schema';
 import { getUserRole } from '../auth-utils';
 import type { ThreadAccessResult } from '../types';
+import { clerkClient } from '@clerk/astro/server';
 
 export async function checkThreadAccess(
     threadId: string,
     userEmail: string | null,
     auth: any,
     urlCategory?: string,
-    urlMode?: string
+    urlMode?: string,
+    context?: any
 ): Promise<ThreadAccessResult> {
     let threadOwner: string | null = null;
     let isPublicThread = false;
@@ -17,6 +19,21 @@ export async function checkThreadAccess(
     // Get user role
     const userRole = getUserRole(auth);
     const isUserAdmin = userRole === 'admin';
+
+    // Fetch user email from Clerk if context is provided and userEmail is not already set
+    let actualUserEmail = userEmail;
+    if (!actualUserEmail && context) {
+        const { userId } = auth();
+        if (userId) {
+            try {
+                const client = clerkClient(context);
+                const user = await client.users.getUser(userId);
+                actualUserEmail = user.emailAddresses?.[0]?.emailAddress || null;
+            } catch (error) {
+                console.error('Error fetching user from Clerk:', error);
+            }
+        }
+    }
 
     // Fetch thread from database
     if (threadId) {
@@ -46,12 +63,12 @@ export async function checkThreadAccess(
                 }
 
                 // If unclaimed and user is authenticated, claim ownership
-                if (!threadOwner && userEmail) {
+                if (!threadOwner && actualUserEmail) {
                     try {
                         await db.update(threadsTable)
-                            .set({ email: userEmail, updatedAt: new Date() })
+                            .set({ email: actualUserEmail, updatedAt: new Date() })
                             .where(eq(threadsTable.id, threadId));
-                        threadOwner = userEmail;
+                        threadOwner = actualUserEmail;
                     } catch (e) {
                         console.error('Error claiming thread ownership:', e);
                     }
@@ -69,7 +86,7 @@ export async function checkThreadAccess(
     // 3. They are an admin
     const isAuthorized = Boolean(
         threadId &&
-        ((threadOwner && threadOwner === userEmail) || !threadOwner || isUserAdmin)
+        ((threadOwner && threadOwner === actualUserEmail) || !threadOwner || isUserAdmin)
     );
 
     // Thread is public if it's marked public AND user is not already authorized
