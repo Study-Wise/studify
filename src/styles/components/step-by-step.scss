@@ -39,11 +39,25 @@ $dpad: 1rem;
     background-color: var(--card-bg);
 
     .correct-explanation {
+      $_bdr: calc(var(--bdr) / 8);
+
+      box-sizing: border-box;
       margin-top: var(--pad);
       padding: var(--pad);
       background-color: rgba(from var(--card-bg) h s calc(l - 3%));
-      border-radius: calc(var(--bdr) / 2);
-      border-left: 3px solid hsl(120 73% 50%);
+      border-radius: $_bdr;
+
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        width: $_bdr;
+        height: 100%;
+        background-color: hsl(120 73% 50%);
+      }
     }
 
     .step-question-choices {
