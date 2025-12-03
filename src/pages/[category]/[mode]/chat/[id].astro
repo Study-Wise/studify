@@ -78,24 +78,15 @@ export const inNav = 'hide';
                         .map(async message => {
                         const { obj, generatedText: htmlText } = await extract(message.content);
 
-                        // For assistant messages with fancy output, show preceding/following text only
-                        let content = htmlText;
+                        // For assistant messages with fancy output, don't render as a regular message
+                        // The fancy output will be rendered separately in the sidebar
                         if (message.role === 'assistant' && (obj.studyGuide || obj.referenceSheet)) {
-                            // Combine preceding and following text, excluding the fancy output
-                            const parts = [];
-                            if (obj.precedingText) parts.push(obj.precedingText);
-                            if (obj.followingText) parts.push(obj.followingText);
-                            content = parts.join('\n\n');
-
-                            // Skip rendering if there's no content (fancy output only)
-                            if (!content.trim()) {
-                                return null;
-                            }
+                            return null;
                         }
 
                         // Render as simple message
                         return <div class={`message ${message.role}`}>
-                            <div class={`message-content ${message.role === 'user' ? 'bg-primary' : ''}`} set:html={content} />
+                            <div class={`message-content ${message.role === 'user' ? 'bg-primary' : ''}`} set:html={htmlText} />
                         </div>
                     })
                 ) : (

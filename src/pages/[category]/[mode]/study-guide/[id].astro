@@ -21,9 +21,9 @@ if (!userId && !isPublic) {
 }
 
 // Get the latest study guide only if authorized or public
-const { content: latestStudyGuide, precedingText, followingText } = (isAuthorized || isPublic)
+const { content: latestStudyGuide } = (isAuthorized || isPublic)
     ? await getLatestStudyGuide(id || '', user_email)
-    : { content: null, precedingText: '', followingText: '' };
+    : { content: null };
 ---
 
 <Layout title="Study Guide" container={true}>
@@ -37,9 +37,7 @@ const { content: latestStudyGuide, precedingText, followingText } = (isAuthorize
             </div>
         ) : latestStudyGuide ? (
             <div class="content-container">
-                {precedingText && <div class="preceding-text" set:html={precedingText} />}
                 <div class="study-guide-content" set:html={latestStudyGuide} />
-                {followingText && <div class="following-text" set:html={followingText} />}
             </div>
         ) : (
             <div class="empty-state">
