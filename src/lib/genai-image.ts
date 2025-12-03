@@ -18,7 +18,7 @@ async function generateImageUrl(prompt: string) {
     const formData = new FormData();
     formData.append('prompt', prompt);
     formData.append('aspect_ratio', '1x1');
-    formData.append('rendering_speed', 'DEFAULT');
+    formData.append('rendering_speed', 'TURBO');
 
     const response = await fetch(IDEOGRAM_API_URL, {
         method: 'POST',
