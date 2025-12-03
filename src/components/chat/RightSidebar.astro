@@ -16,7 +16,7 @@ const infographicUrl = `/${category}/${mode}/infographic/${threadId}`;
                     <span class="material-symbols-outlined">description</span>
                     <h3>Reference Sheet</h3>
                 </div>
-                <button class="regenerate-btn" title="Regenerate reference sheet">
+                <button class="regenerate-btn" id="regenerate-reference-sheet-btn" title="Regenerate reference sheet" data-thread-id={threadId}>
                     <span class="material-symbols-outlined">refresh</span>
                 </button>
             </div>
@@ -38,7 +38,7 @@ const infographicUrl = `/${category}/${mode}/infographic/${threadId}`;
                     <span class="material-symbols-outlined">menu_book</span>
                     <h3>Study Guide</h3>
                 </div>
-                <button class="regenerate-btn" title="Regenerate study guide">
+                <button class="regenerate-btn" id="regenerate-study-guide-btn" title="Regenerate study guide" data-thread-id={threadId}>
                     <span class="material-symbols-outlined">refresh</span>
                 </button>
             </div>
@@ -88,10 +88,12 @@ const infographicUrl = `/${category}/${mode}/infographic/${threadId}`;
 
 <script>
     const generateBtn = document.getElementById('generate-infographic-btn');
-    const regenerateBtn = document.getElementById('regenerate-infographic-btn');
+    const regenerateInfographicBtn = document.getElementById('regenerate-infographic-btn');
+    const regenerateReferenceSheetBtn = document.getElementById('regenerate-reference-sheet-btn');
+    const regenerateStudyGuideBtn = document.getElementById('regenerate-study-guide-btn');
 
     async function generateInfographic(threadId: string, isRegenerate: boolean = false) {
-        const btn = isRegenerate ? regenerateBtn : generateBtn;
+        const btn = isRegenerate ? regenerateInfographicBtn : generateBtn;
         if (!btn) return;
 
         // Disable button and show loading state
@@ -126,6 +128,39 @@ const infographicUrl = `/${category}/${mode}/infographic/${threadId}`;
         }
     }
 
+    async function regenerateContent(threadId: string, type: 'reference-sheet' | 'study-guide', btn: HTMLElement) {
+        // Disable button and show loading state
+        btn.setAttribute('disabled', 'true');
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = `<span class="material-symbols-outlined spinning">progress_activity</span>`;
+
+        try {
+            const response = await fetch(`/api/${type}/generate`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ threadId }),
+            });
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                // Reload the page to show the new content
+                window.location.reload();
+            } else {
+                throw new Error(data.error || `Failed to generate ${type.replace('-', ' ')}`);
+            }
+        } catch (error) {
+            console.error(`Error generating ${type}:`, error);
+            alert(error instanceof Error ? error.message : `Failed to generate ${type.replace('-', ' ')}. Please try again.`);
+
+            // Restore button state
+            btn.removeAttribute('disabled');
+            btn.innerHTML = originalContent;
+        }
+    }
+
     if (generateBtn) {
         generateBtn.addEventListener('click', () => {
             const threadId = generateBtn.getAttribute('data-thread-id');
@@ -135,12 +170,34 @@ const infographicUrl = `/${category}/${mode}/infographic/${threadId}`;
         });
     }
 
-    if (regenerateBtn) {
-        regenerateBtn.addEventListener('click', () => {
-            const threadId = regenerateBtn.getAttribute('data-thread-id');
+    if (regenerateInfographicBtn) {
+        regenerateInfographicBtn.addEventListener('click', () => {
+            const threadId = regenerateInfographicBtn.getAttribute('data-thread-id');
             if (threadId) {
                 if (confirm('Are you sure you want to regenerate the infographic? This will replace the existing one.')) {
                     generateInfographic(threadId, true);
+                }
+            }
+        });
+    }
+
+    if (regenerateReferenceSheetBtn) {
+        regenerateReferenceSheetBtn.addEventListener('click', () => {
+            const threadId = regenerateReferenceSheetBtn.getAttribute('data-thread-id');
+            if (threadId) {
+                if (confirm('Are you sure you want to regenerate the reference sheet?')) {
+                    regenerateContent(threadId, 'reference-sheet', regenerateReferenceSheetBtn);
+                }
+            }
+        });
+    }
+
+    if (regenerateStudyGuideBtn) {
+        regenerateStudyGuideBtn.addEventListener('click', () => {
+            const threadId = regenerateStudyGuideBtn.getAttribute('data-thread-id');
+            if (threadId) {
+                if (confirm('Are you sure you want to regenerate the study guide?')) {
+                    regenerateContent(threadId, 'study-guide', regenerateStudyGuideBtn);
                 }
             }
         });
