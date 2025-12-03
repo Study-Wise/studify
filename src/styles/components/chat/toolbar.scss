@@ -7,6 +7,7 @@ $color: list.nth(map.get($accent-colors, primary), 1);
 $padding: 1rem;
 
 .chat-toolbar {
+    position: sticky;
 
     display: flex;
     flex-direction: column;
@@ -21,10 +22,7 @@ $padding: 1rem;
     transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border-top: 1px solid rgba(from var(--card-border) r g b / 0.2);
 
-    &:not(.at-bottom, .scrolling-down) {
-        box-shadow: 0 -4px 24px rgba(from var(--card-shadow) r g b / 0.12);
-        border-top-color: rgba(from var(--card-border) r g b / 0.4);
-    }
+    border-top-color: rgba(from var(--card-border) r g b / 0.4);
 
     .chat-input-container {
         padding: $padding 1.5rem;

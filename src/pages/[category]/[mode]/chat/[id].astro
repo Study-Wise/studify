@@ -194,22 +194,8 @@ export const inNav = 'hide';
         window.addEventListener('load', window.onFancyOutput);
         window.addEventListener('load', () => {
             const chatMessages = document.querySelector('.chat-messages');
-            const chatToolbar = document.querySelector('.chat-toolbar');
 
             chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
-
-            chatMessages.addEventListener('scroll', () => {
-                const scrollPosition = chatMessages.scrollTop;
-                const chatMessagesHeight = chatMessages.clientHeight;
-                const chatMessagesScrollHeight = chatMessages.scrollHeight;
-                const isAtBottom = scrollPosition + chatMessagesHeight >= chatMessagesScrollHeight;
-
-                if (isAtBottom) {
-                    chatToolbar.classList.add('at-bottom');
-                } else {
-                    chatToolbar.classList.remove('at-bottom');
-                }
-            });
         });
     </script>
     <MessagesScript page="chat" category={category} mode={mode} />
