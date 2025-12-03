@@ -45,6 +45,13 @@
         word-wrap: normal;
         overflow-wrap: normal;
     }
+
+    .cl-userButtonBox.cl-internal-1erfakr {
+        &, .cl-avatarBox.cl-userButtonAvatarBox.cl-internal-14s4tiz {
+            height: 100%;
+            aspect-ratio: 1;
+        }
+    }
 }
 
 .header-logo-link {
@@ -87,7 +94,7 @@
     &.lite {
         flex-direction: row;
         justify-content: center;
-        
+
         background-color: $card-bg-light;
         border-radius: 10px;
         padding: 10px 20px;
@@ -95,7 +102,7 @@
         border: 1px solid var(--card-border);
         width: fit-content;
 
-        &:last-child {
+        :last-child {
             flex: 1;
         }
     }
