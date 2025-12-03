@@ -1,17 +1,11 @@
 import { UTApi } from 'uploadthing/server';
+import type { UploadOptions } from './types';
 
 // Initialize UTApi
 export const utapi = new UTApi();
 
 // Get app ID from environment
 const APP_ID = process.env.UPLOADTHING_APP_ID || '06kq2k6jjh';
-
-// Upload options
-interface UploadOptions {
-    metadata?: Record<string, string>;
-    contentDisposition?: 'inline' | 'attachment';
-    acl?: 'public-read' | 'private';
-}
 
 // Upload a single file
 export async function uploadFile(file: File, options?: UploadOptions) {

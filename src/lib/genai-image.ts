@@ -1,24 +1,16 @@
 import { uploadImageByUrl } from './uploadthing';
+import config from './config';
+import type { IdeogramResponse } from './types';
 
 const IDEOGRAM_API_KEY = process.env.IDEOGRAM_API_KEY || '';
 const IDEOGRAM_API_URL = 'https://api.ideogram.ai/v1/ideogram-v3/generate';
-
-interface IdeogramResponse {
-    data: Array<{
-        url: string;
-        prompt: string;
-        resolution: string;
-        is_image_safe: boolean;
-        seed: number;
-    }>;
-}
 
 // Generate image and return URL
 async function generateImageUrl(prompt: string) {
     const formData = new FormData();
     formData.append('prompt', prompt);
     formData.append('aspect_ratio', '1x1');
-    formData.append('rendering_speed', 'TURBO');
+    formData.append('rendering_speed', config.infographicSpeed);
 
     const response = await fetch(IDEOGRAM_API_URL, {
         method: 'POST',

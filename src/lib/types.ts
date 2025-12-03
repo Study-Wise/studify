@@ -56,4 +56,55 @@ interface ChatRightSidebarProps {
     mode: string;
 }
 
-export type { Mode, Category, LegacyTool, Tool, ReferenceSheetResult, StudyGuideResult, ThreadAccessResult, ChatRightSidebarProps };
+type InfographicSpeed = 'FLASH' | 'TURBO' | 'DEFAULT' | 'QUALITY';
+
+interface IdeogramResponse {
+    data: Array<{
+        url: string;
+        prompt: string;
+        resolution: string;
+        is_image_safe: boolean;
+        seed: number;
+    }>;
+}
+
+interface ModelOption {
+    name: string;
+}
+
+interface Provider {
+    name: string;
+    models: Record<string, { name: string }>;
+}
+
+type Providers = Record<string, Provider>;
+
+interface SelectorSettings {
+    id: string;
+    name: string;
+    options: ModelOption[] | Record<string, ModelOption>;
+    default: string;
+}
+
+interface ThreadData {
+    title: string;
+    isDev: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+    messages: any[];
+}
+
+interface UploadOptions {
+    metadata?: Record<string, string>;
+    contentDisposition?: 'inline' | 'attachment';
+    acl?: 'public-read' | 'private';
+}
+
+interface SettingItem {
+    id: string;
+    name: string;
+    options: ModelOption[] | Record<string, ModelOption>;
+    default: string;
+}
+
+export type { Mode, Category, LegacyTool, Tool, ReferenceSheetResult, StudyGuideResult, ThreadAccessResult, ChatRightSidebarProps, InfographicSpeed, IdeogramResponse, ModelOption, Provider, Providers, SelectorSettings, ThreadData, UploadOptions, SettingItem };

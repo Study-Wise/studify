@@ -4,24 +4,9 @@ import SettingsScript from '../scripts/settings.astro';
 
 import { models, providers } from '../lib/models';
 import config from '../lib/config';
+import type { ModelOption, Provider, Providers, SelectorSettings } from '../lib/types';
 
-interface ModelOption {
-    name: string;
-}
-
-interface Provider {
-    name: string;
-    models: Record<string, { name: string }>;
-}
-
-type Providers = Record<string, Provider>;
-
-const selectorSettings: {
-    id: string;
-    name: string;
-    options: ModelOption[] | Record<string, ModelOption>;
-    default: string;
-} = {
+const selectorSettings: SelectorSettings = {
     id: 'model',
     name: 'Model',
     options: models as ModelOption[],
