@@ -9,11 +9,8 @@ const { page, category, mode } = Astro.props;
     let threadId = 0;
     let userSettings = {};
 
-    let messageInput, sendButton, spinner, outputSection, studyGuideContent, referenceSheetContent, errorMessageDiv, downloadGuideBtn, downloadSheetBtn;
+    let messageInput, sendButton, spinner, errorMessageDiv;
     let isPrinting = false;
-
-    const guidePlaceholder = '<p><i>No Study Guide content generated/extracted.</i></p>';
-    const sheetPlaceholder = '<p><i>No Reference Sheet content generated/extracted.</i></p>';
 
     function loadUserSettings() {
         try {
@@ -45,27 +42,6 @@ const { page, category, mode } = Astro.props;
             if (!sendButton.disabled) generateOutput();
         }
     }
-
-    function setupDownloadButtons() {
-        if (downloadGuideBtn) downloadGuideBtn.addEventListener('click', e => downloadViaPrint('study-guide-content', e.currentTarget));
-        if (downloadSheetBtn) downloadSheetBtn.addEventListener('click', e => downloadViaPrint('reference-sheet-content', e.currentTarget));
-    }
-
-    async function generateOutput() {
-        if (!messageInput) { displayError('Input field missing!'); return; }
-        if (downloadGuideBtn) {
-            downloadGuideBtn.addEventListener('click', event => {
-                downloadViaPrint('study-guide-content', event.currentTarget);
-            });
-        }
-        if (downloadSheetBtn) {
-            downloadSheetBtn.addEventListener('click', event => {
-                downloadViaPrint('reference-sheet-content', event.currentTarget);
-            });
-        }
-    }
-
-
 
     // Main output generation
     async function generateOutput() {
@@ -220,17 +196,6 @@ const { page, category, mode } = Astro.props;
                     errorMessageDiv.style.display = 'none';
                     errorMessageDiv.textContent = '';
                 }
-                if (outputSection) {
-                    outputSection.style.display = 'none';
-                }
-                if (studyGuideContent) {
-                    studyGuideContent.innerHTML = '<p><i>Generating Study Guide...</i></p>';
-                }
-                if (referenceSheetContent) {
-                    referenceSheetContent.innerHTML = '<p><i>Generating Reference Sheet...</i></p>';
-                }
-                if (downloadGuideBtn) downloadGuideBtn.disabled = true;
-                if (downloadSheetBtn) downloadSheetBtn.disabled = true;
             } else {
                 spinner && (spinner.style.display = 'none');
                 if (sendButton) sendButton.disabled = false;
@@ -410,8 +375,6 @@ const { page, category, mode } = Astro.props;
             displayError('Invalid AI response received.');
             return;
         }
-        if (downloadGuideBtn) downloadGuideBtn.disabled = true;
-        if (downloadSheetBtn) downloadSheetBtn.disabled = true;
 
         if (page === 'home' && data.id && category && mode) {
             // Redirect to chat page for first message
@@ -723,20 +686,12 @@ const { page, category, mode } = Astro.props;
     // DOMContentLoaded handler for home page
     function onDomLoadHome() {
         initializeCommon();
-        
+
         // Initialize DOM elements for home page
         messageInput = document.getElementById('text-paste');
         sendButton = document.getElementById('generate-button');
         spinner = sendButton?.querySelector('.spinner');
-        outputSection = document.getElementById('output-section');
-        studyGuideContent = document.getElementById('study-guide-content');
-        referenceSheetContent = document.getElementById('reference-sheet-content');
         errorMessageDiv = document.getElementById('error-message');
-        downloadGuideBtn = document.getElementById('download-guide-pdf');
-        downloadSheetBtn = document.getElementById('download-sheet-pdf');
-
-        // Set up download button event listeners
-        setupDownloadButtons();
 
         // Set up input event listeners
         if (messageInput && sendButton) {
