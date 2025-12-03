@@ -58,6 +58,8 @@ interface ChatRightSidebarProps {
 
 type InfographicSpeed = 'FLASH' | 'TURBO' | 'DEFAULT' | 'QUALITY';
 
+type ImageSize = '256x256' | '512x512' | '1024x1024' | '1792x1024' | '1024x1792';
+
 interface IdeogramResponse {
     data: Array<{
         url: string;
@@ -107,4 +109,4 @@ interface SettingItem {
     default: string;
 }
 
-export type { Mode, Category, LegacyTool, Tool, ReferenceSheetResult, StudyGuideResult, ThreadAccessResult, ChatRightSidebarProps, InfographicSpeed, IdeogramResponse, ModelOption, Provider, Providers, SelectorSettings, ThreadData, UploadOptions, SettingItem };
+export type { Mode, Category, LegacyTool, Tool, ReferenceSheetResult, StudyGuideResult, ThreadAccessResult, ChatRightSidebarProps, InfographicSpeed, ImageSize, IdeogramResponse, ModelOption, Provider, Providers, SelectorSettings, ThreadData, UploadOptions, SettingItem };
