@@ -6,6 +6,8 @@ const threadsTable = pgTable('threads', {
     thread: jsonb('thread').notNull().default({}),
     uploadedFiles: text('uploadedFiles').array().default([]),
     email: text('email'),
+    category: text('category').notNull().default('math'),
+    agent: text('agent').notNull().default('general'),
     generatedInfographic: jsonb('generatedInfographic').notNull().default({}),
     isPublic: boolean('isPublic').notNull().default(false),
     createdAt: timestamp('createdAt').notNull().defaultNow(),
