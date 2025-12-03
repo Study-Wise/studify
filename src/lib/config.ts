@@ -8,6 +8,7 @@ import type { InfographicSpeed } from './types';
 const config = {
     provider: 'openai',
     model: 'gpt-4.1',
+    imageModel: 'gpt-image-1', // OpenAI image generation model
     systemPrompt: prompt,
     maxThreadsPerUser: 5, // Maximum number of threads a user can create
     infographicSpeed: 'DEFAULT' as InfographicSpeed, // Ideogram rendering speed
