@@ -145,7 +145,8 @@ const { page, category, mode } = Astro.props;
             }
             
             const data = await response.json();
-            if (!data?.generatedText) {
+            // For first message, we get studyGuide/referenceSheet instead of generatedText
+            if (!data?.generatedText && !data?.studyGuide && !data?.referenceSheet) {
                 console.error('Invalid data format:', data);
                 throw new Error('Invalid/empty response from AI.');
             }
