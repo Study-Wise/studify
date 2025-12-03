@@ -44,8 +44,8 @@ let hasStudyGuide = false;
 let hasInfographic = false;
 
 if ((isAuthorized || isPublic) && id) {
-    const referenceSheetResult = await getLatestReferenceSheet(id, user_email);
-    const studyGuideResult = await getLatestStudyGuide(id, user_email);
+    const referenceSheetResult = await getLatestReferenceSheet(id);
+    const studyGuideResult = await getLatestStudyGuide(id);
     const infographic = await getInfographic(id);
 
     hasReferenceSheet = !!referenceSheetResult.content;

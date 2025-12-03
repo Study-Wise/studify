@@ -5,7 +5,6 @@ import { threadsTable } from '../../db/schema';
 
 export async function getLatestReferenceSheet(
     threadId: string,
-    userEmail: string | null
 ): Promise<ReferenceSheetResult> {
     // Get the reference sheet from the database
     try {

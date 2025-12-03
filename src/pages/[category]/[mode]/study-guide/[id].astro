@@ -22,7 +22,7 @@ if (!userId && !isPublic) {
 
 // Get the latest study guide only if authorized or public
 const { content: latestStudyGuide } = (isAuthorized || isPublic)
-    ? await getLatestStudyGuide(id || '', user_email)
+    ? await getLatestStudyGuide(id || '')
     : { content: null };
 ---
 

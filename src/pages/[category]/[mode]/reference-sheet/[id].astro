@@ -22,7 +22,7 @@ if (!userId && !isPublic) {
 
 // Get the latest reference sheet only if authorized or public
 const { content: latestReferenceSheet } = (isAuthorized || isPublic)
-    ? await getLatestReferenceSheet(id || '', user_email)
+    ? await getLatestReferenceSheet(id || '')
     : { content: null };
 ---
 

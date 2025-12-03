@@ -5,7 +5,6 @@ import { threadsTable } from '../../db/schema';
 
 export async function getLatestStudyGuide(
     threadId: string,
-    userEmail: string | null
 ): Promise<StudyGuideResult> {
     // Get the study guide from the database
     try {
