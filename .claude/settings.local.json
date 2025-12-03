@@ -5,7 +5,8 @@
       "Bash(npm run build:*)",
       "Bash(git add:*)",
       "Bash(git rm:*)",
-      "WebFetch(domain:ai.google.dev)"
+      "WebFetch(domain:ai.google.dev)",
+      "WebFetch(domain:developer.ideogram.ai)"
     ],
     "deny": [],
     "ask": []
