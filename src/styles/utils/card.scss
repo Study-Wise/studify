@@ -55,7 +55,7 @@
 
     // Compact variant - less padding
     &--compact {
-        padding: math.div($card-spacing, 1.5);
+        padding: calc(#{$card-spacing} / 1.5);
         border-radius: 8px;
     }
 
