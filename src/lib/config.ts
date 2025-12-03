@@ -2,8 +2,10 @@
  * Application Configuration
  */
 
-import prompt from './prompts/math/general.js';
+import { generateTutorPrompt } from './promptGenerator';
 import type { InfographicSpeed, ImageSize } from './types';
+
+const prompt = generateTutorPrompt('General', 'general');
 
 const config = {
     provider: 'openai',
