@@ -28,6 +28,11 @@ export async function uploadFileFromUrl(url: string, options?: UploadOptions) {
     return await utapi.uploadFilesFromUrl(url, options);
 }
 
+// Upload image from URL
+export async function uploadImageByUrl(url: string, options?: UploadOptions) {
+    return await utapi.uploadFilesFromUrl(url, options);
+}
+
 // Upload multiple files from URLs
 export async function uploadFilesFromUrls(urls: string[], options?: UploadOptions & { concurrency?: number }) {
     return await utapi.uploadFilesFromUrl(urls, options);
