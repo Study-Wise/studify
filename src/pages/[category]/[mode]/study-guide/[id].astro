@@ -5,7 +5,7 @@ import { checkThreadAccess } from '../../../../lib/auth/checkThreadAccess';
 import StepByStepScript from '../../../../scripts/step-by-step.astro';
 import '../../../../styles/pages/study-guide.scss';
 
-const { id } = Astro.params;
+const { category, mode, id } = Astro.params;
 
 // Get user authentication
 const { auth } = Astro.locals;
@@ -13,7 +13,7 @@ const { userId, sessionClaims } = auth();
 const user_email = sessionClaims?.email as string || null;
 
 // Check thread access first
-const { isAuthorized, isPublic } = await checkThreadAccess(id || '', user_email, auth);
+const { isAuthorized, isPublic } = await checkThreadAccess(id || '', user_email, auth, category, mode);
 
 // Redirect to sign-in only if not authenticated AND thread is not public
 if (!userId && !isPublic) {
