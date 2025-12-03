@@ -27,6 +27,18 @@ export async function uploadImageByUrl(url: string, options?: UploadOptions) {
     return await utapi.uploadFilesFromUrl(url, options);
 }
 
+// Upload image from base64
+export async function uploadImageFromBase64(base64Data: string, fileName: string = 'image.png', options?: UploadOptions) {
+    // Remove data:image/png;base64, prefix if present
+    const base64String = base64Data.replace(/^data:image\/\w+;base64,/, '');
+    const buffer = Buffer.from(base64String, 'base64');
+
+    // Create a File object from buffer
+    const file = new File([buffer], fileName, { type: 'image/png' });
+
+    return await utapi.uploadFiles(file, options);
+}
+
 // Upload multiple files from URLs
 export async function uploadFilesFromUrls(urls: string[], options?: UploadOptions & { concurrency?: number }) {
     return await utapi.uploadFilesFromUrl(urls, options);
