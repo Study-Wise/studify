@@ -21,9 +21,9 @@ if (!userId && !isPublic) {
 }
 
 // Get the latest reference sheet only if authorized or public
-const { content: latestReferenceSheet, precedingText, followingText } = (isAuthorized || isPublic)
+const { content: latestReferenceSheet } = (isAuthorized || isPublic)
     ? await getLatestReferenceSheet(id || '', user_email)
-    : { content: null, precedingText: '', followingText: '' };
+    : { content: null };
 ---
 
 <Layout title="Reference Sheet" container={true}>
@@ -37,9 +37,7 @@ const { content: latestReferenceSheet, precedingText, followingText } = (isAutho
             </div>
         ) : latestReferenceSheet ? (
             <div class="content-container">
-                {precedingText && <div class="preceding-text" set:html={precedingText} />}
                 <div class="reference-sheet-content" set:html={latestReferenceSheet} />
-                {followingText && <div class="following-text" set:html={followingText} />}
             </div>
         ) : (
             <div class="empty-state">
