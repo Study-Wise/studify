@@ -64,7 +64,7 @@ async function generateImage(prompt: string) {
         const uploadResult = await uploadImageByUrl(imageUrl);
         return { imageUrl, uploadResult };
     }
-    return null;
+    return { imageUrl: null, uploadResult: null };
 }
 
 export { generateImageUrl, generateImageBuffer, generateImage }
