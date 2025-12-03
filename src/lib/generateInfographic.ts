@@ -55,8 +55,20 @@ Style: Clean, modern, professional educational infographic. Use a white backgrou
 
     const imageResult = await generateImage(imagePrompt);
 
-    if (!imageResult || !imageResult.uploadResult || !imageResult.uploadResult.data) {
-        throw new Error('Failed to generate or upload image');
+    if (!imageResult) {
+        throw new Error('Failed to generate image - No result from Ideogram API');
+    }
+
+    if (!imageResult.imageUrl) {
+        throw new Error('Failed to generate image - No image URL returned from Ideogram API');
+    }
+
+    if (!imageResult.uploadResult) {
+        throw new Error('Failed to upload image to UploadThing - No upload result');
+    }
+
+    if (!imageResult.uploadResult.data) {
+        throw new Error('Failed to upload image to UploadThing - No data in upload result');
     }
 
     const imageUrl = imageResult.uploadResult.data.url;
