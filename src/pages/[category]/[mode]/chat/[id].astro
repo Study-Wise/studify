@@ -2,7 +2,6 @@
 import Layout from '../../../../layouts/Layout.astro';
 
 import Header from '../../../../components/chat/Header.astro';
-import FancyOutput from '../../../../components/fancy/Output.astro';
 import Toolbar from '../../../../components/chat/Toolbar.astro';
 import LeftSidebar from '../../../../components/chat/LeftSidebar.astro';
 import RightSidebar from '../../../../components/chat/RightSidebar.astro';
@@ -147,7 +146,7 @@ export const inNav = 'hide';
                 const openBtn = output.querySelector('.buttons .button.open-button');
                 if (openBtn) {
                     openBtn.addEventListener('click', () => {
-                        const content = output.outerHTML.trim()
+                        // const content = output.outerHTML.trim()
                         // const item = messages.filter(m => m.hasFancyOutput).find(m => m.content.trim().replace(' open=""', '') === content.trim().replace(' open=""', ''));
                         if (!output.hasAttribute('open')) {
                             output.showModal();

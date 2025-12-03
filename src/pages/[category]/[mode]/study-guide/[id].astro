@@ -9,8 +9,7 @@ const { category, mode, id } = Astro.params;
 
 // Get user authentication
 const { auth } = Astro.locals;
-const { userId, sessionClaims } = auth();
-const user_email = sessionClaims?.email as string || null;
+const { userId } = auth();
 
 // Check thread access first
 const { isAuthorized, isPublic } = await checkThreadAccess(id || '', auth, category, mode, Astro);
