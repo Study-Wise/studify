@@ -3,7 +3,7 @@
 @use 'sass:map';
 
 /* Header Styles */
-header {
+.header {
     $spacing: 1rem;
     
     min-height: 80px;
@@ -13,9 +13,11 @@ header {
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 
     display: flex;
+    flex-wrap: wrap;
+    gap: $spacing;
+
     align-items: center;
     justify-content: space-between;
-    gap: $spacing;
 
     h1 {
         margin: 0 0 0.1rem 0;
