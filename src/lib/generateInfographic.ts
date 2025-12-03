@@ -46,7 +46,7 @@ Keep it under 1000 characters. Be specific about visual elements, diagrams, icon
         temperature: 0.7,
     });
 
-    // Step 2: Generate the actual image using OpenAI
+    // Step 2: Generate the actual image using Google GenAI
     const imagePrompt = `Create an educational infographic image with the following specifications:
 
 ${descriptionResult.text}
@@ -56,11 +56,11 @@ Style: Clean, modern, professional educational infographic. Use a white backgrou
     const imageResult = await generateImage(imagePrompt);
 
     if (!imageResult) {
-        throw new Error('Failed to generate image - No result from OpenAI API');
+        throw new Error('Failed to generate image - No result from Ideogram API');
     }
 
     if (!imageResult.imageUrl) {
-        throw new Error('Failed to generate image - No image URL returned from OpenAI API');
+        throw new Error('Failed to generate image - No image URL returned from Ideogram API');
     }
 
     if (!imageResult.uploadResult) {

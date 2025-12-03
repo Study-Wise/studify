@@ -12,7 +12,7 @@ import StepByStepScript from '../../../../scripts/step-by-step.astro';
 import '../../../../styles/pages/chat.scss';
 
 import { getMessages, getMessagesLength } from '../../../../lib/threads';
-import extract from '../../../../lib/extractPartsofMessage';
+import { marked } from 'marked';
 import Footer from '../../../../components/Footer.astro';
 import { checkThreadAccess } from '../../../../lib/auth/checkThreadAccess';
 import { getLatestReferenceSheet } from '../../../../lib/content/getLatestReferenceSheet';
@@ -27,7 +27,7 @@ const { userId, sessionClaims } = auth();
 const user_email = sessionClaims?.email as string || null;
 
 // Check thread access first
-const { isAuthorized, isPublic } = await checkThreadAccess(id || '', user_email, auth);
+const { isAuthorized, isPublic } = await checkThreadAccess(id || '', auth, category, mode, Astro);
 
 // Redirect to sign-in only if not authenticated AND thread is not public
 if (!userId && !isPublic) {
@@ -58,7 +58,7 @@ export const inNav = 'hide';
 ---
 <Layout title="Chat" container={false} isChatArea={true} additionalClasses={['chat-page']} hideCopyright={true}>
     <div id="user-email" data-email={user_email} style="display: none;"></div>
-    <header class="header chat-header">
+    <header class="chat-header">
         <div class="chat-title-container">
             <h2><span class="material-symbols-outlined">chat</span>&nbsp;{id ? 'Chat' : 'New Chat'}</h2>
             <button id="share-button" class="share-button" title="Toggle thread visibility">
@@ -76,26 +76,13 @@ export const inNav = 'hide';
                     messages
                         .filter(message => message.role !== 'system')
                         .map(async message => {
-                        const { obj, generatedText: htmlText } = await extract(message.content);
+                        // Convert markdown to HTML
+                        marked.setOptions({ breaks: true, gfm: true });
+                        const htmlText = await marked.parse(message.content);
 
-                        // For assistant messages with fancy output, show preceding/following text only
-                        let content = htmlText;
-                        if (message.role === 'assistant' && (obj.studyGuide || obj.referenceSheet)) {
-                            // Combine preceding and following text, excluding the fancy output
-                            const parts = [];
-                            if (obj.precedingText) parts.push(obj.precedingText);
-                            if (obj.followingText) parts.push(obj.followingText);
-                            content = parts.join('\n\n');
-
-                            // Skip rendering if there's no content (fancy output only)
-                            if (!content.trim()) {
-                                return null;
-                            }
-                        }
-
-                        // Render as simple message
+                        // Render message
                         return <div class={`message ${message.role}`}>
-                            <div class={`message-content ${message.role === 'user' ? 'bg-primary' : ''}`} set:html={content} />
+                            <div class={`message-content ${message.role === 'user' ? 'bg-primary' : ''}`} set:html={htmlText} />
                         </div>
                     })
                 ) : (

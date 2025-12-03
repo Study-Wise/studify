@@ -9,11 +9,8 @@ const { page, category, mode } = Astro.props;
     let threadId = 0;
     let userSettings = {};
 
-    let messageInput, sendButton, spinner, outputSection, studyGuideContent, referenceSheetContent, errorMessageDiv, downloadGuideBtn, downloadSheetBtn;
+    let messageInput, sendButton, spinner, errorMessageDiv;
     let isPrinting = false;
-
-    const guidePlaceholder = '<p><i>No Study Guide content generated/extracted.</i></p>';
-    const sheetPlaceholder = '<p><i>No Reference Sheet content generated/extracted.</i></p>';
 
     function loadUserSettings() {
         try {
@@ -45,27 +42,6 @@ const { page, category, mode } = Astro.props;
             if (!sendButton.disabled) generateOutput();
         }
     }
-
-    function setupDownloadButtons() {
-        if (downloadGuideBtn) downloadGuideBtn.addEventListener('click', e => downloadViaPrint('study-guide-content', e.currentTarget));
-        if (downloadSheetBtn) downloadSheetBtn.addEventListener('click', e => downloadViaPrint('reference-sheet-content', e.currentTarget));
-    }
-
-    async function generateOutput() {
-        if (!messageInput) { displayError('Input field missing!'); return; }
-        if (downloadGuideBtn) {
-            downloadGuideBtn.addEventListener('click', event => {
-                downloadViaPrint('study-guide-content', event.currentTarget);
-            });
-        }
-        if (downloadSheetBtn) {
-            downloadSheetBtn.addEventListener('click', event => {
-                downloadViaPrint('reference-sheet-content', event.currentTarget);
-            });
-        }
-    }
-
-
 
     // Main output generation
     async function generateOutput() {
@@ -145,7 +121,8 @@ const { page, category, mode } = Astro.props;
             }
             
             const data = await response.json();
-            if (!data?.generatedText) {
+            // Check if we have valid response data
+            if (!data?.generatedText && !data?.id) {
                 console.error('Invalid data format:', data);
                 throw new Error('Invalid/empty response from AI.');
             }
@@ -219,17 +196,6 @@ const { page, category, mode } = Astro.props;
                     errorMessageDiv.style.display = 'none';
                     errorMessageDiv.textContent = '';
                 }
-                if (outputSection) {
-                    outputSection.style.display = 'none';
-                }
-                if (studyGuideContent) {
-                    studyGuideContent.innerHTML = '<p><i>Generating Study Guide...</i></p>';
-                }
-                if (referenceSheetContent) {
-                    referenceSheetContent.innerHTML = '<p><i>Generating Reference Sheet...</i></p>';
-                }
-                if (downloadGuideBtn) downloadGuideBtn.disabled = true;
-                if (downloadSheetBtn) downloadSheetBtn.disabled = true;
             } else {
                 spinner && (spinner.style.display = 'none');
                 if (sendButton) sendButton.disabled = false;
@@ -409,62 +375,15 @@ const { page, category, mode } = Astro.props;
             displayError('Invalid AI response received.');
             return;
         }
-        if (downloadGuideBtn) downloadGuideBtn.disabled = true;
-        if (downloadSheetBtn) downloadSheetBtn.disabled = true;
 
-        if (data.studyGuide && data.referenceSheet && page === 'home') {
-            // Redirect to chat page immediately when fancy output is generated
-            if (data.id && category && mode) {
-                window.location.href = `/${category}/${mode}/chat/${data.id}`;
-            } else {
-                displayError('Failed to redirect to chat page.');
-            }
+        if (page === 'home' && data.id && category && mode) {
+            // Redirect to chat page for first message
+            window.location.href = `/${category}/${mode}/chat/${data.id}`;
         } else if (page === 'chat') {
             await addMessage('assistant', data);
-        } else {
-            console.error('No study guide or reference sheet content generated/extracted.');
-            displayError('No study guide or reference sheet content generated/extracted.');
-            if (downloadGuideBtn) downloadGuideBtn.disabled = true;
-            if (downloadSheetBtn) downloadSheetBtn.disabled = true;
-            if (outputSection) outputSection.style.display = 'none';
+        } else if (page === 'home') {
+            displayError('Failed to redirect to chat page.');
         }
-    }
-
-    // Extract fancy output parts from AI response (similar to server-side extract function)
-    async function extractFancyOutput(generatedText) {
-        const obj = {
-            precedingText: '',
-            studyGuide: '',
-            referenceSheet: '',
-            followingText: '',
-        };
-
-        // Create a temporary DOM element to parse the HTML
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = generatedText;
-
-        const fancyOutput = tempDiv.querySelector('.fancy-output');
-        if (fancyOutput) {
-            const fancyStart = `<${fancyOutput.tagName.toLowerCase()}${fancyOutput.className !== '' ? ` class="${fancyOutput.className}"` : ''}${fancyOutput.id !== '' ? ` id="${fancyOutput.id}"` : ''}>`;
-            const fancyEnd = `</${fancyOutput.tagName.toLowerCase()}>`;
-            
-            let precedingText = generatedText.trim()?.split(fancyStart)[0] || '';
-            precedingText = precedingText.trim();
-
-            let followingText = generatedText.trim()?.split(fancyEnd).pop() || '';
-            followingText = followingText.trim();
-            
-            obj.precedingText = precedingText;
-            obj.followingText = followingText;
-
-            const studyGuide = tempDiv.querySelector('.study-guide')?.innerHTML || '';
-            obj.studyGuide = studyGuide;
-
-            const referenceSheet = tempDiv.querySelector('.reference-sheet')?.innerHTML || '';
-            obj.referenceSheet = referenceSheet;
-        }
-
-        return obj;
     }
 
     async function addMessage(role, data) {
@@ -544,9 +463,6 @@ const { page, category, mode } = Astro.props;
         }
 
         try {
-            // Extract fancy output parts
-            const obj = await extractFancyOutput(data.generatedText);
-            
             // Create message container
             const messageDiv = document.createElement('div');
             messageDiv.className = 'message assistant';
@@ -554,95 +470,8 @@ const { page, category, mode } = Astro.props;
             const messageContent = document.createElement('div');
             messageContent.className = 'message-content';
 
-            // Check if this is a fancy output message
-            if (obj.studyGuide || obj.referenceSheet) {
-                // Add preceding text if exists
-                if (obj.precedingText) {
-                    const precedingDiv = document.createElement('div');
-                    precedingDiv.className = 'message-content-inner';
-                    precedingDiv.innerHTML = obj.precedingText;
-                    messageContent.appendChild(precedingDiv);
-                }
-
-                // Create fancy output dialog
-                const fancyOutput = document.createElement('dialog');
-                fancyOutput.className = 'fancy-output';
-
-                // Create tabs
-                const tabsDiv = document.createElement('div');
-                tabsDiv.className = 'tabs';
-
-                if (obj.studyGuide) {
-                    const studyGuideTab = document.createElement('label');
-                    studyGuideTab.className = 'btn bg-tertiary lite tab';
-                    studyGuideTab.innerHTML = '<input type="radio" name="tab" />Study Guide';
-                    tabsDiv.appendChild(studyGuideTab);
-                }
-
-                if (obj.referenceSheet) {
-                    const referenceSheetTab = document.createElement('label');
-                    referenceSheetTab.className = 'btn bg-tertiary lite tab';
-                    referenceSheetTab.innerHTML = '<input type="radio" name="tab" />Reference Sheet';
-                    tabsDiv.appendChild(referenceSheetTab);
-                }
-
-                // Add open button
-                const buttonsDiv = document.createElement('div');
-                buttonsDiv.className = 'buttons';
-                const openButton = document.createElement('button');
-                openButton.className = 'open-button button material-symbols-outlined';
-                openButton.textContent = 'open_in_full';
-                buttonsDiv.appendChild(openButton);
-                tabsDiv.appendChild(buttonsDiv);
-
-                fancyOutput.appendChild(tabsDiv);
-
-                // Create tab contents
-                const tabContentsParent = document.createElement('div');
-                tabContentsParent.className = 'tab-contents-parent';
-
-                if (obj.studyGuide) {
-                    const studyGuideContainer = document.createElement('div');
-                    studyGuideContainer.className = 'tab-content-container study-guide';
-                    const studyGuideContent = document.createElement('div');
-                    studyGuideContent.className = 'tab-content study-guide';
-                    studyGuideContent.innerHTML = obj.studyGuide;
-                    studyGuideContainer.appendChild(studyGuideContent);
-                    tabContentsParent.appendChild(studyGuideContainer);
-                }
-
-                if (obj.referenceSheet) {
-                    const referenceSheetContainer = document.createElement('div');
-                    referenceSheetContainer.className = 'tab-content-container reference-sheet';
-                    const referenceSheetContent = document.createElement('div');
-                    referenceSheetContent.className = 'tab-content reference-sheet';
-                    referenceSheetContent.innerHTML = obj.referenceSheet;
-                    referenceSheetContainer.appendChild(referenceSheetContent);
-                    tabContentsParent.appendChild(referenceSheetContainer);
-                }
-
-                fancyOutput.appendChild(tabContentsParent);
-                messageContent.appendChild(fancyOutput);
-
-                // Add following text if exists
-                if (obj.followingText) {
-                    const followingDiv = document.createElement('div');
-                    followingDiv.className = 'message-content-inner';
-                    followingDiv.innerHTML = obj.followingText;
-                    messageContent.appendChild(followingDiv);
-                }
-
-                // Set up fancy output functionality
-                setTimeout(() => {
-                    if (window.onFancyOutput && typeof window.onFancyOutput === 'function') {
-                        window.onFancyOutput();
-                    }
-                }, 100);
-
-            } else {
-                // Regular message - use the full generated text
-                messageContent.innerHTML = data.generatedText;
-            }
+            // Set the generated text as HTML content
+            messageContent.innerHTML = data.generatedText;
 
             messageDiv.appendChild(messageContent);
             chatMessages.appendChild(messageDiv);
@@ -675,7 +504,7 @@ const { page, category, mode } = Astro.props;
             });
 
         } catch (err) {
-            console.error('ERROR in addMessage:', err);
+            console.error('ERROR in addAssistantMessage:', err);
             displayError(`Failed to render message. ${err.message}`);
         }
     }
@@ -760,20 +589,12 @@ const { page, category, mode } = Astro.props;
     // DOMContentLoaded handler for home page
     function onDomLoadHome() {
         initializeCommon();
-        
+
         // Initialize DOM elements for home page
         messageInput = document.getElementById('text-paste');
         sendButton = document.getElementById('generate-button');
         spinner = sendButton?.querySelector('.spinner');
-        outputSection = document.getElementById('output-section');
-        studyGuideContent = document.getElementById('study-guide-content');
-        referenceSheetContent = document.getElementById('reference-sheet-content');
         errorMessageDiv = document.getElementById('error-message');
-        downloadGuideBtn = document.getElementById('download-guide-pdf');
-        downloadSheetBtn = document.getElementById('download-sheet-pdf');
-
-        // Set up download button event listeners
-        setupDownloadButtons();
 
         // Set up input event listeners
         if (messageInput && sendButton) {

@@ -1,13 +1,16 @@
 import { db } from '../../db/initialize';
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 import { threadsTable } from '../../db/schema';
 import { getUserRole } from '../auth-utils';
 import type { ThreadAccessResult } from '../types';
+import { clerkClient } from '@clerk/astro/server';
 
 export async function checkThreadAccess(
     threadId: string,
-    userEmail: string | null,
-    auth: any
+    auth: any,
+    urlCategory?: string,
+    urlMode?: string,
+    context?: any
 ): Promise<ThreadAccessResult> {
     let threadOwner: string | null = null;
     let isPublicThread = false;
@@ -16,13 +19,47 @@ export async function checkThreadAccess(
     const userRole = getUserRole(auth);
     const isUserAdmin = userRole === 'admin';
 
+    // Fetch user email from Clerk if context is provided
+    let userEmail: string | null = null;
+    if (context) {
+        const { userId } = auth();
+        if (userId) {
+            try {
+                const client = clerkClient(context);
+                const user = await client.users.getUser(userId);
+                userEmail = user.emailAddresses?.[0]?.emailAddress || null;
+            } catch (error) {
+                console.error('Error fetching user from Clerk:', error);
+            }
+        }
+    }
+
     // Fetch thread from database
     if (threadId) {
         try {
             const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
             if (threads.length > 0) {
-                threadOwner = threads[0].email;
-                isPublicThread = threads[0].isPublic;
+                const thread = threads[0];
+                threadOwner = thread.email;
+                isPublicThread = thread.isPublic;
+
+                // Validate that the thread's category and mode match the URL
+                if (urlCategory && thread.category !== urlCategory) {
+                    console.error(`Category mismatch: URL has '${urlCategory}' but thread has '${thread.category}'`);
+                    return {
+                        isAuthorized: false,
+                        isPublic: false,
+                        threadOwner: null
+                    };
+                }
+                if (urlMode && thread.mode !== urlMode) {
+                    console.error(`Mode mismatch: URL has '${urlMode}' but thread has '${thread.mode}'`);
+                    return {
+                        isAuthorized: false,
+                        isPublic: false,
+                        threadOwner: null
+                    };
+                }
 
                 // If unclaimed and user is authenticated, claim ownership
                 if (!threadOwner && userEmail) {

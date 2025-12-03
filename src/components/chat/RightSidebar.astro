@@ -16,9 +16,11 @@ const infographicUrl = `/${category}/${mode}/infographic/${threadId}`;
                     <span class="material-symbols-outlined">description</span>
                     <h3>Reference Sheet</h3>
                 </div>
-                <button class="regenerate-btn" title="Regenerate reference sheet">
-                    <span class="material-symbols-outlined">refresh</span>
-                </button>
+                {hasReferenceSheet && (
+                    <button class="regenerate-btn" id="regenerate-reference-sheet-btn" title="Regenerate reference sheet" data-thread-id={threadId}>
+                        <span class="material-symbols-outlined">refresh</span>
+                    </button>
+                )}
             </div>
             <div class="section-body">
                 {hasReferenceSheet ? (
@@ -27,7 +29,13 @@ const infographicUrl = `/${category}/${mode}/infographic/${threadId}`;
                         <span>View Full Reference Sheet</span>
                     </a>
                 ) : (
-                    <p class="empty-message">No reference sheet generated yet.</p>
+                    <div class="empty-state">
+                        <p class="empty-message">No reference sheet generated yet.</p>
+                        <button class="generate-btn" id="generate-reference-sheet-btn" data-thread-id={threadId}>
+                            <span class="material-symbols-outlined">description</span>
+                            <span>Generate Reference Sheet</span>
+                        </button>
+                    </div>
                 )}
             </div>
         </div>
@@ -38,9 +46,11 @@ const infographicUrl = `/${category}/${mode}/infographic/${threadId}`;
                     <span class="material-symbols-outlined">menu_book</span>
                     <h3>Study Guide</h3>
                 </div>
-                <button class="regenerate-btn" title="Regenerate study guide">
-                    <span class="material-symbols-outlined">refresh</span>
-                </button>
+                {hasStudyGuide && (
+                    <button class="regenerate-btn" id="regenerate-study-guide-btn" title="Regenerate study guide" data-thread-id={threadId}>
+                        <span class="material-symbols-outlined">refresh</span>
+                    </button>
+                )}
             </div>
             <div class="section-body">
                 {hasStudyGuide ? (
@@ -49,7 +59,13 @@ const infographicUrl = `/${category}/${mode}/infographic/${threadId}`;
                         <span>View Full Study Guide</span>
                     </a>
                 ) : (
-                    <p class="empty-message">No study guide generated yet.</p>
+                    <div class="empty-state">
+                        <p class="empty-message">No study guide generated yet.</p>
+                        <button class="generate-btn" id="generate-study-guide-btn" data-thread-id={threadId}>
+                            <span class="material-symbols-outlined">menu_book</span>
+                            <span>Generate Study Guide</span>
+                        </button>
+                    </div>
                 )}
             </div>
         </div>
@@ -87,11 +103,15 @@ const infographicUrl = `/${category}/${mode}/infographic/${threadId}`;
 </aside>
 
 <script>
-    const generateBtn = document.getElementById('generate-infographic-btn');
-    const regenerateBtn = document.getElementById('regenerate-infographic-btn');
+    const generateInfographicBtn = document.getElementById('generate-infographic-btn');
+    const generateReferenceSheetBtn = document.getElementById('generate-reference-sheet-btn');
+    const generateStudyGuideBtn = document.getElementById('generate-study-guide-btn');
+    const regenerateInfographicBtn = document.getElementById('regenerate-infographic-btn');
+    const regenerateReferenceSheetBtn = document.getElementById('regenerate-reference-sheet-btn');
+    const regenerateStudyGuideBtn = document.getElementById('regenerate-study-guide-btn');
 
     async function generateInfographic(threadId: string, isRegenerate: boolean = false) {
-        const btn = isRegenerate ? regenerateBtn : generateBtn;
+        const btn = isRegenerate ? regenerateInfographicBtn : generateInfographicBtn;
         if (!btn) return;
 
         // Disable button and show loading state
@@ -126,21 +146,137 @@ const infographicUrl = `/${category}/${mode}/infographic/${threadId}`;
         }
     }
 
-    if (generateBtn) {
-        generateBtn.addEventListener('click', () => {
-            const threadId = generateBtn.getAttribute('data-thread-id');
+    async function generateReferenceSheet(threadId: string, isRegenerate: boolean = false) {
+        const btnId = isRegenerate ? 'regenerate-reference-sheet-btn' : 'generate-reference-sheet-btn';
+        const btn = document.getElementById(btnId);
+        if (!btn) return;
+
+        // Disable button and show loading state
+        btn.setAttribute('disabled', 'true');
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = `<span class="material-symbols-outlined spinning">progress_activity</span><span>${isRegenerate ? 'Regenerating...' : 'Generating...'}</span>`;
+
+        try {
+            const response = await fetch('/api/reference-sheet/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ threadId }),
+            });
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                // Reload the page to show the new reference sheet
+                window.location.reload();
+            } else {
+                throw new Error(data.error || 'Failed to generate reference sheet');
+            }
+        } catch (error) {
+            console.error('Error generating reference sheet:', error);
+            alert(error instanceof Error ? error.message : 'Failed to generate reference sheet. Please try again.');
+
+            // Restore button state
+            btn.removeAttribute('disabled');
+            btn.innerHTML = originalContent;
+        }
+    }
+
+    async function generateStudyGuide(threadId: string, isRegenerate: boolean = false) {
+        const btnId = isRegenerate ? 'regenerate-study-guide-btn' : 'generate-study-guide-btn';
+        const btn = document.getElementById(btnId);
+        if (!btn) return;
+
+        // Disable button and show loading state
+        btn.setAttribute('disabled', 'true');
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = `<span class="material-symbols-outlined spinning">progress_activity</span><span>${isRegenerate ? 'Regenerating...' : 'Generating...'}</span>`;
+
+        try {
+            const response = await fetch('/api/study-guide/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ threadId }),
+            });
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                // Reload the page to show the new study guide
+                window.location.reload();
+            } else {
+                throw new Error(data.error || 'Failed to generate study guide');
+            }
+        } catch (error) {
+            console.error('Error generating study guide:', error);
+            alert(error instanceof Error ? error.message : 'Failed to generate study guide. Please try again.');
+
+            // Restore button state
+            btn.removeAttribute('disabled');
+            btn.innerHTML = originalContent;
+        }
+    }
+
+    // Generate buttons
+    if (generateInfographicBtn) {
+        generateInfographicBtn.addEventListener('click', () => {
+            const threadId = generateInfographicBtn.getAttribute('data-thread-id');
             if (threadId) {
                 generateInfographic(threadId, false);
             }
         });
     }
 
-    if (regenerateBtn) {
-        regenerateBtn.addEventListener('click', () => {
-            const threadId = regenerateBtn.getAttribute('data-thread-id');
+    if (generateReferenceSheetBtn) {
+        generateReferenceSheetBtn.addEventListener('click', () => {
+            const threadId = generateReferenceSheetBtn.getAttribute('data-thread-id');
+            if (threadId) {
+                generateReferenceSheet(threadId, false);
+            }
+        });
+    }
+
+    if (generateStudyGuideBtn) {
+        generateStudyGuideBtn.addEventListener('click', () => {
+            const threadId = generateStudyGuideBtn.getAttribute('data-thread-id');
+            if (threadId) {
+                generateStudyGuide(threadId, false);
+            }
+        });
+    }
+
+    // Regenerate buttons
+    if (regenerateInfographicBtn) {
+        regenerateInfographicBtn.addEventListener('click', () => {
+            const threadId = regenerateInfographicBtn.getAttribute('data-thread-id');
             if (threadId) {
                 if (confirm('Are you sure you want to regenerate the infographic? This will replace the existing one.')) {
                     generateInfographic(threadId, true);
+                }
+            }
+        });
+    }
+
+    if (regenerateReferenceSheetBtn) {
+        regenerateReferenceSheetBtn.addEventListener('click', () => {
+            const threadId = regenerateReferenceSheetBtn.getAttribute('data-thread-id');
+            if (threadId) {
+                if (confirm('Are you sure you want to regenerate the reference sheet?')) {
+                    generateReferenceSheet(threadId, true);
+                }
+            }
+        });
+    }
+
+    if (regenerateStudyGuideBtn) {
+        regenerateStudyGuideBtn.addEventListener('click', () => {
+            const threadId = regenerateStudyGuideBtn.getAttribute('data-thread-id');
+            if (threadId) {
+                if (confirm('Are you sure you want to regenerate the study guide?')) {
+                    generateStudyGuide(threadId, true);
                 }
             }
         });

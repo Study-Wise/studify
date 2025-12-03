@@ -1,5 +1,6 @@
 import type { Category } from './types';
 import tools from './tools';
+import { generateTutorPrompt } from './promptGenerator';
 
 
 const categories: Record<string, Category> = {
@@ -305,9 +306,7 @@ const categories: Record<string, Category> = {
     },
 }
 
-// Use Vite's glob import to safely resolve prompt modules at build time
-const promptModules = (import.meta as any).glob('./prompts/**/*.ts', { eager: true });
-
+// Generate prompts programmatically for each mode
 for (const topicKey of Object.keys(categories)) {
     const topic = categories[topicKey as keyof typeof categories];
     const modes = topic.modes;
@@ -315,14 +314,11 @@ for (const topicKey of Object.keys(categories)) {
     for (const modeKey of Object.keys(modes)) {
         const mode = modes[modeKey as keyof typeof modes];
 
-        const promptPath = `./prompts/${topicKey}/${modeKey}.ts`;
-        const module = promptModules[promptPath] as any | undefined;
-        if (module) {
-            mode.prompt = Promise.resolve((module as any).default);
-        } else {
-            mode.show = false;
-        }
+        // Generate the prompt using the mode's name and category
+        const prompt = generateTutorPrompt(mode.name, topicKey);
+        mode.prompt = Promise.resolve(prompt);
 
+        // Set default tools if not specified
         if (!mode.tools) {
             mode.tools = tools;
         }
