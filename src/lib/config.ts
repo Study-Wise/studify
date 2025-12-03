@@ -5,7 +5,10 @@
 import { generateTutorPrompt } from './promptGenerator';
 import type { InfographicSpeed, ImageSize } from './types';
 
-const prompt = generateTutorPrompt('math', 'general');
+const defaultCategory = 'math';
+const defaultMode = 'general';
+
+const prompt = generateTutorPrompt(defaultCategory, defaultMode);
 
 const config = {
     provider: 'openai',
@@ -15,8 +18,8 @@ const config = {
     systemPrompt: prompt,
     maxThreadsPerUser: 5, // Maximum number of threads a user can create
     infographicSpeed: 'DEFAULT' as InfographicSpeed, // Ideogram rendering speed
-    defaultCategory: 'math',
-    defaultMode: 'general',
+    defaultCategory: defaultCategory,
+    defaultMode: defaultMode,
 };
 
 export default config;
