@@ -31,14 +31,10 @@ interface LegacyTool {
 
 interface ReferenceSheetResult {
     content: string | null;
-    precedingText: string;
-    followingText: string;
 }
 
 interface StudyGuideResult {
     content: string | null;
-    precedingText: string;
-    followingText: string;
 }
 
 interface ThreadAccessResult {
