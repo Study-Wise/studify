@@ -426,10 +426,8 @@ const { page, category, mode } = Astro.props;
     // Extract fancy output parts from AI response (similar to server-side extract function)
     async function extractFancyOutput(generatedText) {
         const obj = {
-            precedingText: '',
             studyGuide: '',
             referenceSheet: '',
-            followingText: '',
         };
 
         // Create a temporary DOM element to parse the HTML
@@ -438,18 +436,6 @@ const { page, category, mode } = Astro.props;
 
         const fancyOutput = tempDiv.querySelector('.fancy-output');
         if (fancyOutput) {
-            const fancyStart = `<${fancyOutput.tagName.toLowerCase()}${fancyOutput.className !== '' ? ` class="${fancyOutput.className}"` : ''}${fancyOutput.id !== '' ? ` id="${fancyOutput.id}"` : ''}>`;
-            const fancyEnd = `</${fancyOutput.tagName.toLowerCase()}>`;
-            
-            let precedingText = generatedText.trim()?.split(fancyStart)[0] || '';
-            precedingText = precedingText.trim();
-
-            let followingText = generatedText.trim()?.split(fancyEnd).pop() || '';
-            followingText = followingText.trim();
-            
-            obj.precedingText = precedingText;
-            obj.followingText = followingText;
-
             const studyGuide = tempDiv.querySelector('.study-guide')?.innerHTML || '';
             obj.studyGuide = studyGuide;
 
@@ -549,14 +535,6 @@ const { page, category, mode } = Astro.props;
 
             // Check if this is a fancy output message
             if (obj.studyGuide || obj.referenceSheet) {
-                // Add preceding text if exists
-                if (obj.precedingText) {
-                    const precedingDiv = document.createElement('div');
-                    precedingDiv.className = 'message-content-inner';
-                    precedingDiv.innerHTML = obj.precedingText;
-                    messageContent.appendChild(precedingDiv);
-                }
-
                 // Create fancy output dialog
                 const fancyOutput = document.createElement('dialog');
                 fancyOutput.className = 'fancy-output';
@@ -616,14 +594,6 @@ const { page, category, mode } = Astro.props;
 
                 fancyOutput.appendChild(tabContentsParent);
                 messageContent.appendChild(fancyOutput);
-
-                // Add following text if exists
-                if (obj.followingText) {
-                    const followingDiv = document.createElement('div');
-                    followingDiv.className = 'message-content-inner';
-                    followingDiv.innerHTML = obj.followingText;
-                    messageContent.appendChild(followingDiv);
-                }
 
                 // Set up fancy output functionality
                 setTimeout(() => {
