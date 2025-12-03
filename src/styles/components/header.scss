@@ -3,7 +3,7 @@
 @use 'sass:map';
 
 /* Header Styles */
-.header {
+header {
     $spacing: 1rem;
     
     min-height: 80px;
@@ -13,11 +13,9 @@
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 
     display: flex;
-    flex-wrap: wrap;
-    gap: $spacing;
-
     align-items: center;
     justify-content: space-between;
+    gap: $spacing;
 
     h1 {
         margin: 0 0 0.1rem 0;
@@ -44,15 +42,6 @@
 
         word-wrap: normal;
         overflow-wrap: normal;
-    }
-
-    .lite .cl-userButtonBox.cl-internal-1erfakr {
-        &, 
-        .cl-userButtonBox.cl-internal-1erfakr,
-        .cl-avatarBox.cl-userButtonAvatarBox.cl-internal-14s4tiz {
-            height: 100%;
-            aspect-ratio: 1;
-        }
     }
 }
 
@@ -81,11 +70,9 @@
 
 .header-content-wrapper {
     display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-
     align-items: center;
     justify-content: space-between;
+    gap: 1rem;
     // width: 100%;
 
     &:not(.lite) {
@@ -94,23 +81,19 @@
     }
 
     &.lite {
-        flex-direction: row;
-        justify-content: center;
-
+        display: grid;
+        grid-template-columns: 1fr auto;
         background-color: $card-bg-light;
         border-radius: 10px;
         padding: 10px 20px;
         box-shadow: 0 5px 15px var(--card-shadow);
         border: 1px solid var(--card-border);
         width: fit-content;
-
-        :last-child {
-            flex: 1;
-        }
     }
 
     .header-text-container {
         text-align: left;
+        min-width: 0;
     }
 }
 

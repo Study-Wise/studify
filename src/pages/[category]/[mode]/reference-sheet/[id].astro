@@ -5,7 +5,7 @@ import { checkThreadAccess } from '../../../../lib/auth/checkThreadAccess';
 import StepByStepScript from '../../../../scripts/step-by-step.astro';
 import '../../../../styles/pages/reference-sheet.scss';
 
-const { id } = Astro.params;
+const { category, mode, id } = Astro.params;
 
 // Get user authentication
 const { auth } = Astro.locals;
@@ -13,7 +13,7 @@ const { userId, sessionClaims } = auth();
 const user_email = sessionClaims?.email as string || null;
 
 // Check thread access first
-const { isAuthorized, isPublic } = await checkThreadAccess(id || '', user_email, auth);
+const { isAuthorized, isPublic } = await checkThreadAccess(id || '', auth, category, mode, Astro);
 
 // Redirect to sign-in only if not authenticated AND thread is not public
 if (!userId && !isPublic) {
@@ -21,9 +21,9 @@ if (!userId && !isPublic) {
 }
 
 // Get the latest reference sheet only if authorized or public
-const { content: latestReferenceSheet, precedingText, followingText } = (isAuthorized || isPublic)
+const { content: latestReferenceSheet } = (isAuthorized || isPublic)
     ? await getLatestReferenceSheet(id || '', user_email)
-    : { content: null, precedingText: '', followingText: '' };
+    : { content: null };
 ---
 
 <Layout title="Reference Sheet" container={true}>
@@ -37,9 +37,7 @@ const { content: latestReferenceSheet, precedingText, followingText } = (isAutho
             </div>
         ) : latestReferenceSheet ? (
             <div class="content-container">
-                {precedingText && <div class="preceding-text" set:html={precedingText} />}
                 <div class="reference-sheet-content" set:html={latestReferenceSheet} />
-                {followingText && <div class="following-text" set:html={followingText} />}
             </div>
         ) : (
             <div class="empty-state">

@@ -21,8 +21,10 @@ import type { InferSelectModel, InferInsertModel } from 'drizzle-orm';
 import type { Mode } from '../../../lib/types';
 
 import { threadsTable } from '../../../db/schema';
-import extract from '../../../lib/extractPartsofMessage';
 import { isValidEmail } from '../../../lib/validation';
+import { generateReferenceSheet } from '../../../lib/content/generateReferenceSheet';
+import { generateStudyGuide } from '../../../lib/content/generateStudyGuide';
+import { clerkClient } from '@clerk/astro/server';
 
 const provider_maps = {
     openai: [
@@ -66,10 +68,10 @@ type ProviderKey = keyof typeof providerFunctions;
 type Thread = InferSelectModel<typeof threadsTable>;
 type ThreadInsert = InferInsertModel<typeof threadsTable>;
 
-export const POST: APIRoute = async ({ request, locals }) => {
+export const POST: APIRoute = async ({ request, locals, ...context }) => {
     const requestId = nanoid();
     const startTime = Date.now();
-    
+
     console.log(`🚀 [${requestId}] Starting message generation request`);
     console.log(`📊 [${requestId}] Request metadata:`, {
         timestamp: new Date().toISOString(),
@@ -125,14 +127,24 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
         
         console.log(`🔐 [${requestId}] Authentication found, extracting user info`);
-        const { userId, sessionClaims } = auth();
-        const user_email = userId ? ((sessionClaims?.email as string) || null) : null;
-        
+        const { userId } = auth();
+
+        // Fetch user from Clerk to get email properly
+        let user_email: string | null = null;
+        if (userId) {
+            try {
+                const client = clerkClient({ request, locals, ...context });
+                const user = await client.users.getUser(userId);
+                user_email = user.emailAddresses?.[0]?.emailAddress || null;
+                console.log(`✅ [${requestId}] Successfully fetched user email from Clerk`);
+            } catch (error) {
+                console.error(`❌ [${requestId}] Error fetching user from Clerk:`, error);
+            }
+        }
+
         console.log(`👤 [${requestId}] User info:`, {
             userId: userId || 'none',
-            userEmail: user_email || 'none',
-            hasSessionClaims: !!sessionClaims,
-            sessionClaimsKeys: Object.keys(sessionClaims || {})
+            userEmail: user_email || 'none'
         });
 
         // Validate email
@@ -189,6 +201,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
                     title: '',
                     thread: { messages: [] },
                     email: user_email,
+                    category: category || config.defaultCategory,
+                    mode: mode || config.defaultMode,
                     isPublic: isPublic,
                     isDev: process.env.NODE_ENV === 'development'
                 };
@@ -322,6 +336,79 @@ export const POST: APIRoute = async ({ request, locals }) => {
             totalMessages: convoHistory.length,
             userMessageLength: userPrompt.length
         });
+
+        // --- Special handling for first message: Generate study materials directly ---
+        if (convoHistory.length === 2) {
+            console.log(`🎯 [${requestId}] First message detected, generating study materials directly`);
+
+            try {
+                // Save the conversation to database first
+                console.log(`💾 [${requestId}] Saving initial conversation to database`);
+                const convoHistoryWithoutSystem = convoHistory.filter(msg => msg.role !== 'system');
+
+                if (isNewThread) {
+                    // Thread was already created, just update it
+                    console.log(`🔄 [${requestId}] Updating newly created thread with first message`);
+                    await db.update(threadsTable)
+                        .set({
+                            thread: { messages: convoHistoryWithoutSystem },
+                            category: category || config.defaultCategory,
+                            mode: mode || config.defaultMode,
+                            updatedAt: new Date()
+                        })
+                        .where(eq(threadsTable.id, current_thread_id!));
+                } else {
+                    // Thread doesn't exist yet, insert it
+                    console.log(`🆕 [${requestId}] Inserting new thread with first message`);
+                    await db.insert(threadsTable).values({
+                        id: current_thread_id,
+                        title: '',
+                        thread: { messages: convoHistoryWithoutSystem },
+                        email: user_email,
+                        category: category || config.defaultCategory,
+                        mode: mode || config.defaultMode,
+                        isPublic: isPublic,
+                        isDev: process.env.NODE_ENV === 'development'
+                    } as ThreadInsert);
+                }
+                console.log(`✅ [${requestId}] Initial conversation saved`);
+
+                // Generate title
+                console.log(`🏷️ [${requestId}] Generating conversation title`);
+                const convoTitle = await generateTitle(convoHistory, config.model, config.provider as ProviderKey);
+                console.log(`✅ [${requestId}] Title generated: ${convoTitle}`);
+
+                // Update thread with title
+                await db.update(threadsTable)
+                    .set({
+                        title: convoTitle,
+                        updatedAt: new Date()
+                    })
+                    .where(eq(threadsTable.id, current_thread_id!));
+
+                const totalDuration = Date.now() - startTime;
+                console.log(`🎉 [${requestId}] Request completed successfully:`, {
+                    totalDuration: `${totalDuration}ms`,
+                    threadId: current_thread_id,
+                    finalTitle: convoTitle
+                });
+
+                return new Response(
+                    JSON.stringify({
+                        generatedText: '', // Empty for first message
+                        generatedTitle: true,
+                        id: current_thread_id,
+                    }),
+                    {
+                        status: 200,
+                        headers: { 'Content-Type': 'application/json' },
+                    }
+                );
+            } catch (error) {
+                console.error(`❌ [${requestId}] Error generating study materials:`, error);
+                throw error;
+            }
+        }
 
         // --- Model/Provider selection ---
         console.log(`🤖 [${requestId}] Selecting AI model and provider`);
@@ -482,6 +569,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
                     title: convoTitle || '',
                     thread: { messages: convoHistory },
                     email: user_email,
+                    category: category || config.defaultCategory,
+                    mode: mode || config.defaultMode,
                     isPublic: isPublic,
                     isDev: process.env.NODE_ENV === 'development'
                 } as ThreadInsert);
@@ -514,21 +603,21 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        // --- Extract and format response ---
-        console.log(`🔧 [${requestId}] Extracting and formatting response`);
-        const extractStartTime = Date.now();
-        const { obj, generatedText: htmlText } = await extract(generatedText);
-        const extractEndTime = Date.now();
-        const extractDuration = extractEndTime - extractStartTime;
-        
-        console.log(`✅ [${requestId}] Response extraction completed:`, {
-            duration: `${extractDuration}ms`,
-            extractedKeys: Object.keys(obj),
-            htmlTextLength: htmlText.length,
-            hasStudyGuide: !!obj.studyGuide,
-            hasReferenceSheet: !!obj.referenceSheet,
-            studyGuideLength: obj.studyGuide?.length || 0,
-            referenceSheetLength: obj.referenceSheet?.length || 0
+        // --- Format response ---
+        console.log(`🔧 [${requestId}] Formatting response`);
+        const formatStartTime = Date.now();
+
+        // Convert markdown to HTML
+        const { marked } = await import('marked');
+        marked.setOptions({ breaks: true, gfm: true });
+        const htmlText = await marked.parse(generatedText);
+
+        const formatEndTime = Date.now();
+        const formatDuration = formatEndTime - formatStartTime;
+
+        console.log(`✅ [${requestId}] Response formatting completed:`, {
+            duration: `${formatDuration}ms`,
+            htmlTextLength: htmlText.length
         });
 
         const totalDuration = Date.now() - startTime;
@@ -537,7 +626,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
             threadId: current_thread_id,
             finalTitle: convoTitle,
             responseSize: JSON.stringify({
-                ...obj,
                 generatedText: htmlText,
                 generatedTitle: true,
                 id: current_thread_id,
@@ -546,7 +634,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
         return new Response(
             JSON.stringify({
-                ...obj,
                 generatedText: htmlText,
                 generatedTitle: true,
                 id: current_thread_id,
