@@ -21,7 +21,6 @@ import type { InferSelectModel, InferInsertModel } from 'drizzle-orm';
 import type { Mode } from '../../../lib/types';
 
 import { threadsTable } from '../../../db/schema';
-import extract from '../../../lib/extractPartsofMessage';
 import { isValidEmail } from '../../../lib/validation';
 import { generateReferenceSheet } from '../../../lib/content/generateReferenceSheet';
 import { generateStudyGuide } from '../../../lib/content/generateStudyGuide';
@@ -604,21 +603,21 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
             );
         }
 
-        // --- Extract and format response ---
-        console.log(`🔧 [${requestId}] Extracting and formatting response`);
-        const extractStartTime = Date.now();
-        const { obj, generatedText: htmlText } = await extract(generatedText);
-        const extractEndTime = Date.now();
-        const extractDuration = extractEndTime - extractStartTime;
-        
-        console.log(`✅ [${requestId}] Response extraction completed:`, {
-            duration: `${extractDuration}ms`,
-            extractedKeys: Object.keys(obj),
-            htmlTextLength: htmlText.length,
-            hasStudyGuide: !!obj.studyGuide,
-            hasReferenceSheet: !!obj.referenceSheet,
-            studyGuideLength: obj.studyGuide?.length || 0,
-            referenceSheetLength: obj.referenceSheet?.length || 0
+        // --- Format response ---
+        console.log(`🔧 [${requestId}] Formatting response`);
+        const formatStartTime = Date.now();
+
+        // Convert markdown to HTML
+        const { marked } = await import('marked');
+        marked.setOptions({ breaks: true, gfm: true });
+        const htmlText = await marked.parse(generatedText);
+
+        const formatEndTime = Date.now();
+        const formatDuration = formatEndTime - formatStartTime;
+
+        console.log(`✅ [${requestId}] Response formatting completed:`, {
+            duration: `${formatDuration}ms`,
+            htmlTextLength: htmlText.length
         });
 
         const totalDuration = Date.now() - startTime;
@@ -627,7 +626,6 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
             threadId: current_thread_id,
             finalTitle: convoTitle,
             responseSize: JSON.stringify({
-                ...obj,
                 generatedText: htmlText,
                 generatedTitle: true,
                 id: current_thread_id,
@@ -636,7 +634,6 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
 
         return new Response(
             JSON.stringify({
-                ...obj,
                 generatedText: htmlText,
                 generatedTitle: true,
                 id: current_thread_id,

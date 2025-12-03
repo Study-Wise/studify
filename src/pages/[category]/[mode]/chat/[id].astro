@@ -12,7 +12,7 @@ import StepByStepScript from '../../../../scripts/step-by-step.astro';
 import '../../../../styles/pages/chat.scss';
 
 import { getMessages, getMessagesLength } from '../../../../lib/threads';
-import extract from '../../../../lib/extractPartsofMessage';
+import { marked } from 'marked';
 import Footer from '../../../../components/Footer.astro';
 import { checkThreadAccess } from '../../../../lib/auth/checkThreadAccess';
 import { getLatestReferenceSheet } from '../../../../lib/content/getLatestReferenceSheet';
@@ -76,15 +76,11 @@ export const inNav = 'hide';
                     messages
                         .filter(message => message.role !== 'system')
                         .map(async message => {
-                        const { obj, generatedText: htmlText } = await extract(message.content);
+                        // Convert markdown to HTML
+                        marked.setOptions({ breaks: true, gfm: true });
+                        const htmlText = await marked.parse(message.content);
 
-                        // For assistant messages with fancy output, don't render as a regular message
-                        // The fancy output will be rendered separately in the sidebar
-                        if (message.role === 'assistant' && (obj.studyGuide || obj.referenceSheet)) {
-                            return null;
-                        }
-
-                        // Render as simple message
+                        // Render message
                         return <div class={`message ${message.role}`}>
                             <div class={`message-content ${message.role === 'user' ? 'bg-primary' : ''}`} set:html={htmlText} />
                         </div>
