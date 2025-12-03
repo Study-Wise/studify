@@ -5,7 +5,7 @@
 import { generateTutorPrompt } from './promptGenerator';
 import type { InfographicSpeed, ImageSize } from './types';
 
-const prompt = generateTutorPrompt('', 'general');
+const prompt = generateTutorPrompt('math', 'general');
 
 const config = {
     provider: 'openai',
