@@ -145,8 +145,8 @@ const { page, category, mode } = Astro.props;
             }
             
             const data = await response.json();
-            // For first message, we get studyGuide/referenceSheet instead of generatedText
-            if (!data?.generatedText && !data?.studyGuide && !data?.referenceSheet) {
+            // Check if we have valid response data
+            if (!data?.generatedText && !data?.id) {
                 console.error('Invalid data format:', data);
                 throw new Error('Invalid/empty response from AI.');
             }
@@ -413,21 +413,13 @@ const { page, category, mode } = Astro.props;
         if (downloadGuideBtn) downloadGuideBtn.disabled = true;
         if (downloadSheetBtn) downloadSheetBtn.disabled = true;
 
-        if (data.studyGuide && data.referenceSheet && page === 'home') {
-            // Redirect to chat page immediately when fancy output is generated
-            if (data.id && category && mode) {
-                window.location.href = `/${category}/${mode}/chat/${data.id}`;
-            } else {
-                displayError('Failed to redirect to chat page.');
-            }
+        if (page === 'home' && data.id && category && mode) {
+            // Redirect to chat page for first message
+            window.location.href = `/${category}/${mode}/chat/${data.id}`;
         } else if (page === 'chat') {
             await addMessage('assistant', data);
-        } else {
-            console.error('No study guide or reference sheet content generated/extracted.');
-            displayError('No study guide or reference sheet content generated/extracted.');
-            if (downloadGuideBtn) downloadGuideBtn.disabled = true;
-            if (downloadSheetBtn) downloadSheetBtn.disabled = true;
-            if (outputSection) outputSection.style.display = 'none';
+        } else if (page === 'home') {
+            displayError('Failed to redirect to chat page.');
         }
     }
 
