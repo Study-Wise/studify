@@ -1,12 +1,29 @@
 import { getMessages } from '../threads';
 import extract from '../extractPartsofMessage';
 import type { ReferenceSheetResult } from '../types';
+import { db } from '../../db/initialize';
+import { eq } from 'drizzle-orm';
+import { threadsTable } from '../../db/schema';
 
 export async function getLatestReferenceSheet(
     threadId: string,
     userEmail: string | null
 ): Promise<ReferenceSheetResult> {
-    // Get messages for the thread
+    // First, try to get the reference sheet from the database
+    try {
+        const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
+        if (threads.length > 0 && threads[0].generatedReferenceSheet) {
+            return {
+                content: threads[0].generatedReferenceSheet,
+                precedingText: '',
+                followingText: ''
+            };
+        }
+    } catch (error) {
+        console.error('Error fetching reference sheet from database:', error);
+    }
+
+    // Fallback: Get messages for the thread and search for reference sheet
     const messages = await getMessages(threadId, userEmail);
 
     // Find the latest message with a reference sheet
