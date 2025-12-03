@@ -14,9 +14,7 @@ export async function getLatestStudyGuide(
         const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
         if (threads.length > 0 && threads[0].generatedStudyGuide) {
             return {
-                content: threads[0].generatedStudyGuide,
-                precedingText: '',
-                followingText: ''
+                content: threads[0].generatedStudyGuide
             };
         }
     } catch (error) {
@@ -33,9 +31,7 @@ export async function getLatestStudyGuide(
             const { obj } = await extract(message.content);
             if (obj.studyGuide) {
                 return {
-                    content: obj.studyGuide,
-                    precedingText: obj.precedingText || '',
-                    followingText: obj.followingText || ''
+                    content: obj.studyGuide
                 };
             }
         }
@@ -43,8 +39,6 @@ export async function getLatestStudyGuide(
 
     // No study guide found
     return {
-        content: null,
-        precedingText: '',
-        followingText: ''
+        content: null
     };
 }

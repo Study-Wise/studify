@@ -14,9 +14,7 @@ export async function getLatestReferenceSheet(
         const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
         if (threads.length > 0 && threads[0].generatedReferenceSheet) {
             return {
-                content: threads[0].generatedReferenceSheet,
-                precedingText: '',
-                followingText: ''
+                content: threads[0].generatedReferenceSheet
             };
         }
     } catch (error) {
@@ -33,9 +31,7 @@ export async function getLatestReferenceSheet(
             const { obj } = await extract(message.content);
             if (obj.referenceSheet) {
                 return {
-                    content: obj.referenceSheet,
-                    precedingText: obj.precedingText || '',
-                    followingText: obj.followingText || ''
+                    content: obj.referenceSheet
                 };
             }
         }
@@ -43,8 +39,6 @@ export async function getLatestReferenceSheet(
 
     // No reference sheet found
     return {
-        content: null,
-        precedingText: '',
-        followingText: ''
+        content: null
     };
 }
