@@ -31,16 +31,21 @@ async function generateImageUrl(prompt: string) {
     if (!response.ok) {
         let errorMessage = `Ideogram API error (${response.status} ${response.statusText})`;
         try {
-            const errorData = await response.json();
-            if (errorData.error || errorData.message) {
-                errorMessage += `: ${errorData.error || errorData.message}`;
-            }
-        } catch {
-            // If parsing JSON fails, just use the status text
             const errorText = await response.text();
             if (errorText) {
-                errorMessage += `: ${errorText}`;
+                try {
+                    const errorData = JSON.parse(errorText);
+                    if (errorData.error || errorData.message) {
+                        errorMessage += `: ${errorData.error || errorData.message}`;
+                    } else {
+                        errorMessage += `: ${errorText}`;
+                    }
+                } catch {
+                    errorMessage += `: ${errorText}`;
+                }
             }
+        } catch {
+            // Couldn't read response body
         }
         throw new Error(errorMessage);
     }
