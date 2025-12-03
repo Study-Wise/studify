@@ -30,23 +30,42 @@ async function generateImageUrl(prompt: string) {
 
     if (!response.ok) {
         let errorMessage = `Ideogram API error (${response.status} ${response.statusText})`;
-        try {
-            const errorText = await response.text();
-            if (errorText) {
-                try {
-                    const errorData = JSON.parse(errorText);
-                    if (errorData.error || errorData.message) {
-                        errorMessage += `: ${errorData.error || errorData.message}`;
+
+        // Handle specific error codes
+        if (response.status === 524) {
+            errorMessage = 'Ideogram API timeout - The image generation took too long. Please try again.';
+        } else if (response.status === 429) {
+            errorMessage = 'Ideogram API rate limit exceeded - Please wait a moment and try again.';
+        } else if (response.status === 401 || response.status === 403) {
+            errorMessage = 'Ideogram API authentication failed - Please check your API key.';
+        } else {
+            try {
+                const errorText = await response.text();
+                if (errorText) {
+                    // Check if response is HTML (error page)
+                    if (errorText.trim().startsWith('<!DOCTYPE') || errorText.trim().startsWith('<html')) {
+                        // Don't include the full HTML, just the status
+                        errorMessage = `Ideogram API error (${response.status}): Server returned an error page`;
                     } else {
-                        errorMessage += `: ${errorText}`;
+                        // Try to parse as JSON
+                        try {
+                            const errorData = JSON.parse(errorText);
+                            if (errorData.error || errorData.message) {
+                                errorMessage += `: ${errorData.error || errorData.message}`;
+                            }
+                        } catch {
+                            // Use the raw text if it's not too long
+                            if (errorText.length < 200) {
+                                errorMessage += `: ${errorText}`;
+                            }
+                        }
                     }
-                } catch {
-                    errorMessage += `: ${errorText}`;
                 }
+            } catch {
+                // Couldn't read response body
             }
-        } catch {
-            // Couldn't read response body
         }
+
         throw new Error(errorMessage);
     }
 
