@@ -1,5 +1,5 @@
 import { db } from '../../db/initialize';
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 import { threadsTable } from '../../db/schema';
 import { getUserRole } from '../auth-utils';
 import type { ThreadAccessResult } from '../types';
@@ -7,7 +7,9 @@ import type { ThreadAccessResult } from '../types';
 export async function checkThreadAccess(
     threadId: string,
     userEmail: string | null,
-    auth: any
+    auth: any,
+    urlCategory?: string,
+    urlAgent?: string
 ): Promise<ThreadAccessResult> {
     let threadOwner: string | null = null;
     let isPublicThread = false;
@@ -21,8 +23,27 @@ export async function checkThreadAccess(
         try {
             const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
             if (threads.length > 0) {
-                threadOwner = threads[0].email;
-                isPublicThread = threads[0].isPublic;
+                const thread = threads[0];
+                threadOwner = thread.email;
+                isPublicThread = thread.isPublic;
+
+                // Validate that the thread's category and agent match the URL
+                if (urlCategory && thread.category !== urlCategory) {
+                    console.error(`Category mismatch: URL has '${urlCategory}' but thread has '${thread.category}'`);
+                    return {
+                        isAuthorized: false,
+                        isPublic: false,
+                        threadOwner: null
+                    };
+                }
+                if (urlAgent && thread.agent !== urlAgent) {
+                    console.error(`Agent mismatch: URL has '${urlAgent}' but thread has '${thread.agent}'`);
+                    return {
+                        isAuthorized: false,
+                        isPublic: false,
+                        threadOwner: null
+                    };
+                }
 
                 // If unclaimed and user is authenticated, claim ownership
                 if (!threadOwner && userEmail) {
