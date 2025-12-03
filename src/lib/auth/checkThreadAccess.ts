@@ -9,7 +9,7 @@ export async function checkThreadAccess(
     userEmail: string | null,
     auth: any,
     urlCategory?: string,
-    urlAgent?: string
+    urlMode?: string
 ): Promise<ThreadAccessResult> {
     let threadOwner: string | null = null;
     let isPublicThread = false;
@@ -27,7 +27,7 @@ export async function checkThreadAccess(
                 threadOwner = thread.email;
                 isPublicThread = thread.isPublic;
 
-                // Validate that the thread's category and agent match the URL
+                // Validate that the thread's category and mode match the URL
                 if (urlCategory && thread.category !== urlCategory) {
                     console.error(`Category mismatch: URL has '${urlCategory}' but thread has '${thread.category}'`);
                     return {
@@ -36,8 +36,8 @@ export async function checkThreadAccess(
                         threadOwner: null
                     };
                 }
-                if (urlAgent && thread.agent !== urlAgent) {
-                    console.error(`Agent mismatch: URL has '${urlAgent}' but thread has '${thread.agent}'`);
+                if (urlMode && thread.mode !== urlMode) {
+                    console.error(`Mode mismatch: URL has '${urlMode}' but thread has '${thread.mode}'`);
                     return {
                         isAuthorized: false,
                         isPublic: false,
