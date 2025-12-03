@@ -1,5 +1,5 @@
 import { db } from '../../db/initialize';
-import { eq, and } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { threadsTable } from '../../db/schema';
 import { getUserRole } from '../auth-utils';
 import type { ThreadAccessResult } from '../types';
