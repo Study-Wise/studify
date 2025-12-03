@@ -29,7 +29,20 @@ async function generateImageUrl(prompt: string) {
     });
 
     if (!response.ok) {
-        throw new Error(`Ideogram API error: ${response.statusText}`);
+        let errorMessage = `Ideogram API error (${response.status} ${response.statusText})`;
+        try {
+            const errorData = await response.json();
+            if (errorData.error || errorData.message) {
+                errorMessage += `: ${errorData.error || errorData.message}`;
+            }
+        } catch {
+            // If parsing JSON fails, just use the status text
+            const errorText = await response.text();
+            if (errorText) {
+                errorMessage += `: ${errorText}`;
+            }
+        }
+        throw new Error(errorMessage);
     }
 
     const data: IdeogramResponse = await response.json();
@@ -38,7 +51,7 @@ async function generateImageUrl(prompt: string) {
         return data.data[0].url;
     }
 
-    return null;
+    throw new Error('Ideogram API returned no images in response');
 }
 
 // Generate image and return buffer
