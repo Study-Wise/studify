@@ -89,47 +89,6 @@ Please note that the AI will not provide the answer for your immediate equation`
         </div>
         <div id="error-message" class="error-box" style="display: none" role="alert" aria-live="polite"></div>
     </section>
-
-    <!-- Output Section -->
-    <section class="output-section card" id="output-section" style="display: none" aria-live="polite" aria-labelledby="output-heading">
-        <h2 id="output-heading" class="output-section-title">
-            <span class="material-symbols-outlined" aria-hidden="true">lightbulb</span>&nbsp;Your Generated Materials
-        </h2>
-        <div class="output-tabs" role="tablist" aria-label="Generated content tabs">
-            <button id="guide-tab-button" class="tab-button active" onclick="showOutput('guide')" aria-controls="guide-output" role="tab" aria-selected="true" tabindex="0">
-                <span class="material-symbols-outlined" aria-hidden="true">import_contacts</span> Study Guide
-            </button>
-            <button id="sheet-tab-button" class="tab-button" onclick="showOutput('sheet')" aria-controls="sheet-output" role="tab" aria-selected="false" tabindex="-1">
-                <span class="material-symbols-outlined" aria-hidden="true">assignment</span> Reference Sheet
-            </button>
-        </div>
-
-        <!-- Study Guide Tab Panel -->
-        <div id="guide-output" class="output-content active-output" role="tabpanel" aria-labelledby="guide-tab-button" aria-hidden="false">
-            <div class="download-buttons">
-                <button id="download-guide-pdf" class="save-pdf-button material-symbols-outlined" title="Save Study Guide as PDF" aria-label="Save Study Guide as PDF">print</button>
-            </div>
-            <article id="study-guide-content">
-                <p>
-                    <i>Click "Generate Study Materials" above to create your personalized study guide.</i>
-                </p>
-            </article>
-        </div>
-
-        <!-- Reference Sheet Tab Panel -->
-        <div id="sheet-output" class="output-content" role="tabpanel" aria-labelledby="sheet-tab-button" aria-hidden="true">
-            <div class="download-buttons">
-                <button id="download-sheet-pdf" class="save-pdf-button material-symbols-outlined" title="Save Reference Sheet as PDF" aria-label="Save Reference Sheet as PDF">print</button>
-            </div>
-            <article id="reference-sheet-content">
-                <p>
-                    <i>Click "Generate Study Materials" above to create your personalized reference sheet.</i>
-                </p>
-            </article>
-        </div>
-
-        <div class="chat-button-container"></div>
-    </section>
     <MessagesScript page="home" category={category} mode={mode} />
     <StepByStepScript />
 </Layout>
