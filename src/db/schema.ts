@@ -8,6 +8,7 @@ const threadsTable = pgTable('threads', {
     email: text('email'),
     category: text('category').notNull(),
     mode: text('mode').notNull(),
+    model: text('model'),
     generatedInfographic: jsonb('generatedInfographic').notNull().default({}),
     generatedStudyGuide: text('generatedStudyGuide'),
     generatedReferenceSheet: text('generatedReferenceSheet'),
