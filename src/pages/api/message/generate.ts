@@ -87,7 +87,7 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
             userPromptLength: userPrompt?.length || 0,
             userPromptPreview: userPrompt?.substring(0, 100) + (userPrompt?.length > 100 ? '...' : ''),
             threadId: thread_id || 'none',
-            model: model || 'default',
+            model: model || config.model,
             settingsKeys: Object.keys(userSettings || {}),
             isPublic,
             category: category || 'none',
@@ -159,41 +159,44 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
         }
         console.log(`✅ [${requestId}] Email validation passed`);
 
-        // --- Model/Provider selection (moved before thread creation) ---
-        console.log(`🤖 [${requestId}] Selecting AI model and provider`);
-        let userModel = model || userSettings.model || config.model;
-        let userProvider =
-            (Object.keys(providers) as Array<keyof typeof providers>).find(
-                (provider: keyof typeof providers) => (providers[provider].models as Record<string, { name: string }>)[userModel]
-            ) || config.provider;
+        // Helper function to validate and get proper model-provider pair
+        const getValidModelAndProvider = (requestedModel: string | null): { model: string, provider: ProviderKey } => {
+            let modelToUse = requestedModel || config.model;
 
-        console.log(`🔍 [${requestId}] Initial model/provider selection:`, {
-            requestedModel: model,
-            settingsModel: userSettings.model,
-            configModel: config.model,
-            selectedModel: userModel,
-            selectedProvider: userProvider
-        });
+            // Find which provider has this model
+            let providerName =
+                (Object.keys(providers) as Array<keyof typeof providers>).find(
+                    (provider: keyof typeof providers) => (providers[provider].models as Record<string, { name: string }>)[modelToUse]
+                ) || config.provider;
 
-        if (
-            !Object.keys(provider_maps).find((provider) => provider_maps[provider as ProviderKey].includes(userProvider))
-        ) {
-            console.log(`⚠️ [${requestId}] Provider not found in maps, falling back to config provider`);
-            userProvider = config.provider;
-        }
-        let provider = Object.keys(provider_maps).find((provider) => provider_maps[provider as ProviderKey].includes(userProvider)) as ProviderKey;
+            // Validate provider exists in provider_maps
+            if (
+                !Object.keys(provider_maps).find((provider) => provider_maps[provider as ProviderKey].includes(providerName))
+            ) {
+                console.log(`⚠️ [${requestId}] Provider ${providerName} not found in provider_maps, falling back to config`);
+                providerName = config.provider;
+                modelToUse = config.model;
+            }
 
-        if (!provider || !providerFunctions[provider](userModel)) {
-            console.log(`⚠️ [${requestId}] Provider/model validation failed, using defaults`);
-            userModel = config.model;
-            provider = config.provider as ProviderKey;
-        }
+            const finalProvider = Object.keys(provider_maps).find((provider) => provider_maps[provider as ProviderKey].includes(providerName)) as ProviderKey;
 
-        console.log(`✅ [${requestId}] Final model/provider selection:`, {
-            model: userModel,
-            provider: provider,
-            providerFunctionExists: !!providerFunctions[provider]
-        });
+            // Validate the model works with the provider function
+            try {
+                if (!finalProvider || !providerFunctions[finalProvider]) {
+                    console.log(`⚠️ [${requestId}] Invalid provider ${finalProvider}, using config defaults`);
+                    return { model: config.model, provider: config.provider as ProviderKey };
+                }
+
+                // Try to initialize the model to ensure it's valid
+                providerFunctions[finalProvider](modelToUse);
+
+                console.log(`✅ [${requestId}] Validated model-provider pair:`, { model: modelToUse, provider: finalProvider });
+                return { model: modelToUse, provider: finalProvider };
+            } catch (error) {
+                console.log(`⚠️ [${requestId}] Model ${modelToUse} not valid for provider ${finalProvider}, using config defaults`, error);
+                return { model: config.model, provider: config.provider as ProviderKey };
+            }
+        };
 
         // Create a new thread if none provided
         let isNewThread = false;
@@ -201,19 +204,19 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
         if (!current_thread_id) {
             console.log(`🆕 [${requestId}] No thread ID provided, creating new thread`);
             try {
-                
+
                 // Check thread limit for user
                 if (user_email) {
                     console.log(`🔍 [${requestId}] Checking thread limit for user:`, user_email);
                     const userThreads = await db.select().from(threadsTable).where(eq(threadsTable.email, user_email));
                     console.log(`📊 [${requestId}] User thread count:`, userThreads.length, '/', config.maxThreadsPerUser);
-                    
+
                     if (userThreads.length >= config.maxThreadsPerUser) {
                         console.error(`❌ [${requestId}] Thread limit exceeded for user:`, user_email);
                         return new Response(
-                            JSON.stringify({ 
-                                status: 'error', 
-                                error: `You have reached the maximum limit of ${config.maxThreadsPerUser} threads. Please delete some threads before creating new ones.` 
+                            JSON.stringify({
+                                status: 'error',
+                                error: `You have reached the maximum limit of ${config.maxThreadsPerUser} threads. Please delete some threads before creating new ones.`
                             }),
                             {
                                 status: 400,
@@ -222,14 +225,16 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
                         );
                     }
                 }
-                
+
                 console.log(`🆔 [${requestId}] Generating new thread ID`);
                 const newThreadId = nanoid();
                 if (!newThreadId) {
                     console.error(`❌ [${requestId}] Failed to generate thread ID`);
                     throw new Error('Failed to generate thread ID');
                 }
-                
+
+                const { model: initialModel, provider: initialProvider } = getValidModelAndProvider(model);
+
                 const newThread = {
                     id: newThreadId,
                     title: '',
@@ -237,8 +242,8 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
                     email: user_email,
                     category: category || config.defaultCategory,
                     mode: mode || config.defaultMode,
-                    model: userModel,
-                    provider: provider,
+                    model: initialModel,
+                    provider: initialProvider,
                     isPublic: isPublic,
                     isDev: process.env.NODE_ENV === 'development'
                 };
@@ -363,6 +368,50 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
             }
         } else {
             console.log(`🆕 [${requestId}] No thread ID provided, using system message only`);
+        }
+
+        // --- Model/Provider selection ---
+        console.log(`🤖 [${requestId}] Selecting AI model and provider`);
+        let userModel: string;
+        let provider: ProviderKey;
+
+        // Use existing model/provider from database if thread exists, otherwise use client selection
+        if (userData && userData.model && userData.provider) {
+            console.log(`🔄 [${requestId}] Validating existing model/provider from database`);
+
+            // Validate the stored model/provider are still valid
+            const { model: validatedModel, provider: validatedProvider } = getValidModelAndProvider(userData.model);
+
+            // Check if validation changed the model/provider (meaning the stored ones were invalid)
+            if (validatedModel !== userData.model || validatedProvider !== userData.provider) {
+                console.log(`⚠️ [${requestId}] Stored model/provider invalid, using validated:`, {
+                    storedModel: userData.model,
+                    storedProvider: userData.provider,
+                    validatedModel,
+                    validatedProvider
+                });
+            }
+
+            userModel = validatedModel;
+            provider = validatedProvider;
+
+            console.log(`✅ [${requestId}] Using model/provider:`, {
+                model: userModel,
+                provider: provider
+            });
+        } else {
+            console.log(`🆕 [${requestId}] Determining model/provider from client selection`);
+            const requestedModel = model || userSettings.model;
+            const { model: validatedModel, provider: validatedProvider } = getValidModelAndProvider(requestedModel);
+
+            userModel = validatedModel;
+            provider = validatedProvider;
+
+            console.log(`✅ [${requestId}] Final model/provider selection:`, {
+                requestedModel: requestedModel || 'none',
+                model: userModel,
+                provider: provider
+            });
         }
 
         // --- Append new user message ---
