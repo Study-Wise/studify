@@ -3,6 +3,7 @@ import Layout from '../../../../layouts/Layout.astro';
 import { getLatestReferenceSheet } from '../../../../lib/content/getLatestReferenceSheet';
 import { checkThreadAccess } from '../../../../lib/auth/checkThreadAccess';
 import StepByStepScript from '../../../../scripts/step-by-step.astro';
+import { marked } from 'marked';
 import '../../../../styles/pages/reference-sheet.scss';
 
 const { category, mode, id } = Astro.params;
@@ -23,6 +24,9 @@ if (!userId && !isPublic) {
 const { content: latestReferenceSheet } = (isAuthorized || isPublic)
     ? await getLatestReferenceSheet(id || '')
     : { content: null };
+
+// Parse markdown to HTML
+const parsedContent = latestReferenceSheet ? await marked.parse(latestReferenceSheet) : null;
 ---
 
 <Layout title="Reference Sheet" container={true}>
@@ -34,9 +38,9 @@ const { content: latestReferenceSheet } = (isAuthorized || isPublic)
                 <p>You don't have permission to view this reference sheet. This thread belongs to another user.</p>
                 <a href="/" class="btn-primary">Go Home</a>
             </div>
-        ) : latestReferenceSheet ? (
+        ) : parsedContent ? (
             <div class="content-container">
-                <div class="reference-sheet-content" set:html={latestReferenceSheet} />
+                <div class="reference-sheet-content" set:html={parsedContent} />
             </div>
         ) : (
             <div class="empty-state">

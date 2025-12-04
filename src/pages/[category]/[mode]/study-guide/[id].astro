@@ -3,6 +3,7 @@ import Layout from '../../../../layouts/Layout.astro';
 import { getLatestStudyGuide } from '../../../../lib/content/getLatestStudyGuide';
 import { checkThreadAccess } from '../../../../lib/auth/checkThreadAccess';
 import StepByStepScript from '../../../../scripts/step-by-step.astro';
+import { marked } from 'marked';
 import '../../../../styles/pages/study-guide.scss';
 
 const { category, mode, id } = Astro.params;
@@ -23,6 +24,9 @@ if (!userId && !isPublic) {
 const { content: latestStudyGuide } = (isAuthorized || isPublic)
     ? await getLatestStudyGuide(id || '')
     : { content: null };
+
+// Parse markdown to HTML
+const parsedContent = latestStudyGuide ? await marked.parse(latestStudyGuide) : null;
 ---
 
 <Layout title="Study Guide" container={true}>
@@ -34,9 +38,9 @@ const { content: latestStudyGuide } = (isAuthorized || isPublic)
                 <p>You don't have permission to view this study guide. This thread belongs to another user.</p>
                 <a href="/" class="btn-primary">Go Home</a>
             </div>
-        ) : latestStudyGuide ? (
+        ) : parsedContent ? (
             <div class="content-container">
-                <div class="study-guide-content" set:html={latestStudyGuide} />
+                <div class="study-guide-content" set:html={parsedContent} />
             </div>
         ) : (
             <div class="empty-state">
