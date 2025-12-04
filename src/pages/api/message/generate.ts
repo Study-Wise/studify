@@ -576,7 +576,8 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
                     email: user_email,
                     category: category || config.defaultCategory,
                     mode: mode || config.defaultMode,
-                    model: model || null,
+                    model: userModel,
+                    provider: provider,
                     isPublic: isPublic,
                     isDev: process.env.NODE_ENV === 'development'
                 } as ThreadInsert);
