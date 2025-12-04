@@ -5,7 +5,7 @@
 import { generateTutorPrompt } from './promptGenerator';
 import type { InfographicSpeed, ImageSize } from './types';
 
-const defaultCategory = 'math';
+const defaultCategory = 'general';
 const defaultMode = 'general';
 
 const prompt = generateTutorPrompt(defaultCategory, defaultMode);
