@@ -32,7 +32,7 @@
 *::before,
 *::after {
     box-sizing: border-box;
-    &:not(.content-container *), 
+    &:not(.content-container > * *), 
     .step-by-step,
     .step-by-step * {
         margin: 0;
