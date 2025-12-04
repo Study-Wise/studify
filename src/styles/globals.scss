@@ -38,7 +38,7 @@
         padding-inline-start: 1.5em;
     }
 }
-.content-container [class$="-content"]:not(.step-by-step, .step-by-step *) {
+.content-container [class$="-content"] *:not(.step-by-step, .step-by-step *) {
     &, &::before, &::after {
         margin: unset;
         padding: unset;
