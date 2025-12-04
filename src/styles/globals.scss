@@ -43,7 +43,9 @@
         padding: revert;
     }
     &:not(:first-child):not(:last-child) {
-        margin: revert;
+        &, &::before, &::after {
+            margin: revert;
+        }
     }
 }
 
