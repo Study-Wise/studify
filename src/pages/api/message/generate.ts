@@ -159,9 +159,45 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
         }
         console.log(`✅ [${requestId}] Email validation passed`);
 
+        // --- Model/Provider selection (moved before thread creation) ---
+        console.log(`🤖 [${requestId}] Selecting AI model and provider`);
+        let userModel = model || userSettings.model || config.model;
+        let userProvider =
+            (Object.keys(providers) as Array<keyof typeof providers>).find(
+                (provider: keyof typeof providers) => (providers[provider].models as Record<string, { name: string }>)[userModel]
+            ) || config.provider;
+
+        console.log(`🔍 [${requestId}] Initial model/provider selection:`, {
+            requestedModel: model,
+            settingsModel: userSettings.model,
+            configModel: config.model,
+            selectedModel: userModel,
+            selectedProvider: userProvider
+        });
+
+        if (
+            !Object.keys(provider_maps).find((provider) => provider_maps[provider as ProviderKey].includes(userProvider))
+        ) {
+            console.log(`⚠️ [${requestId}] Provider not found in maps, falling back to config provider`);
+            userProvider = config.provider;
+        }
+        let provider = Object.keys(provider_maps).find((provider) => provider_maps[provider as ProviderKey].includes(userProvider)) as ProviderKey;
+
+        if (!provider || !providerFunctions[provider](userModel)) {
+            console.log(`⚠️ [${requestId}] Provider/model validation failed, using defaults`);
+            userModel = config.model;
+            provider = config.provider as ProviderKey;
+        }
+
+        console.log(`✅ [${requestId}] Final model/provider selection:`, {
+            model: userModel,
+            provider: provider,
+            providerFunctionExists: !!providerFunctions[provider]
+        });
+
         // Create a new thread if none provided
         let isNewThread = false;
-        
+
         if (!current_thread_id) {
             console.log(`🆕 [${requestId}] No thread ID provided, creating new thread`);
             try {
@@ -201,7 +237,8 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
                     email: user_email,
                     category: category || config.defaultCategory,
                     mode: mode || config.defaultMode,
-                    model: model || config.model,
+                    model: userModel,
+                    provider: provider,
                     isPublic: isPublic,
                     isDev: process.env.NODE_ENV === 'development'
                 };
@@ -411,42 +448,7 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
             }
         }
 
-        // --- Model/Provider selection ---
-        console.log(`🤖 [${requestId}] Selecting AI model and provider`);
-        let userModel = model || userSettings.model || config.model;
-        let userProvider =
-            (Object.keys(providers) as Array<keyof typeof providers>).find(
-                (provider: keyof typeof providers) => (providers[provider].models as Record<string, { name: string }>)[userModel]
-            ) || config.provider;
-
-        console.log(`🔍 [${requestId}] Initial model/provider selection:`, {
-            requestedModel: model,
-            settingsModel: userSettings.model,
-            configModel: config.model,
-            selectedModel: userModel,
-            selectedProvider: userProvider
-        });
-
-        if (
-            !Object.keys(provider_maps).find((provider) => provider_maps[provider as ProviderKey].includes(userProvider))
-        ) {
-            console.log(`⚠️ [${requestId}] Provider not found in maps, falling back to config provider`);
-            userProvider = config.provider;
-        }
-        let provider = Object.keys(provider_maps).find((provider) => provider_maps[provider as ProviderKey].includes(userProvider)) as ProviderKey;
-
-        if (!provider || !providerFunctions[provider](userModel)) {
-            console.log(`⚠️ [${requestId}] Provider/model validation failed, using defaults`);
-            userModel = config.model;
-            provider = config.provider as ProviderKey;
-        }
-
-        console.log(`✅ [${requestId}] Final model/provider selection:`, {
-            model: userModel,
-            provider: provider,
-            providerFunctionExists: !!providerFunctions[provider]
-        });
-
+        // --- Initialize AI Model ---
         let aiModel = providerFunctions[provider](userModel) as LanguageModelV1;
 
         const tools = modeObj.tools || {};
