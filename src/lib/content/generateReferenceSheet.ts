@@ -1,4 +1,4 @@
-import { generateText, type LanguageModelV1 } from 'ai';
+import { generateText } from 'ai';
 import { getMessages } from '../threads';
 import categories from '../modes';
 import config from '../config';
@@ -63,9 +63,8 @@ Math formatting: use \`$…$\` for displaying math formulas/equations inline and
     ];
 
     // Generate the reference sheet
-    const providerFunction = await import(`@ai-sdk/${provider}`);
     const result = await generateText({
-        model: providerFunction[provider](userModel) as LanguageModelV1,
+        model: `${provider}/${userModel}`,
         messages: messagesForAI,
         temperature: 0.7,
     });

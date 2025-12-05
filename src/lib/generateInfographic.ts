@@ -1,4 +1,4 @@
-import { generateText, type LanguageModelV1 } from 'ai';
+import { generateText } from 'ai';
 import { db } from '../db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '../db/schema';
@@ -35,9 +35,8 @@ Your description should be clear, visual, and specific about:
 
 Keep it under 1000 characters. Be specific about visual elements, diagrams, icons, and text placement.`;
 
-    const providerFunction = await import(`@ai-sdk/${provider}`);
     const descriptionResult = await generateText({
-        model: providerFunction[provider](userModel) as LanguageModelV1,
+        model: `${provider}/${userModel}`,
         messages: [
             {
                 role: 'system',
