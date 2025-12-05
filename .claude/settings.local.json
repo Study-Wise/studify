@@ -9,7 +9,8 @@
       "WebFetch(domain:developer.ideogram.ai)",
       "Bash(find:*)",
       "mcp__ide__getDiagnostics",
-      "Bash(npx astro check)"
+      "Bash(npx astro check)",
+      "mcp__context7__resolve-library-id"
     ],
     "deny": [],
     "ask": []
