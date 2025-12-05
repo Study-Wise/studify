@@ -1,44 +1,8 @@
-import { generateText, type LanguageModelV1 } from 'ai';
-
-import { openai } from '@ai-sdk/openai';
-import { anthropic } from '@ai-sdk/anthropic';
-import { google } from '@ai-sdk/google';
-import { xai } from '@ai-sdk/xai';
-import { vercel } from '@ai-sdk/vercel';
+import { generateText, stepCountIs } from 'ai';
 
 import config from './config';
 import { providers } from './models';
 import { nanoid } from 'nanoid';
-
-export const provider_maps = {
-    openai: [
-        'openai',
-        'chatgpt',
-        'gpt',
-        'copilot',
-        'mscopilot',
-        'microsoftcopilot',
-        'ghcopilot',
-        'githubcopilot',
-    ],
-    anthropic: [
-        'anthropic',
-        'claude',
-    ],
-    google: [
-        'google',
-        'gemini',
-    ],
-    xai: [
-        'xai',
-        'x',
-        'grok',
-    ],
-    vercel: [
-        'vercel',
-        'v0',
-    ],
-};
 
 export interface AIGenerationOptions {
     systemPrompt: string;
@@ -60,7 +24,7 @@ export interface TitleGenerationOptions {
 /**
  * Validates and returns a proper model-provider pair
  */
-export async function getValidModelAndProvider(requestedModel: string | null, requestId?: string): Promise<{ model: string, provider: string, providerFunction: any }> {
+export async function getValidModelAndProvider(requestedModel: string | null, requestId?: string): Promise<{ model: string, provider: string }> {
     let modelToUse = requestedModel || config.model;
 
     // Find which provider has this model
@@ -69,29 +33,8 @@ export async function getValidModelAndProvider(requestedModel: string | null, re
             (provider: keyof typeof providers) => (providers[provider].models as Record<string, { name: string }>)[modelToUse]
         ) || config.provider;
 
-    let providerFunction;
-    try {
-        providerFunction = await import(`@ai-sdk/${providerName}`);
-        // Validate provider exists in provider_maps
-        if (!providerFunction[providerName]) {
-            if (requestId) {
-                console.log(`⚠️ [${requestId}] Provider ${providerName} not found in provider_maps, falling back to config`);
-            }
-            providerName = config.provider;
-            providerFunction = await import(`@ai-sdk/${providerName}`);
-            modelToUse = config.model;
-        }
-    }
-    catch (error) {
-        if (requestId) {
-            console.log(`⚠️ [${requestId}] Error importing provider ${providerName}, falling back to config`, error);
-        }
-        providerName = config.provider;
-        providerFunction = await import(`@ai-sdk/${providerName}`);
-        modelToUse = config.model;
-    }
 
-    return { model: modelToUse, provider: providerName, providerFunction };
+    return { model: modelToUse, provider: providerName };
 }
 
 /**
@@ -134,8 +77,7 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
     }
 
     // Initialize AI Model
-    const providerFunction = await import(`@ai-sdk/${provider}`);
-    const aiModel = providerFunction[provider](userModel) as LanguageModelV1;
+    const aiModel = `${provider}/${userModel}`;
 
     // AI Generation
     console.log(`🧠 [${requestId}] Starting AI text generation with pre-built conversation history`);
@@ -156,7 +98,7 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
             model: aiModel,
             messages: convoHistory,
             tools: tools,
-            maxSteps: maxSteps,
+            stopWhen: stepCountIs(maxSteps),
         });
 
         const aiEndTime = Date.now();
@@ -168,8 +110,8 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
             generatedTextPreview: result.text.substring(0, 200) + (result.text.length > 200 ? '...' : ''),
             hasUsage: !!result.usage,
             usageTokens: result.usage ? {
-                promptTokens: result.usage.promptTokens,
-                completionTokens: result.usage.completionTokens,
+                inputTokens: result.usage.inputTokens,
+                outputTokens: result.usage.outputTokens,
                 totalTokens: result.usage.totalTokens
             } : 'none'
         });
@@ -203,9 +145,8 @@ export async function generateTitle(options: TitleGenerationOptions): Promise<st
 
     try {
         const titleStartTime = Date.now();
-        const providerFunction = await import(`@ai-sdk/${provider}`);
         const { text: generatedText } = await generateText({
-            model: providerFunction[provider](userModel) as LanguageModelV1,
+            model: `${provider}/${userModel}`,
             messages: [
                 {
                     role: 'system',
