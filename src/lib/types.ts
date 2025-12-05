@@ -33,6 +33,7 @@ interface ChatRightSidebarProps {
     hasReferenceSheet: boolean;
     hasStudyGuide: boolean;
     hasInfographic: boolean;
+    hasWebpage: boolean;
     threadId: string;
     category: string;
     mode: string;
