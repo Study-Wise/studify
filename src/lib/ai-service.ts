@@ -124,11 +124,14 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
         });
     }
 
-    // Add user prompt to conversation history
-    convoHistory.push({
-        role: 'user',
-        content: userPrompt
-    });
+    // Add user prompt to conversation history if not already present
+    const lastMessage = convoHistory[convoHistory.length - 1];
+    if (lastMessage?.role !== 'user' || lastMessage?.content !== userPrompt) {
+        convoHistory.push({
+            role: 'user',
+            content: userPrompt
+        });
+    }
 
     // Initialize AI Model
     const providerFunction = await import(`@ai-sdk/${provider}`);
