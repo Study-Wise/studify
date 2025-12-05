@@ -14,10 +14,10 @@ import { getMessages, getMessagesLength } from '../../../../lib/threads';
 import { marked } from 'marked';
 import Footer from '../../../../components/Footer.astro';
 import { checkThreadAccess } from '../../../../lib/auth/checkThreadAccess';
-import { getLatestReferenceSheet } from '../../../../lib/content/getLatestReferenceSheet';
-import { getLatestStudyGuide } from '../../../../lib/content/getLatestStudyGuide';
-import { getLatestInfographic } from '../../../../lib/content/getLatestInfographic';
-import { getLatestWebpage } from '../../../../lib/content/getLatestWebpage';
+import { getLatestReferenceSheet } from '../../../../lib/content/latest/reference-sheet';
+import { getLatestStudyGuide } from '../../../../lib/content/latest/study-guide';
+import { getLatestInfographic } from '../../../../lib/content/latest/infographic';
+import { getLatestWebpage } from '../../../../lib/content/latest/webpage';
 
 let { category, mode, id } = Astro.params || { category: '', mode: '', id: '' };
 
