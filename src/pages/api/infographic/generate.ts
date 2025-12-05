@@ -7,6 +7,7 @@ import { eq } from 'drizzle-orm';
 import { threadsTable } from '../../../db/schema';
 import { isValidEmail } from '../../../lib/validation';
 import { generateInfographic } from '../../../lib/generateInfographic';
+import config from '../../../lib/config';
 
 export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();
@@ -97,7 +98,11 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
         // Generate the infographic
         console.log(`🤖 [${requestId}] Generating infographic`);
-        const infographic = await generateInfographic(threadId, user_email);
+        const userModel = thread.model || config.model;
+        const provider = (thread.provider || config.provider);
+
+        console.log(`🤖 [${requestId}] Using model: ${userModel}, provider: ${provider}`);
+        const infographic = await generateInfographic(threadId, user_email, userModel, provider);
 
         console.log(`🎉 [${requestId}] Infographic generation completed successfully`);
 
