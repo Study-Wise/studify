@@ -1,10 +1,16 @@
-import { generateText } from 'ai';
-import { openai } from '@ai-sdk/openai';
+import { generateText, type LanguageModelV1 } from 'ai';
 import { getMessages } from '../threads';
 import categories from '../modes';
 import config from '../config';
 
-export async function generateReferenceSheet(threadId: string, userEmail: string | null, category: string, mode: string) {
+export async function generateReferenceSheet(
+    threadId: string,
+    userEmail: string | null,
+    category: string,
+    mode: string,
+    userModel: string,
+    provider: string
+) {
     // Get conversation history
     const messages = await getMessages(threadId, userEmail);
 
@@ -48,8 +54,9 @@ Math formatting: use \`$…$\` for displaying math formulas/equations inline and
     ];
 
     // Generate the reference sheet
+    const providerFunction = await import(`@ai-sdk/${provider}`);
     const result = await generateText({
-        model: openai(config.model),
+        model: providerFunction[provider](userModel) as LanguageModelV1,
         messages: messagesForAI,
         temperature: 0.7,
     });
