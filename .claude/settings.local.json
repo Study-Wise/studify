@@ -11,7 +11,8 @@
       "mcp__ide__getDiagnostics",
       "Bash(npx astro check)",
       "mcp__context7__resolve-library-id",
-      "mcp__context7__get-library-docs"
+      "mcp__context7__get-library-docs",
+      "Bash(pkill:*)"
     ],
     "deny": [],
     "ask": []
