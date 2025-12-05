@@ -1,7 +1,5 @@
 import { generateText } from 'ai';
 import { getMessages } from '../../threads';
-import categories from '../../modes';
-import config from '../../config';
 import { db } from '../../../db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '../../../db/schema';
@@ -25,16 +23,8 @@ export async function generateWebpage(threadId: string, userEmail: string | null
         throw new Error('No messages found in thread');
     }
 
-    // Get the mode object for the thread's category and mode
-    const modeObj = categories[category]?.modes?.[mode];
-
-    // Get the base system prompt
-    const baseSystemPrompt = modeObj?.prompt ? await modeObj.prompt : config.systemPrompt;
-
     // Create a webpage specific prompt
-    const webpagePrompt = `${baseSystemPrompt}
-
-IMPORTANT: Generate a complete, interactive webpage based on the conversation history. This should be a comprehensive resource that presents the concepts discussed in an engaging, visual format.
+    const webpagePrompt = `Generate a complete, interactive webpage based on the conversation history. This should be a comprehensive resource that presents the concepts discussed in an engaging, visual format.
 
 Output the content as complete HTML (including <!DOCTYPE html>, <html>, <head>, and <body> tags) with embedded CSS and JavaScript. Make it visually appealing and interactive.
 
