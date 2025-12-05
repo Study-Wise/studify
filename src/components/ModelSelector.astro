@@ -5,10 +5,13 @@ import SettingsScript from '../scripts/settings.astro';
 import { models, providers } from '../lib/models';
 import type { ModelOption, Provider, Providers, SelectorSettings } from '../lib/types';
 
+// Filter out models that are not selectable in UI
+const selectableModels = models.filter((model: any) => model.selectableInUI !== false);
+
 const selectorSettings: SelectorSettings = {
     id: 'model',
     name: 'Model',
-    options: models as ModelOption[],
+    options: selectableModels as ModelOption[],
     default: '',
 };
 
