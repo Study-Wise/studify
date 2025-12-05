@@ -1,17 +1,13 @@
 import 'dotenv/config';
 import type { APIRoute } from 'astro';
 
-import { generateText, type LanguageModelV1 } from 'ai';
-
-import { openai } from '@ai-sdk/openai';
-import { anthropic } from '@ai-sdk/anthropic';
-import { google } from '@ai-sdk/google';
-import { xai } from '@ai-sdk/xai';
-import { vercel } from '@ai-sdk/vercel';
-
 import config from '../../../lib/config';
-import { providers } from '../../../lib/models';
 import categories from '../../../lib/modes';
+import {
+    getValidModelAndProvider,
+    generateAIResponse,
+    generateTitle,
+} from '../../../lib/ai-service';
 
 import { nanoid } from 'nanoid';
 
@@ -24,45 +20,6 @@ import { threadsTable } from '../../../db/schema';
 import { isValidEmail } from '../../../lib/validation';
 import { clerkClient } from '@clerk/astro/server';
 
-const provider_maps = {
-    openai: [
-        'openai',
-        'chatgpt',
-        'gpt',
-        'copilot',
-        'mscopilot',
-        'microsoftcopilot',
-        'ghcopilot',
-        'githubcopilot',
-    ],
-    anthropic: [
-        'anthropic',
-        'claude',
-    ],
-    google: [
-        'google',
-        'gemini',
-    ],
-    xai: [
-        'xai',
-        'x',
-        'grok',
-    ],
-    vercel: [
-        'vercel',
-        'v0',
-    ],
-};
-
-const providerFunctions = {
-    openai: openai,
-    anthropic: anthropic,
-    google: google,
-    xai: xai,
-    vercel: vercel,
-};
-
-type ProviderKey = keyof typeof providerFunctions;
 type Thread = InferSelectModel<typeof threadsTable>;
 type ThreadInsert = InferInsertModel<typeof threadsTable>;
 
@@ -159,45 +116,6 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
         }
         console.log(`✅ [${requestId}] Email validation passed`);
 
-        // Helper function to validate and get proper model-provider pair
-        const getValidModelAndProvider = (requestedModel: string | null): { model: string, provider: ProviderKey } => {
-            let modelToUse = requestedModel || config.model;
-
-            // Find which provider has this model
-            let providerName =
-                (Object.keys(providers) as Array<keyof typeof providers>).find(
-                    (provider: keyof typeof providers) => (providers[provider].models as Record<string, { name: string }>)[modelToUse]
-                ) || config.provider;
-
-            // Validate provider exists in provider_maps
-            if (
-                !Object.keys(provider_maps).find((provider) => provider_maps[provider as ProviderKey].includes(providerName))
-            ) {
-                console.log(`⚠️ [${requestId}] Provider ${providerName} not found in provider_maps, falling back to config`);
-                providerName = config.provider;
-                modelToUse = config.model;
-            }
-
-            const finalProvider = Object.keys(provider_maps).find((provider) => provider_maps[provider as ProviderKey].includes(providerName)) as ProviderKey;
-
-            // Validate the model works with the provider function
-            try {
-                if (!finalProvider || !providerFunctions[finalProvider]) {
-                    console.log(`⚠️ [${requestId}] Invalid provider ${finalProvider}, using config defaults`);
-                    return { model: config.model, provider: config.provider as ProviderKey };
-                }
-
-                // Try to initialize the model to ensure it's valid
-                providerFunctions[finalProvider](modelToUse);
-
-                console.log(`✅ [${requestId}] Validated model-provider pair:`, { model: modelToUse, provider: finalProvider });
-                return { model: modelToUse, provider: finalProvider };
-            } catch (error) {
-                console.log(`⚠️ [${requestId}] Model ${modelToUse} not valid for provider ${finalProvider}, using config defaults`, error);
-                return { model: config.model, provider: config.provider as ProviderKey };
-            }
-        };
-
         // Create a new thread if none provided
         let isNewThread = false;
 
@@ -233,7 +151,7 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
                     throw new Error('Failed to generate thread ID');
                 }
 
-                const { model: initialModel, provider: initialProvider } = getValidModelAndProvider(model);
+                const { model: initialModel, provider: initialProvider } = await getValidModelAndProvider(model, requestId);
 
                 const newThread = {
                     id: newThreadId,
@@ -373,14 +291,14 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
         // --- Model/Provider selection ---
         console.log(`🤖 [${requestId}] Selecting AI model and provider`);
         let userModel: string;
-        let provider: ProviderKey;
+        let provider: string;
 
         // Use existing model/provider from database if thread exists, otherwise use client selection
         if (userData && userData.model && userData.provider) {
             console.log(`🔄 [${requestId}] Validating existing model/provider from database`);
 
             // Validate the stored model/provider are still valid
-            const { model: validatedModel, provider: validatedProvider } = getValidModelAndProvider(userData.model);
+            const { model: validatedModel, provider: validatedProvider } = await getValidModelAndProvider(userData.model, requestId);
 
             // Check if validation changed the model/provider (meaning the stored ones were invalid)
             if (validatedModel !== userData.model || validatedProvider !== userData.provider) {
@@ -402,7 +320,7 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
         } else {
             console.log(`🆕 [${requestId}] Determining model/provider from client selection`);
             const requestedModel = model || userSettings.model;
-            const { model: validatedModel, provider: validatedProvider } = getValidModelAndProvider(requestedModel);
+            const { model: validatedModel, provider: validatedProvider } = await getValidModelAndProvider(requestedModel, requestId);
 
             userModel = validatedModel;
             provider = validatedProvider;
@@ -414,19 +332,14 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
             });
         }
 
-        // --- Append new user message ---
-        console.log(`➕ [${requestId}] Adding user message to conversation history`);
-        convoHistory.push({ role: 'user', content: userPrompt });
-        console.log(`📊 [${requestId}] Updated conversation history:`, {
-            totalMessages: convoHistory.length,
-            userMessageLength: userPrompt.length
-        });
-
         // --- Special handling for first message: Generate study materials directly ---
-        if (convoHistory.length === 2) {
+        if (convoHistory.length === 1) {
             console.log(`🎯 [${requestId}] First message detected, generating study materials directly`);
 
             try {
+                // Add user message to conversation history for saving
+                convoHistory.push({ role: 'user', content: userPrompt });
+
                 // Save the conversation to database first
                 console.log(`💾 [${requestId}] Saving initial conversation to database`);
                 const convoHistoryWithoutSystem = convoHistory.filter(msg => msg.role !== 'system');
@@ -464,7 +377,11 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
 
                 // Generate title
                 console.log(`🏷️ [${requestId}] Generating conversation title`);
-                const convoTitle = await generateTitle(convoHistory, config.model, config.provider as ProviderKey);
+                const convoTitle = await generateTitle({
+                    convoHistory,
+                    userModel: config.model,
+                    provider: config.provider as string
+                });
                 console.log(`✅ [${requestId}] Title generated: ${convoTitle}`);
 
                 // Update thread with title
@@ -499,66 +416,21 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
             }
         }
 
-        // --- Initialize AI Model ---
-        let aiModel = providerFunctions[provider](userModel) as LanguageModelV1;
-
-        const tools = modeObj.tools || {};
-        
-        console.log(`🛠️ [${requestId}] AI generation setup:`, {
-            toolsCount: Object.keys(tools).length,
-            toolsList: Object.keys(tools),
-            systemPromptLength: systemPrompt.length,
-            systemPromptPreview: systemPrompt.substring(0, 200) + '...',
-            conversationHistoryLength: convoHistory.length,
-            systemMessageIncluded: convoHistory[0]?.role === 'system'
-        });
-        
         // --- AI Generation ---
-        console.log(`🧠 [${requestId}] Starting AI text generation with pre-built conversation history`);
-        const aiStartTime = Date.now();
+        const tools = modeObj.tools || {};
         let generatedText: string;
         try {
-            console.log(`📤 [${requestId}] Sending to AI model:`, {
-                model: userModel,
-                provider: provider,
-                messageCount: convoHistory.length,
-                firstMessageRole: convoHistory[0]?.role,
-                lastMessageRole: convoHistory[convoHistory.length - 1]?.role,
-                toolsEnabled: Object.keys(tools).length > 0,
-                maxSteps: 25
-            });
-            
-            const result = await generateText({
-                model: aiModel,
-                messages: convoHistory,
-                tools: tools,
+            generatedText = await generateAIResponse({
+                systemPrompt,
+                userPrompt,
+                convoHistory,
+                userModel,
+                provider,
+                tools,
                 maxSteps: 25,
-            });
-            generatedText = result.text;
-            
-            const aiEndTime = Date.now();
-            const aiDuration = aiEndTime - aiStartTime;
-            
-            console.log(`✅ [${requestId}] AI generation completed:`, {
-                duration: `${aiDuration}ms`,
-                generatedTextLength: generatedText.length,
-                generatedTextPreview: generatedText.substring(0, 200) + (generatedText.length > 200 ? '...' : ''),
-                hasUsage: !!result.usage,
-                usageTokens: result.usage ? {
-                    promptTokens: result.usage.promptTokens,
-                    completionTokens: result.usage.completionTokens,
-                    totalTokens: result.usage.totalTokens
-                } : 'none'
+                requestId
             });
         } catch (error) {
-            const aiEndTime = Date.now();
-            const aiDuration = aiEndTime - aiStartTime;
-            console.error(`❌ [${requestId}] AI generation failed after ${aiDuration}ms:`, error);
-            console.error(`❌ [${requestId}] AI error details:`, {
-                errorName: error instanceof Error ? error.name : 'Unknown',
-                errorMessage: error instanceof Error ? error.message : String(error),
-                errorStack: error instanceof Error ? error.stack : 'No stack trace'
-            });
             return new Response(
                 JSON.stringify({ error: `Failed to generate AI response: ${error}` }),
                 {
@@ -582,7 +454,11 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
             console.log(`🏷️ [${requestId}] Generating conversation title`);
             const titleStartTime = Date.now();
             try {
-                convoTitle = await generateTitle(convoHistory, userModel, provider);
+                convoTitle = await generateTitle({
+                    convoHistory,
+                    userModel,
+                    provider
+                });
                 const titleEndTime = Date.now();
                 const titleDuration = titleEndTime - titleStartTime;
                 console.log(`✅ [${requestId}] Title generated successfully:`, {
@@ -717,53 +593,5 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
         );
     }
 };
-
-async function generateTitle(convoHistory: any[], userModel: string, provider: ProviderKey) {
-    const titleRequestId = nanoid();
-    console.log(`🏷️ [${titleRequestId}] Starting title generation:`, {
-        conversationLength: convoHistory.length,
-        model: userModel,
-        provider: provider
-    });
-    
-    try {
-        const titleStartTime = Date.now();
-        const { text: generatedText } = await generateText({
-            model: providerFunctions[provider](userModel) as LanguageModelV1,
-            messages: [
-                {
-                    role: 'system',
-                    content: 'You are a helpful assistant that generates concise, descriptive titles for conversations.',
-                },
-                ...convoHistory,
-                {
-                    role: 'user',
-                    content: 'Please generate a concise title for this conversation.',
-                },
-            ],
-        });
-        
-        const titleEndTime = Date.now();
-        const titleDuration = titleEndTime - titleStartTime;
-        
-        console.log(`✅ [${titleRequestId}] Title generation completed:`, {
-            duration: `${titleDuration}ms`,
-            generatedTitle: generatedText,
-            titleLength: generatedText.length
-        });
-        
-        return generatedText;
-    } catch (error) {
-        console.error(`❌ [${titleRequestId}] Error in generateTitle:`, error);
-        console.error(`❌ [${titleRequestId}] Title generation error details:`, {
-            errorName: error instanceof Error ? error.name : 'Unknown',
-            errorMessage: error instanceof Error ? error.message : String(error),
-            conversationLength: convoHistory.length,
-            model: userModel,
-            provider: provider
-        });
-        throw error;
-    }
-}
 
 export const prerender = false;
