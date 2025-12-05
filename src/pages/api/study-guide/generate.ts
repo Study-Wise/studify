@@ -7,7 +7,6 @@ import { eq } from 'drizzle-orm';
 import { threadsTable } from '../../../db/schema';
 import { isValidEmail } from '../../../lib/validation';
 import { generateStudyGuide } from '../../../lib/content/generateStudyGuide';
-import config from '../../../lib/config';
 
 export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();
@@ -98,11 +97,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
         // Generate the study guide
         console.log(`🤖 [${requestId}] Generating study guide`);
-        const userModel = thread.model || config.model;
-        const provider = (thread.provider || config.provider);
-
-        console.log(`🤖 [${requestId}] Using model: ${userModel}, provider: ${provider}`);
-        const content = await generateStudyGuide(threadId, user_email, thread.category, thread.mode, userModel, provider);
+        const content = await generateStudyGuide(threadId, user_email);
 
         // Save the generated study guide to the database
         console.log(`💾 [${requestId}] Saving study guide to database`);

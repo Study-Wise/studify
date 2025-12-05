@@ -4,15 +4,24 @@ import categories from '../modes';
 import config from '../config';
 import desmosSection from '../promptTemplates/desmos';
 import stepByStepHTML from '../promptTemplates/stepByStepHTML';
+import { db } from '../../db/initialize';
+import { eq } from 'drizzle-orm';
+import { threadsTable } from '../../db/schema';
 
-export async function generateStudyGuide(
-    threadId: string,
-    userEmail: string | null,
-    category: string,
-    mode: string,
-    userModel: string,
-    provider: string
-) {
+export async function generateStudyGuide(threadId: string, userEmail: string | null) {
+    // Fetch the thread from database
+    const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
+
+    if (threads.length === 0) {
+        throw new Error('Thread not found');
+    }
+
+    const thread = threads[0];
+    const category = thread.category;
+    const mode = thread.mode;
+    const userModel = thread.model || config.model;
+    const provider = thread.provider || config.provider;
+
     // Get conversation history
     const messages = await getMessages(threadId, userEmail);
 

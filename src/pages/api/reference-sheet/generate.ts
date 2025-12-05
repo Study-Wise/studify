@@ -7,7 +7,6 @@ import { eq } from 'drizzle-orm';
 import { threadsTable } from '../../../db/schema';
 import { isValidEmail } from '../../../lib/validation';
 import { generateReferenceSheet } from '../../../lib/content/generateReferenceSheet';
-import config from '../../../lib/config';
 
 export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();
@@ -98,11 +97,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
         // Generate the reference sheet
         console.log(`🤖 [${requestId}] Generating reference sheet`);
-        const userModel = thread.model || config.model;
-        const provider = thread.provider || config.provider;
-
-        console.log(`🤖 [${requestId}] Using model: ${userModel}, provider: ${provider}`);
-        const content = await generateReferenceSheet(threadId, user_email, thread.category, thread.mode, userModel, provider);
+        const content = await generateReferenceSheet(threadId, user_email);
 
         // Save the generated reference sheet to the database
         console.log(`💾 [${requestId}] Saving reference sheet to database`);
