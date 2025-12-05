@@ -1,6 +1,6 @@
 ---
 import Layout from '../../../../layouts/Layout.astro';
-import { getInfographic } from '../../../../lib/content/getInfographic';
+import { getLatestInfographic } from '../../../../lib/content/getLatestInfographic';
 import { checkThreadAccess } from '../../../../lib/auth/checkThreadAccess';
 import '../../../../styles/pages/infographic.scss';
 
@@ -20,7 +20,7 @@ if (!userId && !isPublic) {
 
 // Get the infographic only if authorized or public
 const infographic = (isAuthorized || isPublic) && id
-    ? await getInfographic(id)
+    ? await getLatestInfographic(id)
     : null;
 
 // Extract URL from uploadthing response
