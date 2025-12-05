@@ -34,6 +34,13 @@ const providers = {
     //         'grok-3-mini': { name: 'Grok 3 Mini' },
     //     },
     // },
+    vercel: {
+        name: 'Vercel',
+        models: {
+            'v0-1.5-md': { name: 'Vercel 1.5 Medium', selectableInUI: false },
+            'v0-1.5-lg': { name: 'Vercel 1.5 Large', selectableInUI: false },
+        },
+    },
 };
 
 const models = Object.values(providers).flatMap((p: any) => Object.values(p.models));
