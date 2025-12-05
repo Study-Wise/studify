@@ -17,8 +17,6 @@ export async function generateWebpage(threadId: string, userEmail: string | null
     const thread = threads[0];
     const category = thread.category;
     const mode = thread.mode;
-    const userModel = thread.model || config.model;
-    const provider = thread.provider || config.provider;
 
     // Get conversation history
     const messages = await getMessages(threadId, userEmail);
@@ -72,9 +70,9 @@ Make it engaging, educational, and visually appealing!`;
         ...conversationMessages
     ];
 
-    // Generate the webpage
+    // Generate the webpage using vercel/v0-1.5-md model
     const result = await generateText({
-        model: `${provider}/${userModel}`,
+        model: 'vercel/v0-1.5-md',
         messages: messagesForAI,
         temperature: 0.7,
     });
