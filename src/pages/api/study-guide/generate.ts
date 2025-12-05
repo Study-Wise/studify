@@ -6,7 +6,7 @@ import { db } from '../../../db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '../../../db/schema';
 import { isValidEmail } from '../../../lib/validation';
-import { generateStudyGuide } from '../../../lib/content/generateStudyGuide';
+import { generateStudyGuide } from '../../../lib/content/generate/studyGuide';
 
 export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();

@@ -6,7 +6,7 @@ import { db } from '../../../db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '../../../db/schema';
 import { isValidEmail } from '../../../lib/validation';
-import { generateReferenceSheet } from '../../../lib/content/generateReferenceSheet';
+import { generateReferenceSheet } from '../../../lib/content/generate/referenceSheet';
 
 export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();

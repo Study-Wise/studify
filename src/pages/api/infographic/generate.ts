@@ -6,7 +6,7 @@ import { db } from '../../../db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '../../../db/schema';
 import { isValidEmail } from '../../../lib/validation';
-import { generateInfographic } from '../../../lib/generateInfographic';
+import { generateInfographic } from '../../../lib/content/generate/infographic';
 import config from '../../../lib/config';
 
 export const POST: APIRoute = async ({ request, locals }) => {

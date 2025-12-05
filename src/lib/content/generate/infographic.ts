@@ -1,9 +1,9 @@
 import { generateText } from 'ai';
-import { db } from '../db/initialize';
+import { db } from '../../../db/initialize';
 import { eq } from 'drizzle-orm';
-import { threadsTable } from '../db/schema';
-import { getMessages } from './threads';
-import { generateImage } from './genai-image';
+import { threadsTable } from '../../../db/schema';
+import { getMessages } from '../../threads';
+import { generateImage } from '../../genai-image';
 
 export async function generateInfographic(
     threadId: string,
