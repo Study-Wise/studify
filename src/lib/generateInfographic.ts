@@ -1,12 +1,16 @@
-import { generateText } from 'ai';
-import { openai } from '@ai-sdk/openai';
+import { generateText, type LanguageModelV1 } from 'ai';
 import { db } from '../db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '../db/schema';
 import { getMessages } from './threads';
 import { generateImage } from './genai-image';
 
-export async function generateInfographic(threadId: string, userEmail: string | null) {
+export async function generateInfographic(
+    threadId: string,
+    userEmail: string | null,
+    userModel: string,
+    provider: string
+) {
     // Get conversation history
     const messages = await getMessages(threadId, userEmail);
 
@@ -31,8 +35,9 @@ Your description should be clear, visual, and specific about:
 
 Keep it under 1000 characters. Be specific about visual elements, diagrams, icons, and text placement.`;
 
+    const providerFunction = await import(`@ai-sdk/${provider}`);
     const descriptionResult = await generateText({
-        model: openai('gpt-4.1'),
+        model: providerFunction[provider](userModel) as LanguageModelV1,
         messages: [
             {
                 role: 'system',
