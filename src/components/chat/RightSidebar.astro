@@ -2,11 +2,12 @@
 import '../../styles/components/chat/right-sidebar.scss';
 import type { ChatRightSidebarProps } from '../../lib/types';
 
-const { hasReferenceSheet, hasStudyGuide, hasInfographic, threadId, category, mode } = Astro.props as ChatRightSidebarProps;
+const { hasReferenceSheet, hasStudyGuide, hasInfographic, hasWebpage, threadId, category, mode } = Astro.props as ChatRightSidebarProps;
 
 const referenceSheetUrl = `/${category}/${mode}/reference-sheet/${threadId}`;
 const studyGuideUrl = `/${category}/${mode}/study-guide/${threadId}`;
 const infographicUrl = `/${category}/${mode}/infographic/${threadId}`;
+const webpageUrl = `/${category}/${mode}/webpage/${threadId}`;
 ---
 <aside class="chat-right-sidebar">
     <div class="chat-right-sidebar-content">
@@ -99,6 +100,36 @@ const infographicUrl = `/${category}/${mode}/infographic/${threadId}`;
                 )}
             </div>
         </div>
+
+        <div class="sidebar-section">
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="material-symbols-outlined">web</span>
+                    <h3>Webpage</h3>
+                </div>
+                {hasWebpage && (
+                    <button class="regenerate-btn" id="regenerate-webpage-btn" title="Regenerate webpage" data-thread-id={threadId}>
+                        <span class="material-symbols-outlined">refresh</span>
+                    </button>
+                )}
+            </div>
+            <div class="section-body">
+                {hasWebpage ? (
+                    <a href={webpageUrl} class="view-full-btn" target="_blank">
+                        <span class="material-symbols-outlined">open_in_new</span>
+                        <span>View Webpage</span>
+                    </a>
+                ) : (
+                    <div class="empty-state">
+                        <p class="empty-message">No webpage generated yet.</p>
+                        <button class="generate-btn" id="generate-webpage-btn" data-thread-id={threadId}>
+                            <span class="material-symbols-outlined">web</span>
+                            <span>Generate Webpage</span>
+                        </button>
+                    </div>
+                )}
+            </div>
+        </div>
     </div>
 </aside>
 
@@ -106,9 +137,11 @@ const infographicUrl = `/${category}/${mode}/infographic/${threadId}`;
     const generateInfographicBtn = document.getElementById('generate-infographic-btn');
     const generateReferenceSheetBtn = document.getElementById('generate-reference-sheet-btn');
     const generateStudyGuideBtn = document.getElementById('generate-study-guide-btn');
+    const generateWebpageBtn = document.getElementById('generate-webpage-btn');
     const regenerateInfographicBtn = document.getElementById('regenerate-infographic-btn');
     const regenerateReferenceSheetBtn = document.getElementById('regenerate-reference-sheet-btn');
     const regenerateStudyGuideBtn = document.getElementById('regenerate-study-guide-btn');
+    const regenerateWebpageBtn = document.getElementById('regenerate-webpage-btn');
 
     async function generateInfographic(threadId: string, isRegenerate: boolean = false) {
         const btn = isRegenerate ? regenerateInfographicBtn : generateInfographicBtn;
@@ -220,6 +253,43 @@ const infographicUrl = `/${category}/${mode}/infographic/${threadId}`;
         }
     }
 
+    async function generateWebpage(threadId: string, isRegenerate: boolean = false) {
+        const btnId = isRegenerate ? 'regenerate-webpage-btn' : 'generate-webpage-btn';
+        const btn = document.getElementById(btnId);
+        if (!btn) return;
+
+        // Disable button and show loading state
+        btn.setAttribute('disabled', 'true');
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = `<span class="material-symbols-outlined spinning">progress_activity</span><span>${isRegenerate ? 'Regenerating...' : 'Generating...'}</span>`;
+
+        try {
+            const response = await fetch('/api/webpage/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ threadId }),
+            });
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                // Reload the page to show the new webpage
+                window.location.reload();
+            } else {
+                throw new Error(data.error || 'Failed to generate webpage');
+            }
+        } catch (error) {
+            console.error('Error generating webpage:', error);
+            alert(error instanceof Error ? error.message : 'Failed to generate webpage. Please try again.');
+
+            // Restore button state
+            btn.removeAttribute('disabled');
+            btn.innerHTML = originalContent;
+        }
+    }
+
     // Generate buttons
     if (generateInfographicBtn) {
         generateInfographicBtn.addEventListener('click', () => {
@@ -244,6 +314,15 @@ const infographicUrl = `/${category}/${mode}/infographic/${threadId}`;
             const threadId = generateStudyGuideBtn.getAttribute('data-thread-id');
             if (threadId) {
                 generateStudyGuide(threadId, false);
+            }
+        });
+    }
+
+    if (generateWebpageBtn) {
+        generateWebpageBtn.addEventListener('click', () => {
+            const threadId = generateWebpageBtn.getAttribute('data-thread-id');
+            if (threadId) {
+                generateWebpage(threadId, false);
             }
         });
     }
@@ -277,6 +356,17 @@ const infographicUrl = `/${category}/${mode}/infographic/${threadId}`;
             if (threadId) {
                 if (confirm('Are you sure you want to regenerate the study guide?')) {
                     generateStudyGuide(threadId, true);
+                }
+            }
+        });
+    }
+
+    if (regenerateWebpageBtn) {
+        regenerateWebpageBtn.addEventListener('click', () => {
+            const threadId = regenerateWebpageBtn.getAttribute('data-thread-id');
+            if (threadId) {
+                if (confirm('Are you sure you want to regenerate the webpage? This will replace the existing one.')) {
+                    generateWebpage(threadId, true);
                 }
             }
         });
