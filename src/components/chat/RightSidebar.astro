@@ -14,36 +14,6 @@ const webpageUrl = `/${category}/${mode}/webpage/${threadId}`;
         <div class="sidebar-section">
             <div class="section-header">
                 <div class="section-title">
-                    <span class="material-symbols-outlined">description</span>
-                    <h3>Reference Sheet</h3>
-                </div>
-                {hasReferenceSheet && (
-                    <button class="regenerate-btn" id="regenerate-reference-sheet-btn" title="Regenerate reference sheet" data-thread-id={threadId}>
-                        <span class="material-symbols-outlined">refresh</span>
-                    </button>
-                )}
-            </div>
-            <div class="section-body">
-                {hasReferenceSheet ? (
-                    <a href={referenceSheetUrl} class="view-full-btn" target="_blank">
-                        <span class="material-symbols-outlined">open_in_new</span>
-                        <span>View Full Reference Sheet</span>
-                    </a>
-                ) : (
-                    <div class="empty-state">
-                        <p class="empty-message">No reference sheet generated yet.</p>
-                        <button class="generate-btn" id="generate-reference-sheet-btn" data-thread-id={threadId}>
-                            <span class="material-symbols-outlined">description</span>
-                            <span>Generate Reference Sheet</span>
-                        </button>
-                    </div>
-                )}
-            </div>
-        </div>
-
-        <div class="sidebar-section">
-            <div class="section-header">
-                <div class="section-title">
                     <span class="material-symbols-outlined">menu_book</span>
                     <h3>Study Guide</h3>
                 </div>
@@ -65,6 +35,36 @@ const webpageUrl = `/${category}/${mode}/webpage/${threadId}`;
                         <button class="generate-btn" id="generate-study-guide-btn" data-thread-id={threadId}>
                             <span class="material-symbols-outlined">menu_book</span>
                             <span>Generate Study Guide</span>
+                        </button>
+                    </div>
+                )}
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="material-symbols-outlined">description</span>
+                    <h3>Reference Sheet</h3>
+                </div>
+                {hasReferenceSheet && (
+                    <button class="regenerate-btn" id="regenerate-reference-sheet-btn" title="Regenerate reference sheet" data-thread-id={threadId}>
+                        <span class="material-symbols-outlined">refresh</span>
+                    </button>
+                )}
+            </div>
+            <div class="section-body">
+                {hasReferenceSheet ? (
+                    <a href={referenceSheetUrl} class="view-full-btn" target="_blank">
+                        <span class="material-symbols-outlined">open_in_new</span>
+                        <span>View Full Reference Sheet</span>
+                    </a>
+                ) : (
+                    <div class="empty-state">
+                        <p class="empty-message">No reference sheet generated yet.</p>
+                        <button class="generate-btn" id="generate-reference-sheet-btn" data-thread-id={threadId}>
+                            <span class="material-symbols-outlined">description</span>
+                            <span>Generate Reference Sheet</span>
                         </button>
                     </div>
                 )}
@@ -171,7 +171,7 @@ const webpageUrl = `/${category}/${mode}/webpage/${threadId}`;
             }
         } catch (error) {
             console.error('Error generating infographic:', error);
-            showError(error instanceof Error ? error.message : 'Failed to generate infographic. Please try again.');
+            window.showError(error instanceof Error ? error.message : 'Failed to generate infographic. Please try again.');
 
             // Restore button state
             btn.removeAttribute('disabled');
@@ -208,7 +208,7 @@ const webpageUrl = `/${category}/${mode}/webpage/${threadId}`;
             }
         } catch (error) {
             console.error('Error generating reference sheet:', error);
-            showError(error instanceof Error ? error.message : 'Failed to generate reference sheet. Please try again.');
+            window.showError(error instanceof Error ? error.message : 'Failed to generate reference sheet. Please try again.');
 
             // Restore button state
             btn.removeAttribute('disabled');
@@ -245,7 +245,7 @@ const webpageUrl = `/${category}/${mode}/webpage/${threadId}`;
             }
         } catch (error) {
             console.error('Error generating study guide:', error);
-            showError(error instanceof Error ? error.message : 'Failed to generate study guide. Please try again.');
+            window.showError(error instanceof Error ? error.message : 'Failed to generate study guide. Please try again.');
 
             // Restore button state
             btn.removeAttribute('disabled');
@@ -282,7 +282,7 @@ const webpageUrl = `/${category}/${mode}/webpage/${threadId}`;
             }
         } catch (error) {
             console.error('Error generating webpage:', error);
-            showError(error instanceof Error ? error.message : 'Failed to generate webpage. Please try again.');
+            window.showError(error instanceof Error ? error.message : 'Failed to generate webpage. Please try again.');
 
             // Restore button state
             btn.removeAttribute('disabled');
