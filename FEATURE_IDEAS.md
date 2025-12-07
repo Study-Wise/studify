@@ -6,15 +6,15 @@ This document contains potential features that could be added to enhance the Stu
 
 ### Spaced Repetition System
 
-- [ ] Flashcard generation from chat threads
+- [x] Flashcard generation from chat threads
 - [ ] Smart review scheduling using algorithms like SM-2
 - [ ] Progress tracking and retention analytics
 
 ### Practice Problems & Quizzes
 
-- [ ] Auto-generate practice questions from thread content
-- [ ] Multiple question types (multiple choice, short answer, problem-solving)
-- [ ] Instant feedback and explanations for wrong answers
+- [x] Auto-generate practice questions from thread content
+- [x] Multiple question types (multiple choice, short answer, problem-solving)
+- [x] Instant feedback and explanations for wrong answers
 - [ ] Difficulty progression based on performance
 
 ### Learning Progress Tracking
@@ -35,7 +35,7 @@ This document contains potential features that could be added to enhance the Stu
 
 ### Study Groups
 
-- [ ] Share threads with other users
+- [x] Share threads with other users (via public threads)
 - [ ] Collaborative chat sessions
 - [ ] Group study guide creation
 - [ ] Peer review system
@@ -53,21 +53,22 @@ This document contains potential features that could be added to enhance the Stu
 
 - [ ] Video explanations generated from threads
 - [ ] Audio summaries for listening while commuting
-- [ ] Interactive diagrams and visualizations
+- [x] Interactive diagrams and visualizations (infographics via Ideogram API)
+- [x] Interactive mind maps (HTML/CSS/SVG based)
 - [ ] 3D models for STEM subjects
 
 ### Document Analysis
 
-- [ ] Upload PDFs, textbooks, lecture notes
+- [x] Upload PDFs, textbooks, lecture notes (via UploadThing)
 - [ ] Ask questions about uploaded content
 - [ ] Auto-generate summaries of documents
 - [ ] Extract key concepts and definitions
 
 ### Homework Helper
 
-- [ ] Photo upload of homework problems
-- [ ] Step-by-step solution guidance
-- [ ] Similar problem generation for practice
+- [x] Photo upload of homework problems (via UploadThing)
+- [x] Step-by-step solution guidance (interactive quizzes)
+- [x] Similar problem generation for practice (practice questions API)
 - [ ] Citation and source checking
 
 ## Personalization
@@ -91,9 +92,9 @@ This document contains potential features that could be added to enhance the Stu
 ### Additional AI Tools
 
 - [ ] Calculator tool for complex math
-- [ ] Code execution for Python, Java, etc. (expand beyond JS)
-- [ ] Wikipedia/academic database integration
-- [ ] YouTube educational video search
+- [x] Code execution for JavaScript (JS only, not Python/Java)
+- [x] Web search integration (via Exa API for articles, videos, resources)
+- [x] YouTube educational video search (via resources API)
 - [ ] Translation tool for foreign language modes
 
 ### Voice Interaction
@@ -146,6 +147,7 @@ This document contains potential features that could be added to enhance the Stu
 
 ### Public Thread Library
 
+- [x] Public threads system (`isPublic` field implemented)
 - [ ] Browse popular study threads (leveraging `isPublic` field)
 - [ ] Upvote/downvote helpful threads
 - [ ] Comment and discuss
@@ -161,15 +163,15 @@ This document contains potential features that could be added to enhance the Stu
 
 ### Offline Mode
 
-- [ ] Download threads for offline access
-- [ ] Offline-capable study guides
-- [ ] Sync when back online
-- [ ] Enhanced PWA capabilities
+- [x] Download threads for offline access (PWA with service worker)
+- [x] Offline-capable study guides (cached content)
+- [x] Sync when back online (service worker auto-update)
+- [x] Enhanced PWA capabilities (full PWA implementation with manifest)
 
 ### Multi-Language Support
 
 - [ ] Interface localization
-- [ ] Study in multiple languages
+- [x] Study in multiple languages (Foreign Languages category with Spanish, French, German, Italian modes)
 - [ ] Language-specific AI models
 
 ### Mobile Apps
@@ -204,7 +206,7 @@ This document contains potential features that could be added to enhance the Stu
 
 ### Concept Mapping
 
-- [ ] Auto-generate mind maps from threads
+- [x] Auto-generate mind maps from threads (interactive HTML mind maps)
 - [ ] Visual knowledge graphs
 - [ ] Prerequisite relationship visualization
 - [ ] Learning path recommendations
