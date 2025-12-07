@@ -109,6 +109,19 @@ interface SettingItem {
     default: string;
 }
 
+interface SidebarSectionProps {
+    title: string;
+    icon: string;
+    hasContent: boolean;
+    threadId: string;
+    viewUrl: string;
+    viewButtonText: string;
+    emptyMessage: string;
+    generateButtonId: string;
+    generateButtonText: string;
+    regenerateButtonId: string;
+}
+
 export type {
     Mode,
     Category,
@@ -129,5 +142,6 @@ export type {
     SelectorSettings,
     ThreadData,
     UploadOptions,
-    SettingItem
+    SettingItem,
+    SidebarSectionProps
 };
