@@ -92,8 +92,6 @@ This document contains potential features that could be added to enhance the Stu
 
 - [ ] Calculator tool for complex math
 - [ ] Code execution for Python, Java, etc. (expand beyond JS)
-- [ ] Graph/chart generation tool
-- [ ] LaTeX equation rendering tool
 - [ ] Wikipedia/academic database integration
 - [ ] YouTube educational video search
 - [ ] Translation tool for foreign language modes
