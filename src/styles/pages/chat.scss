@@ -216,18 +216,13 @@ footer, .chat-toolbar {
 
     display: grid;
     grid-template-rows: 1fr auto;
-
-    // Adds space for the scrollbar to prevent layout shift in supporting browsers.
-    // Note: Not supported in Safari or any iOS Browser (WebKit).
-    @supports (scrollbar-gutter: stable) {
-        scrollbar-gutter: stable;
-    }
+    min-height: 0; // Critical for grid items to respect overflow
 
 }
 
 .chat-messages {
     overflow-y: auto;
-    height: 100%;
+    min-height: 0; // Critical for grid items to respect overflow
     box-sizing: border-box;
     padding: 2rem;
     display: flex;
@@ -239,6 +234,12 @@ footer, .chat-toolbar {
     background-image:
         radial-gradient(circle at 20% 50%, rgba(from var(--section-title) r g b / 0.015) 0%, transparent 50%),
         radial-gradient(circle at 80% 80%, rgba(from var(--section-title) r g b / 0.015) 0%, transparent 50%);
+
+    // Adds space for the scrollbar to prevent layout shift in supporting browsers.
+    // Note: Not supported in Safari or any iOS Browser (WebKit).
+    @supports (scrollbar-gutter: stable) {
+        scrollbar-gutter: stable;
+    }
 
     // Custom scrollbar styling
     &::-webkit-scrollbar {
