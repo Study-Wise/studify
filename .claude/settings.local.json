@@ -14,7 +14,8 @@
       "mcp__context7__get-library-docs",
       "Bash(pkill:*)",
       "Bash(grep:*)",
-      "Bash(git restore:*)"
+      "Bash(git restore:*)",
+      "Bash(node convert-indent.js)"
     ],
     "deny": [],
     "ask": []
