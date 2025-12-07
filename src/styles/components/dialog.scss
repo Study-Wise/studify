@@ -1,18 +1,28 @@
 // Dialog Component Styles
 
 .app-dialog {
-    border: none;
-    border-radius: 12px;
+    position: fixed;
+    inset: 50%;
+    translate: -50% -50%;
+
     padding: 0;
-    max-width: 500px;
+
     width: 90%;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+
     background: var(--card-background, #ffffff);
     color: var(--text-color, #333333);
 
+    border: none;
+    border-radius: 12px;
+
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     &::backdrop {
         background: rgba(0, 0, 0, 0.5);
-        backdrop-filter: blur(4px);
+
+        --bd: blur(4px);
+        -webkit-backdrop-filter: var(--bd);
+        backdrop-filter: var(--bd);
     }
 
     // Animation
