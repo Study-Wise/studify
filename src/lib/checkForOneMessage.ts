@@ -46,10 +46,10 @@ export async function checkForOneMessage({
                     ...nonSystemMessages
                 ];
 
-                // Generate welcome message
+                // Generate welcome message (pass a copy of convoHistory to avoid mutation)
                 const welcomeMessage = await generateWelcomeMessage({
                     systemPrompt,
-                    convoHistory,
+                    convoHistory: [...convoHistory],
                     userModel: thread.model || 'gpt-4.1',
                     provider: thread.provider || 'openai',
                     tools: modeObj?.tools || {},
