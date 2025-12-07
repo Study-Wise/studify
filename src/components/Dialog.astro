@@ -1,0 +1,147 @@
+---
+// Dialog component for displaying alerts and messages
+import '../styles/components/dialog.scss';
+---
+
+<dialog id="app-dialog" class="app-dialog">
+    <div class="dialog-content">
+        <div class="dialog-header">
+            <span class="material-symbols-outlined dialog-icon" aria-hidden="true">info</span>
+            <h2 class="dialog-title"></h2>
+        </div>
+        <div class="dialog-body">
+            <p class="dialog-message"></p>
+        </div>
+        <div class="dialog-footer">
+            <button class="dialog-button dialog-button-primary" type="button">
+                OK
+            </button>
+        </div>
+    </div>
+</dialog>
+
+<script is:inline>
+    /**
+     * Show a dialog with a message
+     * @param {string} message - The message to display
+     * @param {object} options - Optional configuration
+     * @param {string} options.title - Dialog title (default: "Alert")
+     * @param {string} options.icon - Material icon name (default: "info")
+     * @param {string} options.type - Dialog type: "info", "error", "warning", "success" (default: "info")
+     */
+    function showDialog(message, options = {}) {
+        const {
+            title = 'Alert',
+            icon = 'info',
+            type = 'info'
+        } = options;
+
+        const dialog = document.getElementById('app-dialog');
+        if (!dialog) {
+            console.error('Dialog element not found');
+            return;
+        }
+
+        const dialogContent = dialog.querySelector('.dialog-content');
+        const dialogIcon = dialog.querySelector('.dialog-icon');
+        const dialogTitle = dialog.querySelector('.dialog-title');
+        const dialogMessage = dialog.querySelector('.dialog-message');
+        const dialogButton = dialog.querySelector('.dialog-button-primary');
+
+        // Set content
+        dialogTitle.textContent = title;
+        dialogMessage.textContent = message;
+        dialogIcon.textContent = icon;
+
+        // Reset classes and apply type
+        dialogContent.className = 'dialog-content';
+        dialogContent.classList.add(`dialog-${type}`);
+
+        // Show dialog
+        dialog.showModal();
+
+        // Focus the OK button
+        dialogButton.focus();
+    }
+
+    /**
+     * Show an error dialog
+     * @param {string} message - The error message to display
+     */
+    function showError(message) {
+        showDialog(message, {
+            title: 'Error',
+            icon: 'error',
+            type: 'error'
+        });
+    }
+
+    /**
+     * Show a warning dialog
+     * @param {string} message - The warning message to display
+     */
+    function showWarning(message) {
+        showDialog(message, {
+            title: 'Warning',
+            icon: 'warning',
+            type: 'warning'
+        });
+    }
+
+    /**
+     * Show a success dialog
+     * @param {string} message - The success message to display
+     */
+    function showSuccess(message) {
+        showDialog(message, {
+            title: 'Success',
+            icon: 'check_circle',
+            type: 'success'
+        });
+    }
+
+    /**
+     * Show an info dialog
+     * @param {string} message - The info message to display
+     */
+    function showInfo(message) {
+        showDialog(message, {
+            title: 'Information',
+            icon: 'info',
+            type: 'info'
+        });
+    }
+
+    // Close dialog when clicking OK button or backdrop
+    document.addEventListener('DOMContentLoaded', () => {
+        const dialog = document.getElementById('app-dialog');
+        if (!dialog) return;
+
+        const closeButton = dialog.querySelector('.dialog-button-primary');
+
+        closeButton?.addEventListener('click', () => {
+            dialog.close();
+        });
+
+        // Close on backdrop click
+        dialog.addEventListener('click', (e) => {
+            if (e.target === dialog) {
+                dialog.close();
+            }
+        });
+
+        // Close on Escape key
+        dialog.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                dialog.close();
+            }
+        });
+    });
+
+    // Make functions available globally
+    window.showDialog = showDialog;
+    window.showError = showError;
+    window.showWarning = showWarning;
+    window.showSuccess = showSuccess;
+    window.showInfo = showInfo;
+</script>

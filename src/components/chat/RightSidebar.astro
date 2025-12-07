@@ -171,7 +171,7 @@ const webpageUrl = `/${category}/${mode}/webpage/${threadId}`;
             }
         } catch (error) {
             console.error('Error generating infographic:', error);
-            alert(error instanceof Error ? error.message : 'Failed to generate infographic. Please try again.');
+            showError(error instanceof Error ? error.message : 'Failed to generate infographic. Please try again.');
 
             // Restore button state
             btn.removeAttribute('disabled');
@@ -208,7 +208,7 @@ const webpageUrl = `/${category}/${mode}/webpage/${threadId}`;
             }
         } catch (error) {
             console.error('Error generating reference sheet:', error);
-            alert(error instanceof Error ? error.message : 'Failed to generate reference sheet. Please try again.');
+            showError(error instanceof Error ? error.message : 'Failed to generate reference sheet. Please try again.');
 
             // Restore button state
             btn.removeAttribute('disabled');
@@ -245,7 +245,7 @@ const webpageUrl = `/${category}/${mode}/webpage/${threadId}`;
             }
         } catch (error) {
             console.error('Error generating study guide:', error);
-            alert(error instanceof Error ? error.message : 'Failed to generate study guide. Please try again.');
+            showError(error instanceof Error ? error.message : 'Failed to generate study guide. Please try again.');
 
             // Restore button state
             btn.removeAttribute('disabled');
@@ -282,7 +282,7 @@ const webpageUrl = `/${category}/${mode}/webpage/${threadId}`;
             }
         } catch (error) {
             console.error('Error generating webpage:', error);
-            alert(error instanceof Error ? error.message : 'Failed to generate webpage. Please try again.');
+            showError(error instanceof Error ? error.message : 'Failed to generate webpage. Please try again.');
 
             // Restore button state
             btn.removeAttribute('disabled');

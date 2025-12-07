@@ -1,0 +1,193 @@
+// Dialog Component Styles
+
+.app-dialog {
+    border: none;
+    border-radius: 12px;
+    padding: 0;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    background: var(--card-background, #ffffff);
+    color: var(--text-color, #333333);
+
+    &::backdrop {
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+    }
+
+    // Animation
+    &[open] {
+        animation: dialog-fade-in 0.2s ease-out;
+    }
+
+    @keyframes dialog-fade-in {
+        from {
+            opacity: 0;
+            transform: scale(0.95) translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+    }
+}
+
+.dialog-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1.5rem;
+
+    // Type-specific styling
+    &.dialog-error {
+        .dialog-icon {
+            color: #ef4444;
+        }
+        .dialog-button-primary {
+            background-color: #ef4444;
+            &:hover {
+                background-color: #dc2626;
+            }
+        }
+    }
+
+    &.dialog-warning {
+        .dialog-icon {
+            color: #f59e0b;
+        }
+        .dialog-button-primary {
+            background-color: #f59e0b;
+            &:hover {
+                background-color: #d97706;
+            }
+        }
+    }
+
+    &.dialog-success {
+        .dialog-icon {
+            color: #10b981;
+        }
+        .dialog-button-primary {
+            background-color: #10b981;
+            &:hover {
+                background-color: #059669;
+            }
+        }
+    }
+
+    &.dialog-info {
+        .dialog-icon {
+            color: #3b82f6;
+        }
+        .dialog-button-primary {
+            background-color: #3b82f6;
+            &:hover {
+                background-color: #2563eb;
+            }
+        }
+    }
+}
+
+.dialog-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color, #e5e7eb);
+}
+
+.dialog-icon {
+    font-size: 28px;
+    font-weight: 500;
+}
+
+.dialog-title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    flex: 1;
+}
+
+.dialog-body {
+    padding: 0.5rem 0;
+}
+
+.dialog-message {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-color-secondary, #666666);
+}
+
+.dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding-top: 0.5rem;
+}
+
+.dialog-button {
+    padding: 0.625rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+
+    &:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: 2px;
+    }
+
+    &:active {
+        transform: scale(0.98);
+    }
+}
+
+.dialog-button-primary {
+    background-color: #3b82f6;
+    color: white;
+
+    &:hover {
+        background-color: #2563eb;
+    }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+    .app-dialog {
+        background: var(--card-background-dark, #1f2937);
+        color: var(--text-color-dark, #f3f4f6);
+
+        .dialog-header {
+            border-bottom-color: var(--border-color-dark, #374151);
+        }
+
+        .dialog-message {
+            color: var(--text-color-secondary-dark, #d1d5db);
+        }
+    }
+}
+
+// Responsive design
+@media (max-width: 640px) {
+    .app-dialog {
+        width: 95%;
+        max-width: none;
+    }
+
+    .dialog-content {
+        padding: 1.25rem;
+        gap: 1.25rem;
+    }
+
+    .dialog-title {
+        font-size: 1.125rem;
+    }
+
+    .dialog-message {
+        font-size: 0.9375rem;
+    }
+}
