@@ -31,6 +31,10 @@ interface FlashcardResult {
     content: string | null;
 }
 
+interface PracticeQuestionsResult {
+    content: string | null;
+}
+
 interface ThreadAccessResult {
     isAuthorized: boolean;
     isPublic: boolean;
@@ -45,6 +49,7 @@ interface ChatRightSidebarProps {
     hasMindMap: boolean;
     hasResources: boolean;
     hasFlashcard: boolean;
+    hasPracticeQuestions: boolean;
     threadId: string;
     category: string;
     mode: string;
@@ -112,6 +117,7 @@ export type {
     StudyGuideResult,
     MindMapResult,
     FlashcardResult,
+    PracticeQuestionsResult,
     ThreadAccessResult,
     ChatRightSidebarProps,
     ImageSize,
