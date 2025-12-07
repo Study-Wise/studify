@@ -1,6 +1,7 @@
 ---
 import '../../styles/components/chat/right-sidebar.scss';
 import type { ChatRightSidebarProps } from '../../lib/types';
+import SidebarSection from './SidebarSection.astro';
 
 const { hasReferenceSheet, hasStudyGuide, hasInfographic, hasWebpage, hasMindMap, hasResources, hasFlashcard, hasPracticeQuestions, threadId, category, mode, isPublic, isAuthorized } = Astro.props as ChatRightSidebarProps;
 
@@ -49,245 +50,109 @@ const practiceQuestionsUrl = `/${category}/${mode}/practice-questions/${threadId
                 </div>
             </div>
         )}
-        <div class="sidebar-section">
-            <div class="section-header">
-                <div class="section-title">
-                    <span class="material-symbols-outlined">menu_book</span>
-                    <h3>Study Guide</h3>
-                </div>
-                {hasStudyGuide && (
-                    <button class="regenerate-btn" id="regenerate-study-guide-btn" title="Regenerate study guide" data-thread-id={threadId}>
-                        <span class="material-symbols-outlined">refresh</span>
-                    </button>
-                )}
-            </div>
-            <div class="section-body">
-                {hasStudyGuide ? (
-                    <a href={studyGuideUrl} class="view-full-btn" target="_blank">
-                        <span class="material-symbols-outlined">open_in_new</span>
-                        <span>View Full Study Guide</span>
-                    </a>
-                ) : (
-                    <div class="empty-state">
-                        <p class="empty-message">No study guide generated yet.</p>
-                        <button class="generate-btn" id="generate-study-guide-btn" data-thread-id={threadId}>
-                            <span class="material-symbols-outlined">menu_book</span>
-                            <span>Generate Study Guide</span>
-                        </button>
-                    </div>
-                )}
-            </div>
-        </div>
+        <SidebarSection
+            title="Study Guide"
+            icon="menu_book"
+            hasContent={hasStudyGuide}
+            threadId={threadId}
+            viewUrl={studyGuideUrl}
+            viewButtonText="View Full Study Guide"
+            emptyMessage="No study guide generated yet."
+            generateButtonId="generate-study-guide-btn"
+            generateButtonText="Generate Study Guide"
+            regenerateButtonId="regenerate-study-guide-btn"
+        />
 
-        <div class="sidebar-section">
-            <div class="section-header">
-                <div class="section-title">
-                    <span class="material-symbols-outlined">description</span>
-                    <h3>Reference Sheet</h3>
-                </div>
-                {hasReferenceSheet && (
-                    <button class="regenerate-btn" id="regenerate-reference-sheet-btn" title="Regenerate reference sheet" data-thread-id={threadId}>
-                        <span class="material-symbols-outlined">refresh</span>
-                    </button>
-                )}
-            </div>
-            <div class="section-body">
-                {hasReferenceSheet ? (
-                    <a href={referenceSheetUrl} class="view-full-btn" target="_blank">
-                        <span class="material-symbols-outlined">open_in_new</span>
-                        <span>View Full Reference Sheet</span>
-                    </a>
-                ) : (
-                    <div class="empty-state">
-                        <p class="empty-message">No reference sheet generated yet.</p>
-                        <button class="generate-btn" id="generate-reference-sheet-btn" data-thread-id={threadId}>
-                            <span class="material-symbols-outlined">description</span>
-                            <span>Generate Reference Sheet</span>
-                        </button>
-                    </div>
-                )}
-            </div>
-        </div>
+        <SidebarSection
+            title="Reference Sheet"
+            icon="description"
+            hasContent={hasReferenceSheet}
+            threadId={threadId}
+            viewUrl={referenceSheetUrl}
+            viewButtonText="View Full Reference Sheet"
+            emptyMessage="No reference sheet generated yet."
+            generateButtonId="generate-reference-sheet-btn"
+            generateButtonText="Generate Reference Sheet"
+            regenerateButtonId="regenerate-reference-sheet-btn"
+        />
 
-        <div class="sidebar-section">
-            <div class="section-header">
-                <div class="section-title">
-                    <span class="material-symbols-outlined">image</span>
-                    <h3>Infographic</h3>
-                </div>
-                {hasInfographic && (
-                    <button class="regenerate-btn" id="regenerate-infographic-btn" title="Regenerate infographic" data-thread-id={threadId}>
-                        <span class="material-symbols-outlined">refresh</span>
-                    </button>
-                )}
-            </div>
-            <div class="section-body">
-                {hasInfographic ? (
-                    <a href={infographicUrl} class="view-full-btn" target="_blank">
-                        <span class="material-symbols-outlined">open_in_new</span>
-                        <span>View Infographic</span>
-                    </a>
-                ) : (
-                    <div class="empty-state">
-                        <p class="empty-message">No infographic generated yet.</p>
-                        <button class="generate-btn" id="generate-infographic-btn" data-thread-id={threadId}>
-                            <span class="material-symbols-outlined">add_photo_alternate</span>
-                            <span>Generate Infographic</span>
-                        </button>
-                    </div>
-                )}
-            </div>
-        </div>
+        <SidebarSection
+            title="Infographic"
+            icon="image"
+            hasContent={hasInfographic}
+            threadId={threadId}
+            viewUrl={infographicUrl}
+            viewButtonText="View Infographic"
+            emptyMessage="No infographic generated yet."
+            generateButtonId="generate-infographic-btn"
+            generateButtonText="Generate Infographic"
+            regenerateButtonId="regenerate-infographic-btn"
+        />
 
-        <div class="sidebar-section">
-            <div class="section-header">
-                <div class="section-title">
-                    <span class="material-symbols-outlined">style</span>
-                    <h3>Flashcards</h3>
-                </div>
-                {hasFlashcard && (
-                    <button class="regenerate-btn" id="regenerate-flashcard-btn" title="Regenerate flashcards" data-thread-id={threadId}>
-                        <span class="material-symbols-outlined">refresh</span>
-                    </button>
-                )}
-            </div>
-            <div class="section-body">
-                {hasFlashcard ? (
-                    <a href={flashcardUrl} class="view-full-btn" target="_blank">
-                        <span class="material-symbols-outlined">open_in_new</span>
-                        <span>View Flashcards</span>
-                    </a>
-                ) : (
-                    <div class="empty-state">
-                        <p class="empty-message">No flashcards generated yet.</p>
-                        <button class="generate-btn" id="generate-flashcard-btn" data-thread-id={threadId}>
-                            <span class="material-symbols-outlined">style</span>
-                            <span>Generate Flashcards</span>
-                        </button>
-                    </div>
-                )}
-            </div>
-        </div>
+        <SidebarSection
+            title="Flashcards"
+            icon="style"
+            hasContent={hasFlashcard}
+            threadId={threadId}
+            viewUrl={flashcardUrl}
+            viewButtonText="View Flashcards"
+            emptyMessage="No flashcards generated yet."
+            generateButtonId="generate-flashcard-btn"
+            generateButtonText="Generate Flashcards"
+            regenerateButtonId="regenerate-flashcard-btn"
+        />
 
-        <div class="sidebar-section">
-            <div class="section-header">
-                <div class="section-title">
-                    <span class="material-symbols-outlined">quiz</span>
-                    <h3>Practice Questions</h3>
-                </div>
-                {hasPracticeQuestions && (
-                    <button class="regenerate-btn" id="regenerate-practice-questions-btn" title="Regenerate practice questions" data-thread-id={threadId}>
-                        <span class="material-symbols-outlined">refresh</span>
-                    </button>
-                )}
-            </div>
-            <div class="section-body">
-                {hasPracticeQuestions ? (
-                    <a href={practiceQuestionsUrl} class="view-full-btn" target="_blank">
-                        <span class="material-symbols-outlined">open_in_new</span>
-                        <span>View Practice Questions</span>
-                    </a>
-                ) : (
-                    <div class="empty-state">
-                        <p class="empty-message">No practice questions generated yet.</p>
-                        <button class="generate-btn" id="generate-practice-questions-btn" data-thread-id={threadId}>
-                            <span class="material-symbols-outlined">quiz</span>
-                            <span>Generate Practice Questions</span>
-                        </button>
-                    </div>
-                )}
-            </div>
-        </div>
+        <SidebarSection
+            title="Practice Questions"
+            icon="quiz"
+            hasContent={hasPracticeQuestions}
+            threadId={threadId}
+            viewUrl={practiceQuestionsUrl}
+            viewButtonText="View Practice Questions"
+            emptyMessage="No practice questions generated yet."
+            generateButtonId="generate-practice-questions-btn"
+            generateButtonText="Generate Practice Questions"
+            regenerateButtonId="regenerate-practice-questions-btn"
+        />
 
-        <div class="sidebar-section">
-            <div class="section-header">
-                <div class="section-title">
-                    <span class="material-symbols-outlined">web</span>
-                    <h3>Webpage</h3>
-                </div>
-                {hasWebpage && (
-                    <button class="regenerate-btn" id="regenerate-webpage-btn" title="Regenerate webpage" data-thread-id={threadId}>
-                        <span class="material-symbols-outlined">refresh</span>
-                    </button>
-                )}
-            </div>
-            <div class="section-body">
-                {hasWebpage ? (
-                    <a href={webpageUrl} class="view-full-btn" target="_blank">
-                        <span class="material-symbols-outlined">open_in_new</span>
-                        <span>View Webpage</span>
-                    </a>
-                ) : (
-                    <div class="empty-state">
-                        <p class="empty-message">No webpage generated yet.</p>
-                        <button class="generate-btn" id="generate-webpage-btn" data-thread-id={threadId}>
-                            <span class="material-symbols-outlined">web</span>
-                            <span>Generate Webpage</span>
-                        </button>
-                    </div>
-                )}
-            </div>
-        </div>
+        <SidebarSection
+            title="Webpage"
+            icon="web"
+            hasContent={hasWebpage}
+            threadId={threadId}
+            viewUrl={webpageUrl}
+            viewButtonText="View Webpage"
+            emptyMessage="No webpage generated yet."
+            generateButtonId="generate-webpage-btn"
+            generateButtonText="Generate Webpage"
+            regenerateButtonId="regenerate-webpage-btn"
+        />
 
-        <div class="sidebar-section">
-            <div class="section-header">
-                <div class="section-title">
-                    <span class="material-symbols-outlined">hub</span>
-                    <h3>Mind Map</h3>
-                </div>
-                {hasMindMap && (
-                    <button class="regenerate-btn" id="regenerate-mind-map-btn" title="Regenerate mind map" data-thread-id={threadId}>
-                        <span class="material-symbols-outlined">refresh</span>
-                    </button>
-                )}
-            </div>
-            <div class="section-body">
-                {hasMindMap ? (
-                    <a href={mindMapUrl} class="view-full-btn" target="_blank">
-                        <span class="material-symbols-outlined">open_in_new</span>
-                        <span>View Mind Map</span>
-                    </a>
-                ) : (
-                    <div class="empty-state">
-                        <p class="empty-message">No mind map generated yet.</p>
-                        <button class="generate-btn" id="generate-mind-map-btn" data-thread-id={threadId}>
-                            <span class="material-symbols-outlined">hub</span>
-                            <span>Generate Mind Map</span>
-                        </button>
-                    </div>
-                )}
-            </div>
-        </div>
+        <SidebarSection
+            title="Mind Map"
+            icon="hub"
+            hasContent={hasMindMap}
+            threadId={threadId}
+            viewUrl={mindMapUrl}
+            viewButtonText="View Mind Map"
+            emptyMessage="No mind map generated yet."
+            generateButtonId="generate-mind-map-btn"
+            generateButtonText="Generate Mind Map"
+            regenerateButtonId="regenerate-mind-map-btn"
+        />
 
-        <div class="sidebar-section">
-            <div class="section-header">
-                <div class="section-title">
-                    <span class="material-symbols-outlined">travel_explore</span>
-                    <h3>Learning Resources</h3>
-                </div>
-                {hasResources && (
-                    <button class="regenerate-btn" id="regenerate-resources-btn" title="Regenerate resources" data-thread-id={threadId}>
-                        <span class="material-symbols-outlined">refresh</span>
-                    </button>
-                )}
-            </div>
-            <div class="section-body">
-                {hasResources ? (
-                    <a href={resourcesUrl} class="view-full-btn" target="_blank">
-                        <span class="material-symbols-outlined">open_in_new</span>
-                        <span>View Resources</span>
-                    </a>
-                ) : (
-                    <div class="empty-state">
-                        <p class="empty-message">No resources found yet.</p>
-                        <button class="generate-btn" id="generate-resources-btn" data-thread-id={threadId}>
-                            <span class="material-symbols-outlined">travel_explore</span>
-                            <span>Find Resources</span>
-                        </button>
-                    </div>
-                )}
-            </div>
-        </div>
+        <SidebarSection
+            title="Learning Resources"
+            icon="travel_explore"
+            hasContent={hasResources}
+            threadId={threadId}
+            viewUrl={resourcesUrl}
+            viewButtonText="View Resources"
+            emptyMessage="No resources found yet."
+            generateButtonId="generate-resources-btn"
+            generateButtonText="Find Resources"
+            regenerateButtonId="regenerate-resources-btn"
+        />
     </div>
 </aside>
 
