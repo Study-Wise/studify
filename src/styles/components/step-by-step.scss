@@ -72,14 +72,14 @@ $dpad: 1rem;
         cursor: pointer;
         border-radius: 100dvw;
         padding-inline: 1ex;
-        transition: background-color 0.2s ease, transform 0.1s ease;
+        transition: background-color 0.2s ease, scale 0.1s ease;
 
         &:hover:not([data-state]) {
           background-color: rgba(from lightblue r g b / 0.3);
         }
 
         &:active {
-          transform: scale(0.98);
+          scale: 0.98;
         }
 
         // Selected and correct
