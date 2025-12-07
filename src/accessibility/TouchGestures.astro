@@ -99,7 +99,7 @@ import '../styles/accessibility/touch-gestures.scss';
             if (!this.refreshIndicator) return;
 
             const translateY = (progress * 60) - 60;
-            this.refreshIndicator.style.transform = `translateY(${translateY}px)`;
+            this.refreshIndicator.style.translate = `0 ${translateY}px`;
             this.refreshIndicator.style.opacity = progress.toString();
 
             if (progress >= 1) {
@@ -112,7 +112,7 @@ import '../styles/accessibility/touch-gestures.scss';
         hideRefreshIndicator() {
             if (!this.refreshIndicator) return;
 
-            this.refreshIndicator.style.transform = 'translateY(-100%)';
+            this.refreshIndicator.style.translate = '0 -100%';
             this.refreshIndicator.style.opacity = '0';
             (this.refreshIndicator.querySelector('.material-symbols-outlined') as HTMLElement)!.style.animation = 'none';
         }
