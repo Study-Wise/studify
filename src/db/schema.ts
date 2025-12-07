@@ -16,6 +16,7 @@ const threadsTable = pgTable('threads', {
     generatedReferenceSheet: text('generatedReferenceSheet'),
     generatedInfographic: jsonb('generatedInfographic').notNull().default({}),
     generatedWebpage: text('generatedWebpage'),
+    generatedMindMap: text('generatedMindMap'),
     isPublic: boolean('isPublic').notNull().default(false),
     createdAt: timestamp('createdAt').notNull().defaultNow(),
     updatedAt: timestamp('updatedAt').notNull().defaultNow(),
