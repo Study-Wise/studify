@@ -21,6 +21,7 @@ import { getLatestWebpage } from '../../../../lib/content/latest/webpage';
 import { getLatestMindMap } from '../../../../lib/content/latest/mind-map';
 import { getLatestResources } from '../../../../lib/content/latest/resources';
 import { getLatestFlashcard } from '../../../../lib/content/latest/flashcard';
+import { getLatestPracticeQuestions } from '../../../../lib/content/latest/practice-questions';
 
 let { category, mode, id } = Astro.params || { category: '', mode: '', id: '' };
 
@@ -41,7 +42,7 @@ if (!userId && !isPublic) {
 const messagesLength = await getMessagesLength(id || '');
 const messages = (isAuthorized || isPublic) && messagesLength > 0 ? await getMessages(id ?? '', user_email) : [];
 
-// Check if reference sheet, study guide, infographic, webpage, mind map, resources, and flashcard exist
+// Check if reference sheet, study guide, infographic, webpage, mind map, resources, flashcard, and practice questions exist
 let hasReferenceSheet = false;
 let hasStudyGuide = false;
 let hasInfographic = false;
@@ -49,6 +50,7 @@ let hasWebpage = false;
 let hasMindMap = false;
 let hasResources = false;
 let hasFlashcard = false;
+let hasPracticeQuestions = false;
 
 if ((isAuthorized || isPublic) && id) {
     const referenceSheetResult = await getLatestReferenceSheet(id);
@@ -58,6 +60,7 @@ if ((isAuthorized || isPublic) && id) {
     const mindMapResult = await getLatestMindMap(id);
     const resourcesResult = await getLatestResources(id);
     const flashcardResult = await getLatestFlashcard(id);
+    const practiceQuestionsResult = await getLatestPracticeQuestions(id);
 
     hasReferenceSheet = !!referenceSheetResult.content;
     hasStudyGuide = !!studyGuideResult.content;
@@ -66,6 +69,7 @@ if ((isAuthorized || isPublic) && id) {
     hasMindMap = !!mindMapResult.content;
     hasResources = !!resourcesResult.content;
     hasFlashcard = !!flashcardResult.content;
+    hasPracticeQuestions = !!practiceQuestionsResult.content;
 }
 
 
@@ -84,7 +88,11 @@ export const inNav = 'hide';
         <Header pTitle={`${id ? 'Chat' : 'New Chat'}`} />
     </header>
     <section class="chat-container">
-        <LeftSidebar />
+        <LeftSidebar
+            isPublic={isPublic}
+            isAuthorized={isAuthorized}
+            threadId={id || ''}
+        />
         <section class="chat-section">
             <div class="chat-messages">
                 {isAuthorized || isPublic ? (
@@ -125,11 +133,10 @@ export const inNav = 'hide';
             hasMindMap={hasMindMap}
             hasResources={hasResources}
             hasFlashcard={hasFlashcard}
+            hasPracticeQuestions={hasPracticeQuestions}
             threadId={id || ''}
             category={category || ''}
             mode={mode || ''}
-            isPublic={isPublic}
-            isAuthorized={isAuthorized}
         />
     </section>
     <script is:inline>

@@ -1,8 +1,46 @@
 ---
+import '../../styles/components/chat/sidebar.scss';
 import '../../styles/components/chat/left-sidebar.scss';
+import type { ChatLeftSidebarProps } from '../../lib/types';
+
+const { isPublic, isAuthorized, threadId } = Astro.props as ChatLeftSidebarProps;
 ---
 <section class="chat-left-sidebar">
     <div class="chat-left-sidebar-content">
+        {isAuthorized && (
+            <div class="sidebar-section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <span class="material-symbols-outlined">share</span>
+                        <h3>Share Settings</h3>
+                    </div>
+                </div>
+                <div class="section-body">
+                    <div class="share-settings">
+                        <div class="share-status">
+                            <div class="status-info">
+                                <span class="status-label">Thread Visibility</span>
+                                <span class="status-value" id="share-status-text">{isPublic ? 'Public' : 'Private'}</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input
+                                    type="checkbox"
+                                    id="public-toggle"
+                                    checked={isPublic}
+                                    data-thread-id={threadId}
+                                />
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <p class="share-description">
+                            {isPublic
+                                ? 'This thread is visible to anyone with the link.'
+                                : 'This thread is private and only visible to you.'}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        )}
         <div class="sidebar-header">
             <h3><span class="material-symbols-outlined">folder</span> Uploaded Files</h3>
         </div>
@@ -13,3 +51,68 @@ import '../../styles/components/chat/left-sidebar.scss';
         </div>
     </div>
 </section>
+
+<script>
+    // Public toggle functionality
+    const publicToggle = document.getElementById('public-toggle') as HTMLInputElement;
+    const shareStatusText = document.getElementById('share-status-text');
+
+    if (publicToggle) {
+        publicToggle.addEventListener('change', async () => {
+            const threadId = publicToggle.getAttribute('data-thread-id');
+            const isPublic = publicToggle.checked;
+
+            if (!threadId) return;
+
+            // Disable toggle during request
+            publicToggle.disabled = true;
+
+            try {
+                const response = await fetch('/api/thread/toggle-public', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ threadId, isPublic }),
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    // Update the status text
+                    if (shareStatusText) {
+                        shareStatusText.textContent = isPublic ? 'Public' : 'Private';
+                    }
+
+                    // Update the description
+                    const shareDescription = document.querySelector('.share-description');
+                    if (shareDescription) {
+                        shareDescription.textContent = isPublic
+                            ? 'This thread is visible to anyone with the link.'
+                            : 'This thread is private and only visible to you.';
+                    }
+
+                    // Show success message
+                    (window as any).showSuccess?.(
+                        isPublic
+                            ? 'Thread is now public. Anyone with the link can view it.'
+                            : 'Thread is now private. Only you can view it.'
+                    );
+                } else {
+                    throw new Error(data.error || 'Failed to update sharing settings');
+                }
+            } catch (error) {
+                console.error('Error toggling public status:', error);
+                (window as any).showError?.(
+                    error instanceof Error ? error.message : 'Failed to update sharing settings. Please try again.'
+                );
+
+                // Revert toggle state on error
+                publicToggle.checked = !isPublic;
+            } finally {
+                // Re-enable toggle
+                publicToggle.disabled = false;
+            }
+        });
+    }
+</script>
