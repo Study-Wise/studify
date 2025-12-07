@@ -332,15 +332,34 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
             });
         }
 
-        // --- Special handling for first message: Generate study materials directly ---
+        // --- Special handling for first message: Generate AI welcome response ---
         if (convoHistory.length === 1) {
-            console.log(`🎯 [${requestId}] First message detected, generating study materials directly`);
+            console.log(`🎯 [${requestId}] First message detected, generating AI welcome response`);
 
             try {
-                // Add user message to conversation history for saving
+                // Add user message to conversation history first
                 convoHistory.push({ role: 'user', content: userPrompt });
 
-                // Save the conversation to database first
+                // Welcome message prompt for first message - ask what they want to study
+                const welcomeMessagePrompt = config.welcomeMessagePrompt;
+
+                // Generate AI response using the model with welcome message prompt
+                const tools = modeObj.tools || {};
+                const welcomeMessage = await generateAIResponse({
+                    systemPrompt,
+                    userPrompt: welcomeMessagePrompt,
+                    convoHistory,
+                    userModel,
+                    provider,
+                    tools,
+                    maxSteps: 25,
+                    requestId
+                });
+
+                // Add AI welcome response to conversation history
+                convoHistory.push({ role: 'assistant', content: welcomeMessage });
+
+                // Save the conversation to database
                 console.log(`💾 [${requestId}] Saving initial conversation to database`);
                 const convoHistoryWithoutSystem = convoHistory.filter(msg => msg.role !== 'system');
 
@@ -392,6 +411,11 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
                     })
                     .where(eq(threadsTable.id, current_thread_id!));
 
+                // Convert welcome message to HTML
+                const { marked } = await import('marked');
+                marked.setOptions({ breaks: true, gfm: true });
+                const htmlText = await marked.parse(welcomeMessage);
+
                 const totalDuration = Date.now() - startTime;
                 console.log(`🎉 [${requestId}] Request completed successfully:`, {
                     totalDuration: `${totalDuration}ms`,
@@ -401,7 +425,7 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
 
                 return new Response(
                     JSON.stringify({
-                        generatedText: '', // Empty for first message
+                        generatedText: htmlText,
                         generatedTitle: true,
                         id: current_thread_id,
                     }),
@@ -411,7 +435,7 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
                     }
                 );
             } catch (error) {
-                console.error(`❌ [${requestId}] Error generating study materials:`, error);
+                console.error(`❌ [${requestId}] Error handling first message:`, error);
                 throw error;
             }
         }
