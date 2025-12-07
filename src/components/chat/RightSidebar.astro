@@ -2,12 +2,13 @@
 import '../../styles/components/chat/right-sidebar.scss';
 import type { ChatRightSidebarProps } from '../../lib/types';
 
-const { hasReferenceSheet, hasStudyGuide, hasInfographic, hasWebpage, threadId, category, mode } = Astro.props as ChatRightSidebarProps;
+const { hasReferenceSheet, hasStudyGuide, hasInfographic, hasWebpage, hasMindMap, threadId, category, mode } = Astro.props as ChatRightSidebarProps;
 
 const referenceSheetUrl = `/${category}/${mode}/reference-sheet/${threadId}`;
 const studyGuideUrl = `/${category}/${mode}/study-guide/${threadId}`;
 const infographicUrl = `/${category}/${mode}/infographic/${threadId}`;
 const webpageUrl = `/${category}/${mode}/webpage/${threadId}`;
+const mindMapUrl = `/${category}/${mode}/mind-map/${threadId}`;
 ---
 <aside class="chat-right-sidebar">
     <div class="chat-right-sidebar-content">
@@ -130,6 +131,36 @@ const webpageUrl = `/${category}/${mode}/webpage/${threadId}`;
                 )}
             </div>
         </div>
+
+        <div class="sidebar-section">
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="material-symbols-outlined">hub</span>
+                    <h3>Mind Map</h3>
+                </div>
+                {hasMindMap && (
+                    <button class="regenerate-btn" id="regenerate-mind-map-btn" title="Regenerate mind map" data-thread-id={threadId}>
+                        <span class="material-symbols-outlined">refresh</span>
+                    </button>
+                )}
+            </div>
+            <div class="section-body">
+                {hasMindMap ? (
+                    <a href={mindMapUrl} class="view-full-btn" target="_blank">
+                        <span class="material-symbols-outlined">open_in_new</span>
+                        <span>View Mind Map</span>
+                    </a>
+                ) : (
+                    <div class="empty-state">
+                        <p class="empty-message">No mind map generated yet.</p>
+                        <button class="generate-btn" id="generate-mind-map-btn" data-thread-id={threadId}>
+                            <span class="material-symbols-outlined">hub</span>
+                            <span>Generate Mind Map</span>
+                        </button>
+                    </div>
+                )}
+            </div>
+        </div>
     </div>
 </aside>
 
@@ -138,10 +169,12 @@ const webpageUrl = `/${category}/${mode}/webpage/${threadId}`;
     const generateReferenceSheetBtn = document.getElementById('generate-reference-sheet-btn');
     const generateStudyGuideBtn = document.getElementById('generate-study-guide-btn');
     const generateWebpageBtn = document.getElementById('generate-webpage-btn');
+    const generateMindMapBtn = document.getElementById('generate-mind-map-btn');
     const regenerateInfographicBtn = document.getElementById('regenerate-infographic-btn');
     const regenerateReferenceSheetBtn = document.getElementById('regenerate-reference-sheet-btn');
     const regenerateStudyGuideBtn = document.getElementById('regenerate-study-guide-btn');
     const regenerateWebpageBtn = document.getElementById('regenerate-webpage-btn');
+    const regenerateMindMapBtn = document.getElementById('regenerate-mind-map-btn');
 
     async function generateInfographic(threadId: string, isRegenerate: boolean = false) {
         const btn = isRegenerate ? regenerateInfographicBtn : generateInfographicBtn;
@@ -367,6 +400,65 @@ const webpageUrl = `/${category}/${mode}/webpage/${threadId}`;
             if (threadId) {
                 if (confirm('Are you sure you want to regenerate the webpage? This will replace the existing one.')) {
                     generateWebpage(threadId, true);
+                }
+            }
+        });
+    }
+
+    async function generateMindMap(threadId: string, isRegenerate: boolean = false) {
+        const btnId = isRegenerate ? 'regenerate-mind-map-btn' : 'generate-mind-map-btn';
+        const btn = document.getElementById(btnId);
+        if (!btn) return;
+
+        // Disable button and show loading state
+        btn.setAttribute('disabled', 'true');
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = `<span class="material-symbols-outlined spinning">progress_activity</span><span>${isRegenerate ? 'Regenerating...' : 'Generating...'}</span>`;
+
+        try {
+            const response = await fetch('/api/mind-map/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ threadId }),
+            });
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                // Reload the page to show the new mind map
+                window.location.reload();
+            } else {
+                throw new Error(data.error || 'Failed to generate mind map');
+            }
+        } catch (error) {
+            console.error('Error generating mind map:', error);
+            (window as any).showError(error instanceof Error ? error.message : 'Failed to generate mind map. Please try again.');
+
+            // Restore button state
+            btn.removeAttribute('disabled');
+            btn.innerHTML = originalContent;
+        }
+    }
+
+    // Generate mind map button
+    if (generateMindMapBtn) {
+        generateMindMapBtn.addEventListener('click', () => {
+            const threadId = generateMindMapBtn.getAttribute('data-thread-id');
+            if (threadId) {
+                generateMindMap(threadId, false);
+            }
+        });
+    }
+
+    // Regenerate mind map button
+    if (regenerateMindMapBtn) {
+        regenerateMindMapBtn.addEventListener('click', () => {
+            const threadId = regenerateMindMapBtn.getAttribute('data-thread-id');
+            if (threadId) {
+                if (confirm('Are you sure you want to regenerate the mind map? This will replace the existing one.')) {
+                    generateMindMap(threadId, true);
                 }
             }
         });

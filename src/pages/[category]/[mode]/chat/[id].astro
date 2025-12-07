@@ -18,6 +18,7 @@ import { getLatestReferenceSheet } from '../../../../lib/content/latest/referenc
 import { getLatestStudyGuide } from '../../../../lib/content/latest/study-guide';
 import { getLatestInfographic } from '../../../../lib/content/latest/infographic';
 import { getLatestWebpage } from '../../../../lib/content/latest/webpage';
+import { getLatestMindMap } from '../../../../lib/content/latest/mind-map';
 
 let { category, mode, id } = Astro.params || { category: '', mode: '', id: '' };
 
@@ -38,22 +39,25 @@ if (!userId && !isPublic) {
 const messagesLength = await getMessagesLength(id || '');
 const messages = (isAuthorized || isPublic) && messagesLength > 0 ? await getMessages(id ?? '', user_email) : [];
 
-// Check if reference sheet, study guide, infographic, and webpage exist
+// Check if reference sheet, study guide, infographic, webpage, and mind map exist
 let hasReferenceSheet = false;
 let hasStudyGuide = false;
 let hasInfographic = false;
 let hasWebpage = false;
+let hasMindMap = false;
 
 if ((isAuthorized || isPublic) && id) {
     const referenceSheetResult = await getLatestReferenceSheet(id);
     const studyGuideResult = await getLatestStudyGuide(id);
     const infographic = await getLatestInfographic(id);
     const webpageResult = await getLatestWebpage(id);
+    const mindMapResult = await getLatestMindMap(id);
 
     hasReferenceSheet = !!referenceSheetResult.content;
     hasStudyGuide = !!studyGuideResult.content;
     hasInfographic = !!infographic;
     hasWebpage = !!webpageResult.content;
+    hasMindMap = !!mindMapResult.content;
 }
 
 
@@ -110,6 +114,7 @@ export const inNav = 'hide';
             hasStudyGuide={hasStudyGuide}
             hasInfographic={hasInfographic}
             hasWebpage={hasWebpage}
+            hasMindMap={hasMindMap}
             threadId={id || ''}
             category={category || ''}
             mode={mode || ''}
