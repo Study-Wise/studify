@@ -19,6 +19,7 @@ import { getLatestStudyGuide } from '../../../../lib/content/latest/study-guide'
 import { getLatestInfographic } from '../../../../lib/content/latest/infographic';
 import { getLatestWebpage } from '../../../../lib/content/latest/webpage';
 import { getLatestMindMap } from '../../../../lib/content/latest/mind-map';
+import { getLatestResources } from '../../../../lib/content/latest/resources';
 
 let { category, mode, id } = Astro.params || { category: '', mode: '', id: '' };
 
@@ -39,12 +40,13 @@ if (!userId && !isPublic) {
 const messagesLength = await getMessagesLength(id || '');
 const messages = (isAuthorized || isPublic) && messagesLength > 0 ? await getMessages(id ?? '', user_email) : [];
 
-// Check if reference sheet, study guide, infographic, webpage, and mind map exist
+// Check if reference sheet, study guide, infographic, webpage, mind map, and resources exist
 let hasReferenceSheet = false;
 let hasStudyGuide = false;
 let hasInfographic = false;
 let hasWebpage = false;
 let hasMindMap = false;
+let hasResources = false;
 
 if ((isAuthorized || isPublic) && id) {
     const referenceSheetResult = await getLatestReferenceSheet(id);
@@ -52,12 +54,14 @@ if ((isAuthorized || isPublic) && id) {
     const infographic = await getLatestInfographic(id);
     const webpageResult = await getLatestWebpage(id);
     const mindMapResult = await getLatestMindMap(id);
+    const resourcesResult = await getLatestResources(id);
 
     hasReferenceSheet = !!referenceSheetResult.content;
     hasStudyGuide = !!studyGuideResult.content;
     hasInfographic = !!infographic;
     hasWebpage = !!webpageResult.content;
     hasMindMap = !!mindMapResult.content;
+    hasResources = !!resourcesResult.content;
 }
 
 
@@ -115,6 +119,7 @@ export const inNav = 'hide';
             hasInfographic={hasInfographic}
             hasWebpage={hasWebpage}
             hasMindMap={hasMindMap}
+            hasResources={hasResources}
             threadId={id || ''}
             category={category || ''}
             mode={mode || ''}
