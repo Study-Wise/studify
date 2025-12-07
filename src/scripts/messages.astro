@@ -233,7 +233,7 @@ const { page, category, mode } = Astro.props;
                 console.warn('displayError: Error text set.');
             } else {
                 console.error('CRITICAL FAILURE in displayError: #error-message element not found:', messageToShow);
-                alert('Critical error occurred; error display area missing.\nHint: ' + messageToShow);
+                showError('Critical error occurred; error display area missing.\nHint: ' + messageToShow);
             }
             const outputSec = document.getElementById('output-section');
             if (outputSec) outputSec.style.display = 'none';
@@ -249,7 +249,7 @@ const { page, category, mode } = Astro.props;
                 errorDiv.textContent = 'Error: Critical UI failure during error reporting.';
                 errorDiv.style.display = 'block';
             } else {
-                alert('Error: Critical UI failure during error reporting.');
+                showError('Error: Critical UI failure during error reporting.');
             }
             console.error('Original message causing displayError failure:', message);
         }
