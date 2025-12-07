@@ -23,6 +23,10 @@ interface StudyGuideResult {
     content: string | null;
 }
 
+interface MindMapResult {
+    content: string | null;
+}
+
 interface ThreadAccessResult {
     isAuthorized: boolean;
     isPublic: boolean;
@@ -34,6 +38,7 @@ interface ChatRightSidebarProps {
     hasStudyGuide: boolean;
     hasInfographic: boolean;
     hasWebpage: boolean;
+    hasMindMap: boolean;
     threadId: string;
     category: string;
     mode: string;
@@ -97,6 +102,7 @@ export type {
     Tool,
     ReferenceSheetResult,
     StudyGuideResult,
+    MindMapResult,
     ThreadAccessResult,
     ChatRightSidebarProps,
     ImageSize,
