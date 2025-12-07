@@ -39,6 +39,7 @@ interface ChatRightSidebarProps {
     hasInfographic: boolean;
     hasWebpage: boolean;
     hasMindMap: boolean;
+    hasResources: boolean;
     threadId: string;
     category: string;
     mode: string;
