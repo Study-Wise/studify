@@ -1,5 +1,4 @@
-@import '../variables';
-@import '../mixins';
+@use '../variables/globals' as *;
 
 .mind-map-page {
     width: 100%;
