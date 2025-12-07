@@ -201,11 +201,13 @@ const resourcesUrl = `/${category}/${mode}/resources/${threadId}`;
     const generateStudyGuideBtn = document.getElementById('generate-study-guide-btn');
     const generateWebpageBtn = document.getElementById('generate-webpage-btn');
     const generateMindMapBtn = document.getElementById('generate-mind-map-btn');
+    const generateResourcesBtn = document.getElementById('generate-resources-btn');
     const regenerateInfographicBtn = document.getElementById('regenerate-infographic-btn');
     const regenerateReferenceSheetBtn = document.getElementById('regenerate-reference-sheet-btn');
     const regenerateStudyGuideBtn = document.getElementById('regenerate-study-guide-btn');
     const regenerateWebpageBtn = document.getElementById('regenerate-webpage-btn');
     const regenerateMindMapBtn = document.getElementById('regenerate-mind-map-btn');
+    const regenerateResourcesBtn = document.getElementById('regenerate-resources-btn');
 
     async function generateInfographic(threadId: string, isRegenerate: boolean = false) {
         const btn = isRegenerate ? regenerateInfographicBtn : generateInfographicBtn;
@@ -490,6 +492,65 @@ const resourcesUrl = `/${category}/${mode}/resources/${threadId}`;
             if (threadId) {
                 if (confirm('Are you sure you want to regenerate the mind map? This will replace the existing one.')) {
                     generateMindMap(threadId, true);
+                }
+            }
+        });
+    }
+
+    async function generateResources(threadId: string, isRegenerate: boolean = false) {
+        const btnId = isRegenerate ? 'regenerate-resources-btn' : 'generate-resources-btn';
+        const btn = document.getElementById(btnId);
+        if (!btn) return;
+
+        // Disable button and show loading state
+        btn.setAttribute('disabled', 'true');
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = `<span class="material-symbols-outlined spinning">progress_activity</span><span>${isRegenerate ? 'Searching...' : 'Finding Resources...'}</span>`;
+
+        try {
+            const response = await fetch('/api/resources/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ threadId }),
+            });
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                // Reload the page to show the new resources
+                window.location.reload();
+            } else {
+                throw new Error(data.error || 'Failed to find resources');
+            }
+        } catch (error) {
+            console.error('Error finding resources:', error);
+            (window as any).showError(error instanceof Error ? error.message : 'Failed to find resources. Please try again.');
+
+            // Restore button state
+            btn.removeAttribute('disabled');
+            btn.innerHTML = originalContent;
+        }
+    }
+
+    // Generate resources button
+    if (generateResourcesBtn) {
+        generateResourcesBtn.addEventListener('click', () => {
+            const threadId = generateResourcesBtn.getAttribute('data-thread-id');
+            if (threadId) {
+                generateResources(threadId, false);
+            }
+        });
+    }
+
+    // Regenerate resources button
+    if (regenerateResourcesBtn) {
+        regenerateResourcesBtn.addEventListener('click', () => {
+            const threadId = regenerateResourcesBtn.getAttribute('data-thread-id');
+            if (threadId) {
+                if (confirm('Are you sure you want to find new resources? This will replace the existing ones.')) {
+                    generateResources(threadId, true);
                 }
             }
         });
