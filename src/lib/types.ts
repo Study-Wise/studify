@@ -41,6 +41,12 @@ interface ThreadAccessResult {
     threadOwner: string | null;
 }
 
+interface ChatLeftSidebarProps {
+    isPublic: boolean;
+    isAuthorized: boolean;
+    threadId: string;
+}
+
 interface ChatRightSidebarProps {
     hasReferenceSheet: boolean;
     hasStudyGuide: boolean;
@@ -53,8 +59,6 @@ interface ChatRightSidebarProps {
     threadId: string;
     category: string;
     mode: string;
-    isPublic: boolean;
-    isAuthorized: boolean;
 }
 
 type InfographicSpeed = 'FLASH' | 'TURBO' | 'DEFAULT' | 'QUALITY';
@@ -130,6 +134,7 @@ export type {
     FlashcardResult,
     PracticeQuestionsResult,
     ThreadAccessResult,
+    ChatLeftSidebarProps,
     ChatRightSidebarProps,
     ImageSize,
     InfographicSpeed,

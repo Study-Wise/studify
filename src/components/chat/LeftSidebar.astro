@@ -5,8 +5,8 @@ import type { ChatLeftSidebarProps } from '../../lib/types';
 
 const { isPublic, isAuthorized, threadId } = Astro.props as ChatLeftSidebarProps;
 ---
-<section class="chat-left-sidebar">
-    <div class="chat-left-sidebar-content">
+<section class="chat-sidebar chat-left-sidebar">
+    <div class="chat-sidebar-content chat-left-sidebar-content">
         {isAuthorized && (
             <div class="sidebar-section">
                 <div class="section-header">
