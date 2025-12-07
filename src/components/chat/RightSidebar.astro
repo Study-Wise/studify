@@ -2,7 +2,7 @@
 import '../../styles/components/chat/right-sidebar.scss';
 import type { ChatRightSidebarProps } from '../../lib/types';
 
-const { hasReferenceSheet, hasStudyGuide, hasInfographic, hasWebpage, hasMindMap, hasResources, hasFlashcard, threadId, category, mode, isPublic, isAuthorized } = Astro.props as ChatRightSidebarProps;
+const { hasReferenceSheet, hasStudyGuide, hasInfographic, hasWebpage, hasMindMap, hasResources, hasFlashcard, hasPracticeQuestions, threadId, category, mode, isPublic, isAuthorized } = Astro.props as ChatRightSidebarProps;
 
 const referenceSheetUrl = `/${category}/${mode}/reference-sheet/${threadId}`;
 const studyGuideUrl = `/${category}/${mode}/study-guide/${threadId}`;
@@ -11,6 +11,7 @@ const webpageUrl = `/${category}/${mode}/webpage/${threadId}`;
 const mindMapUrl = `/${category}/${mode}/mind-map/${threadId}`;
 const resourcesUrl = `/${category}/${mode}/resources/${threadId}`;
 const flashcardUrl = `/${category}/${mode}/flashcard/${threadId}`;
+const practiceQuestionsUrl = `/${category}/${mode}/practice-questions/${threadId}`;
 ---
 <aside class="chat-right-sidebar">
     <div class="chat-right-sidebar-content">
@@ -81,36 +82,6 @@ const flashcardUrl = `/${category}/${mode}/flashcard/${threadId}`;
         <div class="sidebar-section">
             <div class="section-header">
                 <div class="section-title">
-                    <span class="material-symbols-outlined">style</span>
-                    <h3>Flashcards</h3>
-                </div>
-                {hasFlashcard && (
-                    <button class="regenerate-btn" id="regenerate-flashcard-btn" title="Regenerate flashcards" data-thread-id={threadId}>
-                        <span class="material-symbols-outlined">refresh</span>
-                    </button>
-                )}
-            </div>
-            <div class="section-body">
-                {hasFlashcard ? (
-                    <a href={flashcardUrl} class="view-full-btn" target="_blank">
-                        <span class="material-symbols-outlined">open_in_new</span>
-                        <span>View Flashcards</span>
-                    </a>
-                ) : (
-                    <div class="empty-state">
-                        <p class="empty-message">No flashcards generated yet.</p>
-                        <button class="generate-btn" id="generate-flashcard-btn" data-thread-id={threadId}>
-                            <span class="material-symbols-outlined">style</span>
-                            <span>Generate Flashcards</span>
-                        </button>
-                    </div>
-                )}
-            </div>
-        </div>
-
-        <div class="sidebar-section">
-            <div class="section-header">
-                <div class="section-title">
                     <span class="material-symbols-outlined">description</span>
                     <h3>Reference Sheet</h3>
                 </div>
@@ -162,6 +133,66 @@ const flashcardUrl = `/${category}/${mode}/flashcard/${threadId}`;
                         <button class="generate-btn" id="generate-infographic-btn" data-thread-id={threadId}>
                             <span class="material-symbols-outlined">add_photo_alternate</span>
                             <span>Generate Infographic</span>
+                        </button>
+                    </div>
+                )}
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="material-symbols-outlined">style</span>
+                    <h3>Flashcards</h3>
+                </div>
+                {hasFlashcard && (
+                    <button class="regenerate-btn" id="regenerate-flashcard-btn" title="Regenerate flashcards" data-thread-id={threadId}>
+                        <span class="material-symbols-outlined">refresh</span>
+                    </button>
+                )}
+            </div>
+            <div class="section-body">
+                {hasFlashcard ? (
+                    <a href={flashcardUrl} class="view-full-btn" target="_blank">
+                        <span class="material-symbols-outlined">open_in_new</span>
+                        <span>View Flashcards</span>
+                    </a>
+                ) : (
+                    <div class="empty-state">
+                        <p class="empty-message">No flashcards generated yet.</p>
+                        <button class="generate-btn" id="generate-flashcard-btn" data-thread-id={threadId}>
+                            <span class="material-symbols-outlined">style</span>
+                            <span>Generate Flashcards</span>
+                        </button>
+                    </div>
+                )}
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="material-symbols-outlined">quiz</span>
+                    <h3>Practice Questions</h3>
+                </div>
+                {hasPracticeQuestions && (
+                    <button class="regenerate-btn" id="regenerate-practice-questions-btn" title="Regenerate practice questions" data-thread-id={threadId}>
+                        <span class="material-symbols-outlined">refresh</span>
+                    </button>
+                )}
+            </div>
+            <div class="section-body">
+                {hasPracticeQuestions ? (
+                    <a href={practiceQuestionsUrl} class="view-full-btn" target="_blank">
+                        <span class="material-symbols-outlined">open_in_new</span>
+                        <span>View Practice Questions</span>
+                    </a>
+                ) : (
+                    <div class="empty-state">
+                        <p class="empty-message">No practice questions generated yet.</p>
+                        <button class="generate-btn" id="generate-practice-questions-btn" data-thread-id={threadId}>
+                            <span class="material-symbols-outlined">quiz</span>
+                            <span>Generate Practice Questions</span>
                         </button>
                     </div>
                 )}
@@ -268,6 +299,7 @@ const flashcardUrl = `/${category}/${mode}/flashcard/${threadId}`;
     const generateMindMapBtn = document.getElementById('generate-mind-map-btn');
     const generateResourcesBtn = document.getElementById('generate-resources-btn');
     const generateFlashcardBtn = document.getElementById('generate-flashcard-btn');
+    const generatePracticeQuestionsBtn = document.getElementById('generate-practice-questions-btn');
     const regenerateInfographicBtn = document.getElementById('regenerate-infographic-btn');
     const regenerateReferenceSheetBtn = document.getElementById('regenerate-reference-sheet-btn');
     const regenerateStudyGuideBtn = document.getElementById('regenerate-study-guide-btn');
@@ -275,6 +307,7 @@ const flashcardUrl = `/${category}/${mode}/flashcard/${threadId}`;
     const regenerateMindMapBtn = document.getElementById('regenerate-mind-map-btn');
     const regenerateResourcesBtn = document.getElementById('regenerate-resources-btn');
     const regenerateFlashcardBtn = document.getElementById('regenerate-flashcard-btn');
+    const regeneratePracticeQuestionsBtn = document.getElementById('regenerate-practice-questions-btn');
 
     async function generateInfographic(threadId: string, isRegenerate: boolean = false) {
         const btn = isRegenerate ? regenerateInfographicBtn : generateInfographicBtn;
@@ -677,6 +710,65 @@ const flashcardUrl = `/${category}/${mode}/flashcard/${threadId}`;
             if (threadId) {
                 if (confirm('Are you sure you want to regenerate the flashcards? This will replace the existing ones.')) {
                     generateFlashcard(threadId, true);
+                }
+            }
+        });
+    }
+
+    async function generatePracticeQuestions(threadId: string, isRegenerate: boolean = false) {
+        const btnId = isRegenerate ? 'regenerate-practice-questions-btn' : 'generate-practice-questions-btn';
+        const btn = document.getElementById(btnId);
+        if (!btn) return;
+
+        // Disable button and show loading state
+        btn.setAttribute('disabled', 'true');
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = `<span class="material-symbols-outlined spinning">progress_activity</span><span>${isRegenerate ? 'Regenerating...' : 'Generating...'}</span>`;
+
+        try {
+            const response = await fetch('/api/practice-questions/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ threadId }),
+            });
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                // Reload the page to show the new practice questions
+                window.location.reload();
+            } else {
+                throw new Error(data.error || 'Failed to generate practice questions');
+            }
+        } catch (error) {
+            console.error('Error generating practice questions:', error);
+            (window as any).showError(error instanceof Error ? error.message : 'Failed to generate practice questions. Please try again.');
+
+            // Restore button state
+            btn.removeAttribute('disabled');
+            btn.innerHTML = originalContent;
+        }
+    }
+
+    // Generate practice questions button
+    if (generatePracticeQuestionsBtn) {
+        generatePracticeQuestionsBtn.addEventListener('click', () => {
+            const threadId = generatePracticeQuestionsBtn.getAttribute('data-thread-id');
+            if (threadId) {
+                generatePracticeQuestions(threadId, false);
+            }
+        });
+    }
+
+    // Regenerate practice questions button
+    if (regeneratePracticeQuestionsBtn) {
+        regeneratePracticeQuestionsBtn.addEventListener('click', () => {
+            const threadId = regeneratePracticeQuestionsBtn.getAttribute('data-thread-id');
+            if (threadId) {
+                if (confirm('Are you sure you want to regenerate the practice questions? This will replace the existing ones.')) {
+                    generatePracticeQuestions(threadId, true);
                 }
             }
         });
