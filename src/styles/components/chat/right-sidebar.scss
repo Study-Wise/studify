@@ -1,12 +1,12 @@
 @use '../../variables/globals' as *;
 
-.chat-right-sidebar {
+.chat-sidebar.right {
     border-left: 1px solid rgba(from var(--card-border) r g b / 0.3);
 }
 
 // Responsive behavior
 @media (max-width: 1024px) {
-    .chat-right-sidebar {
+    .chat-sidebar.right {
         width: 0;
         min-width: 0;
         overflow: hidden;
