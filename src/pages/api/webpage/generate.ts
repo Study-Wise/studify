@@ -7,8 +7,9 @@ import { eq } from 'drizzle-orm';
 import { threadsTable } from '../../../db/schema';
 import { isValidEmail } from '../../../lib/validation';
 import { generateWebpage } from '../../../lib/content/generate/webpage';
+import { clerkClient } from '@clerk/astro/server';
 
-export const POST: APIRoute = async ({ request, locals }) => {
+export const POST: APIRoute = async ({ request, locals, ...context }) => {
     const requestId = nanoid();
 
     console.log(`🌐 [${requestId}] Starting webpage generation request`);
@@ -46,8 +47,20 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
 
         console.log(`🔐 [${requestId}] Authentication found, extracting user info`);
-        const { userId, sessionClaims } = auth();
-        const user_email = userId ? ((sessionClaims?.email as string) || null) : null;
+        const { userId } = auth();
+
+        // Fetch user from Clerk to get email properly
+        let user_email: string | null = null;
+        if (userId) {
+            try {
+                const client = clerkClient({ request, locals, ...context });
+                const user = await client.users.getUser(userId);
+                user_email = user.emailAddresses?.[0]?.emailAddress || null;
+                console.log(`✅ [${requestId}] Successfully fetched user email from Clerk`);
+            } catch (error) {
+                console.error(`❌ [${requestId}] Error fetching user from Clerk:`, error);
+            }
+        }
 
         console.log(`👤 [${requestId}] User info:`, {
             userId: userId || 'none',
