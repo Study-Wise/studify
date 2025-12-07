@@ -48,6 +48,8 @@ interface ChatRightSidebarProps {
     threadId: string;
     category: string;
     mode: string;
+    isPublic: boolean;
+    isAuthorized: boolean;
 }
 
 type InfographicSpeed = 'FLASH' | 'TURBO' | 'DEFAULT' | 'QUALITY';

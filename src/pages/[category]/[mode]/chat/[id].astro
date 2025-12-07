@@ -128,6 +128,8 @@ export const inNav = 'hide';
             threadId={id || ''}
             category={category || ''}
             mode={mode || ''}
+            isPublic={isPublic}
+            isAuthorized={isAuthorized}
         />
     </section>
     <script is:inline>
@@ -135,7 +137,7 @@ export const inNav = 'hide';
         const classesToIgnore = ['message'];
         const messageEles = document.querySelectorAll('.chat-messages > .message');
         const outputTabs = ['study-guide', 'reference-sheet'];
-        
+
         setTimeout(() => {
             messageEles.forEach(message => {
                 const classes = [...message.classList].filter(cls => !classesToIgnore.includes(cls));
@@ -156,6 +158,38 @@ export const inNav = 'hide';
 
             chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
         });
+
+        // Share button functionality
+        const shareButton = document.getElementById('share-button');
+        if (shareButton) {
+            shareButton.addEventListener('click', async () => {
+                const url = window.location.href;
+
+                try {
+                    await navigator.clipboard.writeText(url);
+
+                    // Visual feedback
+                    const originalHTML = shareButton.innerHTML;
+                    shareButton.innerHTML = '<span class="material-symbols-outlined">check</span><span class="share-text">Copied!</span>';
+                    shareButton.style.pointerEvents = 'none';
+
+                    setTimeout(() => {
+                        shareButton.innerHTML = originalHTML;
+                        shareButton.style.pointerEvents = '';
+                    }, 2000);
+
+                    // Show success message if available
+                    if (window.showSuccess) {
+                        window.showSuccess('Thread link copied to clipboard');
+                    }
+                } catch (error) {
+                    console.error('Failed to copy link:', error);
+                    if (window.showError) {
+                        window.showError('Failed to copy link to clipboard');
+                    }
+                }
+            });
+        }
     </script>
     <MessagesScript page="chat" category={category} mode={mode} />
     <StepByStepScript />
