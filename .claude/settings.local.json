@@ -16,7 +16,8 @@
       "Bash(grep:*)",
       "Bash(git restore:*)",
       "Bash(node convert-indent.js)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(npx drizzle-kit:*)"
     ],
     "deny": [],
     "ask": []
