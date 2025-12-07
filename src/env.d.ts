@@ -1,7 +1,7 @@
 /// <reference types="astro/client" />
 
 declare namespace App {
-  interface Locals {
+    interface Locals {
     auth: import('@clerk/astro/server').Auth;
-  }
+    }
 }

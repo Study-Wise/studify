@@ -6,67 +6,67 @@ $dbdr: 2rem;
 $dpad: 1rem;
 
 @mixin stepsBorder($bor: $dbor, $bdr: $dbdr, $pad: $dpad, $depth: 0) {
-  padding: $pad;
-  border: solid 1px $bor;
-  border-radius: #{$bdr - $pad * $depth};
+    padding: $pad;
+    border: solid 1px $bor;
+    border-radius: #{$bdr - $pad * $depth};
 }
 
 /* Interactive Steps Component */
 .step-by-step {
-  /* Custom properties for consistent styling */
-  --bor: #{$dbor};
-  --bdr: #{$dbdr};
-  --pad: #{$dpad};
+    /* Custom properties for consistent styling */
+    --bor: #{$dbor};
+    --bdr: #{$dbdr};
+    --pad: #{$dpad};
 
-  box-sizing: border-box;
+    box-sizing: border-box;
 
-  background-color: var(--card-bg);
+    background-color: var(--card-bg);
 
-  @include stepsBorder();
+    @include stepsBorder();
 
-  display: flex;
-  flex-direction: column;
-  gap: var(--pad);
+    display: flex;
+    flex-direction: column;
+    gap: var(--pad);
 
-  .divider {
+    .divider {
     border: none;
     height: 1px;
     background-color: var(--bor);
-  }
+    }
 
-  .step {
+    .step {
     box-sizing: border-box;
     background-color: var(--card-bg);
 
     .correct-explanation {
-      $_bdr: calc(var(--bdr) / 8);
+            $_bdr: calc(var(--bdr) / 8);
 
-      box-sizing: border-box;
-      margin-top: var(--pad);
-      padding: var(--pad);
-      background-color: rgba(from var(--card-bg) h s calc(l - 3%));
-      border-radius: $_bdr;
+            box-sizing: border-box;
+            margin-top: var(--pad);
+            padding: var(--pad);
+            background-color: rgba(from var(--card-bg) h s calc(l - 3%));
+            border-radius: $_bdr;
 
-      position: relative;
-      overflow: hidden;
+            position: relative;
+            overflow: hidden;
 
-      &::before {
+            &::before {
         content: '';
         position: absolute;
         inset: 0;
         width: $_bdr;
         height: 100%;
         background-color: hsl(120 73% 50%);
-      }
+            }
     }
 
     .step-question-choices {
-      display: flex;
-      flex-direction: column;
-      gap: $dpad;
-      @include stepsBorder($depth: 1);
+            display: flex;
+            flex-direction: column;
+            gap: $dpad;
+            @include stepsBorder($depth: 1);
 
-      .step-question-choice {
+            .step-question-choice {
         position: relative;
         background-color: var(--card-bg);
         cursor: pointer;
@@ -75,42 +75,42 @@ $dpad: 1rem;
         transition: background-color 0.2s ease, scale 0.1s ease;
 
         &:hover:not([data-state]) {
-          background-color: rgba(from lightblue r g b / 0.3);
+                    background-color: rgba(from lightblue r g b / 0.3);
         }
 
         &:active {
-          scale: 0.98;
+                    scale: 0.98;
         }
 
         // Selected and correct
         &[data-state="selected-correct"] {
-          background-color: hsl(120 73% 75%);
+                    background-color: hsl(120 73% 75%);
         }
 
         // Correct but not selected (shown as hint)
         &[data-state="hint-correct"] {
-          background-color: hsl(120 73% 75% / 0.5);
+                    background-color: hsl(120 73% 75% / 0.5);
         }
 
         // Selected and incorrect
         &[data-state="selected-incorrect"] {
-          background-color: hsl(0 100% 80%);
+                    background-color: hsl(0 100% 80%);
         }
 
         // Incorrect but not selected (shown as hint)
         &[data-state="hint-incorrect"] {
-          background-color: hsl(0 100% 80% / 0.5);
+                    background-color: hsl(0 100% 80% / 0.5);
         }
 
         .step-question-radio {
-          visibility: hidden;
-          position: absolute;
-          width: 0;
-          height: 0;
-          top: -1px;
-          left: -1px;
+                    visibility: hidden;
+                    position: absolute;
+                    width: 0;
+                    height: 0;
+                    top: -1px;
+                    left: -1px;
         }
-      }
+            }
     }
-  }
+    }
 }

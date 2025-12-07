@@ -29,7 +29,7 @@ export const ADMIN_DOMAINS = [
 export function shouldPromoteToAdmin(email: string): boolean {
     const emailLower = email.toLowerCase();
     if (ADMIN_EMAILS.includes(emailLower)) {
-      return true;
+            return true;
     }
     return ADMIN_DOMAINS.some(domain => emailLower.endsWith(domain));
 }

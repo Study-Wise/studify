@@ -2,97 +2,97 @@
 const { settings } = Astro.props;
 ---
 <script is:inline data-settings={settings && typeof settings === 'object' ? JSON.stringify(settings) : '{}'}>
-  const settings = JSON.parse(document.currentScript.dataset.settings);
-  document.currentScript.removeAttribute('data-settings');
+    const settings = JSON.parse(document.currentScript.dataset.settings);
+    document.currentScript.removeAttribute('data-settings');
 
-  // Add change listeners for all settings
-  settings.forEach(setting => {
+    // Add change listeners for all settings
+    settings.forEach(setting => {
     const el = document.getElementById(setting.id);
     if (el) {
-      el.addEventListener('change', function () {
+            el.addEventListener('change', function () {
         setSetting(setting.id, this.value);
-      });
+            });
     }
-  });
+    });
 
-  function activateDependencies() {
+    function activateDependencies() {
     // Dependency logic (if any)
     settings.forEach(setting => {
-      if (setting.dependencies) {
+            if (setting.dependencies) {
         setting.dependencies.forEach(dependency => {
-          const el = document.getElementById(dependency);
-          if (el) {
+                    const el = document.getElementById(dependency);
+                    if (el) {
             handleDependentChanges(el, dependency)
-          }
+                    }
         });
-      }
+            }
     });
-  }
+    }
 
-  function handleDependentChanges(el, dep) {
+    function handleDependentChanges(el, dep) {
     el.addEventListener('change', () => {
-      dependentChangeActions(el, dep);
+            dependentChangeActions(el, dep);
     });
-  }
+    }
 
-  function dependentChangeActions(el, dep) {
+    function dependentChangeActions(el, dep) {
     const value = el.value;
-      const setting = settings.find(s => s.id === dep);
-      const dependentSettings = settings.filter(s => s.dependencies && s.dependencies.includes(dep));
-      dependentSettings.forEach(s => {
+            const setting = settings.find(s => s.id === dep);
+            const dependentSettings = settings.filter(s => s.dependencies && s.dependencies.includes(dep));
+            dependentSettings.forEach(s => {
         const sEl = document.getElementById(s.id);
         const id = `${s.id}s`;
         console.log(setting.options)
         const options = setting.options[value][id]
         sEl.querySelectorAll('option').forEach(o => o.remove());
         Object.keys(options).forEach(o => {
-          const option = document.createElement('option');
-          option.value = o;
-          option.textContent = options[o].name;
-          sEl.appendChild(option);
+                    const option = document.createElement('option');
+                    option.value = o;
+                    option.textContent = options[o].name;
+                    sEl.appendChild(option);
         });
 
-      setSetting(s.id, Object.keys(options)[0]);
+            setSetting(s.id, Object.keys(options)[0]);
     });
-  }
-
-  function getSettings() {
-    try {
-      return JSON.parse(localStorage.getItem('settings')) || {};
-    } catch (e) {
-      return {};
     }
-  }
 
-  function setSetting(key, value) {
+    function getSettings() {
+    try {
+            return JSON.parse(localStorage.getItem('settings')) || {};
+    } catch (e) {
+            return {};
+    }
+    }
+
+    function setSetting(key, value) {
     const userSettings = getSettings();
     userSettings[key] = value;
     localStorage.setItem('settings', JSON.stringify(userSettings));
-  }
+    }
 
-  // Initialize form values from localStorage
-  window.addEventListener('DOMContentLoaded', () => {
+    // Initialize form values from localStorage
+    window.addEventListener('DOMContentLoaded', () => {
     const userSettings = getSettings();
     const settingIds = settings.map(s => s.id);
     
     activateDependencies()
     for (const settingId of settingIds) {
-      if (userSettings[settingId]) {
+            if (userSettings[settingId]) {
         const el = document.getElementById(settingId);
         console.log(userSettings[settingId])
 
         if (el) el.value = userSettings[setting];
-      }
+            }
     }
     settings.forEach(setting => {
-      if (setting.dependencies) {
+            if (setting.dependencies) {
         setting.dependencies.forEach(dependency => {
-          const elem = document.getElementById(dependency);
-          if (elem) {
+                    const elem = document.getElementById(dependency);
+                    if (elem) {
             dependentChangeActions(elem, dependency)
-          }
+                    }
         });
-      }
+            }
     });
-  });
+    });
 </script>

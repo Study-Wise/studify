@@ -5,9 +5,9 @@
 @use 'sass:math';
 
 @property --g-angle {
-  syntax: '<angle>';
-  initial-value: 240deg;
-  inherits: false;
+    syntax: '<angle>';
+    initial-value: 240deg;
+    inherits: false;
 }
 
 // High contrast mode styles
