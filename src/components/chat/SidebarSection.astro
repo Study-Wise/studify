@@ -1,0 +1,45 @@
+---
+import type { SidebarSectionProps } from '../../lib/types';
+
+const {
+    title,
+    icon,
+    hasContent,
+    threadId,
+    viewUrl,
+    viewButtonText,
+    emptyMessage,
+    generateButtonId,
+    generateButtonText,
+    regenerateButtonId
+} = Astro.props as SidebarSectionProps;
+---
+<div class="sidebar-section">
+    <div class="section-header">
+        <div class="section-title">
+            <span class="material-symbols-outlined">{icon}</span>
+            <h3>{title}</h3>
+        </div>
+        {hasContent && (
+            <button class="regenerate-btn" id={regenerateButtonId} title={`Regenerate ${title.toLowerCase()}`} data-thread-id={threadId}>
+                <span class="material-symbols-outlined">refresh</span>
+            </button>
+        )}
+    </div>
+    <div class="section-body">
+        {hasContent ? (
+            <a href={viewUrl} class="view-full-btn" target="_blank">
+                <span class="material-symbols-outlined">open_in_new</span>
+                <span>{viewButtonText}</span>
+            </a>
+        ) : (
+            <div class="empty-state">
+                <p class="empty-message">{emptyMessage}</p>
+                <button class="generate-btn" id={generateButtonId} data-thread-id={threadId}>
+                    <span class="material-symbols-outlined">{icon}</span>
+                    <span>{generateButtonText}</span>
+                </button>
+            </div>
+        )}
+    </div>
+</div>
