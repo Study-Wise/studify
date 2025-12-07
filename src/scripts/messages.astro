@@ -1,11 +1,7 @@
 ---
 const { page, category, mode } = Astro.props;
 ---
-<script is:inline data-page={page} data-category={category} data-mode={mode}>
-    const page = document.currentScript.dataset.page;
-    const category = document.currentScript.dataset.category;
-    const mode = document.currentScript.dataset.mode;
-
+<script is:inline define:vars={{ page, category, mode }}>
     let threadId = 0;
     let userSettings = {};
 
