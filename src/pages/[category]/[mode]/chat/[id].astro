@@ -22,6 +22,7 @@ import { getLatestMindMap } from '../../../../lib/content/latest/mind-map';
 import { getLatestResources } from '../../../../lib/content/latest/resources';
 import { getLatestFlashcard } from '../../../../lib/content/latest/flashcard';
 import { getLatestPracticeQuestions } from '../../../../lib/content/latest/practice-questions';
+import { checkForOneMessage } from '../../../../lib/checkForOneMessage';
 
 let { category, mode, id } = Astro.params || { category: '', mode: '', id: '' };
 
@@ -40,7 +41,16 @@ if (!userId && !isPublic) {
 
 // Get messages only if authorized or public
 const messagesLength = await getMessagesLength(id || '');
-const messages = (isAuthorized || isPublic) && messagesLength > 0 ? await getMessages(id ?? '', user_email) : [];
+let messages = (isAuthorized || isPublic) && messagesLength > 0 ? await getMessages(id ?? '', user_email) : [];
+
+// Check if there's only one message and generate welcome message if needed
+messages = await checkForOneMessage({
+    messages,
+    threadId: id || '',
+    category: category || '',
+    mode: mode || '',
+    isAuthorized
+});
 
 // Check if reference sheet, study guide, infographic, webpage, mind map, resources, flashcard, and practice questions exist
 let hasReferenceSheet = false;
