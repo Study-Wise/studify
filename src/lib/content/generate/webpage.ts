@@ -67,5 +67,15 @@ Make it engaging, educational, and visually appealing!`;
         temperature: 0.7,
     });
 
-    return result.text;
+    // Strip away any text before and after the HTML
+    const text = result.text;
+    const htmlStart = text.indexOf('<!DOCTYPE html>');
+    const htmlEnd = text.lastIndexOf('</html>');
+
+    if (htmlStart !== -1 && htmlEnd !== -1) {
+        return text.substring(htmlStart, htmlEnd + 7); // +7 for '</html>' length
+    }
+
+    // Fallback: return original text if HTML tags not found
+    return text;
 }
