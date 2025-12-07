@@ -1,0 +1,54 @@
+---
+import Layout from '../../../../layouts/Layout.astro';
+import { getLatestPracticeQuestions } from '../../../../lib/content/latest/practice-questions';
+import { checkThreadAccess } from '../../../../lib/auth/checkThreadAccess';
+import StepByStepScript from '../../../../scripts/step-by-step.astro';
+import { marked } from 'marked';
+import '../../../../styles/pages/practice-questions.scss';
+
+const { category, mode, id } = Astro.params;
+
+// Get user authentication
+const { auth } = Astro.locals;
+const { userId } = auth();
+
+// Check thread access first
+const { isAuthorized, isPublic } = await checkThreadAccess(id || '', auth, category, mode, Astro);
+
+// Redirect to sign-in only if not authenticated AND thread is not public
+if (!userId && !isPublic) {
+    return Astro.redirect("/user/sign-in");
+}
+
+// Get the latest practice questions only if authorized or public
+const { content: latestPracticeQuestions } = (isAuthorized || isPublic)
+    ? await getLatestPracticeQuestions(id || '')
+    : { content: null };
+
+// Parse markdown to HTML
+const parsedContent = latestPracticeQuestions ? await marked.parse(latestPracticeQuestions) : null;
+---
+
+<Layout title="Practice Questions" container={true}>
+    <div class="practice-questions-page">
+        {!isAuthorized && !isPublic ? (
+            <div class="empty-state">
+                <span class="material-symbols-outlined">lock</span>
+                <h2>Access Denied</h2>
+                <p>You don't have permission to view these practice questions. This thread belongs to another user.</p>
+                <a href="/" class="btn-primary">Go Home</a>
+            </div>
+        ) : parsedContent ? (
+            <div class="content-container">
+                <div class="practice-questions-content" set:html={parsedContent} />
+            </div>
+        ) : (
+            <div class="empty-state">
+                <span class="material-symbols-outlined">quiz</span>
+                <h2>No Practice Questions Found</h2>
+                <p>There are no practice questions generated for this conversation yet.</p>
+            </div>
+        )}
+    </div>
+    <StepByStepScript />
+</Layout>
