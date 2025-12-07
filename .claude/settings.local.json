@@ -15,7 +15,8 @@
       "Bash(pkill:*)",
       "Bash(grep:*)",
       "Bash(git restore:*)",
-      "Bash(node convert-indent.js)"
+      "Bash(node convert-indent.js)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []
