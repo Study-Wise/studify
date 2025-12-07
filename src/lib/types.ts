@@ -41,6 +41,15 @@ interface ThreadAccessResult {
     threadOwner: string | null;
 }
 
+interface GenerateWelcomeMessageParams {
+    systemPrompt: string;
+    convoHistory: any[];
+    userModel: string;
+    provider: string;
+    tools: Record<string, any>;
+    requestId: string;
+}
+
 interface ChatLeftSidebarProps {
     isPublic: boolean;
     isAuthorized: boolean;
@@ -134,6 +143,7 @@ export type {
     FlashcardResult,
     PracticeQuestionsResult,
     ThreadAccessResult,
+    GenerateWelcomeMessageParams,
     ChatLeftSidebarProps,
     ChatRightSidebarProps,
     ImageSize,

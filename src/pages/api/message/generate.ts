@@ -8,6 +8,7 @@ import {
     generateAIResponse,
     generateTitle,
 } from '../../../lib/ai-service';
+import { generateWelcomeMessage } from '../../../lib/generateWelcomeMessage';
 
 import { nanoid } from 'nanoid';
 
@@ -340,19 +341,14 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
                 // Add user message to conversation history first
                 convoHistory.push({ role: 'user', content: userPrompt });
 
-                // Welcome message prompt for first message - ask what they want to study
-                const welcomeMessagePrompt = config.welcomeMessagePrompt;
-
-                // Generate AI response using the model with welcome message prompt
+                // Generate AI welcome message
                 const tools = modeObj.tools || {};
-                const welcomeMessage = await generateAIResponse({
+                const welcomeMessage = await generateWelcomeMessage({
                     systemPrompt,
-                    userPrompt: welcomeMessagePrompt,
                     convoHistory,
                     userModel,
                     provider,
                     tools,
-                    maxSteps: 25,
                     requestId
                 });
 
