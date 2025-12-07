@@ -10,7 +10,7 @@ import MessagesScript from '../../../../scripts/messages.astro';
 import StepByStepScript from '../../../../scripts/step-by-step.astro';
 import '../../../../styles/pages/chat.scss';
 
-import { getMessages, getMessagesLength } from '../../../../lib/threads';
+import { getMessages, getMessagesLength, getThreadByToken } from '../../../../lib/threads';
 import { marked } from 'marked';
 import Footer from '../../../../components/Footer.astro';
 import { checkThreadAccess } from '../../../../lib/auth/checkThreadAccess';
@@ -38,6 +38,10 @@ const { isAuthorized, isPublic } = await checkThreadAccess(id || '', auth, categ
 if (!userId && !isPublic) {
     return Astro.redirect("/user/sign-in");
 }
+
+// Get thread data to access the title
+const thread = id ? await getThreadByToken(id, user_email) : null;
+const threadTitle = thread?.title || null;
 
 // Get messages only if authorized or public
 const messagesLength = await getMessagesLength(id || '');
@@ -89,13 +93,9 @@ export const inNav = 'hide';
     <div id="user-email" data-email={user_email} style="display: none;"></div>
     <header class="chat-header">
         <div class="chat-title-container">
-            <h2><span class="material-symbols-outlined">chat</span>&nbsp;{id ? 'Chat' : 'New Chat'}</h2>
-            <button id="share-button" class="share-button" title="Toggle thread visibility">
-                <span class="material-symbols-outlined">share</span>
-                <span class="share-text">Share</span>
-            </button>
+            <h2><span class="material-symbols-outlined">chat</span>&nbsp;{threadTitle || (id ? 'Chat' : 'New Chat')}</h2>
         </div>
-        <Header pTitle={`${id ? 'Chat' : 'New Chat'}`} />
+        <Header pTitle={threadTitle || (id ? 'Chat' : 'New Chat')} />
     </header>
     <section class="chat-container">
         <LeftSidebar
@@ -175,38 +175,6 @@ export const inNav = 'hide';
 
             chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
         });
-
-        // Share button functionality
-        const shareButton = document.getElementById('share-button');
-        if (shareButton) {
-            shareButton.addEventListener('click', async () => {
-                const url = window.location.href;
-
-                try {
-                    await navigator.clipboard.writeText(url);
-
-                    // Visual feedback
-                    const originalHTML = shareButton.innerHTML;
-                    shareButton.innerHTML = '<span class="material-symbols-outlined">check</span><span class="share-text">Copied!</span>';
-                    shareButton.style.pointerEvents = 'none';
-
-                    setTimeout(() => {
-                        shareButton.innerHTML = originalHTML;
-                        shareButton.style.pointerEvents = '';
-                    }, 2000);
-
-                    // Show success message if available
-                    if (window.showSuccess) {
-                        window.showSuccess('Thread link copied to clipboard');
-                    }
-                } catch (error) {
-                    console.error('Failed to copy link:', error);
-                    if (window.showError) {
-                        window.showError('Failed to copy link to clipboard');
-                    }
-                }
-            });
-        }
     </script>
     <MessagesScript page="chat" category={category} mode={mode} />
     <StepByStepScript />
