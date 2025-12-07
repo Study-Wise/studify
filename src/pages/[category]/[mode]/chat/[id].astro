@@ -20,6 +20,7 @@ import { getLatestInfographic } from '../../../../lib/content/latest/infographic
 import { getLatestWebpage } from '../../../../lib/content/latest/webpage';
 import { getLatestMindMap } from '../../../../lib/content/latest/mind-map';
 import { getLatestResources } from '../../../../lib/content/latest/resources';
+import { getLatestFlashcard } from '../../../../lib/content/latest/flashcard';
 
 let { category, mode, id } = Astro.params || { category: '', mode: '', id: '' };
 
@@ -40,13 +41,14 @@ if (!userId && !isPublic) {
 const messagesLength = await getMessagesLength(id || '');
 const messages = (isAuthorized || isPublic) && messagesLength > 0 ? await getMessages(id ?? '', user_email) : [];
 
-// Check if reference sheet, study guide, infographic, webpage, mind map, and resources exist
+// Check if reference sheet, study guide, infographic, webpage, mind map, resources, and flashcard exist
 let hasReferenceSheet = false;
 let hasStudyGuide = false;
 let hasInfographic = false;
 let hasWebpage = false;
 let hasMindMap = false;
 let hasResources = false;
+let hasFlashcard = false;
 
 if ((isAuthorized || isPublic) && id) {
     const referenceSheetResult = await getLatestReferenceSheet(id);
@@ -55,6 +57,7 @@ if ((isAuthorized || isPublic) && id) {
     const webpageResult = await getLatestWebpage(id);
     const mindMapResult = await getLatestMindMap(id);
     const resourcesResult = await getLatestResources(id);
+    const flashcardResult = await getLatestFlashcard(id);
 
     hasReferenceSheet = !!referenceSheetResult.content;
     hasStudyGuide = !!studyGuideResult.content;
@@ -62,6 +65,7 @@ if ((isAuthorized || isPublic) && id) {
     hasWebpage = !!webpageResult.content;
     hasMindMap = !!mindMapResult.content;
     hasResources = !!resourcesResult.content;
+    hasFlashcard = !!flashcardResult.content;
 }
 
 
@@ -120,6 +124,7 @@ export const inNav = 'hide';
             hasWebpage={hasWebpage}
             hasMindMap={hasMindMap}
             hasResources={hasResources}
+            hasFlashcard={hasFlashcard}
             threadId={id || ''}
             category={category || ''}
             mode={mode || ''}

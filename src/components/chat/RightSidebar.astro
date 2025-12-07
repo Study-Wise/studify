@@ -2,7 +2,7 @@
 import '../../styles/components/chat/right-sidebar.scss';
 import type { ChatRightSidebarProps } from '../../lib/types';
 
-const { hasReferenceSheet, hasStudyGuide, hasInfographic, hasWebpage, hasMindMap, hasResources, threadId, category, mode } = Astro.props as ChatRightSidebarProps;
+const { hasReferenceSheet, hasStudyGuide, hasInfographic, hasWebpage, hasMindMap, hasResources, hasFlashcard, threadId, category, mode } = Astro.props as ChatRightSidebarProps;
 
 const referenceSheetUrl = `/${category}/${mode}/reference-sheet/${threadId}`;
 const studyGuideUrl = `/${category}/${mode}/study-guide/${threadId}`;
@@ -10,6 +10,7 @@ const infographicUrl = `/${category}/${mode}/infographic/${threadId}`;
 const webpageUrl = `/${category}/${mode}/webpage/${threadId}`;
 const mindMapUrl = `/${category}/${mode}/mind-map/${threadId}`;
 const resourcesUrl = `/${category}/${mode}/resources/${threadId}`;
+const flashcardUrl = `/${category}/${mode}/flashcard/${threadId}`;
 ---
 <aside class="chat-right-sidebar">
     <div class="chat-right-sidebar-content">
@@ -37,6 +38,36 @@ const resourcesUrl = `/${category}/${mode}/resources/${threadId}`;
                         <button class="generate-btn" id="generate-study-guide-btn" data-thread-id={threadId}>
                             <span class="material-symbols-outlined">menu_book</span>
                             <span>Generate Study Guide</span>
+                        </button>
+                    </div>
+                )}
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="material-symbols-outlined">style</span>
+                    <h3>Flashcards</h3>
+                </div>
+                {hasFlashcard && (
+                    <button class="regenerate-btn" id="regenerate-flashcard-btn" title="Regenerate flashcards" data-thread-id={threadId}>
+                        <span class="material-symbols-outlined">refresh</span>
+                    </button>
+                )}
+            </div>
+            <div class="section-body">
+                {hasFlashcard ? (
+                    <a href={flashcardUrl} class="view-full-btn" target="_blank">
+                        <span class="material-symbols-outlined">open_in_new</span>
+                        <span>View Flashcards</span>
+                    </a>
+                ) : (
+                    <div class="empty-state">
+                        <p class="empty-message">No flashcards generated yet.</p>
+                        <button class="generate-btn" id="generate-flashcard-btn" data-thread-id={threadId}>
+                            <span class="material-symbols-outlined">style</span>
+                            <span>Generate Flashcards</span>
                         </button>
                     </div>
                 )}
@@ -202,12 +233,14 @@ const resourcesUrl = `/${category}/${mode}/resources/${threadId}`;
     const generateWebpageBtn = document.getElementById('generate-webpage-btn');
     const generateMindMapBtn = document.getElementById('generate-mind-map-btn');
     const generateResourcesBtn = document.getElementById('generate-resources-btn');
+    const generateFlashcardBtn = document.getElementById('generate-flashcard-btn');
     const regenerateInfographicBtn = document.getElementById('regenerate-infographic-btn');
     const regenerateReferenceSheetBtn = document.getElementById('regenerate-reference-sheet-btn');
     const regenerateStudyGuideBtn = document.getElementById('regenerate-study-guide-btn');
     const regenerateWebpageBtn = document.getElementById('regenerate-webpage-btn');
     const regenerateMindMapBtn = document.getElementById('regenerate-mind-map-btn');
     const regenerateResourcesBtn = document.getElementById('regenerate-resources-btn');
+    const regenerateFlashcardBtn = document.getElementById('regenerate-flashcard-btn');
 
     async function generateInfographic(threadId: string, isRegenerate: boolean = false) {
         const btn = isRegenerate ? regenerateInfographicBtn : generateInfographicBtn;
@@ -551,6 +584,65 @@ const resourcesUrl = `/${category}/${mode}/resources/${threadId}`;
             if (threadId) {
                 if (confirm('Are you sure you want to find new resources? This will replace the existing ones.')) {
                     generateResources(threadId, true);
+                }
+            }
+        });
+    }
+
+    async function generateFlashcard(threadId: string, isRegenerate: boolean = false) {
+        const btnId = isRegenerate ? 'regenerate-flashcard-btn' : 'generate-flashcard-btn';
+        const btn = document.getElementById(btnId);
+        if (!btn) return;
+
+        // Disable button and show loading state
+        btn.setAttribute('disabled', 'true');
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = `<span class="material-symbols-outlined spinning">progress_activity</span><span>${isRegenerate ? 'Regenerating...' : 'Generating...'}</span>`;
+
+        try {
+            const response = await fetch('/api/flashcard/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ threadId }),
+            });
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                // Reload the page to show the new flashcard
+                window.location.reload();
+            } else {
+                throw new Error(data.error || 'Failed to generate flashcard');
+            }
+        } catch (error) {
+            console.error('Error generating flashcard:', error);
+            (window as any).showError(error instanceof Error ? error.message : 'Failed to generate flashcard. Please try again.');
+
+            // Restore button state
+            btn.removeAttribute('disabled');
+            btn.innerHTML = originalContent;
+        }
+    }
+
+    // Generate flashcard button
+    if (generateFlashcardBtn) {
+        generateFlashcardBtn.addEventListener('click', () => {
+            const threadId = generateFlashcardBtn.getAttribute('data-thread-id');
+            if (threadId) {
+                generateFlashcard(threadId, false);
+            }
+        });
+    }
+
+    // Regenerate flashcard button
+    if (regenerateFlashcardBtn) {
+        regenerateFlashcardBtn.addEventListener('click', () => {
+            const threadId = regenerateFlashcardBtn.getAttribute('data-thread-id');
+            if (threadId) {
+                if (confirm('Are you sure you want to regenerate the flashcards? This will replace the existing ones.')) {
+                    generateFlashcard(threadId, true);
                 }
             }
         });

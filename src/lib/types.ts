@@ -27,6 +27,10 @@ interface MindMapResult {
     content: string | null;
 }
 
+interface FlashcardResult {
+    content: string | null;
+}
+
 interface ThreadAccessResult {
     isAuthorized: boolean;
     isPublic: boolean;
@@ -40,6 +44,7 @@ interface ChatRightSidebarProps {
     hasWebpage: boolean;
     hasMindMap: boolean;
     hasResources: boolean;
+    hasFlashcard: boolean;
     threadId: string;
     category: string;
     mode: string;
@@ -104,6 +109,7 @@ export type {
     ReferenceSheetResult,
     StudyGuideResult,
     MindMapResult,
+    FlashcardResult,
     ThreadAccessResult,
     ChatRightSidebarProps,
     ImageSize,

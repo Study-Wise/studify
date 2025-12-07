@@ -18,6 +18,7 @@ const threadsTable = pgTable('threads', {
     generatedWebpage: text('generatedWebpage'),
     generatedMindMap: text('generatedMindMap'),
     generatedResources: text('generatedResources'),
+    generatedFlashcard: text('generatedFlashcard'),
     isPublic: boolean('isPublic').notNull().default(false),
     createdAt: timestamp('createdAt').notNull().defaultNow(),
     updatedAt: timestamp('updatedAt').notNull().defaultNow(),
