@@ -40,7 +40,7 @@ const { page, category, mode } = Astro.props;
     }
 
     // Main output generation
-    async function generateOutput() {
+    window.generateOutput = async function generateOutput() {
         if (!messageInput) {
             displayError('Input field missing!');
             return;
