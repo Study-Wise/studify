@@ -117,9 +117,7 @@ interface SidebarSectionProps {
     viewUrl: string;
     viewButtonText: string;
     emptyMessage: string;
-    generateButtonId: string;
-    generateButtonText: string;
-    regenerateButtonId: string;
+    id: string;
 }
 
 export type {

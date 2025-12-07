@@ -9,10 +9,12 @@ const {
     viewUrl,
     viewButtonText,
     emptyMessage,
-    generateButtonId,
-    generateButtonText,
-    regenerateButtonId
+    id,
 } = Astro.props as SidebarSectionProps;
+
+const generateButtonId = `generate-${id}-btn`;
+const regenerateButtonId = `regenerate-${id}-btn`;
+
 ---
 <div class="sidebar-section">
     <div class="section-header">
@@ -21,7 +23,7 @@ const {
             <h3>{title}</h3>
         </div>
         {hasContent && (
-            <button class="regenerate-btn" id={regenerateButtonId} title={`Regenerate ${title.toLowerCase()}`} data-thread-id={threadId}>
+            <button class="regenerate-btn" id={regenerateButtonId} title={`Regenerate ${title}`} data-thread-id={threadId}>
                 <span class="material-symbols-outlined">refresh</span>
             </button>
         )}
@@ -37,9 +39,86 @@ const {
                 <p class="empty-message">{emptyMessage}</p>
                 <button class="generate-btn" id={generateButtonId} data-thread-id={threadId}>
                     <span class="material-symbols-outlined">{icon}</span>
-                    <span>{generateButtonText}</span>
+                    <span>{`Generate ${title}`}</span>
                 </button>
             </div>
         )}
     </div>
 </div>
+
+<script is:inline define:vars={{ generateButtonId, regenerateButtonId, title, id }}>
+    // Extract the feature type from the button ID (e.g., "generate-study-guide-btn" -> "study-guide")
+    const apiEndpoint = `/api/${id}/generate`;
+
+    const generateBtn = document.getElementById(generateButtonId);
+    const regenerateBtn = document.getElementById(regenerateButtonId);
+
+    async function generateContent(threadId, isRegenerate = false) {
+        const btn = isRegenerate ? regenerateBtn : generateBtn;
+        if (!btn) return;
+
+        // Disable button and show loading state
+        btn.setAttribute('disabled', 'true');
+        const originalContent = btn.innerHTML;
+        const loadingText = isRegenerate ? 'Regenerating...' : 'Generating...';
+
+        // Special case for resources
+        const isResources = apiEndpoint.includes('resources');
+        const resourcesLoadingText = isRegenerate ? 'Searching...' : 'Finding Resources...';
+
+        btn.innerHTML = `<span class="material-symbols-outlined spinning">progress_activity</span><span>${isResources ? resourcesLoadingText : loadingText}</span>`;
+
+        try {
+            const response = await fetch(apiEndpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ threadId }),
+            });
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                // Reload the page to show the new content
+                window.location.reload();
+            } else {
+                throw new Error(data.error || `Failed to generate ${title.toLowerCase()}`);
+            }
+        } catch (error) {
+            console.error(`Error generating ${title.toLowerCase()}:`, error);
+            (window).showError?.(error instanceof Error ? error.message : `Failed to generate ${title.toLowerCase()}. Please try again.`);
+
+            // Restore button state
+            btn.removeAttribute('disabled');
+            btn.innerHTML = originalContent;
+        }
+    }
+
+    // Generate button
+    if (generateBtn) {
+        generateBtn.addEventListener('click', () => {
+            const threadId = generateBtn.getAttribute('data-thread-id');
+            if (threadId) {
+                generateContent(threadId, false);
+            }
+        });
+    }
+
+    // Regenerate button
+    if (regenerateBtn) {
+        regenerateBtn.addEventListener('click', () => {
+            const threadId = regenerateBtn.getAttribute('data-thread-id');
+            if (threadId) {
+                const confirmMessage = `Are you sure you want to regenerate the ${title.toLowerCase()}? This will replace the existing one.`;
+                // Special case for resources
+                const resourcesConfirmMessage = 'Are you sure you want to find new resources? This will replace the existing ones.';
+                const isResources = apiEndpoint.includes('resources');
+
+                if (confirm(isResources ? resourcesConfirmMessage : confirmMessage)) {
+                    generateContent(threadId, true);
+                }
+            }
+        });
+    }
+</script>
