@@ -2,13 +2,14 @@
 import '../../styles/components/chat/right-sidebar.scss';
 import type { ChatRightSidebarProps } from '../../lib/types';
 
-const { hasReferenceSheet, hasStudyGuide, hasInfographic, hasWebpage, hasMindMap, threadId, category, mode } = Astro.props as ChatRightSidebarProps;
+const { hasReferenceSheet, hasStudyGuide, hasInfographic, hasWebpage, hasMindMap, hasResources, threadId, category, mode } = Astro.props as ChatRightSidebarProps;
 
 const referenceSheetUrl = `/${category}/${mode}/reference-sheet/${threadId}`;
 const studyGuideUrl = `/${category}/${mode}/study-guide/${threadId}`;
 const infographicUrl = `/${category}/${mode}/infographic/${threadId}`;
 const webpageUrl = `/${category}/${mode}/webpage/${threadId}`;
 const mindMapUrl = `/${category}/${mode}/mind-map/${threadId}`;
+const resourcesUrl = `/${category}/${mode}/resources/${threadId}`;
 ---
 <aside class="chat-right-sidebar">
     <div class="chat-right-sidebar-content">
@@ -156,6 +157,36 @@ const mindMapUrl = `/${category}/${mode}/mind-map/${threadId}`;
                         <button class="generate-btn" id="generate-mind-map-btn" data-thread-id={threadId}>
                             <span class="material-symbols-outlined">hub</span>
                             <span>Generate Mind Map</span>
+                        </button>
+                    </div>
+                )}
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="material-symbols-outlined">travel_explore</span>
+                    <h3>Learning Resources</h3>
+                </div>
+                {hasResources && (
+                    <button class="regenerate-btn" id="regenerate-resources-btn" title="Regenerate resources" data-thread-id={threadId}>
+                        <span class="material-symbols-outlined">refresh</span>
+                    </button>
+                )}
+            </div>
+            <div class="section-body">
+                {hasResources ? (
+                    <a href={resourcesUrl} class="view-full-btn" target="_blank">
+                        <span class="material-symbols-outlined">open_in_new</span>
+                        <span>View Resources</span>
+                    </a>
+                ) : (
+                    <div class="empty-state">
+                        <p class="empty-message">No resources found yet.</p>
+                        <button class="generate-btn" id="generate-resources-btn" data-thread-id={threadId}>
+                            <span class="material-symbols-outlined">travel_explore</span>
+                            <span>Find Resources</span>
                         </button>
                     </div>
                 )}
