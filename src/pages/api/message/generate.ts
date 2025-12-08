@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import type { APIRoute } from 'astro';
 
 import config from '../../../lib/config';
@@ -83,18 +82,35 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
         }
         
         console.log(`🔐 [${requestId}] Authentication found, extracting user info`);
-        const { userId } = auth();
+        const { userId, sessionClaims } = auth();
 
         // Fetch user from Clerk to get email and check admin status
         let user_email: string | null = null;
         let isAdmin = false;
+
+        // Check admin status from session claims (same as rest of the app)
+        const userRole = (sessionClaims?.metadata as any)?.role || null;
+        isAdmin = userRole === 'admin';
+
         if (userId) {
             try {
                 const client = clerkClient({ request, locals, ...context });
                 const user = await client.users.getUser(userId);
                 user_email = user.emailAddresses?.[0]?.emailAddress || null;
-                // Check if user has admin role in public metadata
-                isAdmin = user.publicMetadata?.role === 'admin' || user.privateMetadata?.role === 'admin';
+
+                // Log metadata for debugging
+                console.log(`🔍 [${requestId}] User metadata:`, {
+                    sessionClaimsRole: userRole,
+                    publicMetadata: user.publicMetadata,
+                    publicRole: user.publicMetadata?.role
+                });
+
+                // Fallback: Also check publicMetadata if session claims don't have role
+                if (!isAdmin && user.publicMetadata?.role === 'admin') {
+                    isAdmin = true;
+                    console.log(`⚠️ [${requestId}] Admin role found in publicMetadata but not in session claims`);
+                }
+
                 console.log(`✅ [${requestId}] Successfully fetched user email from Clerk`);
             } catch (error) {
                 console.error(`❌ [${requestId}] Error fetching user from Clerk:`, error);
@@ -104,6 +120,7 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
         console.log(`👤 [${requestId}] User info:`, {
             userId: userId || 'none',
             userEmail: user_email || 'none',
+            userRole: userRole || 'none',
             isAdmin: isAdmin
         });
 
