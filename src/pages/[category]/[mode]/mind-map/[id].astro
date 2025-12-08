@@ -3,8 +3,14 @@ import Layout from '../../../../layouts/Layout.astro';
 import { getLatestMindMap } from '../../../../lib/content/latest/mind-map';
 import { checkThreadAccess } from '../../../../lib/auth/checkThreadAccess';
 import '../../../../styles/pages/content/mind-map.scss';
+import categories from '../../../../lib/modes';
 
 const { category, mode, id } = Astro.params;
+
+const categoryObj = category ? categories[category] : null;
+const modeObj = categoryObj?.modes?.[mode || ''];
+const categoryName = categoryObj?.name || category;
+const modeName = modeObj?.name || mode;
 
 // Get user authentication
 const { auth } = Astro.locals;
@@ -24,7 +30,7 @@ const { content: latestMindMap } = (isAuthorized || isPublic)
     : { content: null };
 ---
 
-<Layout title={`Mind Map | ${mode} | ${category}`}  container={false}>
+<Layout title={`Mind Map | ${modeName} | ${categoryName}`}  container={false}>
     <div class="mind-map-page">
         {!isAuthorized && !isPublic ? (
             <div class="empty-state">

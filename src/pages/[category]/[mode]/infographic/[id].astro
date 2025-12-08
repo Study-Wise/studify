@@ -3,8 +3,14 @@ import Layout from '../../../../layouts/Layout.astro';
 import { getLatestInfographic } from '../../../../lib/content/latest/infographic';
 import { checkThreadAccess } from '../../../../lib/auth/checkThreadAccess';
 import '../../../../styles/pages/content/infographic.scss';
+import categories from '../../../../lib/modes';
 
 const { category, mode, id } = Astro.params;
+
+const categoryObj = category ? categories[category] : null;
+const modeObj = categoryObj?.modes?.[mode || ''];
+const categoryName = categoryObj?.name || category;
+const modeName = modeObj?.name || mode;
 
 // Get user authentication
 const { auth } = Astro.locals;
@@ -27,7 +33,7 @@ const infographic = (isAuthorized || isPublic) && id
 const infographicUrl = infographic?.imageUrl || null;
 ---
 
-<Layout title={`Infographic | ${mode} | ${category}`}  container={true}>
+<Layout title={`Infographic | ${modeName} | ${categoryName}`}  container={true}>
     <div class="infographic-page">
         {!isAuthorized && !isPublic ? (
             <div class="empty-state">
