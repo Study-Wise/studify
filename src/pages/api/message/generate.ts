@@ -19,6 +19,7 @@ import type { Mode } from '../../../lib/types';
 import { threadsTable } from '../../../db/schema';
 import { isValidEmail } from '../../../lib/validation';
 import { clerkClient } from '@clerk/astro/server';
+import { isAdmin as checkIsAdmin, getUserRole } from '../../../lib/auth-utils';
 
 type Thread = InferSelectModel<typeof threadsTable>;
 type ThreadInsert = InferInsertModel<typeof threadsTable>;
@@ -82,16 +83,14 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
         }
         
         console.log(`🔐 [${requestId}] Authentication found, extracting user info`);
-        const { userId, sessionClaims } = auth();
+        const { userId } = auth();
 
-        // Fetch user from Clerk to get email and check admin status
+        // Check admin status using auth-utils (consistent with rest of app)
+        const isAdmin = checkIsAdmin(auth);
+        const userRole = getUserRole(auth);
+
+        // Fetch user email from Clerk
         let user_email: string | null = null;
-        let isAdmin = false;
-
-        // Check admin status from session claims (same as rest of the app)
-        const userRole = (sessionClaims?.metadata as any)?.role || null;
-        isAdmin = userRole === 'admin';
-
         if (userId) {
             try {
                 const client = clerkClient({ request, locals, ...context });
@@ -104,12 +103,6 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
                     publicMetadata: user.publicMetadata,
                     publicRole: user.publicMetadata?.role
                 });
-
-                // Fallback: Also check publicMetadata if session claims don't have role
-                if (!isAdmin && user.publicMetadata?.role === 'admin') {
-                    isAdmin = true;
-                    console.log(`⚠️ [${requestId}] Admin role found in publicMetadata but not in session claims`);
-                }
 
                 console.log(`✅ [${requestId}] Successfully fetched user email from Clerk`);
             } catch (error) {
