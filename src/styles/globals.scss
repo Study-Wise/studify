@@ -39,6 +39,12 @@
     }
 }
 
+imput, textarea, select, button {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+}
+
 .content-container [class$="-content"],
 .message.assistant .message-content {
     *:not(.step-by-step, .step-by-step *, pre, code, a) {
