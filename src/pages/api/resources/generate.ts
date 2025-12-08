@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import type { APIRoute } from 'astro';
 import { nanoid } from 'nanoid';
 
