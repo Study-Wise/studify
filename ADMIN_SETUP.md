@@ -79,11 +79,13 @@ After setting up the webhook:
 
 1. Create a new test account with one of the admin emails (e.g., `test@studywise.onl`)
 2. Check your server logs for:
-   ```
+
+   ```text
    📨 Clerk webhook received: user.created
    👤 New user created: test@studywise.onl (user_xxx)
    ✅ Auto-promoted user test@studywise.onl to admin role via webhook
    ```
+
 3. Sign out and sign back in with the new account
 4. Verify admin access by visiting `/admin` or creating more than 5 threads
 
