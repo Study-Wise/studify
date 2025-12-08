@@ -1,7 +1,7 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/astro/server';
 
 // Define protected routes
-const isProtectedRoute = createRouteMatcher(['/[category]/[mode]/chat(.*)', '/settings(.*)', '/admin(.*)']);
+const isProtectedRoute = createRouteMatcher(['/[category]/[mode]/chat(.*)', '/settings(.*)', '/admin(.*)', '/user/profile(.*)']);
 const isMFARoute = createRouteMatcher(['/account/manage-mfa(.*)']);
 const isSignInRoute = createRouteMatcher(['/user/sign-in(.*)', '/user/sign-up(.*)']);
 
