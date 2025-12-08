@@ -121,7 +121,7 @@ export const inNav = 'hide';
 
                         // Render message
                         return <div class={`message ${message.role}`}>
-                            <div class={`message-content ${message.role === 'user' ? 'bg-primary' : ''}`} set:html={htmlText} />
+                            <div class={`message-content${message.role === 'user' ? ' bg-primary' : ''}`} set:html={htmlText} />
                         </div>
                     })
                 ) : (
