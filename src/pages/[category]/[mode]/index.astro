@@ -23,7 +23,7 @@ const categoryObj = category ? categories[category] : null;
 const modeObj = categoryObj?.modes?.[mode || ''];
 
 ---
-<Layout title="Home">
+<Layout title={`${mode} | ${category}`}>
     <div id="user-email" data-email={user_email} style="display: none"></div>
     <!-- Introduction Section -->
     <section class="introduction-section card" aria-labelledby="how-it-works-heading">
