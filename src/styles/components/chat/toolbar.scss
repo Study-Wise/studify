@@ -34,7 +34,7 @@ $padding: 1rem;
     .input-wrapper {
         display: grid;
         grid-template-columns: 1fr auto;
-        align-items: flex-end;
+        align-items: center;
         gap: $padding * 0.75;
         background: var(--card-bg);
         border: 2px solid rgba(from var(--card-border) r g b / 0.4);
@@ -90,16 +90,17 @@ $padding: 1rem;
 
     .send-button {
         box-sizing: border-box;
-        padding: 0.625rem;
+        padding: 0.5rem;
         display: flex;
         align-items: center;
         justify-content: center;
         aspect-ratio: 1;
-        width: 2.75lh;
+        width: 2.25rem;
+        height: 2.25rem;
         background: linear-gradient(135deg, $color, color.adjust($color, $hue: 15deg));
         color: white;
         border: none;
-        border-radius: 0.75rem;
+        border-radius: 0.625rem;
         cursor: pointer;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         flex-shrink: 0;
