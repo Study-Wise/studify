@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 import { generateText, stepCountIs } from 'ai';
 
 import config from './config';
