@@ -60,6 +60,15 @@ $padding: 1rem;
                 0 4px 12px rgba(from var(--card-shadow) r g b / 0.08),
                 inset 0 1px 2px rgba(from var(--header-text) r g b / 0.02);
         }
+        &:has([aria-invalid=true]) {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 1px #ef4444;
+
+            [aria-invalid=true] {
+                border: none;
+                box-shadow: none;
+            }
+        }
     }
 
     .message-input {
