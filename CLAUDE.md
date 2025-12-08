@@ -82,7 +82,7 @@ Single table defined in `src/db/schema.ts`:
 - Core fields: `id`, `title`, `email`, `category`, `mode`, `model`, `provider`
 
 - Thread data: `thread` (JSONB storing messages array)
-- Generated content: `generatedStudyGuide`, `generatedReferenceSheet`, `generatedInfographic`, `generatedWebpage`, `generatedMindMap`, `generatedResources`, `generatedFlashcard`, `generatedPracticeQuestions`
+- Generated content: `generatedStudyGuide`, `generatedReferenceSheet`, `generatedInfographic`, `generatedWebpage`, `generatedMindMap`, `generatedResources`, `generatedFlashcards`, `generatedPracticeQuestions`
 - Metadata: `uploadedFiles`, `isPublic`, `isDev`, `createdAt`, `updatedAt`
 
 Database operations in `src/lib/threads.ts` provide:
@@ -111,7 +111,7 @@ API endpoints in `src/pages/api/`:
 - **POST /api/webpage/generate.ts**: Generate webpages from thread
 - **POST /api/mind-map/generate.ts**: Generate mind maps from thread
 - **POST /api/resources/generate.ts**: Generate additional learning resources
-- **POST /api/flashcard/generate.ts**: Generate flashcards from thread content
+- **POST /api/flashcards/generate.ts**: Generate flashcards from thread content
 - **POST /api/practice-questions/generate.ts**: Generate practice questions
 
 **Thread & Authentication:**
@@ -142,7 +142,7 @@ Dynamic routing in `src/pages/`:
 - **`[category]/[mode]/webpage/[id].astro`**: Webpage viewer
 - **`[category]/[mode]/mind-map/[id].astro`**: Mind map viewer
 - **`[category]/[mode]/resources/[id].astro`**: Learning resources viewer
-- **`[category]/[mode]/flashcard/[id].astro`**: Flashcard viewer
+- **`[category]/[mode]/flashcards/[id].astro`**: Flashcards viewer
 - **`[category]/[mode]/practice-questions/[id].astro`**: Practice questions viewer
 
 ### Component Organization
@@ -159,7 +159,7 @@ Dynamic routing in `src/pages/`:
 
 Content generation logic in `src/lib/content/`:
 
-- `generate/` - Functions to create new content (study-guide.ts, reference-sheet.ts, infographic.ts, webpage.ts, mind-map.ts, resources.ts, flashcard.ts, practice-questions.ts)
+- `generate/` - Functions to create new content (study-guide.ts, reference-sheet.ts, infographic.ts, webpage.ts, mind-map.ts, resources.ts, flashcards.ts, practice-questions.ts)
 - `latest/` - Functions to retrieve latest generated content from threads
 
 ### Environment Variables
