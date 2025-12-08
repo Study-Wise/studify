@@ -23,8 +23,14 @@ import { getLatestResources } from '../../../../lib/content/latest/resources';
 import { getLatestFlashcards } from '../../../../lib/content/latest/flashcards';
 import { getLatestPracticeQuestions } from '../../../../lib/content/latest/practice-questions';
 import { checkForOneMessage } from '../../../../lib/checkForOneMessage';
+import categories from '../../../../lib/modes';
 
 let { category, mode, id } = Astro.params || { category: '', mode: '', id: '' };
+
+const categoryObj = category ? categories[category] : null;
+const modeObj = categoryObj?.modes?.[mode || ''];
+const categoryName = categoryObj?.name || category;
+const modeName = modeObj?.name || mode;
 
 // Use Clerk authentication
 const { auth } = Astro.locals;
@@ -89,7 +95,7 @@ if ((isAuthorized || isPublic) && id) {
 
 export const inNav = 'hide';
 ---
-<Layout title={`Chat | ${mode} | ${category}`} container={false} isChatArea={true} additionalClasses={['chat-page']} hideCopyright={true}>
+<Layout title={`Chat | ${modeName} | ${categoryName}`} container={false} isChatArea={true} additionalClasses={['chat-page']} hideCopyright={true}>
     <div id="user-email" data-email={user_email} style="display: none;"></div>
     <header class="chat-header">
         <div class="chat-title-container">

@@ -5,8 +5,14 @@ import { checkThreadAccess } from '../../../../lib/auth/checkThreadAccess';
 import StepByStepScript from '../../../../scripts/step-by-step.astro';
 import { marked } from 'marked';
 import '../../../../styles/pages/content/study-guide.scss';
+import categories from '../../../../lib/modes';
 
 const { category, mode, id } = Astro.params;
+
+const categoryObj = category ? categories[category] : null;
+const modeObj = categoryObj?.modes?.[mode || ''];
+const categoryName = categoryObj?.name || category;
+const modeName = modeObj?.name || mode;
 
 // Get user authentication
 const { auth } = Astro.locals;
@@ -29,7 +35,7 @@ const { content: latestStudyGuide } = (isAuthorized || isPublic)
 const parsedContent = latestStudyGuide ? await marked.parse(latestStudyGuide) : null;
 ---
 
-<Layout title={`Study Guide | ${mode} | ${category}`}  container={true}>
+<Layout title={`Study Guide | ${modeName} | ${categoryName}`}  container={true}>
     <div class="study-guide-page">
         {!isAuthorized && !isPublic ? (
             <div class="empty-state">
