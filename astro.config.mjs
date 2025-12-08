@@ -24,6 +24,7 @@ export default defineConfig({
             signUpUrl: '/user/sign-up',
             signInFallbackRedirectUrl: '/',
             signUpFallbackRedirectUrl: '/',
+            userProfileUrl: '/user/profile',
 
             // Appearance customization
             appearance: {
