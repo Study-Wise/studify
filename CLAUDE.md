@@ -176,6 +176,33 @@ Required environment variables (see `.env`):
 
 ## Development Guidelines
 
+### CRITICAL: Styling Rules
+
+**NEVER put styles in `.astro` files using `<style>` tags. ALWAYS create separate `.scss` files.**
+
+- **Pages**: Create styles in `src/styles/pages/[page-name].scss`
+- **Components**: Create styles in `src/styles/components/[component-name].scss`
+- **Import**: Use `import '../styles/pages/[page-name].scss'` in the frontmatter
+
+Example structure:
+
+```astro
+---
+import Layout from '../layouts/Layout.astro';
+import '../styles/pages/my-page.scss';  // ← ALWAYS DO THIS
+---
+
+<Layout>
+    <div class="my-page-container">
+        <!-- content -->
+    </div>
+</Layout>
+
+<!-- NO <style> TAGS HERE! -->
+```
+
+This keeps styles organized, reusable, and maintainable. Inline styles make the codebase messy and harder to maintain.
+
 ### Adding New AI Tools
 
 1. Create tool file in `src/lib/tools/[tool-name].ts`
