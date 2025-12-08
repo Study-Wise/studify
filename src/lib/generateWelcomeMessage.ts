@@ -18,10 +18,13 @@ export async function generateWelcomeMessage({
 }: GenerateWelcomeMessageParams): Promise<string> {
     console.log(`🎯 [${requestId}] Generating welcome message with AI model`);
 
+    // Create a copy of convoHistory to avoid polluting the original with the welcome prompt
+    const convoHistoryCopy = JSON.parse(JSON.stringify(convoHistory));
+
     const welcomeMessage = await generateAIResponse({
         systemPrompt,
         userPrompt: config.welcomeMessagePrompt,
-        convoHistory,
+        convoHistory: convoHistoryCopy,
         userModel,
         provider,
         tools,
