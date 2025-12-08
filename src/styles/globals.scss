@@ -38,13 +38,17 @@
         padding-inline-start: 1.5em;
     }
 }
-.content-container [class$="-content"] *:not(.step-by-step, .step-by-step *) {
-    &, &::before, &::after {
-        padding: revert;
-    }
-    &:not(:first-child):not(:last-child) {
+
+.content-container [class$="-content"],
+.message.ai .message-content {
+    *:not(.step-by-step, .step-by-step *) {
         &, &::before, &::after {
-            margin: revert;
+            padding: revert;
+        }
+        &:not(:first-child):not(:last-child) {
+            &, &::before, &::after {
+                margin: revert;
+            }
         }
     }
 }
