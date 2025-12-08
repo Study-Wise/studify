@@ -107,7 +107,7 @@ API endpoints in `src/pages/api/`:
 
 - **POST /api/study-guide/generate.ts**: Generate study guides from thread
 - **POST /api/reference-sheet/generate.ts**: Generate reference sheets
-- **POST /api/infographic/generate.ts**: Generate infographics (uses Ideogram API)
+- **POST /api/infographic/generate.ts**: Generate infographics (uses OpenAI image generation)
 - **POST /api/webpage/generate.ts**: Generate webpages from thread
 - **POST /api/mind-map/generate.ts**: Generate mind maps from thread
 - **POST /api/resources/generate.ts**: Generate additional learning resources
@@ -169,11 +169,10 @@ Required environment variables (see `.env`):
 - `POSTGRES_URL` - PostgreSQL connection string
 - `CLERK_PUBLISHABLE_KEY` - Clerk public key
 - `CLERK_SECRET_KEY` - Clerk secret key
-- `OPENAI_API_KEY` - OpenAI API key
+- `OPENAI_API_KEY` - OpenAI API key (also used for image generation)
 - `GOOGLE_GENERATIVE_AI_API_KEY` - Google AI key
 - `EXA_SEARCH_API_KEY` - Exa search API key
 - `UPLOADTHING_TOKEN` - UploadThing token
-- `IDEOGRAM_API_KEY` - Ideogram API key for infographic generation
 
 ## Development Guidelines
 

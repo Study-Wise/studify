@@ -53,7 +53,7 @@ This document contains potential features that could be added to enhance the Stu
 
 - [ ] Video explanations generated from threads
 - [ ] Audio summaries for listening while commuting
-- [x] Interactive diagrams and visualizations (infographics via Ideogram API)
+- [x] Interactive diagrams and visualizations (infographics via OpenAI image generation)
 - [x] Interactive mind maps (HTML/CSS/SVG based)
 - [ ] 3D models for STEM subjects
 
