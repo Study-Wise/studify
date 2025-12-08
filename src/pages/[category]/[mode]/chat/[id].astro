@@ -20,7 +20,7 @@ import { getLatestInfographic } from '../../../../lib/content/latest/infographic
 import { getLatestWebpage } from '../../../../lib/content/latest/webpage';
 import { getLatestMindMap } from '../../../../lib/content/latest/mind-map';
 import { getLatestResources } from '../../../../lib/content/latest/resources';
-import { getLatestFlashcard } from '../../../../lib/content/latest/flashcard';
+import { getLatestFlashcards } from '../../../../lib/content/latest/flashcards';
 import { getLatestPracticeQuestions } from '../../../../lib/content/latest/practice-questions';
 import { checkForOneMessage } from '../../../../lib/checkForOneMessage';
 
@@ -73,7 +73,7 @@ if ((isAuthorized || isPublic) && id) {
     const webpageResult = await getLatestWebpage(id);
     const mindMapResult = await getLatestMindMap(id);
     const resourcesResult = await getLatestResources(id);
-    const flashcardResult = await getLatestFlashcard(id);
+    const flashcardResult = await getLatestFlashcards(id);
     const practiceQuestionsResult = await getLatestPracticeQuestions(id);
 
     hasReferenceSheet = !!referenceSheetResult.content;
