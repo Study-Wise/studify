@@ -1,0 +1,27 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { UserProfile } from '@clerk/astro/components';
+
+// Use Clerk authentication
+const auth = (Astro.locals as any).auth;
+const { userId } = auth();
+
+// Redirect to sign-in if not authenticated
+if (!userId) {
+    return Astro.redirect("/user/sign-in");
+}
+---
+
+<Layout title="User Profile">
+    <div class="profile-container">
+        <UserProfile />
+    </div>
+</Layout>
+
+<style>
+    .profile-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+</style>
