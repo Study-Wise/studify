@@ -86,8 +86,8 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
         const { userId } = auth();
 
         // Check admin status using auth-utils (consistent with rest of app)
-        const isAdmin = checkIsAdmin(auth);
-        const userRole = getUserRole(auth);
+        let isAdmin = checkIsAdmin(auth);
+        let userRole = getUserRole(auth);
 
         // Fetch user email from Clerk
         let user_email: string | null = null;
@@ -96,6 +96,14 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
                 const client = clerkClient({ request, locals, ...context });
                 const user = await client.users.getUser(userId);
                 user_email = user.emailAddresses?.[0]?.emailAddress || null;
+
+                // Fallback: Also check publicMetadata if session claims don't have role
+                // This handles cases where session token customization isn't configured yet
+                if (!isAdmin && user.publicMetadata?.role === 'admin') {
+                    isAdmin = true;
+                    userRole = 'admin';
+                    console.log(`⚠️ [${requestId}] Admin role found in publicMetadata but not in session claims. Please configure session token customization in Clerk Dashboard.`);
+                }
 
                 // Log metadata for debugging
                 console.log(`🔍 [${requestId}] User metadata:`, {
