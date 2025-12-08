@@ -111,12 +111,13 @@ header {
         }
     }
 
-    header h1 {
-        font-size: 1.6rem;
-    }
-
-    header .tagline {
-        font-size: 0.95rem;
+    header {
+        h1 {
+            font-size: 1.6rem;
+        }
+        .tagline {
+            font-size: 0.95rem;
+        }
     }
 }
 
@@ -133,12 +134,13 @@ header {
         gap: 15px;
     }
 
-    header h1 {
-        font-size: 1.5rem;
-    }
-
-    header .tagline {
-        display: none;
+    header {
+        h1 {
+            font-size: 1.5rem;
+        }
+        .tagline {
+            display: none;
+        }
     }
 
     .header-nav {
@@ -176,15 +178,16 @@ header {
         }
     }
 
-    header h1 {
-        font-size: 1.4rem;
-        margin-bottom: 0.1rem;
-    }
-
-    header .tagline {
-        display: block;
-        font-size: 0.9rem;
-        text-align: center;
+    header {
+        h1 {
+            font-size: 1.4rem;
+            margin-bottom: 0.1rem;
+        }
+        .tagline {
+            display: block;
+            font-size: 0.9rem;
+            text-align: center;
+        }
     }
 
     .header-nav {
