@@ -29,7 +29,7 @@ const { content: latestReferenceSheet } = (isAuthorized || isPublic)
 const parsedContent = latestReferenceSheet ? await marked.parse(latestReferenceSheet) : null;
 ---
 
-<Layout title="Reference Sheet" container={true}>
+<Layout title={`Reference Sheet | ${mode} | ${category}`}  container={true}>
     <div class="reference-sheet-page">
         {!isAuthorized && !isPublic ? (
             <div class="empty-state">

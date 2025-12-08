@@ -34,7 +34,7 @@ if (latestResourcesJSON) {
 }
 ---
 
-<Layout title="Learning Resources" container={true}>
+<Layout title={`Resources | ${mode} | ${category}`}  container={true}>
     <div class="resources-page">
         {!isAuthorized && !isPublic ? (
             <div class="empty-state">

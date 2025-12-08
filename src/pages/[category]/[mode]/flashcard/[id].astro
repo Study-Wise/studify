@@ -28,7 +28,7 @@ const { content: latestFlashcard } = (isAuthorized || isPublic)
 const parsedContent = latestFlashcard ? await marked.parse(latestFlashcard) : null;
 ---
 
-<Layout title="Flashcards" container={true}>
+<Layout title={`Flashcards | ${mode} | ${category}`}  container={true}>
     <div class="flashcard-page">
         {!isAuthorized && !isPublic ? (
             <div class="empty-state">

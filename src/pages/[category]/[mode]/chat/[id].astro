@@ -89,7 +89,7 @@ if ((isAuthorized || isPublic) && id) {
 
 export const inNav = 'hide';
 ---
-<Layout title="Chat" container={false} isChatArea={true} additionalClasses={['chat-page']} hideCopyright={true}>
+<Layout title={`Chat | ${mode} | ${category}`} container={false} isChatArea={true} additionalClasses={['chat-page']} hideCopyright={true}>
     <div id="user-email" data-email={user_email} style="display: none;"></div>
     <header class="chat-header">
         <div class="chat-title-container">

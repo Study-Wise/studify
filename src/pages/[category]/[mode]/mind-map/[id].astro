@@ -24,7 +24,7 @@ const { content: latestMindMap } = (isAuthorized || isPublic)
     : { content: null };
 ---
 
-<Layout title="Mind Map" container={false}>
+<Layout title={`Mind Map | ${mode} | ${category}`}  container={false}>
     <div class="mind-map-page">
         {!isAuthorized && !isPublic ? (
             <div class="empty-state">

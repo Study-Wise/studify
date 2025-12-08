@@ -27,7 +27,7 @@ const infographic = (isAuthorized || isPublic) && id
 const infographicUrl = infographic?.imageUrl || null;
 ---
 
-<Layout title="Infographic" container={true}>
+<Layout title={`Infographic | ${mode} | ${category}`}  container={true}>
     <div class="infographic-page">
         {!isAuthorized && !isPublic ? (
             <div class="empty-state">
