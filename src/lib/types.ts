@@ -70,7 +70,8 @@ interface ChatRightSidebarProps {
     mode: string;
 }
 
-type ImageSize = '1024x1024' | '1024x1536' | '1536x1024';
+// OpenAI image generation supported sizes
+type ImageSize = '1024x1024' | '1024x1536' | '1536x1024' | 'auto';
 
 interface ModelOption {
     name: string;

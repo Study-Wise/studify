@@ -85,13 +85,16 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
         console.log(`🔐 [${requestId}] Authentication found, extracting user info`);
         const { userId } = auth();
 
-        // Fetch user from Clerk to get email properly
+        // Fetch user from Clerk to get email and check admin status
         let user_email: string | null = null;
+        let isAdmin = false;
         if (userId) {
             try {
                 const client = clerkClient({ request, locals, ...context });
                 const user = await client.users.getUser(userId);
                 user_email = user.emailAddresses?.[0]?.emailAddress || null;
+                // Check if user has admin role in public metadata
+                isAdmin = user.publicMetadata?.role === 'admin' || user.privateMetadata?.role === 'admin';
                 console.log(`✅ [${requestId}] Successfully fetched user email from Clerk`);
             } catch (error) {
                 console.error(`❌ [${requestId}] Error fetching user from Clerk:`, error);
@@ -100,7 +103,8 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
 
         console.log(`👤 [${requestId}] User info:`, {
             userId: userId || 'none',
-            userEmail: user_email || 'none'
+            userEmail: user_email || 'none',
+            isAdmin: isAdmin
         });
 
         // Validate email
@@ -124,8 +128,8 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
             console.log(`🆕 [${requestId}] No thread ID provided, creating new thread`);
             try {
 
-                // Check thread limit for user
-                if (user_email) {
+                // Check thread limit for user (skip for admins)
+                if (user_email && !isAdmin) {
                     console.log(`🔍 [${requestId}] Checking thread limit for user:`, user_email);
                     const userThreads = await db.select().from(threadsTable).where(eq(threadsTable.email, user_email));
                     console.log(`📊 [${requestId}] User thread count:`, userThreads.length, '/', config.maxThreadsPerUser);
@@ -143,6 +147,8 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
                             }
                         );
                     }
+                } else if (isAdmin) {
+                    console.log(`👑 [${requestId}] Admin user detected - skipping thread limit check`);
                 }
 
                 console.log(`🆔 [${requestId}] Generating new thread ID`);
