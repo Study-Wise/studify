@@ -81,10 +81,21 @@
 
     .acknowledgment {
         background: rgba(from var(--card-border) r g b / 0.1);
-        border-left: 4px solid #6366f1;
         padding: 1.5rem;
         border-radius: 0.5rem;
         margin-top: 3rem;
+
+        position: relative;
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 4px;
+            background: #6366f1;
+            border-radius: 0.5rem 0 0 0.5rem;
+        }
 
         p {
             margin: 0;
