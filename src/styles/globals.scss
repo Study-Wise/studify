@@ -41,7 +41,7 @@
 
 .content-container [class$="-content"],
 .message.assistant .message-content {
-    *:not(.step-by-step, .step-by-step *) {
+    *:not(.step-by-step, .step-by-step *, code) {
         &, &::before, &::after {
             padding: revert;
         }
