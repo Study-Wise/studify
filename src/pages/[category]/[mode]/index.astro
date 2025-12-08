@@ -22,8 +22,11 @@ let { category, mode } = Astro.params || { category: '', mode: '' };
 const categoryObj = category ? categories[category] : null;
 const modeObj = categoryObj?.modes?.[mode || ''];
 
+const categoryName = categoryObj?.name || category;
+const modeName = modeObj?.name || mode;
+
 ---
-<Layout title={`${mode} | ${category}`}>
+<Layout title={`${modeName} | ${categoryName}`}>
     <div id="user-email" data-email={user_email} style="display: none"></div>
     <!-- Introduction Section -->
     <section class="introduction-section card" aria-labelledby="how-it-works-heading">
