@@ -2,8 +2,14 @@
 import { getLatestWebpage } from '../../../../lib/content/latest/webpage';
 import { checkThreadAccess } from '../../../../lib/auth/checkThreadAccess';
 import '../../../../styles/pages/content/webpage.scss';
+import categories from '../../../../lib/modes';
 
 const { category, mode, id } = Astro.params;
+
+const categoryObj = category ? categories[category] : null;
+const modeObj = categoryObj?.modes?.[mode || ''];
+const categoryName = categoryObj?.name || category;
+const modeName = modeObj?.name || mode;
 
 // Get user authentication
 const { auth } = Astro.locals;
@@ -34,7 +40,7 @@ const showContent = (isAuthorized || isPublic) && latestWebpage;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{`Webpage | ${mode} | ${category}`}</title>
+    <title>{`Webpage | ${modeName} | ${categoryName}`}</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>

@@ -5,8 +5,14 @@ import { checkThreadAccess } from '../../../../lib/auth/checkThreadAccess';
 import StepByStepScript from '../../../../scripts/step-by-step.astro';
 import { marked } from 'marked';
 import '../../../../styles/pages/content/practice-questions.scss';
+import categories from '../../../../lib/modes';
 
 const { category, mode, id } = Astro.params;
+
+const categoryObj = category ? categories[category] : null;
+const modeObj = categoryObj?.modes?.[mode || ''];
+const categoryName = categoryObj?.name || category;
+const modeName = modeObj?.name || mode;
 
 // Get user authentication
 const { auth } = Astro.locals;
@@ -29,7 +35,7 @@ const { content: latestPracticeQuestions } = (isAuthorized || isPublic)
 const parsedContent = latestPracticeQuestions ? await marked.parse(latestPracticeQuestions) : null;
 ---
 
-<Layout title={`Practice Questions | ${mode} | ${category}`}  container={true}>
+<Layout title={`Practice Questions | ${modeName} | ${categoryName}`}  container={true}>
     <div class="practice-questions-page">
         {!isAuthorized && !isPublic ? (
             <div class="empty-state">
