@@ -11,4 +11,3 @@
   "include": ["src", "astro.config.mjs", "pwa-assets.config.ts"],
   "exclude": ["dist"]
 }
-
