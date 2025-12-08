@@ -2,7 +2,8 @@ import { google_icons, custom_icons } from "./icons_list";
 
 const icon_map = {
     about: 'info',
-    features: 'info'
+    features: 'info',
+    'privacy-policy': 'description'
 };
 
 function hasGoogleIcon(name: string) {
