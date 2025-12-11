@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mathwise-v2-v1';
+const CACHE_NAME = 'studywise';
 const urlsToCache = [
     '/',
     '/styles/globals.scss',
