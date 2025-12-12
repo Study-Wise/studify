@@ -105,8 +105,8 @@
     display: flex;
     align-items: center;
     gap: $spacing-small;
-    padding-bottom: $spacing-extra-small;
-    border-bottom: 1px solid var(--border-color, #e5e7eb);
+    padding-block-end: $spacing-extra-small;
+    border-block-end: 1px solid var(--border-color, #e5e7eb);
 }
 
 .dialog-icon {
@@ -136,7 +136,7 @@
     display: flex;
     justify-content: end;
     gap: $spacing-small;
-    padding-top: $spacing-extra-small;
+    padding-block-start: $spacing-extra-small;
 }
 
 .dialog-button {
@@ -175,7 +175,7 @@
         color: var(--text-color-dark, #f3f4f6);
 
         .dialog-header {
-            border-bottom-color: var(--border-color-dark, #374151);
+            border-block-end-color: var(--border-color-dark, #374151);
         }
 
         .dialog-message {
