@@ -1,11 +1,8 @@
 @use '../variables/globals.scss' as *;
+@use '../variables/tokens.scss' as *;
 @use 'sass:math';
 
-$dbor: var(--card-border);
-$dbdr: 2rem;
-$dpad: 1rem;
-
-@mixin stepsBorder($bor: $dbor, $bdr: $dbdr, $pad: $dpad, $depth: 0) {
+@mixin stepsBorder($bor: var(--card-border), $bdr: $spacing-extra-large, $pad: $spacing-medium, $depth: 0) {
     padding: $pad;
     border: solid 1px $bor;
     border-radius: #{$bdr - $pad * $depth};
@@ -14,9 +11,9 @@ $dpad: 1rem;
 /* Interactive Steps Component */
 .step-by-step {
     /* Custom properties for consistent styling */
-    --bor: #{$dbor};
-    --bdr: #{$dbdr};
-    --pad: #{$dpad};
+    --bor: var(--card-border);
+    --bdr: #{$spacing-extra-large};
+    --pad: #{$spacing-medium};
 
     box-sizing: border-box;
 
@@ -42,7 +39,7 @@ $dpad: 1rem;
             $_bdr: calc(var(--bdr) / 8);
 
             box-sizing: border-box;
-            margin-top: var(--pad);
+            margin-block-start: var(--pad);
             padding: var(--pad);
             background-color: rgba(from var(--card-bg) h s calc(l - 3%));
             border-radius: $_bdr;
@@ -63,7 +60,7 @@ $dpad: 1rem;
         .step-question-choices {
             display: flex;
             flex-direction: column;
-            gap: $dpad;
+            gap: $spacing-medium;
             @include stepsBorder($depth: 1);
 
             .step-question-choice {
@@ -71,8 +68,8 @@ $dpad: 1rem;
                 background-color: var(--card-bg);
                 cursor: pointer;
                 border-radius: 100dvw;
-                padding-inline: 1ex;
-                transition: background-color 0.2s ease, scale 0.1s ease;
+                padding: 0 1ex;
+                transition: background-color $transition-fast ease, scale 0.1s ease;
 
                 &:hover:not([data-state]) {
                     background-color: rgba(from lightblue r g b / 0.3);
@@ -107,8 +104,8 @@ $dpad: 1rem;
                     position: absolute;
                     width: 0;
                     height: 0;
-                    top: -1px;
-                    left: -1px;
+                    inset-block-start: -1px;
+                    inset-inline-start: -1px;
                 }
             }
         }
