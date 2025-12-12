@@ -1,11 +1,11 @@
 ---
-const { element = 'button', variant = 'primary', icon = '', additionalClasses = '', mode = 'full', ...props } = Astro.props;
-const className = `btn bg-${variant} ${mode === 'lite' ? 'lite' : ''} ${additionalClasses}`.replaceAll('  ', ' ').trim();
+const { element = 'button', variant = 'primary', icon = '', className = '', mode = 'full', ...props } = Astro.props;
+const clsName = `btn bg-${variant} ${mode === 'lite' ? 'lite' : ''} ${className}`.replaceAll('  ', ' ').trim();
 ---
 {(() => {
     const Element = element;
     return (
-        <Element tabindex="0" class={className} {...props}>
+        <Element tabindex="0" class={clsName.trim()} {...props}>
             {icon && <span class="material-symbols-outlined">{icon}</span>}
             {mode === 'tab' ? <span class="text"><slot /></span> : <slot />}
             <span class="spinner" style="display: none"></span>

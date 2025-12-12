@@ -13,20 +13,11 @@ import Dialog from '../components/Dialog.astro';
 const sTitle = "StudyWise";
 const lTitle = `${sTitle} - AI Study Partner`;
 const { title, hideCopyright, container, isChatArea } = Astro.props;
-var { additionalClasses } = Astro.props;
+var { className } = Astro.props;
 const noTitle = title === "Home" || title === '' || !title;
 const pTitle = noTitle ? lTitle : `${title} | ${sTitle}`;
 
-let mainClasses: string[] = [];
-if (container === false) {}
-else mainClasses.push('container');
-
-if (!additionalClasses) additionalClasses = [];
-
-additionalClasses.forEach((className: string) => {
-    mainClasses.push(className);
-});
-
+if (container) className += 'container'
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -104,7 +95,7 @@ additionalClasses.forEach((className: string) => {
         <Dialog />
         {!isChatArea ? <Header pTitle={pTitle} /> : ''}
         
-        <main class={mainClasses.join(' ')} id="main-content">
+        <main class={className.trim()} id="main-content">
             <slot />
         </main>
 

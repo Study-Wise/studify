@@ -8,7 +8,7 @@ const redirectUrl = Astro.url.searchParams.get('redirect_url') ||
                     Astro.url.searchParams.get('returnBackUrl') || '/';
 ---
 
-<Layout title="Sign In" additionalClasses={['auth-page']}>
+<Layout title="Sign In" className="auth-page">
     <div class="auth-container">
         <AuthenticateWithRedirectCallback 
             signInForceRedirectUrl={redirectUrl}

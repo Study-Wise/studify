@@ -1,9 +1,9 @@
 ---
 import '../../styles/components/chat/toolbar.scss';
 
-const { additionalClasses = [] } = Astro.props;
+const { className = '' } = Astro.props;
 ---
-<div class={`chat-toolbar ${additionalClasses.join(' ')}`.trim()}>
+<div class={`chat-toolbar ${className}`.trim()}>
     <div id="error-message" class="error-box" style="display: none" role="alert"></div>
 
     <div class="chat-input-container">
