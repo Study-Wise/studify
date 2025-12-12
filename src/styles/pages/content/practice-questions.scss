@@ -15,13 +15,13 @@
     .practice-questions-content {
         h1, h2, h3, h4, h5, h6 {
             color: var(--section-title);
-            margin-top: 1.5rem;
-            margin-bottom: 1rem;
+            margin-block-start: 1.5rem;
+            margin-block-end: 1rem;
         }
 
         h1 {
             font-size: 2rem;
-            margin-top: 0;
+            margin-block-start: 0;
         }
 
         h2 {
@@ -35,16 +35,16 @@
         p {
             color: var(--body-text);
             line-height: 1.6;
-            margin-bottom: 1rem;
+            margin-block-end: 1rem;
         }
 
         ul, ol {
-            margin-left: 1.5rem;
-            margin-bottom: 1rem;
+            margin-inline-start: 1.5rem;
+            margin-block-end: 1rem;
             color: var(--body-text);
 
             li {
-                margin-bottom: 0.5rem;
+                margin-block-end: 0.5rem;
                 line-height: 1.6;
             }
         }
@@ -62,7 +62,7 @@
             padding: 1rem;
             border-radius: 8px;
             overflow-x: auto;
-            margin-bottom: 1rem;
+            margin-block-end: 1rem;
 
             code {
                 background-color: transparent;
@@ -71,10 +71,10 @@
         }
 
         blockquote {
-            border-left: 4px solid var(--card-border);
-            padding-left: 1rem;
-            margin-left: 0;
-            margin-bottom: 1rem;
+            border-inline-start: 4px solid var(--card-border);
+            padding-inline-start: 1rem;
+            margin-inline-start: 0;
+            margin-block-end: 1rem;
             color: var(--body-text);
             opacity: 0.9;
         }
@@ -82,11 +82,11 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 1rem;
+            margin-block-end: 1rem;
 
             th, td {
                 padding: 0.75rem;
-                text-align: left;
+                text-align: start;
                 border: 1px solid var(--card-border);
             }
 
@@ -130,19 +130,19 @@
 
         .material-symbols-outlined {
             font-size: 4rem;
-            margin-bottom: 1rem;
+            margin-block-end: 1rem;
             opacity: 0.5;
         }
 
         h2 {
-            margin: 1rem 0 0.5rem;
+            margin: 1rem 0 0.5rem 0;
             color: var(--section-title);
         }
 
         p {
             color: var(--body-text);
             opacity: 0.8;
-            margin-bottom: 1.5rem;
+            margin-block-end: 1.5rem;
         }
 
         .btn-primary {

@@ -16,18 +16,18 @@
         .material-symbols-outlined {
             font-size: 4rem;
             color: var(--text-secondary);
-            margin-bottom: 1rem;
+            margin-block-end: 1rem;
         }
 
         h2 {
             font-size: 1.5rem;
             color: var(--text-primary);
-            margin-bottom: 0.5rem;
+            margin-block-end: 0.5rem;
         }
 
         p {
             color: var(--text-secondary);
-            margin-bottom: 1.5rem;
+            margin-block-end: 1.5rem;
         }
 
         .btn-primary {
@@ -52,14 +52,14 @@
     }
 
     .resources-header {
-        margin-bottom: 2rem;
+        margin-block-end: 2rem;
         text-align: center;
 
         .resources-title {
             font-size: 2rem;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 0.5rem;
+            margin-block-end: 0.5rem;
         }
 
         .resources-subtitle {
@@ -69,15 +69,15 @@
     }
 
     .resource-section {
-        margin-bottom: 3rem;
+        margin-block-end: 3rem;
 
         .section-header {
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 2px solid var(--border);
+            margin-block-end: 1.5rem;
+            padding-block-end: 0.75rem;
+            border-block-end: 2px solid var(--border);
 
             .material-symbols-outlined {
                 font-size: 1.75rem;
@@ -159,7 +159,7 @@
                     font-size: 1.125rem;
                     font-weight: 600;
                     color: var(--text-primary);
-                    margin-bottom: 0.75rem;
+                    margin-block-end: 0.75rem;
                     line-height: 1.4;
                     display: -webkit-box;
 
@@ -175,7 +175,7 @@
                     font-size: 0.875rem;
                     color: var(--text-secondary);
                     line-height: 1.5;
-                    margin-bottom: 1rem;
+                    margin-block-end: 1rem;
                     display: -webkit-box;
 
                     --lc: 3;
@@ -191,8 +191,8 @@
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
-                    padding-top: 0.75rem;
-                    border-top: 1px solid var(--border);
+                    padding-block-start: 0.75rem;
+                    border-block-start: 1px solid var(--border);
 
                     .resource-source {
                         font-size: 0.75rem;
