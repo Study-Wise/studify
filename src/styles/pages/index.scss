@@ -18,9 +18,7 @@
         color: var(--body-text);
     }
 
-    // ============================================
-    // NUMBERED STEPS (Phase 3 enhancement)
-    // ============================================
+    // Numbered Steps (Phase 3 enhancement)
     .steps-list {
         counter-reset: step-counter;
         list-style: none;
