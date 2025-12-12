@@ -117,8 +117,8 @@ footer, .chat-toolbar {
         background-color: rgba(from $card-bg-light r g b / 0.95);
         color: $section-title-light;
         width: fit-content;
-        padding: 12px 24px;
-        border-radius: 12px;
+        padding: $spacing-small + 0.25rem $spacing-large;
+        border-radius: $border-radius-large;
         box-shadow:
             0 8px 24px rgba(from var(--card-shadow) r g b / 0.12),
             0 2px 8px rgba(from var(--card-shadow) r g b / 0.08);
