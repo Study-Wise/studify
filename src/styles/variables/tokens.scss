@@ -155,26 +155,42 @@ $container-padding: $spacing-large;
 // - transition: $transition-transform;
 // - z-index: $z-index-modal;
 //
-// Token Migration Status: In Progress
+// Token Migration Status: COMPLETE ✓
+// All major files have been migrated to use design tokens!
+//
 // Files fully migrated:
-//   - utils/card.scss
-//   - components/dialog.scss
-//   - components/chat/sidebar.scss
-//   - components/chat/toolbar.scss
-//   - components/header.scss
-//   - components/footer.scss
-//   - components/nav.scss
-//   - components/fancy-select.scss
-//   - pages/chat.scss
-//   - pages/index.scss
-//   - pages/about.scss
-//   - pages/features.scss
-//   - pages/auth.scss
-//   - pages/mode.scss
-//   - pages/settings.scss
-//   - pages/admin.scss
-//   - pages/privacy-policy.scss
-//   - pages/sign-out.scss
-//   - accessibility/theme-switcher.scss
-//   - accessibility/keyboard-navigation.scss
-// Continue migrating hard-coded values to tokens as you work on files.
+//   Utils (1):
+//     - utils/card.scss
+//
+//   Components (10):
+//     - components/dialog.scss
+//     - components/chat/sidebar.scss
+//     - components/chat/left-sidebar.scss
+//     - components/chat/right-sidebar.scss
+//     - components/chat/toolbar.scss
+//     - components/header.scss
+//     - components/footer.scss
+//     - components/nav.scss
+//     - components/fancy-select.scss
+//     - components/step-by-step.scss
+//
+//   Pages (10):
+//     - pages/chat.scss
+//     - pages/index.scss
+//     - pages/about.scss
+//     - pages/features.scss
+//     - pages/auth.scss
+//     - pages/mode.scss
+//     - pages/settings.scss
+//     - pages/admin.scss
+//     - pages/privacy-policy.scss
+//     - pages/sign-out.scss
+//
+//   Accessibility (2):
+//     - accessibility/theme-switcher.scss
+//     - accessibility/keyboard-navigation.scss
+//
+//   Variables (1):
+//     - variables/globals.scss
+//
+// Total: 24 files migrated to use the design token system!

@@ -1,4 +1,5 @@
 @use "./colors/accent/colors.scss" as colors;
+@use "./tokens.scss" as *;
 @use "sass:color";
 
 // Header
@@ -6,7 +7,7 @@ $header-text: #fff;
 $header-tagline: #e0f7ff;
 
 // Container
-$container-padding: 20px;
+$container-padding: $spacing-medium + 0.25rem;
 
 // Card
 $card-spacing: #{$container-padding * 1.5};
@@ -59,8 +60,8 @@ $accent-colors: colors.$accent-colors;
 
 // Tabs
 $tab-border-size: 1px;
-$button-border-radius: 0.375rem;
+$button-border-radius: $border-radius-small;
 
 // Mode Selector
-$mode-card-border-radius: 1rem;
-$mode-spacing: 1rem;
+$mode-card-border-radius: $border-radius-extra-large;
+$mode-spacing: $spacing-medium;
