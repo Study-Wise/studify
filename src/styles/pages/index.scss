@@ -14,7 +14,7 @@
     }
 
     strong {
-        font-weight: 600;
+        font-weight: $font-weight-semibold;
         color: var(--body-text);
     }
 
@@ -23,16 +23,16 @@
         counter-reset: step-counter;
         list-style: none;
         padding-left: 0;
-        margin: 1.5rem 0;
+        margin: $spacing-large 0;
 
         > li {
             counter-increment: step-counter;
             position: relative;
             padding-left: 3.5rem;
-            margin-bottom: 2rem;
+            margin-bottom: $spacing-extra-large;
 
             &:last-child {
-                margin-bottom: 1rem;
+                margin-bottom: $spacing-medium;
             }
 
             // Gradient numbered circle
@@ -54,11 +54,11 @@
                 color: var(--header-text);
                 border-radius: 50%;
 
-                font-weight: 700;
-                font-size: 1.125rem;
+                font-weight: $font-weight-bold;
+                font-size: $font-size-lg;
                 box-shadow: $box-shadow-medium;
 
-                transition: scale 250ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                transition: scale $transition-base $ease-spring;
             }
 
             // Connecting line
@@ -83,11 +83,11 @@
 
             // Nested list styling
             ul {
-                margin-top: 0.75rem;
-                margin-left: 1.5rem;
+                margin-top: $spacing-small;
+                margin-left: $spacing-large;
 
                 li {
-                    margin-bottom: 0.5rem;
+                    margin-bottom: $spacing-extra-small;
 
                     &::marker {
                         color: list.nth(map.get($accent-colors, primary), 1);

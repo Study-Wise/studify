@@ -7,7 +7,7 @@
 }
 
 .sign-out-card {
-    background: var(--card-bg);
+    background-color: var(--card-bg);
     border: 1px solid var(--card-border);
     border-radius: 1rem;
     padding: 3rem 2rem;
@@ -73,12 +73,12 @@ p {
 }
 
 .btn-secondary {
-    background: var(--card-bg);
+    background-color: var(--card-bg);
     color: var(--card-text);
     border: 1px solid var(--card-border);
 
     &:hover {
-        background: rgba(from var(--card-text) r g b / 0.05);
+        background-color: rgba(from var(--card-text) r g b / 0.05);
         border-color: rgba(from var(--card-border) r g b / 0.8);
     }
 }

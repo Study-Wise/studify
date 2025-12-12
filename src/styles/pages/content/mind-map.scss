@@ -6,7 +6,7 @@
     height: 100vh;
     display: flex;
     flex-direction: column;
-    background: var(--background);
+    background-color: var(--background);
     overflow: hidden;
 
     .empty-state {
@@ -39,7 +39,7 @@
 
         .btn-primary {
             padding: 0.75rem 1.5rem;
-            background: var(--primary);
+            background-color: var(--primary);
             color: white;
             text-decoration: none;
             border-radius: 0.5rem;
@@ -47,7 +47,7 @@
             transition: background 0.2s;
 
             &:hover {
-                background: var(--primary-hover);
+                background-color: var(--primary-hover);
             }
         }
     }

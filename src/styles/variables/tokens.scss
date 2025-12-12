@@ -156,5 +156,16 @@ $container-padding: $spacing-large;
 // - z-index: $z-index-modal;
 //
 // Token Migration Status: In Progress
-// Files fully migrated: card.scss, dialog.scss, sidebar.scss
+// Files fully migrated:
+//   - utils/card.scss
+//   - components/dialog.scss
+//   - components/chat/sidebar.scss
+//   - components/chat/toolbar.scss
+//   - components/header.scss
+//   - components/footer.scss
+//   - components/nav.scss
+//   - components/fancy-select.scss
+//   - pages/chat.scss
+//   - accessibility/theme-switcher.scss
+//   - accessibility/keyboard-navigation.scss
 // Continue migrating hard-coded values to tokens as you work on files.
