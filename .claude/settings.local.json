@@ -19,7 +19,8 @@
       "Bash(test:*)",
       "Bash(git commit:*)",
       "Bash(git checkout:*)",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Bash(git mv:*)"
     ],
     "deny": [],
     "ask": []
