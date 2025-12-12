@@ -1,4 +1,5 @@
 @use '../variables/globals.scss' as *;
+@use '../variables/tokens.scss' as *;
 @use 'sass:list';
 @use 'sass:map';
 
@@ -8,14 +9,14 @@
     #text-paste {
         width: 100%;
         min-height: 200px;
-        padding: 15px;
+        padding: $spacing-medium - 0.0625rem;
         border: 1px solid var(--input-border);
-        border-radius: 6px;
+        border-radius: $border-radius-small;
         font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier,
             monospace;
         font-size: 0.95em;
         resize: vertical;
-        margin-top: 10px;
+        margin-top: $spacing-small - 0.125rem;
         box-shadow: inset 0 1px 3px var(--card-shadow);
 
         &:focus {
@@ -27,10 +28,10 @@
 }
 
 .toolbar {
-    margin-top: 0.5rem;
+    margin-top: $spacing-extra-small;
 
     display: flex;
-    gap: 1rem;
+    gap: $spacing-medium;
     justify-content: space-between;
     align-items: center;
 
@@ -51,7 +52,7 @@
     width: 1.2em;
     height: 1.2em;
     animation: spin 1s linear infinite;
-    margin-left: 10px;
+    margin-left: $spacing-small - 0.125rem;
 }
 
 @keyframes spin {
@@ -61,11 +62,11 @@
 }
 
 .output-tabs {
-    margin-bottom: 25px;
+    margin-bottom: $spacing-large + 0.25rem;
     display: flex;
     gap: clamp(5px, 1.5vw, 10px);
     border-bottom: 1px solid var(--section-title-border);
-    padding-bottom: 12px;
+    padding-bottom: $spacing-small + 0.25rem;
     flex-wrap: wrap;
 
     & + .output-content, & + .output-content + .output-content {
@@ -79,10 +80,10 @@
     border: none;
     background-color: transparent;
     border-bottom: 3px solid transparent;
-    border-radius: 6px 6px 0 0;
-    transition: all 0.3s ease;
+    border-radius: $border-radius-small $border-radius-small 0 0;
+    transition: all $transition-base ease;
     font-size: clamp(0.95rem, 2vw, 1.05rem);
-    font-weight: 500;
+    font-weight: $font-weight-medium;
     color: var(--footer-text);
 
     &:hover {
@@ -97,7 +98,7 @@
     }
 
     i {
-        margin-right: 8px;
+        margin-right: $spacing-extra-small;
     }
 }
 
@@ -111,8 +112,8 @@
 
 .output-content {
     display: none;
-    padding: 20px 0;
-    margin-top: 15px;
+    padding: $spacing-medium + 0.25rem 0;
+    margin-top: $spacing-medium - 0.0625rem;
 
     &.active-output {
         display: block;
@@ -133,7 +134,7 @@
 
 .output-content {
     article {
-        margin-top: 10px;
+        margin-top: $spacing-small - 0.125rem;
         padding: 0 5px;
     }
 
@@ -141,11 +142,11 @@
 
     h3, h4 {
         color: #0056b3;
-        margin-top: 1.8rem;
-        margin-bottom: 1rem;
-        padding-bottom: 6px;
+        margin-top: $spacing-extra-large - 0.2rem;
+        margin-bottom: $spacing-medium;
+        padding-bottom: $border-radius-small;
         border-bottom: 1px solid #eee;
-        font-weight: 600;
+        font-weight: $font-weight-semibold;
 
         &.h3 {
             font-size: 1.4rem;
@@ -159,7 +160,7 @@
     ul, ol {
         margin-left: 30px;
         margin-bottom: 1.1em;
-        padding-left: 15px;
+        padding-left: $spacing-medium - 0.0625rem;
 
         li {
             margin-bottom: 0.6em;

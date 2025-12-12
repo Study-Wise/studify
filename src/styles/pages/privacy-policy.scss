@@ -1,69 +1,71 @@
+@use '../variables/tokens.scss' as *;
+
 .legal-content {
     max-width: 800px;
     margin-inline: auto;
 
     h1 {
         color: var(--card-text);
-        margin-bottom: 0.5rem;
+        margin-bottom: $spacing-extra-small;
         font-size: 2.5rem;
-        font-weight: 700;
+        font-weight: $font-weight-bold;
     }
 
     .last-updated {
         color: rgba(from var(--card-text) r g b / 0.6);
         font-size: 0.9rem;
-        margin-bottom: 2rem;
+        margin-bottom: $spacing-extra-large;
         font-style: italic;
     }
 
     section {
-        margin-bottom: 2.5rem;
+        margin-bottom: $spacing-extra-large + 0.5rem;
     }
 
     h2 {
         color: var(--card-text);
         font-size: 1.75rem;
-        font-weight: 600;
-        margin-top: 2rem;
-        margin-bottom: 1rem;
-        padding-bottom: 0.5rem;
+        font-weight: $font-weight-semibold;
+        margin-top: $spacing-extra-large;
+        margin-bottom: $spacing-medium;
+        padding-bottom: $spacing-extra-small;
         border-bottom: 2px solid var(--card-border);
     }
 
     h3 {
         color: var(--card-text);
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin-top: 1.5rem;
-        margin-bottom: 0.75rem;
+        font-size: $font-size-xl;
+        font-weight: $font-weight-semibold;
+        margin-top: $spacing-large;
+        margin-bottom: $spacing-small;
     }
 
     p {
         color: rgba(from var(--card-text) r g b / 0.85);
-        line-height: 1.7;
-        margin-bottom: 1rem;
+        line-height: $line-height-relaxed + 0.075;
+        margin-bottom: $spacing-medium;
     }
 
     ul {
-        margin: 1rem 0 1rem 1.5rem;
+        margin: $spacing-medium 0 $spacing-medium $spacing-large;
         color: rgba(from var(--card-text) r g b / 0.85);
     }
 
     li {
-        margin-bottom: 0.5rem;
-        line-height: 1.6;
+        margin-bottom: $spacing-extra-small;
+        line-height: $line-height-relaxed;
     }
 
     strong {
         color: var(--card-text);
-        font-weight: 600;
+        font-weight: $font-weight-semibold;
     }
 
     a {
         color: #6366f1;
         text-decoration: none;
         border-bottom: 1px solid transparent;
-        transition: border-color 0.2s ease;
+        transition: border-color $transition-fast ease;
 
         &:hover {
             border-bottom-color: #6366f1;
@@ -72,9 +74,9 @@
 
     .acknowledgment {
         background-color: rgba(from var(--card-border) r g b / 0.1);
-        padding: 1.5rem;
-        border-radius: 0.5rem;
-        margin-top: 3rem;
+        padding: $spacing-large;
+        border-radius: $border-radius-medium;
+        margin-top: $spacing-huge;
 
         position: relative;
         &::before {
@@ -85,12 +87,12 @@
             height: 100%;
             width: 4px;
             background-color: #6366f1;
-            border-radius: 0.5rem 0 0 0.5rem;
+            border-radius: $border-radius-medium 0 0 $border-radius-medium;
         }
 
         p {
             margin: 0;
-            font-weight: 500;
+            font-weight: $font-weight-medium;
         }
     }
 }
@@ -98,15 +100,15 @@
 @media (max-width: 768px) {
     .legal-content {
         h1 {
-            font-size: 2rem;
+            font-size: $spacing-extra-large;
         }
 
         h2 {
-            font-size: 1.5rem;
+            font-size: $font-size-2xl;
         }
 
         h3 {
-            font-size: 1.125rem;
+            font-size: $font-size-lg;
         }
     }
 }

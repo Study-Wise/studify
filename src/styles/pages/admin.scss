@@ -1,32 +1,34 @@
+@use '../variables/tokens.scss' as *;
+
 .admin-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: $spacing-extra-large;
 }
 
 .user-info {
     background-color: #f8f9fa;
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin-bottom: 2rem;
+    padding: $spacing-large;
+    border-radius: $border-radius-medium;
+    margin-bottom: $spacing-extra-large;
 }
 
 .admin-features {
-    margin-bottom: 2rem;
+    margin-bottom: $spacing-extra-large;
 }
 
 .feature-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-top: 1rem;
+    gap: $spacing-large;
+    margin-top: $spacing-medium;
 }
 
 .feature-card {
     background-color: white;
     border: 1px solid #e9ecef;
-    border-radius: 8px;
-    padding: 1.5rem;
+    border-radius: $border-radius-medium;
+    padding: $spacing-large;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
     h3 {
@@ -39,10 +41,10 @@
     background-color: #6366f1;
     color: white;
     border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
+    padding: $spacing-extra-small $spacing-medium;
+    border-radius: $border-radius-extra-small;
     cursor: pointer;
-    margin-top: 1rem;
+    margin-top: $spacing-medium;
 
     &:hover {
         background-color: #5855eb;
