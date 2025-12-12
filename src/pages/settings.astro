@@ -22,7 +22,7 @@ const settings: SettingItem[] = [
 <Layout title="Settings">
     <section class="settings-section card">
         <h2><span class="material-symbols-outlined">settings</span>&nbsp;Settings</h2>
-        <form id="settings-form" onsubmit="event.preventDefault();">
+        <form id="settings-form">
             {settings.map(setting => (
                 <div class="settings-row">
                 <label for={setting.id}>{setting.name}:</label>
@@ -56,6 +56,14 @@ const settings: SettingItem[] = [
     </section>
     <script>
         document.querySelectorAll('select.fancy-select selectedcontent').forEach(sc => sc.outerHTML = `<button>${sc.outerHTML}</button>`)
+
+        // Prevent form submission
+        const settingsForm = document.getElementById('settings-form');
+        if (settingsForm) {
+            settingsForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+            });
+        }
     </script>
     <SettingsScript settings={settings} />
 </Layout> 
