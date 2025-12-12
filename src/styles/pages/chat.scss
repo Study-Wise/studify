@@ -316,7 +316,7 @@ footer, .chat-toolbar {
             // Better code block styling (Phase 3)
             pre,
             code {
-                background: rgba(from var(--card-text) r g b / 0.08);
+                background-color: rgba(from var(--card-text) r g b / 0.08);
                 padding: 0.25rem 0.5rem;
                 border-radius: 4px;
                 font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
@@ -410,7 +410,7 @@ footer, .chat-toolbar {
             span {
                 width: 8px;
                 height: 8px;
-                background: var(--card-text);
+                background-color: var(--card-text);
                 border-radius: 50%;
                 opacity: 0.4;
                 animation: typing-dot 1.4s infinite;
