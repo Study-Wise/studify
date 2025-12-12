@@ -80,7 +80,7 @@
 @mixin content-wrapper($max-width: $container-max-width, $padding: $container-padding) {
     max-width: $max-width;
     margin-inline: auto;
-    padding-inline: $padding;
+    padding: $padding;
 }
 
 // Full viewport height (accounting for mobile address bars)

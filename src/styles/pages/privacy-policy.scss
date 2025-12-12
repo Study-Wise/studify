@@ -1,15 +1,6 @@
-.legal-container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 3rem 1.5rem;
-}
-
 .legal-content {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 1rem;
-    padding: 3rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    max-width: 800px;
+    margin-inline: auto;
 
     h1 {
         color: var(--card-text);
@@ -105,13 +96,7 @@
 }
 
 @media (max-width: 768px) {
-    .legal-container {
-        padding: 2rem 1rem;
-    }
-
     .legal-content {
-        padding: 2rem 1.5rem;
-
         h1 {
             font-size: 2rem;
         }

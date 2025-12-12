@@ -1,4 +1,5 @@
 @use './variables/globals.scss' as *;
+@use './variables/mixins.scss' as *;
 @use './utils/helpers.scss' as *;
 @use './utils/animations.scss' as *;
 @use './utils/print.scss' as *;
@@ -195,11 +196,7 @@ body {
 }
 
 .container {
-    box-sizing: border-box;
-    width: min(clamp(960px, 75vw, 1020px), 100%);
-    margin-left: auto;
-    margin-right: auto;
-    padding: $container-padding;
+    @include content-wrapper;
 }
 
 select.fancy-select,
