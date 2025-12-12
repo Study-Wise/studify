@@ -51,7 +51,7 @@ $color: list.nth(map.get($accent-colors, primary), 1);
                 0 4px 16px rgba(from $color r g b / 0.12),
                 0 0 0 4px rgba(from $color r g b / 0.08),
                 inset 0 1px 2px rgba(from var(--header-text) r g b / 0.02);
-            background: rgba(from var(--card-bg) r g b / 1);
+            background-color: rgba(from var(--card-bg) r g b / 1);
         }
 
         &:hover:not(:has(:focus-visible)) {
@@ -153,7 +153,7 @@ $color: list.nth(map.get($accent-colors, primary), 1);
         }
 
         &:disabled {
-            background: rgba(from var(--card-text) r g b / 0.2);
+            background-color: rgba(from var(--card-text) r g b / 0.2);
             cursor: not-allowed;
             box-shadow: none;
             opacity: $opacity-disabled;

@@ -11,7 +11,7 @@
     width: 90%;
     max-width: 500px;
 
-    background: var(--card-background, #ffffff);
+    background-color: var(--card-background, #ffffff);
     color: var(--text-color, #333333);
 
     border: none;
@@ -19,7 +19,7 @@
 
     box-shadow: $box-shadow-huge;
     &::backdrop {
-        background: rgba(0, 0, 0, 0.5);
+        background-color: rgba(0, 0, 0, 0.5);
 
         --bd: blur(4px);
         -webkit-backdrop-filter: var(--bd);
@@ -171,7 +171,7 @@
 // Dark mode support
 @media (prefers-color-scheme: dark) {
     .app-dialog {
-        background: var(--card-background-dark, #1f2937);
+        background-color: var(--card-background-dark, #1f2937);
         color: var(--text-color-dark, #f3f4f6);
 
         .dialog-header {

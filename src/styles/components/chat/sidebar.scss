@@ -114,7 +114,7 @@
             }
 
             &:hover {
-                background: rgba(from var(--card-text) r g b / 0.05);
+                background-color: rgba(from var(--card-text) r g b / 0.05);
                 border-color: list.nth(map.get($accent-colors, primary), 1);
                 color: list.nth(map.get($accent-colors, primary), 1);
             }

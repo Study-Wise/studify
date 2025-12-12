@@ -28,31 +28,31 @@
 }
 
 .about-section .about-text p {
-    margin-bottom: 1.2em;
+    &:not(:last-child) {
+        margin-block-end: 1.2em;
+    }
     font-size: 1.05em;
+
+    &:has(.material-symbols-outlined) {
+        &, * {
+            vertical-align: middle;
+        }
+    }
 }
 
 .about-section .about-text p a {
     color: var(--about-link);
     text-decoration: none;
     font-weight: $font-weight-medium;
-    vertical-align: middle;
 }
 
 .about-section .about-text p a .social-icon {
     height: 1em;
     width: auto;
-    vertical-align: middle;
 }
 
 .about-section .about-text p a .material-symbols-outlined {
     font-size: 1.2em;
-    vertical-align: middle;
-    margin-right: $spacing-tiny;
-}
-
-.about-section .about-text p a .text {
-    vertical-align: middle;
 }
 
 .about-section .about-text p a:hover .text {
