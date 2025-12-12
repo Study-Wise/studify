@@ -5,11 +5,11 @@
 .footer {
     text-align: center;
     padding: $spacing-medium;
-    border-top: 1px solid #dee2e6;
+    border-block-start: 1px solid #dee2e6;
     background-color: var(--body-bg);
-  
+
     [data-hide-copyright="true"] & {
-        margin-top: 0;
+        margin-block-start: 0;
     }
 }
 
@@ -18,5 +18,5 @@
     font-size: $font-size-sm + 0.025rem;
 }  
 .footer-content p {
-    margin-bottom: 5px;
+    margin-block-end: 5px;
 }
