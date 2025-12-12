@@ -62,11 +62,11 @@
     }
 
     &:active {
-        background: var(--card-text);
+        background-color: var(--card-text);
         scale: 0.95;
 
         &:hover {
-            background: var(--card-text);
+            background-color: var(--card-text);
         }
     }
 
@@ -79,7 +79,7 @@
         translate: -50% 0;
         scale: 0.8;
         padding: $spacing-extra-small $spacing-small;
-        background: var(--card-bg);
+        background-color: var(--card-bg);
         color: var(--card-text);
         border-radius: $border-radius-medium;
         font-size: $font-size-xs;
