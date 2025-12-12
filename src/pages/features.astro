@@ -8,7 +8,5 @@ const markdownContent = await generalModule.compiledContent();
 ---
 
 <Layout title="Features">
-    <main class="features-container">
-        <div class="features-content" set:html={markdownContent} />
-    </main>
+    <div class="features-content card" set:html={markdownContent} />
 </Layout>
