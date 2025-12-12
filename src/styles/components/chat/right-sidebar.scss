@@ -1,4 +1,5 @@
 @use '../../variables/globals' as *;
+@use '../../variables/tokens.scss' as *;
 
 .chat-sidebar.right {
     border-left: 1px solid rgba(from var(--card-border) r g b / 0.3);

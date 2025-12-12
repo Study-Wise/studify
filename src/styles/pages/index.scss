@@ -28,19 +28,19 @@
         > li {
             counter-increment: step-counter;
             position: relative;
-            padding-left: 3.5rem;
-            margin-bottom: $spacing-extra-large;
+            padding-inline-start: 3.5rem;
+            margin-block-end: $spacing-extra-large;
 
             &:last-child {
-                margin-bottom: $spacing-medium;
+                margin-block-end: $spacing-medium;
             }
 
             // Gradient numbered circle
             &::before {
                 content: counter(step-counter);
                 position: absolute;
-                left: 0;
-                top: 0;
+                inset-inline-start: 0;
+                inset-block-start: 0;
 
                 @include flex-center;
 
@@ -65,8 +65,8 @@
             &:not(:last-child)::after {
                 content: '';
                 position: absolute;
-                left: 1.25rem;
-                top: 2.5rem;
+                inset-inline-start: 1.25rem;
+                inset-block-start: 2.5rem;
                 width: 2px;
                 height: calc(100% - 1.5rem);
 
@@ -83,11 +83,11 @@
 
             // Nested list styling
             ul {
-                margin-top: $spacing-small;
-                margin-left: $spacing-large;
+                margin-block-start: $spacing-small;
+                margin-inline-start: $spacing-large;
 
                 li {
-                    margin-bottom: $spacing-extra-small;
+                    margin-block-end: $spacing-extra-small;
 
                     &::marker {
                         color: list.nth(map.get($accent-colors, primary), 1);
@@ -164,8 +164,8 @@
 
                 content: '';
                 position: absolute;
-                bottom: calc(#{-1 * math.div($spacing-extra-small, 2)} - math.div($_height, 2));
-                left: 0;
+                inset-block-end: calc(#{-1 * math.div($spacing-extra-small, 2)} - math.div($_height, 2));
+                inset-inline-start: 0;
                 width: 100%;
                 height: $_height;
                 background: linear-gradient(90deg,

@@ -2,45 +2,45 @@
 
 .features-content {
     max-width: 800px;
-    margin-inline: auto;
+    margin: 0 auto;
 
     h1 {
         color: var(--primary);
         font-size: 2.5rem;
-        margin-bottom: $spacing-medium;
+        margin-block-end: $spacing-medium;
         text-align: center;
     }
 
     h2 {
         color: var(--primary);
         font-size: 1.8rem;
-        margin-top: $spacing-extra-large;
-        margin-bottom: $spacing-medium;
-        border-bottom: 2px solid var(--accent);
-        padding-bottom: $spacing-extra-small;
+        margin-block-start: $spacing-extra-large;
+        margin-block-end: $spacing-medium;
+        border-block-end: 2px solid var(--accent);
+        padding-block-end: $spacing-extra-small;
     }
 
     h3 {
         color: var(--text);
         font-size: 1.3rem;
-        margin-top: $spacing-large;
-        margin-bottom: $spacing-small + 0.05rem;
+        margin-block-start: $spacing-large;
+        margin-block-end: $spacing-small + 0.05rem;
     }
 
     p {
         color: var(--text-secondary);
         line-height: $line-height-relaxed + 0.075;
-        margin-bottom: $spacing-medium;
+        margin-block-end: $spacing-medium;
     }
 
     ul {
-        margin-bottom: $spacing-medium;
-        padding-left: $spacing-large;
+        margin-block-end: $spacing-medium;
+        padding-inline-start: $spacing-large;
     }
 
     li {
         color: var(--text-secondary);
-        margin-bottom: $spacing-extra-small;
+        margin-block-end: $spacing-extra-small;
         line-height: $line-height-relaxed;
     }
 
@@ -53,13 +53,13 @@
     }
 
     ol {
-        margin-bottom: $spacing-medium;
-        padding-left: $spacing-large;
+        margin-block-end: $spacing-medium;
+        padding-inline-start: $spacing-large;
     }
 
     ol li {
         color: var(--text-secondary);
-        margin-bottom: $spacing-extra-small;
+        margin-block-end: $spacing-extra-small;
         line-height: $line-height-relaxed;
     }
 }

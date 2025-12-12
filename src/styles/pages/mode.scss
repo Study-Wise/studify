@@ -16,7 +16,7 @@
             monospace;
         font-size: 0.95em;
         resize: vertical;
-        margin-top: $spacing-small - 0.125rem;
+        margin-block-start: $spacing-small - 0.125rem;
         box-shadow: inset 0 1px 3px var(--card-shadow);
 
         &:focus {
@@ -28,7 +28,7 @@
 }
 
 .toolbar {
-    margin-top: $spacing-extra-small;
+    margin-block-start: $spacing-extra-small;
 
     display: flex;
     gap: $spacing-medium;
@@ -52,7 +52,7 @@
     width: 1.2em;
     height: 1.2em;
     animation: spin 1s linear infinite;
-    margin-left: $spacing-small - 0.125rem;
+    margin-inline-start: $spacing-small - 0.125rem;
 }
 
 @keyframes spin {
@@ -62,11 +62,11 @@
 }
 
 .output-tabs {
-    margin-bottom: $spacing-large + 0.25rem;
+    margin-block-end: $spacing-large + 0.25rem;
     display: flex;
     gap: clamp(5px, 1.5vw, 10px);
-    border-bottom: 1px solid var(--section-title-border);
-    padding-bottom: $spacing-small + 0.25rem;
+    border-block-end: 1px solid var(--section-title-border);
+    padding-block-end: $spacing-small + 0.25rem;
     flex-wrap: wrap;
 
     & + .output-content, & + .output-content + .output-content {
@@ -98,7 +98,7 @@
     }
 
     i {
-        margin-right: $spacing-extra-small;
+        margin-inline-end: $spacing-extra-small;
     }
 }
 
@@ -113,7 +113,7 @@
 .output-content {
     display: none;
     padding: $spacing-medium + 0.25rem 0;
-    margin-top: $spacing-medium - 0.0625rem;
+    margin-block-start: $spacing-medium - 0.0625rem;
 
     &.active-output {
         display: block;
@@ -134,7 +134,7 @@
 
 .output-content {
     article {
-        margin-top: $spacing-small - 0.125rem;
+        margin-block-start: $spacing-small - 0.125rem;
         padding: 0 5px;
     }
 
@@ -142,10 +142,10 @@
 
     h3, h4 {
         color: #0056b3;
-        margin-top: $spacing-extra-large - 0.2rem;
-        margin-bottom: $spacing-medium;
-        padding-bottom: $border-radius-small;
-        border-bottom: 1px solid #eee;
+        margin-block-start: $spacing-extra-large - 0.2rem;
+        margin-block-end: $spacing-medium;
+        padding-block-end: $border-radius-small;
+        border-block-end: 1px solid #eee;
         font-weight: $font-weight-semibold;
 
         &.h3 {
@@ -158,20 +158,20 @@
     }
 
     ul, ol {
-        margin-left: 30px;
-        margin-bottom: 1.1em;
-        padding-left: $spacing-medium - 0.0625rem;
+        margin-inline-start: 30px;
+        margin-block-end: 1.1em;
+        padding-inline-start: $spacing-medium - 0.0625rem;
 
         li {
-            margin-bottom: 0.6em;
+            margin-block-end: 0.6em;
         }
     }
 
     p {
-        margin-bottom: 1em;
+        margin-block-end: 1em;
 
         &.correct-explanation {
-            margin-top: 1em;
+            margin-block-start: 1em;
         }
     }
 }

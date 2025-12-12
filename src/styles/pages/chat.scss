@@ -43,13 +43,13 @@
             .unauthorized-content {
                 h3 {
                     color: var(--section-title);
-                    margin-bottom: $spacing-medium;
+                    margin-block-end: $spacing-medium;
                     font-size: $font-size-2xl;
                 }
-                
+
                 p {
                     color: var(--body-text);
-                    margin-bottom: $spacing-large;
+                    margin-block-end: $spacing-large;
                     line-height: $line-height-relaxed;
                 }
                 
@@ -82,10 +82,10 @@ body:has(.chat-page) {
 //     position: sticky;
 // }
 .chat-header {
-    top: 0;
+    inset-block-start: 0;
 }
 footer, .chat-toolbar {
-    bottom: 0;
+    inset-block-end: 0;
 }
 
 .chat-page {
@@ -98,7 +98,7 @@ footer, .chat-toolbar {
 .chat-header {
     box-sizing: border-box;
     padding: $spacing-medium + 0.25rem $spacing-large;
-    border-bottom: 1px solid rgba(from var(--section-title) r g b / 0.1);
+    border-block-end: 1px solid rgba(from var(--section-title) r g b / 0.1);
     background: linear-gradient($gradient-angle, list.nth(map.get($accent-colors, primary), 1), list.nth(map.get($accent-colors, primary), 2));
     
     --bd: blur(10px);
@@ -327,7 +327,7 @@ footer, .chat-toolbar {
                 padding: $spacing-small;
                 margin: $spacing-extra-small 0;
                 overflow-x: auto;
-                border-left: 3px solid rgba(from var(--section-title) r g b / 0.3);
+                border-inline-start: 3px solid rgba(from var(--section-title) r g b / 0.3);
 
                 code {
                     background-color: transparent;
@@ -348,7 +348,7 @@ footer, .chat-toolbar {
         }
         &-timestamp {
             align-self: end;
-            padding-inline: math.div($_message-space, 2);
+            padding: 0 math.div($_message-space, 2);
             opacity: $opacity-subtle;
             font-size: $font-size-xs;
             transition: opacity $transition-base $ease-out;

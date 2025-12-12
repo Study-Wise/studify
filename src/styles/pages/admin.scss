@@ -10,18 +10,18 @@
     background-color: #f8f9fa;
     padding: $spacing-large;
     border-radius: $border-radius-medium;
-    margin-bottom: $spacing-extra-large;
+    margin-block-end: $spacing-extra-large;
 }
 
 .admin-features {
-    margin-bottom: $spacing-extra-large;
+    margin-block-end: $spacing-extra-large;
 }
 
 .feature-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: $spacing-large;
-    margin-top: $spacing-medium;
+    margin-block-start: $spacing-medium;
 }
 
 .feature-card {
@@ -32,7 +32,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
     h3 {
-        margin-top: 0;
+        margin-block-start: 0;
         color: #495057;
     }
 }
@@ -44,7 +44,7 @@
     padding: $spacing-extra-small $spacing-medium;
     border-radius: $border-radius-extra-small;
     cursor: pointer;
-    margin-top: $spacing-medium;
+    margin-block-start: $spacing-medium;
 
     &:hover {
         background-color: #5855eb;
