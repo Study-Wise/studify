@@ -2,6 +2,7 @@
 import '../../styles/components/chat/sidebar.scss';
 import '../../styles/components/chat/left-sidebar.scss';
 import type { ChatLeftSidebarProps } from '../../lib/types';
+import SidebarSection from './SidebarSection.astro';
 
 const { isPublic, isAuthorized, threadId, uploadedFiles = [], email } = Astro.props as ChatLeftSidebarProps;
 ---
@@ -41,12 +42,18 @@ const { isPublic, isAuthorized, threadId, uploadedFiles = [], email } = Astro.pr
                 </div>
             </div>
         )}
-        <div class="sidebar-header">
-            <h3><span class="material-symbols-outlined">folder</span> Uploaded Files</h3>
-            {isAuthorized && (
+        <SidebarSection
+            title="Uploaded Files"
+            icon="folder"
+            hasContent={uploadedFiles.length > 0}
+            threadId={threadId}
+            id="files"
+            customButton={isAuthorized}
+        >
+            <Fragment slot="custom-button">
                 <label class="upload-button" for="file-upload">
                     <span class="material-symbols-outlined">upload</span>
-                    <span>Upload</span>
+                    <span>Upload File</span>
                     <input
                         type="file"
                         id="file-upload"
@@ -55,14 +62,13 @@ const { isPublic, isAuthorized, threadId, uploadedFiles = [], email } = Astro.pr
                         style="display: none;"
                     />
                 </label>
-            )}
-        </div>
-        <div class="sidebar-body">
-            <div class="file-list" id="file-list">
-                {uploadedFiles.length === 0 ? (
-                    <p class="empty-message">No files uploaded yet. Upload files to see them here.</p>
-                ) : (
-                    uploadedFiles.map((file: any) => (
+            </Fragment>
+            <Fragment slot="content">
+                <div class="file-list" id="file-list">
+                    {uploadedFiles.length === 0 ? (
+                        <p class="empty-message">No files uploaded yet. Upload files to see them here.</p>
+                    ) : (
+                        uploadedFiles.map((file: any) => (
                         <div class="file-item" data-file-key={file.key}>
                             <div class="file-icon">
                                 {file.type.startsWith('image/') ? (
@@ -89,10 +95,11 @@ const { isPublic, isAuthorized, threadId, uploadedFiles = [], email } = Astro.pr
                                 </button>
                             )}
                         </div>
-                    ))
-                )}
-            </div>
-        </div>
+                        ))
+                    )}
+                </div>
+            </Fragment>
+        </SidebarSection>
     </div>
 </section>
 

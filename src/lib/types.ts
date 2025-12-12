@@ -119,12 +119,13 @@ interface SidebarSectionProps {
     icon: string;
     hasContent: boolean;
     threadId: string;
-    viewUrl: string;
-    viewButtonText: string;
-    emptyMessage: string;
+    viewUrl?: string;
+    viewButtonText?: string;
+    emptyMessage?: string;
     id: string;
     generateVerb?: string; // e.g., "Generate", "Find", "Create" (default: "Generate")
     regenerateVerb?: string; // e.g., "Regenerate", "Find New", "Recreate" (default: "Regenerate")
+    customButton?: boolean; // If true, allows custom button slot
 }
 
 export type {

@@ -12,6 +12,7 @@ const {
     id,
     generateVerb = 'Generate',
     regenerateVerb = 'Regenerate',
+    customButton = false,
 } = Astro.props as SidebarSectionProps;
 
 const generateButtonId = `generate-${id}-btn`;
@@ -31,18 +32,24 @@ const regenerateButtonId = `regenerate-${id}-btn`;
         )}
     </div>
     <div class="section-body">
-        {hasContent ? (
+        {Astro.slots.has('content') ? (
+            <slot name="content" />
+        ) : hasContent ? (
             <a href={viewUrl} class="view-full-btn" target="_blank">
                 <span class="material-symbols-outlined">open_in_new</span>
                 <span>{viewButtonText}</span>
             </a>
         ) : (
             <div class="empty-state">
-                <p class="empty-message">{emptyMessage}</p>
-                <button class="generate-btn" id={generateButtonId} data-thread-id={threadId}>
-                    <span class="material-symbols-outlined">{icon}</span>
-                    <span>{`${generateVerb} ${title}`}</span>
-                </button>
+                {emptyMessage && <p class="empty-message">{emptyMessage}</p>}
+                {customButton && Astro.slots.has('custom-button') ? (
+                    <slot name="custom-button" />
+                ) : (
+                    <button class="generate-btn" id={generateButtonId} data-thread-id={threadId}>
+                        <span class="material-symbols-outlined">{icon}</span>
+                        <span>{`${generateVerb} ${title}`}</span>
+                    </button>
+                )}
             </div>
         )}
     </div>
