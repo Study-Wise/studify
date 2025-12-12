@@ -36,7 +36,7 @@ $color: list.nth(map.get($accent-colors, primary), 1);
         grid-template-columns: 1fr auto;
         align-items: center;
         gap: $spacing-small;
-        background: var(--card-bg);
+        background-color: var(--card-bg);
         border: 2px solid rgba(from var(--card-border) r g b / 0.4);
         border-radius: $border-radius-medium;
         padding: $spacing-medium;
