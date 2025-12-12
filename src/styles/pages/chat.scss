@@ -126,11 +126,11 @@ footer, .chat-toolbar {
         margin: 0;
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        font-size: 1.125rem;
-        font-weight: 600;
+        gap: $spacing-extra-small;
+        font-size: $font-size-lg;
+        font-weight: $font-weight-semibold;
         letter-spacing: -0.01em;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all $transition-base $ease-in-out;
 
         &:hover {
             box-shadow:
@@ -140,26 +140,26 @@ footer, .chat-toolbar {
         }
 
         .material-symbols-outlined {
-            font-size: 1.25rem;
+            font-size: $font-size-xl;
         }
     }
 
     .share-button {
-        padding: 10px 16px;
+        padding: $spacing-extra-small + 0.25rem $spacing-medium;
         background-color: rgba(from $card-bg-light r g b / 0.95);
         color: $section-title-light;
         border: 1px solid rgba(from var(--card-border) r g b / 0.6);
-        border-radius: 10px;
+        border-radius: $spacing-extra-small + 0.25rem;
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        font-size: 0.875rem;
-        font-weight: 500;
+        gap: $spacing-extra-small;
+        font-size: $font-size-sm;
+        font-weight: $font-weight-medium;
         box-shadow:
             0 4px 12px rgba(from var(--card-shadow) r g b / 0.08),
             0 2px 6px rgba(from var(--card-shadow) r g b / 0.05);
         cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all $transition-base $ease-in-out;
 
         &:hover {
             background-color: rgba(from $card-bg-light r g b / 1);
@@ -186,11 +186,11 @@ footer, .chat-toolbar {
         }
 
         .material-symbols-outlined {
-            font-size: 1.125rem;
+            font-size: $font-size-lg;
         }
 
         .share-text {
-            font-weight: 500;
+            font-weight: $font-weight-medium;
         }
     }
 
@@ -225,10 +225,10 @@ footer, .chat-toolbar {
     overflow-y: auto;
     min-height: 0; // Critical for grid items to respect overflow
     box-sizing: border-box;
-    padding: 2rem;
+    padding: $spacing-extra-large;
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: $spacing-medium + 0.25rem;
     position: relative;
 
     // Subtle background pattern
