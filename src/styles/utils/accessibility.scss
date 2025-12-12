@@ -124,16 +124,19 @@ input[type="submit"],
 input[type="reset"],
 .clickable,
 .interactive {
-    min-height: 44px;
-    min-width: 44px;
-
-    // Exception for inline text links
-    &:is(a:not([class])) {
-        @supports(min-height: auto) {
-            min-height: auto;
+    &:not(.cl-rootBox.cl-signIn-root *) {
+        min-height: 44px;
+        min-width: 44px;
+    
+        // Exception for inline text links
+        &:is(a:not([class])) {
+            @supports(min-height: auto) {
+                min-height: auto;
+            }
+            min-width: auto;
         }
-        min-width: auto;
     }
+
 }
 
 // Keyboard Navigation Indicators
