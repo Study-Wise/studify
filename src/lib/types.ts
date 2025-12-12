@@ -54,6 +54,8 @@ interface ChatLeftSidebarProps {
     isPublic: boolean;
     isAuthorized: boolean;
     threadId: string;
+    uploadedFiles: any[];
+    email: string;
 }
 
 interface ChatRightSidebarProps {

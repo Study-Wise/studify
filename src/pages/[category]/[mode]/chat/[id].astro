@@ -45,9 +45,10 @@ if (!userId && !isPublic) {
     return Astro.redirect("/user/sign-in");
 }
 
-// Get thread data to access the title
+// Get thread data to access the title and uploaded files
 const thread = id ? await getThreadByToken(id, user_email) : null;
 const threadTitle = thread?.title || null;
+const uploadedFiles = (thread?.uploadedFiles as any[]) || [];
 
 // Get messages only if authorized or public
 const messagesLength = await getMessagesLength(id || '');
@@ -108,6 +109,8 @@ export const inNav = 'hide';
             isPublic={isPublic}
             isAuthorized={isAuthorized}
             threadId={id || ''}
+            uploadedFiles={uploadedFiles}
+            email={user_email || ''}
         />
         <section class="chat-section">
             <div class="chat-messages">

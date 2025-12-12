@@ -11,6 +11,10 @@
         .sidebar-header {
             padding: $spacing-medium $spacing-tiny;
             border-bottom: 1px solid rgba(from var(--card-border) r g b / 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: $spacing-small;
 
             h3 {
                 margin: 0;
@@ -25,6 +29,33 @@
                     font-size: $font-size-xl;
                 }
             }
+
+            .upload-button {
+                display: flex;
+                align-items: center;
+                gap: $spacing-extra-small;
+                padding: $spacing-extra-small $spacing-small;
+                background-color: var(--primary);
+                color: white;
+                border-radius: $border-radius-small;
+                cursor: pointer;
+                font-size: $font-size-sm;
+                font-weight: $font-weight-medium;
+                transition: all $duration-base $easing-out;
+
+                &:hover {
+                    background-color: var(--primary-hover);
+                    transform: translateY(-1px);
+                }
+
+                &:active {
+                    transform: translateY(0);
+                }
+
+                .material-symbols-outlined {
+                    font-size: $font-size-lg;
+                }
+            }
         }
 
         .sidebar-body {
@@ -35,6 +66,7 @@
                 display: flex;
                 flex-direction: column;
                 gap: $spacing-extra-small;
+                padding: $spacing-small;
 
                 .empty-message {
                     color: var(--card-text);
@@ -42,6 +74,94 @@
                     text-align: center;
                     padding: $spacing-extra-large $spacing-medium;
                     font-size: $font-size-sm;
+                }
+
+                .file-item {
+                    display: flex;
+                    align-items: center;
+                    gap: $spacing-small;
+                    padding: $spacing-small;
+                    background-color: var(--card-bg);
+                    border: 1px solid var(--card-border);
+                    border-radius: $border-radius-small;
+                    transition: all $duration-base $easing-out;
+
+                    &:hover {
+                        background-color: var(--card-bg-hover);
+                        border-color: var(--primary);
+                    }
+
+                    .file-icon {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 40px;
+                        height: 40px;
+                        background-color: rgba(from var(--primary) r g b / 0.1);
+                        border-radius: $border-radius-small;
+                        flex-shrink: 0;
+
+                        .material-symbols-outlined {
+                            font-size: $font-size-xl;
+                            color: var(--primary);
+                        }
+                    }
+
+                    .file-info {
+                        flex: 1;
+                        min-width: 0;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 2px;
+
+                        .file-name {
+                            font-size: $font-size-sm;
+                            font-weight: $font-weight-medium;
+                            color: var(--card-text);
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+
+                        .file-size {
+                            font-size: $font-size-xs;
+                            color: var(--card-text);
+                            opacity: $opacity-subtle;
+                        }
+                    }
+
+                    .file-delete {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 32px;
+                        height: 32px;
+                        background-color: transparent;
+                        border: none;
+                        border-radius: $border-radius-small;
+                        cursor: pointer;
+                        flex-shrink: 0;
+                        transition: all $duration-base $easing-out;
+                        opacity: 0;
+
+                        .material-symbols-outlined {
+                            font-size: $font-size-lg;
+                            color: var(--danger);
+                        }
+
+                        &:hover {
+                            background-color: rgba(from var(--danger) r g b / 0.1);
+                        }
+
+                        &:disabled {
+                            opacity: 0.5;
+                            cursor: not-allowed;
+                        }
+                    }
+
+                    &:hover .file-delete {
+                        opacity: 1;
+                    }
                 }
             }
         }

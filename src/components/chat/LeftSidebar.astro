@@ -3,7 +3,7 @@ import '../../styles/components/chat/sidebar.scss';
 import '../../styles/components/chat/left-sidebar.scss';
 import type { ChatLeftSidebarProps } from '../../lib/types';
 
-const { isPublic, isAuthorized, threadId } = Astro.props as ChatLeftSidebarProps;
+const { isPublic, isAuthorized, threadId, uploadedFiles = [], email } = Astro.props as ChatLeftSidebarProps;
 ---
 <section class="chat-sidebar left">
     <div class="chat-sidebar-content left">
@@ -43,10 +43,55 @@ const { isPublic, isAuthorized, threadId } = Astro.props as ChatLeftSidebarProps
         )}
         <div class="sidebar-header">
             <h3><span class="material-symbols-outlined">folder</span> Uploaded Files</h3>
+            {isAuthorized && (
+                <label class="upload-button" for="file-upload">
+                    <span class="material-symbols-outlined">upload</span>
+                    <span>Upload</span>
+                    <input
+                        type="file"
+                        id="file-upload"
+                        accept=".jpg,.jpe,.jpeg,.png,.gif,.webp,.svg,.bmp,.tif,.tiff,.apng,.pdf,.doc,.docx,.docm,.ppt,.pptx,.pptm,.xls,.xlsx,.xlsm,.vsd,.vsdx,.pub,.eml,.txt,.csv,.html,.md"
+                        data-thread-id={threadId}
+                        data-email={email}
+                        style="display: none;"
+                    />
+                </label>
+            )}
         </div>
         <div class="sidebar-body">
-            <div class="file-list">
-                <p class="empty-message">No files uploaded yet. Upload files to see them here.</p>
+            <div class="file-list" id="file-list">
+                {uploadedFiles.length === 0 ? (
+                    <p class="empty-message">No files uploaded yet. Upload files to see them here.</p>
+                ) : (
+                    uploadedFiles.map((file: any) => (
+                        <div class="file-item" data-file-key={file.key}>
+                            <div class="file-icon">
+                                {file.type.startsWith('image/') ? (
+                                    <span class="material-symbols-outlined">image</span>
+                                ) : file.type === 'application/pdf' ? (
+                                    <span class="material-symbols-outlined">picture_as_pdf</span>
+                                ) : file.type.includes('spreadsheet') || file.type.includes('excel') ? (
+                                    <span class="material-symbols-outlined">table_chart</span>
+                                ) : file.type.includes('presentation') || file.type.includes('powerpoint') ? (
+                                    <span class="material-symbols-outlined">slideshow</span>
+                                ) : file.type.includes('word') ? (
+                                    <span class="material-symbols-outlined">description</span>
+                                ) : (
+                                    <span class="material-symbols-outlined">insert_drive_file</span>
+                                )}
+                            </div>
+                            <div class="file-info">
+                                <div class="file-name">{file.name}</div>
+                                <div class="file-size">{(file.size / 1024).toFixed(1)} KB</div>
+                            </div>
+                            {isAuthorized && (
+                                <button class="file-delete" data-file-key={file.key} title="Delete file">
+                                    <span class="material-symbols-outlined">delete</span>
+                                </button>
+                            )}
+                        </div>
+                    ))
+                )}
             </div>
         </div>
     </div>
@@ -114,5 +159,156 @@ const { isPublic, isAuthorized, threadId } = Astro.props as ChatLeftSidebarProps
                 publicToggle.disabled = false;
             }
         });
+    }
+
+    // File upload functionality
+    const fileUpload = document.getElementById('file-upload') as HTMLInputElement;
+    const fileList = document.getElementById('file-list');
+
+    if (fileUpload && fileList) {
+        fileUpload.addEventListener('change', async (e) => {
+            const target = e.target as HTMLInputElement;
+            const file = target.files?.[0];
+
+            if (!file) return;
+
+            const threadId = fileUpload.getAttribute('data-thread-id');
+            const email = fileUpload.getAttribute('data-email');
+
+            if (!threadId || !email) return;
+
+            // Show loading state
+            (window as any).showInfo?.('Uploading file...');
+
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('threadId', threadId);
+                formData.append('email', email);
+
+                const response = await fetch('/api/files/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    // Remove empty message if it exists
+                    const emptyMessage = fileList.querySelector('.empty-message');
+                    if (emptyMessage) {
+                        emptyMessage.remove();
+                    }
+
+                    // Add new file to the list
+                    const fileItem = createFileElement(data.file);
+                    fileList.appendChild(fileItem);
+
+                    // Show success message
+                    (window as any).showSuccess?.(`${file.name} uploaded successfully`);
+
+                    // Reset input
+                    target.value = '';
+                } else {
+                    throw new Error(data.error || 'Upload failed');
+                }
+            } catch (error) {
+                console.error('File upload error:', error);
+                (window as any).showError?.(
+                    error instanceof Error ? error.message : 'Failed to upload file. Please try again.'
+                );
+            }
+        });
+    }
+
+    // File delete functionality
+    fileList?.addEventListener('click', async (e) => {
+        const target = e.target as HTMLElement;
+        const deleteButton = target.closest('.file-delete') as HTMLButtonElement;
+
+        if (!deleteButton) return;
+
+        const fileKey = deleteButton.getAttribute('data-file-key');
+        const threadId = fileUpload?.getAttribute('data-thread-id');
+        const email = fileUpload?.getAttribute('data-email');
+
+        if (!fileKey || !threadId || !email) return;
+
+        // Confirm deletion
+        if (!confirm('Are you sure you want to delete this file?')) return;
+
+        // Disable button during request
+        deleteButton.disabled = true;
+
+        try {
+            const response = await fetch('/api/files/delete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ threadId, email, fileKey })
+            });
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                // Remove file from UI
+                const fileItem = deleteButton.closest('.file-item');
+                fileItem?.remove();
+
+                // Show empty message if no files left
+                if (fileList && fileList.children.length === 0) {
+                    const emptyMessage = document.createElement('p');
+                    emptyMessage.className = 'empty-message';
+                    emptyMessage.textContent = 'No files uploaded yet. Upload files to see them here.';
+                    fileList.appendChild(emptyMessage);
+                }
+
+                (window as any).showSuccess?.('File deleted successfully');
+            } else {
+                throw new Error(data.error || 'Deletion failed');
+            }
+        } catch (error) {
+            console.error('File deletion error:', error);
+            (window as any).showError?.(
+                error instanceof Error ? error.message : 'Failed to delete file. Please try again.'
+            );
+            deleteButton.disabled = false;
+        }
+    });
+
+    // Helper function to create file element
+    function createFileElement(file: any) {
+        const fileItem = document.createElement('div');
+        fileItem.className = 'file-item';
+        fileItem.setAttribute('data-file-key', file.key);
+
+        let iconName = 'insert_drive_file';
+        if (file.type.startsWith('image/')) {
+            iconName = 'image';
+        } else if (file.type === 'application/pdf') {
+            iconName = 'picture_as_pdf';
+        } else if (file.type.includes('spreadsheet') || file.type.includes('excel')) {
+            iconName = 'table_chart';
+        } else if (file.type.includes('presentation') || file.type.includes('powerpoint')) {
+            iconName = 'slideshow';
+        } else if (file.type.includes('word')) {
+            iconName = 'description';
+        }
+
+        fileItem.innerHTML = `
+            <div class="file-icon">
+                <span class="material-symbols-outlined">${iconName}</span>
+            </div>
+            <div class="file-info">
+                <div class="file-name">${file.name}</div>
+                <div class="file-size">${(file.size / 1024).toFixed(1)} KB</div>
+            </div>
+            <button class="file-delete" data-file-key="${file.key}" title="Delete file">
+                <span class="material-symbols-outlined">delete</span>
+            </button>
+        `;
+
+        return fileItem;
     }
 </script>
