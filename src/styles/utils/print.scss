@@ -3,10 +3,7 @@
 // Ensures clean PDF generation for study materials
 
 @media print {
-    // ============================================
-    // GENERAL PRINT SETTINGS
-    // ============================================
-
+    // General Print Settings
     body {
         font-size: 10pt;
         color: #000 !important;
@@ -14,10 +11,7 @@
         line-height: 1.4;
     }
 
-    // ============================================
-    // HIDE NON-PRINTABLE ELEMENTS
-    // ============================================
-
+    // Hide Non-Printable Elements
     // Hide navigation, headers, footers
     body > header,
     body > footer,
@@ -45,10 +39,7 @@
         display: none !important;
     }
 
-    // ============================================
-    // SHOW PRINTABLE CONTENT
-    // ============================================
-
+    // Show Printable Content
     // Ensure main container and output section are visible
     body,
     body > main,
@@ -63,10 +54,7 @@
         max-width: none !important;
     }
 
-    // ============================================
-    // OUTPUT CONTENT VISIBILITY
-    // ============================================
-
+    // Output Content Visibility
     // Hide all output content by default
     .output-section-title,
     .output-content {
@@ -103,10 +91,7 @@
         }
     }
 
-    // ============================================
-    // PAGE BREAK CONTROL
-    // ============================================
-
+    // Page Break Control
     // Avoid breaking these elements
     h2,
     h3,
@@ -127,10 +112,7 @@
         page-break-inside: avoid !important;
     }
 
-    // ============================================
-    // TYPOGRAPHY ADJUSTMENTS
-    // ============================================
-
+    // Typography Adjustments
     code {
         font-size: 9pt;
         word-wrap: break-word;
@@ -140,10 +122,7 @@
         white-space: pre-wrap;
     }
 
-    // ============================================
-    // MATHJAX PRINT HANDLING
-    // ============================================
-
+    // MathJax Print Handling
     mjx-container {
         visibility: visible !important;
     }
@@ -152,10 +131,7 @@
         visibility: hidden !important;
     }
 
-    // ============================================
-    // DESMOS GRAPH HANDLING
-    // ============================================
-
+    // Desmos Graph Handling
     .desmos-graph {
         page-break-inside: avoid !important;
         page-break-after: auto !important;
