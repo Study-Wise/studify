@@ -55,16 +55,16 @@
                 
                 .btn-primary {
                     display: inline-block;
-                    background: var(--card-bg);
+                    background-color: var(--card-bg);
                     color: var(--body-text);
                     padding: $spacing-small $spacing-large;
                     border-radius: $border-radius-medium;
                     text-decoration: none;
                     border: 1px solid var(--card-border);
                     transition: $transition-all;
-                    
+
                     &:hover {
-                        background: hsl(from var(--card-bg) h s calc(l - 5%));
+                        background-color: hsl(from var(--card-bg) h s calc(l - 5%));
                         translate: 0 -2px;
                         box-shadow: 0 5px 15px var(--card-shadow);
                     }
@@ -249,18 +249,18 @@ footer, .chat-toolbar {
 
     &::-webkit-scrollbar-track {
         background-color: transparent;
-        margin: 0.5rem 0;
+        margin: $spacing-extra-small 0;
     }
 
     &::-webkit-scrollbar-thumb {
-        background: rgba(from var(--section-title) r g b / 0.15);
+        background-color: rgba(from var(--section-title) r g b / 0.15);
         border-radius: 9999px;
         border: 2px solid transparent;
         background-clip: padding-box;
-        transition: background 0.2s ease;
+        transition: background-color 0.2s ease;
 
         &:hover {
-            background: rgba(from var(--section-title) r g b / 0.3);
+            background-color: rgba(from var(--section-title) r g b / 0.3);
             background-clip: padding-box;
         }
     }
