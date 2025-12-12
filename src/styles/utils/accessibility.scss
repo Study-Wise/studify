@@ -33,7 +33,7 @@ textarea:focus-visible {
     top: -100%;
     left: 0;
     padding: 1rem 1.5rem;
-    background: var(--section-title);
+    background-color: var(--section-title);
     color: var(--header-text);
     text-decoration: none;
     font-weight: 600;
@@ -163,7 +163,7 @@ input[type="reset"],
         height: auto;
         overflow: visible;
         padding: 1rem;
-        background: var(--card-bg);
+        background-color: var(--card-bg);
         border: 1px solid var(--card-border);
         border-radius: 0.5rem;
         margin-block: 1rem;
