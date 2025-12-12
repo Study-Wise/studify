@@ -97,7 +97,7 @@ footer, .chat-toolbar {
 
 .chat-header {
     box-sizing: border-box;
-    padding: 1.25rem 1.5rem;
+    padding: $spacing-medium + 0.25rem $spacing-large;
     border-bottom: 1px solid rgba(from var(--section-title) r g b / 0.1);
     background: linear-gradient($gradient-angle, list.nth(map.get($accent-colors, primary), 1), list.nth(map.get($accent-colors, primary), 2));
     
