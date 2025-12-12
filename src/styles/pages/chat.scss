@@ -257,7 +257,7 @@ footer, .chat-toolbar {
         border-radius: 9999px;
         border: 2px solid transparent;
         background-clip: padding-box;
-        transition: background-color 0.2s ease;
+        transition: background-color $transition-fast ease;
 
         &:hover {
             background-color: rgba(from var(--section-title) r g b / 0.3);
@@ -349,9 +349,9 @@ footer, .chat-toolbar {
         &-timestamp {
             align-self: end;
             padding-inline: math.div($_message-space, 2);
-            opacity: 0.6;
-            font-size: 0.75rem;
-            transition: opacity 250ms cubic-bezier(0, 0, 0.2, 1);
+            opacity: $opacity-subtle;
+            font-size: $font-size-xs;
+            transition: opacity $transition-base $ease-out;
 
             &:hover {
                 opacity: 1;
@@ -491,7 +491,7 @@ footer, .chat-toolbar {
     }
 
     .chat-section {
-        padding: 25px;
+        padding: $spacing-large + 0.25rem;
     }
 
     .chat-messages .message {

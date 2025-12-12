@@ -179,20 +179,20 @@
             align-items: center;
             gap: $spacing-extra-small;
             padding: $spacing-small $spacing-medium;
-            background: var(--primary-color, #007bff);
+            background-color: var(--primary-color, #007bff);
             color: white;
             border: none;
             border-radius: $border-radius-medium;
             cursor: pointer;
             font-size: 0.9rem;
             font-weight: $font-weight-medium;
-            transition: background $transition-fast ease;
+            transition: background-color $transition-fast ease;
             margin-top: $spacing-extra-small;
             width: 100%;
             justify-content: center;
 
             &:hover:not([disabled]) {
-                background: var(--primary-hover, #0056b3);
+                background-color: var(--primary-hover, #0056b3);
             }
 
             &:disabled {
