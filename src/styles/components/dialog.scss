@@ -1,4 +1,5 @@
 // Dialog Component Styles
+@use '../variables/tokens.scss' as *;
 
 .app-dialog {
     position: fixed;
@@ -14,9 +15,9 @@
     color: var(--text-color, #333333);
 
     border: none;
-    border-radius: 12px;
+    border-radius: $border-radius-large;
 
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    box-shadow: $box-shadow-huge;
     &::backdrop {
         background: rgba(0, 0, 0, 0.5);
 
@@ -27,7 +28,7 @@
 
     // Animation
     &[open] {
-        animation: dialog-fade-in 0.2s ease-out;
+        animation: dialog-fade-in $transition-fast ease-out;
     }
 
     @keyframes dialog-fade-in {
@@ -47,8 +48,8 @@
 .dialog-content {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    padding: 1.5rem;
+    gap: $spacing-large;
+    padding: $spacing-large;
 
     // Type-specific styling
     &.dialog-error {
@@ -103,8 +104,8 @@
 .dialog-header {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding-bottom: 0.5rem;
+    gap: $spacing-small;
+    padding-bottom: $spacing-extra-small;
     border-bottom: 1px solid var(--border-color, #e5e7eb);
 }
 
@@ -115,37 +116,37 @@
 
 .dialog-title {
     margin: 0;
-    font-size: 1.25rem;
-    font-weight: 600;
+    font-size: $font-size-xl;
+    font-weight: $font-weight-semibold;
     flex: 1;
 }
 
 .dialog-body {
-    padding: 0.5rem 0;
+    padding: $spacing-extra-small 0;
 }
 
 .dialog-message {
     margin: 0;
-    font-size: 1rem;
-    line-height: 1.6;
+    font-size: $font-size-base;
+    line-height: $line-height-relaxed;
     color: var(--text-color-secondary, #666666);
 }
 
 .dialog-footer {
     display: flex;
     justify-content: end;
-    gap: 0.75rem;
-    padding-top: 0.5rem;
+    gap: $spacing-small;
+    padding-top: $spacing-extra-small;
 }
 
 .dialog-button {
-    padding: 0.625rem 1.5rem;
+    padding: 0.625rem $spacing-large;
     border: none;
-    border-radius: 6px;
+    border-radius: $border-radius-small;
     font-size: 0.9375rem;
-    font-weight: 500;
+    font-weight: $font-weight-medium;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: $transition-all;
     outline: none;
 
     &:focus-visible {
@@ -191,12 +192,12 @@
     }
 
     .dialog-content {
-        padding: 1.25rem;
-        gap: 1.25rem;
+        padding: $spacing-medium + 0.25rem;
+        gap: $spacing-medium + 0.25rem;
     }
 
     .dialog-title {
-        font-size: 1.125rem;
+        font-size: $font-size-lg;
     }
 
     .dialog-message {

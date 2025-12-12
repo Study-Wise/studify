@@ -22,7 +22,7 @@ $border-radius: $button-border-radius; // 6px
 
     background-color: inherit;
 
-    border: none;
+    border-style: none;
     border-color: transparent;
 
     cursor: pointer;
@@ -30,7 +30,9 @@ $border-radius: $button-border-radius; // 6px
 
     isolation: isolate;
 
-    transition: color $transition;
+    transition-property: color;
+    transition-duration: $transition-duration;
+    transition-timing-function: ease-in-out;
 
     &:disabled {
         color: #adb5bd;
@@ -101,7 +103,9 @@ $border-radius: $button-border-radius; // 6px
 .btn.tab {
     padding: 0.5em 0.75em;
 
-    border: solid $tab-border-size var(--card-text);
+    border-style: solid;
+    border-width: $tab-border-size;
+    border-color: var(--card-text);
 
     font-size: var(--font-size, 1rem);
 
@@ -127,15 +131,19 @@ $border-radius: $button-border-radius; // 6px
 // Simple button variant (no gradient, clean style)
 .btn.simple {
     padding: 0.75rem 1.25rem;
-    background: var(--card-bg);
+    background-color: var(--card-bg);
     color: var(--card-text);
-    border: 1px solid var(--card-border);
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--card-border);
     border-radius: 8px;
     font-weight: 500;
-    transition: all 250ms cubic-bezier(0, 0, 0.2, 1);
+    transition-property: all;
+    transition-duration: 250ms;
+    transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 
     &:hover:not(:disabled) {
-        background: hsl(from var(--card-bg) h s calc(l - 3%));
+        background-color: hsl(from var(--card-bg) h s calc(l - 3%));
         translate: 0 -2px;
         box-shadow: 0 4px 12px var(--card-shadow);
     }
@@ -156,7 +164,9 @@ $border-radius: $button-border-radius; // 6px
 
     @include flex-center;
 
-    transition: all 250ms cubic-bezier(0, 0, 0.2, 1);
+    transition-property: all;
+    transition-duration: 250ms;
+    transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 
     &:hover:not(:disabled) {
         scale: 1.1;

@@ -5,10 +5,10 @@
 /* Card Container */
 .card {
     background-color: var(--card-bg);
-    padding: clamp(1.5rem, 4vw, 2rem);
+    padding: clamp($spacing-large, 4vw, $spacing-extra-large);
     margin-block-end: $card-spacing;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px var(--card-shadow);
+    border-radius: $border-radius-large;
+    box-shadow: $box-shadow-medium;
 
     &:first-of-type {
         margin-block-start: 0;
@@ -37,8 +37,8 @@
     // Interactive variant - adds hover effect
     &--interactive {
         cursor: pointer;
-        transition: translate 250ms cubic-bezier(0, 0, 0.2, 1),
-                    box-shadow 250ms cubic-bezier(0, 0, 0.2, 1);
+        transition: translate $transition-base $ease-out,
+                    box-shadow $transition-base $ease-out;
 
         &:hover {
             translate: 0 -4px;
@@ -53,7 +53,7 @@
     // Compact variant - less padding
     &--compact {
         padding: calc(#{$card-spacing} / 1.5);
-        border-radius: 8px;
+        border-radius: $border-radius-medium;
     }
 
     // Bordered variant - adds visible border

@@ -1,4 +1,5 @@
 @use '../../variables/globals' as *;
+@use '../../variables/tokens.scss' as *;
 @use 'sass:color';
 @use 'sass:list';
 @use 'sass:map';
@@ -10,7 +11,7 @@
     background-color: var(--card-bg);
     display: flex;
     flex-direction: column;
-    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: width $transition-slow $ease-in-out;
     overflow-y: auto;
 
     // Custom scrollbar styling
@@ -24,8 +25,8 @@
 
     &::-webkit-scrollbar-thumb {
         background: rgba(from var(--section-title) r g b / 0.15);
-        border-radius: 9999px;
-        transition: background 0.2s ease;
+        border-radius: $border-radius-full;
+        transition: background $transition-fast ease;
 
         &:hover {
             background: rgba(from var(--section-title) r g b / 0.3);
@@ -38,8 +39,8 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
+    gap: $spacing-medium;
+    padding: $spacing-medium;
     overflow-y: auto;
 
     // Custom scrollbar styling
@@ -53,8 +54,8 @@
 
     &::-webkit-scrollbar-thumb {
         background: rgba(from var(--section-title) r g b / 0.15);
-        border-radius: 9999px;
-        transition: background 0.2s ease;
+        border-radius: $border-radius-full;
+        transition: background $transition-fast ease;
 
         &:hover {
             background: rgba(from var(--section-title) r g b / 0.3);
@@ -68,48 +69,48 @@
     flex-direction: column;
     background-color: rgba(from var(--card-bg) h s calc(l + 2%));
     border: 1px solid rgba(from var(--card-border) r g b / 0.3);
-    border-radius: 0.75rem;
+    border-radius: $border-radius-large;
 
     .section-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 1rem 1.25rem;
+        padding: $spacing-medium $spacing-medium + 0.25rem;
         border-bottom: 1px solid rgba(from var(--card-border) r g b / 0.2);
         background-color: rgba(from var(--card-bg) h s calc(l - 1%));
 
         .section-title {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: $spacing-extra-small;
 
             .material-symbols-outlined {
-                font-size: 1.25rem;
+                font-size: $font-size-xl;
                 color: list.nth(map.get($accent-colors, primary), 1);
             }
 
             h3 {
                 margin: 0;
-                font-size: 1rem;
-                font-weight: 600;
+                font-size: $font-size-base;
+                font-weight: $font-weight-semibold;
                 color: var(--section-title);
             }
         }
 
         .regenerate-btn {
-            padding: 0.5rem;
+            padding: $spacing-extra-small;
             background: transparent;
             border: 1px solid rgba(from var(--card-border) r g b / 0.6);
-            border-radius: 0.5rem;
+            border-radius: $border-radius-medium;
             color: var(--card-text);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all $transition-slow $ease-in-out;
 
             .material-symbols-outlined {
-                font-size: 1.125rem;
+                font-size: $font-size-lg;
             }
 
             &:hover {
@@ -125,13 +126,13 @@
     }
 
     .section-body {
-        padding: 1.25rem;
+        padding: $spacing-medium + 0.25rem;
 
         .empty-message {
             color: var(--card-text);
-            opacity: 0.6;
+            opacity: $opacity-subtle;
             text-align: center;
-            font-size: 0.875rem;
+            font-size: $font-size-sm;
             margin: 0;
         }
 
@@ -139,19 +140,19 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
-            padding: 0.875rem 1.25rem;
+            gap: $spacing-extra-small;
+            padding: 0.875rem $spacing-medium + 0.25rem;
             background: var(--card-bg);
             color: var(--body-text);
             text-decoration: none;
             border: 1px solid var(--card-border);
-            border-radius: 0.5rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: $border-radius-medium;
+            font-size: $font-size-sm;
+            font-weight: $font-weight-medium;
+            transition: all $transition-slow $ease-in-out;
 
             .material-symbols-outlined {
-                font-size: 1.125rem;
+                font-size: $font-size-lg;
             }
 
             &:hover {
@@ -159,7 +160,7 @@
                 border-color: list.nth(map.get($accent-colors, primary), 1);
                 color: list.nth(map.get($accent-colors, primary), 1);
                 translate: 0 -2px;
-                box-shadow: 0 5px 15px var(--card-shadow);
+                box-shadow: $box-shadow-medium;
             }
 
             &:active {
@@ -170,23 +171,23 @@
         .empty-state {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: $spacing-extra-small;
         }
 
         .generate-btn {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1rem;
+            gap: $spacing-extra-small;
+            padding: $spacing-small $spacing-medium;
             background: var(--primary-color, #007bff);
             color: white;
             border: none;
-            border-radius: 0.5rem;
+            border-radius: $border-radius-medium;
             cursor: pointer;
             font-size: 0.9rem;
-            font-weight: 500;
-            transition: background 0.2s ease;
-            margin-top: 0.5rem;
+            font-weight: $font-weight-medium;
+            transition: background $transition-fast ease;
+            margin-top: $spacing-extra-small;
             width: 100%;
             justify-content: center;
 
@@ -195,7 +196,7 @@
             }
 
             &:disabled {
-                opacity: 0.6;
+                opacity: $opacity-subtle;
                 cursor: not-allowed;
             }
 
@@ -207,7 +208,7 @@
         .share-settings {
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
+            gap: $spacing-small;
 
             .share-status {
                 display: flex;
@@ -221,16 +222,16 @@
                     gap: 0.25rem;
 
                     .status-label {
-                        font-size: 0.875rem;
+                        font-size: $font-size-sm;
                         color: var(--card-text);
                         opacity: 0.7;
-                        font-weight: 500;
+                        font-weight: $font-weight-medium;
                     }
 
                     .status-value {
-                        font-size: 0.875rem;
+                        font-size: $font-size-sm;
                         color: var(--card-text);
-                        font-weight: 600;
+                        font-weight: $font-weight-semibold;
                     }
                 }
 
@@ -255,7 +256,7 @@
                         }
 
                         &:disabled + .toggle-slider {
-                            opacity: 0.5;
+                            opacity: $opacity-disabled;
                             cursor: not-allowed;
                         }
                     }
@@ -268,7 +269,7 @@
                         right: 0;
                         bottom: 0;
                         background-color: rgba(from var(--card-text) r g b / 0.2);
-                        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                        transition: all $transition-slow $ease-in-out;
                         border-radius: 26px;
 
                         &:before {
@@ -279,7 +280,7 @@
                             left: 3px;
                             bottom: 3px;
                             background-color: white;
-                            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                            transition: transform $transition-slow $ease-in-out;
                             border-radius: 50%;
                             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
                         }
