@@ -1,5 +1,6 @@
 @use '../variables/globals.scss' as *;
 @use '../variables/tokens.scss' as *;
+@use '../variables/mixins.scss' as *;
 @use 'sass:list';
 @use 'sass:map';
 @use 'sass:math';
@@ -43,9 +44,7 @@
                 left: 0;
                 top: 0;
 
-                display: flex;
-                align-items: center;
-                justify-content: center;
+                @include flex-center;
 
                 width: 2.5rem;
                 height: 2.5rem;
@@ -149,13 +148,7 @@
         }
 
         // Subtle lift on hover
-        transition: translate $transition-base $ease-out,
-                    box-shadow $transition-base $ease-out;
-
-        &:hover {
-            translate: 0 -2px;
-            box-shadow: $box-shadow-large;
-        }
+        @include interactive-lift;
 
         .category-title {
             line-height: $line-height-tight;
