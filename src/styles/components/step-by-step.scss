@@ -29,16 +29,16 @@ $dpad: 1rem;
     gap: var(--pad);
 
     .divider {
-    border: none;
-    height: 1px;
-    background-color: var(--bor);
+        border: none;
+        height: 1px;
+        background-color: var(--bor);
     }
 
     .step {
-    box-sizing: border-box;
-    background-color: var(--card-bg);
+        box-sizing: border-box;
+        background-color: var(--card-bg);
 
-    .correct-explanation {
+        .correct-explanation {
             $_bdr: calc(var(--bdr) / 8);
 
             box-sizing: border-box;
@@ -51,66 +51,66 @@ $dpad: 1rem;
             overflow: hidden;
 
             &::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        width: $_bdr;
-        height: 100%;
-        background-color: hsl(120 73% 50%);
+                content: '';
+                position: absolute;
+                inset: 0;
+                width: $_bdr;
+                height: 100%;
+                background-color: hsl(120 73% 50%);
             }
-    }
+        }
 
-    .step-question-choices {
+        .step-question-choices {
             display: flex;
             flex-direction: column;
             gap: $dpad;
             @include stepsBorder($depth: 1);
 
             .step-question-choice {
-        position: relative;
-        background-color: var(--card-bg);
-        cursor: pointer;
-        border-radius: 100dvw;
-        padding-inline: 1ex;
-        transition: background-color 0.2s ease, scale 0.1s ease;
+                position: relative;
+                background-color: var(--card-bg);
+                cursor: pointer;
+                border-radius: 100dvw;
+                padding-inline: 1ex;
+                transition: background-color 0.2s ease, scale 0.1s ease;
 
-        &:hover:not([data-state]) {
+                &:hover:not([data-state]) {
                     background-color: rgba(from lightblue r g b / 0.3);
-        }
+                }
 
-        &:active {
+                &:active {
                     scale: 0.98;
-        }
+                }
 
-        // Selected and correct
-        &[data-state="selected-correct"] {
+                // Selected and correct
+                &[data-state="selected-correct"] {
                     background-color: hsl(120 73% 75%);
-        }
+                }
 
-        // Correct but not selected (shown as hint)
-        &[data-state="hint-correct"] {
+                // Correct but not selected (shown as hint)
+                &[data-state="hint-correct"] {
                     background-color: hsl(120 73% 75% / 0.5);
-        }
+                }
 
-        // Selected and incorrect
-        &[data-state="selected-incorrect"] {
+                // Selected and incorrect
+                &[data-state="selected-incorrect"] {
                     background-color: hsl(0 100% 80%);
-        }
+                }
 
-        // Incorrect but not selected (shown as hint)
-        &[data-state="hint-incorrect"] {
+                // Incorrect but not selected (shown as hint)
+                &[data-state="hint-incorrect"] {
                     background-color: hsl(0 100% 80% / 0.5);
-        }
+                }
 
-        .step-question-radio {
+                .step-question-radio {
                     visibility: hidden;
                     position: absolute;
                     width: 0;
                     height: 0;
                     top: -1px;
                     left: -1px;
-        }
+                }
             }
-    }
+        }
     }
 }
