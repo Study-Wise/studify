@@ -1,16 +1,18 @@
+@use '../variables/tokens.scss' as *;
+
 .sign-out-container {
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 60vh;
-    padding: 2rem 1rem;
+    padding: $spacing-extra-large $spacing-medium;
 }
 
 .sign-out-card {
     background-color: var(--card-bg);
     border: 1px solid var(--card-border);
-    border-radius: 1rem;
-    padding: 3rem 2rem;
+    border-radius: $border-radius-extra-large;
+    padding: $spacing-huge $spacing-extra-large;
     max-width: 400px;
     width: 100%;
     text-align: center;
@@ -20,38 +22,38 @@
 .sign-out-icon {
     font-size: 4rem;
     color: #ef4444;
-    margin-bottom: 1rem;
+    margin-block-end: $spacing-medium;
 }
 
 h1 {
-    margin: 1rem 0 0.5rem;
+    margin: $spacing-medium 0 $spacing-extra-small;
     color: var(--card-text);
     font-size: 1.75rem;
 }
 
 p {
     color: rgba(from var(--card-text) r g b / 0.7);
-    margin-bottom: 2rem;
-    font-size: 1rem;
+    margin-block-end: $spacing-extra-large;
+    font-size: $font-size-base;
 }
 
 .button-group {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: $spacing-small;
 }
 
 .btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
-    font-size: 1rem;
-    font-weight: 500;
+    gap: $spacing-extra-small;
+    padding: $spacing-small $spacing-large;
+    border-radius: $border-radius-medium;
+    font-size: $font-size-base;
+    font-weight: $font-weight-medium;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $transition-fast ease;
     text-decoration: none;
     border: none;
     font-family: inherit;
@@ -84,5 +86,5 @@ p {
 }
 
 .material-symbols-outlined {
-    font-size: 1.25rem;
+    font-size: $font-size-xl;
 }

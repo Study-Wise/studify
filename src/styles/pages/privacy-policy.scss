@@ -6,7 +6,7 @@
 
     h1 {
         color: var(--card-text);
-        margin-bottom: $spacing-extra-small;
+        margin-block-end: $spacing-extra-small;
         font-size: 2.5rem;
         font-weight: $font-weight-bold;
     }
@@ -14,40 +14,41 @@
     .last-updated {
         color: rgba(from var(--card-text) r g b / 0.6);
         font-size: 0.9rem;
-        margin-bottom: $spacing-extra-large;
+        margin-block-end: $spacing-extra-large;
         font-style: italic;
     }
 
     section {
-        margin-bottom: $spacing-extra-large + 0.5rem;
+        margin-block-end: $spacing-extra-large + 0.5rem;
     }
 
     h2 {
         color: var(--card-text);
         font-size: 1.75rem;
         font-weight: $font-weight-semibold;
-        margin-top: $spacing-extra-large;
-        margin-bottom: $spacing-medium;
-        padding-bottom: $spacing-extra-small;
-        border-bottom: 2px solid var(--card-border);
+        margin-block-start: $spacing-extra-large;
+        margin-block-end: $spacing-medium;
+        padding-block-end: $spacing-extra-small;
+        border-block-end: 2px solid var(--card-border);
     }
 
     h3 {
         color: var(--card-text);
         font-size: $font-size-xl;
         font-weight: $font-weight-semibold;
-        margin-top: $spacing-large;
-        margin-bottom: $spacing-small;
+        margin-block-start: $spacing-large;
+        margin-block-end: $spacing-small;
     }
 
     p {
         color: rgba(from var(--card-text) r g b / 0.85);
         line-height: $line-height-relaxed + 0.075;
-        margin-bottom: $spacing-medium;
+        margin-block-end: $spacing-medium;
     }
 
     ul {
-        margin: $spacing-medium 0 $spacing-medium $spacing-large;
+        margin-block: $spacing-medium;
+        margin-inline-start: $spacing-large;
         color: rgba(from var(--card-text) r g b / 0.85);
     }
 

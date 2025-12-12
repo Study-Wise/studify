@@ -1,4 +1,5 @@
 @use '../variables/globals.scss' as *;
+@use '../variables/tokens.scss' as *;
 
 // Styles specific to index.astro page
 
@@ -9,7 +10,7 @@
     }
 
     strong {
-        font-weight: 600;
+        font-weight: $font-weight-semibold;
         color: var(--body-text);
     }
 }
@@ -22,7 +23,7 @@
     width: 1.2em;
     height: 1.2em;
     animation: spin 1s linear infinite;
-    margin-left: 10px;
+    margin-left: $spacing-small - 0.125rem;
 }
 
 .settings-row {
@@ -31,7 +32,7 @@
 
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: $spacing-small - 0.125rem;
 }
 
 @keyframes spin {
@@ -44,9 +45,9 @@
     background-color: #f8d7da;
     color: #721c24;
     border: 1px solid #f5c6cb;
-    padding: 15px;
-    border-radius: 6px;
-    margin-top: 20px;
+    padding: $spacing-medium - 0.0625rem;
+    border-radius: $border-radius-small;
+    margin-top: $spacing-medium + 0.25rem;
     font-size: 1em;
 }
 
