@@ -58,7 +58,7 @@ async function generateImage(prompt: string) {
     const imageUrl = await generateImageUrl(prompt);
     if (imageUrl) {
         const uploadResult = await uploadImageByUrl(imageUrl);
-        return { imageUrl, uploadResult };
+        return { imageUrl: uploadResult.data?.ufsUrl ?? imageUrl ?? null, uploadResult };
     }
     return { imageUrl: null, uploadResult: null };
 }

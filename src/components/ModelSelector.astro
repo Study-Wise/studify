@@ -1,9 +1,8 @@
 ---
 // import '../styles/pages/settings.scss';
-import SettingsScript from '../scripts/settings.astro';
 
 import { models, providers } from '../lib/models';
-import type { ModelOption, Provider, Providers, SelectorSettings } from '../lib/types';
+import type { ModelOption, Providers, SelectorSettings } from '../lib/types';
 
 // Filter out models that are not selectable in UI
 const selectableModels = models.filter((model: any) => model.selectableInUI !== false);

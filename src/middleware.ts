@@ -2,11 +2,10 @@ import { clerkMiddleware, createRouteMatcher } from '@clerk/astro/server';
 
 // Define protected routes
 const isProtectedRoute = createRouteMatcher(['/[category]/[mode]/chat(.*)', '/settings(.*)', '/admin(.*)', '/user/profile(.*)']);
-const isMFARoute = createRouteMatcher(['/account/manage-mfa(.*)']);
 const isSignInRoute = createRouteMatcher(['/user/sign-in(.*)', '/user/sign-up(.*)']);
 
 export const onRequest = clerkMiddleware((auth, context) => {
-    const { userId, sessionClaims, redirectToSignIn } = auth();
+    const { userId, redirectToSignIn } = auth();
 
     // Redirect signed-in users away from auth pages
     if (userId && isSignInRoute(context.request)) {

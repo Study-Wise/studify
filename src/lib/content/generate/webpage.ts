@@ -12,9 +12,9 @@ export async function generateWebpage(threadId: string, userEmail: string | null
         throw new Error('Thread not found');
     }
 
-    const thread = threads[0];
-    const category = thread.category;
-    const mode = thread.mode;
+    // const thread = threads[0];
+    // const category = thread.category;
+    // const mode = thread.mode;
 
     // Get conversation history
     const messages = await getMessages(threadId, userEmail);

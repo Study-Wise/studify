@@ -17,8 +17,8 @@ export async function generateMindMap(threadId: string, userEmail: string | null
     const thread = threads[0];
     const category = thread.category;
     const mode = thread.mode;
-    const userModel = thread.model || config.model;
-    const provider = thread.provider || config.provider;
+    // const userModel = thread.model || config.model;
+    // const provider = thread.provider || config.provider;
 
     // Get conversation history
     const messages = await getMessages(threadId, userEmail);

@@ -33,7 +33,7 @@ const runJSCodeTool = tool({
             ))
             .filter((line: string | null) => line)
 
-        const max = ranCode.length
+        // const max = ranCode.length
         const last = ranCode[ranCode.length - 1]
         if (last && !last.includes('return')) {
             ranCode[ranCode.length - 1] = 'return ' + last
