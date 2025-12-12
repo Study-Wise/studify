@@ -20,16 +20,16 @@
     }
 
     &::-webkit-scrollbar-track {
-        background: transparent;
+        background-color: transparent;
     }
 
     &::-webkit-scrollbar-thumb {
-        background: rgba(from var(--section-title) r g b / 0.15);
+        background-color: rgba(from var(--section-title) r g b / 0.15);
         border-radius: $border-radius-full;
-        transition: background $transition-fast ease;
+        transition: background-color $transition-fast ease;
 
         &:hover {
-            background: rgba(from var(--section-title) r g b / 0.3);
+            background-color: rgba(from var(--section-title) r g b / 0.3);
         }
     }
 }
@@ -49,16 +49,16 @@
     }
 
     &::-webkit-scrollbar-track {
-        background: transparent;
+        background-color: transparent;
     }
 
     &::-webkit-scrollbar-thumb {
-        background: rgba(from var(--section-title) r g b / 0.15);
+        background-color: rgba(from var(--section-title) r g b / 0.15);
         border-radius: $border-radius-full;
-        transition: background $transition-fast ease;
+        transition: background-color $transition-fast ease;
 
         &:hover {
-            background: rgba(from var(--section-title) r g b / 0.3);
+            background-color: rgba(from var(--section-title) r g b / 0.3);
         }
     }
 }
