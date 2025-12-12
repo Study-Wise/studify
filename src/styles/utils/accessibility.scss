@@ -115,8 +115,7 @@ textarea:focus-visible {
 }
 
 // Touch Target Size
-// Ensure interactive elements meet minimum touch target size (44x44px)
-// Based on WCAG 2.5.5 Target Size
+// Ensure interactive elements meet minimum touch target size (1rem x 1rem)
 button,
 a:not(.skip-link),
 input[type="button"],
@@ -125,8 +124,8 @@ input[type="reset"],
 .clickable,
 .interactive {
     &:not(.cl-rootBox.cl-signIn-root *) {
-        min-height: 44px;
-        min-width: 44px;
+        min-height: 1rem;
+        min-width: 1rem;
     
         // Exception for inline text links
         &:is(a:not([class])) {
