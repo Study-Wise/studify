@@ -155,5 +155,6 @@ $container-padding: $spacing-large;
 // - transition: $transition-transform;
 // - z-index: $z-index-modal;
 //
-// These tokens are available for use but don't replace existing values yet.
-// Gradually migrate to these tokens as you touch files.
+// Token Migration Status: In Progress
+// Files fully migrated: card.scss, dialog.scss, sidebar.scss
+// Continue migrating hard-coded values to tokens as you work on files.
