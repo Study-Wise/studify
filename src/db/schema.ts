@@ -6,7 +6,7 @@ const threadsTable = pgTable('threads', {
     id: text('id').primaryKey(),
     title: varchar({ length: 255 }).notNull(),
     thread: jsonb('thread').notNull().default({}),
-    uploadedFiles: text('uploadedFiles').array().default([]),
+    uploadedFiles: jsonb('uploadedFiles').notNull().default([]),
     email: text('email'),
     category: text('category').notNull().default(config.defaultCategory),
     mode: text('mode').notNull().default(config.defaultMode),
