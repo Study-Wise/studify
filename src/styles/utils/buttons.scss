@@ -30,9 +30,7 @@ $border-radius: $button-border-radius; // 6px
 
     isolation: isolate;
 
-    transition-property: color;
-    transition-duration: $transition-duration;
-    transition-timing-function: ease-in-out;
+    transition: color $transition;
 
     &:disabled {
         color: #adb5bd;
@@ -138,9 +136,7 @@ $border-radius: $button-border-radius; // 6px
     border-color: var(--card-border);
     border-radius: 8px;
     font-weight: 500;
-    transition-property: all;
-    transition-duration: 250ms;
-    transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    transition: all 250ms cubic-bezier(0, 0, 0.2, 1);
 
     &:hover:not(:disabled) {
         background-color: hsl(from var(--card-bg) h s calc(l - 3%));
@@ -164,9 +160,7 @@ $border-radius: $button-border-radius; // 6px
 
     @include flex-center;
 
-    transition-property: all;
-    transition-duration: 250ms;
-    transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    transition: all 250ms cubic-bezier(0, 0, 0.2, 1);
 
     &:hover:not(:disabled) {
         scale: 1.1;
