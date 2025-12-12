@@ -150,7 +150,7 @@
 
 // Glassmorphism effect
 @mixin glass($blur: 10px, $opacity: 0.8) {
-    background: rgba(from var(--card-bg) r g b / $opacity);
+    background-color: rgba(from var(--card-bg) r g b / $opacity);
     backdrop-filter: blur($blur);
     -webkit-backdrop-filter: blur($blur);
 }
