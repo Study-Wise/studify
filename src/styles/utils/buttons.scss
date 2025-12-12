@@ -125,7 +125,7 @@ $border-radius: $button-border-radius; // 6px
 }
 
 // Simple button variant (no gradient, clean style)
-.btn--simple {
+.btn.simple {
     padding: 0.75rem 1.25rem;
     background: var(--card-bg);
     color: var(--card-text);
@@ -147,7 +147,7 @@ $border-radius: $button-border-radius; // 6px
 }
 
 // Icon button variant
-.btn--icon {
+.btn.icon {
     aspect-ratio: 1;
     padding: 0.75rem;
     min-width: 44px;

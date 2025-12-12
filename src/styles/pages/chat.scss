@@ -391,9 +391,7 @@ footer, .chat-toolbar {
         }
     }
 
-    // ============================================
-    // TYPING INDICATOR (Phase 3)
-    // ============================================
+    // Typing Indicator (Phase 3)
     // Add class "typing" to message when AI is generating
     .message.typing {
         .message-content {
