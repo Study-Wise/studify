@@ -13,10 +13,7 @@ $transition-base: 250ms;
 $transition-slow: 350ms;
 $transition-bounce: 500ms;
 
-// ============================================
-// ENTRANCE ANIMATIONS
-// ============================================
-
+// Entrance Animations
 // Fade in from slightly below
 @keyframes fadeIn {
     from {
@@ -65,10 +62,7 @@ $transition-bounce: 500ms;
     }
 }
 
-// ============================================
-// LOADING ANIMATIONS
-// ============================================
-
+// Loading Animations
 // Shimmer effect for loading states
 @keyframes shimmer {
     0% {
@@ -109,10 +103,7 @@ $transition-bounce: 500ms;
     }
 }
 
-// ============================================
-// UTILITY CLASSES
-// ============================================
-
+// Utility Classes
 // Apply fade-in animation
 .animate-fade-in {
     animation: fadeIn 0.5s $ease-out;
@@ -147,10 +138,7 @@ $transition-bounce: 500ms;
     }
 }
 
-// ============================================
-// ACCESSIBILITY
-// ============================================
-
+// Accessibility
 // Respect user's motion preferences
 @media (prefers-reduced-motion: reduce) {
     *,
