@@ -62,13 +62,13 @@ messages = await checkForOneMessage({
     isAuthorized
 });
 
-// Check if reference sheet, study guide, infographic, webpage, mind map, resources, flashcard, and practice questions exist
+// Check if reference sheet, study guide, infographic, webpage, mind map, additional resources, flashcard, and practice questions exist
 let hasReferenceSheet = false;
 let hasStudyGuide = false;
 let hasInfographic = false;
 let hasWebpage = false;
 let hasMindMap = false;
-let hasResources = false;
+let hasAdditionalResources = false;
 let hasFlashcard = false;
 let hasPracticeQuestions = false;
 
@@ -78,7 +78,7 @@ if ((isAuthorized || isPublic) && id) {
     const infographic = await getLatestInfographic(id);
     const webpageResult = await getLatestWebpage(id);
     const mindMapResult = await getLatestMindMap(id);
-    const resourcesResult = await getLatestResources(id);
+    const additionalResourcesResult = await getLatestResources(id);
     const flashcardResult = await getLatestFlashcards(id);
     const practiceQuestionsResult = await getLatestPracticeQuestions(id);
 
@@ -87,7 +87,7 @@ if ((isAuthorized || isPublic) && id) {
     hasInfographic = !!infographic;
     hasWebpage = !!webpageResult.content;
     hasMindMap = !!mindMapResult.content;
-    hasResources = !!resourcesResult.content;
+    hasAdditionalResources = !!additionalResourcesResult.content;
     hasFlashcard = !!flashcardResult.content;
     hasPracticeQuestions = !!practiceQuestionsResult.content;
 }
@@ -147,7 +147,7 @@ export const inNav = 'hide';
             hasInfographic={hasInfographic}
             hasWebpage={hasWebpage}
             hasMindMap={hasMindMap}
-            hasResources={hasResources}
+            hasAdditionalResources={hasAdditionalResources}
             hasFlashcard={hasFlashcard}
             hasPracticeQuestions={hasPracticeQuestions}
             threadId={id || ''}

@@ -62,7 +62,7 @@ interface ChatRightSidebarProps {
     hasInfographic: boolean;
     hasWebpage: boolean;
     hasMindMap: boolean;
-    hasResources: boolean;
+    hasAdditionalResources: boolean;
     hasFlashcard: boolean;
     hasPracticeQuestions: boolean;
     threadId: string;
@@ -121,6 +121,8 @@ interface SidebarSectionProps {
     viewButtonText: string;
     emptyMessage: string;
     id: string;
+    generateVerb?: string; // e.g., "Generate", "Find", "Create" (default: "Generate")
+    regenerateVerb?: string; // e.g., "Regenerate", "Find New", "Recreate" (default: "Regenerate")
 }
 
 export type {

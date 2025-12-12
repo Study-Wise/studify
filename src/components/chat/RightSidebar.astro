@@ -4,14 +4,14 @@ import '../../styles/components/chat/right-sidebar.scss';
 import type { ChatRightSidebarProps } from '../../lib/types';
 import SidebarSection from './SidebarSection.astro';
 
-const { hasReferenceSheet, hasStudyGuide, hasInfographic, hasWebpage, hasMindMap, hasResources, hasFlashcard, hasPracticeQuestions, threadId, category, mode } = Astro.props as ChatRightSidebarProps;
+const { hasReferenceSheet, hasStudyGuide, hasInfographic, hasWebpage, hasMindMap, hasAdditionalResources, hasFlashcard, hasPracticeQuestions, threadId, category, mode } = Astro.props as ChatRightSidebarProps;
 
 const referenceSheetUrl = `/${category}/${mode}/reference-sheet/${threadId}`;
 const studyGuideUrl = `/${category}/${mode}/study-guide/${threadId}`;
 const infographicUrl = `/${category}/${mode}/infographic/${threadId}`;
 const webpageUrl = `/${category}/${mode}/webpage/${threadId}`;
 const mindMapUrl = `/${category}/${mode}/mind-map/${threadId}`;
-const resourcesUrl = `/${category}/${mode}/resources/${threadId}`;
+const additionalResourcesUrl = `/${category}/${mode}/additional-resources/${threadId}`;
 const flashcardUrl = `/${category}/${mode}/flashcards/${threadId}`;
 const practiceQuestionsUrl = `/${category}/${mode}/practice-questions/${threadId}`;
 ---
@@ -81,7 +81,6 @@ const practiceQuestionsUrl = `/${category}/${mode}/practice-questions/${threadId
             viewButtonText="View Webpage"
             emptyMessage="No webpage generated yet."
             id="webpage"
-            ="Generate Webpage"
         />
 
         <SidebarSection
@@ -98,12 +97,14 @@ const practiceQuestionsUrl = `/${category}/${mode}/practice-questions/${threadId
         <SidebarSection
             title="Learning Resources"
             icon="travel_explore"
-            hasContent={hasResources}
+            hasContent={hasAdditionalResources}
             threadId={threadId}
-            viewUrl={resourcesUrl}
+            viewUrl={additionalResourcesUrl}
             viewButtonText="View Resources"
             emptyMessage="No resources found yet."
-            id="resources"
+            id="additional-resources"
+            generateVerb="Find"
+            regenerateVerb="Find New"
         />
     </div>
 </aside>

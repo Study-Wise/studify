@@ -6,7 +6,7 @@ import { db } from '../../../db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '../../../db/schema';
 import { isValidEmail } from '../../../lib/validation';
-import { generateResources } from '../../../lib/content/generate/resources';
+import { generateResources } from '../../../lib/content/generate/additional-resources';
 import { clerkClient } from '@clerk/astro/server';
 
 export const POST: APIRoute = async ({ request, locals, ...context }) => {
@@ -116,7 +116,7 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
         console.log(`💾 [${requestId}] Saving resources to database`);
         await db.update(threadsTable)
             .set({
-                generatedResources: content,
+                generatedAdditionalResources: content,
                 updatedAt: new Date()
             })
             .where(eq(threadsTable.id, threadId));

@@ -82,7 +82,7 @@ Single table defined in `src/db/schema.ts`:
 - Core fields: `id`, `title`, `email`, `category`, `mode`, `model`, `provider`
 
 - Thread data: `thread` (JSONB storing messages array)
-- Generated content: `generatedStudyGuide`, `generatedReferenceSheet`, `generatedInfographic`, `generatedWebpage`, `generatedMindMap`, `generatedResources`, `generatedFlashcards`, `generatedPracticeQuestions`
+- Generated content: `generatedStudyGuide`, `generatedReferenceSheet`, `generatedInfographic`, `generatedWebpage`, `generatedMindMap`, `generatedAdditionalResources`, `generatedFlashcards`, `generatedPracticeQuestions`
 - Metadata: `uploadedFiles`, `isPublic`, `isDev`, `createdAt`, `updatedAt`
 
 Database operations in `src/lib/threads.ts` provide:
@@ -110,7 +110,7 @@ API endpoints in `src/pages/api/`:
 - **POST /api/infographic/generate.ts**: Generate infographics (uses OpenAI image generation)
 - **POST /api/webpage/generate.ts**: Generate webpages from thread
 - **POST /api/mind-map/generate.ts**: Generate mind maps from thread
-- **POST /api/resources/generate.ts**: Generate additional learning resources
+- **POST /api/additional-resources/generate.ts**: Generate additional learning resources
 - **POST /api/flashcards/generate.ts**: Generate flashcards from thread content
 - **POST /api/practice-questions/generate.ts**: Generate practice questions
 

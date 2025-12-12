@@ -10,6 +10,8 @@ const {
     viewButtonText,
     emptyMessage,
     id,
+    generateVerb = 'Generate',
+    regenerateVerb = 'Regenerate',
 } = Astro.props as SidebarSectionProps;
 
 const generateButtonId = `generate-${id}-btn`;
@@ -39,14 +41,14 @@ const regenerateButtonId = `regenerate-${id}-btn`;
                 <p class="empty-message">{emptyMessage}</p>
                 <button class="generate-btn" id={generateButtonId} data-thread-id={threadId}>
                     <span class="material-symbols-outlined">{icon}</span>
-                    <span>{`Generate ${title}`}</span>
+                    <span>{`${generateVerb} ${title}`}</span>
                 </button>
             </div>
         )}
     </div>
 </div>
 
-<script is:inline define:vars={{ generateButtonId, regenerateButtonId, title, id }}>
+<script is:inline define:vars={{ generateButtonId, regenerateButtonId, title, id, generateVerb, regenerateVerb }}>
     // Extract the feature type from the button ID (e.g., "generate-study-guide-btn" -> "study-guide")
     const apiEndpoint = `/api/${id}/generate`;
 
@@ -60,13 +62,9 @@ const regenerateButtonId = `regenerate-${id}-btn`;
         // Disable button and show loading state
         btn.setAttribute('disabled', 'true');
         const originalContent = btn.innerHTML;
-        const loadingText = isRegenerate ? 'Regenerating...' : 'Generating...';
+        const loadingText = isRegenerate ? `${regenerateVerb}...` : `${generateVerb}...`;
 
-        // Special case for resources
-        const isResources = apiEndpoint.includes('resources');
-        const resourcesLoadingText = isRegenerate ? 'Searching...' : 'Finding Resources...';
-
-        btn.innerHTML = `<span class="material-symbols-outlined spinning">progress_activity</span><span>${isResources ? resourcesLoadingText : loadingText}</span>`;
+        btn.innerHTML = `<span class="material-symbols-outlined spinning">progress_activity</span><span>${loadingText}</span>`;
 
         try {
             const response = await fetch(apiEndpoint, {
@@ -110,12 +108,9 @@ const regenerateButtonId = `regenerate-${id}-btn`;
         regenerateBtn.addEventListener('click', () => {
             const threadId = regenerateBtn.getAttribute('data-thread-id');
             if (threadId) {
-                const confirmMessage = `Are you sure you want to regenerate the ${title.toLowerCase()}? This will replace the existing one.`;
-                // Special case for resources
-                const resourcesConfirmMessage = 'Are you sure you want to find new resources? This will replace the existing ones.';
-                const isResources = apiEndpoint.includes('resources');
+                const confirmMessage = `Are you sure you want to ${regenerateVerb.toLowerCase()} the ${title.toLowerCase()}? This will replace the existing one.`;
 
-                if (confirm(isResources ? resourcesConfirmMessage : confirmMessage)) {
+                if (confirm(confirmMessage)) {
                     generateContent(threadId, true);
                 }
             }
