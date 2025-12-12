@@ -12,10 +12,13 @@ import Dialog from '../components/Dialog.astro';
 
 const sTitle = "StudyWise";
 const lTitle = `${sTitle} - AI Study Partner`;
-const { title, hideCopyright, container, isChatArea } = Astro.props;
-var { className } = Astro.props;
+const { title, hideCopyright, isChatArea } = Astro.props;
+var { className, container } = Astro.props;
 const noTitle = title === "Home" || title === '' || !title;
 const pTitle = noTitle ? lTitle : `${title} | ${sTitle}`;
+
+container ??= true;
+className ??= '';
 
 if (container) className += 'container'
 ---
