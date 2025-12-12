@@ -12,11 +12,6 @@ import StepByStepScript from '../../../scripts/step-by-step.astro';
 
 import categories from '../../../lib/modes';
 
-// Use Clerk authentication
-const { auth } = Astro.locals;
-const { sessionClaims } = auth();
-const user_email = sessionClaims?.email as string || null;
-
 let { category, mode } = Astro.params || { category: '', mode: '' };
 
 const categoryObj = category ? categories[category] : null;
@@ -27,7 +22,6 @@ const modeName = modeObj?.name || mode;
 
 ---
 <Layout title={`${modeName} | ${categoryName}`}>
-    <div id="user-email" data-email={user_email} style="display: none"></div>
     <!-- Introduction Section -->
     <section class="introduction-section card" aria-labelledby="how-it-works-heading">
         <h2 id="how-it-works-heading">

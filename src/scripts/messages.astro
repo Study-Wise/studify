@@ -69,10 +69,6 @@ const { page, category, mode } = Astro.props;
             setLoadingState(true);
         }
         try {
-            // Get user email from page data attribute
-            const userEmailElement = document.getElementById('user-email');
-            const user_email = userEmailElement?.getAttribute('data-email') || null;
-            
             // Get share button state
             const shareButton = document.getElementById('share-button');
             const isPublic = shareButton ? shareButton.classList.contains('active') : false;
