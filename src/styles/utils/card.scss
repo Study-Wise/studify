@@ -35,7 +35,7 @@
 
     // Card Variants (Phase 3 enhancements)
     // Interactive variant - adds hover effect
-    &--interactive {
+    &.interactive {
         cursor: pointer;
         transition: translate $transition-base $ease-out,
                     box-shadow $transition-base $ease-out;
@@ -51,18 +51,18 @@
     }
 
     // Compact variant - less padding
-    &--compact {
+    &.compact {
         padding: calc(#{$card-spacing} / 1.5);
         border-radius: $border-radius-medium;
     }
 
     // Bordered variant - adds visible border
-    &--bordered {
+    &.bordered {
         border: 1px solid var(--card-border);
     }
 
     // Elevated variant - stronger shadow for emphasis
-    &--elevated {
+    &.elevated {
         box-shadow: $box-shadow-large;
     }
 }
