@@ -110,7 +110,7 @@ footer, .chat-toolbar {
     .chat-title-container {
         display: flex;
         align-items: center;
-        gap: 1rem;
+        gap: $spacing-medium;
     }
 
     h2 {
