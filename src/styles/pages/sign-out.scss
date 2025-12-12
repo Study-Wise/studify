@@ -58,11 +58,11 @@ p {
 }
 
 .btn-primary {
-    background: #ef4444;
+    background-color: #ef4444;
     color: white;
 
     &:hover {
-        background: #dc2626;
+        background-color: #dc2626;
         transform: translateY(-1px);
         box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
     }

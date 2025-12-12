@@ -247,7 +247,7 @@ footer, .chat-toolbar {
     }
 
     &::-webkit-scrollbar-track {
-        background: transparent;
+        background-color: transparent;
         margin: 0.5rem 0;
     }
 
@@ -329,7 +329,7 @@ footer, .chat-toolbar {
                 border-left: 3px solid rgba(from var(--section-title) r g b / 0.3);
 
                 code {
-                    background: none;
+                    background-color: transparent;
                     padding: 0;
                 }
             }
