@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { db } from '../../../db';
+import { db } from '../../../db/initialize';
 import { threadsTable } from '../../../db/schema';
 import { eq } from 'drizzle-orm';
 import { userFilesUpload } from '../../../lib/uploadthing';
