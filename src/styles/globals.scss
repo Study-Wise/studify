@@ -282,17 +282,17 @@ main {
         display: flex;
         align-items: center;
         font-weight: 600;
-        
+
         &:not(.chat-header h2) {
-            margin-bottom: 25px;
-            border-bottom: 1px solid var(--section-title-border);
-            padding-bottom: 12px;
+            margin-block-end: 25px;
+            border-block-end: 1px solid var(--section-title-border);
+            padding-block-end: 12px;
         }
     }
 }
 
 :is(section, .chat-page) h2 i {
-    margin-right: 12px;
+    margin-inline-end: 12px;
     color: list.nth(map.get($accent-colors, primary), 1);
 }
 
@@ -309,7 +309,7 @@ main {
     border: 1px solid #f5c6cb;
     padding: 15px;
     border-radius: 6px;
-    margin-top: 20px;
+    margin-block-start: 20px;
     font-size: 1em;
 }
 
