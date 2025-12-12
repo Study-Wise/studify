@@ -49,6 +49,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
 </div>
 
 <script is:inline define:vars={{ generateButtonId, regenerateButtonId, title, id, generateVerb, regenerateVerb }}>
+    // @ts-nocheck - Variables are injected by Astro's define:vars
     // Extract the feature type from the button ID (e.g., "generate-study-guide-btn" -> "study-guide")
     const apiEndpoint = `/api/${id}/generate`;
 
