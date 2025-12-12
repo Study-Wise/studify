@@ -6,9 +6,10 @@ import '../styles/pages/auth.scss'
 const { page } = Astro.props;
 
 // Get the redirect URL from query parameters, returnBackUrl, or referrer, fallback to home
-const redirectUrl = Astro.url.searchParams.get('redirect_url') || 
+const redirectUrl = Astro.url.searchParams.get('redirect_url')  || 
                     Astro.url.searchParams.get('returnBackUrl') || 
-                    Astro.request.headers.get('referer') || '/';
+                    Astro.request.headers .get('referer')       || 
+                    '/';
 
 const appearance = {
     elements: {
@@ -23,24 +24,23 @@ const appearance = {
         footerActionLink: 'footer-link'
     }
 };
+
+const pathName = page.toLowerCase().replaceAll(' ', '-');
+
+// Dynamically select the component
+const Component = page === 'Sign In' ? SignIn : SignUp;
+
+// Component props
+const componentProps = {
+    appearance,
+    routing: "path" as const,
+    path: `/user/${pathName}`,
+    signUpUrl: "/user/sign-up",
+    signInUrl: "/user/sign-in",
+    forceRedirectUrl: `/user/sign-in/sso-callback?redirect_url=${encodeURIComponent(redirectUrl)}`
+};
 ---
 
-<Layout title={page} additionalClasses={['auth-page']}>
-    {page === 'Sign In' ? (
-        <SignIn 
-            appearance={appearance}
-            routing="path"
-            path="/user/sign-in"
-            signUpUrl="/user/sign-up"
-            forceRedirectUrl={`/user/sign-in/sso-callback?redirect_url=${encodeURIComponent(redirectUrl)}`}
-        />
-    ) : (
-        <SignUp 
-            appearance={appearance}
-            routing="path"
-            path="/user/sign-up"
-            signInUrl="/user/sign-in"
-            forceRedirectUrl={`/user/sign-in/sso-callback?redirect_url=${encodeURIComponent(redirectUrl)}`}
-        />
-    )}
+<Layout title={page} className="auth-page">
+    <Component {...componentProps} />
 </Layout>

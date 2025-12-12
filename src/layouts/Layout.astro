@@ -95,7 +95,7 @@ if (container) className += 'container'
         <Dialog />
         {!isChatArea ? <Header pTitle={pTitle} /> : ''}
         
-        <main class={className.trim()} id="main-content">
+        <main class={className?.trim()} id="main-content">
             <slot />
         </main>
 
