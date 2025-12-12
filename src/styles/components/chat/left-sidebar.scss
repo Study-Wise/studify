@@ -1,4 +1,5 @@
 @use '../../variables/globals' as *;
+@use '../../variables/tokens.scss' as *;
 
 .chat-sidebar.left {
     border-right: 1px solid rgba(from var(--card-border) r g b / 0.3);
@@ -8,20 +9,20 @@
 
     .chat-sidebar-content.left {
         .sidebar-header {
-            padding: 1rem 0.25rem;
+            padding: $spacing-medium $spacing-tiny;
             border-bottom: 1px solid rgba(from var(--card-border) r g b / 0.3);
 
             h3 {
                 margin: 0;
-                font-size: 1rem;
-                font-weight: 600;
+                font-size: $font-size-base;
+                font-weight: $font-weight-semibold;
                 color: var(--section-title);
                 display: flex;
                 align-items: center;
-                gap: 0.5rem;
+                gap: $spacing-extra-small;
 
                 .material-symbols-outlined {
-                    font-size: 1.25rem;
+                    font-size: $font-size-xl;
                 }
             }
         }
@@ -33,14 +34,14 @@
             .file-list {
                 display: flex;
                 flex-direction: column;
-                gap: 0.5rem;
+                gap: $spacing-extra-small;
 
                 .empty-message {
                     color: var(--card-text);
-                    opacity: 0.6;
+                    opacity: $opacity-subtle;
                     text-align: center;
-                    padding: 2rem 1rem;
-                    font-size: 0.875rem;
+                    padding: $spacing-extra-large $spacing-medium;
+                    font-size: $font-size-sm;
                 }
             }
         }
