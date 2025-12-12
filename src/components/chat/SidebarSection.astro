@@ -12,7 +12,6 @@ const {
     id,
     generateVerb = 'Generate',
     regenerateVerb = 'Regenerate',
-    customButton = false,
 } = Astro.props as SidebarSectionProps;
 
 const generateButtonId = `generate-${id}-btn`;
@@ -42,14 +41,10 @@ const regenerateButtonId = `regenerate-${id}-btn`;
         ) : (
             <div class="empty-state">
                 {emptyMessage && <p class="empty-message">{emptyMessage}</p>}
-                {customButton && Astro.slots.has('custom-button') ? (
-                    <slot name="custom-button" />
-                ) : (
-                    <button class="generate-btn" id={generateButtonId} data-thread-id={threadId}>
-                        <span class="material-symbols-outlined">{icon}</span>
-                        <span>{`${generateVerb} ${title}`}</span>
-                    </button>
-                )}
+                <button class="generate-btn" id={generateButtonId} data-thread-id={threadId}>
+                    <span class="material-symbols-outlined">{icon}</span>
+                    <span>{`${generateVerb} ${title}`}</span>
+                </button>
             </div>
         )}
     </div>
