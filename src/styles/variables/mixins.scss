@@ -3,7 +3,10 @@
 // Import tokens for use in mixins
 @use './tokens.scss' as *;
 
-// Focus States
+// ============================================
+// FOCUS STATES
+// ============================================
+
 // Consistent focus ring for accessibility
 @mixin focus-ring($color: var(--section-title), $width: 2px, $offset: 2px) {
     outline: $width solid $color;
@@ -22,7 +25,10 @@
     }
 }
 
-// Text Utilities
+// ============================================
+// TEXT UTILITIES
+// ============================================
+
 // Single line text overflow with ellipsis
 @mixin text-ellipsis {
     overflow: hidden;
@@ -51,7 +57,10 @@
     border-width: 0;
 }
 
-// Layout Utilities
+// ============================================
+// LAYOUT UTILITIES
+// ============================================
+
 // Flexbox centering
 @mixin flex-center {
     display: flex;
@@ -80,7 +89,10 @@
     height: 100dvh; // Dynamic viewport height for mobile
 }
 
-// Interactive Effects
+// ============================================
+// INTERACTIVE EFFECTS
+// ============================================
+
 // Lift effect on hover (common for cards and buttons)
 @mixin interactive-lift($lift: -2px, $shadow: $box-shadow-large) {
     transition: translate $transition-base $ease-out,
@@ -132,7 +144,10 @@
     }
 }
 
-// Visual Effects
+// ============================================
+// VISUAL EFFECTS
+// ============================================
+
 // Glassmorphism effect
 @mixin glass($blur: 10px, $opacity: 0.8) {
     background: rgba(from var(--card-bg) r g b / $opacity);
@@ -198,7 +213,10 @@
     }
 }
 
-// Aspect Ratio
+// ============================================
+// ASPECT RATIO
+// ============================================
+
 // Maintain aspect ratio (useful for images and videos)
 @mixin aspect-ratio($width, $height) {
     aspect-ratio: #{$width} / #{$height};
@@ -213,7 +231,10 @@
     }
 }
 
-// Animations
+// ============================================
+// ANIMATIONS
+// ============================================
+
 // Fade in animation
 @mixin fade-in($duration: $transition-base, $delay: 0s) {
     animation: fadeIn $duration $ease-out $delay;
@@ -228,7 +249,9 @@
     }
 }
 
-// Usage Examples
+// ============================================
+// USAGE EXAMPLES
+// ============================================
 //
 // Import this file in any SCSS file:
 // @use '../variables/mixins' as *;
