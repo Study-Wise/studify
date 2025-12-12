@@ -1,4 +1,5 @@
 @use '../variables/globals.scss' as *;
+@use '../variables/tokens.scss' as *;
 
 @use 'sass:list';
 @use 'sass:map';
@@ -14,18 +15,17 @@
 .theme-switcher {
     --g-angle: 240deg;
 
-    $spacing: 1rem;
     position: fixed;
-    bottom: $spacing;
-    left: $spacing;
+    bottom: $spacing-medium;
+    left: $spacing-medium;
 
     box-sizing: content-box;
 
-    padding: math.div($spacing, 2);
+    padding: $spacing-extra-small;
 
     aspect-ratio: 1;
-    width: #{$spacing * 1.25};
-    height: #{$spacing * 1.25};
+    width: $spacing-medium + 0.25rem;
+    height: $spacing-medium + 0.25rem;
 
     background: linear-gradient(var(--g-angle), list.nth(map.get($accent-colors, primary), 1), list.nth(map.get($accent-colors, primary), 2));
     color: var(--body-bg);
@@ -40,12 +40,12 @@
     box-shadow: 0 0 10px hsl(from var(--body-text) h s l / 0.5);
 
     cursor: pointer;
-    z-index: 99990;
+    z-index: $z-index-theme-switcher;
 
     // Smooth transitions
-    transition: scale 250ms cubic-bezier(0, 0, 0.2, 1),
-                rotate 250ms cubic-bezier(0, 0, 0.2, 1),
-                box-shadow 250ms cubic-bezier(0, 0, 0.2, 1);
+    transition: scale $transition-base $ease-out,
+                rotate $transition-base $ease-out,
+                box-shadow $transition-base $ease-out;
     user-select: none;
 
     // Enhanced hover effect
@@ -74,21 +74,21 @@
     &::before {
         content: attr(aria-label);
         position: absolute;
-        bottom: calc(100% + 0.5rem);
+        bottom: calc(100% + $spacing-extra-small);
         left: 50%;
         translate: -50% 0;
         scale: 0.8;
-        padding: 0.5rem 0.75rem;
+        padding: $spacing-extra-small $spacing-small;
         background: var(--card-bg);
         color: var(--card-text);
-        border-radius: 0.5rem;
-        font-size: 0.75rem;
+        border-radius: $border-radius-medium;
+        font-size: $font-size-xs;
         white-space: nowrap;
         opacity: 0;
         pointer-events: none;
-        transition: opacity 250ms cubic-bezier(0, 0, 0.2, 1),
-                    translate 250ms cubic-bezier(0, 0, 0.2, 1),
-                    scale 250ms cubic-bezier(0, 0, 0.2, 1);
+        transition: opacity $transition-base $ease-out,
+                    translate $transition-base $ease-out,
+                    scale $transition-base $ease-out;
         box-shadow: 0 4px 8px hsl(from var(--body-text) h s l / 0.2);
         z-index: 1;
     }
@@ -102,7 +102,7 @@
     .material-symbols-outlined {
         font-size: 20px;
         aspect-ratio: 1;
-        transition: scale 500ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        transition: scale $transition-slower $ease-spring;
     }
 }
 
