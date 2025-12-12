@@ -1,11 +1,11 @@
 @use '../variables/globals.scss' as *;
+@use '../variables/tokens.scss' as *;
 
 @use 'sass:list';
 @use 'sass:map';
 @use 'sass:color';
 @use 'sass:math';
 
-$spacing: 0.5rem;
 $border-size: 2px;
 
 select.fancy-select,
@@ -16,7 +16,7 @@ select.fancy-select,
     box-sizing: border-box;
     max-height: 100%;
 
-    padding: $spacing;
+    padding: $spacing-extra-small;
 }
 
 select.fancy-select {
@@ -28,31 +28,31 @@ select.fancy-select {
 ::picker(select) {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: calc($spacing + #{$border-size*2});
+    gap: calc($spacing-extra-small + #{$border-size*2});
 
-    margin-block: $spacing;
-    border-radius: $spacing;
+    margin-block: $spacing-extra-small;
+    border-radius: $border-radius-medium;
 
     background: linear-gradient(30deg, list.nth(map.get($accent-colors, primary), 1), list.nth(map.get($accent-colors, primary), 2));
     cursor: default
 }
 
 select.fancy-select {
-    padding: 0 $spacing;
+    padding: 0 $spacing-extra-small;
     selectedcontent,
     option {
         box-sizing: border-box;
-        padding: $spacing;
+        padding: $spacing-extra-small;
 
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: $spacing;
+        gap: $spacing-extra-small;
         
         outline: $border-size solid hsl(from var(--body-bg) h s l / 0.25);
         background-color: hsl(from var(--body-bg) h s l / 0.5);
-        border-radius: math.div($spacing, 2);
+        border-radius: $border-radius-extra-small;
         
         &::checkmark {
             content: unset;
@@ -73,7 +73,7 @@ select.fancy-select {
             max-width: 100%;
             word-wrap: break-word;
             text-align: center;
-            line-height: 1;
+            line-height: $line-height-none;
             @supports (text-wrap: wrap) {
                 text-wrap: wrap;
             }

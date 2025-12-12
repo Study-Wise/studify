@@ -5,7 +5,7 @@
 }
 
 .user-info {
-    background: #f8f9fa;
+    background-color: #f8f9fa;
     padding: 1.5rem;
     border-radius: 8px;
     margin-bottom: 2rem;
@@ -23,7 +23,7 @@
 }
 
 .feature-card {
-    background: white;
+    background-color: white;
     border: 1px solid #e9ecef;
     border-radius: 8px;
     padding: 1.5rem;
@@ -36,7 +36,7 @@
 }
 
 .btn {
-    background: #6366f1;
+    background-color: #6366f1;
     color: white;
     border: none;
     padding: 0.5rem 1rem;
@@ -45,6 +45,6 @@
     margin-top: 1rem;
 
     &:hover {
-        background: #5855eb;
+        background-color: #5855eb;
     }
 }

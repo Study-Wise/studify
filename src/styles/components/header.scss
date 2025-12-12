@@ -1,25 +1,25 @@
 @use '../variables/globals.scss' as *;
+@use '../variables/tokens.scss' as *;
 @use 'sass:list';
 @use 'sass:map';
 
 /* Header Styles */
 header {
-    $spacing: 1rem;
     
     min-height: 80px;
     background: linear-gradient($gradient-angle, list.nth(map.get($accent-colors, primary), 1), list.nth(map.get($accent-colors, primary), 2));
     color: var(--header-text);
-    padding: #{$spacing * 0.75} $spacing;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    padding: $spacing-small $spacing-medium;
+    box-shadow: $box-shadow-small;
 
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: $spacing;
+    gap: $spacing-medium;
 
     h1 {
         margin: 0 0 0.1rem 0;
-        font-weight: 600;
+        font-weight: $font-weight-semibold;
         font-size: 1.8rem;
         text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         word-wrap: normal;
@@ -35,7 +35,7 @@ header {
         margin: 0;
         margin-inline: auto;
 
-        font-size: 1rem;
+        font-size: $font-size-base;
         font-style: normal;
         font-weight: 300;
         color: var(--header-tagline);
@@ -57,7 +57,7 @@ header {
     &:focus-visible {
         outline: 2px solid white;
         outline-offset: 2px;
-        border-radius: 4px;
+        border-radius: $border-radius-extra-small;
     }
 
     .header-logo {
@@ -72,7 +72,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1rem;
+    gap: $spacing-medium;
     // width: 100%;
 
     &:not(.lite) {
@@ -84,9 +84,9 @@ header {
         display: grid;
         grid-template-columns: 1fr auto;
         background-color: $card-bg-light;
-        border-radius: 10px;
+        border-radius: $border-radius-large;
         padding: 10px 20px;
-        box-shadow: 0 5px 15px var(--card-shadow);
+        box-shadow: $box-shadow-medium;
         border: 1px solid var(--card-border);
         width: fit-content;
     }
@@ -113,7 +113,7 @@ header {
 
     header {
         h1 {
-            font-size: 1.6rem;
+            font-size: $font-size-2xl - 0.1rem;
         }
         .tagline {
             font-size: 0.95rem;
@@ -136,7 +136,7 @@ header {
 
     header {
         h1 {
-            font-size: 1.5rem;
+            font-size: $font-size-2xl;
         }
         .tagline {
             display: none;
@@ -180,12 +180,12 @@ header {
 
     header {
         h1 {
-            font-size: 1.4rem;
+            font-size: $font-size-xl + 0.15rem;
             margin-bottom: 0.1rem;
         }
         .tagline {
             display: block;
-            font-size: 0.9rem;
+            font-size: $font-size-sm + 0.025rem;
             text-align: center;
         }
     }

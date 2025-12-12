@@ -130,7 +130,7 @@
         content: '';
         position: absolute;
         inset: 0;
-        background: $color;
+        background-color: $color;
         border-radius: inherit;
         scale: 0;
         opacity: 0;
@@ -192,15 +192,15 @@
     }
 
     &::-webkit-scrollbar-track {
-        background: $track-color;
+        background-color: $track-color;
     }
 
     &::-webkit-scrollbar-thumb {
-        background: $thumb-color;
+        background-color: $thumb-color;
         border-radius: $border-radius-full;
 
         &:hover {
-            background: hsl(from var(--section-title) h s l / 0.5);
+            background-color: hsl(from var(--section-title) h s l / 0.5);
         }
     }
 
