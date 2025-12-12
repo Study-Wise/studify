@@ -2,10 +2,7 @@
 // Ensures the application is usable for all users including those using
 // assistive technologies, keyboard navigation, and motion preferences
 
-// ============================================
-// FOCUS STATES
-// ============================================
-
+// Focus States
 // Apply consistent focus styles to all interactive elements
 :focus-visible {
     outline: 2px solid var(--section-title);
@@ -28,10 +25,7 @@ textarea:focus-visible {
     outline-offset: 2px;
 }
 
-// ============================================
-// SKIP TO MAIN CONTENT
-// ============================================
-
+// Skip to Main Content
 // Skip link for keyboard navigation
 // Allows keyboard users to skip repetitive navigation
 .skip-to-main {
@@ -53,10 +47,7 @@ textarea:focus-visible {
     }
 }
 
-// ============================================
-// SCREEN READER ONLY
-// ============================================
-
+// Screen Reader Only
 // Hide visually but keep accessible to screen readers
 .sr-only {
     position: absolute;
@@ -85,10 +76,7 @@ textarea:focus-visible {
     }
 }
 
-// ============================================
-// REDUCED MOTION
-// ============================================
-
+// Reduced Motion
 // Respect user preference for reduced motion
 // Disables animations for users who have motion sensitivity
 @media (prefers-reduced-motion: reduce) {
@@ -102,10 +90,7 @@ textarea:focus-visible {
     }
 }
 
-// ============================================
-// HIGH CONTRAST MODE
-// ============================================
-
+// High Contrast Mode
 // Support for high contrast mode (Windows High Contrast Mode)
 @media (prefers-contrast: high) {
     // Ensure borders are visible
@@ -129,10 +114,7 @@ textarea:focus-visible {
     }
 }
 
-// ============================================
-// TOUCH TARGET SIZE
-// ============================================
-
+// Touch Target Size
 // Ensure interactive elements meet minimum touch target size (44x44px)
 // Based on WCAG 2.5.5 Target Size
 button,
@@ -154,10 +136,7 @@ input[type="reset"],
     }
 }
 
-// ============================================
-// KEYBOARD NAVIGATION INDICATORS
-// ============================================
-
+// Keyboard Navigation Indicators
 // Add a visual indicator for keyboard navigation
 // Shows which element is currently focused
 .keyboard-navigation-active {
@@ -167,10 +146,7 @@ input[type="reset"],
     }
 }
 
-// ============================================
-// ARIA LIVE REGIONS
-// ============================================
-
+// ARIA Live Regions
 // Styles for live regions (announcements)
 [aria-live="polite"],
 [aria-live="assertive"] {
@@ -194,10 +170,7 @@ input[type="reset"],
     }
 }
 
-// ============================================
-// COLOR CONTRAST
-// ============================================
-
+// Color Contrast
 // Ensure disabled states maintain sufficient contrast
 :disabled,
 [aria-disabled="true"] {
@@ -206,10 +179,7 @@ input[type="reset"],
     pointer-events: none;
 }
 
-// ============================================
-// FOCUS TRAPPING
-// ============================================
-
+// Focus Trapping
 // When a modal or dialog is open, prevent focus on background content
 body:has([role="dialog"][aria-modal="true"]) {
     // Prevent background scroll
@@ -222,9 +192,7 @@ body:has([role="dialog"][aria-modal="true"]) {
     }
 }
 
-// ============================================
-// USAGE NOTES
-// ============================================
+// Usage Notes
 //
 // Import this file in globals.scss:
 // @use './utils/accessibility' as *;
