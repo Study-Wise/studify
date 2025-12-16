@@ -122,8 +122,8 @@ export const inNav = 'hide';
                         const htmlText = await marked.parse(message.content);
 
                         // Render message
-                        return <div class={`message ${message.role}`}>
-                            <div class={`message-content${message.role === 'user' ? ' bg-primary' : ''}`} set:html={htmlText} />
+                        return <div class:list={['message', message.role]}>
+                            <div class:list={['message-content', { 'bg-primary': message.role === 'user' }]} set:html={htmlText} />
                         </div>
                     })
                 ) : (

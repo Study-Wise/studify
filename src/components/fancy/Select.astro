@@ -2,6 +2,6 @@
 import '../../styles/components/fancy-select.scss';
 const { className = '', ...props } = Astro.props;
 ---
-<select class={`fancy-select ${className}`.trim()} {...props}>
+<select class:list={['fancy-select', className]} {...props}>
     <slot />
 </select>
