@@ -10,6 +10,12 @@ const { category, mode, id } = Astro.params;
 
 const categoryObj = category ? categories[category] : null;
 const modeObj = categoryObj?.modes?.[mode || ''];
+
+// Validate category and mode exist
+if (!categoryObj || !modeObj) {
+    return Astro.redirect('/404');
+}
+
 const categoryName = categoryObj?.name || category;
 const modeName = modeObj?.name || mode;
 

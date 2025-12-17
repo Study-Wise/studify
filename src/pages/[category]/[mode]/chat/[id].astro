@@ -5,15 +5,17 @@ import Header from '../../../../components/chat/Header.astro';
 import Toolbar from '../../../../components/chat/Toolbar.astro';
 import LeftSidebar from '../../../../components/chat/LeftSidebar.astro';
 import RightSidebar from '../../../../components/chat/RightSidebar.astro';
+import Footer from '../../../../components/Footer.astro';
 
 import MessagesScript from '../../../../scripts/messages.astro';
 import StepByStepScript from '../../../../scripts/step-by-step.astro';
 import '../../../../styles/pages/chat.scss';
 
-import { getMessages, getMessagesLength, getThreadByToken } from '../../../../lib/threads';
 import { marked } from 'marked';
-import Footer from '../../../../components/Footer.astro';
+
+import { getMessages, getMessagesLength, getThreadByToken } from '../../../../lib/threads';
 import { checkThreadAccess } from '../../../../lib/auth/checkThreadAccess';
+
 import { getLatestReferenceSheet } from '../../../../lib/content/latest/reference-sheet';
 import { getLatestStudyGuide } from '../../../../lib/content/latest/study-guide';
 import { getLatestInfographic } from '../../../../lib/content/latest/infographic';
@@ -22,6 +24,7 @@ import { getLatestMindMap } from '../../../../lib/content/latest/mind-map';
 import { getLatestResources } from '../../../../lib/content/latest/additional-resources';
 import { getLatestFlashcards } from '../../../../lib/content/latest/flashcards';
 import { getLatestPracticeQuestions } from '../../../../lib/content/latest/practice-questions';
+
 import { checkForOneMessage } from '../../../../lib/checkForOneMessage';
 import categories from '../../../../lib/modes';
 
@@ -29,6 +32,12 @@ let { category, mode, id } = Astro.params || { category: '', mode: '', id: '' };
 
 const categoryObj = category ? categories[category] : null;
 const modeObj = categoryObj?.modes?.[mode || ''];
+
+// Validate category and mode exist
+if (!categoryObj || !modeObj) {
+    return Astro.redirect('/404');
+}
+
 const categoryName = categoryObj?.name || category;
 const modeName = modeObj?.name || mode;
 
