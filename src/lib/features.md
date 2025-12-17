@@ -14,27 +14,72 @@ StudyWise is your comprehensive AI-powered learning companion. Whether you're st
 - **Vocabulary terms** to strengthen your subject knowledge
 - **Helpful tips** and common mistakes to avoid
 
+### 📝 Reference Sheets
+
+- **Key formulas** and definitions in one place
+- **Quick lookup** for important concepts
+- **Concise summaries** for efficient review
+- **Perfect for exam preparation** and last-minute studying
+
+### 🎨 Visual Infographics
+
+- **Eye-catching visual summaries** of complex topics
+- **At-a-glance understanding** through professional graphics
+- **Perfect for visual learners** and quick reviews
+- **Shareable and printable** study aids
+
+### 📇 Interactive Flashcards
+
+- **Effective memorization** with question-and-answer format
+- **Key terms and definitions** for each topic
+- **Active recall practice** to reinforce learning
+- **Perfect for vocabulary** and concept review
+
+### ❓ Practice Questions
+
+- **Test your understanding** with targeted questions
+- **Difficulty-appropriate problems** for your level
+- **Reinforce learning** through active practice
+- **Track your progress** and identify weak areas
+
+### 🌐 Generated Webpages
+
+- **Comprehensive topic pages** with full content
+- **Structured learning materials** in web format
+- **Easy to navigate** and explore concepts
+- **Perfect for deep dives** into subjects
+
+### 🗺️ Mind Maps
+
+- **Visual concept connections** to see the big picture
+- **Understand relationships** between ideas
+- **Perfect for visual learners** and holistic understanding
+- **Great for exam preparation** and review
+
+### 🔍 Curated Learning Resources
+
+- **Video tutorials** from trusted educational sources
+- **Articles and guides** for deeper understanding
+- **Step-by-step tutorials** for hands-on learning
+- **Documentation and references** for comprehensive study
+- **Automatically searched and curated** based on your topics
+
 ### 🧮 Interactive Learning Tools
 
 - **Live calculations** for math and science problems
-- **Practice quizzes** to test your understanding
-- **Reference materials** for quick lookup
 - **Web search integration** for additional resources
-
-### 📊 Visual Learning
-
-- **Interactive graphs** for mathematical functions and data
-- **Step-by-step breakdowns** with clear explanations
-- **Professional notation** that's easy to read and understand
-- **Visual aids** to help you grasp complex concepts
+- **File uploads** to share your homework and materials
+- **Multiple AI models** to choose from for the best learning experience
 
 ## How It Works
 
-1. **Paste your problems or questions** into the input box
-2. **Choose your subject** (Math, Science, Social Studies, etc.)
-3. **Select your AI model** for the best learning experience
-4. **Get your personalized study guide** with explanations and practice
-5. **Study and practice** with interactive tools and quizzes
+1. **Choose your subject and mode** (Math, Science, Social Studies, etc.)
+2. **Start a conversation** with our AI tutor about your topic
+3. **Upload files** if you want to share homework, notes, or other materials
+4. **Generate study materials** - create study guides, reference sheets, infographics, flashcards, practice questions, webpages, mind maps, or find curated learning resources
+5. **Study and practice** with all the generated materials
+6. **Share your work** - make your study materials public to help other students
+7. **Save or print** any content for offline use
 
 ## Perfect For
 
@@ -48,10 +93,13 @@ StudyWise is your comprehensive AI-powered learning companion. Whether you're st
 
 - **No direct answers** - we help you learn, not just copy
 - **Personalized content** based on your specific questions
-- **Multiple learning styles** - visual, interactive, and text-based
+- **Multiple content formats** - study guides, flashcards, infographics, mind maps, and more
+- **Multiple learning styles** - visual, interactive, and text-based materials
+- **Curated external resources** - videos, articles, tutorials automatically found for you
 - **Professional quality** notation and explanations
 - **Mobile-friendly** - study anywhere, anytime
 - **Comprehensive coverage** across multiple subjects
+- **Share and collaborate** - make your study materials public to help others
 
 ## Learning Philosophy
 
