@@ -89,6 +89,11 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
         let userRole = getUserRole(auth);
         let isAdmin = userRole === 'admin';
 
+        console.log(`🔐 [${requestId}] Initial admin check:`, {
+            userRole: userRole || 'none',
+            isAdmin: isAdmin
+        });
+
         // Fetch user email from Clerk
         let user_email: string | null = null;
         if (userId) {
@@ -102,6 +107,16 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
                 if (!isAdmin && user.publicMetadata?.role === 'admin') {
                     isAdmin = true;
                     console.log(`⚠️ [${requestId}] Admin role found in publicMetadata but not in session claims. Please configure session token customization in Clerk Dashboard.`);
+                    console.log(`✅ [${requestId}] Admin status updated via fallback:`, {
+                        previousIsAdmin: false,
+                        newIsAdmin: true,
+                        source: 'publicMetadata'
+                    });
+                } else if (!isAdmin) {
+                    console.log(`ℹ️ [${requestId}] User is not an admin:`, {
+                        sessionClaimsRole: userRole || 'none',
+                        publicMetadataRole: user.publicMetadata?.role || 'none'
+                    });
                 }
 
                 // Log metadata for debugging
@@ -147,22 +162,27 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
 
                 // Check thread limit for user (skip for admins)
                 if (user_email) {
-                    console.log(`🔍 [${requestId}] Checking thread limit for user:`, user_email);
-                    const userThreads = await db.select().from(threadsTable).where(eq(threadsTable.email, user_email));
-                    console.log(`📊 [${requestId}] User thread count:`, userThreads.length, '/', isAdmin ? 'unlimited' : config.maxThreadsPerUser);
+                    // Explicitly skip thread limit check for admin users
+                    if (isAdmin) {
+                        console.log(`👑 [${requestId}] Admin user detected - skipping thread limit check for:`, user_email);
+                    } else {
+                        console.log(`🔍 [${requestId}] Checking thread limit for user:`, user_email);
+                        const userThreads = await db.select().from(threadsTable).where(eq(threadsTable.email, user_email));
+                        console.log(`📊 [${requestId}] User thread count:`, userThreads.length, '/', config.maxThreadsPerUser);
 
-                    if (userThreads.length >= config.maxThreadsPerUser && !isAdmin) {
-                        console.error(`❌ [${requestId}] Thread limit exceeded for user:`, user_email);
-                        return new Response(
-                            JSON.stringify({
-                                status: 'error',
-                                error: `You have reached the maximum limit of ${config.maxThreadsPerUser} threads. Please delete some threads before creating new ones.`
-                            }),
-                            {
-                                status: 400,
-                                headers: { 'Content-Type': 'application/json' },
-                            }
-                        );
+                        if (userThreads.length >= config.maxThreadsPerUser) {
+                            console.error(`❌ [${requestId}] Thread limit exceeded for user:`, user_email);
+                            return new Response(
+                                JSON.stringify({
+                                    status: 'error',
+                                    error: `You have reached the maximum limit of ${config.maxThreadsPerUser} threads. Please delete some threads before creating new ones.`
+                                }),
+                                {
+                                    status: 400,
+                                    headers: { 'Content-Type': 'application/json' },
+                                }
+                            );
+                        }
                     }
                 }
 
