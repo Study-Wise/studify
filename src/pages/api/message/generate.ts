@@ -147,10 +147,10 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
             try {
 
                 // Check thread limit for user (skip for admins)
-                if (user_email && !isAdmin) {
+                if (user_email) {
                     console.log(`🔍 [${requestId}] Checking thread limit for user:`, user_email);
                     const userThreads = await db.select().from(threadsTable).where(eq(threadsTable.email, user_email));
-                    console.log(`📊 [${requestId}] User thread count:`, userThreads.length, '/', config.maxThreadsPerUser);
+                    console.log(`📊 [${requestId}] User thread count:`, userThreads.length, '/', isAdmin ? 'unlimited' : config.maxThreadsPerUser);
 
                     if (userThreads.length >= config.maxThreadsPerUser && !isAdmin) {
                         console.error(`❌ [${requestId}] Thread limit exceeded for user:`, user_email);
@@ -165,8 +165,6 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
                             }
                         );
                     }
-                } else if (isAdmin) {
-                    console.log(`👑 [${requestId}] Admin user detected - skipping thread limit check`);
                 }
 
                 console.log(`🆔 [${requestId}] Generating new thread ID`);
