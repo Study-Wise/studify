@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { clerkClient } from '@clerk/astro/server';
-import { shouldPromoteToAdmin } from '../../../lib/auth-utils';
+import { shouldPromoteToAdmin } from '../../../lib/auth/utils';
 
 export const POST: APIRoute = async (context) => {
     try {

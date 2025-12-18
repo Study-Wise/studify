@@ -1,7 +1,7 @@
 import { db } from '../../db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '../../db/schema';
-import { getUserRole } from '../auth-utils';
+import { getUserRole } from './utils';
 import type { ThreadAccessResult } from '../types';
 import { clerkClient } from '@clerk/astro/server';
 

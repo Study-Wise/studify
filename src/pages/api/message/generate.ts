@@ -19,7 +19,7 @@ import type { Mode } from '../../../lib/types';
 import { threadsTable } from '../../../db/schema';
 import { isValidEmail } from '../../../lib/validation';
 import { clerkClient } from '@clerk/astro/server';
-import { isAdmin as checkIsAdmin, getUserRole } from '../../../lib/auth-utils';
+import { isAdmin as checkIsAdmin, getUserRole } from '../../../lib/auth/utils';
 
 type Thread = InferSelectModel<typeof threadsTable>;
 type ThreadInsert = InferInsertModel<typeof threadsTable>;
