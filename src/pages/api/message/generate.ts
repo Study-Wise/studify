@@ -152,7 +152,7 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
                     const userThreads = await db.select().from(threadsTable).where(eq(threadsTable.email, user_email));
                     console.log(`📊 [${requestId}] User thread count:`, userThreads.length, '/', config.maxThreadsPerUser);
 
-                    if (userThreads.length >= config.maxThreadsPerUser) {
+                    if (userThreads.length >= config.maxThreadsPerUser && !isAdmin) {
                         console.error(`❌ [${requestId}] Thread limit exceeded for user:`, user_email);
                         return new Response(
                             JSON.stringify({
