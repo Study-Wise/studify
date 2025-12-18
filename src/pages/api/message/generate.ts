@@ -19,7 +19,7 @@ import type { Mode } from '../../../lib/types';
 import { threadsTable } from '../../../db/schema';
 import { isValidEmail } from '../../../lib/validation';
 import { clerkClient } from '@clerk/astro/server';
-import { isAdmin as checkIsAdmin, getUserRole } from '../../../lib/auth/utils';
+import { getUserRole } from '../../../lib/auth/utils';
 
 type Thread = InferSelectModel<typeof threadsTable>;
 type ThreadInsert = InferInsertModel<typeof threadsTable>;
@@ -86,8 +86,8 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
         const { userId } = auth();
 
         // Check admin status using auth-utils (consistent with rest of app)
-        let isAdmin = checkIsAdmin(auth);
         let userRole = getUserRole(auth);
+        let isAdmin = userRole === 'admin';
 
         // Fetch user email from Clerk
         let user_email: string | null = null;
@@ -101,7 +101,6 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
                 // This handles cases where session token customization isn't configured yet
                 if (!isAdmin && user.publicMetadata?.role === 'admin') {
                     isAdmin = true;
-                    userRole = 'admin';
                     console.log(`⚠️ [${requestId}] Admin role found in publicMetadata but not in session claims. Please configure session token customization in Clerk Dashboard.`);
                 }
 

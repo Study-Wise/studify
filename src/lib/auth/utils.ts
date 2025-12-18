@@ -15,11 +15,6 @@ export function getUserMetadata(auth: any): any {
     return sessionClaims?.metadata || {};
 }
 
-// Check if user is admin
-export function isAdmin(auth: any): boolean {
-    return getUserRole(auth) === 'admin';
-}
-
 // Admin promotion configuration (same as webhook)
 export const ADMIN_EMAILS = [
     'adarshravikumar2@gmail.com',
