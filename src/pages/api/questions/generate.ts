@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid';
 import { db } from '../../../db/initialize';
 import { eq } from 'drizzle-orm';
 import { questionsTable } from '../../../db/schema';
-import { questionToId } from '../../../lib/faq-utils';
+import { questionToId } from '../../../lib/question-utils';
 import { generateAIResponse } from '../../../lib/ai-service';
 import config from '../../../lib/config';
 
@@ -11,7 +11,7 @@ export const POST: APIRoute = async ({ request }) => {
     const requestId = nanoid();
     const startTime = Date.now();
 
-    console.log(`🤔 [${requestId}] Starting FAQ generation request`);
+    console.log(`🤔 [${requestId}] Starting question generation request`);
 
     try {
         const { question, category, mode } = await request.json();
@@ -27,7 +27,7 @@ export const POST: APIRoute = async ({ request }) => {
             );
         }
 
-        console.log(`📝 [${requestId}] FAQ request:`, {
+        console.log(`📝 [${requestId}] Question request:`, {
             questionLength: question.length,
             questionPreview: question.substring(0, 100),
             category,
@@ -35,17 +35,17 @@ export const POST: APIRoute = async ({ request }) => {
         });
 
         // Generate ID from question
-        const faqId = questionToId(question);
-        console.log(`🆔 [${requestId}] Generated FAQ ID:`, faqId);
+        const questionId = questionToId(question);
+        console.log(`🆔 [${requestId}] Generated question ID:`, questionId);
 
         // Check if question already exists
-        const existingQuestions = await db.select().from(questionsTable).where(eq(questionsTable.id, faqId));
+        const existingQuestions = await db.select().from(questionsTable).where(eq(questionsTable.id, questionId));
 
         if (existingQuestions.length > 0) {
             console.log(`✅ [${requestId}] Question already exists, returning existing answer`);
             return new Response(
                 JSON.stringify({
-                    id: faqId,
+                    id: questionId,
                     question: existingQuestions[0].question,
                     answer: existingQuestions[0].answer,
                     category: existingQuestions[0].category,
@@ -60,9 +60,9 @@ export const POST: APIRoute = async ({ request }) => {
         }
 
         // Generate answer using AI
-        console.log(`🤖 [${requestId}] Generating AI answer for FAQ`);
+        console.log(`🤖 [${requestId}] Generating AI answer for question`);
         const systemPrompt = `You are an educational AI assistant specializing in ${category} - ${mode}.
-Provide a comprehensive, well-structured answer to the following frequently asked question.
+Provide a comprehensive, well-structured answer to the following question.
 Your answer should be:
 - Clear and easy to understand
 - Detailed and informative
@@ -101,7 +101,7 @@ Question: ${question}`;
         };
 
         await db.insert(questionsTable).values({
-            id: faqId,
+            id: questionId,
             question,
             answer,
             category,
@@ -111,14 +111,14 @@ Question: ${question}`;
             isPublic: true
         });
 
-        console.log(`💾 [${requestId}] FAQ saved to database`);
+        console.log(`💾 [${requestId}] Question saved to database`);
 
         const totalDuration = Date.now() - startTime;
-        console.log(`🎉 [${requestId}] FAQ generation completed in ${totalDuration}ms`);
+        console.log(`🎉 [${requestId}] Question generation completed in ${totalDuration}ms`);
 
         return new Response(
             JSON.stringify({
-                id: faqId,
+                id: questionId,
                 question,
                 answer,
                 category,
@@ -132,9 +132,9 @@ Question: ${question}`;
         );
     } catch (error) {
         const totalDuration = Date.now() - startTime;
-        console.error(`💥 [${requestId}] Error in FAQ generation after ${totalDuration}ms:`, error);
+        console.error(`💥 [${requestId}] Error in question generation after ${totalDuration}ms:`, error);
         return new Response(
-            JSON.stringify({ error: `Failed to generate FAQ: ${error}` }),
+            JSON.stringify({ error: `Failed to generate question: ${error}` }),
             {
                 status: 500,
                 headers: { 'Content-Type': 'application/json' },
