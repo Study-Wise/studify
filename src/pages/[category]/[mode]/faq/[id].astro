@@ -1,0 +1,198 @@
+---
+import Layout from '../../../../layouts/Layout.astro';
+import { marked } from 'marked';
+import { db } from '../../../../db/initialize';
+import { eq } from 'drizzle-orm';
+import { questionsTable } from '../../../../db/schema';
+import categories from '../../../../lib/modes';
+import { idToQuestion } from '../../../../lib/faq-utils';
+import '../../../../styles/pages/faq.scss';
+
+const { category, mode, id } = Astro.params;
+
+const categoryObj = category ? categories[category] : null;
+const modeObj = categoryObj?.modes?.[mode || ''];
+
+// Validate category and mode exist
+if (!categoryObj || !modeObj) {
+    return Astro.redirect('/404');
+}
+
+const categoryName = categoryObj?.name || category;
+const modeName = modeObj?.name || mode;
+
+// Fetch FAQ from database
+let faqData = null;
+let parsedAnswer = null;
+
+try {
+    const results = await db.select().from(questionsTable).where(eq(questionsTable.id, id || ''));
+
+    if (results.length > 0) {
+        faqData = results[0];
+
+        // Increment view count
+        const currentViewCount = parseInt(faqData.viewCount) || 0;
+        await db.update(questionsTable)
+            .set({
+                viewCount: String(currentViewCount + 1),
+                updatedAt: new Date()
+            })
+            .where(eq(questionsTable.id, id || ''));
+
+        // Parse markdown answer to HTML
+        parsedAnswer = await marked.parse(faqData.answer);
+    }
+} catch (error) {
+    console.error('Error fetching FAQ:', error);
+}
+
+// Fallback question from ID if not found in database
+const displayQuestion = faqData?.question || idToQuestion(id || '');
+const displayAnswer = parsedAnswer;
+
+// Generate structured data for SEO (FAQ Schema)
+const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": {
+        "@type": "Question",
+        "name": displayQuestion,
+        "acceptedAnswer": {
+            "@type": "Answer",
+            "text": faqData?.answer || "Answer not yet generated. Please try again later."
+        }
+    }
+};
+
+// SEO metadata
+const pageTitle = `${displayQuestion} | ${modeName} FAQ | StudyWise`;
+const pageDescription = faqData?.answer
+    ? faqData.answer.substring(0, 155) + '...'
+    : `Find answers to frequently asked questions about ${modeName} in ${categoryName}. Get expert help with ${displayQuestion}`;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+
+<Layout title={pageTitle}>
+    <!-- SEO Meta Tags -->
+    <Fragment slot="head">
+        <meta name="description" content={pageDescription} />
+        <meta name="keywords" content={`${modeName}, ${categoryName}, FAQ, frequently asked questions, ${displayQuestion}, education, learning, study help`} />
+
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={canonicalURL} />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={pageDescription} />
+
+        <!-- Twitter -->
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content={canonicalURL} />
+        <meta property="twitter:title" content={pageTitle} />
+        <meta property="twitter:description" content={pageDescription} />
+
+        <!-- Canonical URL -->
+        <link rel="canonical" href={canonicalURL} />
+
+        <!-- Structured Data (JSON-LD) -->
+        <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+        <!-- Additional SEO hints -->
+        <meta name="robots" content="index, follow" />
+        <meta name="author" content="StudyWise" />
+        <meta name="category" content={categoryName} />
+        <meta name="topic" content={modeName} />
+    </Fragment>
+
+    <div class="faq-page">
+        {!faqData ? (
+            <article class="faq-empty">
+                <header>
+                    <h1 class="faq-question">{displayQuestion}</h1>
+                    <nav class="faq-breadcrumb" aria-label="Breadcrumb">
+                        <ol>
+                            <li><a href="/">Home</a></li>
+                            <li><a href={`/${category}`}>{categoryName}</a></li>
+                            <li><a href={`/${category}/${mode}`}>{modeName}</a></li>
+                            <li aria-current="page">FAQ</li>
+                        </ol>
+                    </nav>
+                </header>
+
+                <div class="empty-state">
+                    <span class="material-symbols-outlined">help_outline</span>
+                    <h2>Answer Not Found</h2>
+                    <p>This question hasn't been answered yet. Our AI is generating a response.</p>
+                    <p>Please check back shortly, or ask your question in a new chat session.</p>
+                    <a href={`/${category}/${mode}`} class="btn-primary">Ask in {modeName}</a>
+                </div>
+            </article>
+        ) : (
+            <article class="faq-content" itemscope itemtype="https://schema.org/Question">
+                <header>
+                    <h1 class="faq-question" itemprop="name">{displayQuestion}</h1>
+
+                    <nav class="faq-breadcrumb" aria-label="Breadcrumb">
+                        <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+                            <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                                <a itemprop="item" href="/">
+                                    <span itemprop="name">Home</span>
+                                </a>
+                                <meta itemprop="position" content="1" />
+                            </li>
+                            <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                                <a itemprop="item" href={`/${category}`}>
+                                    <span itemprop="name">{categoryName}</span>
+                                </a>
+                                <meta itemprop="position" content="2" />
+                            </li>
+                            <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                                <a itemprop="item" href={`/${category}/${mode}`}>
+                                    <span itemprop="name">{modeName}</span>
+                                </a>
+                                <meta itemprop="position" content="3" />
+                            </li>
+                            <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" aria-current="page">
+                                <span itemprop="name">FAQ</span>
+                                <meta itemprop="position" content="4" />
+                            </li>
+                        </ol>
+                    </nav>
+
+                    <div class="faq-meta">
+                        <span class="faq-category">{categoryName}</span>
+                        <span class="faq-separator">•</span>
+                        <span class="faq-mode">{modeName}</span>
+                        <span class="faq-separator">•</span>
+                        <span class="faq-views">{parseInt(faqData.viewCount) + 1} views</span>
+                    </div>
+                </header>
+
+                <div class="faq-answer" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+                    <div itemprop="text" set:html={displayAnswer} />
+                </div>
+
+                <footer class="faq-footer">
+                    <div class="faq-helpful">
+                        <p>Was this answer helpful?</p>
+                        <div class="faq-actions">
+                            <a href={`/${category}/${mode}`} class="btn-secondary">Ask Another Question</a>
+                            <a href={`/${category}/${mode}/chat/${crypto.randomUUID()}`} class="btn-primary">Start a Chat</a>
+                        </div>
+                    </div>
+
+                    <div class="faq-related">
+                        <h2>Need More Help?</h2>
+                        <p>Get personalized tutoring and detailed explanations in our interactive chat.</p>
+                        <a href={`/${category}/${mode}`} class="faq-link">
+                            Explore {modeName} <span class="material-symbols-outlined">arrow_forward</span>
+                        </a>
+                    </div>
+                </footer>
+
+                <meta itemprop="dateCreated" content={faqData.createdAt.toISOString()} />
+                <meta itemprop="dateModified" content={faqData.updatedAt.toISOString()} />
+            </article>
+        )}
+    </div>
+</Layout>
