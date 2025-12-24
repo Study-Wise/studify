@@ -26,4 +26,17 @@ const threadsTable = pgTable('threads', {
     isDev: boolean('isDev').notNull().default(true),
 });
 
-export { threadsTable };
+const questionsTable = pgTable('questions', {
+    id: text('id').primaryKey(),
+    question: text('question').notNull(),
+    answer: text('answer').notNull(),
+    category: text('category').notNull(),
+    mode: text('mode').notNull(),
+    metadata: jsonb('metadata').notNull().default({}),
+    viewCount: text('viewCount').notNull().default('0'),
+    isPublic: boolean('isPublic').notNull().default(true),
+    createdAt: timestamp('createdAt').notNull().defaultNow(),
+    updatedAt: timestamp('updatedAt').notNull().defaultNow(),
+});
+
+export { threadsTable, questionsTable };
