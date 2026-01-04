@@ -43,25 +43,12 @@ The project includes a `.beadsrc` configuration file with these settings:
 - **Agent Mode**: Enabled (optimized for AI agents)
 - **JSON Output**: Enabled (structured output for agent processing)
 
-## NPM Scripts
-
-Convenient npm scripts are available for common Beads commands:
-
-```bash
-npm run beads:init       # Initialize Beads in the repository
-npm run beads:ready      # Show tasks that are ready to work on (no blockers)
-npm run beads:create     # Create a new task
-npm run beads:list       # List all tasks
-npm run beads:status     # Show overall project status
-npm run beads:show       # Show detailed information about a specific task
-```
-
 ## Getting Started
 
 ### 1. Initialize Beads (First Time Only)
 
 ```bash
-npm run beads:init
+bd init
 ```
 
 This creates the `.beads/` directory structure.
@@ -69,17 +56,13 @@ This creates the `.beads/` directory structure.
 ### 2. Create Your First Task
 
 ```bash
-# Using npm script
-npm run beads:create
-
-# Or directly with bd
 bd create "Add user authentication feature" --priority 5
 ```
 
 ### 3. See What's Ready to Work On
 
 ```bash
-npm run beads:ready
+bd ready
 ```
 
 This shows all unblocked tasks that can be worked on immediately.
@@ -134,7 +117,7 @@ bd show <task-id>
 bd list --json
 
 # Show project status
-npm run beads:status
+bd status
 ```
 
 ## Task Priorities

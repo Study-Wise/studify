@@ -6,13 +6,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro",
-    "beads:init": "bd init",
-    "beads:ready": "bd ready",
-    "beads:create": "bd create",
-    "beads:list": "bd list",
-    "beads:status": "bd status",
-    "beads:show": "bd show"
+    "astro": "astro"
   },
   "devDependencies": {
     "@astrojs/ts-plugin": "^1.10.4",

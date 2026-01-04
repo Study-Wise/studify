@@ -22,12 +22,12 @@ StudyWise is an AI-powered educational platform built with Astro that provides p
 
 ### Task Management (Beads)
 
-- `npm run beads:init` - Initialize Beads task tracking system
-- `npm run beads:ready` - Show tasks ready to work on (no blockers)
-- `npm run beads:create` - Create a new task
-- `npm run beads:list` - List all tasks
-- `npm run beads:status` - Show overall project status
-- `npm run beads:show` - Show detailed task information
+- `bd init` - Initialize Beads task tracking system
+- `bd ready` - Show tasks ready to work on (no blockers)
+- `bd create` - Create a new task
+- `bd list` - List all tasks
+- `bd status` - Show overall project status
+- `bd show` - Show detailed task information
 
 See [BEADS.md](./BEADS.md) for complete documentation on using Beads for AI agent task tracking.
 
