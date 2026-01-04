@@ -1,0 +1,24 @@
+# Beads Configuration for StudyWise
+# This configuration file customizes Beads behavior for AI agent task tracking
+
+# Default priority for new tasks (1-5, where 5 is highest)
+default_priority=3
+
+# Auto-sync with git (true/false)
+# When true, Beads will automatically commit task changes to the .beads/ directory
+auto_sync=true
+
+# Summarization settings
+# Enable automatic summarization of completed tasks to preserve context
+enable_summarization=true
+
+# Maximum number of tasks to show in 'bd ready' output
+max_ready_tasks=10
+
+# Task hierarchy depth
+# Controls how deeply nested subtasks can be created
+max_depth=3
+
+# Agent-specific settings
+agent_mode=true
+json_output=true

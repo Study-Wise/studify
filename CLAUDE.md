@@ -20,6 +20,17 @@ StudyWise is an AI-powered educational platform built with Astro that provides p
 - `npx drizzle-kit generate` - Generate migration files from schema changes
 - `npx drizzle-kit migrate` - Run pending migrations
 
+### Task Management (Beads)
+
+- `bd init` - Initialize Beads task tracking system
+- `bd ready` - Show tasks ready to work on (no blockers)
+- `bd create` - Create a new task
+- `bd list` - List all tasks
+- `bd status` - Show overall project status
+- `bd show` - Show detailed task information
+
+See [BEADS.md](./BEADS.md) for complete documentation on using Beads for AI agent task tracking.
+
 ## Architecture
 
 ### Core Technologies
