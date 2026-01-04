@@ -23,3 +23,8 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 .vercel
+
+# Beads SQLite cache (keep .beads/ directory for git-backed task storage)
+.beads/*.db
+.beads/*.db-shm
+.beads/*.db-wal
