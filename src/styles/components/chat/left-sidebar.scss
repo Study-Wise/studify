@@ -20,7 +20,7 @@
             cursor: pointer;
             font-size: 0.9rem;
             font-weight: $font-weight-medium;
-            transition: background-color $transition-fast ease;
+            transition: background-color $transition-fast $ease;
             margin-block-end: $spacing-small;
             width: 100%;
             justify-content: center;

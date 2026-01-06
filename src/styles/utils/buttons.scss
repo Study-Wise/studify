@@ -4,7 +4,7 @@
 @use 'sass:map';
 
 $transition-duration: 0.25s;
-$transition: $transition-duration ease-in-out;
+$transition: $transition-duration $ease-in-out;
 $border-size: 0.125rem; // 2px = 0.125rem
 $border-radius: $button-border-radius; // 6px
 
@@ -30,7 +30,7 @@ $border-radius: $button-border-radius; // 6px
 
     isolation: isolate;
 
-    transition: color $transition;
+    transition: color $ease-in-out $transition-duration;
 
     &:disabled {
         color: #adb5bd;
@@ -66,10 +66,10 @@ $border-radius: $button-border-radius; // 6px
     isolation: isolate;
     overflow: hidden;
 
-    transition: 
-        border $transition, outline $transition,
-        box-shadow $transition, text-shadow $transition,
-        translate $transition;
+    transition:
+        border $ease-in-out $transition-duration, outline $ease-in-out $transition-duration,
+        box-shadow $ease-in-out $transition-duration, text-shadow $ease-in-out $transition-duration,
+        translate $ease-in-out $transition-duration;
 
     &:is(:hover, :focus-visible, :focus-within):not(:disabled) {
         animation-play-state: paused;
@@ -116,7 +116,7 @@ $border-radius: $button-border-radius; // 6px
 // Enhanced transition timing for all buttons
 .btn {
     // Ensure smooth transitions
-    transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    transition-timing-function: $ease-out;
 
     // Add subtle scale on active state
     &:active:not(:disabled) {
@@ -132,7 +132,7 @@ $border-radius: $button-border-radius; // 6px
     border: 1px solid var(--card-border);
     border-radius: 8px;
     font-weight: 500;
-    transition: all 250ms cubic-bezier(0, 0, 0.2, 1);
+    transition: all 250ms $ease-out;
 
     &:hover:not(:disabled) {
         background-color: hsl(from var(--card-bg) h s calc(l - 3%));
@@ -156,7 +156,7 @@ $border-radius: $button-border-radius; // 6px
 
     @include flex-center;
 
-    transition: all 250ms cubic-bezier(0, 0, 0.2, 1);
+    transition: all 250ms $ease-out;
 
     &:hover:not(:disabled) {
         scale: 1.1;

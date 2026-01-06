@@ -28,7 +28,7 @@
 
     // Animation
     &[open] {
-        animation: dialog-fade-in $transition-fast ease-out;
+        animation: dialog-fade-in $transition-fast $ease-out;
     }
 
     @keyframes dialog-fade-in {
