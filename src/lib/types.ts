@@ -127,6 +127,23 @@ interface SidebarSectionProps {
     regenerateVerb?: string; // e.g., "Regenerate", "Find New", "Recreate" (default: "Regenerate")
 }
 
+interface AIGenerationOptions {
+    systemPrompt: string;
+    userPrompt: string;
+    convoHistory: any[];
+    userModel: string;
+    provider: string;
+    tools?: Record<string, any>;
+    maxSteps?: number;
+    requestId?: string;
+}
+
+interface TitleGenerationOptions {
+    convoHistory: any[];
+    userModel: string;
+    provider: string;
+}
+
 export type {
     Mode,
     Category,
@@ -148,5 +165,7 @@ export type {
     ThreadData,
     UploadOptions,
     SettingItem,
-    SidebarSectionProps
+    SidebarSectionProps,
+    AIGenerationOptions,
+    TitleGenerationOptions
 };

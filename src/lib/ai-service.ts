@@ -5,23 +5,7 @@ import { generateText, stepCountIs } from 'ai';
 import config from './config';
 import { providers } from './models';
 import { nanoid } from 'nanoid';
-
-export interface AIGenerationOptions {
-    systemPrompt: string;
-    userPrompt: string;
-    convoHistory: any[];
-    userModel: string;
-    provider: string;
-    tools?: Record<string, any>;
-    maxSteps?: number;
-    requestId?: string;
-}
-
-export interface TitleGenerationOptions {
-    convoHistory: any[];
-    userModel: string;
-    provider: string;
-}
+import type { AIGenerationOptions, TitleGenerationOptions } from './types';
 
 /**
  * Validates and returns a proper model-provider pair
