@@ -55,7 +55,7 @@ import '../styles/accessibility/touch-gestures.scss';
         setupTouchEvents() {
             document.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: false });
             document.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: false });
-            document.addEventListener('touchend', (e) => this.handleTouchEnd(e), { passive: false });
+            document.addEventListener('touchend', () => this.handleTouchEnd(), { passive: false });
         }
 
         handleTouchStart(e: TouchEvent) {
@@ -81,7 +81,7 @@ import '../styles/accessibility/touch-gestures.scss';
             }
         }
 
-        handleTouchEnd(e: TouchEvent) {
+        handleTouchEnd() {
             if (!this.isPulling) return;
 
             const deltaY = this.endY - this.startY;

@@ -4,7 +4,7 @@ import '../../styles/components/chat/left-sidebar.scss';
 import type { ChatLeftSidebarProps } from '../../lib/types';
 import SidebarSection from './SidebarSection.astro';
 
-const { isPublic, isAuthorized, threadId, uploadedFiles = [], email } = Astro.props as ChatLeftSidebarProps;
+const { isPublic, isAuthorized, threadId, uploadedFiles = [] } = Astro.props as ChatLeftSidebarProps;
 ---
 <section class="chat-sidebar left">
     <div class="chat-sidebar-content left">
