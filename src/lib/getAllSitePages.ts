@@ -15,12 +15,16 @@ const pages = Object.entries(import.meta.glob('/src/pages/*.astro', { eager: tru
         const hiddenFromNav = modTyped?.inNav ? modTyped.inNav[0] === 'hide' : false;
         const isHidden = pagesToHide.includes(name);
 
-        let pageTitle = modTyped?.title ? modTyped.title : name.charAt(0).toUpperCase() + name.slice(1);
+        let pageTitle = modTyped?.title ? modTyped.title : `${name.charAt(0).toUpperCase()}${name.slice(1)}`
 
         if (name === 'index') pageTitle = 'Home';
 
+        // Ensure pageTitle is a string before replacing
+        const pageTitleStr = Array.isArray(pageTitle) ? pageTitle.join(' ') : pageTitle;
+        const finalPageTitle = pageTitleStr.replaceAll('-', ' ');
+
         return {
-            name: pageTitle,
+            name: finalPageTitle,
             path: route,
             hiddenFromNav: hiddenFromNav || isHidden
         };
