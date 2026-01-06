@@ -64,7 +64,7 @@ import categories from '../lib/modes';
 
         <div class="categories-grid">
             {Object.entries(categories).map(([categoryKey, category]) => {
-                if (Object.entries(category.modes).find(([modeKey, mode]) => mode.show)) {
+                if (Object.entries(category.modes).find(([_, mode]) => mode.show)) {
                     return (
                         <div class="category-card">
                             <h3 class="category-title">{category.name}</h3>

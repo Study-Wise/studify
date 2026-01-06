@@ -6,7 +6,6 @@ const { page, category, mode } = Astro.props;
     let userSettings = {};
 
     let messageInput, sendButton, spinner, errorMessageDiv;
-    let isPrinting = false;
 
     function loadUserSettings() {
         try {
@@ -134,49 +133,6 @@ const { page, category, mode } = Astro.props;
         }
     }
 
-    // Output display helpers
-    function showOutput(type) {
-        showHomeOutput(type);
-    }
-
-    function showHomeOutput(type) {
-        try {
-            const isActive = el => el?.classList.contains('active-output');
-            const guideOutputEl = document.getElementById('guide-output');
-            const sheetOutputEl = document.getElementById('sheet-output');
-
-            if (!guideOutputEl || !sheetOutputEl) {
-                console.error('Error in showOutput: Could not find guide/sheet output elements.');
-                return;
-            }
-
-            const isGuideActive = isActive(guideOutputEl);
-            const isSheetActive = isActive(sheetOutputEl);
-
-            if ((type === 'guide' && isGuideActive) || (type === 'sheet' && isSheetActive)) {
-                return;
-            }
-
-            document.querySelectorAll('.output-content').forEach(el => el.classList.remove('active-output'));
-            document.querySelectorAll('.output-tabs .tab-button').forEach(el => el.classList.remove('active'));
-
-            const contentEl = document.getElementById(`${type}-output`);
-            const tabButtonEl = document.getElementById(`${type}-tab-button`);
-
-            if (contentEl) contentEl.classList.add('active-output');
-            else {
-                console.error(`showOutput: Could not find content element '#${type}-output'.`);
-            }
-
-            if (tabButtonEl) tabButtonEl.classList.add('active');
-            else {
-                console.error(`showOutput: Could not find tab button '#${type}-tab-button'.`);
-            }
-        } catch (error) {
-            console.error('Error in showOutput function:', error);
-        }
-    }
-
     function setLoadingState(isLoading) {
         try {
             if (isLoading) {
@@ -268,63 +224,6 @@ const { page, category, mode } = Astro.props;
         } catch (err) {
             console.error('Error in typesetMathJax:', err);
             return Promise.resolve();
-        }
-    }
-
-    async function downloadViaPrint(contentElementId, buttonElement) {
-        if (isPrinting) {
-            console.warn('Print already in progress.');
-            return;
-        }
-        const elementToPrint = document.getElementById(contentElementId);
-        const parentContainer = elementToPrint?.closest('.output-content');
-        if (!elementToPrint || !parentContainer) {
-            displayError(`Cannot print: Content/parent area missing for '${contentElementId}'.`);
-            return;
-        }
-        const hasRealContent =
-            elementToPrint.innerHTML &&
-            elementToPrint.innerHTML.trim() !== '' &&
-            !elementToPrint.querySelector('p > i');
-        if (!hasRealContent) {
-            displayError(`Cannot print: Content empty for '${contentElementId}'.`);
-            return;
-        }
-        if (!buttonElement) {
-            console.error(`Print Error: Button element missing.`);
-            return;
-        }
-        let originalActiveTabId = null;
-        const targetTabId = contentElementId === 'study-guide-content' ? 'guide' : 'sheet';
-        const currentActiveButton = document.querySelector('.output-tabs .tab-button.active');
-        if (currentActiveButton) originalActiveTabId = currentActiveButton.id.replace('-tab-button', '');
-        const isTargetVisible = parentContainer.classList.contains('active-output');
-        if (!isTargetVisible) {
-            showOutput(targetTabId);
-            await new Promise(resolve => setTimeout(resolve, 150));
-        }
-        isPrinting = true;
-        buttonElement.disabled = true;
-        const originalButtonHTML = buttonElement.innerHTML;
-        buttonElement.innerHTML = '<span class="material-symbols-outlined" style="animation: spin 1s linear infinite;">progress_activity</span> Preparing...';
-        parentContainer.classList.add('print-target-container');
-        await new Promise(resolve => setTimeout(resolve, 100));
-        try {
-            window.print();
-        } catch (error) {
-            console.error('Error invoking print:', error);
-            displayError('Could not open print dialog.');
-        } finally {
-            if (parentContainer) parentContainer.classList.remove('print-target-container');
-            if (!isTargetVisible && originalActiveTabId && originalActiveTabId !== targetTabId) {
-                showOutput(originalActiveTabId);
-                await new Promise(resolve => setTimeout(resolve, 50));
-            }
-            if (buttonElement) {
-                buttonElement.disabled = false;
-                buttonElement.innerHTML = originalButtonHTML;
-            }
-            isPrinting = false;
         }
     }
 

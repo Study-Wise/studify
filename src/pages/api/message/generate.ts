@@ -193,7 +193,7 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
                     throw new Error('Failed to generate thread ID');
                 }
 
-                const { model: initialModel, provider: initialProvider } = await getValidModelAndProvider(model, requestId);
+                const { model: initialModel, provider: initialProvider } = await getValidModelAndProvider(model);
 
                 const newThread = {
                     id: newThreadId,
@@ -340,7 +340,7 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
             console.log(`🔄 [${requestId}] Validating existing model/provider from database`);
 
             // Validate the stored model/provider are still valid
-            const { model: validatedModel, provider: validatedProvider } = await getValidModelAndProvider(userData.model, requestId);
+            const { model: validatedModel, provider: validatedProvider } = await getValidModelAndProvider(userData.model);
 
             // Check if validation changed the model/provider (meaning the stored ones were invalid)
             if (validatedModel !== userData.model || validatedProvider !== userData.provider) {
@@ -362,7 +362,7 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
         } else {
             console.log(`🆕 [${requestId}] Determining model/provider from client selection`);
             const requestedModel = model || userSettings.model;
-            const { model: validatedModel, provider: validatedProvider } = await getValidModelAndProvider(requestedModel, requestId);
+            const { model: validatedModel, provider: validatedProvider } = await getValidModelAndProvider(requestedModel);
 
             userModel = validatedModel;
             provider = validatedProvider;
