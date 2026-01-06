@@ -46,7 +46,7 @@
             border-radius: 8px;
             text-decoration: none;
             border: 1px solid var(--card-border);
-            transition: all 0.3s ease;
+            transition: all 0.3s $ease;
 
             &:hover {
                 background-color: hsl(from var(--card-bg) h s calc(l - 5%));
