@@ -1,6 +1,6 @@
-@use '../variables/globals.scss' as *;
-@use './buttons.scss' as *;
-@use './card.scss' as *;
+@use '../variables/globals' as *;
+@use './buttons' as *;
+@use './card' as *;
 @use 'sass:color';
 @use 'sass:list';
 @use 'sass:map';

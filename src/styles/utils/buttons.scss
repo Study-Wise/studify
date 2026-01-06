@@ -1,5 +1,6 @@
-@use '../variables/globals.scss' as *;
-@use '../variables/mixins.scss' as *;
+@use '../variables/globals' as *;
+@use '../variables/tokens' as *;
+@use '../variables/mixins' as *;
 @use 'sass:list';
 @use 'sass:map';
 

@@ -147,7 +147,7 @@ $container-padding: $spacing-large;
 // ============================================
 //
 // Import this file in any SCSS file where you need design tokens:
-// @use '../variables/tokens.scss' as *;
+// @use '../variables/tokens' as *;
 //
 // Examples:
 // - padding: $spacing-medium;

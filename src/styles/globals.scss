@@ -1,13 +1,14 @@
 @use 'open-props/easings' as *;
 
-@use './variables/globals.scss' as *;
-@use './variables/mixins.scss' as *;
-@use './utils/helpers.scss' as *;
-@use './utils/animations.scss' as *;
-@use './utils/print.scss' as *;
+@use './variables/globals' as *;
+@use './variables/tokens' as *;
+@use './variables/mixins' as *;
+@use './utils/helpers' as *;
+@use './utils/animations' as *;
+@use './utils/print' as *;
 @use './utils/accessibility' as *;
-@use './utils/buttons.scss' as *;
-@use './utils/card.scss' as *;
+@use './utils/buttons' as *;
+@use './utils/card' as *;
 
 @use 'sass:color';
 @use 'sass:list';
