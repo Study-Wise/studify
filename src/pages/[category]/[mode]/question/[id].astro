@@ -104,12 +104,12 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         <meta name="topic" content={modeName} />
     </Fragment>
 
-    <div class="questions-page">
+    <div class="question-page">
         {!questionData ? (
-            <article class="questions-empty">
+            <article class="question-empty">
                 <header>
-                    <h1 class="questions-question">{displayQuestion}</h1>
-                    <nav class="questions-breadcrumb" aria-label="Breadcrumb">
+                    <h1 class="question-question">{displayQuestion}</h1>
+                    <nav class="question-breadcrumb" aria-label="Breadcrumb">
                         <ol>
                             <li><a href="/">Home</a></li>
                             <li><a href={`/${category}`}>{categoryName}</a></li>
@@ -128,11 +128,11 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
                 </div>
             </article>
         ) : (
-            <article class="questions-content" itemscope itemtype="https://schema.org/Question">
+            <article class="question-content" itemscope itemtype="https://schema.org/Question">
                 <header>
-                    <h1 class="questions-question" itemprop="name">{displayQuestion}</h1>
+                    <h1 class="question-question" itemprop="name">{displayQuestion}</h1>
 
-                    <nav class="questions-breadcrumb" aria-label="Breadcrumb">
+                    <nav class="question-breadcrumb" aria-label="Breadcrumb">
                         <ol itemscope itemtype="https://schema.org/BreadcrumbList">
                             <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                                 <a itemprop="item" href="/">
@@ -159,32 +159,32 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
                         </ol>
                     </nav>
 
-                    <div class="questions-meta">
-                        <span class="questions-category">{categoryName}</span>
-                        <span class="questions-separator">•</span>
-                        <span class="questions-mode">{modeName}</span>
-                        <span class="questions-separator">•</span>
-                        <span class="questions-views">{parseInt(questionData.viewCount) + 1} views</span>
+                    <div class="question-meta">
+                        <span class="question-category">{categoryName}</span>
+                        <span class="question-separator">•</span>
+                        <span class="question-mode">{modeName}</span>
+                        <span class="question-separator">•</span>
+                        <span class="question-views">{parseInt(questionData.viewCount) + 1} views</span>
                     </div>
                 </header>
 
-                <div class="questions-answer" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+                <div class="question-answer" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
                     <div itemprop="text" set:html={displayAnswer} />
                 </div>
 
-                <footer class="questions-footer">
-                    <div class="questions-helpful">
+                <footer class="question-footer">
+                    <div class="question-helpful">
                         <p>Was this answer helpful?</p>
-                        <div class="questions-actions">
+                        <div class="question-actions">
                             <a href={`/${category}/${mode}`} class="btn-secondary">Ask Another Question</a>
                             <a href={`/${category}/${mode}/chat/${crypto.randomUUID()}`} class="btn-primary">Start a Chat</a>
                         </div>
                     </div>
 
-                    <div class="questions-related">
+                    <div class="question-related">
                         <h2>Need More Help?</h2>
                         <p>Get personalized tutoring and detailed explanations in our interactive chat.</p>
-                        <a href={`/${category}/${mode}`} class="questions-link">
+                        <a href={`/${category}/${mode}`} class="question-link">
                             Explore {modeName} <span class="material-symbols-outlined">arrow_forward</span>
                         </a>
                     </div>
