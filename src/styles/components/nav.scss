@@ -9,7 +9,7 @@
 
     &:not(.lite) .nav-btn {
         background-color: $section-title-light;
-        transition: background-color $transition-fast ease; 
+        transition: background-color $transition-fast $ease; 
         color: var(--header-text);
         &:hover, &:focus-visible {
             background-color: color.adjust($section-title-light, $lightness: -10%);
@@ -24,7 +24,7 @@
     }
     &.lite .nav-btn {
         color: $section-title-light;
-        transition: color $transition-fast ease; 
+        transition: color $transition-fast $ease; 
         &:hover, &:focus-visible {
             color: color.adjust($section-title-light, $lightness: -10%);
         }
