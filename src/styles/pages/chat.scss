@@ -257,7 +257,7 @@ footer, .chat-toolbar {
         border-radius: 9999px;
         border: 2px solid transparent;
         background-clip: padding-box;
-        transition: background-color $transition-fast ease;
+        transition: background-color $transition-fast $ease;
 
         &:hover {
             background-color: rgba(from var(--section-title) r g b / 0.3);
@@ -302,7 +302,7 @@ footer, .chat-toolbar {
                 background: linear-gradient(135deg, rgba(from var(--header-text) r g b / 0.02) 0%, transparent 50%);
                 pointer-events: none;
                 opacity: 0;
-                transition: opacity $transition-base ease;
+                transition: opacity $transition-base $ease;
             }
 
             &:hover::before {
