@@ -537,6 +537,8 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
         // --- Save updated history back to DB ---
         console.log(`💾 [${requestId}] Saving conversation to database`);
         const saveStartTime = Date.now();
+        // Filter out system message before saving to database
+        const convoHistoryWithoutSystem = convoHistory.filter(msg => msg.role !== 'system');
         try {
             if (current_thread_id && userData) {
                 console.log(`🔄 [${requestId}] Updating existing thread`);
@@ -544,7 +546,7 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
                     .update(threadsTable)
                     .set({
                         title: convoTitle,
-                        thread: { messages: convoHistory },
+                        thread: { messages: convoHistoryWithoutSystem },
                         updatedAt: new Date(),
                         isDev: process.env.NODE_ENV === 'development' ? true : false,
                     })
@@ -558,7 +560,7 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
                 await db.insert(threadsTable).values({
                     id: current_thread_id,
                     title: convoTitle || '',
-                    thread: { messages: convoHistory },
+                    thread: { messages: convoHistoryWithoutSystem },
                     email: user_email,
                     category: category || config.defaultCategory,
                     mode: mode || config.defaultMode,
@@ -574,7 +576,7 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
                     .update(threadsTable)
                     .set({
                         title: convoTitle,
-                        thread: { messages: convoHistory },
+                        thread: { messages: convoHistoryWithoutSystem },
                         updatedAt: new Date(),
                         isDev: process.env.NODE_ENV === 'development' ? true : false,
                     })
