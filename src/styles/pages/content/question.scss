@@ -1,4 +1,4 @@
-.questions-page {
+.question-page {
     max-width: 900px;
     margin: 0 auto;
     padding: 2rem 1rem;
@@ -11,15 +11,15 @@
     }
 }
 
-.questions-content,
-.questions-empty {
+.question-content,
+.question-empty {
     header {
         padding: 2rem 2rem 1rem;
         border-bottom: 1px solid var(--border-color, #e5e7eb);
     }
 }
 
-.questions-question {
+.question-question {
     font-size: 2rem;
     font-weight: 700;
     line-height: 1.3;
@@ -31,7 +31,7 @@
     }
 }
 
-.questions-breadcrumb {
+.question-breadcrumb {
     margin: 1rem 0;
 
     ol {
@@ -73,7 +73,7 @@
     }
 }
 
-.questions-meta {
+.question-meta {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -82,23 +82,23 @@
     margin-top: 0.5rem;
 }
 
-.questions-category,
-.questions-mode {
+.question-category,
+.question-mode {
     font-weight: 500;
     color: var(--text-primary, #1f2937);
 }
 
-.questions-separator {
+.question-separator {
     color: var(--text-tertiary, #9ca3af);
 }
 
-.questions-views {
+.question-views {
     display: flex;
     align-items: center;
     gap: 0.25rem;
 }
 
-.questions-answer {
+.question-answer {
     padding: 2rem;
     font-size: 1.125rem;
     line-height: 1.8;
@@ -203,13 +203,13 @@
     }
 }
 
-.questions-footer {
+.question-footer {
     padding: 2rem;
     border-top: 1px solid var(--border-color, #e5e7eb);
     background: var(--background-tertiary, #f9fafb);
 }
 
-.questions-helpful {
+.question-helpful {
     margin-bottom: 2rem;
 
     p {
@@ -219,7 +219,7 @@
     }
 }
 
-.questions-actions {
+.question-actions {
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
@@ -234,7 +234,7 @@
     }
 }
 
-.questions-related {
+.question-related {
     h2 {
         font-size: 1.25rem;
         font-weight: 600;
@@ -248,7 +248,7 @@
     }
 }
 
-.questions-link {
+.question-link {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
@@ -328,25 +328,25 @@
 }
 
 @media (prefers-color-scheme: dark) {
-    .questions-page {
+    .question-page {
         article {
             background: var(--background-secondary, #1f2937);
         }
     }
 
-    .questions-question,
-    .questions-answer h1,
-    .questions-answer h2,
-    .questions-answer h3,
-    .questions-answer h4,
-    .questions-answer h5,
-    .questions-answer h6,
-    .questions-related h2,
+    .question-question,
+    .question-answer h1,
+    .question-answer h2,
+    .question-answer h3,
+    .question-answer h4,
+    .question-answer h5,
+    .question-answer h6,
+    .question-related h2,
     .empty-state h2 {
         color: var(--text-primary, #f9fafb);
     }
 
-    .questions-answer {
+    .question-answer {
         color: var(--text-primary, #f9fafb);
 
         code {
@@ -366,7 +366,7 @@
         }
     }
 
-    .questions-footer {
+    .question-footer {
         background: var(--background-tertiary, #111827);
     }
 
