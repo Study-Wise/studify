@@ -145,6 +145,7 @@ Tasks progress through these states:
 Beads is designed for AI agents like Claude Code. When working with tasks:
 
 1. **Use JSON output** for structured parsing:
+
    ```bash
    bd ready --json
    bd list --json
@@ -152,11 +153,13 @@ Beads is designed for AI agents like Claude Code. When working with tasks:
    ```
 
 2. **Check ready tasks** before starting work:
+
    ```bash
    bd ready
    ```
 
 3. **Update status** as you progress:
+
    ```bash
    bd start <task-id>
    # ... do work ...
@@ -164,6 +167,7 @@ Beads is designed for AI agents like Claude Code. When working with tasks:
    ```
 
 4. **Create dependencies** when tasks are related:
+
    ```bash
    bd dep add <dependent-task> <blocker-task>
    ```
@@ -232,9 +236,9 @@ bd sync
 
 ## Learn More
 
-- **GitHub Repository**: https://github.com/steveyegge/beads
+- **GitHub Repository**: [https://github.com/steveyegge/beads](https://github.com/steveyegge/beads)
 - **Documentation**: Check the repository README for detailed documentation
-- **Issues**: Report problems at https://github.com/steveyegge/beads/issues
+- **Issues**: Report problems at [https://github.com/steveyegge/beads/issues](https://github.com/steveyegge/beads/issues)
 
 ## Example: Adding a New Feature
 
