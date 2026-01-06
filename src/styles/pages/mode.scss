@@ -81,7 +81,7 @@
     background-color: transparent;
     border-bottom: 3px solid transparent;
     border-radius: $border-radius-small $border-radius-small 0 0;
-    transition: all $transition-base ease;
+    transition: all $transition-base $ease;
     font-size: clamp(0.95rem, 2vw, 1.05rem);
     font-weight: $font-weight-medium;
     color: var(--footer-text);
@@ -117,7 +117,7 @@
 
     &.active-output {
         display: block;
-        animation: fadeIn 0.5s ease-in-out;
+        animation: fadeIn 0.5s $ease-in-out;
     }
 }
 

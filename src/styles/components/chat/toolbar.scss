@@ -125,7 +125,7 @@ $color: list.nth(map.get($accent-colors, primary), 1);
             inset: 0;
             background: linear-gradient(135deg, rgba(from white r g b / 0.2) 0%, transparent 50%);
             opacity: 0;
-            transition: opacity $transition-slow ease;
+            transition: opacity $transition-slow $ease;
         }
 
         &:hover:not(:disabled) {

@@ -26,7 +26,7 @@
     &::-webkit-scrollbar-thumb {
         background-color: rgba(from var(--section-title) r g b / 0.15);
         border-radius: $border-radius-full;
-        transition: background-color $transition-fast ease;
+        transition: background-color $transition-fast $ease;
 
         &:hover {
             background-color: rgba(from var(--section-title) r g b / 0.3);
@@ -55,7 +55,7 @@
     &::-webkit-scrollbar-thumb {
         background-color: rgba(from var(--section-title) r g b / 0.15);
         border-radius: $border-radius-full;
-        transition: background-color $transition-fast ease;
+        transition: background-color $transition-fast $ease;
 
         &:hover {
             background-color: rgba(from var(--section-title) r g b / 0.3);
@@ -186,7 +186,7 @@
             cursor: pointer;
             font-size: 0.9rem;
             font-weight: $font-weight-medium;
-            transition: background-color $transition-fast ease;
+            transition: background-color $transition-fast $ease;
             margin-block-start: $spacing-extra-small;
             width: 100%;
             justify-content: center;
