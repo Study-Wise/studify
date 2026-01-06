@@ -1,4 +1,4 @@
-@import 'open-props/easings';
+@use 'open-props/easings' as *;
 
 @use './variables/globals.scss' as *;
 @use './variables/mixins.scss' as *;

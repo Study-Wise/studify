@@ -16,7 +16,7 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
     <button id="update-button" class="update-button">Update Now</button>
 </div>
 
-<script define:vars={{ isProd }}>
+<script is:inline define:vars={{ isProd }}>
     // Offline/Online detection
     function updateOnlineStatus() {
         const indicator = document.getElementById('offline-indicator');

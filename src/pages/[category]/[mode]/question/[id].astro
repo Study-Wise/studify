@@ -95,7 +95,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         <link rel="canonical" href={canonicalURL} />
 
         <!-- Structured Data (JSON-LD) -->
-        <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+        <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 
         <!-- Additional SEO hints -->
         <meta name="robots" content="index, follow" />
