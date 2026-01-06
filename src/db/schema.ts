@@ -26,7 +26,7 @@ const threadsTable = pgTable('threads', {
     isDev: boolean('isDev').notNull().default(true),
 });
 
-const questionsTable = pgTable('questions', {
+const questionTable = pgTable('question', {
     id: text('id').primaryKey(),
     question: text('question').notNull(),
     answer: text('answer').notNull(),
@@ -39,4 +39,4 @@ const questionsTable = pgTable('questions', {
     updatedAt: timestamp('updatedAt').notNull().defaultNow(),
 });
 
-export { threadsTable, questionsTable };
+export { threadsTable, questionTable };

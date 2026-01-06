@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 import { nanoid } from 'nanoid';
 import { db } from '../../../db/initialize';
 import { eq } from 'drizzle-orm';
-import { questionsTable } from '../../../db/schema';
+import { questionTable } from '../../../db/schema';
 import { questionToId } from '../../../lib/question-utils';
 import { generateAIResponse } from '../../../lib/ai-service';
 import config from '../../../lib/config';
@@ -39,7 +39,7 @@ export const POST: APIRoute = async ({ request }) => {
         console.log(`🆔 [${requestId}] Generated question ID:`, questionId);
 
         // Check if question already exists
-        const existingQuestions = await db.select().from(questionsTable).where(eq(questionsTable.id, questionId));
+        const existingQuestions = await db.select().from(questionTable).where(eq(questionTable.id, questionId));
 
         if (existingQuestions.length > 0) {
             console.log(`✅ [${requestId}] Question already exists, returning existing answer`);
@@ -100,7 +100,7 @@ Question: ${question}`;
             providerUsed: config.provider
         };
 
-        await db.insert(questionsTable).values({
+        await db.insert(questionTable).values({
             id: questionId,
             question,
             answer,

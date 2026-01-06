@@ -3,7 +3,7 @@ import Layout from '../../../../layouts/Layout.astro';
 import { marked } from 'marked';
 import { db } from '../../../../db/initialize';
 import { eq } from 'drizzle-orm';
-import { questionsTable } from '../../../../db/schema';
+import { questionTable } from '../../../../db/schema';
 import categories from '../../../../lib/modes';
 import { idToQuestion } from '../../../../lib/question-utils';
 import '../../../../styles/pages/content/question.scss';
@@ -26,19 +26,19 @@ let questionData = null;
 let parsedAnswer = null;
 
 try {
-    const results = await db.select().from(questionsTable).where(eq(questionsTable.id, id || ''));
+    const results = await db.select().from(questionTable).where(eq(questionTable.id, id || ''));
 
     if (results.length > 0) {
         questionData = results[0];
 
         // Increment view count
         const currentViewCount = parseInt(questionData.viewCount) || 0;
-        await db.update(questionsTable)
+        await db.update(questionTable)
             .set({
                 viewCount: String(currentViewCount + 1),
                 updatedAt: new Date()
             })
-            .where(eq(questionsTable.id, id || ''));
+            .where(eq(questionTable.id, id || ''));
 
         // Parse markdown answer to HTML
         parsedAnswer = await marked.parse(questionData.answer);
