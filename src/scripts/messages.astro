@@ -247,40 +247,6 @@ const { page, category, mode } = Astro.props;
         }
     }
 
-    function parseAIResponse(guideMarkdown, sheetMarkdown) {
-        if (!guideMarkdown) guideMarkdown = guidePlaceholder;
-        if (!sheetMarkdown) sheetMarkdown = sheetPlaceholder;
-
-        // Clean up and format markdown
-        guideMarkdown = guideMarkdown.replace(/^<h3>Study Guide<\/h3>\s*/i, '').trim();
-        guideMarkdown = `<h3>Study Guide</h3><br>${guideMarkdown}`;
-
-        sheetMarkdown = sheetMarkdown.replace(/^<h3>Reference Sheet<\/h3>\s*/i, '').trim();
-        sheetMarkdown = sheetMarkdown ? `<h3>Reference Sheet</h3><br>${sheetMarkdown}` : '';
-
-        // Remove code block wrappers from desmos graphs
-        if (sheetMarkdown.includes('```<div class="desmos-graph')) {
-            const desmosGraph = sheetMarkdown.match(/```<div class="desmos-graph[^>]*>([\s\S]*?)<\/div>```/g);
-            if (desmosGraph) {
-                desmosGraph.forEach(graph => {
-                    const newGraph = graph.slice(3, -3);
-                    sheetMarkdown = sheetMarkdown.replace(graph, newGraph);
-                });
-            }
-        }
-        if (sheetMarkdown.includes('`<div class="desmos-graph"')) {
-            const desmosGraph = sheetMarkdown.match(/`<div class="desmos-graph"[^>]*>([\s\S]*?)<\/div>`/g);
-            if (desmosGraph) {
-                desmosGraph.forEach(graph => {
-                    const newGraph = graph.slice(1, -1);
-                    sheetMarkdown = sheetMarkdown.replace(graph, newGraph);
-                });
-            }
-        }
-
-        return { guideMarkdown, sheetMarkdown };
-    }
-
     async function typesetMathJax(elements) {
         try {
             if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
