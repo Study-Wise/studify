@@ -105,7 +105,7 @@ if (container) className += ' container'
         {!isChatArea ? <Footer hideCopyright={hideCopyright} /> : ''}
 
         <script is:inline>
-            function activateLocalStorageInput(name) {
+            window.activateLocalStorageInput = function(name) {
                 const input = document.querySelector(`:is(input, select, textarea)[name="${name}"]`);
                 if (input) {
                     input.value = localStorage.getItem(name) || '';
@@ -113,7 +113,7 @@ if (container) className += ' container'
                 input.addEventListener('change', e => {
                     localStorage.setItem(name, e.target.value);
                 });
-            }
+            };
 
             window.cookies = {
                 get: cName => {
