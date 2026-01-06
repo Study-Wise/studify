@@ -63,11 +63,12 @@ $transition-base: 250ms;
 $transition-slow: 350ms;
 $transition-slower: 500ms;
 
-// Easing curves
-$ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
-$ease-out: cubic-bezier(0, 0, 0.2, 1);
-$ease-in: cubic-bezier(0.4, 0, 1, 1);
-$ease-spring: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+// Easing curves (using Open Props)
+$ease: var(--ease-3);
+$ease-in-out: var(--ease-in-out-3);
+$ease-out: var(--ease-out-3);
+$ease-in: var(--ease-in-3);
+$ease-spring: var(--ease-elastic-4);
 
 // Common transition combinations
 $transition-colors: color $transition-base $ease-out,
