@@ -12,6 +12,7 @@ const {
     id,
     generateVerb = 'Generate',
     regenerateVerb = 'Regenerate',
+    isAuthorized = true,
 } = Astro.props as SidebarSectionProps;
 
 const generateButtonId = `generate-${id}-btn`;
@@ -24,7 +25,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
             <span class="material-symbols-outlined">{icon}</span>
             <h3>{title}</h3>
         </div>
-        {hasContent && (
+        {hasContent && isAuthorized && (
             <button class="regenerate-btn" id={regenerateButtonId} title={`Regenerate ${title}`} data-thread-id={threadId}>
                 <span class="material-symbols-outlined">refresh</span>
             </button>
@@ -41,10 +42,12 @@ const regenerateButtonId = `regenerate-${id}-btn`;
         ) : (
             <div class="empty-state">
                 {emptyMessage && <p class="empty-message">{emptyMessage}</p>}
-                <button class="generate-btn" id={generateButtonId} data-thread-id={threadId}>
-                    <span class="material-symbols-outlined">{icon}</span>
-                    <span>{`${generateVerb} ${title}`}</span>
-                </button>
+                {isAuthorized && (
+                    <button class="generate-btn" id={generateButtonId} data-thread-id={threadId}>
+                        <span class="material-symbols-outlined">{icon}</span>
+                        <span>{`${generateVerb} ${title}`}</span>
+                    </button>
+                )}
             </div>
         )}
     </div>
