@@ -26,7 +26,7 @@ export interface TitleGenerationOptions {
 /**
  * Validates and returns a proper model-provider pair
  */
-export async function getValidModelAndProvider(requestedModel: string | null, requestId?: string): Promise<{ model: string, provider: string }> {
+export async function getValidModelAndProvider(requestedModel: string | null): Promise<{ model: string, provider: string }> {
     let modelToUse = requestedModel || config.model;
 
     // Find which provider has this model
