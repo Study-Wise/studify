@@ -70,6 +70,7 @@ interface ChatRightSidebarProps {
     threadId: string;
     category: string;
     mode: string;
+    isAuthorized: boolean;
 }
 
 // OpenAI image generation supported sizes
