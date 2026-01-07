@@ -11,33 +11,6 @@
     margin: 0 auto;
     padding: $spacing-extra-large $spacing-medium;
 
-    .page-header {
-        margin-bottom: $spacing-extra-large;
-        text-align: center;
-
-        h1 {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: $spacing-small;
-            font-size: $font-size-2xl;
-            font-weight: $font-weight-bold;
-            color: var(--header-text);
-            margin-bottom: $spacing-small;
-
-            .material-symbols-outlined {
-                font-size: 2rem;
-                color: list.nth(map.get($accent-colors, primary), 1);
-            }
-        }
-
-        .subtitle {
-            color: var(--body-text);
-            opacity: 0.8;
-            font-size: $font-size-lg;
-        }
-    }
-
     .empty-state {
         text-align: center;
         padding: $spacing-extra-large * 2;
@@ -46,7 +19,7 @@
 
         .empty-icon {
             font-size: 4rem;
-            color: list.nth(map.get($accent-colors, primary), 1);
+            // color: list.nth(map.get($accent-colors, primary), 1);
             opacity: 0.5;
             margin-bottom: $spacing-large;
         }
@@ -54,12 +27,12 @@
         h2 {
             font-size: $font-size-xl;
             font-weight: $font-weight-semibold;
-            color: var(--header-text);
+            // color: var(--header-text);
             margin-bottom: $spacing-medium;
         }
 
         p {
-            color: var(--body-text);
+            // color: var(--body-text);
             opacity: 0.8;
             margin-bottom: $spacing-large;
             font-size: $font-size-base;
@@ -72,7 +45,7 @@
                 list.nth(map.get($accent-colors, primary), 1),
                 list.nth(map.get($accent-colors, primary), 2)
             );
-            color: var(--header-text);
+            // color: var(--header-text);
             text-decoration: none;
             border-radius: $border-radius-large;
             font-weight: $font-weight-semibold;
@@ -101,7 +74,6 @@
         .category-title {
             font-size: $font-size-xl;
             font-weight: $font-weight-semibold;
-            color: var(--section-title);
             margin-bottom: $spacing-large;
             padding-bottom: $spacing-medium;
             border-bottom: 2px solid var(--card-border);
@@ -153,10 +125,6 @@
                 .mode-icon {
                     scale: 1.15;
                 }
-
-                .thread-title {
-                    color: list.nth(map.get($accent-colors, primary), 1);
-                }
             }
 
             &:active {
@@ -190,7 +158,6 @@
                         .thread-title {
                             font-size: $font-size-base;
                             font-weight: $font-weight-semibold;
-                            color: var(--header-text);
                             margin: 0 0 $spacing-extra-small 0;
                             transition: color $transition-base $ease-out;
 
@@ -201,7 +168,6 @@
 
                         .thread-mode {
                             font-size: $font-size-sm;
-                            color: var(--body-text);
                             opacity: 0.7;
                             margin: 0;
                         }
