@@ -1,24 +1,25 @@
 import type { APIRoute } from 'astro';
 
+import { nanoid } from 'nanoid';
+
+import { eq } from 'drizzle-orm';
+import type { InferSelectModel, InferInsertModel } from 'drizzle-orm';
+import { clerkClient } from '@clerk/astro/server';
+
 import config from '../../../lib/config';
 import categories from '../../../lib/modes';
 import {
     getValidModelAndProvider,
     generateAIResponse,
     generateTitle,
-} from '../../../lib/ai-service';
+} from '../../../lib/ai-service';    
 import { generateWelcomeMessage } from '../../../lib/generateWelcomeMessage';
 
-import { nanoid } from 'nanoid';
-
 import { db } from '../../../db/initialize';
-import { eq } from 'drizzle-orm';
-import type { InferSelectModel, InferInsertModel } from 'drizzle-orm';
+import { threadsTable } from '../../../db/schema';
 import type { Mode } from '../../../lib/types';
 
-import { threadsTable } from '../../../db/schema';
 import { isValidEmail } from '../../../lib/validation';
-import { clerkClient } from '@clerk/astro/server';
 import { getUserRole } from '../../../lib/auth/utils';
 
 type Thread = InferSelectModel<typeof threadsTable>;
