@@ -1,0 +1,115 @@
+---
+import '../../styles/pages/my-chats.scss';
+import Layout from '../../layouts/Layout.astro';
+import { getUserThreads } from '../../lib/threads';
+import categories from '../../lib/modes';
+import { currentUser } from '@clerk/astro/server';
+
+const user = await currentUser(Astro);
+
+if (!user) {
+    return Astro.redirect('/user/sign-in?redirect=/user/my-chats');
+}
+
+const userEmail = user.emailAddresses[0]?.emailAddress;
+
+if (!userEmail) {
+    return Astro.redirect('/');
+}
+
+const threads = await getUserThreads(userEmail);
+
+// Group threads by category
+const threadsByCategory = threads.reduce((acc, thread) => {
+    const categoryKey = thread.category;
+    if (!acc[categoryKey]) {
+        acc[categoryKey] = [];
+    }
+    acc[categoryKey].push(thread);
+    return acc;
+}, {} as Record<string, typeof threads>);
+
+// Format date helper
+function formatDate(date: Date) {
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+    if (days === 0) {
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        if (hours === 0) {
+            const minutes = Math.floor(diff / (1000 * 60));
+            return minutes <= 1 ? 'Just now' : `${minutes} minutes ago`;
+        }
+        return hours === 1 ? '1 hour ago' : `${hours} hours ago`;
+    } else if (days === 1) {
+        return 'Yesterday';
+    } else if (days < 7) {
+        return `${days} days ago`;
+    } else {
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+}
+---
+
+<Layout title="My Chats">
+    <div class="my-chats-container">
+        <header class="page-header">
+            <h1>
+                <span class="material-symbols-outlined">chat</span>
+                My Chats
+            </h1>
+            <p class="subtitle">All your conversations across all subjects</p>
+        </header>
+
+        {threads.length === 0 ? (
+            <div class="empty-state card">
+                <span class="material-symbols-outlined empty-icon">chat_bubble_outline</span>
+                <h2>No chats yet</h2>
+                <p>Start a conversation in any subject to see it here!</p>
+                <a href="/" class="btn-primary">Browse Subjects</a>
+            </div>
+        ) : (
+            <div class="threads-container">
+                {Object.entries(threadsByCategory).map(([categoryKey, categoryThreads]) => {
+                    const category = categories[categoryKey];
+                    if (!category) return null;
+
+                    return (
+                        <section class="category-section card">
+                            <h2 class="category-title">{category.name}</h2>
+                            <div class="threads-list">
+                                {categoryThreads.map((thread) => {
+                                    const mode = category.modes[thread.mode];
+                                    const chatUrl = `/${categoryKey}/${thread.mode}/chat/${thread.id}`;
+                                    const updatedDate = new Date(thread.updatedAt);
+
+                                    return (
+                                        <a href={chatUrl} class="thread-card">
+                                            <div class="thread-header">
+                                                <div class="thread-info">
+                                                    {mode && <span class="mode-icon">{mode.icon}</span>}
+                                                    <div class="thread-text">
+                                                        <h3 class="thread-title">{thread.title}</h3>
+                                                        <p class="thread-mode">
+                                                            {mode ? mode.name : thread.mode}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="thread-meta">
+                                                    <span class="thread-date">
+                                                        {formatDate(updatedDate)}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    );
+                                })}
+                            </div>
+                        </section>
+                    );
+                })}
+            </div>
+        )}
+    </div>
+</Layout>

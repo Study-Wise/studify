@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { eq, desc } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/vercel-postgres';
 import { threadsTable } from '../db/schema';
 import type { InferSelectModel } from "drizzle-orm";
@@ -53,18 +53,18 @@ async function getThreadByToken(id: string, user_email?: string | null) {
     try {
         const db = drizzle();
         const dbResponse: Thread[] = await db.select().from(threadsTable).where(eq(threadsTable.id, id));
-        
+
         if (dbResponse.length === 0) {
             return null;
         }
-        
+
         const thread = dbResponse[0];
-        
+
         // Check ownership if user_email is provided
         if (user_email && thread.email && thread.email !== user_email) {
             return null;
         }
-        
+
         return thread;
     } catch (e) {
         console.error(e);
@@ -72,4 +72,20 @@ async function getThreadByToken(id: string, user_email?: string | null) {
     }
 }
 
-export { getMessages, getMessagesLength, getThreadByToken };
+async function getUserThreads(user_email: string) {
+    try {
+        const db = drizzle();
+        const threads: Thread[] = await db
+            .select()
+            .from(threadsTable)
+            .where(eq(threadsTable.email, user_email))
+            .orderBy(desc(threadsTable.updatedAt));
+
+        return threads;
+    } catch (e) {
+        console.error(e);
+        return [];
+    }
+}
+
+export { getMessages, getMessagesLength, getThreadByToken, getUserThreads };
