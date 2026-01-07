@@ -168,3 +168,60 @@ export async function generateTitle(options: TitleGenerationOptions): Promise<st
         throw error;
     }
 }
+
+/**
+ * Paraphrases a user's question to make it clearer and more concise
+ */
+export async function paraphraseQuestion(question: string, category: string, mode: string): Promise<string> {
+    const paraphraseRequestId = nanoid();
+
+    console.log(`✍️ [${paraphraseRequestId}] Starting question paraphrasing:`, {
+        originalQuestion: question,
+        questionLength: question.length,
+        category,
+        mode
+    });
+
+    try {
+        const paraphraseStartTime = Date.now();
+        const { text: paraphrasedQuestion } = await generateText({
+            model: `${config.provider}/${config.model}`,
+            messages: [
+                {
+                    role: 'system',
+                    content: `You are a helpful assistant that paraphrases student questions to make them clearer and more concise while preserving their original meaning. The question is in the context of ${category} - ${mode}.
+
+IMPORTANT: Only output the paraphrased question, nothing else. Do not add any explanations, quotation marks, or additional text.`,
+                },
+                {
+                    role: 'user',
+                    content: question,
+                },
+            ],
+        });
+
+        const paraphraseEndTime = Date.now();
+        const paraphraseDuration = paraphraseEndTime - paraphraseStartTime;
+
+        console.log(`✅ [${paraphraseRequestId}] Question paraphrasing completed:`, {
+            duration: `${paraphraseDuration}ms`,
+            originalQuestion: question,
+            paraphrasedQuestion: paraphrasedQuestion,
+            paraphrasedLength: paraphrasedQuestion.length
+        });
+
+        return paraphrasedQuestion;
+    } catch (error) {
+        console.error(`❌ [${paraphraseRequestId}] Error in paraphraseQuestion:`, error);
+        console.error(`❌ [${paraphraseRequestId}] Paraphrase error details:`, {
+            errorName: error instanceof Error ? error.name : 'Unknown',
+            errorMessage: error instanceof Error ? error.message : String(error),
+            originalQuestion: question,
+            category,
+            mode
+        });
+        // Return original question as fallback
+        console.log(`⚠️ [${paraphraseRequestId}] Falling back to original question`);
+        return question;
+    }
+}

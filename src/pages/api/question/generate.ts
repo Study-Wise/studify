@@ -4,7 +4,7 @@ import { db } from '../../../db/initialize';
 import { eq } from 'drizzle-orm';
 import { questionTable } from '../../../db/schema';
 import { questionToId } from '../../../lib/question-utils';
-import { generateAIResponse } from '../../../lib/ai-service';
+import { generateAIResponse, paraphraseQuestion } from '../../../lib/ai-service';
 import config from '../../../lib/config';
 
 export const POST: APIRoute = async ({ request }) => {
@@ -34,8 +34,17 @@ export const POST: APIRoute = async ({ request }) => {
             mode
         });
 
-        // Generate ID from question
-        const questionId = questionToId(question);
+        // Paraphrase the question to make it clearer and more concise
+        console.log(`✍️ [${requestId}] Paraphrasing user question`);
+        const paraphrasedQuestion = await paraphraseQuestion(question, category, mode);
+        console.log(`✅ [${requestId}] Question paraphrased:`, {
+            originalLength: question.length,
+            paraphrasedLength: paraphrasedQuestion.length,
+            paraphrasedPreview: paraphrasedQuestion.substring(0, 100)
+        });
+
+        // Generate ID from paraphrased question
+        const questionId = questionToId(paraphrasedQuestion);
         console.log(`🆔 [${requestId}] Generated question ID:`, questionId);
 
         // Check if question already exists
@@ -59,8 +68,8 @@ export const POST: APIRoute = async ({ request }) => {
             );
         }
 
-        // Generate answer using AI
-        console.log(`🤖 [${requestId}] Generating AI answer for question`);
+        // Generate answer using AI with paraphrased question
+        console.log(`🤖 [${requestId}] Generating AI answer for paraphrased question`);
         const systemPrompt = `You are an educational AI assistant specializing in ${category} - ${mode}.
 Provide a comprehensive, well-structured answer to the following question.
 Your answer should be:
@@ -68,18 +77,16 @@ Your answer should be:
 - Detailed and informative
 - Formatted in Markdown
 - Include examples where appropriate
-- Suitable for students seeking help
-
-Question: ${question}`;
+- Suitable for students seeking help`;
 
         const convoHistory = [
             { role: 'system', content: systemPrompt },
-            { role: 'user', content: question }
+            { role: 'user', content: paraphrasedQuestion }
         ];
 
         const answer = await generateAIResponse({
             systemPrompt,
-            userPrompt: question,
+            userPrompt: paraphrasedQuestion,
             convoHistory,
             userModel: config.model,
             provider: config.provider as string,
@@ -102,7 +109,7 @@ Question: ${question}`;
 
         await db.insert(questionTable).values({
             id: questionId,
-            question,
+            question: paraphrasedQuestion,
             answer,
             category,
             mode,
@@ -119,7 +126,7 @@ Question: ${question}`;
         return new Response(
             JSON.stringify({
                 id: questionId,
-                question,
+                question: paraphrasedQuestion,
                 answer,
                 category,
                 mode,
