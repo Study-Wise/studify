@@ -23,7 +23,8 @@
       "Bash(git mv:*)",
       "Bash(rg:*)",
       "Bash(npm install:*)",
-      "Bash(node test-vercel-api.js:*)"
+      "Bash(node test-vercel-api.js:*)",
+      "Bash(node -e \"console.log\\(Object.keys\\(require\\(''ai''\\)\\).filter\\(k => !k.startsWith\\(''_''\\)\\).sort\\(\\).join\\('', ''\\)\\)\")"
     ],
     "deny": [],
     "ask": []
