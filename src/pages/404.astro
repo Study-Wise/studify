@@ -1,0 +1,54 @@
+---
+import '../styles/pages/404.scss';
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Page Not Found">
+    <div class="error-404-container">
+        <div class="error-content card">
+            <div class="error-icon">
+                <span class="material-symbols-outlined">search_off</span>
+            </div>
+
+            <h1 class="error-title">404</h1>
+            <h2 class="error-subtitle">Page Not Found</h2>
+
+            <p class="error-message">
+                Oops! The page you're looking for doesn't exist or has been moved.
+            </p>
+
+            <div class="error-actions">
+                <a href="/" class="btn-primary">
+                    <span class="material-symbols-outlined">home</span>
+                    Go Home
+                </a>
+                <a href="javascript:history.back()" class="btn-secondary">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                    Go Back
+                </a>
+            </div>
+
+            <div class="suggestions">
+                <h3>Popular Pages</h3>
+                <div class="suggestions-grid">
+                    <a href="/science/physics" class="suggestion-card">
+                        <span class="suggestion-icon">⚛️</span>
+                        <span class="suggestion-text">Physics</span>
+                    </a>
+                    <a href="/math/algebra" class="suggestion-card">
+                        <span class="suggestion-icon">🔢</span>
+                        <span class="suggestion-text">Algebra</span>
+                    </a>
+                    <a href="/science/computer-science" class="suggestion-card">
+                        <span class="suggestion-icon">💻</span>
+                        <span class="suggestion-text">Computer Science</span>
+                    </a>
+                    <a href="/math/calculus" class="suggestion-card">
+                        <span class="suggestion-icon">∫</span>
+                        <span class="suggestion-text">Calculus</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</Layout>

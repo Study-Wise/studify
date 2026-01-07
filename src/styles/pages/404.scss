@@ -1,0 +1,292 @@
+@use '../variables/globals' as *;
+@use '../variables/tokens' as *;
+@use '../variables/mixins' as *;
+@use 'sass:list';
+@use 'sass:map';
+
+// Styles specific to 404.astro page
+
+.error-404-container {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-extra-large $spacing-medium;
+
+    .error-content {
+        max-width: 600px;
+        text-align: center;
+        padding: $spacing-extra-large * 2;
+
+        animation: fadeIn 0.6s $ease-out forwards;
+
+        .error-icon {
+            margin-bottom: $spacing-large;
+
+            .material-symbols-outlined {
+                font-size: 6rem;
+                color: list.nth(map.get($accent-colors, primary), 1);
+                opacity: 0.6;
+                animation: float 3s ease-in-out infinite;
+            }
+        }
+
+        .error-title {
+            font-size: 6rem;
+            font-weight: $font-weight-bold;
+            line-height: 1;
+            margin-bottom: $spacing-small;
+
+            background: linear-gradient(135deg,
+                list.nth(map.get($accent-colors, primary), 1),
+                list.nth(map.get($accent-colors, primary), 2)
+            );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+
+            animation: slideInDown 0.6s $ease-out forwards;
+        }
+
+        .error-subtitle {
+            font-size: $font-size-2xl;
+            font-weight: $font-weight-semibold;
+            color: var(--header-text);
+            margin-bottom: $spacing-large;
+
+            animation: slideInUp 0.6s $ease-out forwards;
+        }
+
+        .error-message {
+            font-size: $font-size-lg;
+            color: var(--body-text);
+            opacity: 0.8;
+            margin-bottom: $spacing-extra-large;
+            line-height: $line-height-relaxed;
+
+            animation: fadeIn 0.6s 0.2s $ease-out forwards;
+            opacity: 0;
+        }
+
+        .error-actions {
+            display: flex;
+            gap: $spacing-medium;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: $spacing-extra-large;
+
+            animation: fadeIn 0.6s 0.3s $ease-out forwards;
+            opacity: 0;
+
+            a {
+                display: inline-flex;
+                align-items: center;
+                gap: $spacing-small;
+                padding: $spacing-small $spacing-large;
+                border-radius: $border-radius-large;
+                text-decoration: none;
+                font-weight: $font-weight-semibold;
+                font-size: $font-size-base;
+                box-shadow: $box-shadow-medium;
+
+                transition: scale $transition-base $ease-out,
+                            box-shadow $transition-base $ease-out,
+                            translate $transition-base $ease-out;
+
+                .material-symbols-outlined {
+                    font-size: 1.25rem;
+                }
+
+                &:hover {
+                    scale: 1.05;
+                    translate: 0 -2px;
+                    box-shadow: $box-shadow-large;
+                }
+
+                &:active {
+                    scale: 1.02;
+                    translate: 0 0;
+                }
+            }
+
+            .btn-primary {
+                background: linear-gradient(135deg,
+                    list.nth(map.get($accent-colors, primary), 1),
+                    list.nth(map.get($accent-colors, primary), 2)
+                );
+                color: var(--header-text);
+            }
+
+            .btn-secondary {
+                background-color: var(--card-bg);
+                color: var(--body-text);
+                border: 2px solid var(--card-border);
+
+                &:hover {
+                    border-color: list.nth(map.get($accent-colors, primary), 1);
+                }
+            }
+        }
+
+        .suggestions {
+            margin-top: $spacing-extra-large;
+            padding-top: $spacing-extra-large;
+            border-top: 2px solid var(--card-border);
+
+            animation: fadeIn 0.6s 0.4s $ease-out forwards;
+            opacity: 0;
+
+            h3 {
+                font-size: $font-size-lg;
+                font-weight: $font-weight-semibold;
+                color: var(--header-text);
+                margin-bottom: $spacing-large;
+            }
+
+            .suggestions-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: $spacing-medium;
+
+                .suggestion-card {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: $spacing-small;
+                    padding: $spacing-medium;
+                    background-color: var(--card-bg);
+                    border: 1px solid var(--card-border);
+                    border-radius: $border-radius-large;
+                    text-decoration: none;
+                    color: inherit;
+                    box-shadow: $box-shadow-small;
+
+                    transition: scale $transition-base $ease-out,
+                                box-shadow $transition-base $ease-out,
+                                translate $transition-base $ease-out,
+                                border-color $transition-base $ease-out;
+
+                    &:hover {
+                        scale: 1.05;
+                        translate: 0 -4px;
+                        box-shadow: $box-shadow-medium;
+                        border-color: list.nth(map.get($accent-colors, primary), 1);
+
+                        .suggestion-icon {
+                            scale: 1.15;
+                        }
+                    }
+
+                    &:active {
+                        scale: 1.02;
+                        translate: 0 -2px;
+                    }
+
+                    .suggestion-icon {
+                        font-size: 2rem;
+                        transition: scale $transition-base $ease-spring;
+                    }
+
+                    .suggestion-text {
+                        font-size: $font-size-sm;
+                        font-weight: $font-weight-medium;
+                        color: var(--body-text);
+                        text-align: center;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Animations
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+    .error-404-container {
+        padding: $spacing-large $spacing-small;
+
+        .error-content {
+            padding: $spacing-extra-large;
+
+            .error-icon {
+                .material-symbols-outlined {
+                    font-size: 4rem;
+                }
+            }
+
+            .error-title {
+                font-size: 4rem;
+            }
+
+            .error-subtitle {
+                font-size: $font-size-xl;
+            }
+
+            .error-message {
+                font-size: $font-size-base;
+            }
+
+            .error-actions {
+                flex-direction: column;
+                align-items: stretch;
+
+                a {
+                    justify-content: center;
+                }
+            }
+
+            .suggestions {
+                .suggestions-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .error-404-container {
+        .error-content {
+            .error-title {
+                font-size: 3rem;
+            }
+
+            .suggestions {
+                .suggestions-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+        }
+    }
+}
