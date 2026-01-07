@@ -22,7 +22,8 @@
       "Bash(python:*)",
       "Bash(git mv:*)",
       "Bash(rg:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(node test-vercel-api.js:*)"
     ],
     "deny": [],
     "ask": []
