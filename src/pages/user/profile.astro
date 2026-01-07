@@ -1,6 +1,8 @@
 ---
+import '../../styles/pages/profile.scss';
 import Layout from '../../layouts/Layout.astro';
 import { UserProfile } from '@clerk/astro/components';
+import MyChats from '../../components/MyChats.astro';
 
 // Use Clerk authentication
 const auth = (Astro.locals as any).auth;
@@ -15,15 +17,9 @@ if (!userId) {
 <Layout title="User Profile">
     <div class="profile-container">
         <UserProfile>
-            <UserProfile.Page label="My Chats" labelIcon="chat" url="/user/my-chats" />
+            <UserProfile.Page label="My Chats" url="my-chats">
+                <MyChats />
+            </UserProfile.Page>
         </UserProfile>
     </div>
 </Layout>
-
-<style>
-    .profile-container {
-        max-width: 1200px;
-        margin: 2rem auto;
-        padding: 0 1rem;
-    }
-</style>
