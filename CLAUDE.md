@@ -169,6 +169,7 @@ Required environment variables (see `.env`):
 - `POSTGRES_URL` - PostgreSQL connection string
 - `CLERK_PUBLISHABLE_KEY` - Clerk public key
 - `CLERK_SECRET_KEY` - Clerk secret key
+- `CLERK_WEBHOOK_SECRET` - Clerk webhook signing secret (required for admin auto-promotion)
 - `OPENAI_API_KEY` - OpenAI API key (also used for image generation)
 - `GOOGLE_GENERATIVE_AI_API_KEY` - Google AI key
 - `EXA_SEARCH_API_KEY` - Exa search API key
