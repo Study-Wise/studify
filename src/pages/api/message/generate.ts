@@ -20,7 +20,7 @@ import { threadsTable } from '../../../db/schema';
 import type { Mode } from '../../../lib/types';
 
 import { isValidEmail } from '../../../lib/validation';
-import { getUserRole } from '../../../lib/auth/utils';
+import { getUserRoleFromUser } from '../../../lib/auth/utils';
 
 type Thread = InferSelectModel<typeof threadsTable>;
 type ThreadInsert = InferInsertModel<typeof threadsTable>;
@@ -86,48 +86,26 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
         console.log(`🔐 [${requestId}] Authentication found, extracting user info`);
         const { userId } = auth();
 
-        // Check admin status using auth-utils (consistent with rest of app)
-        let userRole = getUserRole(auth);
-        let isAdmin = userRole === 'admin';
-
-        console.log(`🔐 [${requestId}] Initial admin check:`, {
-            userRole: userRole || 'none',
-            isAdmin: isAdmin
-        });
-
-        // Fetch user email from Clerk
+        // Fetch user and check admin status from user.publicMetadata.role
         let user_email: string | null = null;
+        let userRole: string | null = null;
+        let isAdmin = false;
+
         if (userId) {
             try {
                 const client = clerkClient({ request, locals, ...context });
                 const user = await client.users.getUser(userId);
                 user_email = user.emailAddresses?.[0]?.emailAddress || null;
 
-                // Fallback: Also check publicMetadata if session claims don't have role
-                // This handles cases where session token customization isn't configured yet
-                if (!isAdmin && user.publicMetadata?.role === 'admin') {
-                    isAdmin = true;
-                    console.log(`⚠️ [${requestId}] Admin role found in publicMetadata but not in session claims. Please configure session token customization in Clerk Dashboard.`);
-                    console.log(`✅ [${requestId}] Admin status updated via fallback:`, {
-                        previousIsAdmin: false,
-                        newIsAdmin: true,
-                        source: 'publicMetadata'
-                    });
-                } else if (!isAdmin) {
-                    console.log(`ℹ️ [${requestId}] User is not an admin:`, {
-                        sessionClaimsRole: userRole || 'none',
-                        publicMetadataRole: user.publicMetadata?.role || 'none'
-                    });
-                }
+                // Check admin status from user.publicMetadata.role
+                userRole = getUserRoleFromUser(user);
+                isAdmin = userRole === 'admin';
 
-                // Log metadata for debugging
-                console.log(`🔍 [${requestId}] User metadata:`, {
-                    sessionClaimsRole: userRole,
-                    publicMetadata: user.publicMetadata,
-                    publicRole: user.publicMetadata?.role
+                console.log(`✅ [${requestId}] Successfully fetched user from Clerk`);
+                console.log(`🔐 [${requestId}] Admin check (from user.publicMetadata):`, {
+                    userRole: userRole || 'none',
+                    isAdmin: isAdmin
                 });
-
-                console.log(`✅ [${requestId}] Successfully fetched user email from Clerk`);
             } catch (error) {
                 console.error(`❌ [${requestId}] Error fetching user from Clerk:`, error);
             }

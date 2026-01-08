@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { getUserRole, getUserMetadata } from '../lib/auth/utils';
+import { getUserRoleFromUser, getUserMetadataFromUser } from '../lib/auth/utils';
+import { clerkClient } from '@clerk/astro/server';
 import '../styles/pages/admin.scss';
 
 // Use Clerk authentication
@@ -12,10 +13,12 @@ if (!userId) {
     return Astro.redirect("/user/sign-in");
 }
 
-// Check if user is admin
-const userRole = getUserRole(auth);
+// Fetch user and check if admin
+const client = clerkClient(Astro);
+const user = await client.users.getUser(userId);
+const userRole = getUserRoleFromUser(user);
 const isUserAdmin = userRole === 'admin';
-const userMetadata = getUserMetadata(auth);
+const userMetadata = getUserMetadataFromUser(user);
 
 // Redirect non-admins away from admin page
 if (!isUserAdmin) {

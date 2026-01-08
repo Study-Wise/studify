@@ -4,15 +4,13 @@ export function hasPermission(auth: any, permission: string): boolean {
     return has({ permission });
 }
 
-// User metadata utilities
-export function getUserRole(auth: any): string | null {
-    const { sessionClaims } = auth();
-    return (sessionClaims?.metadata as any)?.role || null;
+// User metadata utilities - fetch from user.publicMetadata
+export function getUserRoleFromUser(user: any): string | null {
+    return (user.publicMetadata as any)?.role || null;
 }
 
-export function getUserMetadata(auth: any): any {
-    const { sessionClaims } = auth();
-    return sessionClaims?.metadata || {};
+export function getUserMetadataFromUser(user: any): any {
+    return user.publicMetadata || {};
 }
 
 // Admin promotion configuration (same as webhook)

@@ -1,7 +1,7 @@
 import { db } from '../../db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '../../db/schema';
-import { getUserRole } from './utils';
+import { getUserRoleFromUser } from './utils';
 import type { ThreadAccessResult } from '../types';
 import { clerkClient } from '@clerk/astro/server';
 
@@ -15,9 +15,19 @@ export async function checkThreadAccess(
     let threadOwner: string | null = null;
     let isPublicThread = false;
 
-    // Get user role
-    const userRole = getUserRole(auth);
-    const isUserAdmin = userRole === 'admin';
+    // Fetch user and check if admin
+    let isUserAdmin = false;
+    const { userId } = auth();
+    if (userId && context) {
+        try {
+            const client = clerkClient(context);
+            const user = await client.users.getUser(userId);
+            const userRole = getUserRoleFromUser(user);
+            isUserAdmin = userRole === 'admin';
+        } catch (error) {
+            console.error('Error fetching user for admin check:', error);
+        }
+    }
 
     // Fetch user email from Clerk if context is provided
     let userEmail: string | null = null;

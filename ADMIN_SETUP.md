@@ -4,10 +4,9 @@ This guide explains how to set up admin users in the application.
 
 ## How Admin Roles Work
 
-The application uses Clerk's metadata system to manage admin roles. There are two ways admin status is checked:
+The application uses Clerk's public metadata system to manage admin roles. Admin status is checked by fetching the user from Clerk API and checking:
 
-1. **Session Claims (Primary)**: `sessionClaims.metadata.role === 'admin'` - Used by most of the app
-2. **Public Metadata (Fallback)**: `user.publicMetadata.role === 'admin'` - Used as backup
+**User Public Metadata**: `user.publicMetadata.role === 'admin'` - The application fetches the user object from Clerk and checks their public metadata directly. This approach doesn't require session token customization.
 
 ## Setting Up Admin Users
 
@@ -28,32 +27,13 @@ The application uses Clerk's metadata system to manage admin roles. There are tw
 
 7. Click **"Save"**
 
-### Step 2: Configure Session Claims (REQUIRED)
+### Step 2: Verify Admin Access
 
-For the admin role to work properly throughout the app, you need to add `publicMetadata.role` to the JWT session token:
-
-1. Go to [Clerk Dashboard](https://dashboard.clerk.com/)
-2. Navigate to **Sessions** (in the left sidebar)
-3. Click on **"Customize session token"**
-4. Add this code to include the role in session claims:
-
-    ```json
-    {
-        "metadata": {
-        "role": "{{user.public_metadata.role}}"
-        }
-    }
-    ```
-
-5. Click **"Save"**
-
-### Step 3: Sign Out and Sign Back In
-
-After configuring session claims, users must sign out and sign back in for the changes to take effect. Session tokens are only updated on new sign-ins.
+The admin role will take effect immediately on the next page load or API request. No need to sign out and back in since we fetch the user's publicMetadata directly from Clerk on each request.
 
 ## Auto-Promotion via Webhook
 
-The application supports automatic admin promotion via webhook for specific emails/domains configured in `src/lib/auth-utils.ts`.
+The application supports automatic admin promotion via webhook for specific emails/domains configured in `src/lib/auth/utils.ts`.
 
 To configure which emails/domains should be auto-promoted to admin, edit the `ADMIN_EMAILS` and `ADMIN_DOMAINS` arrays in that file.
 
@@ -108,8 +88,7 @@ After setting up the webhook:
    ✅ Auto-promoted user test@studywise.onl to admin role via webhook
    ```
 
-3. Sign out and sign back in with the new account
-4. Verify admin access by visiting `/admin` or creating more than 5 threads
+3. Verify admin access by visiting `/admin` or creating more than 5 threads
 
 ## Admin Features
 
@@ -125,7 +104,7 @@ Once a user has admin role, they get:
 Check the console logs when creating a thread. You should see:
 
 ```text
-🔍 User metadata: { sessionClaimsRole: 'admin', publicMetadata: { role: 'admin' }, ... }
+🔐 Admin check (from user.publicMetadata): { userRole: 'admin', isAdmin: true }
 👤 User info: { userId: '...', userEmail: '...', userRole: 'admin', isAdmin: true }
 👑 Admin user detected - skipping thread limit check
 ```
@@ -139,9 +118,8 @@ Check the console logs when creating a thread. You should see:
 **Solutions**:
 
 1. Verify `publicMetadata.role` is set to `'admin'` in Clerk Dashboard
-2. Verify session token customization is configured (Step 2 above)
-3. Sign out and sign back in to refresh the session token
-4. Check console logs to see what role is detected
+2. Check console logs to see what role is detected
+3. Ensure the role value is exactly `'admin'` (lowercase)
 
 ### Admin page redirects to home
 
@@ -149,12 +127,9 @@ Check the console logs when creating a thread. You should see:
 
 **Solutions**:
 
-1. Ensure session token customization is configured
-2. Sign out and sign back in
-3. Check `sessionClaims.metadata.role` in browser DevTools:
-   - Open DevTools → Application → Cookies
-   - Look for Clerk session cookie
-   - Decode JWT at jwt.io to verify `metadata.role` exists
+1. Verify `publicMetadata.role` is set to `'admin'` in Clerk Dashboard
+2. Check the value is exactly `'admin'` (lowercase, no extra spaces)
+3. Check server logs for any errors when fetching the user
 
 ### Auto-promotion not working
 
