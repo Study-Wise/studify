@@ -14,6 +14,9 @@ const manifest = fs.readJSONSync(manifestPath);
 export default defineConfig({
     output: 'server',
     adapter: vercel(),
+    redirects: {
+        '/user/sign-in/sso-callback': '/user/sso-callback',
+    },
     integrations: [
         clerk({
             // Authentication configuration
