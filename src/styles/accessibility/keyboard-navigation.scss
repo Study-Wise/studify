@@ -13,6 +13,11 @@
     box-shadow: 0 0 0 2px #4F46E5, 0 0 0 4px rgba(79, 70, 229, 0.2);
 }
 
+body:has(.update-indicator[style*=flex]) {
+    --pad: 40px;
+    padding-top: var(--pad);
+}
+
 /* Skip links */
 .skip-link {
     $_pos: 6px;
@@ -34,10 +39,10 @@
     z-index: $z-index-dropdown;
 
     transition: translate $transition-slow;
-    translate: 0 -100%;
+    translate: 0 calc(-100% - var(--pad, 0));
 
     &:focus-visible {
-        translate: 0 $_pos;
+        translate: 0 calc($_pos - var(--pad, 0));
         outline: 2px solid #fff;
         outline-offset: 2px;
     }
