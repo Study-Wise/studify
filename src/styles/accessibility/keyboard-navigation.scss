@@ -13,16 +13,12 @@
     box-shadow: 0 0 0 2px #4F46E5, 0 0 0 4px rgba(79, 70, 229, 0.2);
 }
 
-body:has(:is(.update-indicator, .offline-indicator)[style*=flex]) {
-    --pad: 40px;
-    padding-top: var(--pad);
-}
-
 /* Skip links */
 .skip-link {
     $_pos: 6px;
 
     position: absolute;
+    top: 0;
     left: $_pos;
 
     padding: $spacing-small;
@@ -39,10 +35,10 @@ body:has(:is(.update-indicator, .offline-indicator)[style*=flex]) {
     z-index: $z-index-dropdown;
 
     transition: translate $transition-slow;
-    translate: 0 calc(-100% - var(--pad, 0px));
+    translate: 0 -100%;
 
     &:focus-visible {
-        translate: 0 calc($_pos - var(--pad, 0px));
+        translate: 0 $_pos;
         outline: 2px solid #fff;
         outline-offset: 2px;
     }
