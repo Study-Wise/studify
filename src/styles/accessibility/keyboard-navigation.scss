@@ -39,10 +39,10 @@ body:has(.update-indicator[style*=flex]) {
     z-index: $z-index-dropdown;
 
     transition: translate $transition-slow;
-    translate: 0 calc(-100% - var(--pad, 0));
+    translate: 0 calc(-100% - var(--pad, 0px));
 
     &:focus-visible {
-        translate: 0 calc($_pos - var(--pad, 0));
+        translate: 0 calc($_pos - var(--pad, 0px));
         outline: 2px solid #fff;
         outline-offset: 2px;
     }
