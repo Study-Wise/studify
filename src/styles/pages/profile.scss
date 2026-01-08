@@ -3,3 +3,7 @@
     margin: 2rem auto;
     padding: 0 1rem;
 }
+
+body:has([role=dialog][aria-modal=true]) > *:not([role=dialog]) {
+    filter: none !important;
+}
