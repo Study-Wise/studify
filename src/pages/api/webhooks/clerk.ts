@@ -5,63 +5,73 @@ import { Webhook } from 'svix';
 
 export const POST: APIRoute = async (context) => {
     try {
+        // Check for development test mode (only works in DEV, requires special header)
+        const isDevelopment = import.meta.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'development';
+        const testMode = isDevelopment && context.request.headers.get('x-test-mode') === 'true';
+
         // Get the webhook secret from environment variables
         // Use import.meta.env first, fallback to process.env
         const webhookSecret = import.meta.env.CLERK_WEBHOOK_SECRET || process.env.CLERK_WEBHOOK_SECRET;
 
-        if (!webhookSecret) {
-            console.error('❌ CLERK_WEBHOOK_SECRET is not configured');
-            console.error('❌ Available env vars:', Object.keys(process.env).filter(k => k.startsWith('CLERK')));
-            return new Response(JSON.stringify({
-                error: 'Webhook secret not configured'
-            }), {
-                status: 500,
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-        }
-
-        // Get the headers
-        const svixId = context.request.headers.get('svix-id');
-        const svixTimestamp = context.request.headers.get('svix-timestamp');
-        const svixSignature = context.request.headers.get('svix-signature');
-
-        if (!svixId || !svixTimestamp || !svixSignature) {
-            console.error('❌ Missing Svix headers');
-            return new Response(JSON.stringify({
-                error: 'Missing webhook headers'
-            }), {
-                status: 400,
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-        }
-
-        // Get the raw body text for signature verification
-        const payload = await context.request.text();
-
-        // Verify the webhook signature
-        const wh = new Webhook(webhookSecret);
         let evt: any;
 
-        try {
-            evt = wh.verify(payload, {
-                'svix-id': svixId,
-                'svix-timestamp': svixTimestamp,
-                'svix-signature': svixSignature,
-            });
-        } catch (err) {
-            console.error('❌ Webhook signature verification failed:', err);
-            return new Response(JSON.stringify({
-                error: 'Webhook verification failed'
-            }), {
-                status: 400,
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+        if (testMode) {
+            console.warn('⚠️ Running in TEST MODE - signature verification bypassed');
+            evt = await context.request.json();
+        } else {
+            if (!webhookSecret) {
+                console.error('❌ CLERK_WEBHOOK_SECRET is not configured');
+                console.error('❌ Available env vars:', Object.keys(process.env).filter(k => k.startsWith('CLERK')));
+                return new Response(JSON.stringify({
+                    error: 'Webhook secret not configured'
+                }), {
+                    status: 500,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+            }
+
+            // Get the headers
+            const svixId = context.request.headers.get('svix-id');
+            const svixTimestamp = context.request.headers.get('svix-timestamp');
+            const svixSignature = context.request.headers.get('svix-signature');
+
+            if (!svixId || !svixTimestamp || !svixSignature) {
+                console.error('❌ Missing Svix headers');
+                return new Response(JSON.stringify({
+                    error: 'Missing webhook headers'
+                }), {
+                    status: 400,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+            }
+
+            // Get the raw body text for signature verification
+            const payload = await context.request.text();
+
+            // Verify the webhook signature
+            const wh = new Webhook(webhookSecret);
+
+            try {
+                evt = wh.verify(payload, {
+                    'svix-id': svixId,
+                    'svix-timestamp': svixTimestamp,
+                    'svix-signature': svixSignature,
+                });
+            } catch (err) {
+                console.error('❌ Webhook signature verification failed:', err);
+                return new Response(JSON.stringify({
+                    error: 'Webhook verification failed'
+                }), {
+                    status: 400,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+            }
         }
 
         const { type, data } = evt;
