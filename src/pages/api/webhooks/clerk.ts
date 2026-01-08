@@ -6,10 +6,12 @@ import { Webhook } from 'svix';
 export const POST: APIRoute = async (context) => {
     try {
         // Get the webhook secret from environment variables
-        const webhookSecret = import.meta.env.CLERK_WEBHOOK_SECRET;
+        // Use import.meta.env first, fallback to process.env
+        const webhookSecret = import.meta.env.CLERK_WEBHOOK_SECRET || process.env.CLERK_WEBHOOK_SECRET;
 
         if (!webhookSecret) {
             console.error('❌ CLERK_WEBHOOK_SECRET is not configured');
+            console.error('❌ Available env vars:', Object.keys(process.env).filter(k => k.startsWith('CLERK')));
             return new Response(JSON.stringify({
                 error: 'Webhook secret not configured'
             }), {
@@ -65,6 +67,7 @@ export const POST: APIRoute = async (context) => {
         const { type, data } = evt;
 
         console.log(`📨 Clerk webhook received: ${type}`);
+        console.log(`📦 Webhook data:`, JSON.stringify(data, null, 2));
 
         // Handle user.created webhook
         if (type === 'user.created') {
@@ -73,6 +76,8 @@ export const POST: APIRoute = async (context) => {
             const userId = user.id;
 
             console.log(`👤 New user created: ${email} (${userId})`);
+            console.log(`🔍 Checking if ${email} should be promoted to admin...`);
+            console.log(`🔍 shouldPromoteToAdmin result:`, shouldPromoteToAdmin(email));
 
             if (email && shouldPromoteToAdmin(email)) {
                 try {

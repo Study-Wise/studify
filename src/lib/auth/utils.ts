@@ -28,8 +28,21 @@ export const ADMIN_DOMAINS = [
 
 export function shouldPromoteToAdmin(email: string): boolean {
     const emailLower = email.toLowerCase();
+    console.log(`🔍 shouldPromoteToAdmin check for: ${emailLower}`);
+    console.log(`📋 ADMIN_EMAILS:`, ADMIN_EMAILS);
+    console.log(`📋 ADMIN_DOMAINS:`, ADMIN_DOMAINS);
+
     if (ADMIN_EMAILS.includes(emailLower)) {
-            return true;
+        console.log(`✅ Email found in ADMIN_EMAILS`);
+        return true;
     }
-    return ADMIN_DOMAINS.some(domain => emailLower.endsWith(domain));
+
+    const matchesDomain = ADMIN_DOMAINS.some(domain => emailLower.endsWith(domain));
+    if (matchesDomain) {
+        console.log(`✅ Email matches ADMIN_DOMAINS`);
+    } else {
+        console.log(`❌ Email does not match any admin criteria`);
+    }
+
+    return matchesDomain;
 }
