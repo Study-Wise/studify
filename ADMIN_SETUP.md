@@ -72,6 +72,28 @@ To configure which emails/domains should be auto-promoted to admin, edit the `AD
      - ✅ `user.created` (required for auto-promotion on signup)
      - ✅ `user.updated` (optional, for retroactive promotion)
 5. Click **"Create"** or **"Add Endpoint"**
+6. **Copy the Signing Secret**:
+   - After creating the endpoint, Clerk will display a **"Signing Secret"** (starts with `whsec_`)
+   - Copy this secret - you'll need it for the next step
+   - You can also find it later by clicking on the webhook endpoint
+
+#### Add Webhook Secret to Environment Variables
+
+Add the webhook signing secret to your environment:
+
+1. **Local Development**: Add to your `.env` file:
+
+   ```env
+   CLERK_WEBHOOK_SECRET=whsec_your_secret_here
+   ```
+
+2. **Production (Vercel)**: Add environment variable in Vercel Dashboard:
+   - Go to your project settings
+   - Navigate to **Environment Variables**
+   - Add `CLERK_WEBHOOK_SECRET` with the value from Clerk
+   - Redeploy your application
+
+**Security Note**: The webhook secret is required to verify that webhook requests are legitimately from Clerk. Without it, the webhook endpoint will reject all requests.
 
 #### Testing the Webhook
 
@@ -140,7 +162,28 @@ Check the console logs when creating a thread. You should see:
 
 **Solutions**:
 
-1. Verify webhook is configured in Clerk Dashboard
-2. Check webhook endpoint is accessible: `POST /api/webhooks/clerk`
-3. Check server logs for webhook processing errors
-4. Verify email/domain is in `ADMIN_EMAILS` or `ADMIN_DOMAINS` in `src/lib/auth-utils.ts`
+1. **Verify `CLERK_WEBHOOK_SECRET` is set**:
+   - Check your `.env` file (local) or Vercel environment variables (production)
+   - The secret should start with `whsec_`
+   - Without this, all webhook requests will be rejected
+
+2. Verify webhook is configured in Clerk Dashboard:
+   - Go to Webhooks section
+   - Ensure endpoint URL matches your deployment
+   - Verify `user.created` event is checked
+   - Copy the signing secret and add it to environment variables
+
+3. Check webhook endpoint is accessible:
+   - Test: `POST /api/webhooks/clerk`
+   - Check server logs for webhook processing errors
+   - Look for "Webhook signature verification failed" errors
+
+4. Verify email/domain is in the auto-promotion list:
+   - Edit `src/lib/auth/utils.ts`
+   - Add your email to `ADMIN_EMAILS` array
+   - Or add your domain to `ADMIN_DOMAINS` array
+
+5. Check server logs when creating a new user:
+   - You should see: "📨 Clerk webhook received: user.created"
+   - Then: "✅ Auto-promoted user \[email\] to admin role via webhook"
+   - If you see errors, check the webhook secret and configuration

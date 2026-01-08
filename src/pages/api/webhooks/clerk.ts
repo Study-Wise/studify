@@ -1,11 +1,68 @@
 import type { APIRoute } from 'astro';
 import { clerkClient } from '@clerk/astro/server';
 import { shouldPromoteToAdmin } from '../../../lib/auth/utils';
+import { Webhook } from 'svix';
 
 export const POST: APIRoute = async (context) => {
     try {
-        const body = await context.request.json();
-        const { type, data } = body;
+        // Get the webhook secret from environment variables
+        const webhookSecret = import.meta.env.CLERK_WEBHOOK_SECRET;
+
+        if (!webhookSecret) {
+            console.error('❌ CLERK_WEBHOOK_SECRET is not configured');
+            return new Response(JSON.stringify({
+                error: 'Webhook secret not configured'
+            }), {
+                status: 500,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        }
+
+        // Get the headers
+        const svixId = context.request.headers.get('svix-id');
+        const svixTimestamp = context.request.headers.get('svix-timestamp');
+        const svixSignature = context.request.headers.get('svix-signature');
+
+        if (!svixId || !svixTimestamp || !svixSignature) {
+            console.error('❌ Missing Svix headers');
+            return new Response(JSON.stringify({
+                error: 'Missing webhook headers'
+            }), {
+                status: 400,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        }
+
+        // Get the raw body text for signature verification
+        const payload = await context.request.text();
+
+        // Verify the webhook signature
+        const wh = new Webhook(webhookSecret);
+        let evt: any;
+
+        try {
+            evt = wh.verify(payload, {
+                'svix-id': svixId,
+                'svix-timestamp': svixTimestamp,
+                'svix-signature': svixSignature,
+            });
+        } catch (err) {
+            console.error('❌ Webhook signature verification failed:', err);
+            return new Response(JSON.stringify({
+                error: 'Webhook verification failed'
+            }), {
+                status: 400,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        }
+
+        const { type, data } = evt;
 
         console.log(`📨 Clerk webhook received: ${type}`);
 
