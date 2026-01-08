@@ -1,7 +1,7 @@
 ---
 import { AuthenticateWithRedirectCallback } from '@clerk/astro/components';
-import Layout from '../../../layouts/Layout.astro';
-import '../../../styles/pages/auth.scss';
+import Layout from '../../layouts/Layout.astro';
+import '../../styles/pages/auth.scss';
 
 // Get the redirect URL from query parameters, fallback to home
 const redirectUrl = Astro.url.searchParams.get('redirect_url') || 
