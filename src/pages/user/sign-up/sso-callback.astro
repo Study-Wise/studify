@@ -1,0 +1,18 @@
+---
+import { AuthenticateWithRedirectCallback } from '@clerk/astro/components';
+import Layout from '../../../layouts/Layout.astro';
+import '../../../styles/pages/auth.scss';
+
+// Get the redirect URL from query parameters, fallback to home
+const redirectUrl = Astro.url.searchParams.get('redirect_url') ||
+                    Astro.url.searchParams.get('returnBackUrl') || '/';
+---
+
+<Layout title="Sign Up" className="auth-page">
+    <div class="auth-container">
+        <AuthenticateWithRedirectCallback
+            signInForceRedirectUrl={redirectUrl}
+            signUpForceRedirectUrl={redirectUrl}
+        />
+    </div>
+</Layout>
