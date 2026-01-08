@@ -26,7 +26,8 @@
       "Bash(node test-vercel-api.js:*)",
       "Bash(node -e \"console.log\\(Object.keys\\(require\\(''ai''\\)\\).filter\\(k => !k.startsWith\\(''_''\\)\\).sort\\(\\).join\\('', ''\\)\\)\")",
       "Bash(cd:*)",
-      "mcp__context7__query-docs"
+      "mcp__context7__query-docs",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []
