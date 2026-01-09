@@ -3,7 +3,6 @@ import { google_icons, custom_icons } from "./icons_list";
 const icon_map = {
     about: 'info',
     features: 'info',
-    'privacy-policy': 'description',
     'privacy_policy': 'privacy_tip'
 };
 
