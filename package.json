@@ -6,7 +6,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "ts": "node --experimental-strip-types"
   },
   "devDependencies": {
     "@astrojs/ts-plugin": "^1.10.4",
