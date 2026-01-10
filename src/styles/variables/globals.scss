@@ -1,6 +1,8 @@
 @use "./colors/accent/colors.scss" as colors;
 @use "./tokens.scss" as *;
 @use "sass:color";
+@use "sass:list";
+@use "sass:map";
 
 // Header
 $header-text: #fff;
