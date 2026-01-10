@@ -4,6 +4,7 @@ import { threadsTable } from '../../../db/schema';
 import { eq } from 'drizzle-orm';
 import { userFilesUpload } from '../../../lib/uploadthing';
 import { extractTextFromFile } from '../../../lib/file-processing';
+import type { UploadedFile } from '../../../lib/types';
 
 export const POST: APIRoute = async ({ request }) => {
     try {
@@ -107,7 +108,7 @@ export const POST: APIRoute = async ({ request }) => {
         }
 
         // Prepare file metadata
-        const fileMetadata = {
+        const fileMetadata: UploadedFile = {
             key: uploadResult.data.key,
             name: uploadResult.data.name,
             size: uploadResult.data.size,
@@ -118,7 +119,7 @@ export const POST: APIRoute = async ({ request }) => {
         };
 
         // Update thread with new file
-        const currentFiles = (thread[0].uploadedFiles as any[]) || [];
+        const currentFiles = (thread[0].uploadedFiles || []) as UploadedFile[];
         const updatedFiles = [...currentFiles, fileMetadata];
 
         await db

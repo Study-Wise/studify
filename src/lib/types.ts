@@ -146,6 +146,16 @@ interface TitleGenerationOptions {
     provider: string;
 }
 
+interface UploadedFile {
+    key: string;
+    name: string;
+    url: string;
+    size: number;
+    type: string;
+    uploadedAt?: string;
+    extractedText?: string | null;
+}
+
 export type {
     Mode,
     Category,
@@ -169,5 +179,6 @@ export type {
     SettingItem,
     SidebarSectionProps,
     AIGenerationOptions,
-    TitleGenerationOptions
+    TitleGenerationOptions,
+    UploadedFile
 };

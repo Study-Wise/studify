@@ -3,6 +3,7 @@ import { db } from '../../../db/initialize';
 import { threadsTable } from '../../../db/schema';
 import { eq } from 'drizzle-orm';
 import { userFilesUpload } from '../../../lib/uploadthing';
+import type { UploadedFile } from '../../../lib/types';
 
 export const POST: APIRoute = async ({ request }) => {
     try {
@@ -44,8 +45,8 @@ export const POST: APIRoute = async ({ request }) => {
         }
 
         // Remove file from thread metadata
-        const currentFiles = (thread[0].uploadedFiles as any[]) || [];
-        const updatedFiles = currentFiles.filter((file: any) => file.key !== fileKey);
+        const currentFiles = (thread[0].uploadedFiles || []) as UploadedFile[];
+        const updatedFiles = currentFiles.filter((file) => file.key !== fileKey);
 
         await db
             .update(threadsTable)
