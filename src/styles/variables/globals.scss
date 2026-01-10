@@ -23,7 +23,7 @@ $card-border-light: #e0e0e0;
 $card-border-dark: #555;
 
 // Section
-$section-title-light: #0056b3;
+$section-title-light: list.nth(map.get(colors.$accent-colors, 'primary'), 2);
 $section-title-dark: color.adjust($section-title-light, $lightness: 25%);
 $section-title-border: #dee2e6;
 
