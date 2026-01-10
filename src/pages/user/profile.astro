@@ -5,7 +5,7 @@ import { UserProfile } from '@clerk/astro/components';
 import MyChats from '../../components/MyChats.astro';
 
 // Use Clerk authentication
-const auth = (Astro.locals as any).auth;
+const auth = Astro.locals.auth;
 const { userId } = auth();
 
 // Redirect to sign-in if not authenticated

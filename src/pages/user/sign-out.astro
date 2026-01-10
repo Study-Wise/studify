@@ -4,7 +4,7 @@ import { SignOutButton } from '@clerk/astro/components';
 import '../../styles/pages/sign-out.scss';
 
 // Check if user is authenticated
-const auth = (Astro.locals as any).auth;
+const auth = Astro.locals.auth;
 const { userId } = auth();
 
 // If not signed in, redirect to home

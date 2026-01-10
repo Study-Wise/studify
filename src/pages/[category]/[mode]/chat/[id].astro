@@ -57,7 +57,7 @@ if (!userId && !isPublic) {
 // Get thread data to access the title and uploaded files
 const thread = id ? await getThreadByToken(id, user_email) : null;
 const threadTitle = thread?.title || null;
-const uploadedFiles = (thread?.uploadedFiles as any[]) || [];
+const uploadedFiles = thread?.uploadedFiles || [];
 
 // Get messages only if authorized or public
 const messagesLength = await getMessagesLength(id || '');

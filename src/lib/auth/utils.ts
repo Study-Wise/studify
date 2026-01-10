@@ -6,7 +6,7 @@ export function hasPermission(auth: any, permission: string): boolean {
 
 // User metadata utilities - fetch from user.publicMetadata
 export function getUserRoleFromUser(user: any): string | null {
-    return (user.publicMetadata as any)?.role || null;
+    return user.publicMetadata?.role || null;
 }
 
 export function getUserMetadataFromUser(user: any): any {
