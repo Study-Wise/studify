@@ -30,7 +30,8 @@
       "Bash(curl:*)",
       "WebFetch(domain:neon.com)",
       "WebSearch",
-      "WebFetch(domain:www.better-auth.com)"
+      "WebFetch(domain:www.better-auth.com)",
+      "Bash(openssl rand:*)"
     ],
     "deny": [],
     "ask": []
