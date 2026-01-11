@@ -3,8 +3,6 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "../db/initialize";
 import { magicLink } from "better-auth/plugins";
-import { user as userTable } from "../db/auth-schema";
-import { eq } from "drizzle-orm";
 import type { UserRole } from "./types";
 
 // Admin email whitelist
