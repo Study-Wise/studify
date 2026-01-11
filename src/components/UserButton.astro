@@ -24,7 +24,7 @@ const user = Astro.locals.user;
 )}
 
 <script>
-    import { authClient } from '../lib/auth-client';
+    import { authClient } from '../lib/auth/client';
 
     const signoutBtn = document.getElementById('signout-btn');
     signoutBtn?.addEventListener('click', async () => {

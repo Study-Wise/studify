@@ -147,7 +147,7 @@ Route access control in `src/lib/auth/checkThreadAccess.ts` validates thread own
 **Better Auth Configuration:**
 
 - Server: `src/lib/auth.ts` - Better Auth instance with Drizzle adapter
-- Client: `src/lib/auth-client.ts` - Client-side auth utilities
+- Client: `src/lib/auth/client.ts` - Client-side auth utilities
 - API Handler: `src/pages/api/auth/[...all].ts` - Handles all auth requests
 - Database Schema: `src/db/auth-schema.ts` - User, session, account, and verification tables
 

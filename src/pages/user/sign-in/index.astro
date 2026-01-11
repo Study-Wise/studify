@@ -76,7 +76,7 @@ if (Astro.locals.user) {
 </Layout>
 
 <script>
-    import { authClient } from '../../../lib/auth-client';
+    import { authClient } from '../../../lib/auth/client';
 
     const form = document.getElementById('signin-form') as HTMLFormElement;
     const googleBtn = document.getElementById('google-signin');
