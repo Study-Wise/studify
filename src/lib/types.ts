@@ -156,6 +156,26 @@ interface UploadedFile {
     extractedText?: string | null;
 }
 
+// Neon Auth types
+interface NeonUser {
+    id: string;
+    email: string;
+    emailVerified: boolean;
+    name?: string;
+    image?: string;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+interface NeonSession {
+    id: string;
+    userId: string;
+    expiresAt: Date;
+    token: string;
+    ipAddress?: string;
+    userAgent?: string;
+}
+
 export type {
     Mode,
     Category,
@@ -180,5 +200,7 @@ export type {
     SidebarSectionProps,
     AIGenerationOptions,
     TitleGenerationOptions,
-    UploadedFile
+    UploadedFile,
+    NeonUser,
+    NeonSession
 };

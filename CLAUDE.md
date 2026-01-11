@@ -26,8 +26,8 @@ StudyWise is an AI-powered educational platform built with Astro that provides p
 
 - **Framework**: Astro 5.x with SSR (server-side rendering)
 - **Deployment**: Vercel adapter
-- **Authentication**: Clerk (configured in `astro.config.mjs`)
-- **Database**: PostgreSQL via Vercel Postgres with Drizzle ORM
+- **Authentication**: Neon Auth (managed auth service using `@neondatabase/neon-js/auth`)
+- **Database**: PostgreSQL via Neon with Drizzle ORM
 - **AI Integration**: Multiple providers via Vercel AI SDK (`ai` package)
 - **PWA**: Progressive Web App support via `@vite-pwa/astro`
 - **File Uploads**: UploadThing
@@ -203,6 +203,33 @@ import '../styles/pages/my-page.scss';  // ← ALWAYS DO THIS
 ```
 
 This keeps styles organized, reusable, and maintainable. Inline styles make the codebase messy and harder to maintain.
+
+### CRITICAL: TypeScript Types Convention
+
+**ALL TypeScript types and interfaces MUST be defined in `src/lib/types.ts`.**
+
+- **Never** define types inline in components, pages, or other modules
+- **Always** import types from `src/lib/types.ts`
+- **Always** export new types from the centralized types file
+
+Example:
+
+```typescript
+// ❌ WRONG - Don't define types inline
+interface User {
+    id: string;
+    email: string;
+}
+
+// ✅ CORRECT - Import from centralized types
+import type { NeonUser } from '../lib/types';
+```
+
+This ensures:
+- Type consistency across the codebase
+- Easy refactoring and maintenance
+- Single source of truth for all type definitions
+- Better IDE autocomplete and type checking
 
 ### Adding New AI Tools
 
