@@ -46,7 +46,7 @@ const user = Astro.locals.user;
     });
 
     // Close menu when clicking outside
-    document.addEventListener('click', (e) => {
+    document.addEventListener('click', () => {
         if (menu && !menu.hasAttribute('hidden')) {
             menu.setAttribute('hidden', '');
         }
