@@ -1,12 +1,12 @@
-import { createAuthClient } from '@neondatabase/neon-js/auth';
+// Client-side Better Auth utilities
+import { createAuthClient } from "better-auth/client";
 
-// Create the Neon Auth client for client-side use
-export const authClient = createAuthClient(import.meta.env.PUBLIC_NEON_AUTH_URL);
+export const authClient = createAuthClient({
+  baseURL: "http://localhost:4321",
+});
 
-// Export auth methods for convenience
-export const {
-    signIn,
-    signUp,
-    signOut,
-    getSession,
-} = authClient;
+// Export convenience methods for backward compatibility
+export const { signIn, signUp, signOut } = authClient;
+
+// Export getSession for direct session access
+export const getSession = () => authClient.getSession();

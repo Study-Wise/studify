@@ -2,11 +2,12 @@ import { db } from '../../db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '../../db/schema';
 import { isUserAdmin as checkIsUserAdmin } from './admin';
-import type { ThreadAccessResult, NeonUser } from '../types';
+import type { ThreadAccessResult } from '../types';
+import type { User } from "better-auth";
 
 export async function checkThreadAccess(
     threadId: string,
-    user: NeonUser | null,
+    user: User | null,
     urlCategory?: string,
     urlMode?: string,
 ): Promise<ThreadAccessResult> {

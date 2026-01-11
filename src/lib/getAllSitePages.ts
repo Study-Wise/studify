@@ -1,6 +1,6 @@
 const pagesToHide = ['chat', 'settings', 'admin', '404'];
 
-export default function getAllSitePages(userId?: string | null) {
+export default function getAllSitePages() {
     const pages = Object.entries(import.meta.glob('/src/pages/*.astro', { eager: true }))
         .map(([path, mod]: [string, any]) => {
             const fileName = path.split('/').pop();

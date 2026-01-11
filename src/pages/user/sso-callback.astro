@@ -21,23 +21,17 @@ if (Astro.locals.user) {
 </Layout>
 
 <script>
-    import { authClient } from '../../lib/auth-client';
-
     async function completeOAuth() {
         const redirectUrl = new URLSearchParams(window.location.search).get('returnBackUrl') || '/';
+
         try {
-            // Get session to complete OAuth and update client state
-            const session = await authClient.getSession();
-            console.log('OAuth session established:', session);
-
-            // Wait for cookies
-            await new Promise(resolve => setTimeout(resolve, 200));
-
-            // Force a full page reload to ensure middleware runs
+            // Better Auth automatically handles the OAuth callback
+            // Just redirect to the intended destination
+            // The session is already established via cookies
             window.location.replace(redirectUrl);
         } catch (error) {
-            console.error('OAuth error:', error);
-            // Fallback: try redirecting anyway
+            console.error('OAuth callback error:', error);
+            // Fallback: redirect anyway
             setTimeout(() => window.location.replace(redirectUrl), 500);
         }
     }

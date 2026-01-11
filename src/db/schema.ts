@@ -39,4 +39,7 @@ const questionTable = pgTable('question', {
     updatedAt: timestamp('updatedAt').notNull().defaultNow(),
 });
 
+// Export Better Auth tables
+export * from './auth-schema';
+
 export { threadsTable, questionTable };

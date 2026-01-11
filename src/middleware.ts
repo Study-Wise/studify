@@ -27,37 +27,12 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
     const { request, locals, redirect } = context;
     const pathname = new URL(request.url).pathname;
 
-    // Check for session cookie (rewritten from __Secure-neon-auth.session_token for localhost)
-    const cookies = request.headers.get('cookie') || '';
-    const hasSessionCookie = cookies.includes('neon-auth.session_token');
+    // Get session using Better Auth
+    const session = await auth.api.getSession({ headers: request.headers });
 
-    // Fetch session data from proxy
-    if (hasSessionCookie) {
-        try {
-            const sessionResponse = await fetch('http://localhost:4321/api/auth/get-session', {
-                headers: {
-                    'Cookie': cookies,
-                },
-            });
-
-            if (sessionResponse.ok) {
-                const sessionData = await sessionResponse.json();
-                if (sessionData && sessionData.user) {
-                    locals.user = sessionData.user;
-                    locals.session = sessionData.session;
-                } else {
-                    locals.user = null;
-                    locals.session = null;
-                }
-            } else {
-                locals.user = null;
-                locals.session = null;
-            }
-        } catch (error) {
-            console.error('Error fetching session:', error);
-            locals.user = null;
-            locals.session = null;
-        }
+    if (session) {
+        locals.user = session.user;
+        locals.session = session.session;
     } else {
         locals.user = null;
         locals.session = null;

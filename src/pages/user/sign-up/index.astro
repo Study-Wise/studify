@@ -112,26 +112,20 @@ if (Astro.locals.user) {
         hideError();
 
         const formData = new FormData(form);
-        const name = formData.get('name') as string;
+        const nameValue = (formData.get('name') as string | null) || '';
         const email = formData.get('email') as string;
         const password = formData.get('password') as string;
 
         try {
-            const result = await authClient.signUp.email({
+            const { error } = await authClient.signUp.email({
                 email,
                 password,
-                name: name || undefined,
+                name: nameValue,
             });
 
-            if (result.error) {
-                showError(result.error.message || 'Sign up failed. Please try again.');
+            if (error) {
+                showError(error.message || 'Sign up failed. Please try again.');
             } else {
-                // Force session refresh to update client state
-                await authClient.getSession();
-
-                // Small delay to ensure cookies are set
-                await new Promise(resolve => setTimeout(resolve, 100));
-
                 // Redirect on success
                 const redirectUrl = new URLSearchParams(window.location.search).get('returnBackUrl') || '/';
                 window.location.href = redirectUrl;

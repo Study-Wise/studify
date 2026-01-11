@@ -3,7 +3,9 @@
  */
 
 import { generateTutorPrompt } from './promptGenerator';
-import type { ImageSize, CategoryName, ModeName } from './types';
+
+import type { ImageSize } from './types';
+import type { CategoryName, ModeName } from './modes';
 
 const defaultCategory = 'general';
 const defaultMode = 'general';
