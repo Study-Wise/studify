@@ -26,7 +26,6 @@
     "@astrojs/compiler": "^2.13.0",
     "@astrojs/vercel": "^9.0.3",
     "@google/genai": "^1.30.0",
-    "@neondatabase/neon-js": "^0.1.0-beta.21",
     "@sentry/astro": "^10.32.1",
     "@vercel/analytics": "^1.5.0",
     "@vercel/postgres": "^0.10.0",
