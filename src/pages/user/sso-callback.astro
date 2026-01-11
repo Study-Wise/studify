@@ -21,14 +21,28 @@ if (Astro.locals.user) {
 </Layout>
 
 <script>
-    // Neon Auth handles OAuth callback automatically
-    // Just wait for session to be established, then redirect
-    const redirectUrl = new URLSearchParams(window.location.search).get('returnBackUrl') || '/';
+    import { authClient } from '../../lib/auth-client';
 
-    // Give Neon Auth time to set session cookie
-    setTimeout(() => {
-        window.location.href = redirectUrl;
-    }, 1500);
+    async function completeOAuth() {
+        const redirectUrl = new URLSearchParams(window.location.search).get('returnBackUrl') || '/';
+        try {
+            // Get session to complete OAuth and update client state
+            const session = await authClient.getSession();
+            console.log('OAuth session established:', session);
+
+            // Wait for cookies
+            await new Promise(resolve => setTimeout(resolve, 200));
+
+            // Force a full page reload to ensure middleware runs
+            window.location.replace(redirectUrl);
+        } catch (error) {
+            console.error('OAuth error:', error);
+            // Fallback: try redirecting anyway
+            setTimeout(() => window.location.replace(redirectUrl), 500);
+        }
+    }
+
+    completeOAuth();
 </script>
 
 <style>

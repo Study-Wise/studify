@@ -27,32 +27,38 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
     const { request, locals, redirect } = context;
     const pathname = new URL(request.url).pathname;
 
-    // Check for session cookie (Neon Auth uses __neon_auth.session_token)
+    // Check for session cookie (rewritten from __Secure-neon-auth.session_token for localhost)
     const cookies = request.headers.get('cookie') || '';
-    const hasSessionCookie = cookies.includes('__neon_auth.session_token');
+    const hasSessionCookie = cookies.includes('neon-auth.session_token');
 
-    // Only try to get session if cookie exists
+    // Fetch session data from proxy
     if (hasSessionCookie) {
         try {
-            const session = await auth.getSession({
-                headers: request.headers,
+            const sessionResponse = await fetch('http://localhost:4321/api/auth/get-session', {
+                headers: {
+                    'Cookie': cookies,
+                },
             });
 
-            // Attach user and session to locals for downstream access
-            if (session && session.user) {
-                locals.user = session.user;
-                locals.session = session.session;
+            if (sessionResponse.ok) {
+                const sessionData = await sessionResponse.json();
+                if (sessionData && sessionData.user) {
+                    locals.user = sessionData.user;
+                    locals.session = sessionData.session;
+                } else {
+                    locals.user = null;
+                    locals.session = null;
+                }
             } else {
                 locals.user = null;
                 locals.session = null;
             }
         } catch (error) {
-            console.error('Error getting session:', error);
+            console.error('Error fetching session:', error);
             locals.user = null;
             locals.session = null;
         }
     } else {
-        // No session cookie, user is not authenticated
         locals.user = null;
         locals.session = null;
     }

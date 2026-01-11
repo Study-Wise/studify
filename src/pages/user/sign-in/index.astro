@@ -113,6 +113,12 @@ if (Astro.locals.user) {
             if (result.error) {
                 showError(result.error.message || 'Sign in failed. Please check your credentials.');
             } else {
+                // Force session refresh to update client state
+                await authClient.getSession();
+
+                // Small delay to ensure cookies are set
+                await new Promise(resolve => setTimeout(resolve, 100));
+
                 // Redirect on success
                 const redirectUrl = new URLSearchParams(window.location.search).get('returnBackUrl') || '/';
                 window.location.href = redirectUrl;
