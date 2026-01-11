@@ -54,7 +54,7 @@ const currentUrl = Astro.request.url;
         </div>
     </div>
 
-    <script define:vars={{ currentUrl }}>
+    <script is:inline define:vars={{ currentUrl }}>
         throw new Error(`The page ${currentUrl} was not found.`);
     </script>
 </Layout>
