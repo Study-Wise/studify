@@ -1,5 +1,9 @@
 import type { Tool } from 'ai';
 import type { CategoryName, ModeName } from './modes';
+
+// User roles
+export type UserRole = "user" | "premium" | "moderator" | "admin";
+
 export interface Category {
     name: string;
     description: string;
@@ -178,4 +182,12 @@ export interface Resource {
     title: string;
     snippet: string;
     source: string;
+}
+
+// Better Auth type extensions for custom fields
+// Extend Better Auth's User type with our custom role field
+import type { User as BetterAuthUser } from "better-auth";
+
+export interface ExtendedUser extends BetterAuthUser {
+    role?: UserRole;
 }
