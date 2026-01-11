@@ -27,22 +27,32 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
     const { request, locals, redirect } = context;
     const pathname = new URL(request.url).pathname;
 
-    // Get session from Neon Auth
-    try {
-        const session = await auth.getSession({
-            headers: request.headers,
-        });
+    // Check for session cookie (Neon Auth uses __neon_auth.session_token)
+    const cookies = request.headers.get('cookie') || '';
+    const hasSessionCookie = cookies.includes('__neon_auth.session_token');
 
-        // Attach user and session to locals for downstream access
-        if (session && session.user) {
-            locals.user = session.user;
-            locals.session = session.session;
-        } else {
+    // Only try to get session if cookie exists
+    if (hasSessionCookie) {
+        try {
+            const session = await auth.getSession({
+                headers: request.headers,
+            });
+
+            // Attach user and session to locals for downstream access
+            if (session && session.user) {
+                locals.user = session.user;
+                locals.session = session.session;
+            } else {
+                locals.user = null;
+                locals.session = null;
+            }
+        } catch (error) {
+            console.error('Error getting session:', error);
             locals.user = null;
             locals.session = null;
         }
-    } catch (error) {
-        console.error('Error getting session:', error);
+    } else {
+        // No session cookie, user is not authenticated
         locals.user = null;
         locals.session = null;
     }
