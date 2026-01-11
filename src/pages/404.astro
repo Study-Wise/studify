@@ -1,6 +1,8 @@
 ---
 import '../styles/pages/404.scss';
 import Layout from '../layouts/Layout.astro';
+
+const currentUrl = Astro.request.url;
 ---
 
 <Layout title="Page Not Found">
@@ -51,4 +53,8 @@ import Layout from '../layouts/Layout.astro';
             </div>
         </div>
     </div>
+
+    <script define:vars={{ currentUrl }}>
+        throw new Error(`The page ${currentUrl} was not found.`);
+    </script>
 </Layout>
