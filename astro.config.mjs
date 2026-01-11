@@ -131,6 +131,10 @@ export default defineConfig({
                 enabled: true
             }
         }), 
-        sentry()
+        sentry({
+            project: "studywise",
+            org: "adarshrkumar",
+            authToken: process.env.SENTRY_AUTH_TOKEN,
+        }),
     ],
 });
