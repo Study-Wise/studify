@@ -1,9 +1,8 @@
 /// <reference types="astro/client" />
-/// <reference types="./lib/types" />
 
 declare namespace App {
     interface Locals {
-        user: import('better-auth').User | null;
+        user: import('./lib/types').ExtendedUser | null;
         session: import('better-auth').Session | null;
     }
 }
