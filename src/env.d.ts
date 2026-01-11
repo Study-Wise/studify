@@ -1,4 +1,5 @@
 /// <reference types="astro/client" />
+/// <reference types="./lib/types" />
 
 declare namespace App {
     interface Locals {
