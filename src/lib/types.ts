@@ -1,5 +1,6 @@
 import type { Tool } from 'ai';
 import type { CategoryName, ModeName } from './modes';
+import type { User, Session } from "better-auth";
 
 interface Category {
     name: string;
@@ -158,25 +159,8 @@ interface UploadedFile {
     extractedText?: string | null;
 }
 
-// Neon Auth types
-interface NeonUser {
-    id: string;
-    email: string;
-    emailVerified: boolean;
-    name?: string;
-    image?: string;
-    createdAt: Date;
-    updatedAt: Date;
-}
-
-interface NeonSession {
-    id: string;
-    userId: string;
-    expiresAt: Date;
-    token: string;
-    ipAddress?: string;
-    userAgent?: string;
-}
+type NeonUser = User;
+type NeonSession = Session;
 
 // Message type for AI conversations
 interface Message {
@@ -228,6 +212,8 @@ export type {
     AIGenerationOptions,
     TitleGenerationOptions,
     UploadedFile,
+    User as BetterAuthUser, 
+    Session as BetterAuthSession,
     NeonUser,
     NeonSession,
     Message,
