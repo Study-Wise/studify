@@ -32,14 +32,5 @@ export default function getAllSitePages(userId?: string | null) {
         .filter((page): page is { name: string; path: string; hiddenFromNav: boolean } => !!page)
         .sort((a, b) => a.name === 'Home' ? -1 : b.name === 'Home' ? 1 : 0);
 
-    // If user is not logged in, add a sign-in page link
-    if (!userId) {
-        pages.push({
-            name: 'Sign In',
-            path: '/user/sign-in',
-            hiddenFromNav: false
-        });
-    }
-
     return pages;
 }
