@@ -7,6 +7,8 @@ import clerk from '@clerk/astro';
 import fs from 'fs-extra';
 import path from 'path';
 
+import sentry from '@sentry/astro';
+
 const manifestPath = path.join(process.cwd(), 'public', 'manifest.webmanifest');
 const manifest = fs.readJSONSync(manifestPath);
 
@@ -60,7 +62,7 @@ export default defineConfig({
                     },
                 },
             },
-        }),
+        }), 
         AstroPWA({
             registerType: 'autoUpdate',
             includeAssets: [
@@ -128,6 +130,7 @@ export default defineConfig({
             devOptions: {
                 enabled: true
             }
-        }),
+        }), 
+        sentry()
     ],
 });
