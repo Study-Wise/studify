@@ -4,7 +4,12 @@ import '../../styles/components/chat/left-sidebar.scss';
 import type { ChatLeftSidebarProps } from '../../lib/types';
 import SidebarSection from './SidebarSection.astro';
 
-const { isPublic, isAuthorized, threadId, uploadedFiles = [] } = Astro.props as ChatLeftSidebarProps;
+const { 
+    isPublic, 
+    isAuthorized, 
+    threadId, 
+    uploadedFiles = []
+} = Astro.props as ChatLeftSidebarProps;
 ---
 <section class="chat-sidebar left">
     <div class="chat-sidebar-content left">
@@ -103,6 +108,15 @@ const { isPublic, isAuthorized, threadId, uploadedFiles = [] } = Astro.props as 
 </section>
 
 <script>
+    // Type definition for uploaded files (used in createFileElement)
+    interface UploadedFile {
+        key: string;
+        name: string;
+        url: string;
+        size: number;
+        type: string;
+    }
+
     // Public toggle functionality
     const publicToggle = document.getElementById('public-toggle') as HTMLInputElement;
     const shareStatusText = document.getElementById('share-status-text');
@@ -283,7 +297,7 @@ const { isPublic, isAuthorized, threadId, uploadedFiles = [] } = Astro.props as 
     });
 
     // Helper function to create file element
-    function createFileElement(file) {
+    function createFileElement(file: UploadedFile) {
         const fileItem = document.createElement('div');
         fileItem.className = 'file-item';
         fileItem.setAttribute('data-file-key', file.key);

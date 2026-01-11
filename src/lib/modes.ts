@@ -308,11 +308,13 @@ const categories: Record<string, Category> = {
 
 // Generate prompts programmatically for each mode
 for (const topicKey of Object.keys(categories)) {
-    const topic = categories[topicKey as keyof typeof categories];
+    const topicKeyTyped: keyof typeof categories = topicKey;
+    const topic = categories[topicKeyTyped];
     const modes = topic.modes;
 
     for (const modeKey of Object.keys(modes)) {
-        const mode = modes[modeKey as keyof typeof modes];
+        const modeKeyTyped: keyof typeof modes = modeKey;
+        const mode = modes[modeKeyTyped];
 
         // Generate the prompt using the mode's name and category
         const prompt = generateTutorPrompt(mode.name, topicKey);
@@ -323,10 +325,17 @@ for (const topicKey of Object.keys(categories)) {
             mode.tools = tools;
         }
 
-        modes[modeKey as keyof typeof modes] = mode;
+        modes[modeKeyTyped] = mode;
     }
 
-    categories[topicKey as keyof typeof categories] = topic;
+    categories[topicKeyTyped] = topic;
 }
+
+// Export auto-generated types based on the categories object
+export type CategoryName = keyof typeof categories;
+
+export type ModeName = {
+    [K in keyof typeof categories]: keyof typeof categories[K]['modes']
+}[keyof typeof categories];
 
 export default categories;

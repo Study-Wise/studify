@@ -7,7 +7,7 @@ import { eq } from 'drizzle-orm';
 import { threadsTable } from '../../../db/schema';
 import { isValidEmail } from '../../../lib/validation';
 
-export const POST: APIRoute = async ({ request, locals, ...context }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();
 
     console.log(`🔄 [${requestId}] Starting toggle public request`);

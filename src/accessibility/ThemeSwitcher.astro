@@ -18,7 +18,7 @@ import '../styles/accessibility/theme-switcher.scss';
 </style>
 
 <script>
-    let userTheme = localStorage.getItem('user-theme') || 'system'
+    let userTheme = localStorage.getItem('user-theme') as keyof typeof themes || 'system';
     
     const themeSwitcher = document.querySelector('.theme-switcher') || document.createElement('div');
     const switcherIcon = themeSwitcher.querySelector('.material-symbols-outlined') || document.createElement('span');
@@ -44,8 +44,8 @@ import '../styles/accessibility/theme-switcher.scss';
         addListener();
     });
 
-    function setTheme(t: string) {
-        const theme = themes[t as keyof typeof themes];
+    function setTheme(t: keyof typeof themes) {
+        const theme = themes[t];
         switcherIcon.textContent = theme.icon;
         document.documentElement.setAttribute('data-theme', t);
         themeSwitcher.setAttribute('aria-label', theme.ariaLabel);
@@ -58,7 +58,7 @@ import '../styles/accessibility/theme-switcher.scss';
             if (newIndex >= Object.keys(themes).length) {
                 newIndex = 0;
             }
-            userTheme = Object.keys(themes)[newIndex];
+            userTheme = Object.keys(themes)[newIndex] as keyof typeof themes;
             setTheme(userTheme);
         });
     }

@@ -1,13 +1,14 @@
 import type { Tool } from 'ai';
+import type { CategoryName, ModeName } from './modes';
 
 interface Category {
     name: string;
     description: string;
-    modes: Record<string, Mode>;
+    modes: Record<CategoryName, Mode>;
 }
 
 interface Mode {
-    name: string;
+    name: ModeName;
     description: string;
     icon?: string;
     prompt?: Promise<any>;
@@ -203,6 +204,8 @@ interface Resource {
 export type {
     Mode,
     Category,
+    ModeName,
+    CategoryName,
     Tool,
     ReferenceSheetResult,
     StudyGuideResult,

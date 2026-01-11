@@ -41,16 +41,15 @@ if (!categoryObj || !modeObj) {
 const categoryName = categoryObj?.name || category;
 const modeName = modeObj?.name || mode;
 
-// Use Clerk authentication
-const { auth } = Astro.locals;
-const { userId, sessionClaims } = auth();
-const user_email = sessionClaims?.email as string || null;
+// Get user authentication
+const user = Astro.locals.user;
+const user_email = user?.email || null;
 
 // Check thread access first
-const { isAuthorized, isPublic } = await checkThreadAccess(id || '', auth, category, mode, Astro);
+const { isAuthorized, isPublic } = await checkThreadAccess(id || '', user, category, mode);
 
 // Redirect to sign-in only if not authenticated AND thread is not public
-if (!userId && !isPublic) {
+if (!user && !isPublic) {
     return Astro.redirect("/user/sign-in");
 }
 

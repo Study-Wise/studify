@@ -8,7 +8,7 @@ import { threadsTable } from '../../../db/schema';
 import { isValidEmail } from '../../../lib/validation';
 import { generatePracticeQuestions } from '../../../lib/content/generate/practice-questions';
 
-export const POST: APIRoute = async ({ request, locals, ...context }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();
 
     console.log(`📝 [${requestId}] Starting practice questions generation request`);

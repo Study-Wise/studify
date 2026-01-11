@@ -8,7 +8,7 @@ import { threadsTable } from '../../../db/schema';
 import { isValidEmail } from '../../../lib/validation';
 import { generateWebpage } from '../../../lib/content/generate/webpage';
 
-export const POST: APIRoute = async ({ request, locals, ...context }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();
 
     console.log(`🌐 [${requestId}] Starting webpage generation request`);

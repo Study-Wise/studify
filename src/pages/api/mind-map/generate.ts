@@ -8,7 +8,7 @@ import { threadsTable } from '../../../db/schema';
 import { isValidEmail } from '../../../lib/validation';
 import { generateMindMap } from '../../../lib/content/generate/mind-map';
 
-export const POST: APIRoute = async ({ request, locals, ...context }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();
 
     console.log(`🧠 [${requestId}] Starting mind map generation request`);

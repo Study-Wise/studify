@@ -8,7 +8,7 @@ import { isValidEmail } from '../../../lib/validation';
 import { generateInfographic } from '../../../lib/content/generate/infographic';
 import config from '../../../lib/config';
 
-export const POST: APIRoute = async ({ request, locals, ...context }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();
 
     console.log(`🎨 [${requestId}] Starting infographic generation request`);

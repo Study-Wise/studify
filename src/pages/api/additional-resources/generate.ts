@@ -8,7 +8,7 @@ import { threadsTable } from '../../../db/schema';
 import { isValidEmail } from '../../../lib/validation';
 import { generateResources } from '../../../lib/content/generate/additional-resources';
 
-export const POST: APIRoute = async ({ request, locals, ...context }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();
 
     console.log(`🔍 [${requestId}] Starting resources generation request`);

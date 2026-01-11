@@ -9,7 +9,7 @@ import categories from './modes';
 import { db } from '../db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '../db/schema';
-import type { CheckForOneMessageParams } from './types';
+import type { CheckForOneMessageParams, Message } from './types';
 
 export async function checkForOneMessage({
     messages,
@@ -34,7 +34,7 @@ export async function checkForOneMessage({
                 const systemPrompt = await (modeObj?.prompt || Promise.resolve(''));
 
                 // Prepare conversation history with system message
-                const convoHistory = [
+                const convoHistory: Message[] = [
                     { role: 'system', content: systemPrompt },
                     ...nonSystemMessages
                 ];
@@ -50,7 +50,7 @@ export async function checkForOneMessage({
                 });
 
                 // Add welcome message to the conversation
-                const updatedMessages = [
+                const updatedMessages: Message[] = [
                     ...nonSystemMessages,
                     { role: 'assistant', content: welcomeMessage }
                 ];

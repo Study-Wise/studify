@@ -2,7 +2,7 @@
 // import '../styles/pages/settings.scss';
 
 import { models, providers } from '../lib/models';
-import type { ModelOption, Providers, SelectorSettings } from '../lib/types';
+import type { ModelOption, SelectorSettings } from '../lib/types';
 
 // Filter out models that are not selectable in UI
 const selectableModels = models.filter((model) => model.selectableInUI !== false);
@@ -17,7 +17,7 @@ const selectorSettings: SelectorSettings = {
 if (Array.isArray(selectorSettings.options) && selectorSettings.options.length > 0 && selectorSettings.options[0].name !== 'Select A Model') {
     selectorSettings.options.unshift({ name: 'Select A Model' });
 }
-(providers as Providers)['studywise'] = {
+(providers)['studywise'] = {
     name: 'MW',
     models: {
         '': { name: 'Select A Model' },
@@ -35,15 +35,15 @@ const modelOptionRecord = selectorSettings.options as Record<string, ModelOption
             {/* <selectedcontent /> */}
             {selectorSettings.options.map(option => {
                 const providerKey = option.name === 'Select A Model' ? 'studywise' : Object.keys(providers).find(p =>
-                    Object.keys((providers as Providers)[p].models).find(m => (providers as Providers)[p].models[m].name === option.name)
+                    Object.keys(providers[p].models).find(m => providers[p].models[m].name === option.name)
                 );
                 const currKey = providerKey
-                    ? Object.keys((providers as Providers)[providerKey].models).find(m => (providers as Providers)[providerKey].models[m].name === option.name)
+                    ? Object.keys(providers[providerKey].models).find(m => providers[providerKey].models[m].name === option.name)
                     : '';
                 
                 return (
                     <option value={currKey} selected={currKey === selectorSettings.default} disabled={option.name === 'Select A Model'}>
-                        {option.name === 'Select A Model' ? '' : <img src={`/assets/providers/${providerKey || 'default'}.svg`} alt={providerKey ? (providers as Providers)[providerKey].name : 'Provider'} />}
+                        {option.name === 'Select A Model' ? '' : <img src={`/assets/providers/${providerKey || 'default'}.svg`} alt={providerKey ? providers[providerKey].name : 'Provider'} />}
                         {option.name || currKey}
                     </option>
                 );

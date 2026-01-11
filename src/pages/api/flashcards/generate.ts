@@ -7,7 +7,7 @@ import { threadsTable } from '../../../db/schema';
 import { isValidEmail } from '../../../lib/validation';
 import { generateFlashcards } from '../../../lib/content/generate/flashcards';
 
-export const POST: APIRoute = async ({ request, locals, ...context }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();
 
     console.log(`🎴 [${requestId}] Starting flashcards generation request`);
