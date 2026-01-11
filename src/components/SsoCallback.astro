@@ -7,6 +7,14 @@ import '../styles/pages/auth.scss';
 const redirectUrl = Astro.url.searchParams.get('redirect_url') ||
                     Astro.url.searchParams.get('returnBackUrl') || '/';
 
+// Check if user is already logged in
+const { userId } = Astro.locals.auth();
+
+// If user is already authenticated, redirect immediately without rendering
+if (userId) {
+    return Astro.redirect(redirectUrl);
+}
+
 const { page } = Astro.props;
 ---
 
