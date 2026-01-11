@@ -32,4 +32,7 @@ const pages = Object.entries(import.meta.glob('/src/pages/*.astro', { eager: tru
     .filter((page): page is { name: string; path: string; hiddenFromNav: boolean } => !!page)
     .sort((a, b) => a.name === 'Home' ? -1 : b.name === 'Home' ? 1 : 0);
     
+
+// TODO: If user is not logged in, add in a sign-in page link;
+
 export default pages;
