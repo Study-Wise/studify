@@ -28,6 +28,7 @@
     "@clerk/astro": "^2.11.8",
     "@clerk/clerk-js": "^5.90.0",
     "@google/genai": "^1.30.0",
+    "@sentry/astro": "^10.32.1",
     "@vercel/analytics": "^1.5.0",
     "@vercel/postgres": "^0.10.0",
     "@vercel/sdk": "^1.18.6",
