@@ -28,7 +28,8 @@
       "Bash(cd:*)",
       "mcp__context7__query-docs",
       "Bash(curl:*)",
-      "WebFetch(domain:neon.com)"
+      "WebFetch(domain:neon.com)",
+      "WebFetch(domain:www.better-auth.com)"
     ],
     "deny": [],
     "ask": []
