@@ -9,14 +9,7 @@ import categories from './modes';
 import { db } from '../db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '../db/schema';
-
-interface CheckForOneMessageParams {
-    messages: any[];
-    threadId: string;
-    category: string;
-    mode: string;
-    isAuthorized: boolean;
-}
+import type { CheckForOneMessageParams } from './types';
 
 export async function checkForOneMessage({
     messages,
@@ -24,7 +17,7 @@ export async function checkForOneMessage({
     category,
     mode,
     isAuthorized
-}: CheckForOneMessageParams): Promise<any[]> {
+}: CheckForOneMessageParams): Promise<Message[]> {
     // Check if there's only one message (user or AI, not system) and generate welcome message if needed
     const nonSystemMessages = messages.filter(msg => msg.role !== 'system');
 

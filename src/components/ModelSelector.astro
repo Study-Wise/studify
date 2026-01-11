@@ -5,7 +5,7 @@ import { models, providers } from '../lib/models';
 import type { ModelOption, Providers, SelectorSettings } from '../lib/types';
 
 // Filter out models that are not selectable in UI
-const selectableModels = models.filter((model: any) => model.selectableInUI !== false);
+const selectableModels = models.filter((model) => model.selectableInUI !== false);
 
 const selectorSettings: SelectorSettings = {
     id: 'model',

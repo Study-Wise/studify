@@ -43,7 +43,7 @@ interface ThreadAccessResult {
 
 interface GenerateWelcomeMessageParams {
     systemPrompt: string;
-    convoHistory: any[];
+    convoHistory: Message[];
     userModel: string;
     provider: string;
     tools: Record<string, any>;
@@ -54,7 +54,7 @@ interface ChatLeftSidebarProps {
     isPublic: boolean;
     isAuthorized: boolean;
     threadId: string;
-    uploadedFiles: any[];
+    uploadedFiles: UploadedFile[];
     email: string;
 }
 
@@ -78,11 +78,12 @@ type ImageSize = '1024x1024' | '1024x1536' | '1536x1024' | 'auto';
 
 interface ModelOption {
     name: string;
+    selectableInUI?: boolean;
 }
 
 interface Provider {
     name: string;
-    models: Record<string, { name: string }>;
+    models: Record<string, ModelOption>;
 }
 
 type Providers = Record<string, Provider>;
@@ -99,7 +100,7 @@ interface ThreadData {
     isDev: boolean;
     createdAt: Date;
     updatedAt: Date;
-    messages: any[];
+    messages: Message[];
 }
 
 interface UploadOptions {
@@ -132,7 +133,7 @@ interface SidebarSectionProps {
 interface AIGenerationOptions {
     systemPrompt: string;
     userPrompt: string;
-    convoHistory: any[];
+    convoHistory: Message[];
     userModel: string;
     provider: string;
     tools?: Record<string, any>;
@@ -141,7 +142,7 @@ interface AIGenerationOptions {
 }
 
 interface TitleGenerationOptions {
-    convoHistory: any[];
+    convoHistory: Message[];
     userModel: string;
     provider: string;
 }
@@ -176,6 +177,29 @@ interface NeonSession {
     userAgent?: string;
 }
 
+// Message type for AI conversations
+interface Message {
+    role: 'system' | 'user' | 'assistant';
+    content: string;
+}
+
+// Check for one message params
+interface CheckForOneMessageParams {
+    messages: Message[];
+    threadId: string;
+    category: string;
+    mode: string;
+    isAuthorized: boolean;
+}
+
+// Resource type for additional resources
+interface Resource {
+    url: string;
+    title: string;
+    snippet: string;
+    source: string;
+}
+
 export type {
     Mode,
     Category,
@@ -202,5 +226,8 @@ export type {
     TitleGenerationOptions,
     UploadedFile,
     NeonUser,
-    NeonSession
+    NeonSession,
+    Message,
+    CheckForOneMessageParams,
+    Resource
 };

@@ -2,21 +2,14 @@
 import '../styles/components/my-chats.scss';
 import { getUserThreads } from '../lib/threads';
 import categories from '../lib/modes';
-import { clerkClient } from '@clerk/astro/server';
 
-const auth = Astro.locals.auth();
+const user = Astro.locals.user;
 
-if (!auth.userId) {
+if (!user) {
     return Astro.redirect('/user/sign-in?redirect=/user/my-chats');
 }
 
-const client = clerkClient(Astro);
-const user = await client.users.getUser(auth.userId);
-const userEmail = user.emailAddresses[0]?.emailAddress;
-
-if (!userEmail) {
-    return Astro.redirect('/');
-}
+const userEmail = user.email;
 
 const threads = await getUserThreads(userEmail);
 

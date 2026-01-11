@@ -4,6 +4,7 @@ import { getLatestResources } from '../../../../lib/content/latest/additional-re
 import { checkThreadAccess } from '../../../../lib/auth/checkThreadAccess';
 import '../../../../styles/pages/content/additional-resources.scss';
 import categories from '../../../../lib/modes';
+import type { Resource } from '../../../../lib/types';
 
 const { category, mode, id } = Astro.params;
 
@@ -69,7 +70,7 @@ if (latestResourcesJSON) {
                             <h2>Video Tutorials</h2>
                         </div>
                         <div class="resource-grid">
-                            {resourcesData.videos.map((resource: any) => (
+                            {resourcesData.videos.map((resource: Resource) => (
                                 <a href={resource.url} target="_blank" rel="noopener noreferrer" class="resource-card">
                                     <div class="resource-icon video">
                                         <span class="material-symbols-outlined">play_circle</span>
@@ -95,7 +96,7 @@ if (latestResourcesJSON) {
                             <h2>Articles & Guides</h2>
                         </div>
                         <div class="resource-grid">
-                            {resourcesData.articles.map((resource: any) => (
+                            {resourcesData.articles.map((resource: Resource) => (
                                 <a href={resource.url} target="_blank" rel="noopener noreferrer" class="resource-card">
                                     <div class="resource-icon article">
                                         <span class="material-symbols-outlined">article</span>
@@ -121,7 +122,7 @@ if (latestResourcesJSON) {
                             <h2>Step-by-Step Tutorials</h2>
                         </div>
                         <div class="resource-grid">
-                            {resourcesData.tutorials.map((resource: any) => (
+                            {resourcesData.tutorials.map((resource: Resource) => (
                                 <a href={resource.url} target="_blank" rel="noopener noreferrer" class="resource-card">
                                     <div class="resource-icon tutorial">
                                         <span class="material-symbols-outlined">school</span>
@@ -147,7 +148,7 @@ if (latestResourcesJSON) {
                             <h2>Documentation & References</h2>
                         </div>
                         <div class="resource-grid">
-                            {resourcesData.documentation.map((resource: any) => (
+                            {resourcesData.documentation.map((resource: Resource) => (
                                 <a href={resource.url} target="_blank" rel="noopener noreferrer" class="resource-card">
                                     <div class="resource-icon documentation">
                                         <span class="material-symbols-outlined">menu_book</span>

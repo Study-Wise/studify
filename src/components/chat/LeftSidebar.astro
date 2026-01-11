@@ -67,7 +67,7 @@ const { isPublic, isAuthorized, threadId, uploadedFiles = [] } = Astro.props as 
                     {uploadedFiles.length === 0 ? (
                         <p class="empty-message">No files uploaded yet. Upload files to see them here.</p>
                     ) : (
-                        uploadedFiles.map((file: any) => (
+                        uploadedFiles.map((file) => (
                         <div class="file-item" data-file-key={file.key}>
                             <div class="file-icon">
                                 {file.type.startsWith('image/') ? (
@@ -283,7 +283,7 @@ const { isPublic, isAuthorized, threadId, uploadedFiles = [] } = Astro.props as 
     });
 
     // Helper function to create file element
-    function createFileElement(file: any) {
+    function createFileElement(file) {
         const fileItem = document.createElement('div');
         fileItem.className = 'file-item';
         fileItem.setAttribute('data-file-key', file.key);

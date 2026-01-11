@@ -1,25 +1,51 @@
 ---
 import '../../styles/pages/profile.scss';
 import Layout from '../../layouts/Layout.astro';
-import { UserProfile } from '@clerk/astro/components';
 import MyChats from '../../components/MyChats.astro';
 
-// Use Clerk authentication
-const auth = Astro.locals.auth;
-const { userId } = auth();
+const user = Astro.locals.user;
 
 // Redirect to sign-in if not authenticated
-if (!userId) {
+if (!user) {
     return Astro.redirect("/user/sign-in");
 }
 ---
 
 <Layout title="User Profile">
     <div class="profile-container">
-        <UserProfile>
-            <UserProfile.Page label="My Chats" url="my-chats">
+        <div class="profile-header">
+            <h1>Profile</h1>
+        </div>
+
+        <div class="profile-content">
+            <!-- User Info Section -->
+            <section class="profile-section">
+                <h2>Account Information</h2>
+                <div class="profile-info">
+                    <div class="info-item">
+                        <span class="info-label">Name:</span>
+                        <span class="info-value">{user.name || 'Not set'}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Email:</span>
+                        <span class="info-value">{user.email}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Email Verified:</span>
+                        <span class="info-value">{user.emailVerified ? 'Yes' : 'No'}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Member Since:</span>
+                        <span class="info-value">{new Date(user.createdAt).toLocaleDateString()}</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- My Chats Section -->
+            <section class="profile-section">
+                <h2>My Chats</h2>
                 <MyChats />
-            </UserProfile.Page>
-        </UserProfile>
+            </section>
+        </div>
     </div>
 </Layout>

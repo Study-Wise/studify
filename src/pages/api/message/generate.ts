@@ -4,7 +4,6 @@ import { nanoid } from 'nanoid';
 
 import { eq } from 'drizzle-orm';
 import type { InferSelectModel, InferInsertModel } from 'drizzle-orm';
-import { clerkClient } from '@clerk/astro/server';
 
 import config from '../../../lib/config';
 import categories from '../../../lib/modes';
@@ -12,7 +11,7 @@ import {
     getValidModelAndProvider,
     generateAIResponse,
     generateTitle,
-} from '../../../lib/ai-service';    
+} from '../../../lib/ai-service';
 import { generateWelcomeMessage } from '../../../lib/generateWelcomeMessage';
 
 import { db } from '../../../db/initialize';
@@ -20,7 +19,7 @@ import { threadsTable } from '../../../db/schema';
 import type { Mode } from '../../../lib/types';
 
 import { isValidEmail } from '../../../lib/validation';
-import { getUserRoleFromUser } from '../../../lib/auth/utils';
+import { isUserAdmin } from '../../../lib/auth/admin';
 
 type Thread = InferSelectModel<typeof threadsTable>;
 type ThreadInsert = InferInsertModel<typeof threadsTable>;
@@ -71,8 +70,10 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
         
         // TODO: Use category and mode for context-specific prompts
         let current_thread_id: string | undefined = thread_id;
-        const auth = locals?.auth;
-        if (!auth) {
+
+        // Check authentication
+        const user = locals.user;
+        if (!user) {
             console.error(`❌ [${requestId}] Authentication required but not provided`);
             return new Response(
                 JSON.stringify({ status: 'error', error: 'Authentication required' }),
@@ -82,39 +83,20 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
                 }
             );
         }
-        
+
         console.log(`🔐 [${requestId}] Authentication found, extracting user info`);
-        const { userId } = auth();
 
-        // Fetch user and check admin status from user.publicMetadata.role
-        let user_email: string | null = null;
-        let userRole: string | null = null;
-        let isAdmin = false;
+        const user_email = user.email;
+        const isAdmin = await isUserAdmin(user_email);
 
-        if (userId) {
-            try {
-                const client = clerkClient({ request, locals, ...context });
-                const user = await client.users.getUser(userId);
-                user_email = user.emailAddresses?.[0]?.emailAddress || null;
-
-                // Check admin status from user.publicMetadata.role
-                userRole = getUserRoleFromUser(user);
-                isAdmin = userRole === 'admin';
-
-                console.log(`✅ [${requestId}] Successfully fetched user from Clerk`);
-                console.log(`🔐 [${requestId}] Admin check (from user.publicMetadata):`, {
-                    userRole: userRole || 'none',
-                    isAdmin: isAdmin
-                });
-            } catch (error) {
-                console.error(`❌ [${requestId}] Error fetching user from Clerk:`, error);
-            }
-        }
+        console.log(`✅ [${requestId}] Successfully retrieved user from session`);
+        console.log(`🔐 [${requestId}] Admin check (from email whitelist):`, {
+            isAdmin: isAdmin
+        });
 
         console.log(`👤 [${requestId}] User info:`, {
-            userId: userId || 'none',
-            userEmail: user_email || 'none',
-            userRole: userRole || 'none',
+            userId: user.id,
+            userEmail: user_email,
             isAdmin: isAdmin
         });
 
@@ -233,7 +215,7 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
             role: 'system',
             content: systemPrompt,
         }
-        
+
         let convoHistory: any[] = [systemObj];
         console.log(`🔄 [${requestId}] Initialized conversation history with system message`);
 
