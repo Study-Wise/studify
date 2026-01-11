@@ -3,7 +3,8 @@ import { google_icons, custom_icons } from "./icons_list";
 const icon_map = {
     about: 'info',
     features: 'info',
-    'privacy_policy': 'privacy_tip'
+    'privacy_policy': 'privacy_tip',
+    'sign_in': 'login',
 };
 
 function hasGoogleIcon(name: string) {

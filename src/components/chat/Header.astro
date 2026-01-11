@@ -2,7 +2,11 @@
 import '../../styles/components/header.scss';
 
 import Nav from '../Nav.astro';
-import pages from '../../lib/getAllSitePages';
+import getAllSitePages from '../../lib/getAllSitePages';
+
+const auth = Astro.locals.auth;
+const { userId } = auth();
+const pages = getAllSitePages(userId);
 ---
 <!-- Container wraps text and nav -->
 <div class="header-content-wrapper lite">
