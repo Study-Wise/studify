@@ -1,4 +1,5 @@
 import { auth } from './lib/auth';
+import { getUserRole } from './lib/auth/admin';
 import type { MiddlewareHandler } from 'astro';
 
 // Define protected routes (same as before)
@@ -31,6 +32,12 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
     const session = await auth.api.getSession({ headers: request.headers });
 
     if (session) {
+        // Ensure role is populated (fetch from DB if not in session)
+        if (!session.user.role && session.user.email) {
+            const role = await getUserRole(session.user.email);
+            session.user.role = role;
+        }
+
         locals.user = session.user;
         locals.session = session.session;
     } else {
