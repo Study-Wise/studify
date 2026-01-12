@@ -59,10 +59,8 @@ const currentUrl = Astro.request.url;
         // This avoids unnecessary noise from legitimate 404s (bots, mistyped URLs)
         if (typeof window !== 'undefined' && window.Sentry) {
             const referrer = document.referrer;
-            const isInternalReferrer = referrer && (
-                referrer.startsWith(window.location.origin) ||
-                referrer.includes('studywise')
-            );
+            // Check if referrer is from the same origin (more precise than domain matching)
+            const isInternalReferrer = referrer && referrer.startsWith(window.location.origin);
             
             // Add breadcrumb for context
             window.Sentry.addBreadcrumb({
