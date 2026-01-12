@@ -1,11 +1,312 @@
 @use '../variables/globals' as *;
+@use '../variables/tokens' as *;
+@use '../variables/colors/accent/colors' as colors;
+@use 'sass:list';
+@use 'sass:map';
 
-$border-size: 0.1em;
-
+// Auth page layout
 .auth-page {
-    place-content: center;
-    place-items: center;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-large;
+    background: var(--body-bg);
 }
+
+// Auth container and card
+.auth-container {
+    width: 100%;
+    max-width: 28rem;
+    margin: 0 auto;
+}
+
+.auth-card {
+    background: var(--card-bg);
+    border-radius: $border-radius-extra-large;
+    box-shadow: 0 8px 16px var(--card-shadow);
+    padding: $spacing-huge;
+    border: 1px solid var(--card-border);
+    transition: $transition-all;
+
+    @media (max-width: 640px) {
+        padding: $spacing-extra-large;
+    }
+}
+
+// Title and subtitle
+.auth-title {
+    font-size: $font-size-3xl;
+    font-weight: $font-weight-bold;
+    text-align: center;
+    margin: 0 0 $spacing-extra-small 0;
+    color: var(--card-text);
+    line-height: $line-height-tight;
+}
+
+.auth-subtitle {
+    font-size: $font-size-base;
+    text-align: center;
+    margin: 0 0 $spacing-extra-large 0;
+    color: hsl(from var(--card-text) h s l / 0.6);
+    line-height: $line-height-normal;
+}
+
+// Form elements
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-large;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-extra-small;
+}
+
+.form-label {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: var(--card-text);
+    margin: 0;
+}
+
+.form-input {
+    width: 100%;
+    padding: $spacing-small $spacing-medium;
+    font-size: $font-size-base;
+    line-height: $line-height-normal;
+    color: var(--card-text);
+    background: hsl(from var(--card-bg) h s calc(l + 2%));
+    border: 1px solid var(--input-border);
+    border-radius: $border-radius-medium;
+    transition: $transition-colors, border-color $transition-base $ease-out,
+        box-shadow $transition-base $ease-out;
+    outline: none;
+
+    &::placeholder {
+        color: hsl(from var(--card-text) h s l / 0.4);
+    }
+
+    &:focus {
+        border-color: list.nth(map.get(colors.$accent-colors, 'primary'), 1);
+        box-shadow: 0 0 0 3px hsl(from #{list.nth(map.get(colors.$accent-colors, 'primary'), 1)} h s l / 0.15);
+    }
+
+    &:disabled {
+        opacity: $opacity-disabled;
+        cursor: not-allowed;
+    }
+}
+
+// Error message
+.error-message {
+    padding: $spacing-small $spacing-medium;
+    background: hsl(0 100% 96% / 1);
+    color: hsl(0 60% 40% / 1);
+    border: 1px solid hsl(0 100% 90% / 1);
+    border-radius: $border-radius-medium;
+    font-size: $font-size-sm;
+    line-height: $line-height-normal;
+    margin-top: -$spacing-small;
+
+    @media (prefers-color-scheme: dark) {
+        background: hsl(0 40% 20% / 1);
+        color: hsl(0 100% 90% / 1);
+        border-color: hsl(0 40% 30% / 1);
+    }
+}
+
+// Auth button
+.auth-button {
+    width: 100%;
+    padding: $spacing-small $spacing-large;
+    font-size: $font-size-base;
+    font-weight: $font-weight-semibold;
+    color: #fff;
+    background: linear-gradient(
+        135deg,
+        list.nth(map.get(colors.$accent-colors, 'primary'), 1),
+        list.nth(map.get(colors.$accent-colors, 'primary'), 2)
+    );
+    border: none;
+    border-radius: $border-radius-medium;
+    cursor: pointer;
+    transition: $transition-transform, opacity $transition-base $ease-out,
+        box-shadow $transition-base $ease-out;
+    box-shadow: $box-shadow-small;
+    outline: none;
+
+    &:hover {
+        opacity: $opacity-hover;
+        transform: translateY(-1px);
+        box-shadow: $box-shadow-medium;
+    }
+
+    &:active {
+        transform: translateY(0);
+        box-shadow: $box-shadow-extra-small;
+    }
+
+    &:focus-visible {
+        outline: 2px solid list.nth(map.get(colors.$accent-colors, 'primary'), 1);
+        outline-offset: 2px;
+    }
+
+    &:disabled {
+        opacity: $opacity-disabled;
+        cursor: not-allowed;
+        transform: none;
+    }
+}
+
+// Divider
+.auth-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: $spacing-large 0;
+    color: hsl(from var(--card-text) h s l / 0.5);
+    font-size: $font-size-sm;
+
+    &::before,
+    &::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid var(--card-border);
+    }
+
+    span {
+        padding: 0 $spacing-medium;
+    }
+}
+
+// Social buttons
+.social-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-medium;
+}
+
+.social-button {
+    width: 100%;
+    padding: $spacing-small $spacing-large;
+    font-size: $font-size-base;
+    font-weight: $font-weight-medium;
+    color: var(--card-text);
+    background: hsl(from var(--card-bg) h s calc(l + 2%));
+    border: 1px solid var(--card-border);
+    border-radius: $border-radius-medium;
+    cursor: pointer;
+    transition: $transition-colors, border-color $transition-base $ease-out,
+        box-shadow $transition-base $ease-out, transform $transition-base $ease-out;
+    box-shadow: $box-shadow-extra-small;
+    outline: none;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-small;
+
+    svg {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+    }
+
+    &:hover {
+        background: hsl(from var(--card-bg) h s calc(l - 2%));
+        border-color: hsl(from var(--card-border) h s calc(l - 10%));
+        box-shadow: $box-shadow-small;
+        transform: translateY(-1px);
+    }
+
+    &:active {
+        transform: translateY(0);
+        box-shadow: $box-shadow-extra-small;
+    }
+
+    &:focus-visible {
+        outline: 2px solid list.nth(map.get(colors.$accent-colors, 'primary'), 1);
+        outline-offset: 2px;
+    }
+
+    &:disabled {
+        opacity: $opacity-disabled;
+        cursor: not-allowed;
+        transform: none;
+    }
+}
+
+// Footer links
+.footer-links {
+    margin-top: $spacing-large;
+    text-align: center;
+
+    p {
+        margin: 0;
+        font-size: $font-size-sm;
+        color: hsl(from var(--card-text) h s l / 0.6);
+        line-height: $line-height-normal;
+    }
+}
+
+.footer-link {
+    color: list.nth(map.get(colors.$accent-colors, 'primary'), 1);
+    text-decoration: none;
+    font-weight: $font-weight-medium;
+    transition: $transition-colors;
+
+    &:hover {
+        color: list.nth(map.get(colors.$accent-colors, 'primary'), 2);
+        text-decoration: underline;
+    }
+
+    &:focus-visible {
+        outline: 2px solid list.nth(map.get(colors.$accent-colors, 'primary'), 1);
+        outline-offset: 2px;
+        border-radius: $border-radius-extra-small;
+    }
+}
+
+// Loading spinner (for SSO callback)
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    margin: $spacing-extra-large auto;
+    border: 4px solid hsl(from var(--card-border) h s l / 0.3);
+    border-top: 4px solid list.nth(map.get(colors.$accent-colors, 'primary'), 1);
+    border-radius: $border-radius-full;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+// Responsive adjustments
+@media (max-width: 640px) {
+    .auth-page {
+        padding: $spacing-medium;
+    }
+
+    .auth-title {
+        font-size: $font-size-2xl;
+    }
+
+    .auth-subtitle {
+        font-size: $font-size-sm;
+    }
+}
+
+// Legacy classes (for backwards compatibility)
+$border-size: 0.1em;
 
 .form-btns {
     --border-size: #{$border-size};
@@ -13,7 +314,6 @@ $border-size: 0.1em;
     grid-template-columns: repeat(auto-fit, minmax(10em, 1fr));
     gap: calc(var(--border-size) * 7);
     margin-block: 1em;
-    // margin-inline: auto;
     max-width: max-content;
 }
 
