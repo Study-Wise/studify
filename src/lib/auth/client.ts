@@ -1,8 +1,23 @@
 // Client-side Better Auth utilities
 import { createAuthClient } from "better-auth/client";
 
+const resolveBaseURL = (): string => {
+    if (typeof process !== "undefined" && typeof process.env !== "undefined" && process.env.BETTER_AUTH_URL) {
+        return process.env.BETTER_AUTH_URL;
+    }
+
+    if (typeof window !== "undefined" && window.location && window.location.origin) {
+        return window.location.origin;
+    }
+
+    // Fallback to localhost for development environments
+    return "http://localhost:4321";
+};
+
+const baseURL = resolveBaseURL();
+
 export const authClient = createAuthClient({
-    baseURL: "http://localhost:4321",
+    baseURL,
 });
 
 // Export convenience methods for backward compatibility
