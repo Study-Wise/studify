@@ -55,6 +55,35 @@ const currentUrl = Astro.request.url;
     </div>
 
     <script is:inline define:vars={{ currentUrl }}>
-        throw new Error(`The page ${currentUrl} was not found.`);
+        // Track 404s in Sentry using breadcrumbs instead of throwing errors
+        // This avoids unnecessary noise from legitimate 404s (bots, mistyped URLs)
+        if (typeof window !== 'undefined' && window.Sentry) {
+            const referrer = document.referrer;
+            const isInternalReferrer = referrer && (
+                referrer.startsWith(window.location.origin) ||
+                referrer.includes('studywise')
+            );
+            
+            // Add breadcrumb for context
+            window.Sentry.addBreadcrumb({
+                category: 'navigation',
+                message: `404 page accessed: ${currentUrl}`,
+                level: 'info',
+                data: {
+                    url: currentUrl,
+                    referrer: referrer || 'none',
+                    isInternalReferrer: isInternalReferrer
+                }
+            });
+            
+            // Only capture as a message (not an error) if it's from an internal link
+            // This helps identify broken internal links without noise from external 404s
+            if (isInternalReferrer) {
+                window.Sentry.captureMessage(
+                    `Potential broken internal link: ${currentUrl}`,
+                    'warning'
+                );
+            }
+        }
     </script>
 </Layout>
