@@ -1,46 +1,29 @@
 import { db } from '../../db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '../../db/schema';
-import { getUserRoleFromUser } from './utils';
+import { isUserAdmin as checkIsUserAdmin } from './admin';
 import type { ThreadAccessResult } from '../types';
-import { clerkClient } from '@clerk/astro/server';
+import type { User } from "better-auth";
 
 export async function checkThreadAccess(
     threadId: string,
-    auth: any,
+    user: User | null,
     urlCategory?: string,
     urlMode?: string,
-    context?: any
 ): Promise<ThreadAccessResult> {
     let threadOwner: string | null = null;
     let isPublicThread = false;
 
-    // Fetch user and check if admin
-    let isUserAdmin = false;
-    const { userId } = auth();
-    if (userId && context) {
-        try {
-            const client = clerkClient(context);
-            const user = await client.users.getUser(userId);
-            const userRole = getUserRoleFromUser(user);
-            isUserAdmin = userRole === 'admin';
-        } catch (error) {
-            console.error('Error fetching user for admin check:', error);
-        }
-    }
+    // Get user email
+    const userEmail = user?.email || null;
 
-    // Fetch user email from Clerk if context is provided
-    let userEmail: string | null = null;
-    if (context) {
-        const { userId } = auth();
-        if (userId) {
-            try {
-                const client = clerkClient(context);
-                const user = await client.users.getUser(userId);
-                userEmail = user.emailAddresses?.[0]?.emailAddress || null;
-            } catch (error) {
-                console.error('Error fetching user from Clerk:', error);
-            }
+    // Check if user is admin
+    let isUserAdminFlag = false;
+    if (userEmail) {
+        try {
+            isUserAdminFlag = await checkIsUserAdmin(userEmail);
+        } catch (error) {
+            console.error('Error checking admin status:', error);
         }
     }
 
@@ -95,7 +78,7 @@ export async function checkThreadAccess(
     // 3. They are an admin
     const isAuthorized = Boolean(
         threadId &&
-        ((threadOwner && threadOwner === userEmail) || !threadOwner || isUserAdmin)
+        ((threadOwner && threadOwner === userEmail) || !threadOwner || isUserAdminFlag)
     );
 
     // Thread is public if it's marked public AND user is not already authorized

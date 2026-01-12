@@ -1,30 +1,65 @@
-import { clerkMiddleware, createRouteMatcher } from '@clerk/astro/server';
+import { auth } from './lib/auth';
+import { getUserRole } from './lib/auth/admin';
+import type { MiddlewareHandler } from 'astro';
+import type { ExtendedUser } from './lib/types';
 
-// Define protected routes
-const isProtectedRoute = createRouteMatcher(['/[category]/[mode]/chat(.*)', '/settings(.*)', '/admin(.*)', '/user/profile(.*)', '/user/my-chats(.*)']);
-const isSignInRoute = createRouteMatcher(['/user/sign-in(.*)', '/user/sign-up(.*)']);
+// Define protected routes (same as before)
+const protectedRoutes = [
+    /^\/[^\/]+\/[^\/]+\/chat\/.*/,
+    /^\/settings.*/,
+    /^\/admin.*/,
+    /^\/user\/profile.*/,
+    /^\/user\/my-chats.*/,
+];
 
-export const onRequest = clerkMiddleware((auth, context) => {
-    const { userId, redirectToSignIn } = auth();
+const authRoutes = [
+    /^\/user\/sign-in.*/,
+    /^\/user\/sign-up.*/,
+];
 
-    // Redirect signed-in users away from auth pages
-    if (userId && isSignInRoute(context.request)) {
-    return Response.redirect(new URL('/', context.request.url));
+function isProtectedRoute(pathname: string): boolean {
+    return protectedRoutes.some(route => route.test(pathname));
+}
+
+function isAuthRoute(pathname: string): boolean {
+    return authRoutes.some(route => route.test(pathname));
+}
+
+export const onRequest: MiddlewareHandler = async (context, next) => {
+    const { request, locals, redirect } = context;
+    const pathname = new URL(request.url).pathname;
+
+    // Get session using Better Auth
+    const session = await auth.api.getSession({ headers: request.headers });
+
+    if (session) {
+        // Cast to ExtendedUser to include role field
+        const extendedUser: ExtendedUser = session.user;
+
+        // Ensure role is populated (fetch from DB if not in session)
+        if (!extendedUser.role && extendedUser.email) {
+            const role = await getUserRole(extendedUser.email);
+            extendedUser.role = role;
+        }
+
+        locals.user = extendedUser;
+        locals.session = session.session;
+    } else {
+        locals.user = null;
+        locals.session = null;
     }
 
-    // Protect routes that require authentication
-    if (isProtectedRoute(context.request) && !userId) {
-    const currentUrl = new URL(context.request.url);
-    return redirectToSignIn({ returnBackUrl: currentUrl.pathname + currentUrl.search });
+    // Redirect authenticated users away from auth pages
+    if (locals.user && isAuthRoute(pathname)) {
+        return redirect('/');
     }
 
-    // Optional: Enforce MFA for protected routes
-    // Uncomment the following code to require MFA
-    /*
-    if (userId && isProtectedRoute(context.request) && !isMFARoute(context.request)) {
-    if (sessionClaims?.isMfa === false) {
-            return Response.redirect(new URL('/account/manage-mfa/add', context.request.url));
+    // Protect routes requiring authentication
+    if (isProtectedRoute(pathname) && !locals.user) {
+        const currentUrl = new URL(request.url);
+        const returnBackUrl = currentUrl.pathname + currentUrl.search;
+        return redirect(`/user/sign-in?returnBackUrl=${encodeURIComponent(returnBackUrl)}`);
     }
-    }
-    */
-});
+
+    return next();
+};

@@ -80,8 +80,8 @@ Your answer should be:
 - Suitable for students seeking help`;
 
         const convoHistory = [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: paraphrasedQuestion }
+            { role: 'system' as const, content: systemPrompt },
+            { role: 'user' as const, content: paraphrasedQuestion }
         ];
 
         const answer = await generateAIResponse({
@@ -89,7 +89,7 @@ Your answer should be:
             userPrompt: paraphrasedQuestion,
             convoHistory,
             userModel: config.model,
-            provider: config.provider as string,
+            provider: config.provider,
             tools: {},
             maxSteps: 5,
             requestId

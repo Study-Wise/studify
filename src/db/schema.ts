@@ -26,7 +26,7 @@ const threadsTable = pgTable('threads', {
     isDev: boolean('isDev').notNull().default(true),
 });
 
-const questionTable = pgTable('question', {
+const questionTable = pgTable('questions', {
     id: text('id').primaryKey(),
     question: text('question').notNull(),
     answer: text('answer').notNull(),
@@ -38,5 +38,8 @@ const questionTable = pgTable('question', {
     createdAt: timestamp('createdAt').notNull().defaultNow(),
     updatedAt: timestamp('updatedAt').notNull().defaultNow(),
 });
+
+// Export Better Auth tables
+export * from './auth-schema';
 
 export { threadsTable, questionTable };

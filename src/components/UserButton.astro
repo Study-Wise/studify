@@ -1,0 +1,59 @@
+---
+import '../styles/components/user-button.scss';
+
+const user = Astro.locals.user;
+---
+
+{user ? (
+    <div class="user-button-container">
+        <button class="user-button nav-btn" id="user-menu-trigger" aria-label="User menu">
+            <span class="material-symbols-outlined">account_circle</span>
+            <span class="user-name">{user.name || user.email}</span>
+        </button>
+        <div class="user-menu" id="user-menu" hidden>
+            <a href="/user/profile" class="user-menu-item">Profile</a>
+            <a href="/user/my-chats" class="user-menu-item">My Chats</a>
+            <button id="signout-btn" class="user-menu-item signout">Sign Out</button>
+        </div>
+    </div>
+) : (
+    <a href="/user/sign-in" class="nav-btn">
+        <span class="material-symbols-outlined">login</span>
+        Sign In
+    </a>
+)}
+
+<script>
+    import { authClient } from '../lib/auth/client';
+
+    const signoutBtn = document.getElementById('signout-btn');
+    signoutBtn?.addEventListener('click', async () => {
+        try {
+            await authClient.signOut();
+            window.location.href = '/';
+        } catch (error) {
+            console.error('Sign out error:', error);
+        }
+    });
+
+    // Toggle user menu
+    const menuTrigger = document.getElementById('user-menu-trigger');
+    const menu = document.getElementById('user-menu');
+
+    menuTrigger?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        menu?.toggleAttribute('hidden');
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', () => {
+        if (menu && !menu.hasAttribute('hidden')) {
+            menu.setAttribute('hidden', '');
+        }
+    });
+
+    // Prevent menu from closing when clicking inside it
+    menu?.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+</script>

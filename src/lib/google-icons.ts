@@ -8,11 +8,11 @@ const icon_map = {
 };
 
 function hasGoogleIcon(name: string) {
-    const hasIcon = !!Object.keys(google_icons).find(category => (
-        google_icons[category as keyof typeof google_icons].includes(name)
+    const hasIcon = !!Object.keys(google_icons).find((category: string) => (
+        google_icons[category as keyof typeof google_icons]?.includes(name)
     ));
 
-    const hasMap = !!Object.keys(icon_map).find(icon => (
+    const hasMap = !!Object.keys(icon_map).find((icon: string) => (
         !!icon_map[icon as keyof typeof icon_map]
     ));
 

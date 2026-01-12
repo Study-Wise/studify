@@ -1,13 +1,17 @@
 import type { Tool } from 'ai';
+import type { CategoryName, ModeName } from './modes';
 
-interface Category {
+// User roles
+export type UserRole = "user" | "premium" | "moderator" | "admin";
+
+export interface Category {
     name: string;
     description: string;
-    modes: Record<string, Mode>;
+    modes: Record<CategoryName, Mode>;
 }
 
-interface Mode {
-    name: string;
+export interface Mode {
+    name: ModeName;
     description: string;
     icon?: string;
     prompt?: Promise<any>;
@@ -15,50 +19,50 @@ interface Mode {
     show?: true | false;
 }
 
-interface ReferenceSheetResult {
+export interface ReferenceSheetResult {
     content: string | null;
 }
 
-interface StudyGuideResult {
+export interface StudyGuideResult {
     content: string | null;
 }
 
-interface MindMapResult {
+export interface MindMapResult {
     content: string | null;
 }
 
-interface FlashcardResult {
+export interface FlashcardResult {
     content: string | null;
 }
 
-interface PracticeQuestionsResult {
+export interface PracticeQuestionsResult {
     content: string | null;
 }
 
-interface ThreadAccessResult {
+export interface ThreadAccessResult {
     isAuthorized: boolean;
     isPublic: boolean;
     threadOwner: string | null;
 }
 
-interface GenerateWelcomeMessageParams {
+export interface GenerateWelcomeMessageParams {
     systemPrompt: string;
-    convoHistory: any[];
+    convoHistory: Message[];
     userModel: string;
     provider: string;
     tools: Record<string, any>;
     requestId: string;
 }
 
-interface ChatLeftSidebarProps {
+export interface ChatLeftSidebarProps {
     isPublic: boolean;
     isAuthorized: boolean;
     threadId: string;
-    uploadedFiles: any[];
+    uploadedFiles: UploadedFile[];
     email: string;
 }
 
-interface ChatRightSidebarProps {
+export interface ChatRightSidebarProps {
     hasReferenceSheet: boolean;
     hasStudyGuide: boolean;
     hasInfographic: boolean;
@@ -74,48 +78,49 @@ interface ChatRightSidebarProps {
 }
 
 // OpenAI image generation supported sizes
-type ImageSize = '1024x1024' | '1024x1536' | '1536x1024' | 'auto';
+export type ImageSize = '1024x1024' | '1024x1536' | '1536x1024' | 'auto';
 
-interface ModelOption {
+export interface ModelOption {
     name: string;
+    selectableInUI?: boolean;
 }
 
-interface Provider {
+export interface Provider {
     name: string;
-    models: Record<string, { name: string }>;
+    models: Record<string, ModelOption>;
 }
 
-type Providers = Record<string, Provider>;
+export type Providers = Record<string, Provider>;
 
-interface SelectorSettings {
+export interface SelectorSettings {
     id: string;
     name: string;
     options: ModelOption[] | Record<string, ModelOption>;
     default: string;
 }
 
-interface ThreadData {
+export interface ThreadData {
     title: string;
     isDev: boolean;
     createdAt: Date;
     updatedAt: Date;
-    messages: any[];
+    messages: Message[];
 }
 
-interface UploadOptions {
+export interface UploadOptions {
     metadata?: Record<string, string>;
     contentDisposition?: 'inline' | 'attachment';
     acl?: 'public-read' | 'private';
 }
 
-interface SettingItem {
+export interface SettingItem {
     id: string;
     name: string;
     options: ModelOption[] | Record<string, ModelOption>;
     default: string;
 }
 
-interface SidebarSectionProps {
+export interface SidebarSectionProps {
     title: string;
     icon: string;
     hasContent: boolean;
@@ -129,10 +134,10 @@ interface SidebarSectionProps {
     isAuthorized?: boolean;
 }
 
-interface AIGenerationOptions {
+export interface AIGenerationOptions {
     systemPrompt: string;
     userPrompt: string;
-    convoHistory: any[];
+    convoHistory: Message[];
     userModel: string;
     provider: string;
     tools?: Record<string, any>;
@@ -140,13 +145,13 @@ interface AIGenerationOptions {
     requestId?: string;
 }
 
-interface TitleGenerationOptions {
-    convoHistory: any[];
+export interface TitleGenerationOptions {
+    convoHistory: Message[];
     userModel: string;
     provider: string;
 }
 
-interface UploadedFile {
+export interface UploadedFile {
     key: string;
     name: string;
     url: string;
@@ -156,29 +161,33 @@ interface UploadedFile {
     extractedText?: string | null;
 }
 
-export type {
-    Mode,
-    Category,
-    Tool,
-    ReferenceSheetResult,
-    StudyGuideResult,
-    MindMapResult,
-    FlashcardResult,
-    PracticeQuestionsResult,
-    ThreadAccessResult,
-    GenerateWelcomeMessageParams,
-    ChatLeftSidebarProps,
-    ChatRightSidebarProps,
-    ImageSize,
-    ModelOption,
-    Provider,
-    Providers,
-    SelectorSettings,
-    ThreadData,
-    UploadOptions,
-    SettingItem,
-    SidebarSectionProps,
-    AIGenerationOptions,
-    TitleGenerationOptions,
-    UploadedFile
-};
+// Message type for AI conversations
+export interface Message {
+    role: 'system' | 'user' | 'assistant';
+    content: string;
+}
+
+// Check for one message params
+export interface CheckForOneMessageParams {
+    messages: Message[];
+    threadId: string;
+    category: string;
+    mode: string;
+    isAuthorized: boolean;
+}
+
+// Resource type for additional resources
+export interface Resource {
+    url: string;
+    title: string;
+    snippet: string;
+    source: string;
+}
+
+// Better Auth type extensions for custom fields
+// Extend Better Auth's User type with our custom role field
+import type { User as BetterAuthUser } from "better-auth";
+
+export interface ExtendedUser extends BetterAuthUser {
+    role?: UserRole;
+}

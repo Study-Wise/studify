@@ -1,8 +1,9 @@
 ---
-import { hasIcon,  getIcon } from '../lib/google-icons';
 import '../styles/components/nav.scss';
+import UserButton from './UserButton.astro';
+
+import { hasIcon,  getIcon } from '../lib/google-icons';
 const { pages, pTitle, mode } = Astro.props;
-import { UserButton } from '@clerk/astro/components';
 ---
 <!-- Navigation -->
 <nav class:list={['header-nav', { 'lite': mode === 'lite' }]} role="navigation" aria-label="Main navigation" id="main-navigation">
@@ -19,5 +20,6 @@ import { UserButton } from '@clerk/astro/components';
             {page.name}
         </a>
     })}
-    <UserButton userProfileUrl="/user/profile" />
+
+    <UserButton />
 </nav>

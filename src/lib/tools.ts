@@ -1,4 +1,4 @@
-import type { Tool } from './types';
+import type { Tool } from 'ai';
 
 const tools: Record<string, Tool> = {};
 

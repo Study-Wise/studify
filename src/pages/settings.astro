@@ -6,15 +6,13 @@ import '../styles/pages/settings.scss';
 
 import config from '../lib/config';
 import { providers, models } from '../lib/models';
-import type { ModelOption, SettingItem, Providers } from '../lib/types';
-
-const typedProviders = providers as Providers;
+import type { SettingItem } from '../lib/types';
 
 const settings: SettingItem[] = [
     {
         id: 'model',
         name: 'Model',
-        options: models as ModelOption[],
+        options: models,
         default: config.model,
     }
 ];
@@ -30,17 +28,17 @@ const settings: SettingItem[] = [
                         <select class="fancy-select" id={setting.id} name={setting.id} value={setting.default}>
                             <selectedcontent />
                             {setting.options.map(option => {
-                                const providerKey = Object.keys(typedProviders).find(p =>
-                                    Object.keys(typedProviders[p].models).find(m => typedProviders[p].models[m].name === option.name)
+                                const providerKey = Object.keys(providers).find(p =>
+                                    Object.keys(providers[p].models).find(m => providers[p].models[m].name === option.name)
                                 );
                                 const currKey = providerKey
-                                    ? Object.keys(typedProviders[providerKey].models).find(m => typedProviders[providerKey].models[m].name === option.name)
+                                    ? Object.keys(providers[providerKey].models).find(m => providers[providerKey].models[m].name === option.name)
                                     : '';
                                 return (
                                     <option value={currKey} selected={currKey === setting.default}>
                                         <img
                                             src={`/assets/providers/${providerKey || 'default'}.svg`}
-                                            alt={providerKey ? typedProviders[providerKey].name : 'Provider'}
+                                            alt={providerKey ? providers[providerKey].name : 'Provider'}
                                         />
                                         {option.name || currKey}
                                     </option>

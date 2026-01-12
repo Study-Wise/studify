@@ -4,7 +4,20 @@ import '../../styles/components/chat/right-sidebar.scss';
 import type { ChatRightSidebarProps } from '../../lib/types';
 import SidebarSection from './SidebarSection.astro';
 
-const { hasReferenceSheet, hasStudyGuide, hasInfographic, hasWebpage, hasMindMap, hasAdditionalResources, hasFlashcard, hasPracticeQuestions, threadId, category, mode, isAuthorized } = Astro.props as ChatRightSidebarProps;
+const { 
+    hasReferenceSheet, 
+    hasStudyGuide, 
+    hasInfographic, 
+    hasWebpage, 
+    hasMindMap, 
+    hasAdditionalResources, 
+    hasFlashcard, 
+    hasPracticeQuestions, 
+    threadId, 
+    category, 
+    mode, 
+    isAuthorized
+} = Astro.props as ChatRightSidebarProps;
 
 const referenceSheetUrl = `/${category}/${mode}/reference-sheet/${threadId}`;
 const studyGuideUrl = `/${category}/${mode}/study-guide/${threadId}`;

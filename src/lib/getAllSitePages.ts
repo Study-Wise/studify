@@ -1,8 +1,8 @@
 const pagesToHide = ['chat', 'settings', 'admin', '404'];
 
-export default function getAllSitePages(userId?: string | null) {
+export default function getAllSitePages() {
     const pages = Object.entries(import.meta.glob('/src/pages/*.astro', { eager: true }))
-        .map(([path, mod]) => {
+        .map(([path, mod]: [string, any]) => {
             const fileName = path.split('/').pop();
             if (!fileName) return null;
 
@@ -12,11 +12,10 @@ export default function getAllSitePages(userId?: string | null) {
             if (name.startsWith('_')) return null;
 
             const route = `/${name === 'index' ? '' : name}`;
-            const modTyped = mod as Record<string, string[]>;
-            const hiddenFromNav = modTyped?.inNav ? modTyped.inNav[0] === 'hide' : false;
+            const hiddenFromNav = mod?.inNav ? mod.inNav[0] === 'hide' : false;
             const isHidden = pagesToHide.includes(name);
 
-            let pageTitle = modTyped?.title ? modTyped.title : `${name.charAt(0).toUpperCase()}${name.slice(1)}`
+            let pageTitle = mod?.title ? mod.title : `${name.charAt(0).toUpperCase()}${name.slice(1)}`
 
             if (name === 'index') pageTitle = 'Home';
 
@@ -32,15 +31,6 @@ export default function getAllSitePages(userId?: string | null) {
         })
         .filter((page): page is { name: string; path: string; hiddenFromNav: boolean } => !!page)
         .sort((a, b) => a.name === 'Home' ? -1 : b.name === 'Home' ? 1 : 0);
-
-    // If user is not logged in, add a sign-in page link
-    if (!userId) {
-        pages.push({
-            name: 'Sign In',
-            path: '/user/sign-in',
-            hiddenFromNav: false
-        });
-    }
 
     return pages;
 }

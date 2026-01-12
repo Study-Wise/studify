@@ -7,9 +7,8 @@ import { eq } from 'drizzle-orm';
 import { threadsTable } from '../../../db/schema';
 import { isValidEmail } from '../../../lib/validation';
 import { generateWebpage } from '../../../lib/content/generate/webpage';
-import { clerkClient } from '@clerk/astro/server';
 
-export const POST: APIRoute = async ({ request, locals, ...context }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();
 
     console.log(`🌐 [${requestId}] Starting webpage generation request`);
@@ -34,8 +33,8 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
         }
 
         // Authentication
-        const auth = locals?.auth;
-        if (!auth) {
+        const user = locals.user;
+        if (!user) {
             console.error(`❌ [${requestId}] Authentication required but not provided`);
             return new Response(
                 JSON.stringify({ status: 'error', error: 'Authentication required' }),
@@ -47,24 +46,13 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
         }
 
         console.log(`🔐 [${requestId}] Authentication found, extracting user info`);
-        const { userId } = auth();
 
-        // Fetch user from Clerk to get email properly
-        let user_email: string | null = null;
-        if (userId) {
-            try {
-                const client = clerkClient({ request, locals, ...context });
-                const user = await client.users.getUser(userId);
-                user_email = user.emailAddresses?.[0]?.emailAddress || null;
-                console.log(`✅ [${requestId}] Successfully fetched user email from Clerk`);
-            } catch (error) {
-                console.error(`❌ [${requestId}] Error fetching user from Clerk:`, error);
-            }
-        }
+        const user_email = user.email;
 
+        console.log(`✅ [${requestId}] Successfully retrieved user from session`);
         console.log(`👤 [${requestId}] User info:`, {
-            userId: userId || 'none',
-            userEmail: user_email || 'none'
+            userId: user.id,
+            userEmail: user_email
         });
 
         // Validate email

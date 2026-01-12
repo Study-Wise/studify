@@ -45,7 +45,7 @@ export const POST: APIRoute = async ({ request }) => {
         }
 
         // Remove file from thread metadata
-        const currentFiles = (thread[0].uploadedFiles || []) as UploadedFile[];
+        const currentFiles = (thread[0].uploadedFiles as UploadedFile[]) || [];
         const updatedFiles = currentFiles.filter((file) => file.key !== fileKey);
 
         await db

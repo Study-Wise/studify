@@ -4,7 +4,6 @@ import { nanoid } from 'nanoid';
 
 import { eq } from 'drizzle-orm';
 import type { InferSelectModel, InferInsertModel } from 'drizzle-orm';
-import { clerkClient } from '@clerk/astro/server';
 
 import config from '../../../lib/config';
 import categories from '../../../lib/modes';
@@ -12,20 +11,20 @@ import {
     getValidModelAndProvider,
     generateAIResponse,
     generateTitle,
-} from '../../../lib/ai-service';    
+} from '../../../lib/ai-service';
 import { generateWelcomeMessage } from '../../../lib/generateWelcomeMessage';
 
 import { db } from '../../../db/initialize';
 import { threadsTable } from '../../../db/schema';
-import type { Mode } from '../../../lib/types';
+import type { Mode, ThreadData, Message } from '../../../lib/types';
 
 import { isValidEmail } from '../../../lib/validation';
-import { getUserRoleFromUser } from '../../../lib/auth/utils';
+import { isUserAdmin } from '../../../lib/auth/admin';
 
 type Thread = InferSelectModel<typeof threadsTable>;
 type ThreadInsert = InferInsertModel<typeof threadsTable>;
 
-export const POST: APIRoute = async ({ request, locals, ...context }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();
     const startTime = Date.now();
 
@@ -71,8 +70,10 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
         
         // TODO: Use category and mode for context-specific prompts
         let current_thread_id: string | undefined = thread_id;
-        const auth = locals?.auth;
-        if (!auth) {
+
+        // Check authentication
+        const user = locals.user;
+        if (!user) {
             console.error(`❌ [${requestId}] Authentication required but not provided`);
             return new Response(
                 JSON.stringify({ status: 'error', error: 'Authentication required' }),
@@ -82,39 +83,20 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
                 }
             );
         }
-        
+
         console.log(`🔐 [${requestId}] Authentication found, extracting user info`);
-        const { userId } = auth();
 
-        // Fetch user and check admin status from user.publicMetadata.role
-        let user_email: string | null = null;
-        let userRole: string | null = null;
-        let isAdmin = false;
+        const user_email = user.email;
+        const isAdmin = await isUserAdmin(user_email);
 
-        if (userId) {
-            try {
-                const client = clerkClient({ request, locals, ...context });
-                const user = await client.users.getUser(userId);
-                user_email = user.emailAddresses?.[0]?.emailAddress || null;
-
-                // Check admin status from user.publicMetadata.role
-                userRole = getUserRoleFromUser(user);
-                isAdmin = userRole === 'admin';
-
-                console.log(`✅ [${requestId}] Successfully fetched user from Clerk`);
-                console.log(`🔐 [${requestId}] Admin check (from user.publicMetadata):`, {
-                    userRole: userRole || 'none',
-                    isAdmin: isAdmin
-                });
-            } catch (error) {
-                console.error(`❌ [${requestId}] Error fetching user from Clerk:`, error);
-            }
-        }
+        console.log(`✅ [${requestId}] Successfully retrieved user from session`);
+        console.log(`🔐 [${requestId}] Admin check (from email whitelist):`, {
+            isAdmin: isAdmin
+        });
 
         console.log(`👤 [${requestId}] User info:`, {
-            userId: userId || 'none',
-            userEmail: user_email || 'none',
-            userRole: userRole || 'none',
+            userId: user.id,
+            userEmail: user_email,
             isAdmin: isAdmin
         });
 
@@ -229,12 +211,12 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
             promptPreview: systemPrompt.substring(0, 200) + '...'
         });
         
-        const systemObj = {
+        const systemObj: Message = {
             role: 'system',
             content: systemPrompt,
         }
-        
-        let convoHistory: any[] = [systemObj];
+
+        let convoHistory: Message[] = [systemObj];
         console.log(`🔄 [${requestId}] Initialized conversation history with system message`);
 
         // --- Conversation History Fetch from DB ---
@@ -277,16 +259,16 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
                     }
                     
                     if (
-                        userData.thread && 
-                        typeof userData.thread === 'object' && 
+                        userData.thread &&
+                        typeof userData.thread === 'object' &&
                         'messages' in userData.thread &&
-                        Array.isArray((userData.thread as { messages: any[] }).messages)
+                        Array.isArray((userData.thread as ThreadData).messages)
                     ) {
-                        convoHistory = [systemObj, ...(userData.thread as { messages: any[] }).messages];
+                        convoHistory = [systemObj, ...(userData.thread as ThreadData).messages];
                         console.log(`💬 [${requestId}] Conversation history loaded with system message:`, {
                             totalMessageCount: convoHistory.length,
                             systemMessageIncluded: true,
-                            userMessagesCount: (userData.thread as { messages: any[] }).messages.length,
+                            userMessagesCount: (userData.thread as ThreadData).messages.length,
                             lastMessageRole: convoHistory[convoHistory.length - 1]?.role || 'none'
                         });
                     } else {
@@ -359,7 +341,7 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
 
             try {
                 // Add user message to conversation history first
-                convoHistory.push({ role: 'user', content: userPrompt });
+                convoHistory.push({ role: 'user', content: userPrompt } as Message);
 
                 // Generate AI welcome message
                 const tools = modeObj.tools || {};
@@ -373,7 +355,7 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
                 });
 
                 // Add AI welcome response to conversation history
-                convoHistory.push({ role: 'assistant', content: welcomeMessage });
+                convoHistory.push({ role: 'assistant', content: welcomeMessage } as Message);
 
                 // Save the conversation to database
                 console.log(`💾 [${requestId}] Saving initial conversation to database`);
@@ -482,7 +464,7 @@ export const POST: APIRoute = async ({ request, locals, ...context }) => {
 
         // --- Append AI response to history ---
         console.log(`➕ [${requestId}] Adding AI response to conversation history`);
-        convoHistory.push({ role: 'assistant', content: generatedText });
+        convoHistory.push({ role: 'assistant', content: generatedText } as Message);
         console.log(`📊 [${requestId}] Final conversation history:`, {
             totalMessages: convoHistory.length,
             aiResponseLength: generatedText.length

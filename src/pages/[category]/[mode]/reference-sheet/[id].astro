@@ -21,14 +21,13 @@ const categoryName = categoryObj?.name || category;
 const modeName = modeObj?.name || mode;
 
 // Get user authentication
-const { auth } = Astro.locals;
-const { userId } = auth();
+const user = Astro.locals.user;
 
 // Check thread access first
-const { isAuthorized, isPublic } = await checkThreadAccess(id || '', auth, category, mode, Astro);
+const { isAuthorized, isPublic } = await checkThreadAccess(id || '', user, category, mode);
 
 // Redirect to sign-in only if not authenticated AND thread is not public
-if (!userId && !isPublic) {
+if (!user && !isPublic) {
     return Astro.redirect("/user/sign-in");
 }
 

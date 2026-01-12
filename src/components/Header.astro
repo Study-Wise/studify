@@ -4,9 +4,7 @@ import '../styles/components/header.scss';
 import Nav from './Nav.astro';
 import getAllSitePages from '../lib/getAllSitePages';
 
-const auth = Astro.locals.auth;
-const { userId } = auth();
-const pages = getAllSitePages(userId);
+const pages = getAllSitePages();
 
 const sTitle = "StudyWise";
 
@@ -16,15 +14,15 @@ const imgAlt= `${sTitle} Logo`;
 <header role="banner">
     <!-- Wrap the logo image in an anchor tag -->
     <a href="/" title="Go to Homepage" class="header-logo-link" aria-label={imgAriaLabel}>
-            <img src="/assets/logos/logo.png" alt={imgAlt} class="header-logo" />
+        <img src="/assets/logos/logo.png" alt={imgAlt} class="header-logo" />
     </a>
 
     <!-- Container wraps text and nav -->
     <div class="header-content-wrapper">
-            <div class="header-text-container">
-        <h1><span class="material-symbols-outlined" aria-hidden="true">school</span> {sTitle}</h1>
-        <p class="tagline">Your AI-Powered Study Partner - By Rien Gupta and Adarsh R. Kumar</p>
-            </div>
-            <Nav pages={pages} />
+        <div class="header-text-container">
+            <h1><span class="material-symbols-outlined" aria-hidden="true">school</span> {sTitle}</h1>
+            <p class="tagline">Your AI-Powered Study Partner - By Rien Gupta and Adarsh R. Kumar</p>
+        </div>
+        <Nav pages={pages} />
     </div>
 </header>

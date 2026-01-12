@@ -1,4 +1,6 @@
-const providers = {
+import type { ModelOption, Providers } from './types';
+
+const providers: Providers = {
     openai: {
         name: 'OpenAI',
         models: {
@@ -43,6 +45,6 @@ const providers = {
     },
 };
 
-const models = Object.values(providers).flatMap((p: any) => Object.values(p.models));
+const models: ModelOption[] = Object.values(providers).flatMap(p => Object.values(p.models));
 
 export { providers, models };

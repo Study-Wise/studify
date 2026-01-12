@@ -1,14 +1,11 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { SignOutButton } from '@clerk/astro/components';
 import '../../styles/pages/sign-out.scss';
 
-// Check if user is authenticated
-const auth = Astro.locals.auth;
-const { userId } = auth();
+const user = Astro.locals.user;
 
 // If not signed in, redirect to home
-if (!userId) {
+if (!user) {
     return Astro.redirect("/");
 }
 ---
@@ -21,12 +18,10 @@ if (!userId) {
             <p>Are you sure you want to sign out?</p>
 
             <div class="button-group">
-                <SignOutButton redirectUrl="/">
-                    <button class="btn btn-primary">
-                        <span class="material-symbols-outlined">logout</span>
-                        Yes, Sign Out
-                    </button>
-                </SignOutButton>
+                <button id="signout-confirm-btn" class="btn btn-primary">
+                    <span class="material-symbols-outlined">logout</span>
+                    Yes, Sign Out
+                </button>
 
                 <a href="/" class="btn btn-secondary">
                     <span class="material-symbols-outlined">close</span>
@@ -36,3 +31,18 @@ if (!userId) {
         </div>
     </div>
 </Layout>
+
+<script>
+    import { authClient } from '../../lib/auth/client';
+
+    const signoutBtn = document.getElementById('signout-confirm-btn');
+    signoutBtn?.addEventListener('click', async () => {
+        try {
+            await authClient.signOut();
+            window.location.href = '/';
+        } catch (error) {
+            console.error('Sign out error:', error);
+            alert('Sign out failed. Please try again.');
+        }
+    });
+</script>

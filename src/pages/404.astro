@@ -30,7 +30,7 @@ const currentUrl = Astro.request.url;
                 </a>
             </div>
 
-            <div class="suggestions">
+            {/*<div class="suggestions">
                 <h3>Popular Pages</h3>
                 <div class="suggestions-grid">
                     <a href="/science/physics" class="suggestion-card">
@@ -50,11 +50,11 @@ const currentUrl = Astro.request.url;
                         <span class="suggestion-text">Calculus</span>
                     </a>
                 </div>
-            </div>
+            </div>*/}
         </div>
     </div>
 
-    <script define:vars={{ currentUrl }}>
+    <script is:inline define:vars={{ currentUrl }}>
         throw new Error(`The page ${currentUrl} was not found.`);
     </script>
 </Layout>

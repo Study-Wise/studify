@@ -26,8 +26,8 @@ StudyWise is an AI-powered educational platform built with Astro that provides p
 
 - **Framework**: Astro 5.x with SSR (server-side rendering)
 - **Deployment**: Vercel adapter
-- **Authentication**: Clerk (configured in `astro.config.mjs`)
-- **Database**: PostgreSQL via Vercel Postgres with Drizzle ORM
+- **Authentication**: Better Auth (modern authentication framework with email/password, OAuth, and magic links)
+- **Database**: PostgreSQL via Neon with Drizzle ORM
 - **AI Integration**: Multiple providers via Vercel AI SDK (`ai` package)
 - **PWA**: Progressive Web App support via `@vite-pwa/astro`
 - **File Uploads**: UploadThing
@@ -75,15 +75,23 @@ Tools use the Vercel AI SDK's `tool()` function with Zod schemas for parameters.
 
 ### Database Schema
 
-Single table defined in `src/db/schema.ts`:
+Application tables defined in `src/db/schema.ts`:
 
 **threadsTable**: Stores conversation threads with:
 
 - Core fields: `id`, `title`, `email`, `category`, `mode`, `model`, `provider`
-
 - Thread data: `thread` (JSONB storing messages array)
 - Generated content: `generatedStudyGuide`, `generatedReferenceSheet`, `generatedInfographic`, `generatedWebpage`, `generatedMindMap`, `generatedAdditionalResources`, `generatedFlashcards`, `generatedPracticeQuestions`
 - Metadata: `uploadedFiles`, `isPublic`, `isDev`, `createdAt`, `updatedAt`
+
+**questionTable**: Stores Q&A pairs for public knowledge base
+
+Better Auth tables defined in `src/db/auth-schema.ts`:
+
+**user**: User accounts with email, name, image, and verification status
+**session**: Active user sessions with expiration and device info
+**account**: OAuth provider accounts and credentials
+**verification**: Email verification and magic link tokens
 
 Database operations in `src/lib/threads.ts` provide:
 
@@ -114,21 +122,34 @@ API endpoints in `src/pages/api/`:
 - **POST /api/flashcards/generate.ts**: Generate flashcards from thread content
 - **POST /api/practice-questions/generate.ts**: Generate practice questions
 
-**Thread & Authentication:**
+**Thread Management:**
 
 - **POST /api/thread/toggle-public.ts**: Toggle thread visibility (public/private)
-- **POST /api/webhooks/clerk.ts**: Clerk authentication webhooks
 
 ### Authentication & Middleware
 
-`src/middleware.ts` implements Clerk authentication:
+`src/middleware.ts` implements Better Auth authentication:
 
-- Protected routes: `/[category]/[mode]/chat/*`, `/settings`, `/admin`
+- Protected routes: `/[category]/[mode]/chat/*`, `/settings`, `/admin`, `/user/profile`, `/user/my-chats`
 - Redirects authenticated users away from sign-in/sign-up pages
 - Returns users to original URL after authentication
-- MFA enforcement available (currently commented out)
+- Session management via Better Auth's `auth.api.getSession()`
 
 Route access control in `src/lib/auth/checkThreadAccess.ts` validates thread ownership.
+
+**Authentication Pages:**
+
+- `/user/sign-in` - Email/password and OAuth sign-in (Google, GitHub)
+- `/user/sign-up` - Email/password and OAuth sign-up
+- `/user/sso-callback` - OAuth callback handler
+- `/user/sign-out` - Sign-out confirmation
+
+**Better Auth Configuration:**
+
+- Server: `src/lib/auth.ts` - Better Auth instance with Drizzle adapter
+- Client: `src/lib/auth/client.ts` - Client-side auth utilities
+- API Handler: `src/pages/api/auth/[...all].ts` - Handles all auth requests
+- Database Schema: `src/db/auth-schema.ts` - User, session, account, and verification tables
 
 ### Page Structure
 
@@ -167,9 +188,12 @@ Content generation logic in `src/lib/content/`:
 Required environment variables (see `.env`):
 
 - `POSTGRES_URL` - PostgreSQL connection string
-- `CLERK_PUBLISHABLE_KEY` - Clerk public key
-- `CLERK_SECRET_KEY` - Clerk secret key
-- `CLERK_WEBHOOK_SECRET` - Clerk webhook signing secret (required for admin auto-promotion)
+- `BETTER_AUTH_URL` - Base URL for Better Auth (e.g., [http://localhost:4321](http://localhost:4321) for dev)
+- `BETTER_AUTH_SECRET` - Secret key for Better Auth (generate a random 64-char string)
+- `GOOGLE_CLIENT_ID` - Google OAuth client ID
+- `GOOGLE_CLIENT_SECRET` - Google OAuth client secret
+- `GITHUB_CLIENT_ID` - GitHub OAuth client ID
+- `GITHUB_CLIENT_SECRET` - GitHub OAuth client secret
 - `OPENAI_API_KEY` - OpenAI API key (also used for image generation)
 - `GOOGLE_GENERATIVE_AI_API_KEY` - Google AI key
 - `EXA_SEARCH_API_KEY` - Exa search API key
@@ -203,6 +227,34 @@ import '../styles/pages/my-page.scss';  // ← ALWAYS DO THIS
 ```
 
 This keeps styles organized, reusable, and maintainable. Inline styles make the codebase messy and harder to maintain.
+
+### CRITICAL: TypeScript Types Convention
+
+**ALL TypeScript types and interfaces MUST be defined in `src/lib/types.ts`.**
+
+- **Never** define types inline in components, pages, or other modules
+- **Always** import types from `src/lib/types.ts`
+- **Always** export new types from the centralized types file
+
+Example:
+
+```typescript
+// ❌ WRONG - Don't define types inline
+interface User {
+    id: string;
+    email: string;
+}
+
+// ✅ CORRECT - Import from centralized types
+import type { User, Session } from "better-auth";
+```
+
+This ensures:
+
+- Type consistency across the codebase
+- Easy refactoring and maintenance
+- Single source of truth for all type definitions
+- Better IDE autocomplete and type checking
 
 ### Adding New AI Tools
 
@@ -240,8 +292,18 @@ PWA settings in `astro.config.mjs`:
 
 ### Authentication Flow
 
-1. Middleware checks protected routes
-2. Unauthenticated users redirected to `/user/sign-in`
-3. After auth, users return to original URL
-4. User email from Clerk used for thread ownership
-5. Thread access validated in API routes before operations
+1. Middleware checks protected routes using Better Auth's `auth.api.getSession()`
+2. Unauthenticated users redirected to `/user/sign-in` with return URL
+3. Users can sign in via:
+    - Email/password
+    - Google OAuth
+    - GitHub OAuth
+    - Magic links (requires email service configuration)
+4. After authentication, users return to original URL
+5. User email from Better Auth used for thread ownership
+6. Thread access validated in API routes before operations
+7. Admin users identified via email whitelist in `src/lib/auth/admin.ts`
+
+### Code Style Guidelines
+
+**CRITICAL: Always use 4 spaces for indentation, never tabs.**

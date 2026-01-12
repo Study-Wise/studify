@@ -2,6 +2,7 @@
 
 declare namespace App {
     interface Locals {
-    auth: import('@clerk/astro/server').Auth;
+        user: import('./lib/types').ExtendedUser | null;
+        session: import('better-auth').Session | null;
     }
 }

@@ -4,9 +4,7 @@ import '../../styles/components/header.scss';
 import Nav from '../Nav.astro';
 import getAllSitePages from '../../lib/getAllSitePages';
 
-const auth = Astro.locals.auth;
-const { userId } = auth();
-const pages = getAllSitePages(userId);
+const pages = getAllSitePages();
 ---
 <!-- Container wraps text and nav -->
 <div class="header-content-wrapper lite">
