@@ -1,9 +1,9 @@
 ---
-import Layout from '../../../../layouts/Layout.astro';
-import { getLatestInfographic } from '../../../../lib/content/latest/infographic';
-import { checkThreadAccess } from '../../../../lib/auth/checkThreadAccess';
-import '../../../../styles/pages/content/infographic.scss';
-import categories from '../../../../lib/modes';
+import Layout from '@/layouts/Layout.astro';
+import { getLatestInfographic } from '@/lib/content/latest/infographic';
+import { checkThreadAccess } from '@/lib/auth/checkThreadAccess';
+import '@/styles/pages/content/infographic.scss';
+import categories from '@/lib/modes';
 
 const { category, mode, id } = Astro.params;
 

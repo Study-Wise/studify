@@ -207,14 +207,14 @@ Required environment variables (see `.env`):
 
 - **Pages**: Create styles in `src/styles/pages/[page-name].scss`
 - **Components**: Create styles in `src/styles/components/[component-name].scss`
-- **Import**: Use `import '../styles/pages/[page-name].scss'` in the frontmatter
+- **Import**: Use `import '@/styles/pages/[page-name].scss'` in the frontmatter
 
 Example structure:
 
 ```astro
 ---
-import Layout from '../layouts/Layout.astro';
-import '../styles/pages/my-page.scss';  // ← ALWAYS DO THIS
+import Layout from '@/layouts/Layout.astro';
+import '@/styles/pages/my-page.scss';  // ← ALWAYS DO THIS
 ---
 
 <Layout>

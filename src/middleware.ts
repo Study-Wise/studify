@@ -1,5 +1,6 @@
 import { auth } from './lib/auth';
 import { getUserRole } from './lib/auth/admin';
+import { isDev, getDevUser } from './lib/auth/dev';
 import type { MiddlewareHandler } from 'astro';
 import type { ExtendedUser } from './lib/types';
 
@@ -44,6 +45,16 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
 
         locals.user = extendedUser;
         locals.session = session.session;
+    } else if (isDev()) {
+        // In dev mode, try to authenticate using USER_ACCESS_TOKEN
+        const devUser = await getDevUser();
+        if (devUser) {
+            locals.user = devUser;
+            locals.session = null; // No actual session, but user is authenticated via token
+        } else {
+            locals.user = null;
+            locals.session = null;
+        }
     } else {
         locals.user = null;
         locals.session = null;

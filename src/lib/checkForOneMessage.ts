@@ -6,9 +6,9 @@
 
 import { generateWelcomeMessage } from './generateWelcomeMessage';
 import categories from './modes';
-import { db } from '../db/initialize';
+import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
-import { threadsTable } from '../db/schema';
+import { threadsTable } from '@/db/schema';
 import type { CheckForOneMessageParams, Message } from './types';
 
 export async function checkForOneMessage({

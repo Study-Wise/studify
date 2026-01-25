@@ -5,21 +5,21 @@ import { nanoid } from 'nanoid';
 import { eq } from 'drizzle-orm';
 import type { InferSelectModel, InferInsertModel } from 'drizzle-orm';
 
-import config from '../../../lib/config';
-import categories from '../../../lib/modes';
+import config from '@/lib/config';
+import categories from '@/lib/modes';
 import {
     getValidModelAndProvider,
     generateAIResponse,
     generateTitle,
-} from '../../../lib/ai-service';
-import { generateWelcomeMessage } from '../../../lib/generateWelcomeMessage';
+} from '@/lib/ai-service';
+import { generateWelcomeMessage } from '@/lib/generateWelcomeMessage';
 
-import { db } from '../../../db/initialize';
-import { threadsTable } from '../../../db/schema';
-import type { Mode, ThreadData, Message } from '../../../lib/types';
+import { db } from '@/db/initialize';
+import { threadsTable } from '@/db/schema';
+import type { Mode, ThreadData, Message } from '@/lib/types';
 
-import { isValidEmail } from '../../../lib/validation';
-import { isUserAdmin } from '../../../lib/auth/admin';
+import { isValidEmail } from '@/lib/validation';
+import { isUserAdmin } from '@/lib/auth/admin';
 
 type Thread = InferSelectModel<typeof threadsTable>;
 type ThreadInsert = InferInsertModel<typeof threadsTable>;

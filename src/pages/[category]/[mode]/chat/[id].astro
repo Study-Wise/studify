@@ -1,32 +1,32 @@
 ---
-import Layout from '../../../../layouts/Layout.astro';
+import Layout from '@/layouts/Layout.astro';
 
-import Header from '../../../../components/chat/Header.astro';
-import Toolbar from '../../../../components/chat/Toolbar.astro';
-import LeftSidebar from '../../../../components/chat/LeftSidebar.astro';
-import RightSidebar from '../../../../components/chat/RightSidebar.astro';
-import Footer from '../../../../components/Footer.astro';
+import Header from '@/components/chat/Header.astro';
+import Toolbar from '@/components/chat/Toolbar.astro';
+import LeftSidebar from '@/components/chat/LeftSidebar.astro';
+import RightSidebar from '@/components/chat/RightSidebar.astro';
+import Footer from '@/components/Footer.astro';
 
-import MessagesScript from '../../../../scripts/messages.astro';
-import StepByStepScript from '../../../../scripts/step-by-step.astro';
-import '../../../../styles/pages/chat.scss';
+import MessagesScript from '@/scripts/messages.astro';
+import StepByStepScript from '@/scripts/step-by-step.astro';
+import '@/styles/pages/chat.scss';
 
 import { marked } from 'marked';
 
-import { getMessages, getMessagesLength, getThreadByToken } from '../../../../lib/threads';
-import { checkThreadAccess } from '../../../../lib/auth/checkThreadAccess';
+import { getMessages, getMessagesLength, getThreadByToken } from '@/lib/threads';
+import { checkThreadAccess } from '@/lib/auth/checkThreadAccess';
 
-import { getLatestReferenceSheet } from '../../../../lib/content/latest/reference-sheet';
-import { getLatestStudyGuide } from '../../../../lib/content/latest/study-guide';
-import { getLatestInfographic } from '../../../../lib/content/latest/infographic';
-import { getLatestWebpage } from '../../../../lib/content/latest/webpage';
-import { getLatestMindMap } from '../../../../lib/content/latest/mind-map';
-import { getLatestResources } from '../../../../lib/content/latest/additional-resources';
-import { getLatestFlashcards } from '../../../../lib/content/latest/flashcards';
-import { getLatestPracticeQuestions } from '../../../../lib/content/latest/practice-questions';
+import { getLatestReferenceSheet } from '@/lib/content/latest/reference-sheet';
+import { getLatestStudyGuide } from '@/lib/content/latest/study-guide';
+import { getLatestInfographic } from '@/lib/content/latest/infographic';
+import { getLatestWebpage } from '@/lib/content/latest/webpage';
+import { getLatestMindMap } from '@/lib/content/latest/mind-map';
+import { getLatestResources } from '@/lib/content/latest/additional-resources';
+import { getLatestFlashcards } from '@/lib/content/latest/flashcards';
+import { getLatestPracticeQuestions } from '@/lib/content/latest/practice-questions';
 
-import { checkForOneMessage } from '../../../../lib/checkForOneMessage';
-import categories from '../../../../lib/modes';
+import { checkForOneMessage } from '@/lib/checkForOneMessage';
+import categories from '@/lib/modes';
 
 let { category, mode, id } = Astro.params || { category: '', mode: '', id: '' };
 

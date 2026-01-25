@@ -1,6 +1,6 @@
 import { eq, desc } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/vercel-postgres';
-import { threadsTable } from '../db/schema';
+import { threadsTable } from '@/db/schema';
 import type { InferSelectModel } from "drizzle-orm";
 import type { ThreadData } from './types';
 

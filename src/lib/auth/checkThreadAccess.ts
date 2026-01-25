@@ -1,7 +1,8 @@
-import { db } from '../../db/initialize';
+import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
-import { threadsTable } from '../../db/schema';
+import { threadsTable } from '@/db/schema';
 import { isUserAdmin as checkIsUserAdmin } from './admin';
+import { isDev, getDevUser, isDevUserAdmin } from './dev';
 import type { ThreadAccessResult } from '../types';
 import type { User } from "better-auth";
 
@@ -14,8 +15,12 @@ export async function checkThreadAccess(
     let threadOwner: string | null = null;
     let isPublicThread = false;
 
-    // Get user email
-    const userEmail = user?.email || null;
+    // Get user email - fallback to dev user if in dev mode and no user provided
+    let effectiveUser = user;
+    if (!effectiveUser && isDev()) {
+        effectiveUser = await getDevUser();
+    }
+    const userEmail = effectiveUser?.email || null;
 
     // Check if user is admin
     let isUserAdminFlag = false;
@@ -24,6 +29,13 @@ export async function checkThreadAccess(
             isUserAdminFlag = await checkIsUserAdmin(userEmail);
         } catch (error) {
             console.error('Error checking admin status:', error);
+        }
+    } else if (isDev()) {
+        // In dev mode without a user email, check dev user admin status directly
+        try {
+            isUserAdminFlag = await isDevUserAdmin();
+        } catch (error) {
+            console.error('Error checking dev admin status:', error);
         }
     }
 

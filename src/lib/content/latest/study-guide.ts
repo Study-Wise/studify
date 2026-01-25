@@ -1,7 +1,7 @@
 import type { StudyGuideResult } from '../../types';
-import { db } from '../../../db/initialize';
+import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
-import { threadsTable } from '../../../db/schema';
+import { threadsTable } from '@/db/schema';
 
 export async function getLatestStudyGuide(
     threadId: string,

@@ -1,16 +1,16 @@
 ---
-import '../../../styles/pages/index.scss';
-import '../../../styles/pages/mode.scss';
-import '../../../styles/components/step-by-step.scss';
+import '@/styles/pages/index.scss';
+import '@/styles/pages/mode.scss';
+import '@/styles/components/step-by-step.scss';
 
-import Layout from '../../../layouts/Layout.astro';
-import FancyButton from '../../../components/fancy/Button.astro';
-import Button from '../../../components/fancy/Button.astro';
-import ModelSelector from '../../../components/ModelSelector.astro';
-import MessagesScript from '../../../scripts/messages.astro';
-import StepByStepScript from '../../../scripts/step-by-step.astro';
+import Layout from '@/layouts/Layout.astro';
+import FancyButton from '@/components/fancy/Button.astro';
+import Button from '@/components/fancy/Button.astro';
+import ModelSelector from '@/components/ModelSelector.astro';
+import MessagesScript from '@/scripts/messages.astro';
+import StepByStepScript from '@/scripts/step-by-step.astro';
 
-import categories from '../../../lib/modes';
+import categories from '@/lib/modes';
 
 let { category, mode } = Astro.params || { category: '', mode: '' };
 

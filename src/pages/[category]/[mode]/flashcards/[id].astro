@@ -1,10 +1,10 @@
 ---
-import Layout from '../../../../layouts/Layout.astro';
-import { getLatestFlashcards } from '../../../../lib/content/latest/flashcards';
-import { checkThreadAccess } from '../../../../lib/auth/checkThreadAccess';
+import Layout from '@/layouts/Layout.astro';
+import { getLatestFlashcards } from '@/lib/content/latest/flashcards';
+import { checkThreadAccess } from '@/lib/auth/checkThreadAccess';
 import { marked } from 'marked';
-import '../../../../styles/pages/content/flashcards.scss';
-import categories from '../../../../lib/modes';
+import '@/styles/pages/content/flashcards.scss';
+import categories from '@/lib/modes';
 
 const { category, mode, id } = Astro.params;
 

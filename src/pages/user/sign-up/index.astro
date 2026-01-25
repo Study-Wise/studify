@@ -1,6 +1,6 @@
 ---
-import Layout from '../../../layouts/Layout.astro';
-import '../../../styles/pages/auth.scss';
+import Layout from '@/layouts/Layout.astro';
+import '@/styles/pages/auth.scss';
 
 // Get redirect URL from query params
 const redirectUrl = Astro.url.searchParams.get('returnBackUrl') || '/';
@@ -87,7 +87,7 @@ if (Astro.locals.user) {
 </Layout>
 
 <script>
-    import { authClient } from '../../../lib/auth/client';
+    import { authClient } from '@/lib/auth/client';
 
     const form = document.getElementById('signup-form') as HTMLFormElement;
     const googleBtn = document.getElementById('google-signup');

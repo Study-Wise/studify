@@ -33,7 +33,7 @@ StudyWise offers a comprehensive suite of AI-generated study materials:
 
 ## Project Structure
 
-```
+```text
 /
 ├── public/              # Static assets
 ├── src/
@@ -162,6 +162,7 @@ Content generation logic is organized in `src/lib/content/`:
 ### Database Schema
 
 Single table `threadsTable` stores conversation threads with:
+
 - Core fields: id, title, email, category, mode, model, provider
 - Thread data: thread (JSONB storing messages array)
 - Generated content: generatedStudyGuide, generatedReferenceSheet, generatedInfographic, generatedWebpage, generatedMindMap, generatedAdditionalResources, generatedFlashcards, generatedPracticeQuestions
@@ -175,7 +176,7 @@ Single table `threadsTable` stores conversation threads with:
 
 - Pages: Create styles in `src/styles/pages/[page-name].scss`
 - Components: Create styles in `src/styles/components/[component-name].scss`
-- Import: Use `import '../styles/pages/[page-name].scss'` in the frontmatter
+- Import: Use `import '@/styles/pages/[page-name].scss'` in the frontmatter
 
 ## Contributors
 

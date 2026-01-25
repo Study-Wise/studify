@@ -1,6 +1,6 @@
 import { pgTable, varchar, timestamp, jsonb, boolean, text } from 'drizzle-orm/pg-core';
 
-import config from '../lib/config';
+import config from '@/lib/config';
 
 const threadsTable = pgTable('threads', {
     id: text('id').primaryKey(),

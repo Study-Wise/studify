@@ -2,11 +2,11 @@ import 'dotenv/config';
 import type { APIRoute } from 'astro';
 import { nanoid } from 'nanoid';
 
-import { db } from '../../../db/initialize';
+import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
-import { threadsTable } from '../../../db/schema';
-import { isValidEmail } from '../../../lib/validation';
-import { generateWebpage } from '../../../lib/content/generate/webpage';
+import { threadsTable } from '@/db/schema';
+import { isValidEmail } from '@/lib/validation';
+import { generateWebpage } from '@/lib/content/generate/webpage';
 
 export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();

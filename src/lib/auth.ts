@@ -1,9 +1,9 @@
 // Server-side Better Auth configuration
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { db } from "../db/initialize";
+import { db } from "@/db/initialize";
 import { magicLink } from "better-auth/plugins";
-import { user, session, account, verification } from "../db/auth-schema";
+import { user, session, account, verification } from "@/db/auth-schema";
 import type { UserRole } from "./types";
 
 // Admin email whitelist

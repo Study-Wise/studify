@@ -1,5 +1,5 @@
 ---
-import '../styles/components/user-button.scss';
+import '@/styles/components/user-button.scss';
 
 const user = Astro.locals.user;
 ---
@@ -24,7 +24,7 @@ const user = Astro.locals.user;
 )}
 
 <script>
-    import { authClient } from '../lib/auth/client';
+    import { authClient } from '@/lib/auth/client';
 
     const signoutBtn = document.getElementById('signout-btn');
     signoutBtn?.addEventListener('click', async () => {

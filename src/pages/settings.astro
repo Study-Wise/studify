@@ -1,12 +1,12 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from '@/layouts/Layout.astro';
 
-import SettingsScript from '../scripts/settings.astro';
-import '../styles/pages/settings.scss';
+import SettingsScript from '@/scripts/settings.astro';
+import '@/styles/pages/settings.scss';
 
-import config from '../lib/config';
-import { providers, models } from '../lib/models';
-import type { SettingItem } from '../lib/types';
+import config from '@/lib/config';
+import { providers, models } from '@/lib/models';
+import type { SettingItem } from '@/lib/types';
 
 const settings: SettingItem[] = [
     {

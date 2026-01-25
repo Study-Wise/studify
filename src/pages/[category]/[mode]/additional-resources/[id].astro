@@ -1,10 +1,10 @@
 ---
-import Layout from '../../../../layouts/Layout.astro';
-import { getLatestResources } from '../../../../lib/content/latest/additional-resources';
-import { checkThreadAccess } from '../../../../lib/auth/checkThreadAccess';
-import '../../../../styles/pages/content/additional-resources.scss';
-import categories from '../../../../lib/modes';
-import type { Resource } from '../../../../lib/types';
+import Layout from '@/layouts/Layout.astro';
+import { getLatestResources } from '@/lib/content/latest/additional-resources';
+import { checkThreadAccess } from '@/lib/auth/checkThreadAccess';
+import '@/styles/pages/content/additional-resources.scss';
+import categories from '@/lib/modes';
+import type { Resource } from '@/lib/types';
 
 const { category, mode, id } = Astro.params;
 

@@ -3,9 +3,9 @@ import { getMessages } from '../../threads';
 import categories from '../../modes';
 import config from '../../config';
 import stepByStepHTML from '../../promptTemplates/stepByStepHTML';
-import { db } from '../../../db/initialize';
+import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
-import { threadsTable } from '../../../db/schema';
+import { threadsTable } from '@/db/schema';
 
 export async function generatePracticeQuestions(threadId: string, userEmail: string | null) {
     // Fetch the thread from database

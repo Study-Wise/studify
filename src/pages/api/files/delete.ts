@@ -1,9 +1,9 @@
 import type { APIRoute } from 'astro';
-import { db } from '../../../db/initialize';
-import { threadsTable } from '../../../db/schema';
+import { db } from '@/db/initialize';
+import { threadsTable } from '@/db/schema';
 import { eq } from 'drizzle-orm';
-import { userFilesUpload } from '../../../lib/uploadthing';
-import type { UploadedFile } from '../../../lib/types';
+import { userFilesUpload } from '@/lib/uploadthing';
+import type { UploadedFile } from '@/lib/types';
 
 export const POST: APIRoute = async ({ request }) => {
     try {
