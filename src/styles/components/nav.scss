@@ -22,6 +22,10 @@
             }
         }
     }
+    &.lighter .nav-btn {
+        background-color: color.adjust($section-title-light, $lightness: 10%);
+    }
+
     &.lite .nav-btn {
         color: $section-title-light;
         transition: color $transition-fast $ease; 

@@ -93,7 +93,12 @@ header {
 
     .header-text-container {
         text-align: left;
-        min-width: 0;
+        // min-width: 0;
+        h1 {
+            @supports (text-wrap: nowrap) {
+                text-wrap: nowrap;
+            }
+        }
     }
 }
 
