@@ -8,9 +8,9 @@
         "preview": "astro preview",
         "astro": "astro",
         "ts": "node --experimental-strip-types",
-        "test:chrome": "npx playwright test --headed --browser=chromium",
-        "test:firefox": "npx playwright test --headed --browser=firefox",
-        "test:safari": "npx playwright test --headed --browser=webkit",
+        "test:chrome": "npx playwright test --headed --browser=chromium --reporter=json:test-results/chrome.json",
+        "test:firefox": "npx playwright test --headed --browser=firefox --reporter=json:test-results/firefox.json",
+        "test:safari": "npx playwright test --headed --browser=webkit --reporter=json:test-results/safari.json",
         "test": "npm run test:chrome && npm run test:firefox && npm run test:safari"
     },
     "devDependencies": {
