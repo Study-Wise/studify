@@ -203,6 +203,7 @@
         box-shadow $transition-base $ease-out, transform $transition-base $ease-out;
     box-shadow: $box-shadow-extra-small;
     outline: none;
+    text-decoration: none;
 
     display: flex;
     align-items: center;
