@@ -32,7 +32,9 @@
       "WebSearch",
       "WebFetch(domain:www.better-auth.com)",
       "Bash(openssl rand:*)",
-      "Bash(npm uninstall:*)"
+      "Bash(npm uninstall:*)",
+      "Bash(node -e:*)",
+      "Bash(xxd:*)"
     ],
     "deny": [],
     "ask": []
