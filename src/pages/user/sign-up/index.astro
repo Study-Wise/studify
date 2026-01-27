@@ -10,8 +10,8 @@ if (Astro.locals.user) {
     return Astro.redirect(redirectUrl);
 }
 
-// Build OAuth URLs for social sign-up (must use absolute URL for OAuth redirect)
-const callbackURL = `${Astro.url.origin}/user/sso-callback?returnBackUrl=${encodeURIComponent(redirectUrl)}`;
+// Build OAuth URLs for social sign-up
+const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redirectUrl)}`;
 const googleAuthURL = `/api/auth/sign-in/social?provider=google&callbackURL=${encodeURIComponent(callbackURL)}`;
 const githubAuthURL = `/api/auth/sign-in/social?provider=github&callbackURL=${encodeURIComponent(callbackURL)}`;
 ---
