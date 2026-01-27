@@ -1,0 +1,61 @@
+# Configuration for actions/labeler
+# Labels PRs based on the paths of changed files
+
+frontend:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'src/pages/**/*'
+      - 'src/components/**/*'
+      - 'src/layouts/**/*'
+      - 'src/styles/**/*'
+      - 'src/scripts/**/*'
+
+api:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'src/pages/api/**/*'
+
+auth:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'src/lib/auth/**/*'
+      - 'src/lib/auth.ts'
+      - 'src/db/auth-schema.ts'
+      - 'src/pages/user/**/*'
+
+database:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'src/db/**/*'
+      - 'drizzle.config.ts'
+
+ai:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'src/lib/ai-service.ts'
+      - 'src/lib/models.ts'
+      - 'src/lib/tools/**/*'
+
+content-generation:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'src/lib/content/**/*'
+
+config:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'src/lib/config.ts'
+      - 'astro.config.mjs'
+      - 'tsconfig.json'
+      - 'package.json'
+
+dependencies:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'package.json'
+      - 'package-lock.json'
+
+ci:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '.github/**/*'
