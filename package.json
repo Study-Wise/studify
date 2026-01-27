@@ -12,10 +12,13 @@
         "test:firefox": "npx playwright test --headed --browser=firefox",
         "test:safari": "npx playwright test --headed --browser=webkit",
         "test": "npm run test:chrome && npm run test:firefox && npm run test:safari",
-        "test:nopause:chrome": "npx playwright test tests/browser.test.nopause.ts --headed --browser=chromium",
-        "test:nopause:firefox": "npx playwright test tests/browser.test.nopause.ts --headed --browser=firefox",
-        "test:nopause:safari": "npx playwright test tests/browser.test.nopause.ts --headed --browser=webkit",
-        "test:nopause": "npm run test:nopause:chrome && npm run test:nopause:firefox && npm run test:nopause:safari"
+        "test:nopause:chrome": "npx playwright test tests/browser.test.nopause.ts --browser=chromium",
+        "test:nopause:firefox": "npx playwright test tests/browser.test.nopause.ts --browser=firefox",
+        "test:nopause:safari": "npx playwright test tests/browser.test.nopause.ts --browser=webkit",
+        "test:nopause": "npm run test:nopause:chrome && npm run test:nopause:firefox && npm run test:nopause:safari",
+        "test:nopause:chrome:headed": "npx playwright test tests/browser.test.nopause.ts --headed --browser=chromium",
+        "test:nopause:firefox:headed": "npx playwright test tests/browser.test.nopause.ts --headed --browser=firefox",
+        "test:nopause:safari:headed": "npx playwright test tests/browser.test.nopause.ts --headed --browser=webkit"
     },
     "devDependencies": {
         "@astrojs/ts-plugin": "^1.10.6",
@@ -27,14 +30,15 @@
         "baseline-browser-mapping": "^2.8.32",
         "drizzle-kit": "^0.31.8",
         "sass": "^1.89.0",
-        "sass-embedded": "^1.89.0"
+        "sass-embedded": "^1.89.0",
+        "wait-on": "^9.0.3"
     },
     "dependencies": {
         "@astrojs/check": "^0.9.6",
         "@astrojs/compiler": "^2.13.0",
         "@astrojs/vercel": "^9.0.4",
-        "@playwright/test": "^1.58.0",
         "@google/genai": "^1.30.0",
+        "@playwright/test": "^1.58.0",
         "@sentry/astro": "^10.32.1",
         "@vercel/analytics": "^1.5.0",
         "@vercel/postgres": "^0.10.0",

@@ -1,0 +1,94 @@
+name: Browser Tests
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+    workflow_dispatch:
+        inputs:
+            browser_test_path:
+                description: 'Path to test (e.g., /user/sign-in)'
+                required: false
+                default: '/'
+
+env:
+    POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
+    BETTER_AUTH_URL: http://localhost:4321
+    BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+    GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+    GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+    GITHUB_CLIENT_ID: ${{ secrets.GH_OAUTH_CLIENT_ID }}
+    GITHUB_CLIENT_SECRET: ${{ secrets.GH_OAUTH_CLIENT_SECRET }}
+    OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
+    EXA_SEARCH_API_KEY: ${{ secrets.EXA_SEARCH_API_KEY }}
+    UPLOADTHING_TOKEN: ${{ secrets.UPLOADTHING_TOKEN }}
+    BROWSER_TEST_PATH: ${{ github.event.inputs.browser_test_path || '/' }}
+
+jobs:
+    test-chrome:
+        name: Chrome
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+                  cache: 'npm'
+            - run: npm ci
+            - run: npx playwright install --with-deps chromium
+            - run: npm run dev &
+            - run: npx wait-on http://localhost:4321 --timeout 60000
+            - run: npm run test:nopause:chrome
+            - uses: actions/upload-artifact@v4
+              if: failure()
+              with:
+                  name: playwright-report-chrome
+                  path: playwright-report/
+                  retention-days: 7
+
+    test-firefox:
+        name: Firefox
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+                  cache: 'npm'
+            - run: npm ci
+            - run: npx playwright install --with-deps firefox
+            - run: npm run dev &
+            - run: npx wait-on http://localhost:4321 --timeout 60000
+            - run: npm run test:nopause:firefox
+            - uses: actions/upload-artifact@v4
+              if: failure()
+              with:
+                  name: playwright-report-firefox
+                  path: playwright-report/
+                  retention-days: 7
+
+    test-safari:
+        name: Safari
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+                  cache: 'npm'
+            - run: npm ci
+            - run: npx playwright install --with-deps webkit
+            - run: npm run dev &
+            - run: npx wait-on http://localhost:4321 --timeout 60000
+            - run: npm run test:nopause:safari
+            - uses: actions/upload-artifact@v4
+              if: failure()
+              with:
+                  name: playwright-report-safari
+                  path: playwright-report/
+                  retention-days: 7
