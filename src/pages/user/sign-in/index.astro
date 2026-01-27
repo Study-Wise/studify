@@ -11,7 +11,7 @@ if (Astro.locals.user) {
 }
 
 // Build OAuth URLs for social sign-in
-const callbackURL = `${Astro.url.origin}/user/sso-callback?returnBackUrl=${encodeURIComponent(redirectUrl)}`;
+const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redirectUrl)}`;
 const googleAuthURL = `/api/auth/sign-in/social?provider=google&callbackURL=${encodeURIComponent(callbackURL)}`;
 const githubAuthURL = `/api/auth/sign-in/social?provider=github&callbackURL=${encodeURIComponent(callbackURL)}`;
 ---
