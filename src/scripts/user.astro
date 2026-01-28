@@ -1,0 +1,49 @@
+<script>
+    import { signIn } from '@/lib/auth/client';
+
+    const errorMessage = document.getElementById('error-message');
+    const socialButtonsContainer = document.querySelector('.social-buttons') as HTMLElement;
+    const callbackURL = socialButtonsContainer?.dataset.callbackUrl || '/user/sso-callback';
+
+    function showError(message: string) {
+        if (errorMessage) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+    }
+
+    function hideError() {
+        if (errorMessage) {
+            errorMessage.style.display = 'none';
+        }
+    }
+
+    function getRedirectUrl() {
+        return
+    }
+
+    // Social sign-in click handlers
+    document.querySelectorAll('.social-button[data-provider]').forEach((button) => {
+        button.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const provider = (button as HTMLElement).dataset.provider as 'google' | 'github';
+            try {
+                await signIn.social({
+                    provider,
+                    callbackURL,
+                });
+            } catch (error) {
+                console.error(`${provider} sign-in error:`, error);
+                showError(`${provider} sign-in failed. Please try again.`);
+            }
+        });
+    });
+
+    // Expose utilities for page-specific scripts
+    (window as any).authUtils = {
+        showError,
+        hideError,
+        getRedirectUrl,
+        callbackURL,
+    };
+</script>
