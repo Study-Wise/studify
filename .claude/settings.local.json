@@ -34,7 +34,8 @@
       "Bash(openssl rand:*)",
       "Bash(npm uninstall:*)",
       "Bash(node -e:*)",
-      "Bash(xxd:*)"
+      "Bash(xxd:*)",
+      "WebFetch(domain:platform.openai.com)"
     ],
     "deny": [],
     "ask": []

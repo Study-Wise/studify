@@ -256,6 +256,52 @@ This ensures:
 - Single source of truth for all type definitions
 - Better IDE autocomplete and type checking
 
+### CRITICAL: Error Investigation Protocol
+
+**ALWAYS investigate and search for root causes when encountering errors. NEVER implement tangential fixes without understanding the problem.**
+
+When you encounter an error:
+
+1. **Search First**: Use Grep, Glob, or the Task tool with the Explore agent to search the codebase for:
+   - Related error messages or error handling code
+   - Similar patterns or implementations
+   - Documentation or comments explaining the behavior
+   - Type definitions and interfaces involved
+
+2. **Search the Web**: If the error is unclear or related to external libraries/frameworks, use WebSearch to:
+   - Look up specific error messages or codes
+   - Find documentation for the libraries/packages involved
+   - Research best practices for the technology stack
+   - Check for known issues or breaking changes in dependencies
+
+3. **Read Context**: Read relevant files completely to understand:
+   - How the code is supposed to work
+   - What dependencies or imports are involved
+   - What other parts of the codebase interact with this code
+   - What the actual error message means in context
+
+4. **Verify Understanding**: Before implementing a fix:
+   - Confirm you understand the root cause
+   - Check if similar issues exist elsewhere
+   - Consider if the fix addresses the actual problem or just symptoms
+   - Look for existing patterns or solutions in the codebase
+
+4. **Avoid Quick Fixes**: DO NOT:
+   - Add `any` types without understanding why type checking is failing
+   - Comment out code that's causing errors
+   - Add try-catch blocks to suppress errors without handling them
+   - Make assumptions about what "should" work without verification
+   - Apply fixes from external sources without adapting them to this codebase
+
+Example workflow:
+```
+❌ WRONG: "Getting a type error, let me add 'as any' to bypass it"
+✅ CORRECT: "Getting a type error. Let me search for the type definition,
+understand what's expected, and check how similar code handles this case."
+```
+
+This ensures fixes are targeted, maintainable, and don't introduce new issues.
+
 ### Adding New AI Tools
 
 1. Create tool file in `src/lib/tools/[tool-name].ts`
