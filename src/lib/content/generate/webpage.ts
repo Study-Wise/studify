@@ -1,4 +1,5 @@
 import { generateText } from 'ai';
+import type { GatewayProviderOptions } from '@ai-sdk/gateway';
 import { getMessages } from '../../threads';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
@@ -61,11 +62,17 @@ ONLY INCLUDE THE HTML CONTENT IN YOUR RESPONSE. DO NOT RESPOND WITH ANYTHING ELS
         ...conversationMessages
     ];
 
-    // Generate the webpage using vercel/v0-1.5-md model
+    // Generate the webpage using Vercel's v0 model (optimized for HTML generation)
+    // with automatic fallback to Claude Sonnet 4.5 via AI Gateway
     const result = await generateText({
         model: 'vercel/v0-1.5-md',
         messages: messagesForAI,
         temperature: 0.7,
+        providerOptions: {
+            gateway: {
+                models: ['anthropic/claude-sonnet-4.5']
+            } satisfies GatewayProviderOptions
+        }
     });
 
     // Strip away any text before and after the HTML

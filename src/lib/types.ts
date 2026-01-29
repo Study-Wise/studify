@@ -77,7 +77,7 @@ export interface ChatRightSidebarProps {
     isAuthorized: boolean;
 }
 
-// OpenAI image generation supported sizes
+// OpenAI gpt-image models supported sizes
 export type ImageSize = '1024x1024' | '1024x1536' | '1536x1024' | 'auto';
 
 export interface ModelOption {
@@ -182,6 +182,19 @@ export interface Resource {
     title: string;
     snippet: string;
     source: string;
+}
+
+// Application configuration
+export interface Config {
+    provider: string;
+    model: string;
+    imageModel: string;
+    imageSize: ImageSize;
+    systemPrompt: string;
+    welcomeMessagePrompt: string;
+    maxThreadsPerUser: number;
+    defaultCategory: CategoryName;
+    defaultMode: ModeName;
 }
 
 // Better Auth type extensions for custom fields

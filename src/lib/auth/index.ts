@@ -42,7 +42,27 @@ function determineUserRole(email: string): UserRole {
     return "user";
 }
 
-const socialProviderNames = ['google', 'github'] as const;
+// Build social providers configuration
+const socialProviders: Record<string, { clientId: string; clientSecret: string }> = {};
+
+// Add Google provider if configured
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+    socialProviders.google = {
+        clientId: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    };
+}
+
+// Add GitHub provider if configured (skip placeholder values)
+if (process.env.GITHUB_CLIENT_ID &&
+    process.env.GITHUB_CLIENT_SECRET &&
+    process.env.GITHUB_CLIENT_ID !== 'your-github-client-id' &&
+    process.env.GITHUB_CLIENT_SECRET !== 'your-github-client-secret') {
+    socialProviders.github = {
+        clientId: process.env.GITHUB_CLIENT_ID,
+        clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    };
+}
 
 export const auth = betterAuth({
     database: drizzleAdapter(db, {
@@ -60,19 +80,7 @@ export const auth = betterAuth({
         minPasswordLength: 8,
     },
 
-    socialProviders: {
-        ...socialProviderNames.reduce((acc, provider) => {
-            const clientId = process.env[`${provider.toUpperCase()}_CLIENT_ID`];
-            const clientSecret = process.env[`${provider.toUpperCase()}_CLIENT_SECRET`];
-            if (clientId && clientSecret) {
-                acc[provider] = {
-                    clientId,
-                    clientSecret,
-                };
-            }
-            return acc;
-        }, {} as Record<string, { clientId: string; clientSecret: string }>),
-    },
+    socialProviders,
 
     plugins: [
         magicLink({

@@ -1,4 +1,5 @@
 import { generateText } from 'ai';
+import type { GatewayProviderOptions } from '@ai-sdk/gateway';
 import { getMessages } from '../../threads';
 import categories from '../../modes';
 import config from '../../config';
@@ -90,11 +91,17 @@ Output a complete HTML document (including <!DOCTYPE html>, <html>, <head>, and 
         ...conversationMessages
     ];
 
-    // Generate the mind map using vercel/v0-1.5-md model (same as webpage)
+    // Generate the mind map using Vercel's v0 model (optimized for HTML generation)
+    // with automatic fallback to Claude Sonnet 4.5 via AI Gateway
     const result = await generateText({
         model: 'vercel/v0-1.5-md',
         messages: messagesForAI,
         temperature: 0.7,
+        providerOptions: {
+            gateway: {
+                models: ['anthropic/claude-sonnet-4.5']
+            } satisfies GatewayProviderOptions
+        }
     });
 
     return result.text;

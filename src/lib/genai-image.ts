@@ -1,4 +1,4 @@
-import { uploadImageByUrl } from './uploadthing';
+import { uploadFile } from './uploadthing';
 import config from './config';
 import OpenAI from 'openai';
 
@@ -6,19 +6,23 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
-// Generate image and return URL
-async function generateImageUrl(prompt: string) {
+// Generate image and return buffer (gpt-image models return base64)
+async function generateImageBuffer(prompt: string) {
     try {
+        // gpt-image models use output_format and always return base64
         const response = await openai.images.generate({
             model: config.imageModel,
             prompt: prompt,
             n: 1,
-            size: config.imageSize,
-            response_format: 'url',
+            size: config.imageSize === 'auto' ? '1024x1024' : config.imageSize,
+            // @ts-ignore - OpenAI SDK types may not be updated yet for gpt-image models
+            output_format: 'png'
         });
 
-        if (response.data && response.data.length > 0 && response.data[0].url) {
-            return response.data[0].url;
+        if (response.data && response.data.length > 0 && response.data[0].b64_json) {
+            const base64Data = response.data[0].b64_json;
+            const buffer = Buffer.from(base64Data, 'base64');
+            return buffer;
         }
 
         throw new Error('OpenAI API returned no images in response');
@@ -37,30 +41,22 @@ async function generateImageUrl(prompt: string) {
     }
 }
 
-// Generate image and return buffer
-async function generateImageBuffer(prompt: string) {
-    const imageUrl = await generateImageUrl(prompt);
-
-    if (imageUrl) {
-        // Fetch the image from the URL
-        const imageResponse = await fetch(imageUrl);
-        const arrayBuffer = await imageResponse.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
-
-        return buffer;
-    }
-
-    return null;
-}
-
 // Generate image and upload to UploadThing
-async function generateImage(prompt: string) {
-    const imageUrl = await generateImageUrl(prompt);
-    if (imageUrl) {
-        const uploadResult = await uploadImageByUrl(imageUrl);
-        return { imageUrl: uploadResult.data?.ufsUrl ?? imageUrl ?? null, uploadResult };
+async function generateImage(prompt: string, filename: string = 'infographic.png') {
+    const buffer = await generateImageBuffer(prompt);
+
+    if (buffer) {
+        // Convert buffer to File for upload
+        const file = new File([buffer], filename, { type: 'image/png' });
+        const uploadResult = await uploadFile(file);
+
+        return {
+            imageUrl: uploadResult.data?.ufsUrl ?? null,
+            uploadResult
+        };
     }
+
     return { imageUrl: null, uploadResult: null };
 }
 
-export { generateImageUrl, generateImageBuffer, generateImage }
+export { generateImageBuffer, generateImage }

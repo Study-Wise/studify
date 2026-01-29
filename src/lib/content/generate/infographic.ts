@@ -57,7 +57,7 @@ ${descriptionResult.text}
 
 Style: Clean, modern, professional educational infographic. Use a white background with colorful accents. Include clear typography, simple icons, and visual hierarchy. Make it suitable for students and educators.`;
 
-    const imageResult = await generateImage(imagePrompt);
+    const imageResult = await generateImage(imagePrompt, `${threadId}-infographic.png`);
 
     if (!imageResult) {
         throw new Error('Failed to generate image - No result from image generation API');

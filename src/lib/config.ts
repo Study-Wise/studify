@@ -4,25 +4,14 @@
 
 import { generateTutorPrompt } from './promptGenerator';
 
-import type { ImageSize } from './types';
-import type { CategoryName, ModeName } from './modes';
+import type { Config } from './types';
 
 const defaultCategory = 'general';
 const defaultMode = 'general';
 
 const prompt = generateTutorPrompt(defaultCategory, defaultMode);
 
-const config: {
-    provider: string;
-    model: string;
-    imageModel: string;
-    imageSize: ImageSize;
-    systemPrompt: string;
-    welcomeMessagePrompt: string;
-    maxThreadsPerUser: number;
-    defaultCategory: CategoryName;
-    defaultMode: ModeName;
-} = {
+const config: Config = {
     provider: 'openai',
     model: 'gpt-4.1',
     imageModel: 'gpt-image-1',
