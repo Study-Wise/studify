@@ -24,6 +24,7 @@ env:
     GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
     EXA_SEARCH_API_KEY: ${{ secrets.EXA_SEARCH_API_KEY }}
     UPLOADTHING_TOKEN: ${{ secrets.UPLOADTHING_TOKEN }}
+    USER_ACCESS_TOKEN: ${{ secrets.USER_ACCESS_TOKEN }}
     BROWSER_TEST_PATH: ${{ github.event.inputs.browser_test_path || '/' }}
 
 jobs:
