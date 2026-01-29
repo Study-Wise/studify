@@ -39,8 +39,12 @@ jobs:
                   cache: 'npm'
             - run: npm ci
             - run: npx playwright install --with-deps chromium
-            - run: npm run dev &
-            - run: npx wait-on http://localhost:4321 --timeout 60000
+            - name: Start dev server
+              run: npm run dev &
+            - name: Wait for server
+              run: |
+                  npx wait-on tcp:4321 --timeout 60000
+                  sleep 5
             - run: npm run test:nopause:chrome
             - uses: actions/upload-artifact@v4
               if: failure()
@@ -61,8 +65,12 @@ jobs:
                   cache: 'npm'
             - run: npm ci
             - run: npx playwright install --with-deps firefox
-            - run: npm run dev &
-            - run: npx wait-on http://localhost:4321 --timeout 60000
+            - name: Start dev server
+              run: npm run dev &
+            - name: Wait for server
+              run: |
+                  npx wait-on tcp:4321 --timeout 60000
+                  sleep 5
             - run: npm run test:nopause:firefox
             - uses: actions/upload-artifact@v4
               if: failure()
@@ -83,8 +91,12 @@ jobs:
                   cache: 'npm'
             - run: npm ci
             - run: npx playwright install --with-deps webkit
-            - run: npm run dev &
-            - run: npx wait-on http://localhost:4321 --timeout 60000
+            - name: Start dev server
+              run: npm run dev &
+            - name: Wait for server
+              run: |
+                  npx wait-on tcp:4321 --timeout 60000
+                  sleep 5
             - run: npm run test:nopause:safari
             - uses: actions/upload-artifact@v4
               if: failure()
