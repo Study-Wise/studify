@@ -19,6 +19,7 @@ const config: Config = {
     systemPrompt: prompt,
     welcomeMessagePrompt: 'Based on the user\'s question or homework, ask them what specifically they want to study. Be friendly and encouraging.',
     maxThreadsPerUser: 5, // Maximum number of threads a user can create
+    maxMessagesPerThread: 10, // Maximum number of messages per thread
     defaultCategory: defaultCategory,
     defaultMode: defaultMode,
 };
