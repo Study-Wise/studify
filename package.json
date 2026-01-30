@@ -40,7 +40,7 @@
         "@google/genai": "^1.30.0",
         "@neondatabase/serverless": "^1.0.2",
         "@playwright/test": "^1.58.0",
-        "@sentry/astro": "^10.32.1",
+        "@sentry/astro": "^10.38.0",
         "@vercel/analytics": "^1.5.0",
         "@vercel/sdk": "^1.18.6",
         "@vite-pwa/assets-generator": "^1.0.1",
