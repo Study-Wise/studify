@@ -291,6 +291,37 @@ export const POST: APIRoute = async ({ request, locals }) => {
             console.log(`🆕 [${requestId}] No thread ID provided, using system message only`);
         }
 
+        // --- Check message limit per thread (skip for admins) ---
+        if (isAdmin) {
+            console.log(`👑 [${requestId}] Admin user detected - skipping message limit check for:`, user_email);
+        } else {
+            console.log(`🔍 [${requestId}] Checking message limit for thread:`, current_thread_id);
+            // Count current user messages only
+            const currentUserMessageCount = convoHistory.filter(msg => msg.role === 'user').length;
+            // Adding one more user message
+            const newUserMessageCount = currentUserMessageCount + 1;
+
+            console.log(`📊 [${requestId}] User message count:`, {
+                current: currentUserMessageCount,
+                afterNewMessage: newUserMessageCount,
+                limit: config.maxMessagesPerThread
+            });
+
+            if (newUserMessageCount > config.maxMessagesPerThread) {
+                console.error(`❌ [${requestId}] User message limit exceeded for thread:`, current_thread_id);
+                return new Response(
+                    JSON.stringify({
+                        status: 'error',
+                        error: `This thread has reached the maximum limit of ${config.maxMessagesPerThread} user messages. Please start a new conversation.`
+                    }),
+                    {
+                        status: 400,
+                        headers: { 'Content-Type': 'application/json' },
+                    }
+                );
+            }
+        }
+
         // --- Model/Provider selection ---
         console.log(`🤖 [${requestId}] Selecting AI model and provider`);
         let userModel: string;

@@ -193,6 +193,7 @@ export interface Config {
     systemPrompt: string;
     welcomeMessagePrompt: string;
     maxThreadsPerUser: number;
+    maxMessagesPerThread: number;
     defaultCategory: CategoryName;
     defaultMode: ModeName;
 }
