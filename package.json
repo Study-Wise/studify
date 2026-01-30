@@ -38,6 +38,7 @@
         "@astrojs/compiler": "^2.13.0",
         "@astrojs/vercel": "^9.0.4",
         "@google/genai": "^1.30.0",
+        "@neondatabase/serverless": "^1.0.2",
         "@playwright/test": "^1.58.0",
         "@sentry/astro": "^10.32.1",
         "@vercel/analytics": "^1.5.0",
