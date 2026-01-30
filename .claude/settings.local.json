@@ -35,7 +35,8 @@
       "Bash(npm uninstall:*)",
       "Bash(node -e:*)",
       "Bash(xxd:*)",
-      "WebFetch(domain:platform.openai.com)"
+      "WebFetch(domain:platform.openai.com)",
+      "mcp__sentry__find_organizations"
     ],
     "deny": [],
     "ask": []
