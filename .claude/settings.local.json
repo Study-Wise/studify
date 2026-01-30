@@ -36,7 +36,8 @@
       "Bash(node -e:*)",
       "Bash(xxd:*)",
       "WebFetch(domain:platform.openai.com)",
-      "mcp__sentry__find_organizations"
+      "mcp__sentry__find_organizations",
+      "mcp__sentry__search_issues"
     ],
     "deny": [],
     "ask": []
