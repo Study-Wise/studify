@@ -37,7 +37,9 @@
       "Bash(xxd:*)",
       "WebFetch(domain:platform.openai.com)",
       "mcp__sentry__find_organizations",
-      "mcp__sentry__search_issues"
+      "mcp__sentry__search_issues",
+      "mcp__sentry__get_issue_details",
+      "mcp__sentry__analyze_issue_with_seer"
     ],
     "deny": [],
     "ask": []

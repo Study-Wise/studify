@@ -30,6 +30,17 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
     const { request, locals, redirect } = context;
     const pathname = new URL(request.url).pathname;
 
+    // Handle HEAD requests early to avoid rendering issues
+    // HEAD requests should return 200 OK without body
+    if (request.method === 'HEAD') {
+        return new Response(null, {
+            status: 200,
+            headers: {
+                'Content-Type': 'text/html',
+            },
+        });
+    }
+
     // Get session using Better Auth
     const session = await auth.api.getSession({ headers: request.headers });
 
