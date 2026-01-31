@@ -5,8 +5,9 @@ import '@/styles/components/step-by-step.scss';
 import Layout from '@/layouts/Layout.astro';
 import categories from '@/lib/modes';
 
+const description = "StudyWise is your AI-powered study partner. Paste your homework and instantly generate study guides, reference sheets, flashcards, practice questions, mind maps, and more across subjects like Math, Science, and English.";
 ---
-<Layout title="Home">
+<Layout title="Home" description={description}>
     <!-- Introduction Section -->
     <section class="introduction-section card">
         <h2>
