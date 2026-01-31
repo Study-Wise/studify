@@ -12,7 +12,7 @@ import Dialog from '@/components/Dialog.astro';
 
 const sTitle = "StudyWise";
 const lTitle = `${sTitle} - AI Study Partner`;
-const { title, hideCopyright, isChatArea } = Astro.props;
+const { title, description, hideCopyright, isChatArea } = Astro.props;
 var { className, container } = Astro.props;
 const noTitle = title === "Home" || title === '' || !title;
 const pTitle = noTitle ? lTitle : `${title} | ${sTitle}`;
@@ -32,6 +32,7 @@ if (container) className += ' container'
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
         <meta name="apple-mobile-web-app-title" content={sTitle}>
+        {description ? <meta name="description" content={description} /> : ''}
         <link rel="apple-touch-icon" href="/assets/logos/apple-touch-icon.png">
         <link rel="icon" type="image/png" href="/assets/logos/favicon.png">
         <link rel="manifest" href="/manifest.webmanifest">
