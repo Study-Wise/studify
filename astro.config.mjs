@@ -7,12 +7,14 @@ import fs from 'fs-extra';
 import path from 'path';
 
 import sentry from '@sentry/astro';
+import sitemap from '@astrojs/sitemap';
 
 const manifestPath = path.join(process.cwd(), 'public', 'manifest.webmanifest');
 const manifest = fs.readJSONSync(manifestPath);
 
 // https://astro.build/config
 export default defineConfig({
+    site: 'https://studywise.onl',
     output: 'server',
     adapter: vercel(),
     integrations: [
@@ -85,5 +87,22 @@ export default defineConfig({
             }
         }), 
         sentry(),
+        sitemap({
+            filter: (page) =>
+                !page.includes('/api/') &&
+                !page.includes('/chat/') &&
+                !page.includes('/study-guide/') &&
+                !page.includes('/reference-sheet/') &&
+                !page.includes('/infographic/') &&
+                !page.includes('/webpage/') &&
+                !page.includes('/mind-map/') &&
+                !page.includes('/resources/') &&
+                !page.includes('/flashcards/') &&
+                !page.includes('/practice-questions/') &&
+                !page.includes('/user/sso-callback'),
+            changefreq: 'weekly',
+            priority: 0.7,
+            lastmod: new Date(),
+        }),
     ],
 });
