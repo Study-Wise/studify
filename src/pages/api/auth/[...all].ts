@@ -2,7 +2,13 @@ import type { APIRoute } from "astro";
 import { auth } from "@/lib/auth";
 
 const handler: APIRoute = async (ctx) => {
-    return auth.handler(ctx.request);
+    try {
+        return await auth.handler(ctx.request);
+    } catch (error) {
+        console.error("[Auth API Error]", error);
+        // Re-throw to let Better Auth handle its own errors
+        throw error;
+    }
 };
 
 export const GET = handler;
