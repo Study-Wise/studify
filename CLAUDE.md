@@ -286,7 +286,7 @@ When you encounter an error:
    - Consider if the fix addresses the actual problem or just symptoms
    - Look for existing patterns or solutions in the codebase
 
-4. **Avoid Quick Fixes**: DO NOT:
+5. **Avoid Quick Fixes**: DO NOT:
    - Add `any` types without understanding why type checking is failing
    - Comment out code that's causing errors
    - Add try-catch blocks to suppress errors without handling them
@@ -294,7 +294,8 @@ When you encounter an error:
    - Apply fixes from external sources without adapting them to this codebase
 
 Example workflow:
-```
+
+```text
 ❌ WRONG: "Getting a type error, let me add 'as any' to bypass it"
 ✅ CORRECT: "Getting a type error. Let me search for the type definition,
 understand what's expected, and check how similar code handles this case."
