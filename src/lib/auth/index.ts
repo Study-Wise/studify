@@ -70,6 +70,10 @@ function buildSocialProviders(): SocialProviderConfig {
     // Google OAuth
     const googleClientId = getEnvVar('GOOGLE_CLIENT_ID');
     const googleClientSecret = getEnvVar('GOOGLE_CLIENT_SECRET');
+
+    console.log('[Better Auth] GOOGLE_CLIENT_ID exists:', !!googleClientId);
+    console.log('[Better Auth] GOOGLE_CLIENT_SECRET exists:', !!googleClientSecret);
+
     if (googleClientId && googleClientSecret) {
         providers.google = {
             clientId: googleClientId,
@@ -80,6 +84,10 @@ function buildSocialProviders(): SocialProviderConfig {
     // GitHub OAuth
     const githubClientId = getEnvVar('GITHUB_CLIENT_ID');
     const githubClientSecret = getEnvVar('GITHUB_CLIENT_SECRET');
+
+    console.log('[Better Auth] GITHUB_CLIENT_ID exists:', !!githubClientId);
+    console.log('[Better Auth] GITHUB_CLIENT_SECRET exists:', !!githubClientSecret);
+
     if (githubClientId && githubClientSecret) {
         providers.github = {
             clientId: githubClientId,
@@ -92,6 +100,16 @@ function buildSocialProviders(): SocialProviderConfig {
 
 const socialProviders = buildSocialProviders();
 const baseURL = getEnvVar('BETTER_AUTH_URL') || "http://localhost:4321";
+
+// Debug logging for social providers
+console.log('[Better Auth] Configured social providers:', Object.keys(socialProviders));
+console.log('[Better Auth] Base URL:', baseURL);
+if (!socialProviders.google) {
+    console.warn('[Better Auth] Google provider NOT configured - check GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET env vars');
+}
+if (!socialProviders.github) {
+    console.warn('[Better Auth] GitHub provider NOT configured - check GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET env vars');
+}
 
 export const auth = betterAuth({
     database: drizzleAdapter(db, {
