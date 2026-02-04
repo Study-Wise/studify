@@ -32,7 +32,6 @@
       "WebSearch",
       "WebFetch(domain:www.better-auth.com)",
       "Bash(openssl rand:*)",
-      "Bash(npm uninstall:*)",
       "Bash(node -e:*)",
       "Bash(xxd:*)",
       "WebFetch(domain:platform.openai.com)",
