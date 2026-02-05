@@ -40,7 +40,6 @@
                 list.nth(map.get($accent-colors, primary), 2)
             );
             -webkit-text-fill-color: transparent;
-            -webkit-background-clip: text;
             background-clip: text;
             animation: slideInDown 0.6s $ease-out forwards;
         }
