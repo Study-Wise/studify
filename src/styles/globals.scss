@@ -184,6 +184,11 @@ body {
 }
 
 @media screen {
+    h1, h2, h3, h4, h5, h6 {
+        @supports (text-wrap: pretty) {
+            text-wrap: pretty;
+        }
+    }
     h1, h2, h3, h4, h5, h6, p, ul, ol, li, pre, code, blockquote {
         &:first-child {
             margin-block-start: 0;
