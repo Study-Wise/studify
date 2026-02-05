@@ -40,16 +40,16 @@
         }
     }
 
-    $_lh: 1.5;
+    $lh: 1.5;
 
     img {
-        height: #{2.5lh * $_lh};
-        width: #{2.5lh * $_lh};
+        height: #{2.5lh * $lh};
+        width: #{2.5lh * $lh};
         aspect-ratio: 1;
     }
 
     p {
-        line-height: $_lh;
+        line-height: $lh;
         font-size: 2em;
     }
 }

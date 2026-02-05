@@ -263,14 +263,14 @@ footer, .chat-toolbar {
     }
 
     .message {
-        $_message-space: $spacing-medium + 0.25rem;
+        $message-space: $spacing-medium + 0.25rem;
 
         display: flex;
         flex-direction: column;
-        gap: math.div($_message-space, 2);
+        gap: math.div($message-space, 2);
         width: fit-content;
-        border-radius: $_message-space;
-        max-width: min(calc(600px + 4 * $_message-space), 100%);
+        border-radius: $message-space;
+        max-width: min(calc(600px + 4 * $message-space), 100%);
         position: relative;
 
         // Slide-in animation from left (assistant messages)
@@ -278,7 +278,7 @@ footer, .chat-toolbar {
 
         &-content {
             box-sizing: border-box;
-            padding: $_message-space $spacing-large;
+            padding: $message-space $spacing-large;
             background-color: var(--message-bg);
             border-radius: inherit;
             border: 1px solid rgb(from var(--card-border) r g b / 30%);
@@ -346,7 +346,7 @@ footer, .chat-toolbar {
 
         &-timestamp {
             align-self: end;
-            padding: 0 math.div($_message-space, 2);
+            padding: 0 math.div($message-space, 2);
             opacity: $opacity-subtle;
             font-size: $font-size-extra-small;
             transition: opacity $transition-base $ease-out;

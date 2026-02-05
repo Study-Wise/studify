@@ -15,11 +15,11 @@
 
 /* Skip links */
 .skip-link {
-    $_pos: 6px;
+    $pos: 6px;
 
     position: absolute;
     top: 0;
-    left: $_pos;
+    left: $pos;
     padding: $spacing-small;
     background-color: #000;
     color: #fff;
@@ -32,7 +32,7 @@
     translate: 0 -100%;
 
     &:focus-visible {
-        translate: 0 $_pos;
+        translate: 0 $pos;
         outline: 2px solid #fff;
         outline-offset: 2px;
     }
