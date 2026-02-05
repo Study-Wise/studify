@@ -133,10 +133,10 @@
         opacity: 0;
         animation: fade-in 0.5s $ease-out forwards;
 
-        $_max: 10;
+        $max: 10;
 
-        @for $i from 1 through $_max {
-            &:nth-child(#{$_max}n - #{$_max - $i}) {
+        @for $i from 1 through $max {
+            &:nth-child(#{$max}n - #{$max - $i}) {
                 animation-delay: #{$i * 0.1}s;
             }
         }
@@ -157,14 +157,14 @@
             display: inline-block;
 
             &::after {
-                $_height: 3px;
+                $height: 3px;
 
                 content: '';
                 position: absolute;
-                inset-block-end: calc(#{-1 * math.div($spacing-extra-small, 2)} - math.div($_height, 2));
+                inset-block-end: calc(#{-1 * math.div($spacing-extra-small, 2)} - math.div($height, 2));
                 inset-inline-start: 0;
                 width: 100%;
-                height: $_height;
+                height: $height;
                 background: linear-gradient(90deg,
                     list.nth(map.get($accent-colors, primary), 1),
                     list.nth(map.get($accent-colors, primary), 2)
