@@ -14,9 +14,9 @@ $color: list.nth(map.get($accent-colors, primary), 1);
     background: linear-gradient(to top, var(--body-bg) 0%, rgb(from var(--body-bg) r g b / 98%) 100%);
 
     --bd: blur(8px);
+
     -webkit-backdrop-filter: var(--bd);
     backdrop-filter: var(--bd);
-
     box-shadow: 0 -2px 20px rgb(from var(--card-shadow) r g b / 0%);
     transition: box-shadow $transition-slow $ease-in-out;
     border-top: 1px solid rgb(from var(--card-border) r g b / 20%);
