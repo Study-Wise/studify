@@ -17,6 +17,7 @@ export interface Mode {
     prompt?: Promise<any>;
     tools?: Record<string, Tool>;
     show?: true | false;
+    desmos?: boolean;
 }
 
 export interface ReferenceSheetResult {
