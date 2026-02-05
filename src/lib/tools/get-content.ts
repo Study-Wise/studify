@@ -38,7 +38,7 @@ const requiresModelProvider = ['infographic'];
 
 const getContentTool = tool({
     description: "Get specific content (study guide, reference sheet, flashcards, etc.) for a thread. If the content doesn't exist, it will be generated automatically.",
-    parameters: z.object({
+    inputSchema: z.object({
         type: z.enum(validTypes).describe('The content type to retrieve or generate'),
         threadId: z.string().describe('The thread ID to get/generate content for'),
         userEmail: z.string().optional().describe('The user email for authorization (optional)'),
