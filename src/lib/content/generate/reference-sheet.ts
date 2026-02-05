@@ -58,7 +58,7 @@ Output the content directly without any wrapping HTML tags or dialog elements.
 You may remove or modify sections below as you see fit based on relevance to the topic.
 
 ### Reference Sheet
-#### Formulas & Theorems
+#### Formulas & Theorems (ONLY if the topic involves math, science, or technical formulas - fully omit this section otherwise)
 (list with \`$…$\`/\`$$…$$\`, explain variables)
 
 #### Key Definitions

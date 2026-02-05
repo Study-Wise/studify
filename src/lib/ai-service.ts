@@ -111,17 +111,34 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
         // Extract client-side actions from tool results
         const clientToolCalls: ClientToolCall[] = [];
 
+        console.log(`🔧 [${requestId}] Tool execution results:`, {
+            hasToolResults: !!result.toolResults,
+            toolResultsLength: result.toolResults?.length || 0,
+            hasToolCalls: !!result.toolCalls,
+            toolCallsLength: result.toolCalls?.length || 0,
+            hasSteps: !!result.steps,
+            stepsLength: result.steps?.length || 0,
+        });
+
         // Check tool results for actions that need client-side handling
         if (result.toolResults && result.toolResults.length > 0) {
+            console.log(`🔧 [${requestId}] Processing ${result.toolResults.length} tool results`);
             for (const toolResult of result.toolResults) {
                 try {
                     // Tool results are JSON strings, so we need to parse them
                     // Cast to access the result property which varies by type
                     const rawResult = (toolResult as unknown as { result?: unknown }).result;
+                    console.log(`🔧 [${requestId}] Raw tool result:`, {
+                        toolCallId: toolResult.toolCallId,
+                        toolName: (toolResult as any).toolName,
+                        rawResultType: typeof rawResult,
+                        rawResultPreview: typeof rawResult === 'string' ? rawResult.substring(0, 200) : JSON.stringify(rawResult)?.substring(0, 200),
+                    });
                     const resultString = rawResult as string;
                     const resultValue = typeof resultString === 'string' ? JSON.parse(resultString) : resultString;
 
                     if (resultValue && resultValue.action === 'open-content') {
+                        console.log(`✅ [${requestId}] Found open-content action in tool result`);
                         clientToolCalls.push({
                             toolName: 'open-content',
                             toolCallId: toolResult.toolCallId,
@@ -134,8 +151,45 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
                             },
                         });
                     }
-                } catch {
+                } catch (parseError) {
+                    console.log(`⚠️ [${requestId}] Failed to parse tool result:`, parseError);
                     // Not a JSON result or not an open-content action, skip
+                }
+            }
+        }
+
+        // Also check steps for tool results (multi-step scenarios)
+        if (result.steps && result.steps.length > 0) {
+            console.log(`🔧 [${requestId}] Processing ${result.steps.length} steps for tool results`);
+            for (const step of result.steps) {
+                if (step.toolResults && step.toolResults.length > 0) {
+                    for (const toolResult of step.toolResults) {
+                        try {
+                            const rawResult = (toolResult as any).result;
+                            console.log(`🔧 [${requestId}] Step tool result:`, {
+                                toolName: (toolResult as any).toolName,
+                                rawResultType: typeof rawResult,
+                                rawResultPreview: typeof rawResult === 'string' ? rawResult.substring(0, 200) : JSON.stringify(rawResult)?.substring(0, 200),
+                            });
+                            const resultValue = typeof rawResult === 'string' ? JSON.parse(rawResult) : rawResult;
+                            if (resultValue && resultValue.action === 'open-content') {
+                                console.log(`✅ [${requestId}] Found open-content action in step tool result`);
+                                clientToolCalls.push({
+                                    toolName: 'open-content',
+                                    toolCallId: (toolResult as any).toolCallId,
+                                    args: {
+                                        type: resultValue.type,
+                                        threadId: resultValue.threadId,
+                                        category: resultValue.category,
+                                        mode: resultValue.mode,
+                                        url: resultValue.url,
+                                    },
+                                });
+                            }
+                        } catch {
+                            // Not a JSON result or not an open-content action, skip
+                        }
+                    }
                 }
             }
         }

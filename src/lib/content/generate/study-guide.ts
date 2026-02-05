@@ -61,6 +61,9 @@ Generate ONLY a Study Guide based on the conversation history and any uploaded f
 
 DO NOT include any of the following (these are generated separately):
 ${getExclusionList('Study Guide')}
+- Interactive Mock Quiz
+- Practice Problems
+- Quiz questions
 
 Output the content directly without any wrapping HTML tags or dialog elements.
 

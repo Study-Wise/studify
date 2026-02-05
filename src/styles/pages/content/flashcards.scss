@@ -13,6 +13,164 @@
         border: 1px solid var(--card-border);
     }
 
+    // Quizlet-style flashcards
+    .quizlet-flashcards {
+        .flashcard-intro {
+            text-align: center;
+            margin-block-end: 2rem;
+            padding-block-end: 1.5rem;
+            border-bottom: 1px solid var(--card-border);
+            color: var(--body-text);
+            opacity: 0.9;
+
+            p {
+                margin: 0;
+                line-height: 1.6;
+            }
+        }
+
+        .flashcard-deck {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .flashcard-progress {
+            text-align: center;
+            margin-block-end: 1rem;
+            font-size: 0.9rem;
+            color: var(--body-text);
+            opacity: 0.7;
+
+            .current {
+                font-weight: 600;
+            }
+        }
+
+        .flashcard-container {
+            perspective: 1000px;
+            min-height: 300px;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 300px;
+            cursor: pointer;
+            display: none;
+
+            &[data-index="0"] {
+                display: block;
+            }
+
+            .flashcard-inner {
+                position: relative;
+                width: 100%;
+                height: 100%;
+                transition: transform 0.6s $ease;
+                transform-style: preserve-3d;
+            }
+
+            &[data-flipped="true"] .flashcard-inner {
+                transform: rotateY(180deg);
+            }
+
+            .flashcard-front,
+            .flashcard-back {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                backface-visibility: hidden;
+                border-radius: 1rem;
+                padding: 2rem;
+                display: flex;
+                flex-direction: column;
+                box-shadow: 0 4px 20px var(--card-shadow);
+                border: 1px solid var(--card-border);
+                overflow: auto;
+            }
+
+            .flashcard-front {
+                background: linear-gradient(135deg, var(--card-bg) 0%, hsl(from var(--card-bg) h s calc(l - 3%)) 100%);
+            }
+
+            .flashcard-back {
+                background: linear-gradient(135deg, hsl(from var(--primary) h s calc(l + 35%)) 0%, hsl(from var(--primary) h s calc(l + 30%)) 100%);
+                transform: rotateY(180deg);
+
+                @media (prefers-color-scheme: dark) {
+                    background: linear-gradient(135deg, hsl(from var(--primary) h s calc(l - 20%)) 0%, hsl(from var(--primary) h s calc(l - 25%)) 100%);
+                }
+            }
+
+            .card-label {
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                opacity: 0.6;
+                margin-block-end: 1rem;
+            }
+
+            .card-content {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.2rem;
+                line-height: 1.6;
+                text-align: center;
+
+                p {
+                    margin: 0;
+                }
+            }
+        }
+
+        .flashcard-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-block-start: 1.5rem;
+
+            .control-btn {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.75rem 1.25rem;
+                border: 1px solid var(--card-border);
+                border-radius: 0.5rem;
+                background-color: var(--card-bg);
+                color: var(--body-text);
+                cursor: pointer;
+                transition: all 0.2s $ease;
+
+                &:hover:not(:disabled) {
+                    background-color: hsl(from var(--card-bg) h s calc(l - 5%));
+                    translate: 0 -2px;
+                    box-shadow: 0 4px 12px var(--card-shadow);
+                }
+
+                &:disabled {
+                    opacity: 0.4;
+                    cursor: not-allowed;
+                }
+
+                .material-symbols-outlined {
+                    font-size: 1.25rem;
+                }
+            }
+
+            .flip {
+                background-color: var(--primary);
+                color: white;
+                border-color: var(--primary);
+
+                &:hover {
+                    background-color: hsl(from var(--primary) h s calc(l - 5%));
+                }
+            }
+        }
+    }
+
     .empty-state {
         display: flex;
         flex-direction: column;

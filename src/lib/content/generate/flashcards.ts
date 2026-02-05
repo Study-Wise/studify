@@ -1,9 +1,18 @@
-import { generateText } from 'ai';
+import { generateObject } from 'ai';
+import { z } from 'zod';
 import config, { getExclusionList } from '../../config';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
-import type { ThreadData, UploadedFile } from '../../types';
+import type { ThreadData, UploadedFile, FlashcardData } from '../../types';
+
+const flashcardSchema = z.object({
+    text: z.string().describe('A brief markdown summary/introduction about the flashcards topic'),
+    questions: z.array(z.object({
+        front: z.string().describe('The question or prompt on the front of the flashcard'),
+        back: z.string().describe('The answer or explanation on the back of the flashcard'),
+    })).describe('Array of flashcards with front (question) and back (answer)')
+});
 
 function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
     const filesWithText = uploadedFiles.filter(f => f.extractedText);
@@ -16,7 +25,7 @@ function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
     return `\n\n### Uploaded Files Content\nThe user has uploaded the following files. Include this content in your analysis:\n\n${fileContents}`;
 }
 
-export async function generateFlashcards(threadId: string, _userEmail: string | null) {
+export async function generateFlashcards(threadId: string, _userEmail: string | null): Promise<FlashcardData> {
     // Fetch the thread from database
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
@@ -53,21 +62,11 @@ Generate ONLY Flashcards based on the conversation history and any uploaded file
 DO NOT include any of the following (these are generated separately):
 ${getExclusionList('Flashcards')}
 
-Output the content in the following format:
+You must return:
+1. A "text" field with a brief markdown introduction/summary about what these flashcards cover (2-3 sentences)
+2. A "questions" array with 10-15 flashcards
 
-### Flashcards
-
-Each flashcard should be formatted as:
-
-#### [Card Number]. [Front of Card - Question/Prompt]
-
-**Answer:**
-[Back of Card - Answer/Explanation]
-
----
-
-Guidelines:
-- Create 10-15 flashcards covering the main topics discussed
+Guidelines for questions:
 - Questions should be clear and specific
 - Answers should be concise but complete
 - Include a mix of:
@@ -80,11 +79,7 @@ Guidelines:
 - For math/science: include relevant formulas and their applications
 - For other subjects: focus on key terms, concepts, and relationships
 
-Math formatting: use \`$…$\` for displaying math formulas/equations inline and \`$$…$$\` for displaying them on their own; never use backticks for complex math.
-
-Output should be clean markdown without any wrapping HTML tags or dialog elements.
-
-You may remove or modify sections as you see fit based on relevance to the topic.`;
+Math formatting: use $…$ for displaying math formulas/equations inline and $$…$$ for displaying them on their own.`;
 
     // Build messages array with system prompt first, then conversation history
     const conversationMessages = messages.filter(msg => msg.role !== 'system');
@@ -96,21 +91,27 @@ You may remove or modify sections as you see fit based on relevance to the topic
         ...conversationMessages
     ];
 
-    // Generate the flashcards
-    const result = await generateText({
+    // Generate the flashcards using structured output
+    const result = await generateObject({
         model: `${provider}/${userModel}`,
         messages: messagesForAI,
+        schema: flashcardSchema,
         temperature: 0.7,
     });
 
-    if (!result.text || result.text.length === 0) {
+    if (!result.object || !result.object.questions || result.object.questions.length === 0) {
         throw new Error('Generated flashcards are empty');
     }
 
-    // Save to database
+    const flashcardData: FlashcardData = {
+        text: result.object.text,
+        questions: result.object.questions
+    };
+
+    // Save to database as JSON string
     await db.update(threadsTable)
-        .set({ generatedFlashcards: result.text, updatedAt: new Date() })
+        .set({ generatedFlashcards: JSON.stringify(flashcardData), updatedAt: new Date() })
         .where(eq(threadsTable.id, threadId));
 
-    return result.text;
+    return flashcardData;
 }
