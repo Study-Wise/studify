@@ -4,6 +4,12 @@ import '@/styles/components/step-by-step.scss';
 
 import Layout from '@/layouts/Layout.astro';
 import categories from '@/lib/modes';
+import { auth } from '@/lib/auth';
+
+const session = await auth.api.getSession({
+    headers: Astro.request.headers,
+});
+const isLoggedIn = !!session?.user;
 
 const description = "StudyWise is your AI-powered study partner. Paste your homework and instantly generate study guides, reference sheets, flashcards, practice questions, mind maps, and more across subjects like Math, Science, and English.";
 ---
@@ -70,8 +76,10 @@ const description = "StudyWise is your AI-powered study partner. Paste your home
                             <div class="modes-grid">
                                 {Object.entries(category.modes).map(([modeKey, mode]) => {
                                     if (mode.show) {
+                                        const chatUrl = `/${categoryKey}/${modeKey}/chat/new`;
+                                        const href = isLoggedIn ? chatUrl : `/user/sign-in?returnBackUrl=${encodeURIComponent(chatUrl)}`;
                                         return (
-                                            <a href={`/${categoryKey}/${modeKey}`} class="mode-card">
+                                            <a href={href} class="mode-card">
                                                 <div class="mode-icon">{mode.icon}</div>
                                                 <h4>{mode.name}</h4>
                                                 <p>{mode.description}</p>

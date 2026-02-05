@@ -27,6 +27,7 @@ import { getLatestPracticeQuestions } from '@/lib/content/latest/practice-questi
 
 import { checkForOneMessage } from '@/lib/checkForOneMessage';
 import categories from '@/lib/modes';
+import type { Message } from '@/lib/types';
 
 let { category, mode, id } = Astro.params || { category: '', mode: '', id: '' };
 
@@ -45,31 +46,45 @@ const modeName = modeObj?.name || mode;
 const user = Astro.locals.user;
 const user_email = user?.email || null;
 
-// Check thread access first
-const { isAuthorized, isPublic } = await checkThreadAccess(id || '', user, category, mode);
+// Check if this is a new chat
+const isNewChat = (id === 'new');
 
-// Redirect to sign-in only if not authenticated AND thread is not public
-if (!user && !isPublic) {
-    return Astro.redirect("/user/sign-in");
+// Check thread access (skip for new chats)
+let isAuthorized = isNewChat ? true : false;
+let isPublic = false;
+
+if (!isNewChat) {
+    const accessCheck = await checkThreadAccess(id || '', user, category, mode);
+    isAuthorized = accessCheck.isAuthorized;
+    isPublic = accessCheck.isPublic;
+    
 }
 
-// Get thread data to access the title and uploaded files
-const thread = id ? await getThreadByToken(id, user_email) : null;
+// For new chats, user must be authenticated
+if ((isNewChat && !user) || (!user && !isPublic)) {
+    return Astro.redirect(`/user/sign-in?returnBackUrl=${encodeURIComponent(`/${category}/${mode}/chat/${id}`)}`);
+}
+
+// Get thread data to access the title and uploaded files (skip for new chats)
+const thread = !isNewChat && id ? await getThreadByToken(id, user_email) : null;
 const threadTitle = thread?.title || null;
 const uploadedFiles = thread?.uploadedFiles || [];
 
-// Get messages only if authorized or public
-const messagesLength = await getMessagesLength(id || '');
-let messages = (isAuthorized || isPublic) && messagesLength > 0 ? await getMessages(id ?? '', user_email) : [];
+// Get messages only if authorized or public (skip for new chats)
+let messages: Message[] = [];
+if (!isNewChat) {
+    const messagesLength = await getMessagesLength(id || '');
+    messages = (isAuthorized || isPublic) && messagesLength > 0 ? await getMessages(id ?? '', user_email) : [];
 
-// Check if there's only one message and generate welcome message if needed
-messages = await checkForOneMessage({
-    messages,
-    threadId: id || '',
-    category: category || '',
-    mode: mode || '',
-    isAuthorized
-});
+    // Check if there's only one message and generate welcome message if needed
+    messages = await checkForOneMessage({
+        messages,
+        threadId: id || '',
+        category: category || '',
+        mode: mode || '',
+        isAuthorized
+    });
+}
 
 // Check if reference sheet, study guide, infographic, webpage, mind map, additional resources, flashcard, and practice questions exist
 let hasReferenceSheet = false;
@@ -81,7 +96,7 @@ let hasAdditionalResources = false;
 let hasFlashcard = false;
 let hasPracticeQuestions = false;
 
-if ((isAuthorized || isPublic) && id) {
+if (!isNewChat && (isAuthorized || isPublic) && id) {
     const referenceSheetResult = await getLatestReferenceSheet(id);
     const studyGuideResult = await getLatestStudyGuide(id);
     const infographic = await getLatestInfographic(id);
@@ -107,9 +122,9 @@ export const inNav = 'hide';
 <Layout title={`Chat | ${modeName} | ${categoryName}`} container={false} isChatArea={true} className="chat-page" hideCopyright={true}>
     <header class="chat-header">
         <div class="chat-title-container">
-            <h2><span class="material-symbols-outlined">chat</span>&nbsp;{threadTitle || (id ? 'Chat' : 'New Chat')}</h2>
+            <h2><span class="material-symbols-outlined">chat</span>&nbsp;{threadTitle || (isNewChat ? 'New Chat' : 'Chat')}</h2>
         </div>
-        <Header pTitle={threadTitle || (id ? 'Chat' : 'New Chat')} />
+        <Header pTitle={threadTitle || (isNewChat ? 'New Chat' : 'Chat')} />
     </header>
     <section class="chat-container">
         <LeftSidebar
@@ -193,6 +208,6 @@ export const inNav = 'hide';
             chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
         });
     </script>
-    <MessagesScript page="chat" category={category} mode={mode} />
+    <MessagesScript page="chat" category={category} mode={mode} id={id} />
     <StepByStepScript />
 </Layout> 

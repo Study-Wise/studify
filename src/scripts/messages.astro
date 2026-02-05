@@ -1,7 +1,7 @@
 ---
-const { page, category, mode } = Astro.props;
+const { page, category, mode, id } = Astro.props;
 ---
-<script is:inline define:vars={{ page, category, mode }}>
+<script is:inline define:vars={{ page, category, mode, id }}>
     let threadId = 0;
     let userSettings = {};
 
@@ -237,7 +237,15 @@ const { page, category, mode } = Astro.props;
             // Redirect to chat page for first message
             window.location.href = `/${category}/${mode}/chat/${data.id}`;
         } else if (page === 'chat') {
-            await addMessage('assistant', data);
+            // Check if this is a new chat (URL ends with /chat/new)
+            const isNewChat = (id === 'new');
+
+            if (isNewChat && data.id && category && mode) {
+                // Redirect to the actual thread ID after first message
+                window.location.href = `/${category}/${mode}/chat/${data.id}`;
+            } else {
+                await addMessage('assistant', data);
+            }
         } else if (page === 'home') {
             displayError('Failed to redirect to chat page.');
         }
@@ -467,7 +475,8 @@ const { page, category, mode } = Astro.props;
         let pathSegments = location.pathname;
         if (pathSegments.endsWith('/')) pathSegments = pathSegments.slice(0, -1);
         const idFromUrl = pathSegments.split('/').pop();
-        if (idFromUrl && idFromUrl !== 'chat') {
+        // If the ID is "new", keep threadId as null so the API creates a new thread
+        if (idFromUrl && idFromUrl !== 'chat' && idFromUrl !== 'new') {
             threadId = idFromUrl;
             localStorage.setItem('threadId', threadId);
         }

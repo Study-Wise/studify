@@ -90,13 +90,61 @@ const categories: Record<string, Category> = {
     },
     'social-studies': {
         name: 'Social Studies',
-        description: 'Understand society, culture, government, and human interactions throughout history',
+        description: 'Understand society, culture, government, history, and human interactions',
         modes: {
-            history: {
+            'general-history': {
                 show: true,
-                name: 'History',
-                description: 'Explore past events, civilizations, and their impact on the modern world',
+                name: 'General History',
+                description: 'General history topics and historical analysis across all time periods',
                 icon: '📜',
+            },
+            'world-history': {
+                show: true,
+                name: 'World History',
+                description: 'Study global events, civilizations, and interconnections across continents',
+                icon: '🗺️',
+            },
+            'us-history': {
+                show: true,
+                name: 'US History',
+                description: 'Explore American history from colonization to the present day',
+                icon: '🇺🇸',
+            },
+            'ancient-history': {
+                show: true,
+                name: 'Ancient History',
+                description: 'Discover ancient civilizations including Egypt, Greece, Rome, and Mesopotamia',
+                icon: '🏺',
+            },
+            'medieval-history': {
+                show: true,
+                name: 'Medieval History',
+                description: 'Study the Middle Ages, feudalism, crusades, and medieval societies',
+                icon: '⚔️',
+            },
+            'modern-history': {
+                show: true,
+                name: 'Modern History',
+                description: 'Analyze events from the Renaissance through the 21st century',
+                icon: '🏭',
+            },
+            'european-history': {
+                show: true,
+                name: 'European History',
+                description: 'Explore European civilizations, empires, wars, and cultural movements',
+                icon: '🇪🇺',
+            },
+            'asian-history': {
+                show: true,
+                name: 'Asian History',
+                description: 'Study the rich histories of China, Japan, India, and other Asian civilizations',
+                icon: '🏯',
+            },
+            'african-history': {
+                show: true,
+                name: 'African History',
+                description: 'Discover African kingdoms, colonialism, independence movements, and cultures',
+                icon: '🌴',
             },
             geography: {
                 show: true,
