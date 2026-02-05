@@ -71,7 +71,7 @@ Tools are defined in `src/lib/tools/*.ts` and automatically imported via `src/li
 - **search.ts**: Web search using Exa API
 - **runJSCode.ts**: Execute JavaScript code (sanitizes imports for security)
 
-Tools use the Vercel AI SDK's `tool()` function with Zod schemas for parameters.
+Tools use the Vercel AI SDK's `tool()` function with Zod schemas for inputSchema.
 
 ### Database Schema
 
@@ -308,7 +308,7 @@ This ensures fixes are targeted, maintainable, and don't introduce new issues.
 1. Create tool file in `src/lib/tools/[tool-name].ts`
 2. Export default object with:
    - Spread `tool()` from `ai` package
-   - `description` and `parameters` (Zod schema)
+   - `description` and `inputSchema` (Zod schema)
    - `execute` async function
    - `ready: true` flag
 3. Tool will be automatically imported by `src/lib/tools.ts`
