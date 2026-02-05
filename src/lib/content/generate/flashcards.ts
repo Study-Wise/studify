@@ -25,7 +25,7 @@ function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
     return `\n\n### Uploaded Files Content\nThe user has uploaded the following files. Include this content in your analysis:\n\n${fileContents}`;
 }
 
-export async function generateFlashcards(threadId: string, _userEmail: string | null): Promise<FlashcardData> {
+export async function generateFlashcards(threadId: string, _userEmail: string | null, userPrompt?: string): Promise<FlashcardData> {
     // Fetch the thread from database
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
@@ -79,7 +79,7 @@ Guidelines for questions:
 - For math/science: include relevant formulas and their applications
 - For other subjects: focus on key terms, concepts, and relationships
 
-Math formatting: use $…$ for displaying math formulas/equations inline and $$…$$ for displaying them on their own.`;
+Math formatting: use $…$ for displaying math formulas/equations inline and $$…$$ for displaying them on their own.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS:\n${userPrompt}` : ''}`;
 
     // Build messages array with system prompt first, then conversation history
     const conversationMessages = messages.filter(msg => msg.role !== 'system');

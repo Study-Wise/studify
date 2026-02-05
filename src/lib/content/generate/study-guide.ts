@@ -18,7 +18,7 @@ function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
     return `\n\n### Uploaded Files Content\nThe user has uploaded the following files. Include this content in your analysis:\n\n${fileContents}`;
 }
 
-export async function generateStudyGuide(threadId: string, _userEmail: string | null) {
+export async function generateStudyGuide(threadId: string, _userEmail: string | null, userPrompt?: string) {
     // Fetch the thread from database
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
@@ -90,7 +90,7 @@ ${desmosContent}
 
 Math formatting: use \`$…$\` for inline math and \`$$…$$\` for block math.
 
-REMEMBER: Output ONLY the Study Guide. No quizzes, no practice questions, no flashcards, no other content types.`;
+REMEMBER: Output ONLY the Study Guide. No quizzes, no practice questions, no flashcards, no other content types.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS:\n${userPrompt}` : ''}`;
 
     // Build messages array with system prompt first, then conversation history
     const conversationMessages = messages.filter(msg => msg.role !== 'system');

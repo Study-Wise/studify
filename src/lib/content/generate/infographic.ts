@@ -21,7 +21,8 @@ export async function generateInfographic(
     threadId: string,
     _userEmail: string | null,
     userModel: string,
-    provider: string
+    provider: string,
+    userPrompt?: string
 ) {
     // Fetch the thread from database to get conversation history
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
@@ -70,7 +71,7 @@ Your description should be clear, visual, and specific about:
 
 Keep it under 1000 characters. Be specific about visual elements, diagrams, icons, and text placement.
 
-You may remove or modify elements as you see fit based on relevance to the topic.`;
+You may remove or modify elements as you see fit based on relevance to the topic.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS:\n${userPrompt}` : ''}`;
 
     const descriptionResult = await generateText({
         model: `${provider}/${userModel}`,

@@ -17,7 +17,7 @@ function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
     return `\n\n### Uploaded Files Content\nThe user has uploaded the following files. Include this content in your analysis:\n\n${fileContents}`;
 }
 
-export async function generatePracticeQuestions(threadId: string, _userEmail: string | null) {
+export async function generatePracticeQuestions(threadId: string, _userEmail: string | null, userPrompt?: string) {
     // Fetch the thread from database
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
@@ -137,7 +137,7 @@ Math formatting: use \`$…$\` for displaying math formulas/equations inline and
 
 Ensure all questions are directly related to topics discussed in the conversation. Vary difficulty levels to support different learning stages. Make questions engaging and practical.
 
-You may remove or modify sections as you see fit based on relevance to the topic.`;
+You may remove or modify sections as you see fit based on relevance to the topic.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS:\n${userPrompt}` : ''}`;
 
     // Build messages array with system prompt first, then conversation history
     const conversationMessages = messages.filter(msg => msg.role !== 'system');

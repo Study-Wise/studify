@@ -17,7 +17,7 @@ function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
     return `\n\n### Uploaded Files Content\nThe user has uploaded the following files. Include this content in your analysis:\n\n${fileContents}`;
 }
 
-export async function generateWebpage(threadId: string, _userEmail: string | null) {
+export async function generateWebpage(threadId: string, _userEmail: string | null, userPrompt?: string) {
     // Fetch the thread from database
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
@@ -77,7 +77,7 @@ Make it engaging, educational, and visually appealing!
 
 You may remove or modify sections as you see fit based on relevance to the topic.
 
-ONLY INCLUDE THE HTML CONTENT IN YOUR RESPONSE. DO NOT RESPOND WITH ANYTHING ELSE BEFORE OR AFTER THE HTML.`;
+ONLY INCLUDE THE HTML CONTENT IN YOUR RESPONSE. DO NOT RESPOND WITH ANYTHING ELSE BEFORE OR AFTER THE HTML.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS:\n${userPrompt}` : ''}`;
 
     // Build messages array with system prompt first, then conversation history
     const conversationMessages = messages.filter(msg => msg.role !== 'system');

@@ -40,8 +40,9 @@ const getContentTool = tool({
         threadId: z.string().describe('The thread ID to get/generate content for'),
         userEmail: z.string().optional().describe('The user email for authorization (optional)'),
         regenerate: z.boolean().optional().describe('Force regeneration even if content already exists (default: false)'),
+        userPrompt: z.string().optional().describe('Additional instructions from the user for content generation (only used when regenerate=true)'),
     }),
-    execute: async ({ type, threadId, userEmail, regenerate = false }) => {
+    execute: async ({ type, threadId, userEmail, regenerate = false, userPrompt }) => {
         try {
             const pascalCase = toPascalCase(type);
 
@@ -87,16 +88,20 @@ const getContentTool = tool({
 
             let generatedContent;
 
+            // Only pass userPrompt when regenerating
+            const promptToPass = regenerate ? userPrompt : undefined;
+
             // Handle types that require model/provider (always use default for reliability)
             if (requiresModelProvider.includes(type)) {
                 generatedContent = await generateFn(
                     threadId,
                     userEmail || null,
                     config.model,
-                    config.provider
+                    config.provider,
+                    promptToPass
                 );
             } else {
-                generatedContent = await generateFn(threadId, userEmail || null);
+                generatedContent = await generateFn(threadId, userEmail || null, promptToPass);
             }
 
             // Each generate function saves to DB on its own

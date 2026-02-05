@@ -23,7 +23,7 @@ interface ResourceCollection {
     generatedAt: string;
 }
 
-export async function generateResources(threadId: string, _userEmail: string | null): Promise<string> {
+export async function generateResources(threadId: string, _userEmail: string | null, userPrompt?: string): Promise<string> {
     // Fetch the thread from database
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
