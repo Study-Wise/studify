@@ -1,10 +1,13 @@
 ---
+import Layout from '@/layouts/Layout.astro';
+import ContentActions from '@/components/content/ContentActions.astro';
 import { getLatestWebpage } from '@/lib/content/latest/webpage';
 import { checkThreadAccess } from '@/lib/auth/checkThreadAccess';
 import '@/styles/pages/content/webpage.scss';
 import categories from '@/lib/modes';
 
 const { category, mode, id } = Astro.params;
+const chatUrl = `/${category}/${mode}/chat/${id}`;
 
 const categoryObj = category ? categories[category] : null;
 const modeObj = categoryObj?.modes?.[mode || ''];
@@ -32,38 +35,38 @@ if (!user && !isPublic) {
 const { content: latestWebpage } = (isAuthorized || isPublic)
     ? await getLatestWebpage(id || '')
     : { content: null };
-
-// If authorized but no content, show empty state
-// If not authorized and not public, show access denied
-const showAccessDenied = !isAuthorized && !isPublic;
-const showEmptyState = (isAuthorized || isPublic) && !latestWebpage;
-const showContent = (isAuthorized || isPublic) && latestWebpage;
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{`Webpage | ${modeName} | ${categoryName}`}</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-</head>
-<body>
-    {showAccessDenied ? (
-        <div class="error-container">
-            <span class="material-symbols-outlined">lock</span>
-            <h2>Access Denied</h2>
-            <p>You don't have permission to view this webpage. This thread belongs to another user.</p>
-            <a href="/" class="btn-primary">Go Home</a>
-        </div>
-    ) : showEmptyState ? (
-        <div class="error-container">
-            <span class="material-symbols-outlined">web</span>
-            <h2>No Webpage Found</h2>
-            <p>There is no webpage generated for this conversation yet.</p>
-        </div>
-    ) : showContent ? (
-        <iframe srcdoc={latestWebpage} title="Generated Webpage" sandbox="allow-scripts allow-same-origin"></iframe>
-    ) : null}
-</body>
-</html>
+<Layout title={`Webpage | ${modeName} | ${categoryName}`} container={false}>
+    <div class="webpage-page">
+        {!isAuthorized && !isPublic ? (
+            <div class="empty-state">
+                <span class="material-symbols-outlined">lock</span>
+                <h2>Access Denied</h2>
+                <p>You don't have permission to view this webpage. This thread belongs to another user.</p>
+                <a href="/" class="btn-primary">Go Home</a>
+            </div>
+        ) : (
+            <>
+                <ContentActions
+                    contentType="webpage"
+                    threadId={id || ''}
+                    hasContent={!!latestWebpage}
+                    isAuthorized={isAuthorized}
+                    chatUrl={chatUrl}
+                />
+                {latestWebpage ? (
+                    <div class="webpage-container">
+                        <iframe srcdoc={latestWebpage} title="Generated Webpage" sandbox="allow-scripts allow-same-origin" />
+                    </div>
+                ) : (
+                    <div class="empty-state">
+                        <span class="material-symbols-outlined">web</span>
+                        <h2>No Webpage Found</h2>
+                        <p>There is no webpage generated for this conversation yet.</p>
+                    </div>
+                )}
+            </>
+        )}
+    </div>
+</Layout>

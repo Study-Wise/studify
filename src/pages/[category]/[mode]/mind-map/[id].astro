@@ -1,11 +1,13 @@
 ---
 import Layout from '@/layouts/Layout.astro';
+import ContentActions from '@/components/content/ContentActions.astro';
 import { getLatestMindMap } from '@/lib/content/latest/mind-map';
 import { checkThreadAccess } from '@/lib/auth/checkThreadAccess';
 import '@/styles/pages/content/mind-map.scss';
 import categories from '@/lib/modes';
 
 const { category, mode, id } = Astro.params;
+const chatUrl = `/${category}/${mode}/chat/${id}`;
 
 const categoryObj = category ? categories[category] : null;
 const modeObj = categoryObj?.modes?.[mode || ''];
@@ -44,21 +46,32 @@ const { content: latestMindMap } = (isAuthorized || isPublic)
                 <p>You don't have permission to view this mind map. This thread belongs to another user.</p>
                 <a href="/" class="btn-primary">Go Home</a>
             </div>
-        ) : latestMindMap ? (
-            <div class="mind-map-container">
-                <iframe
-                    srcdoc={latestMindMap}
-                    title="Mind Map"
-                    class="mind-map-iframe"
-                    sandbox="allow-scripts allow-same-origin"
-                />
-            </div>
         ) : (
-            <div class="empty-state">
-                <span class="material-symbols-outlined">hub</span>
-                <h2>No Mind Map Found</h2>
-                <p>There is no mind map generated for this conversation yet.</p>
-            </div>
+            <>
+                <ContentActions
+                    contentType="mind-map"
+                    threadId={id || ''}
+                    hasContent={!!latestMindMap}
+                    isAuthorized={isAuthorized}
+                    chatUrl={chatUrl}
+                />
+                {latestMindMap ? (
+                    <div class="mind-map-container">
+                        <iframe
+                            srcdoc={latestMindMap}
+                            title="Mind Map"
+                            class="mind-map-iframe"
+                            sandbox="allow-scripts allow-same-origin"
+                        />
+                    </div>
+                ) : (
+                    <div class="empty-state">
+                        <span class="material-symbols-outlined">hub</span>
+                        <h2>No Mind Map Found</h2>
+                        <p>There is no mind map generated for this conversation yet.</p>
+                    </div>
+                )}
+            </>
         )}
     </div>
 </Layout>

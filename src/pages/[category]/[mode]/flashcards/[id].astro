@@ -1,5 +1,6 @@
 ---
 import Layout from '@/layouts/Layout.astro';
+import ContentActions from '@/components/content/ContentActions.astro';
 import { getLatestFlashcards } from '@/lib/content/latest/flashcards';
 import { checkThreadAccess } from '@/lib/auth/checkThreadAccess';
 import { marked } from 'marked';
@@ -7,6 +8,7 @@ import '@/styles/pages/content/flashcards.scss';
 import categories from '@/lib/modes';
 
 const { category, mode, id } = Astro.params;
+const chatUrl = `/${category}/${mode}/chat/${id}`;
 
 const categoryObj = category ? categories[category] : null;
 const modeObj = categoryObj?.modes?.[mode || ''];
@@ -48,16 +50,27 @@ const parsedContent = latestFlashcards ? await marked.parse(latestFlashcards) : 
                 <p>You don't have permission to view these flashcards. This thread belongs to another user.</p>
                 <a href="/" class="btn-primary">Go Home</a>
             </div>
-        ) : parsedContent ? (
-            <div class="content-container">
-                <div class="flashcard-content" set:html={parsedContent} />
-            </div>
         ) : (
-            <div class="empty-state">
-                <span class="material-symbols-outlined">style</span>
-                <h2>No Flashcards Found</h2>
-                <p>There are no flashcards generated for this conversation yet.</p>
-            </div>
+            <>
+                <ContentActions
+                    contentType="flashcards"
+                    threadId={id || ''}
+                    hasContent={!!parsedContent}
+                    isAuthorized={isAuthorized}
+                    chatUrl={chatUrl}
+                />
+                {parsedContent ? (
+                    <div class="content-container">
+                        <div class="flashcard-content" set:html={parsedContent} />
+                    </div>
+                ) : (
+                    <div class="empty-state">
+                        <span class="material-symbols-outlined">style</span>
+                        <h2>No Flashcards Found</h2>
+                        <p>There are no flashcards generated for this conversation yet.</p>
+                    </div>
+                )}
+            </>
         )}
     </div>
 </Layout>

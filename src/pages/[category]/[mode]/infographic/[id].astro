@@ -1,11 +1,13 @@
 ---
 import Layout from '@/layouts/Layout.astro';
+import ContentActions from '@/components/content/ContentActions.astro';
 import { getLatestInfographic } from '@/lib/content/latest/infographic';
 import { checkThreadAccess } from '@/lib/auth/checkThreadAccess';
 import '@/styles/pages/content/infographic.scss';
 import categories from '@/lib/modes';
 
 const { category, mode, id } = Astro.params;
+const chatUrl = `/${category}/${mode}/chat/${id}`;
 
 const categoryObj = category ? categories[category] : null;
 const modeObj = categoryObj?.modes?.[mode || ''];
@@ -47,16 +49,27 @@ const infographicUrl = infographic?.imageUrl || null;
                 <p>You don't have permission to view this infographic. This thread belongs to another user.</p>
                 <a href="/" class="btn-primary">Go Home</a>
             </div>
-        ) : infographicUrl ? (
-            <div class="content-container">
-                <img src={infographicUrl} alt="Generated Infographic" class="infographic-image" />
-            </div>
         ) : (
-            <div class="empty-state">
-                <span class="material-symbols-outlined">image</span>
-                <h2>No Infographic Found</h2>
-                <p>There is no infographic generated for this conversation yet.</p>
-            </div>
+            <>
+                <ContentActions
+                    contentType="infographic"
+                    threadId={id || ''}
+                    hasContent={!!infographicUrl}
+                    isAuthorized={isAuthorized}
+                    chatUrl={chatUrl}
+                />
+                {infographicUrl ? (
+                    <div class="content-container">
+                        <img src={infographicUrl} alt="Generated Infographic" class="infographic-image" />
+                    </div>
+                ) : (
+                    <div class="empty-state">
+                        <span class="material-symbols-outlined">image</span>
+                        <h2>No Infographic Found</h2>
+                        <p>There is no infographic generated for this conversation yet.</p>
+                    </div>
+                )}
+            </>
         )}
     </div>
 </Layout>

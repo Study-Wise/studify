@@ -1,5 +1,6 @@
 ---
 import Layout from '@/layouts/Layout.astro';
+import ContentActions from '@/components/content/ContentActions.astro';
 import { getLatestPracticeQuestions } from '@/lib/content/latest/practice-questions';
 import { checkThreadAccess } from '@/lib/auth/checkThreadAccess';
 import StepByStepScript from '@/scripts/step-by-step.astro';
@@ -8,6 +9,7 @@ import '@/styles/pages/content/practice-questions.scss';
 import categories from '@/lib/modes';
 
 const { category, mode, id } = Astro.params;
+const chatUrl = `/${category}/${mode}/chat/${id}`;
 
 const categoryObj = category ? categories[category] : null;
 const modeObj = categoryObj?.modes?.[mode || ''];
@@ -49,16 +51,27 @@ const parsedContent = latestPracticeQuestions ? await marked.parse(latestPractic
                 <p>You don't have permission to view these practice questions. This thread belongs to another user.</p>
                 <a href="/" class="btn-primary">Go Home</a>
             </div>
-        ) : parsedContent ? (
-            <div class="content-container">
-                <div class="practice-questions-content" set:html={parsedContent} />
-            </div>
         ) : (
-            <div class="empty-state">
-                <span class="material-symbols-outlined">quiz</span>
-                <h2>No Practice Questions Found</h2>
-                <p>There are no practice questions generated for this conversation yet.</p>
-            </div>
+            <>
+                <ContentActions
+                    contentType="practice-questions"
+                    threadId={id || ''}
+                    hasContent={!!parsedContent}
+                    isAuthorized={isAuthorized}
+                    chatUrl={chatUrl}
+                />
+                {parsedContent ? (
+                    <div class="content-container">
+                        <div class="practice-questions-content" set:html={parsedContent} />
+                    </div>
+                ) : (
+                    <div class="empty-state">
+                        <span class="material-symbols-outlined">quiz</span>
+                        <h2>No Practice Questions Found</h2>
+                        <p>There are no practice questions generated for this conversation yet.</p>
+                    </div>
+                )}
+            </>
         )}
     </div>
     <StepByStepScript />

@@ -1,5 +1,6 @@
 ---
 import Layout from '@/layouts/Layout.astro';
+import ContentActions from '@/components/content/ContentActions.astro';
 import { getLatestResources } from '@/lib/content/latest/additional-resources';
 import { checkThreadAccess } from '@/lib/auth/checkThreadAccess';
 import '@/styles/pages/content/additional-resources.scss';
@@ -7,6 +8,7 @@ import categories from '@/lib/modes';
 import type { Resource } from '@/lib/types';
 
 const { category, mode, id } = Astro.params;
+const chatUrl = `/${category}/${mode}/chat/${id}`;
 
 const categoryObj = category ? categories[category] : null;
 const modeObj = categoryObj?.modes?.[mode || ''];
@@ -55,7 +57,16 @@ if (latestResourcesJSON) {
                 <p>You don't have permission to view these resources. This thread belongs to another user.</p>
                 <a href="/" class="btn-primary">Go Home</a>
             </div>
-        ) : resourcesData ? (
+        ) : (
+            <>
+                <ContentActions
+                    contentType="additional-resources"
+                    threadId={id || ''}
+                    hasContent={!!resourcesData}
+                    isAuthorized={isAuthorized}
+                    chatUrl={chatUrl}
+                />
+                {resourcesData ? (
             <div class="content-container">
                 <div class="resources-header">
                     <h1 class="resources-title">{resourcesData.topic}</h1>
@@ -166,12 +177,14 @@ if (latestResourcesJSON) {
                     </section>
                 )}
             </div>
-        ) : (
-            <div class="empty-state">
-                <span class="material-symbols-outlined">search</span>
-                <h2>No Resources Found</h2>
-                <p>There are no resources generated for this conversation yet.</p>
-            </div>
+                ) : (
+                    <div class="empty-state">
+                        <span class="material-symbols-outlined">search</span>
+                        <h2>No Resources Found</h2>
+                        <p>There are no resources generated for this conversation yet.</p>
+                    </div>
+                )}
+            </>
         )}
     </div>
 </Layout>

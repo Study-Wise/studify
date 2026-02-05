@@ -1,5 +1,6 @@
 ---
 import Layout from '@/layouts/Layout.astro';
+import ContentActions from '@/components/content/ContentActions.astro';
 import { getLatestReferenceSheet } from '@/lib/content/latest/reference-sheet';
 import { checkThreadAccess } from '@/lib/auth/checkThreadAccess';
 import StepByStepScript from '@/scripts/step-by-step.astro';
@@ -8,6 +9,7 @@ import '@/styles/pages/content/reference-sheet.scss';
 import categories from '@/lib/modes';
 
 const { category, mode, id } = Astro.params;
+const chatUrl = `/${category}/${mode}/chat/${id}`;
 
 const categoryObj = category ? categories[category] : null;
 const modeObj = categoryObj?.modes?.[mode || ''];
@@ -49,16 +51,27 @@ const parsedContent = latestReferenceSheet ? await marked.parse(latestReferenceS
                 <p>You don't have permission to view this reference sheet. This thread belongs to another user.</p>
                 <a href="/" class="btn-primary">Go Home</a>
             </div>
-        ) : parsedContent ? (
-            <div class="content-container">
-                <div class="reference-sheet-content" set:html={parsedContent} />
-            </div>
         ) : (
-            <div class="empty-state">
-                <span class="material-symbols-outlined">description</span>
-                <h2>No Reference Sheet Found</h2>
-                <p>There is no reference sheet generated for this conversation yet.</p>
-            </div>
+            <>
+                <ContentActions
+                    contentType="reference-sheet"
+                    threadId={id || ''}
+                    hasContent={!!parsedContent}
+                    isAuthorized={isAuthorized}
+                    chatUrl={chatUrl}
+                />
+                {parsedContent ? (
+                    <div class="content-container">
+                        <div class="reference-sheet-content" set:html={parsedContent} />
+                    </div>
+                ) : (
+                    <div class="empty-state">
+                        <span class="material-symbols-outlined">description</span>
+                        <h2>No Reference Sheet Found</h2>
+                        <p>There is no reference sheet generated for this conversation yet.</p>
+                    </div>
+                )}
+            </>
         )}
     </div>
     <StepByStepScript />
