@@ -71,7 +71,7 @@ Your description should be clear, visual, and specific about:
 
 Keep it under 1000 characters. Be specific about visual elements, diagrams, icons, and text placement.
 
-You may remove or modify elements as you see fit based on relevance to the topic.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS:\n${userPrompt}` : ''}`;
+You may remove or modify elements as you see fit based on relevance to the topic.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
 
     const descriptionResult = await generateText({
         model: `${provider}/${userModel}`,
