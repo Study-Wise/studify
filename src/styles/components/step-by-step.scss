@@ -2,7 +2,7 @@
 @use '../variables/tokens' as *;
 @use 'sass:math';
 
-@mixin stepsBorder($bor: var(--card-border), $bdr: $spacing-extra-large, $pad: $spacing-medium, $depth: 0) {
+@mixin steps-border($bor: var(--card-border), $bdr: $spacing-extra-large, $pad: $spacing-medium, $depth: 0) {
     padding: $pad;
     border: solid 1px $bor;
     border-radius: #{$bdr - $pad * $depth};
@@ -18,7 +18,7 @@
     box-sizing: border-box;
     background-color: var(--card-bg);
 
-    @include stepsBorder;
+    @include steps-border;
 
     display: flex;
     flex-direction: column;
@@ -60,7 +60,7 @@
             flex-direction: column;
             gap: $spacing-medium;
 
-            @include stepsBorder($depth: 1);
+            @include steps-border($depth: 1);
 
             .step-question-choice {
                 position: relative;
