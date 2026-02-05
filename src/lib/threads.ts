@@ -1,5 +1,5 @@
 import { eq, desc } from 'drizzle-orm';
-import { drizzle } from 'drizzle-orm/vercel-postgres';
+import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 import type { InferSelectModel } from "drizzle-orm";
 import type { ThreadData } from './types';
@@ -8,7 +8,6 @@ type Thread = InferSelectModel<typeof threadsTable>;
 
 async function getMessages(id: string, user_email?: string | null) {
     try {
-        const db = drizzle();
         const dbResponse: Thread[] = await db.select().from(threadsTable).where(eq(threadsTable.id, id));
         
         if (dbResponse.length === 0) {
@@ -32,7 +31,6 @@ async function getMessages(id: string, user_email?: string | null) {
 
 async function getMessagesLength(id: string) {
     try {
-        const db = drizzle();
         const dbResponse: Thread[] = await db.select().from(threadsTable).where(eq(threadsTable.id, id));
         
         if (dbResponse.length === 0) {
@@ -51,7 +49,6 @@ async function getMessagesLength(id: string) {
 
 async function getThreadByToken(id: string, user_email?: string | null) {
     try {
-        const db = drizzle();
         const dbResponse: Thread[] = await db.select().from(threadsTable).where(eq(threadsTable.id, id));
 
         if (dbResponse.length === 0) {
@@ -74,7 +71,6 @@ async function getThreadByToken(id: string, user_email?: string | null) {
 
 async function getUserThreads(user_email: string) {
     try {
-        const db = drizzle();
         const threads: Thread[] = await db
             .select()
             .from(threadsTable)
