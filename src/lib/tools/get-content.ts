@@ -37,7 +37,7 @@ const specialCases: Record<string, { latestFn?: string; generateFn?: string }> =
 const requiresModelProvider = ['infographic'];
 
 const getContentTool = tool({
-    description: "Retrieve or generate study materials for a thread. Returns existing content if available; otherwise automatically generates new content based on the conversation history and uploaded files.",
+    description: "Retrieve or generate study materials for a thread. Returns existing content if available; otherwise automatically generates new content based on the conversation history and uploaded files. IMPORTANT: After successfully retrieving or generating content, you should call the 'open-content' tool to open the content in a new tab for the user.",
     inputSchema: z.object({
         type: z.enum(validTypes).describe('The content type to retrieve or generate'),
         threadId: z.string().describe('The thread ID to get/generate content for'),
