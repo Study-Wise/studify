@@ -60,6 +60,8 @@ export interface ChatLeftSidebarProps {
     threadId: string;
     uploadedFiles: UploadedFile[];
     email: string;
+    category: string;
+    mode: string;
 }
 
 export interface ChatRightSidebarProps {
