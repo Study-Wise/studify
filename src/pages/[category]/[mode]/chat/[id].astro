@@ -74,7 +74,9 @@ const uploadedFiles = thread?.uploadedFiles || [];
 let messages: Message[] = [];
 if (!isNewChat) {
     const messagesLength = await getMessagesLength(id || '');
-    messages = (isAuthorized || isPublic) && messagesLength > 0 ? await getMessages(id ?? '', user_email) : [];
+    // For public threads, pass null to skip ownership check in getMessages
+    const emailForMessages = isPublic && !isAuthorized ? null : user_email;
+    messages = (isAuthorized || isPublic) && messagesLength > 0 ? await getMessages(id ?? '', emailForMessages) : [];
 
     // Check if there's only one message and generate welcome message if needed
     messages = await checkForOneMessage({
@@ -116,6 +118,16 @@ if (!isNewChat && (isAuthorized || isPublic) && id) {
     hasPracticeQuestions = !!practiceQuestionsResult.content;
 }
 
+// Pre-process messages to convert markdown to HTML (server-side)
+marked.setOptions({ breaks: true, gfm: true });
+const processedMessages = await Promise.all(
+    messages
+        .filter(message => message.role !== 'system')
+        .map(async message => ({
+            role: message.role,
+            htmlContent: await marked.parse(message.content)
+        }))
+);
 
 export const inNav = 'hide';
 ---
@@ -139,18 +151,11 @@ export const inNav = 'hide';
         <section class="chat-section">
             <div class="chat-messages">
                 {isAuthorized || isPublic ? (
-                    messages
-                        .filter(message => message.role !== 'system')
-                        .map(async message => {
-                        // Convert markdown to HTML
-                        marked.setOptions({ breaks: true, gfm: true });
-                        const htmlText = await marked.parse(message.content);
-
-                        // Render message
-                        return <div class:list={['message', message.role]}>
-                            <div class:list={['message-content', { 'bg-primary': message.role === 'user' }]} set:html={htmlText} />
+                    processedMessages.map(message => (
+                        <div class:list={['message', message.role]}>
+                            <div class:list={['message-content', { 'bg-primary': message.role === 'user' }]} set:html={message.htmlContent} />
                         </div>
-                    })
+                    ))
                 ) : (
                     <div class="unauthorized-message">
                         <div class="message assistant">
