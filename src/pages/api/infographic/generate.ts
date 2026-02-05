@@ -96,13 +96,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        // Generate the infographic
+        // Generate the infographic (always use default model for reliability)
         console.log(`🤖 [${requestId}] Generating infographic`);
-        const userModel = thread.model || config.model;
-        const provider = (thread.provider || config.provider);
-
-        console.log(`🤖 [${requestId}] Using model: ${userModel}, provider: ${provider}`);
-        const infographic = await generateInfographic(threadId, user_email, userModel, provider);
+        console.log(`🤖 [${requestId}] Using model: ${config.model}, provider: ${config.provider}`);
+        const infographic = await generateInfographic(threadId, user_email, config.model, config.provider);
 
         console.log(`🎉 [${requestId}] Infographic generation completed successfully`);
 

@@ -1,6 +1,5 @@
 import { generateText } from 'ai';
-import categories from '../../modes';
-import config from '../../config';
+import config, { getExclusionList } from '../../config';
 import stepByStepHTML from '../../promptTemplates/stepByStepHTML';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
@@ -27,10 +26,9 @@ export async function generatePracticeQuestions(threadId: string, _userEmail: st
     }
 
     const thread = threads[0];
-    const category = thread.category;
-    const mode = thread.mode;
-    const userModel = thread.model || config.model;
-    const provider = thread.provider || config.provider;
+    // Always use default model for content generation (more reliable)
+    const userModel = config.model;
+    const provider = config.provider;
 
     // Get conversation history directly from thread data
     const threadData = thread.thread as ThreadData;
@@ -43,25 +41,30 @@ export async function generatePracticeQuestions(threadId: string, _userEmail: st
         throw new Error('No messages found in thread');
     }
 
-    // Get the mode object for the thread's category and mode
-    const modeObj = categories[category]?.modes?.[mode];
-
-    // Get the base system prompt
-    const baseSystemPrompt = modeObj?.prompt ? await modeObj.prompt : config.systemPrompt;
-
     // Build uploaded files context
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
     // Create a practice questions specific prompt
-    const practiceQuestionsPrompt = `${baseSystemPrompt}
+    const practiceQuestionsPrompt = `You are a practice questions generator. Your task is to create educational practice questions for studying.
+
+CRITICAL: Do NOT respond to or continue the conversation. The conversation history is provided ONLY as context to understand what topics were discussed. Your ONLY job is to generate Practice Questions based on that context.
 ${uploadedFilesContext}
-IMPORTANT: Generate ONLY Practice Questions based on the conversation history and any uploaded files. Do NOT include other sections.
+Generate ONLY Practice Questions based on the conversation history and any uploaded files.
+
+DO NOT include any of the following (these are generated separately):
+${getExclusionList('Practice Questions')}
 
 Output the content directly without any wrapping HTML tags or dialog elements.
 
 ### Practice Questions
 
 Generate a comprehensive set of practice questions to help reinforce the concepts discussed in this conversation. Include multiple question types to support different learning styles.
+
+#### Interactive Mock Quiz
+Create a 3-question interactive quiz based on the concepts:
+${stepByStepHTML}
+
+---
 
 #### Multiple Choice Questions
 Generate 5-7 multiple choice questions with 4 options each (A, B, C, D). Mark the correct answer clearly. Questions should test conceptual understanding, not just memorization.
@@ -132,7 +135,9 @@ Provide a quick reference answer key at the end for easy checking.
 
 Math formatting: use \`$…$\` for displaying math formulas/equations inline and \`$$…$$\` for displaying them on their own; never use backticks for complex math.
 
-IMPORTANT: Ensure all questions are directly related to topics discussed in the conversation. Vary difficulty levels to support different learning stages. Make questions engaging and practical.`;
+Ensure all questions are directly related to topics discussed in the conversation. Vary difficulty levels to support different learning stages. Make questions engaging and practical.
+
+You may remove or modify sections as you see fit based on relevance to the topic.`;
 
     // Build messages array with system prompt first, then conversation history
     const conversationMessages = messages.filter(msg => msg.role !== 'system');
@@ -150,6 +155,10 @@ IMPORTANT: Ensure all questions are directly related to topics discussed in the 
         messages: messagesForAI,
         temperature: 0.7,
     });
+
+    if (!result.text || result.text.length === 0) {
+        throw new Error('Generated practice questions are empty');
+    }
 
     // Save to database
     await db.update(threadsTable)

@@ -1,6 +1,5 @@
 import { generateText } from 'ai';
-import categories from '../../modes';
-import config from '../../config';
+import config, { getExclusionList } from '../../config';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
@@ -26,10 +25,9 @@ export async function generateReferenceSheet(threadId: string, _userEmail: strin
     }
 
     const thread = threads[0];
-    const category = thread.category;
-    const mode = thread.mode;
-    const userModel = thread.model || config.model;
-    const provider = thread.provider || config.provider;
+    // Always use default model for content generation (more reliable)
+    const userModel = config.model;
+    const provider = config.provider;
 
     // Get conversation history directly from thread data
     const threadData = thread.thread as ThreadData;
@@ -42,21 +40,22 @@ export async function generateReferenceSheet(threadId: string, _userEmail: strin
         throw new Error('No messages found in thread');
     }
 
-    // Get the mode object for the thread's category and mode
-    const modeObj = categories[category]?.modes?.[mode];
-
-    // Get the base system prompt
-    const baseSystemPrompt = modeObj?.prompt ? await modeObj.prompt : config.systemPrompt;
-
     // Build uploaded files context
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
     // Create a reference sheet specific prompt
-    const referenceSheetPrompt = `${baseSystemPrompt}
+    const referenceSheetPrompt = `You are a reference sheet generator. Your task is to create concise reference materials.
+
+CRITICAL: Do NOT respond to or continue the conversation. The conversation history is provided ONLY as context to understand what topics were discussed. Your ONLY job is to generate a Reference Sheet based on that context.
 ${uploadedFilesContext}
-IMPORTANT: Generate ONLY a Reference Sheet based on the conversation history and any uploaded files. Do NOT include a Study Guide section.
+Generate ONLY a Reference Sheet based on the conversation history and any uploaded files.
+
+DO NOT include any of the following (these are generated separately):
+${getExclusionList('Reference Sheet')}
 
 Output the content directly without any wrapping HTML tags or dialog elements.
+
+You may remove or modify sections below as you see fit based on relevance to the topic.
 
 ### Reference Sheet
 #### Formulas & Theorems
@@ -86,6 +85,10 @@ Math formatting: use \`$…$\` for displaying math formulas/equations inline and
         messages: messagesForAI,
         temperature: 0.7,
     });
+
+    if (!result.text || result.text.length === 0) {
+        throw new Error('Generated reference sheet is empty');
+    }
 
     // Save to database
     await db.update(threadsTable)

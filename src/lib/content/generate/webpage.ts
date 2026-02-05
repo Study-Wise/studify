@@ -1,5 +1,6 @@
 import { generateText } from 'ai';
 import type { GatewayProviderOptions } from '@ai-sdk/gateway';
+import { getExclusionList } from '../../config';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
@@ -41,8 +42,14 @@ export async function generateWebpage(threadId: string, _userEmail: string | nul
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
     // Create a webpage specific prompt
-    const webpagePrompt = `Generate a complete, interactive webpage based on the conversation history and any uploaded files.
-${uploadedFilesContext} This should be a comprehensive resource that presents the concepts discussed in an engaging, visual format.
+    const webpagePrompt = `You are a webpage generator. Your task is to create interactive educational webpages.
+
+CRITICAL: Do NOT respond to or continue the conversation. The conversation history is provided ONLY as context to understand what topics were discussed. Your ONLY job is to generate a Webpage based on that context.
+${uploadedFilesContext}
+Generate ONLY a complete, interactive webpage (HTML with embedded CSS/JS) based on the conversation history and any uploaded files. This should be a comprehensive resource that presents the concepts discussed in an engaging, visual format.
+
+DO NOT include separate sections for the following (these are generated separately):
+${getExclusionList('Webpage')}
 
 Output the content as complete HTML (including <!DOCTYPE html>, <html>, <head>, and <body> tags) with embedded CSS and JavaScript. Make it visually appealing and interactive.
 
@@ -67,6 +74,9 @@ Content to include:
 Math formatting: Use MathJax or KaTeX (include the CDN) to render mathematical formulas properly. Use \\(...\\) for inline math and \\[...\\] for display math.
 
 Make it engaging, educational, and visually appealing!
+
+You may remove or modify sections as you see fit based on relevance to the topic.
+
 ONLY INCLUDE THE HTML CONTENT IN YOUR RESPONSE. DO NOT RESPOND WITH ANYTHING ELSE BEFORE OR AFTER THE HTML.`;
 
     // Build messages array with system prompt first, then conversation history
@@ -91,6 +101,10 @@ ONLY INCLUDE THE HTML CONTENT IN YOUR RESPONSE. DO NOT RESPOND WITH ANYTHING ELS
             } satisfies GatewayProviderOptions
         }
     });
+
+    if (!result.text || result.text.length === 0) {
+        throw new Error('Generated webpage is empty');
+    }
 
     // Strip away any text before and after the HTML
     const text = result.text;

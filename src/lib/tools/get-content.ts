@@ -1,8 +1,5 @@
 import { tool } from 'ai';
 import { z } from 'zod';
-import { db } from '@/db/initialize';
-import { eq } from 'drizzle-orm';
-import { threadsTable } from '@/db/schema';
 import config from '../config';
 
 // Convert kebab-case to camelCase
@@ -86,20 +83,13 @@ const getContentTool = tool({
 
             let generatedContent;
 
-            // Handle types that require model/provider
+            // Handle types that require model/provider (always use default for reliability)
             if (requiresModelProvider.includes(type)) {
-                const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
-
-                if (threads.length === 0) {
-                    return { status: 'error', message: 'Thread not found', content: null };
-                }
-
-                const thread = threads[0];
                 generatedContent = await generateFn(
                     threadId,
                     userEmail || null,
-                    thread.model || config.model,
-                    thread.provider || config.provider
+                    config.model,
+                    config.provider
                 );
             } else {
                 generatedContent = await generateFn(threadId, userEmail || null);

@@ -1,7 +1,6 @@
 import { generateText } from 'ai';
 import type { GatewayProviderOptions } from '@ai-sdk/gateway';
-import categories from '../../modes';
-import config from '../../config';
+import { getExclusionList } from '../../config';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
@@ -27,8 +26,6 @@ export async function generateMindMap(threadId: string, _userEmail: string | nul
     }
 
     const thread = threads[0];
-    const category = thread.category;
-    const mode = thread.mode;
 
     // Get conversation history directly from thread data
     const threadData = thread.thread as ThreadData;
@@ -41,19 +38,18 @@ export async function generateMindMap(threadId: string, _userEmail: string | nul
         throw new Error('No messages found in thread');
     }
 
-    // Get the mode object for the thread's category and mode
-    const modeObj = categories[category]?.modes?.[mode];
-
-    // Get the base system prompt
-    const baseSystemPrompt = modeObj?.prompt ? await modeObj.prompt : config.systemPrompt;
-
     // Build uploaded files context
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
     // Create a mind map specific prompt
-    const mindMapPrompt = `${baseSystemPrompt}
+    const mindMapPrompt = `You are a mind map generator. Your task is to create interactive visual mind maps.
+
+CRITICAL: Do NOT respond to or continue the conversation. The conversation history is provided ONLY as context to understand what topics were discussed. Your ONLY job is to generate a Mind Map based on that context.
 ${uploadedFilesContext}
-IMPORTANT: Generate ONLY a Mind Map based on the conversation history and any uploaded files. Create a comprehensive visual representation of the concepts, relationships, and key ideas discussed.
+Generate ONLY a Mind Map (as interactive HTML) based on the conversation history and any uploaded files. Create a comprehensive visual representation of the concepts, relationships, and key ideas discussed.
+
+DO NOT include any of the following (these are generated separately):
+${getExclusionList('Mind Map')}
 
 Output the content as a complete, interactive HTML mind map with embedded CSS and JavaScript. The mind map should be visually engaging, interactive, and clearly show relationships between concepts.
 
@@ -95,7 +91,9 @@ Visual design:
 
 Math formatting: If mathematical formulas are present, use MathJax or KaTeX (include the CDN) with \\(...\\) for inline math and \\[...\\] for display math.
 
-Output a complete HTML document (including <!DOCTYPE html>, <html>, <head>, and <body> tags) with all necessary CSS and JavaScript embedded. Make it visually stunning and educational!`;
+Output a complete HTML document (including <!DOCTYPE html>, <html>, <head>, and <body> tags) with all necessary CSS and JavaScript embedded. Make it visually stunning and educational!
+
+You may remove or modify sections as you see fit based on relevance to the topic.`;
 
     // Build messages array with system prompt first, then conversation history
     const conversationMessages = messages.filter(msg => msg.role !== 'system');
@@ -119,6 +117,10 @@ Output a complete HTML document (including <!DOCTYPE html>, <html>, <head>, and 
             } satisfies GatewayProviderOptions
         }
     });
+
+    if (!result.text || result.text.length === 0) {
+        throw new Error('Generated mind map is empty');
+    }
 
     // Save to database
     await db.update(threadsTable)
