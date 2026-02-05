@@ -4,11 +4,14 @@ import '@/styles/components/chat/left-sidebar.scss';
 import type { ChatLeftSidebarProps } from '@/lib/types';
 import SidebarSection from './SidebarSection.astro';
 
-const { 
-    isPublic, 
-    isAuthorized, 
-    threadId, 
-    uploadedFiles = []
+const {
+    isPublic,
+    isAuthorized,
+    threadId,
+    uploadedFiles = [],
+    email = '',
+    category = '',
+    mode = ''
 } = Astro.props as ChatLeftSidebarProps;
 ---
 <section class="chat-sidebar left">
@@ -58,12 +61,16 @@ const {
                 {isAuthorized && (
                     <label class="upload-button" for="file-upload">
                         <span class="material-symbols-outlined">upload</span>
-                        <span>Upload File</span>
+                        <span>Upload Files</span>
                         <input
                             type="file"
                             id="file-upload"
                             accept=".jpg,.jpe,.jpeg,.png,.gif,.webp,.svg,.bmp,.tif,.tiff,.apng,.pdf,.doc,.docx,.docm,.ppt,.pptx,.pptm,.xls,.xlsx,.xlsm,.vsd,.vsdx,.pub,.eml,.txt,.csv,.html,.md"
                             data-thread-id={threadId}
+                            data-email={email}
+                            data-category={category}
+                            data-mode={mode}
+                            multiple
                             style="display: none;"
                         />
                     </label>
@@ -184,22 +191,34 @@ const {
     const fileUpload = document.getElementById('file-upload') as HTMLInputElement;
     const fileList = document.getElementById('file-list');
 
-    if (fileUpload && fileList) {
-        fileUpload.addEventListener('change', async (e) => {
-            const target = e.target as HTMLInputElement;
-            const file = target.files?.[0];
+    // Upload queue state
+    let uploadQueue: File[] = [];
+    let isUploading = false;
 
-            if (!file) return;
+    async function processUploadQueue() {
+        if (isUploading || uploadQueue.length === 0) return;
 
-            const threadId = fileUpload.getAttribute('data-thread-id');
-            const email = fileUpload.getAttribute('data-email');
+        isUploading = true;
+        const threadId = fileUpload?.getAttribute('data-thread-id');
+        const email = fileUpload?.getAttribute('data-email');
 
-            if (!threadId || !email) return;
+        if (!threadId || !email || !fileList) {
+            isUploading = false;
+            uploadQueue = [];
+            return;
+        }
 
-            // Show loading state
-            (window as any).showInfo?.('Uploading file...');
+        while (uploadQueue.length > 0) {
+            const file = uploadQueue.shift()!;
+            const remainingCount = uploadQueue.length;
 
             try {
+                // Show progress
+                const progressMsg = remainingCount > 0
+                    ? `Uploading ${file.name}... (${remainingCount} remaining)`
+                    : `Uploading ${file.name}...`;
+                (window as any).showInfo?.(progressMsg);
+
                 const formData = new FormData();
                 formData.append('file', file);
                 formData.append('threadId', threadId);
@@ -223,20 +242,54 @@ const {
                     const fileItem = createFileElement(data.file);
                     fileList.appendChild(fileItem);
 
-                    // Show success message
-                    (window as any).showSuccess?.(`${file.name} uploaded successfully`);
-
-                    // Reset input
-                    target.value = '';
+                    // Show success for this file
+                    if (remainingCount === 0) {
+                        (window as any).showSuccess?.(`${file.name} uploaded successfully`);
+                    }
                 } else {
                     throw new Error(data.error || 'Upload failed');
                 }
             } catch (error) {
                 console.error('File upload error:', error);
                 (window as any).showError?.(
-                    error instanceof Error ? error.message : 'Failed to upload file. Please try again.'
+                    `Failed to upload ${file.name}: ${error instanceof Error ? error.message : 'Unknown error'}`
                 );
             }
+        }
+
+        isUploading = false;
+
+        // Reset input
+        if (fileUpload) {
+            fileUpload.value = '';
+        }
+    }
+
+    if (fileUpload && fileList) {
+        fileUpload.addEventListener('change', async (e) => {
+            const target = e.target as HTMLInputElement;
+            const files = target.files;
+
+            if (!files || files.length === 0) return;
+
+            const threadId = fileUpload.getAttribute('data-thread-id');
+            const email = fileUpload.getAttribute('data-email');
+
+            if (!threadId || !email) return;
+
+            // Add all files to the queue
+            for (let i = 0; i < files.length; i++) {
+                uploadQueue.push(files[i]);
+            }
+
+            // Show initial message
+            const totalFiles = uploadQueue.length;
+            if (totalFiles > 1) {
+                (window as any).showInfo?.(`Queued ${totalFiles} files for upload...`);
+            }
+
+            // Start processing the queue
+            processUploadQueue();
         });
     }
 
