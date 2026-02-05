@@ -41,7 +41,8 @@
       "mcp__sentry__analyze_issue_with_seer",
       "Bash(git fsck:*)",
       "Bash(git branch:*)",
-      "Bash(npx stylelint:*)"
+      "Bash(npx stylelint:*)",
+      "WebFetch(domain:caniuse.com)"
     ],
     "deny": [],
     "ask": []
