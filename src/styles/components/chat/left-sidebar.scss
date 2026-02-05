@@ -30,15 +30,11 @@
             }
         }
 
-        .sidebar-body {
-            flex: 1;
-            overflow-y: auto;
-
+        .section-body {
             .file-list {
                 display: flex;
                 flex-direction: column;
                 gap: $spacing-extra-small;
-                padding: $spacing-small;
 
                 .empty-message {
                     color: var(--card-text);
