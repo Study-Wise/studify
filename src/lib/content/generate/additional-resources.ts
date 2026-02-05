@@ -1,7 +1,7 @@
-import { getMessages } from '../../threads';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
+import type { ThreadData } from '../../types';
 import Exa from "exa-js";
 
 const exa = new Exa(process.env.EXA_SEARCH_API_KEY);
@@ -23,7 +23,7 @@ interface ResourceCollection {
     generatedAt: string;
 }
 
-export async function generateResources(threadId: string, userEmail: string | null): Promise<string> {
+export async function generateResources(threadId: string, _userEmail: string | null): Promise<string> {
     // Fetch the thread from database
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
@@ -33,8 +33,9 @@ export async function generateResources(threadId: string, userEmail: string | nu
 
     const thread = threads[0];
 
-    // Get conversation history
-    const messages = await getMessages(threadId, userEmail);
+    // Get conversation history directly from thread data
+    const threadData = thread.thread as ThreadData;
+    const messages = threadData?.messages ?? [];
 
     if (messages.length === 0) {
         throw new Error('No messages found in thread');

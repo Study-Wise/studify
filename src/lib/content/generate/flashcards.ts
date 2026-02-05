@@ -1,12 +1,12 @@
 import { generateText } from 'ai';
-import { getMessages } from '../../threads';
 import categories from '../../modes';
 import config from '../../config';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
+import type { ThreadData } from '../../types';
 
-export async function generateFlashcards(threadId: string, userEmail: string | null) {
+export async function generateFlashcards(threadId: string, _userEmail: string | null) {
     // Fetch the thread from database
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
@@ -20,8 +20,9 @@ export async function generateFlashcards(threadId: string, userEmail: string | n
     const userModel = thread.model || config.model;
     const provider = thread.provider || config.provider;
 
-    // Get conversation history
-    const messages = await getMessages(threadId, userEmail);
+    // Get conversation history directly from thread data
+    const threadData = thread.thread as ThreadData;
+    const messages = threadData?.messages ?? [];
 
     if (messages.length === 0) {
         throw new Error('No messages found in thread');

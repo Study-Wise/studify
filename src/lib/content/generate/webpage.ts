@@ -1,11 +1,11 @@
 import { generateText } from 'ai';
 import type { GatewayProviderOptions } from '@ai-sdk/gateway';
-import { getMessages } from '../../threads';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
+import type { ThreadData } from '../../types';
 
-export async function generateWebpage(threadId: string, userEmail: string | null) {
+export async function generateWebpage(threadId: string, _userEmail: string | null) {
     // Fetch the thread from database
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
@@ -13,12 +13,11 @@ export async function generateWebpage(threadId: string, userEmail: string | null
         throw new Error('Thread not found');
     }
 
-    // const thread = threads[0];
-    // const category = thread.category;
-    // const mode = thread.mode;
+    const thread = threads[0];
 
-    // Get conversation history
-    const messages = await getMessages(threadId, userEmail);
+    // Get conversation history directly from thread data
+    const threadData = thread.thread as ThreadData;
+    const messages = threadData?.messages ?? [];
 
     if (messages.length === 0) {
         throw new Error('No messages found in thread');

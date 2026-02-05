@@ -2,17 +2,27 @@ import { generateText } from 'ai';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
-import { getMessages } from '../../threads';
 import { generateImage } from '../../genai-image';
+import type { ThreadData } from '../../types';
 
 export async function generateInfographic(
     threadId: string,
-    userEmail: string | null,
+    _userEmail: string | null,
     userModel: string,
     provider: string
 ) {
-    // Get conversation history
-    const messages = await getMessages(threadId, userEmail);
+    // Fetch the thread from database to get conversation history
+    const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
+
+    if (threads.length === 0) {
+        throw new Error('Thread not found');
+    }
+
+    const thread = threads[0];
+
+    // Get conversation history directly from thread data
+    const threadData = thread.thread as ThreadData;
+    const messages = threadData?.messages ?? [];
 
     if (messages.length === 0) {
         throw new Error('No messages found in thread');
