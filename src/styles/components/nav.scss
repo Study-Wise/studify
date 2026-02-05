@@ -7,10 +7,13 @@
     gap: 15px;
     flex-wrap: wrap;
 
-    &:not(.lite) .nav-btn {
-        background-color: $section-title-light;
-        transition: background-color $transition-fast $ease; 
-        color: var(--header-text);
+    .nav-btn {
+        transition: all $transition-fast $ease; 
+
+        &:hover, &:focus-visible, &.active {
+            color: var(--header-text);
+        }
+
         &:hover, &:focus-visible {
             background-color: color.adjust($section-title-light, $lightness: -10%);
         }
@@ -22,22 +25,14 @@
             }
         }
     }
-    &.lighter .nav-btn {
-        background-color: color.adjust($section-title-light, $lightness: 10%);
+    &:not(.lite) .nav-btn {
+        background-color: $section-title-light;
+        color: var(--header-text);
     }
 
     &.lite .nav-btn {
-        color: $section-title-light;
-        transition: color $transition-fast $ease; 
-        &:hover, &:focus-visible {
-            color: color.adjust($section-title-light, $lightness: -10%);
-        }
-        &.active {
-            color: color.adjust($section-title-light, $lightness: 10%);
-            font-weight: $font-weight-semibold;
-            &:hover, &:focus-visible {
-                color: color.adjust($section-title-light, $lightness: 5%);
-            }
+        &:not(:hover, :focus-visible, .active) {
+            color: $section-title-light;
         }
     }
   
