@@ -72,6 +72,14 @@ $color: list.nth(map.get($accent-colors, primary), 1);
                 0 2px 8px rgba(from #ef4444 r g b / 0.1),
                 0 0 0 2px rgba(from #ef4444 r g b / 0.1);
         }
+
+        // Disabled state - when AI is responding
+        &:has(:disabled) {
+            opacity: 0.7;
+            pointer-events: none;
+            border-color: rgba(from var(--card-border) r g b / 0.3);
+            background-color: rgba(from var(--card-bg) r g b / 0.5);
+        }
     }
 
     .message-input {
@@ -86,6 +94,7 @@ $color: list.nth(map.get($accent-colors, primary), 1);
         min-height: 2lh;
         overflow-y: auto;
         color: var(--card-text);
+        transition: opacity $transition-slow $ease-in-out;
         @supports (field-sizing: content) {
             field-sizing: content;
         }
@@ -97,6 +106,16 @@ $color: list.nth(map.get($accent-colors, primary), 1);
         &:focus,
         &:focus-visible {
             outline: none;
+        }
+
+        &:disabled {
+            opacity: $opacity-disabled;
+            cursor: not-allowed;
+
+            &::placeholder {
+                color: rgba(from var(--card-text) r g b / 0.3);
+                font-style: italic;
+            }
         }
     }
 
