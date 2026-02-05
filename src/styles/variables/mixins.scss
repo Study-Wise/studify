@@ -141,6 +141,8 @@
 // Glassmorphism effect
 @mixin glass($blur: 10px, $opacity: 0.8) {
     background-color: rgb(from var(--card-bg) r g b / $opacity);
+
+    -webkit-backdrop-filter: blur($blur);
     backdrop-filter: blur($blur);
 }
 
@@ -175,6 +177,15 @@
     $track-color: transparent,
     $thumb-color: hsl(from var(--section-title) h s l / 0.3)
 ) {
+    // Firefox
+    @supports (scrollbar-width: thin) {
+        scrollbar-width: thin; // stylelint-disable-line no-invalid-position-declaration
+    }
+
+    @supports (scrollbar-color: $thumb-color $track-color) {
+        scrollbar-color: $thumb-color $track-color; // stylelint-disable-line no-invalid-position-declaration
+    }
+
     &::-webkit-scrollbar {
         width: $width;
         height: $width;
@@ -191,15 +202,6 @@
         &:hover {
             background-color: hsl(from var(--section-title) h s l / 50%);
         }
-    }
-
-    // Firefox
-    @supports(scrollbar-width: thin) {
-        scrollbar-width: thin;
-    }
-
-    @supports(scrollbar-color: $thumb-color $track-color) {
-        scrollbar-color: $thumb-color $track-color;
     }
 }
 
