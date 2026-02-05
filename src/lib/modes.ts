@@ -44,6 +44,7 @@ const categories: Record<string, Category> = {
                 name: 'General',
                 description: 'General mathematics and problem-solving across all topics',
                 icon: '📐',
+                desmos: true,
             },
             algebra: {
                 show: true,
@@ -99,7 +100,7 @@ const categories: Record<string, Category> = {
         name: 'Social Studies',
         description: 'Understand society, culture, government, history, and human interactions',
         modes: {
-            'general-history': {
+            general: {
                 show: true,
                 name: 'General History',
                 description: 'General history topics and historical analysis across all time periods',
@@ -188,12 +189,14 @@ const categories: Record<string, Category> = {
                 name: 'Economics',
                 description: 'Study supply and demand, markets, money, and economic decision-making',
                 icon: '💰',
+                desmos: true,
             },
             finance: {
                 show: true,
                 name: 'Finance',
                 description: 'Master financial analysis, investment strategies, and money management principles',
                 icon: '📊',
+                desmos: true,
             },
         },
     },
