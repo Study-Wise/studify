@@ -3,7 +3,7 @@ import config from './config';
 import OpenAI from 'openai';
 
 const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
+    apiKey: import.meta.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY,
 });
 
 // Generate image and return buffer (gpt-image models return base64)

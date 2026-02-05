@@ -2,6 +2,10 @@
 import { createAuthClient } from "better-auth/client";
 
 const resolveBaseURL = (): string => {
+    if (typeof import.meta !== "undefined" && import.meta.env?.BETTER_AUTH_URL) {
+        return import.meta.env.BETTER_AUTH_URL;
+    }
+
     if (typeof process !== "undefined" && typeof process.env !== "undefined" && process.env.BETTER_AUTH_URL) {
         return process.env.BETTER_AUTH_URL;
     }

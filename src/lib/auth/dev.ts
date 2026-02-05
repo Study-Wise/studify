@@ -11,7 +11,7 @@ import type { UserRole, ThreadAccessResult, ExtendedUser } from "../types";
  * Check if we're in development environment
  */
 export function isDev(): boolean {
-    return process.env.NODE_ENV === "development";
+    return (import.meta.env.NODE_ENV || process.env.NODE_ENV) === "development";
 }
 
 /**
@@ -21,7 +21,7 @@ function getDevAccessToken(): string | null {
     if (!isDev()) {
         return null;
     }
-    return process.env.USER_ACCESS_TOKEN || null;
+    return import.meta.env.USER_ACCESS_TOKEN || process.env.USER_ACCESS_TOKEN || null;
 }
 
 /**

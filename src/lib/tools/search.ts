@@ -2,7 +2,7 @@ import { tool } from 'ai';
 import { z } from 'zod';
 import Exa from "exa-js";
 
-const exa = new Exa(process.env.EXA_SEARCH_API_KEY);
+const exa = new Exa(import.meta.env.EXA_SEARCH_API_KEY || process.env.EXA_SEARCH_API_KEY);
 
 const searchTool = tool({
     description: 'Search the web for information',

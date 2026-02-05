@@ -5,7 +5,7 @@ import type { UploadOptions } from './types';
 export function createUploadThingUtils(envVar: string, appId: string) {
     // Initialize UTApi with token from environment variable
     const utapi = new UTApi({
-        token: process.env[envVar] || process.env.UPLOADTHING_TOKEN || '',
+        token: import.meta.env[envVar] || process.env[envVar] || import.meta.env.UPLOADTHING_TOKEN || process.env.UPLOADTHING_TOKEN || '',
     });
 
     return {
@@ -66,7 +66,7 @@ export const {
     uploadFilesFromUrls,
     deleteFiles,
     listFiles
-} = createUploadThingUtils('UPLOADTHING_TOKEN', process.env.UPLOADTHING_APP_ID || '06kq2k6jjh');
+} = createUploadThingUtils('UPLOADTHING_TOKEN', import.meta.env.UPLOADTHING_APP_ID || process.env.UPLOADTHING_APP_ID || '06kq2k6jjh');
 
 // User files instance
 export const userFilesUpload = createUploadThingUtils('USERFILES_UPLOADTHING_TOKEN', 'rsmwe6uny3');
