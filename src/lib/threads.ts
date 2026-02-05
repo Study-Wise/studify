@@ -9,19 +9,30 @@ type Thread = InferSelectModel<typeof threadsTable>;
 async function getMessages(id: string, user_email?: string | null) {
     try {
         const dbResponse: Thread[] = await db.select().from(threadsTable).where(eq(threadsTable.id, id));
-        
+
         if (dbResponse.length === 0) {
             return [];
         }
-        
+
         const thread = dbResponse[0];
-        
+
         // Check ownership if user_email is provided
         if (user_email && thread.email && thread.email !== user_email) {
             return []
         }
-        
-        const threadData = thread?.thread as ThreadData;
+
+        // Handle case where thread data is stored as string instead of object
+        let threadData: ThreadData;
+        const rawThread = thread?.thread;
+        if (typeof rawThread === 'string') {
+            // Remove trailing commas before ] or } (invalid JSON but sometimes stored)
+            const cleanedJson = rawThread.replace(/,\s*([\]}])/g, '$1');
+            threadData = JSON.parse(cleanedJson);
+            // Fix the data in DB
+            await db.update(threadsTable).set({ thread: threadData }).where(eq(threadsTable.id, id));
+        } else {
+            threadData = rawThread as ThreadData;
+        }
         return threadData?.messages ?? [];
     } catch (e) {
         console.error(e);
@@ -32,14 +43,25 @@ async function getMessages(id: string, user_email?: string | null) {
 async function getMessagesLength(id: string) {
     try {
         const dbResponse: Thread[] = await db.select().from(threadsTable).where(eq(threadsTable.id, id));
-        
+
         if (dbResponse.length === 0) {
             return 0;
         }
-        
+
         const thread = dbResponse[0];
-        
-        const threadData = thread?.thread as ThreadData;
+
+        // Handle case where thread data is stored as string instead of object
+        let threadData: ThreadData;
+        const rawThread = thread?.thread;
+        if (typeof rawThread === 'string') {
+            // Remove trailing commas before ] or } (invalid JSON but sometimes stored)
+            const cleanedJson = rawThread.replace(/,\s*([\]}])/g, '$1');
+            threadData = JSON.parse(cleanedJson);
+            // Fix the data in DB
+            await db.update(threadsTable).set({ thread: threadData }).where(eq(threadsTable.id, id));
+        } else {
+            threadData = rawThread as ThreadData;
+        }
         return threadData?.messages?.length ?? 0;
     } catch (e) {
         console.error(e);
