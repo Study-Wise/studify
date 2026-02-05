@@ -122,24 +122,24 @@ $container-max-width: 1200px;
 $container-padding: $spacing-large;
 
 // USAGE NOTES
-//
+
 // Import this file in any SCSS file where you need design tokens:
-// @use '../variables/tokens' as *;
-//
+//   @use '../variables/tokens' as *;
+
 // Examples:
-// - padding: $spacing-medium;
-// - border-radius: $border-radius-large;
-// - box-shadow: $box-shadow-medium;
-// - transition: $transition-transform;
-// - z-index: $z-index-modal;
-//
-// Token Migration Status: COMPLETE ✓
+//   - padding: $spacing-medium;
+//   - border-radius: $border-radius-large;
+//   - box-shadow: $box-shadow-medium;
+//   - transition: $transition-transform;
+//   - z-index: $z-index-modal;
+
+// Token Migration Status: COMPLETE
 // All major files have been migrated to use design tokens!
-//
+
 // Files fully migrated:
 //   Utils (1):
 //     - utils/card.scss
-//
+
 //   Components (10):
 //     - components/dialog.scss
 //     - components/chat/sidebar.scss
@@ -151,7 +151,7 @@ $container-padding: $spacing-large;
 //     - components/nav.scss
 //     - components/fancy-select.scss
 //     - components/step-by-step.scss
-//
+
 //   Pages (10):
 //     - pages/chat.scss
 //     - pages/index.scss
@@ -163,12 +163,12 @@ $container-padding: $spacing-large;
 //     - pages/admin.scss
 //     - pages/privacy-policy.scss
 //     - pages/sign-out.scss
-//
+
 //   Accessibility (2):
 //     - accessibility/theme-switcher.scss
 //     - accessibility/keyboard-navigation.scss
-//
+
 //   Variables (1):
 //     - variables/globals.scss
-//
+
 // Total: 24 files migrated to use the design token system!
