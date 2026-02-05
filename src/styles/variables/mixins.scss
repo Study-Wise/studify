@@ -142,7 +142,6 @@
 @mixin glass($blur: 10px, $opacity: 0.8) {
     background-color: rgb(from var(--card-bg) r g b / $opacity);
     backdrop-filter: blur($blur);
-    backdrop-filter: blur($blur);
 }
 
 // Gradient overlay (useful for hover effects)

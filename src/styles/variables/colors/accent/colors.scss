@@ -139,7 +139,6 @@ $accent-colors: (
         list.nth(map.get($accent-colors, $color-key), 2)
     );
     background-clip: text;
-    background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
 }
