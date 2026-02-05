@@ -48,6 +48,95 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
     const actionBtn = document.getElementById(`${contentType}-action-btn`);
     const apiEndpoint = `/api/${contentType}/generate`;
     const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    const contentClassName = contentType.replace(/-/g, '-') + '-content';
+
+    // Content types that use markdown
+    const markdownTypes = ['study-guide', 'reference-sheet', 'flashcards', 'practice-questions'];
+    // Content types that use iframes
+    const iframeTypes = ['mind-map', 'webpage'];
+    // Content types that use images
+    const imageTypes = ['infographic'];
+
+    // Load marked.js dynamically if needed
+    async function loadMarked() {
+        if (window.marked) return window.marked;
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/marked/marked.min.js';
+            script.onload = () => resolve(window.marked);
+            script.onerror = reject;
+            document.head.appendChild(script);
+        });
+    }
+
+    // Update page content based on content type
+    async function updatePageContent(content) {
+        const page = document.querySelector(`.${contentType}-page, .${contentType.replace(/-/g, '')}-page`);
+        if (!page) return;
+
+        // Remove empty state if exists
+        const emptyState = page.querySelector('.empty-state');
+
+        if (markdownTypes.includes(contentType)) {
+            const marked = await loadMarked();
+            const parsedContent = marked.parse(content);
+
+            // Find or create content container
+            let contentContainer = page.querySelector('.content-container');
+            let contentDiv = page.querySelector(`.${contentClassName}`);
+
+            if (emptyState && !contentContainer) {
+                // Replace empty state with content
+                contentContainer = document.createElement('div');
+                contentContainer.className = 'content-container';
+                contentDiv = document.createElement('div');
+                contentDiv.className = contentClassName;
+                contentContainer.appendChild(contentDiv);
+                emptyState.replaceWith(contentContainer);
+            }
+
+            if (contentDiv) {
+                contentDiv.innerHTML = parsedContent;
+            }
+        } else if (iframeTypes.includes(contentType)) {
+            let container = page.querySelector(`.${contentType}-container`);
+            let iframe = page.querySelector('iframe');
+
+            if (emptyState && !container) {
+                container = document.createElement('div');
+                container.className = `${contentType}-container`;
+                iframe = document.createElement('iframe');
+                iframe.title = contentTypeName;
+                iframe.className = `${contentType}-iframe`;
+                iframe.sandbox = 'allow-scripts allow-same-origin';
+                container.appendChild(iframe);
+                emptyState.replaceWith(container);
+            }
+
+            if (iframe) {
+                iframe.srcdoc = content;
+            }
+        } else if (imageTypes.includes(contentType)) {
+            // For infographic, content is an object with imageUrl
+            const imageUrl = typeof content === 'object' ? content.imageUrl : content;
+            let contentContainer = page.querySelector('.content-container');
+            let img = page.querySelector('.infographic-image');
+
+            if (emptyState && !contentContainer) {
+                contentContainer = document.createElement('div');
+                contentContainer.className = 'content-container';
+                img = document.createElement('img');
+                img.className = 'infographic-image';
+                img.alt = 'Generated Infographic';
+                contentContainer.appendChild(img);
+                emptyState.replaceWith(contentContainer);
+            }
+
+            if (img) {
+                img.src = imageUrl;
+            }
+        }
+    }
 
     if (actionBtn) {
         actionBtn.addEventListener('click', async () => {
@@ -76,8 +165,16 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
                 const data = await response.json();
 
                 if (data.status === 'success') {
-                    // Reload the page to show the new content
-                    window.location.reload();
+                    // Update the page content directly
+                    const content = data.content || data.infographic;
+                    if (content) {
+                        await updatePageContent(content);
+                    }
+
+                    // Update button to regenerate state
+                    actionBtn.setAttribute('data-has-content', 'true');
+                    actionBtn.innerHTML = `<span class="material-symbols-outlined">refresh</span><span>${regenerateVerb} ${contentTypeName}</span>`;
+                    actionBtn.removeAttribute('disabled');
                 } else {
                     throw new Error(data.error || `Failed to generate ${contentTypeName.toLowerCase()}`);
                 }
