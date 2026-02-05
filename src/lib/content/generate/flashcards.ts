@@ -86,5 +86,10 @@ Output should be clean markdown without any wrapping HTML tags or dialog element
         temperature: 0.7,
     });
 
+    // Save to database
+    await db.update(threadsTable)
+        .set({ generatedFlashcards: result.text, updatedAt: new Date() })
+        .where(eq(threadsTable.id, threadId));
+
     return result.text;
 }

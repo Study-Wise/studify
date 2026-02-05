@@ -133,5 +133,10 @@ IMPORTANT: Ensure all questions are directly related to topics discussed in the 
         temperature: 0.7,
     });
 
+    // Save to database
+    await db.update(threadsTable)
+        .set({ generatedPracticeQuestions: result.text, updatedAt: new Date() })
+        .where(eq(threadsTable.id, threadId));
+
     return result.text;
 }

@@ -80,10 +80,14 @@ ONLY INCLUDE THE HTML CONTENT IN YOUR RESPONSE. DO NOT RESPOND WITH ANYTHING ELS
     const htmlStart = text.indexOf('<!DOCTYPE html>');
     const htmlEnd = text.lastIndexOf('</html>');
 
-    if (htmlStart !== -1 && htmlEnd !== -1) {
-        return text.substring(htmlStart, htmlEnd + 7); // +7 for '</html>' length
-    }
+    const content = (htmlStart !== -1 && htmlEnd !== -1)
+        ? text.substring(htmlStart, htmlEnd + 7) // +7 for '</html>' length
+        : text;
 
-    // Fallback: return original text if HTML tags not found
-    return text;
+    // Save to database
+    await db.update(threadsTable)
+        .set({ generatedWebpage: content, updatedAt: new Date() })
+        .where(eq(threadsTable.id, threadId));
+
+    return content;
 }

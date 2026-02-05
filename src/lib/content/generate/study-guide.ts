@@ -90,5 +90,10 @@ Math formatting: use \`$…$\` for displaying math formulas/equations inline and
         temperature: 0.7,
     });
 
+    // Save to database
+    await db.update(threadsTable)
+        .set({ generatedStudyGuide: result.text, updatedAt: new Date() })
+        .where(eq(threadsTable.id, threadId));
+
     return result.text;
 }

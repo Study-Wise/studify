@@ -140,6 +140,12 @@ export async function generateResources(threadId: string, userEmail: string | nu
         throw new Error('Failed to search for educational resources');
     }
 
-    // Return as JSON string to be stored in the database
-    return JSON.stringify(resourceCollection, null, 2);
+    const content = JSON.stringify(resourceCollection, null, 2);
+
+    // Save to database
+    await db.update(threadsTable)
+        .set({ generatedAdditionalResources: content, updatedAt: new Date() })
+        .where(eq(threadsTable.id, threadId));
+
+    return content;
 }

@@ -104,5 +104,10 @@ Output a complete HTML document (including <!DOCTYPE html>, <html>, <head>, and 
         }
     });
 
+    // Save to database
+    await db.update(threadsTable)
+        .set({ generatedMindMap: result.text, updatedAt: new Date() })
+        .where(eq(threadsTable.id, threadId));
+
     return result.text;
 }
