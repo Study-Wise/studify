@@ -123,20 +123,17 @@ input[type="submit"],
 input[type="reset"],
 .clickable,
 .interactive {
-    &:not(.cl-rootBox.cl-signIn-root *) {
-        min-height: 1rem;
-        min-width: 1rem;
-    
-        // Exception for inline text links
-        &:is(a:not([class])) {
-            @supports(min-height: auto) {
-                min-height: auto;
-            }
+    min-height: 1rem;
+    min-width: 1rem;
 
-            min-width: auto;
+    // Exception for inline text links
+    &:is(a:not([class])) {
+        @supports (min-height: auto) {
+            min-height: auto;
         }
-    }
 
+        min-width: auto;
+    }
 }
 
 // Keyboard Navigation Indicators
