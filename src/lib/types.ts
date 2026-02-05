@@ -207,3 +207,16 @@ import type { User as BetterAuthUser } from "better-auth";
 export interface ExtendedUser extends BetterAuthUser {
     role?: UserRole;
 }
+
+// Client-side tool call that needs to be executed in the browser
+export interface ClientToolCall {
+    toolName: string;
+    toolCallId: string;
+    args: Record<string, unknown>;
+}
+
+// AI generation result with potential client-side tool calls
+export interface AIGenerationResult {
+    text: string;
+    clientToolCalls: ClientToolCall[];
+}

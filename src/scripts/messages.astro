@@ -227,10 +227,32 @@ const { page, category, mode, id } = Astro.props;
         }
     }
 
+    // Handle client-side tool calls from the AI
+    function executeClientToolCalls(toolCalls) {
+        if (!toolCalls || !Array.isArray(toolCalls)) return;
+
+        for (const toolCall of toolCalls) {
+            if (toolCall.toolName === 'open-content') {
+                const { type, threadId, category: cat, mode: m } = toolCall.args;
+                if (type && threadId && cat && m) {
+                    const url = `/${cat}/${m}/${type}/${threadId}`;
+                    console.log(`🔗 Opening content: ${url}`);
+                    window.open(url, '_blank');
+                }
+            }
+            // Add more client-side tool handlers here as needed
+        }
+    }
+
     async function displayResults(data) {
         if (!data || typeof data !== 'object') {
             displayError('Invalid AI response received.');
             return;
+        }
+
+        // Execute any client-side tool calls
+        if (data.clientToolCalls) {
+            executeClientToolCalls(data.clientToolCalls);
         }
 
         if (page === 'home' && data.id && category && mode) {

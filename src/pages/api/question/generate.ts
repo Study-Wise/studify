@@ -84,7 +84,7 @@ Your answer should be:
             { role: 'user' as const, content: paraphrasedQuestion }
         ];
 
-        const answer = await generateAIResponse({
+        const aiResult = await generateAIResponse({
             systemPrompt,
             userPrompt: paraphrasedQuestion,
             convoHistory,
@@ -94,6 +94,7 @@ Your answer should be:
             maxSteps: 5,
             requestId
         });
+        const answer = aiResult.text;
 
         console.log(`✅ [${requestId}] AI answer generated:`, {
             answerLength: answer.length,

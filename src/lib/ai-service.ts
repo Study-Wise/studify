@@ -5,7 +5,7 @@ import { generateText, stepCountIs } from 'ai';
 import config from './config';
 import { providers } from './models';
 import { nanoid } from 'nanoid';
-import type { AIGenerationOptions, TitleGenerationOptions } from './types';
+import type { AIGenerationOptions, TitleGenerationOptions, AIGenerationResult, ClientToolCall } from './types';
 
 /**
  * Validates and returns a proper model-provider pair
@@ -24,9 +24,23 @@ export async function getValidModelAndProvider(requestedModel: string | null): P
 }
 
 /**
+ * Identifies which tools are client-side (no execute function or marked as clientSide)
+ */
+function getClientSideToolNames(tools: Record<string, any>): Set<string> {
+    const clientTools = new Set<string>();
+    for (const [name, tool] of Object.entries(tools)) {
+        // A tool is client-side if it has clientSide: true or has no execute function
+        if (tool.clientSide === true || !tool.execute) {
+            clientTools.add(name);
+        }
+    }
+    return clientTools;
+}
+
+/**
  * Generates AI response for a conversation
  */
-export async function generateAIResponse(options: AIGenerationOptions): Promise<string> {
+export async function generateAIResponse(options: AIGenerationOptions): Promise<AIGenerationResult> {
     const {
         systemPrompt,
         userPrompt,
@@ -38,9 +52,13 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
         requestId = nanoid()
     } = options;
 
+    // Identify client-side tools
+    const clientSideToolNames = getClientSideToolNames(tools);
+
     console.log(`🛠️ [${requestId}] AI generation setup:`, {
         toolsCount: Object.keys(tools).length,
         toolsList: Object.keys(tools),
+        clientSideTools: Array.from(clientSideToolNames),
         conversationHistoryLength: convoHistory.length,
         systemMessageIncluded: convoHistory[0]?.role === 'system'
     });
@@ -90,10 +108,28 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
         const aiEndTime = Date.now();
         const aiDuration = aiEndTime - aiStartTime;
 
+        // Extract client-side tool calls (tools that were called but not executed)
+        const clientToolCalls: ClientToolCall[] = [];
+
+        if (result.toolCalls && result.toolCalls.length > 0) {
+            for (const toolCall of result.toolCalls) {
+                if (clientSideToolNames.has(toolCall.toolName)) {
+                    // Cast to any to access args since the type varies between TypedToolCall and DynamicToolCall
+                    const args = (toolCall as unknown as { args?: Record<string, unknown> }).args ?? {};
+                    clientToolCalls.push({
+                        toolName: toolCall.toolName,
+                        toolCallId: toolCall.toolCallId,
+                        args,
+                    });
+                }
+            }
+        }
+
         console.log(`✅ [${requestId}] AI generation completed:`, {
             duration: `${aiDuration}ms`,
             generatedTextLength: result.text.length,
             generatedTextPreview: result.text.substring(0, 200) + (result.text.length > 200 ? '...' : ''),
+            clientToolCalls: clientToolCalls.length,
             hasUsage: !!result.usage,
             usageTokens: result.usage ? {
                 inputTokens: result.usage.inputTokens,
@@ -102,7 +138,10 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
             } : 'none'
         });
 
-        return result.text;
+        return {
+            text: result.text,
+            clientToolCalls,
+        };
     } catch (error) {
         const aiEndTime = Date.now();
         const aiDuration = aiEndTime - aiStartTime;

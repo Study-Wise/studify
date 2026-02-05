@@ -21,7 +21,7 @@ export async function generateWelcomeMessage({
     // Create a copy of convoHistory to avoid polluting the original with the welcome prompt
     const convoHistoryCopy = JSON.parse(JSON.stringify(convoHistory));
 
-    const welcomeMessage = await generateAIResponse({
+    const result = await generateAIResponse({
         systemPrompt,
         userPrompt: config.welcomeMessagePrompt,
         convoHistory: convoHistoryCopy,
@@ -32,5 +32,7 @@ export async function generateWelcomeMessage({
         requestId
     });
 
-    return welcomeMessage;
+    // Note: Client tool calls from welcome message are currently ignored
+    // since the welcome message flow handles things differently
+    return result.text;
 }

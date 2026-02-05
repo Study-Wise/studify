@@ -472,8 +472,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
         // --- AI Generation ---
         const tools = modeObj.tools || {};
         let generatedText: string;
+        let clientToolCalls: { toolName: string; toolCallId: string; args: Record<string, unknown> }[] = [];
         try {
-            generatedText = await generateAIResponse({
+            const aiResult = await generateAIResponse({
                 systemPrompt,
                 userPrompt,
                 convoHistory,
@@ -483,6 +484,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
                 maxSteps: 25,
                 requestId
             });
+            generatedText = aiResult.text;
+            clientToolCalls = aiResult.clientToolCalls;
         } catch (error) {
             return new Response(
                 JSON.stringify({ error: `Failed to generate AI response: ${error}` }),
@@ -624,6 +627,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
                 generatedText: htmlText,
                 generatedTitle: true,
                 id: current_thread_id,
+                clientToolCalls: clientToolCalls.length > 0 ? clientToolCalls : undefined,
             }),
             {
                 status: 200,
