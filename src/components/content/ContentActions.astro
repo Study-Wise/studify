@@ -1,0 +1,94 @@
+---
+import '@/styles/components/content/content-actions.scss';
+
+interface Props {
+    contentType: string;
+    threadId: string;
+    hasContent: boolean;
+    isAuthorized: boolean;
+    chatUrl: string;
+    generateVerb?: string;
+    regenerateVerb?: string;
+}
+
+const {
+    contentType,
+    threadId,
+    hasContent,
+    isAuthorized,
+    chatUrl,
+    generateVerb = 'Generate',
+    regenerateVerb = 'Regenerate',
+} = Astro.props;
+
+const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+---
+
+<div class="content-actions">
+    <a href={chatUrl} class="action-btn secondary">
+        <span class="material-symbols-outlined">arrow_back</span>
+        <span>Back to Chat</span>
+    </a>
+
+    {isAuthorized && (
+        <button
+            id={`${contentType}-action-btn`}
+            class="action-btn primary"
+            data-thread-id={threadId}
+            data-content-type={contentType}
+            data-has-content={hasContent.toString()}
+        >
+            <span class="material-symbols-outlined">{hasContent ? 'refresh' : 'auto_awesome'}</span>
+            <span>{hasContent ? `${regenerateVerb} ${contentTypeName}` : `${generateVerb} ${contentTypeName}`}</span>
+        </button>
+    )}
+</div>
+
+<script is:inline define:vars={{ contentType, threadId, hasContent, generateVerb, regenerateVerb }}>
+    const actionBtn = document.getElementById(`${contentType}-action-btn`);
+    const apiEndpoint = `/api/${contentType}/generate`;
+    const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+
+    if (actionBtn) {
+        actionBtn.addEventListener('click', async () => {
+            const currentHasContent = actionBtn.getAttribute('data-has-content') === 'true';
+            const isRegenerate = currentHasContent;
+
+            // Confirm if regenerating
+            if (isRegenerate) {
+                const confirmMessage = `Are you sure you want to ${regenerateVerb.toLowerCase()} the ${contentTypeName.toLowerCase()}? This will replace the existing one.`;
+                if (!confirm(confirmMessage)) return;
+            }
+
+            // Disable button and show loading state
+            actionBtn.setAttribute('disabled', 'true');
+            const originalContent = actionBtn.innerHTML;
+            const loadingText = isRegenerate ? `${regenerateVerb}...` : `${generateVerb}...`;
+            actionBtn.innerHTML = `<span class="material-symbols-outlined spinning">progress_activity</span><span>${loadingText}</span>`;
+
+            try {
+                const response = await fetch(apiEndpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ threadId }),
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    // Reload the page to show the new content
+                    window.location.reload();
+                } else {
+                    throw new Error(data.error || `Failed to generate ${contentTypeName.toLowerCase()}`);
+                }
+            } catch (error) {
+                console.error(`Error generating ${contentTypeName.toLowerCase()}:`, error);
+                window.showError?.(error instanceof Error ? error.message : `Failed to generate ${contentTypeName.toLowerCase()}. Please try again.`);
+
+                // Restore button state
+                actionBtn.removeAttribute('disabled');
+                actionBtn.innerHTML = originalContent;
+            }
+        });
+    }
+</script>

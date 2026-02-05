@@ -53,16 +53,56 @@ const regenerateButtonId = `regenerate-${id}-btn`;
     </div>
 </div>
 
-<script is:inline define:vars={{ generateButtonId, regenerateButtonId, title, id, generateVerb, regenerateVerb }}>
+<script is:inline define:vars={{ generateButtonId, regenerateButtonId, title, id, generateVerb, regenerateVerb, viewUrl, viewButtonText, threadId }}>
     // @ts-nocheck - Variables are injected by Astro's define:vars
     // Extract the feature type from the button ID (e.g., "generate-study-guide-btn" -> "study-guide")
     const apiEndpoint = `/api/${id}/generate`;
 
     const generateBtn = document.getElementById(generateButtonId);
-    const regenerateBtn = document.getElementById(regenerateButtonId);
+    let regenerateBtn = document.getElementById(regenerateButtonId);
 
-    async function generateContent(threadId, isRegenerate = false) {
-        const btn = isRegenerate ? regenerateBtn : generateBtn;
+    // Update the section UI to show content exists
+    function updateSectionToShowContent() {
+        const section = generateBtn?.closest('.sidebar-section') || regenerateBtn?.closest('.sidebar-section');
+        if (!section) return;
+
+        const sectionBody = section.querySelector('.section-body');
+        const sectionHeader = section.querySelector('.section-header');
+
+        if (sectionBody) {
+            // Replace with view button
+            sectionBody.innerHTML = `
+                <a href="${viewUrl}" class="view-full-btn" target="_blank">
+                    <span class="material-symbols-outlined">open_in_new</span>
+                    <span>${viewButtonText}</span>
+                </a>
+            `;
+        }
+
+        // Add regenerate button if not present
+        if (sectionHeader && !section.querySelector('.regenerate-btn')) {
+            const newRegenerateBtn = document.createElement('button');
+            newRegenerateBtn.className = 'regenerate-btn';
+            newRegenerateBtn.id = regenerateButtonId;
+            newRegenerateBtn.title = `Regenerate ${title}`;
+            newRegenerateBtn.setAttribute('data-thread-id', threadId);
+            newRegenerateBtn.innerHTML = '<span class="material-symbols-outlined">refresh</span>';
+            sectionHeader.appendChild(newRegenerateBtn);
+
+            // Attach event listener to new button
+            newRegenerateBtn.addEventListener('click', () => {
+                const confirmMessage = `Are you sure you want to ${regenerateVerb.toLowerCase()} the ${title.toLowerCase()}? This will replace the existing one.`;
+                if (confirm(confirmMessage)) {
+                    generateContent(threadId, true, newRegenerateBtn);
+                }
+            });
+
+            regenerateBtn = newRegenerateBtn;
+        }
+    }
+
+    async function generateContent(tid, isRegenerate = false, btnOverride = null) {
+        const btn = btnOverride || (isRegenerate ? regenerateBtn : generateBtn);
         if (!btn) return;
 
         // Disable button and show loading state
@@ -78,14 +118,20 @@ const regenerateButtonId = `regenerate-${id}-btn`;
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ threadId }),
+                body: JSON.stringify({ threadId: tid }),
             });
 
             const data = await response.json();
 
             if (data.status === 'success') {
-                // Reload the page to show the new content
-                window.location.reload();
+                // Update UI without reloading
+                updateSectionToShowContent();
+
+                // If regenerating, restore the button state
+                if (isRegenerate && btn) {
+                    btn.removeAttribute('disabled');
+                    btn.innerHTML = '<span class="material-symbols-outlined">refresh</span>';
+                }
             } else {
                 throw new Error(data.error || `Failed to generate ${title.toLowerCase()}`);
             }
@@ -102,9 +148,9 @@ const regenerateButtonId = `regenerate-${id}-btn`;
     // Generate button
     if (generateBtn) {
         generateBtn.addEventListener('click', () => {
-            const threadId = generateBtn.getAttribute('data-thread-id');
-            if (threadId) {
-                generateContent(threadId, false);
+            const tid = generateBtn.getAttribute('data-thread-id');
+            if (tid) {
+                generateContent(tid, false);
             }
         });
     }
@@ -112,12 +158,12 @@ const regenerateButtonId = `regenerate-${id}-btn`;
     // Regenerate button
     if (regenerateBtn) {
         regenerateBtn.addEventListener('click', () => {
-            const threadId = regenerateBtn.getAttribute('data-thread-id');
-            if (threadId) {
+            const tid = regenerateBtn.getAttribute('data-thread-id');
+            if (tid) {
                 const confirmMessage = `Are you sure you want to ${regenerateVerb.toLowerCase()} the ${title.toLowerCase()}? This will replace the existing one.`;
 
                 if (confirm(confirmMessage)) {
-                    generateContent(threadId, true);
+                    generateContent(tid, true);
                 }
             }
         });
