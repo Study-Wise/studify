@@ -1,0 +1,81 @@
+@use '../../variables/globals' as *;
+@use '../../variables/tokens' as *;
+@use 'sass:map';
+@use 'sass:list';
+
+$color: list.nth(map.get($accent-colors, primary), 1);
+
+.content-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $spacing-medium;
+    padding: $spacing-medium $spacing-large;
+    background-color: var(--card-bg);
+    border-bottom: 1px solid var(--card-border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+
+    .action-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: $spacing-small;
+        padding: $spacing-small $spacing-medium;
+        border-radius: $border-radius-medium;
+        font-size: $font-size-small;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all $transition-base $ease;
+        text-decoration: none;
+        border: none;
+
+        .material-symbols-outlined {
+            font-size: 1.125rem;
+        }
+
+        &.primary {
+            background-color: $color;
+            color: white;
+
+            &:hover:not(:disabled) {
+                filter: brightness(1.1);
+            }
+
+            &:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
+        }
+
+        &.secondary {
+            background-color: var(--body-bg);
+            color: var(--card-text);
+            border: 1px solid var(--card-border);
+
+            &:hover {
+                background-color: var(--card-bg);
+                border-color: var(--card-text);
+            }
+        }
+    }
+
+    @media (max-width: 600px) {
+        flex-direction: column;
+        gap: $spacing-small;
+
+        .action-btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+}
+
+.spinning {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}

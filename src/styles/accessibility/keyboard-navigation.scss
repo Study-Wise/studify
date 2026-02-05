@@ -67,7 +67,7 @@ button:focus-visible {
 }
 
 /* Form validation styles */
-[aria-invalid="true"] {
+:not(.message-input):user-invalid {
     border-color: #ef4444;
     box-shadow: 0 0 0 1px #ef4444;
 }

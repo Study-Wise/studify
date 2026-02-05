@@ -85,7 +85,7 @@
             gap: $spacing-extra-small;
 
             .material-symbols-outlined {
-                font-size: $font-size-xl;
+                font-size: $font-size-extra-large;
                 color: list.nth(map.get($accent-colors, primary), 1);
             }
 
@@ -110,7 +110,7 @@
             transition: all $transition-slow $ease-in-out;
 
             .material-symbols-outlined {
-                font-size: $font-size-lg;
+                font-size: $font-size-large;
             }
 
             &:hover {
@@ -132,7 +132,7 @@
             color: var(--card-text);
             opacity: $opacity-subtle;
             text-align: center;
-            font-size: $font-size-sm;
+            font-size: $font-size-small;
             margin: 0;
         }
 
@@ -147,12 +147,12 @@
             text-decoration: none;
             border: 1px solid var(--card-border);
             border-radius: $border-radius-medium;
-            font-size: $font-size-sm;
+            font-size: $font-size-small;
             font-weight: $font-weight-medium;
             transition: all $transition-slow $ease-in-out;
 
             .material-symbols-outlined {
-                font-size: $font-size-lg;
+                font-size: $font-size-large;
             }
 
             &:hover {
@@ -222,14 +222,14 @@
                     gap: 0.25rem;
 
                     .status-label {
-                        font-size: $font-size-sm;
+                        font-size: $font-size-small;
                         color: var(--card-text);
                         opacity: 0.7;
                         font-weight: $font-weight-medium;
                     }
 
                     .status-value {
-                        font-size: $font-size-sm;
+                        font-size: $font-size-small;
                         color: var(--card-text);
                         font-weight: $font-weight-semibold;
                     }

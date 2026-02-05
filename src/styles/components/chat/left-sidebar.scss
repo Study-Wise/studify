@@ -41,7 +41,7 @@
                     opacity: $opacity-subtle;
                     text-align: center;
                     padding: $spacing-extra-large $spacing-medium;
-                    font-size: $font-size-sm;
+                    font-size: $font-size-small;
                 }
 
                 .file-item {
@@ -70,7 +70,7 @@
                         flex-shrink: 0;
 
                         .material-symbols-outlined {
-                            font-size: $font-size-xl;
+                            font-size: $font-size-extra-large;
                             color: var(--primary);
                         }
                     }
@@ -83,7 +83,7 @@
                         gap: 2px;
 
                         .file-name {
-                            font-size: $font-size-sm;
+                            font-size: $font-size-small;
                             font-weight: $font-weight-medium;
                             color: var(--card-text);
                             white-space: nowrap;
@@ -92,7 +92,7 @@
                         }
 
                         .file-size {
-                            font-size: $font-size-xs;
+                            font-size: $font-size-extra-small;
                             color: var(--card-text);
                             opacity: $opacity-subtle;
                         }
@@ -113,7 +113,7 @@
                         opacity: 0;
 
                         .material-symbols-outlined {
-                            font-size: $font-size-lg;
+                            font-size: $font-size-large;
                             color: var(--danger);
                         }
 

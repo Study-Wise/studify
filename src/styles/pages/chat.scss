@@ -44,7 +44,7 @@
                 h3 {
                     color: var(--section-title);
                     margin-block-end: $spacing-medium;
-                    font-size: $font-size-2xl;
+                    font-size: $font-size-2x-large;
                 }
 
                 p {
@@ -127,7 +127,7 @@ footer, .chat-toolbar {
         display: flex;
         align-items: center;
         gap: $spacing-extra-small;
-        font-size: $font-size-lg;
+        font-size: $font-size-large;
         font-weight: $font-weight-semibold;
         letter-spacing: -0.01em;
         transition: all $transition-base $ease-in-out;
@@ -140,7 +140,7 @@ footer, .chat-toolbar {
         }
 
         .material-symbols-outlined {
-            font-size: $font-size-xl;
+            font-size: $font-size-extra-large;
         }
     }
 
@@ -153,7 +153,7 @@ footer, .chat-toolbar {
         display: flex;
         align-items: center;
         gap: $spacing-extra-small;
-        font-size: $font-size-sm;
+        font-size: $font-size-small;
         font-weight: $font-weight-medium;
         box-shadow:
             0 4px 12px rgba(from var(--card-shadow) r g b / 0.08),
@@ -186,7 +186,7 @@ footer, .chat-toolbar {
         }
 
         .material-symbols-outlined {
-            font-size: $font-size-lg;
+            font-size: $font-size-large;
         }
 
         .share-text {
@@ -350,7 +350,7 @@ footer, .chat-toolbar {
             align-self: end;
             padding: 0 math.div($_message-space, 2);
             opacity: $opacity-subtle;
-            font-size: $font-size-xs;
+            font-size: $font-size-extra-small;
             transition: opacity $transition-base $ease-out;
 
             &:hover {

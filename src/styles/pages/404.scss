@@ -49,7 +49,7 @@
         }
 
         .error-subtitle {
-            font-size: $font-size-2xl;
+            font-size: $font-size-2x-large;
             font-weight: $font-weight-semibold;
             color: var(--header-text);
             margin-bottom: $spacing-large;
@@ -58,7 +58,7 @@
         }
 
         .error-message {
-            font-size: $font-size-lg;
+            font-size: $font-size-large;
             color: var(--body-text);
             opacity: 0.8;
             margin-bottom: $spacing-extra-large;
@@ -137,7 +137,7 @@
             opacity: 0;
 
             h3 {
-                font-size: $font-size-lg;
+                font-size: $font-size-large;
                 font-weight: $font-weight-semibold;
                 color: var(--header-text);
                 margin-bottom: $spacing-large;
@@ -188,7 +188,7 @@
                     }
 
                     .suggestion-text {
-                        font-size: $font-size-sm;
+                        font-size: $font-size-small;
                         font-weight: $font-weight-medium;
                         color: var(--body-text);
                         text-align: center;
@@ -250,7 +250,7 @@
             }
 
             .error-subtitle {
-                font-size: $font-size-xl;
+                font-size: $font-size-extra-large;
             }
 
             .error-message {

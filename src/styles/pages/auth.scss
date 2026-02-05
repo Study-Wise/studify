@@ -36,7 +36,7 @@
 
 // Title and subtitle
 .auth-title {
-    font-size: $font-size-3xl;
+    font-size: $font-size-3x-large;
     font-weight: $font-weight-bold;
     text-align: center;
     margin: 0 0 $spacing-extra-small 0;
@@ -66,7 +66,7 @@
 }
 
 .form-label {
-    font-size: $font-size-sm;
+    font-size: $font-size-small;
     font-weight: $font-weight-medium;
     color: var(--card-text);
     margin: 0;
@@ -107,7 +107,7 @@
     color: hsl(0 60% 40% / 1);
     border: 1px solid hsl(0 100% 90% / 1);
     border-radius: $border-radius-medium;
-    font-size: $font-size-sm;
+    font-size: $font-size-small;
     line-height: $line-height-normal;
     margin-top: -$spacing-small;
 
@@ -168,7 +168,7 @@
     text-align: center;
     margin: $spacing-large 0;
     color: hsl(from var(--card-text) h s l / 0.5);
-    font-size: $font-size-sm;
+    font-size: $font-size-small;
 
     &::before,
     &::after {
@@ -247,7 +247,7 @@
 
     p {
         margin: 0;
-        font-size: $font-size-sm;
+        font-size: $font-size-small;
         color: hsl(from var(--card-text) h s l / 0.6);
         line-height: $line-height-normal;
     }
@@ -298,11 +298,11 @@
     }
 
     .auth-title {
-        font-size: $font-size-2xl;
+        font-size: $font-size-2x-large;
     }
 
     .auth-subtitle {
-        font-size: $font-size-sm;
+        font-size: $font-size-small;
     }
 }
 

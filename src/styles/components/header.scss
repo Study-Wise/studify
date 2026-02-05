@@ -118,7 +118,7 @@ header {
 
     header {
         h1 {
-            font-size: $font-size-2xl - 0.1rem;
+            font-size: $font-size-2x-large - 0.1rem;
         }
         .tagline {
             font-size: 0.95rem;
@@ -141,7 +141,7 @@ header {
 
     header {
         h1 {
-            font-size: $font-size-2xl;
+            font-size: $font-size-2x-large;
         }
         .tagline {
             display: none;
@@ -185,12 +185,12 @@ header {
 
     header {
         h1 {
-            font-size: $font-size-xl + 0.15rem;
+            font-size: $font-size-extra-large + 0.15rem;
             margin-block-end: 0.1rem;
         }
         .tagline {
             display: block;
-            font-size: $font-size-sm + 0.025rem;
+            font-size: $font-size-small + 0.025rem;
             text-align: center;
         }
     }
