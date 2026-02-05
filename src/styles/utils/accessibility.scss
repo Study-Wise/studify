@@ -196,10 +196,10 @@ body:has([role="dialog"][aria-modal="true"]) {
 }
 
 // Usage Notes
-//
+
 // Import this file in globals.scss:
-// @use './utils/accessibility' as *;
-//
+//   @use './utils/accessibility' as *;
+
 // This file provides baseline accessibility improvements.
 // Always ensure:
 // - Semantic HTML (use button, not div with onClick)

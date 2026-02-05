@@ -236,25 +236,25 @@
 }
 
 // USAGE EXAMPLES
-//
+
 // Import this file in any SCSS file:
-// @use '../variables/mixins' as *;
-//
+//   @use '../variables/mixins' as *;
+
 // Examples:
-//
+
 // .button {
 //     @include interactive-lift;
 //     @include focus-visible-only;
 // }
-//
+
 // .card {
 //     @include gradient-overlay(0.05);
 // }
-//
+
 // .scrollable-area {
 //     @include custom-scrollbar;
 // }
-//
+
 // .description {
 //     @include text-overflow-lines(3);
 // }
