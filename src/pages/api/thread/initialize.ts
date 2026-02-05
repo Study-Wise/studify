@@ -63,7 +63,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             model: initialModel,
             provider: initialProvider,
             isPublic: false,
-            isDev: process.env.NODE_ENV === 'development'
+            isDev: (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development'
         };
 
         await db.insert(threadsTable).values(newThread);

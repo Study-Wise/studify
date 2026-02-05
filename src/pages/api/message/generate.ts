@@ -166,7 +166,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
                     model: initialModel,
                     provider: initialProvider,
                     isPublic: isPublic,
-                    isDev: process.env.NODE_ENV === 'development'
+                    isDev: (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development'
                 };
                 
                 console.log(`💾 [${requestId}] Inserting new thread into database:`, {
@@ -431,7 +431,7 @@ Use the above thread context when calling tools that require threadId, category,
                         model: userModel,
                         provider: provider,
                         isPublic: isPublic,
-                        isDev: process.env.NODE_ENV === 'development'
+                        isDev: (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development'
                     } as ThreadInsert).onConflictDoUpdate({
                         target: threadsTable.id,
                         set: {
@@ -566,7 +566,7 @@ Use the above thread context when calling tools that require threadId, category,
                         title: convoTitle,
                         thread: { messages: convoHistoryWithoutSystem },
                         updatedAt: new Date(),
-                        isDev: process.env.NODE_ENV === 'development' ? true : false,
+                        isDev: (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development' ? true : false,
                     })
                     .where(eq(threadsTable.id, current_thread_id));
                 console.log(`✅ [${requestId}] Thread updated successfully`);
@@ -585,7 +585,7 @@ Use the above thread context when calling tools that require threadId, category,
                     model: userModel,
                     provider: provider,
                     isPublic: isPublic,
-                    isDev: process.env.NODE_ENV === 'development'
+                    isDev: (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development'
                 } as ThreadInsert);
                 console.log(`✅ [${requestId}] New thread inserted successfully`);
             } else if (isNewThread) {
@@ -596,7 +596,7 @@ Use the above thread context when calling tools that require threadId, category,
                         title: convoTitle,
                         thread: { messages: convoHistoryWithoutSystem },
                         updatedAt: new Date(),
-                        isDev: process.env.NODE_ENV === 'development' ? true : false,
+                        isDev: (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development' ? true : false,
                     })
                     .where(eq(threadsTable.id, current_thread_id));
                 console.log(`✅ [${requestId}] New thread updated successfully`);
