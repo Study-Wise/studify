@@ -2,9 +2,7 @@
 // Single source of truth for spacing, sizing, shadows, and other design values
 // These tokens provide consistency and make future updates easier
 
-// ============================================
 // SPACING SCALE (8px base)
-// ============================================
 // Use these for padding, margin, gap, etc.
 
 $spacing-tiny: 0.25rem;        // 4px  - Minimal spacing
@@ -16,9 +14,7 @@ $spacing-extra-large: 2rem;    // 32px - Extra large spacing
 $spacing-huge: 3rem;           // 48px - Section spacing
 $spacing-massive: 4rem;        // 64px - Major section spacing
 
-// ============================================
 // BORDER RADIUS SCALE
-// ============================================
 // Use these for consistent rounded corners
 
 $border-radius-extra-small: 0.25rem;  // 4px  - Subtle rounding
@@ -29,9 +25,7 @@ $border-radius-extra-large: 1rem;     // 16px - Large cards
 $border-radius-huge: 1.5rem;          // 24px - Hero elements
 $border-radius-full: 100vw;          // Pill shape / circular
 
-// ============================================
 // SHADOW SYSTEM (Elevation-based)
-// ============================================
 // Light mode shadows
 
 $box-shadow-extra-small: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -53,9 +47,7 @@ $box-shadow-dark-huge: 0 20px 40px 0 rgba(0, 0, 0, 0.8);
 $box-shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
 $box-shadow-inner-dark: inset 0 2px 4px 0 rgba(0, 0, 0, 0.4);
 
-// ============================================
 // TRANSITION SYSTEM
-// ============================================
 // Durations
 
 $transition-fast: 150ms;
@@ -81,25 +73,19 @@ $transition-opacity: opacity $transition-base $ease-out;
 
 $transition-all: all $transition-base $ease-out;
 
-// ============================================
 // Z-INDEX SCALE
-// ============================================
 // Use these to prevent z-index conflicts
 
 $z-index-base: 1;
 $z-index-dropdown: 1000;
 $z-index-sticky: 1100;
 $z-index-fixed: 1200;
-$z-index-modal-backdrop: 1300;
-$z-index-modal: 1400;
 $z-index-popover: 1500;
 $z-index-tooltip: 1600;
 $z-index-notification: 1700;
 $z-index-theme-switcher: 9999;
 
-// ============================================
 // TYPOGRAPHY SCALE
-// ============================================
 // Font sizes
 
 $font-size-extra-small: 0.75rem;      // 12px
@@ -126,25 +112,19 @@ $line-height-normal: 1.5;
 $line-height-relaxed: 1.625;
 $line-height-loose: 2;
 
-// ============================================
 // OPACITY SCALE
-// ============================================
 
 $opacity-disabled: 0.5;
 $opacity-hover: 0.9;
 $opacity-overlay: 0.8;
 $opacity-subtle: 0.6;
 
-// ============================================
 // LAYOUT
-// ============================================
 
 $container-max-width: 1200px;
 $container-padding: $spacing-large;
 
-// ============================================
 // USAGE NOTES
-// ============================================
 //
 // Import this file in any SCSS file where you need design tokens:
 // @use '../variables/tokens' as *;
