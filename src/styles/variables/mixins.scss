@@ -223,15 +223,15 @@
 
 // Fade in animation
 @mixin fade-in($duration: $transition-base, $delay: 0s) {
-    animation: fadeIn $duration $ease-out $delay;
+    animation: fade-in $duration $ease-out $delay;
 }
 
 // Slide in from direction
 @mixin slide-in($direction: 'left', $duration: $transition-base, $delay: 0s) {
     @if $direction == 'left' {
-        animation: slideInFromLeft $duration $ease-out $delay;
+        animation: slide-in-from-left $duration $ease-out $delay;
     } @else if $direction == 'right' {
-        animation: slideInFromRight $duration $ease-out $delay;
+        animation: slide-in-from-right $duration $ease-out $delay;
     }
 }
 

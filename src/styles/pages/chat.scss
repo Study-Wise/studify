@@ -274,7 +274,7 @@ footer, .chat-toolbar {
         position: relative;
 
         // Slide-in animation from left (assistant messages)
-        animation: slideInFromLeft 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        animation: slide-in-from-left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 
         &-content {
             box-sizing: border-box;
@@ -360,7 +360,7 @@ footer, .chat-toolbar {
             align-self: end;
 
             // Slide-in animation from right (user messages)
-            animation: slideInFromRight 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: slide-in-from-right 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 
             .message-content {
                 background: linear-gradient(135deg,
@@ -438,7 +438,7 @@ footer, .chat-toolbar {
 }
 
 // Enhanced slide-in animations
-@keyframes slideInFromLeft {
+@keyframes slide-in-from-left {
     from {
         opacity: 0;
         translate: -20px 10px;
@@ -452,7 +452,7 @@ footer, .chat-toolbar {
     }
 }
 
-@keyframes slideInFromRight {
+@keyframes slide-in-from-right {
     from {
         opacity: 0;
         translate: 20px 10px;
