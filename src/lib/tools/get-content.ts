@@ -25,8 +25,6 @@ const validTypes = [
     'practice-questions'
 ] as const;
 
-type ContentType = typeof validTypes[number];
-
 // Special cases that don't follow the standard naming convention
 const specialCases: Record<string, { latestFn?: string; generateFn?: string }> = {
     'additional-resources': {
@@ -34,9 +32,6 @@ const specialCases: Record<string, { latestFn?: string; generateFn?: string }> =
         generateFn: 'generateResources',
     },
 };
-
-// Types that save to DB automatically in their generate function
-const savesAutomatically = ['infographic'];
 
 // Types that require model/provider for generation
 const requiresModelProvider = ['infographic'];
@@ -51,13 +46,11 @@ const getContentTool = tool({
     execute: async ({ type, threadId, userEmail }) => {
         try {
             const pascalCase = toPascalCase(type);
-            const camelCase = toCamelCase(type);
 
             // Derive function names (with special case handling)
             const special = specialCases[type] || {};
             const latestFnName = special.latestFn || `getLatest${pascalCase}`;
             const generateFnName = special.generateFn || `generate${pascalCase}`;
-            const dbColumn = `generated${pascalCase}` as keyof typeof threadsTable.$inferSelect;
 
             // Dynamically import the latest content retrieval function
             const latestModule = await import(`../content/latest/${type}.ts`);
@@ -112,14 +105,8 @@ const getContentTool = tool({
                 generatedContent = await generateFn(threadId, userEmail || null);
             }
 
-            // Save to database (unless it saves automatically)
-            if (!savesAutomatically.includes(type)) {
-                await db.update(threadsTable)
-                    .set({ [dbColumn]: generatedContent, updatedAt: new Date() })
-                    .where(eq(threadsTable.id, threadId));
-            }
-
-            console.log(`✅ ${type} generated and saved for thread ${threadId}`);
+            // Each generate function saves to DB on its own
+            console.log(`✅ ${type} generated for thread ${threadId}`);
 
             return {
                 status: 'success',
