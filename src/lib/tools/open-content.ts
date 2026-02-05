@@ -13,9 +13,8 @@ const validTypes = [
 ] as const;
 
 /**
- * Client-side tool for opening content in a new browser tab.
- * This tool has no `execute` function because it runs on the client.
- * The AI will call this tool, and the client handles the actual window.open().
+ * Tool for opening content in a new browser tab.
+ * Returns a special response that the client handles to open the URL.
  */
 const openContentTool = tool({
     description: "Open study content (study guide, reference sheet, flashcards, etc.) in a new browser tab. Use this when the user asks to view, open, or see their generated content.",
@@ -25,11 +24,23 @@ const openContentTool = tool({
         category: z.string().describe('The category (e.g., math, science)'),
         mode: z.string().describe('The mode (e.g., algebra, physics)'),
     }),
-    // No execute function - this is a client-side tool
+    execute: async ({ type, threadId, category, mode }) => {
+        const url = `/${category}/${mode}/${type}/${threadId}`;
+
+        // Return a special response that signals the client to open this URL
+        return JSON.stringify({
+            action: 'open-content',
+            url,
+            type,
+            threadId,
+            category,
+            mode,
+            message: `Opening ${type.replace(/-/g, ' ')} in a new tab...`
+        });
+    },
 });
 
 export default {
     ...openContentTool,
     ready: true,
-    clientSide: true, // Flag to identify client-side tools
 };

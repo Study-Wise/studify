@@ -283,9 +283,10 @@ const { page, category, mode, id } = Astro.props;
 
         for (const toolCall of toolCalls) {
             if (toolCall.toolName === 'open-content') {
-                const { type, threadId: tid, category: cat, mode: m } = toolCall.args;
-                if (type && tid && cat && m) {
-                    const url = `/${cat}/${m}/${type}/${tid}`;
+                const { type, threadId: tid, category: cat, mode: m, url: providedUrl } = toolCall.args;
+                const url = providedUrl || (type && tid && cat && m ? `/${cat}/${m}/${type}/${tid}` : null);
+
+                if (url && type) {
                     const apiEndpoint = `/api/${type}/generate`;
 
                     console.log(`🔗 Ensuring content exists and opening: ${url}`);
@@ -295,7 +296,7 @@ const { page, category, mode, id } = Astro.props;
                         const response = await fetch(apiEndpoint, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ threadId: tid }),
+                            body: JSON.stringify({ threadId: tid || threadId }),
                         });
 
                         const data = await response.json();
@@ -307,6 +308,8 @@ const { page, category, mode, id } = Astro.props;
                             window.open(url, '_blank');
                         } else {
                             console.error(`Failed to generate ${type}:`, data.error);
+                            // Try to open anyway
+                            window.open(url, '_blank');
                         }
                     } catch (error) {
                         console.error(`Error generating ${type}:`, error);

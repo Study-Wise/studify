@@ -108,9 +108,39 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
         const aiEndTime = Date.now();
         const aiDuration = aiEndTime - aiStartTime;
 
-        // Extract client-side tool calls (tools that were called but not executed)
+        // Extract client-side actions from tool results
         const clientToolCalls: ClientToolCall[] = [];
 
+        // Check tool results for actions that need client-side handling
+        if (result.toolResults && result.toolResults.length > 0) {
+            for (const toolResult of result.toolResults) {
+                try {
+                    // Tool results are JSON strings, so we need to parse them
+                    // Cast to access the result property which varies by type
+                    const rawResult = (toolResult as unknown as { result?: unknown }).result;
+                    const resultString = rawResult as string;
+                    const resultValue = typeof resultString === 'string' ? JSON.parse(resultString) : resultString;
+
+                    if (resultValue && resultValue.action === 'open-content') {
+                        clientToolCalls.push({
+                            toolName: 'open-content',
+                            toolCallId: toolResult.toolCallId,
+                            args: {
+                                type: resultValue.type,
+                                threadId: resultValue.threadId,
+                                category: resultValue.category,
+                                mode: resultValue.mode,
+                                url: resultValue.url,
+                            },
+                        });
+                    }
+                } catch {
+                    // Not a JSON result or not an open-content action, skip
+                }
+            }
+        }
+
+        // Also check for client-side tools that weren't executed (fallback)
         if (result.toolCalls && result.toolCalls.length > 0) {
             for (const toolCall of result.toolCalls) {
                 if (clientSideToolNames.has(toolCall.toolName)) {
