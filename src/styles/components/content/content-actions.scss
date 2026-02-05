@@ -7,9 +7,10 @@ $color: list.nth(map.get($accent-colors, primary), 1);
 
 .content-actions {
     position: sticky;
-    top: 0;
+    top: $spacing-medium;
 
     margin-bottom: $spacing-medium;
+    margin-inline: #{-1 * $spacing-medium};
     padding: $spacing-medium $spacing-large;
     background-color: var(--card-bg);
 
@@ -20,6 +21,8 @@ $color: list.nth(map.get($accent-colors, primary), 1);
     align-items: center;
     justify-content: space-between;
     gap: $spacing-medium;
+
+    box-shadow: 0 0 $spacing-medium rgba(from var(--body-text) r g b / 0.25);
 
     z-index: 10;
 
