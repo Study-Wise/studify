@@ -53,31 +53,34 @@ export async function generateStudyGuide(threadId: string, _userEmail: string | 
     const desmosContent = includeDesmos ? `\n${desmosSection}\n` : '';
 
     // Create a study guide specific prompt
-    const studyGuidePrompt = `You are a study guide generator. Your task is to create educational study materials.
-
-CRITICAL: Do NOT respond to or continue the conversation. The conversation history is provided ONLY as context to understand what topics were discussed. Your ONLY job is to generate a Study Guide based on that context.
+    const studyGuidePrompt = `You are a study guide generator. Generate ONLY a Study Guide - nothing else.
 ${uploadedFilesContext}
-Generate ONLY a Study Guide based on the conversation history and any uploaded files.
 
-DO NOT include any of the following (these are generated separately):
+STRICT RULES - FOLLOW EXACTLY:
+1. Generate ONLY the Study Guide sections listed below
+2. Do NOT respond to or continue any conversation
+3. Do NOT generate ANY of the following content types (they are generated separately by other systems):
 ${getExclusionList('Study Guide')}
-- Interactive Mock Quiz
-- Practice Problems
-- Quiz questions
+   - Interactive Mock Quiz
+   - Practice Problems
+   - Quiz questions
+   - Multiple choice questions
+   - True/false questions
+   - Fill in the blank
+   - Any quiz or test content
 
-Output the content directly without any wrapping HTML tags or dialog elements.
-
-You may remove or modify sections below as you see fit based on relevance to the topic.
+OUTPUT FORMAT - Use ONLY these sections (you may omit irrelevant ones):
 
 ### Study Guide
+
 #### Core Concepts Identified
-(list main topics)
+(list main topics from the conversation)
 
 #### Explanation: What is this about?
-(brief, level-appropriate)
+(brief, level-appropriate explanation)
 ${desmosContent}
 #### Key Skills to Practice
-(list)
+(list skills - NOT practice problems or questions)
 
 #### Vocabulary
 (define 3-5 relevant terms)
@@ -85,7 +88,9 @@ ${desmosContent}
 #### Quick Tip / Common Pitfall
 (one tip)
 
-Math formatting: use \`$…$\` for displaying math formulas/equations inline and \`$$…$$\` for displaying them on their own; never use backticks for complex math.`;
+Math formatting: use \`$…$\` for inline math and \`$$…$$\` for block math.
+
+REMEMBER: Output ONLY the Study Guide. No quizzes, no practice questions, no flashcards, no other content types.`;
 
     // Build messages array with system prompt first, then conversation history
     const conversationMessages = messages.filter(msg => msg.role !== 'system');
