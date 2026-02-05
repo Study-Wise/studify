@@ -34,13 +34,14 @@ const specialCases: Record<string, { latestFn?: string; generateFn?: string }> =
 const requiresModelProvider = ['infographic'];
 
 const getContentTool = tool({
-    description: "Retrieve or generate study materials for a thread. Returns existing content if available; otherwise automatically generates new content based on the conversation history and uploaded files. After successfully retrieving or generating content, call the 'open-content' tool to open the content in a new tab for the user.",
+    description: "Retrieve or generate study materials for a thread. Returns existing content if available; otherwise automatically generates new content based on the conversation history and uploaded files. Use regenerate=true to force regeneration even if content already exists. After successfully retrieving or generating content, call the 'open-content' tool to open the content in a new tab for the user.",
     inputSchema: z.object({
         type: z.enum(validTypes).describe('The content type to retrieve or generate'),
         threadId: z.string().describe('The thread ID to get/generate content for'),
         userEmail: z.string().optional().describe('The user email for authorization (optional)'),
+        regenerate: z.boolean().optional().describe('Force regeneration even if content already exists (default: false)'),
     }),
-    execute: async ({ type, threadId, userEmail }) => {
+    execute: async ({ type, threadId, userEmail, regenerate = false }) => {
         try {
             const pascalCase = toPascalCase(type);
 
@@ -49,33 +50,36 @@ const getContentTool = tool({
             const latestFnName = special.latestFn || `getLatest${pascalCase}`;
             const generateFnName = special.generateFn || `generate${pascalCase}`;
 
-            // Dynamically import the latest content retrieval function
-            const latestModule = await import(`../content/latest/${type}.ts`);
-            const getLatestFn = latestModule[latestFnName];
+            // Skip checking for existing content if regenerate is true
+            if (!regenerate) {
+                // Dynamically import the latest content retrieval function
+                const latestModule = await import(`../content/latest/${type}.ts`);
+                const getLatestFn = latestModule[latestFnName];
 
-            // First, try to get existing content
-            const existingContent = await getLatestFn(threadId);
+                // First, try to get existing content
+                const existingContent = await getLatestFn(threadId);
 
-            // Check if content exists (handle different return types)
-            const hasContent = typeof existingContent === 'object' && existingContent !== null
-                ? 'content' in existingContent ? existingContent.content !== null : 'imageUrl' in existingContent
-                : existingContent !== null;
+                // Check if content exists (handle different return types)
+                const hasContent = typeof existingContent === 'object' && existingContent !== null
+                    ? 'content' in existingContent ? existingContent.content !== null : 'imageUrl' in existingContent
+                    : existingContent !== null;
 
-            if (hasContent) {
-                const content = typeof existingContent === 'object' && 'content' in existingContent
-                    ? existingContent.content
-                    : existingContent;
+                if (hasContent) {
+                    const content = typeof existingContent === 'object' && 'content' in existingContent
+                        ? existingContent.content
+                        : existingContent;
 
-                return {
-                    status: 'success',
-                    message: `Retrieved existing ${type}`,
-                    content,
-                    generated: false
-                };
+                    return {
+                        status: 'success',
+                        message: `Retrieved existing ${type}`,
+                        content,
+                        generated: false
+                    };
+                }
             }
 
-            // Content doesn't exist, generate it
-            console.log(`📝 Generating ${type} for thread ${threadId}`);
+            // Content doesn't exist or regenerate requested, generate it
+            console.log(`📝 ${regenerate ? 'Regenerating' : 'Generating'} ${type} for thread ${threadId}`);
 
             // Dynamically import the content generation function
             const generateModule = await import(`../content/generate/${type}.ts`);
@@ -96,13 +100,14 @@ const getContentTool = tool({
             }
 
             // Each generate function saves to DB on its own
-            console.log(`✅ ${type} generated for thread ${threadId}`);
+            console.log(`✅ ${type} ${regenerate ? 'regenerated' : 'generated'} for thread ${threadId}`);
 
             return {
                 status: 'success',
-                message: `Generated new ${type}`,
+                message: regenerate ? `Regenerated ${type}` : `Generated new ${type}`,
                 content: generatedContent,
-                generated: true
+                generated: true,
+                regenerated: regenerate
             };
 
         } catch (error) {
