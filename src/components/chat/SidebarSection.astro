@@ -124,7 +124,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
             const data = await response.json();
 
             if (data.status === 'success') {
-                // Update UI without reloading
+                // Update UI
                 updateSectionToShowContent();
 
                 // If regenerating, restore the button state

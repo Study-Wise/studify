@@ -202,7 +202,7 @@ const {
                 if (data.status === 'success' && data.id) {
                     currentThreadId = data.id;
 
-                    // Update the URL without reloading
+                    // Update the URL
                     const newUrl = `/${category}/${mode}/chat/${data.id}`;
                     window.history.replaceState({}, '', newUrl);
                 } else {
