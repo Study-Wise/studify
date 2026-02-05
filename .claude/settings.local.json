@@ -40,7 +40,8 @@
       "mcp__sentry__get_issue_details",
       "mcp__sentry__analyze_issue_with_seer",
       "Bash(git fsck:*)",
-      "Bash(git branch:*)"
+      "Bash(git branch:*)",
+      "Bash(npx stylelint:*)"
     ],
     "deny": [],
     "ask": []

@@ -14,6 +14,10 @@ StudyWise is an AI-powered educational platform built with Astro that provides p
 - `npm run build` - Build production site to `./dist/`
 - `npm run preview` - Preview production build locally
 
+### Checking
+
+- `npm run check` - Run Astro type checking and SCSS linting (stylelint)
+
 ### Database
 
 - `npx drizzle-kit push` - Push schema changes to PostgreSQL database
