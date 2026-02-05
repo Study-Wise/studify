@@ -95,18 +95,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        // Generate the flashcards
+        // Generate the flashcards (saves to DB automatically)
         console.log(`🤖 [${requestId}] Generating flashcards`);
         const content = await generateFlashcards(threadId, user_email);
-
-        // Save the generated flashcards to the database
-        console.log(`💾 [${requestId}] Saving flashcards to database`);
-        await db.update(threadsTable)
-            .set({
-                generatedFlashcards: content,
-                updatedAt: new Date()
-            })
-            .where(eq(threadsTable.id, threadId));
 
         console.log(`🎉 [${requestId}] Flashcards generation completed successfully`);
 

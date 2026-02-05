@@ -96,18 +96,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        // Generate the mind map
+        // Generate the mind map (saves to DB automatically)
         console.log(`🤖 [${requestId}] Generating mind map`);
         const content = await generateMindMap(threadId, user_email);
-
-        // Save the generated mind map to the database
-        console.log(`💾 [${requestId}] Saving mind map to database`);
-        await db.update(threadsTable)
-            .set({
-                generatedMindMap: content,
-                updatedAt: new Date()
-            })
-            .where(eq(threadsTable.id, threadId));
 
         console.log(`🎉 [${requestId}] Mind map generation completed successfully`);
 

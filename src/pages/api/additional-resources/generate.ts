@@ -96,18 +96,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        // Generate the resources
+        // Generate the resources (saves to DB automatically)
         console.log(`🤖 [${requestId}] Generating resources`);
         const content = await generateResources(threadId, user_email);
-
-        // Save the generated resources to the database
-        console.log(`💾 [${requestId}] Saving resources to database`);
-        await db.update(threadsTable)
-            .set({
-                generatedAdditionalResources: content,
-                updatedAt: new Date()
-            })
-            .where(eq(threadsTable.id, threadId));
 
         console.log(`🎉 [${requestId}] Resources generation completed successfully`);
 

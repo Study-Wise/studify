@@ -96,18 +96,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        // Generate the webpage
+        // Generate the webpage (saves to DB automatically)
         console.log(`🤖 [${requestId}] Generating webpage`);
         const content = await generateWebpage(threadId, user_email);
-
-        // Save the generated webpage to the database
-        console.log(`💾 [${requestId}] Saving webpage to database`);
-        await db.update(threadsTable)
-            .set({
-                generatedWebpage: content,
-                updatedAt: new Date()
-            })
-            .where(eq(threadsTable.id, threadId));
 
         console.log(`🎉 [${requestId}] Webpage generation completed successfully`);
 

@@ -96,18 +96,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        // Generate the study guide
+        // Generate the study guide (saves to DB automatically)
         console.log(`🤖 [${requestId}] Generating study guide`);
         const content = await generateStudyGuide(threadId, user_email);
-
-        // Save the generated study guide to the database
-        console.log(`💾 [${requestId}] Saving study guide to database`);
-        await db.update(threadsTable)
-            .set({
-                generatedStudyGuide: content,
-                updatedAt: new Date()
-            })
-            .where(eq(threadsTable.id, threadId));
 
         console.log(`🎉 [${requestId}] Study guide generation completed successfully`);
 

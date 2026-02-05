@@ -96,18 +96,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        // Generate the practice questions
+        // Generate the practice questions (saves to DB automatically)
         console.log(`🤖 [${requestId}] Generating practice questions`);
         const content = await generatePracticeQuestions(threadId, user_email);
-
-        // Save the generated practice questions to the database
-        console.log(`💾 [${requestId}] Saving practice questions to database`);
-        await db.update(threadsTable)
-            .set({
-                generatedPracticeQuestions: content,
-                updatedAt: new Date()
-            })
-            .where(eq(threadsTable.id, threadId));
 
         console.log(`🎉 [${requestId}] Practice questions generation completed successfully`);
 
