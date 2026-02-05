@@ -3,7 +3,18 @@ import type { GatewayProviderOptions } from '@ai-sdk/gateway';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
-import type { ThreadData } from '../../types';
+import type { ThreadData, UploadedFile } from '../../types';
+
+function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
+    const filesWithText = uploadedFiles.filter(f => f.extractedText);
+    if (filesWithText.length === 0) return '';
+
+    const fileContents = filesWithText
+        .map(f => `--- File: ${f.name} ---\n${f.extractedText}`)
+        .join('\n\n');
+
+    return `\n\n### Uploaded Files Content\nThe user has uploaded the following files. Include this content in your analysis:\n\n${fileContents}`;
+}
 
 export async function generateWebpage(threadId: string, _userEmail: string | null) {
     // Fetch the thread from database
@@ -19,12 +30,19 @@ export async function generateWebpage(threadId: string, _userEmail: string | nul
     const threadData = thread.thread as ThreadData;
     const messages = threadData?.messages ?? [];
 
+    // Get uploaded files
+    const uploadedFiles = (thread.uploadedFiles as UploadedFile[]) ?? [];
+
     if (messages.length === 0) {
         throw new Error('No messages found in thread');
     }
 
+    // Build uploaded files context
+    const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
+
     // Create a webpage specific prompt
-    const webpagePrompt = `Generate a complete, interactive webpage based on the conversation history. This should be a comprehensive resource that presents the concepts discussed in an engaging, visual format.
+    const webpagePrompt = `Generate a complete, interactive webpage based on the conversation history and any uploaded files.
+${uploadedFilesContext} This should be a comprehensive resource that presents the concepts discussed in an engaging, visual format.
 
 Output the content as complete HTML (including <!DOCTYPE html>, <html>, <head>, and <body> tags) with embedded CSS and JavaScript. Make it visually appealing and interactive.
 

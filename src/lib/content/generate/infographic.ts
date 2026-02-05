@@ -3,7 +3,18 @@ import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
 import { generateImage } from '../../genai-image';
-import type { ThreadData } from '../../types';
+import type { ThreadData, UploadedFile } from '../../types';
+
+function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
+    const filesWithText = uploadedFiles.filter(f => f.extractedText);
+    if (filesWithText.length === 0) return '';
+
+    const fileContents = filesWithText
+        .map(f => `--- File: ${f.name} ---\n${f.extractedText}`)
+        .join('\n\n');
+
+    return `\n\n### Uploaded Files Content\nThe user has uploaded the following files. Include this content in your analysis:\n\n${fileContents}`;
+}
 
 export async function generateInfographic(
     threadId: string,
@@ -24,6 +35,9 @@ export async function generateInfographic(
     const threadData = thread.thread as ThreadData;
     const messages = threadData?.messages ?? [];
 
+    // Get uploaded files
+    const uploadedFiles = (thread.uploadedFiles as UploadedFile[]) ?? [];
+
     if (messages.length === 0) {
         throw new Error('No messages found in thread');
     }
@@ -34,8 +48,12 @@ export async function generateInfographic(
         .map(msg => `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`)
         .join('\n\n');
 
+    // Build uploaded files context
+    const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
+
     // Step 1: Generate a description of what the infographic should show
-    const systemPrompt = `You are an expert at analyzing educational conversations and creating infographic concepts. Based on the conversation history provided, create a detailed description for an educational infographic image.
+    const systemPrompt = `You are an expert at analyzing educational conversations and creating infographic concepts. Based on the conversation history and any uploaded files provided, create a detailed description for an educational infographic image.
+${uploadedFilesContext}
 
 Your description should be clear, visual, and specific about:
 - Main topic/title at the top

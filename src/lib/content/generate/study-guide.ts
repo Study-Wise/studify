@@ -6,7 +6,18 @@ import stepByStepHTML from '../../promptTemplates/stepByStepHTML';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
-import type { ThreadData } from '../../types';
+import type { ThreadData, UploadedFile } from '../../types';
+
+function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
+    const filesWithText = uploadedFiles.filter(f => f.extractedText);
+    if (filesWithText.length === 0) return '';
+
+    const fileContents = filesWithText
+        .map(f => `--- File: ${f.name} ---\n${f.extractedText}`)
+        .join('\n\n');
+
+    return `\n\n### Uploaded Files Content\nThe user has uploaded the following files. Include this content in your analysis:\n\n${fileContents}`;
+}
 
 export async function generateStudyGuide(threadId: string, _userEmail: string | null) {
     // Fetch the thread from database
@@ -26,6 +37,9 @@ export async function generateStudyGuide(threadId: string, _userEmail: string | 
     const threadData = thread.thread as ThreadData;
     const messages = threadData?.messages ?? [];
 
+    // Get uploaded files
+    const uploadedFiles = (thread.uploadedFiles as UploadedFile[]) ?? [];
+
     if (messages.length === 0) {
         throw new Error('No messages found in thread');
     }
@@ -36,10 +50,13 @@ export async function generateStudyGuide(threadId: string, _userEmail: string | 
     // Get the base system prompt
     const baseSystemPrompt = modeObj?.prompt ? await modeObj.prompt : config.systemPrompt;
 
+    // Build uploaded files context
+    const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
+
     // Create a study guide specific prompt
     const studyGuidePrompt = `${baseSystemPrompt}
-
-IMPORTANT: Generate ONLY a Study Guide based on the conversation history. Do NOT include a Reference Sheet section.
+${uploadedFilesContext}
+IMPORTANT: Generate ONLY a Study Guide based on the conversation history and any uploaded files. Do NOT include a Reference Sheet section.
 
 Output the content directly without any wrapping HTML tags or dialog elements.
 

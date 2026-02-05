@@ -1,7 +1,7 @@
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
-import type { ThreadData } from '../../types';
+import type { ThreadData, UploadedFile } from '../../types';
 import Exa from "exa-js";
 
 const exa = new Exa(process.env.EXA_SEARCH_API_KEY);
@@ -37,6 +37,9 @@ export async function generateResources(threadId: string, _userEmail: string | n
     const threadData = thread.thread as ThreadData;
     const messages = threadData?.messages ?? [];
 
+    // Get uploaded files
+    const uploadedFiles = (thread.uploadedFiles as UploadedFile[]) ?? [];
+
     if (messages.length === 0) {
         throw new Error('No messages found in thread');
     }
@@ -47,8 +50,15 @@ export async function generateResources(threadId: string, _userEmail: string | n
         .map(msg => msg.content)
         .join(' ');
 
-    // Create a concise topic summary for search
-    const topicSummary = conversationText.slice(0, 500);
+    // Include extracted text from uploaded files in topic extraction
+    const uploadedFilesText = uploadedFiles
+        .filter(f => f.extractedText)
+        .map(f => f.extractedText)
+        .join(' ');
+
+    // Create a concise topic summary for search (include uploaded files content)
+    const combinedText = `${conversationText} ${uploadedFilesText}`.trim();
+    const topicSummary = combinedText.slice(0, 500);
 
     const resourceCollection: ResourceCollection = {
         topic: thread.title || 'Study Resources',
