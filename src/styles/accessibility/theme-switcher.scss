@@ -1,6 +1,5 @@
 @use '../variables/globals' as *;
 @use '../variables/tokens' as *;
-
 @use 'sass:list';
 @use 'sass:map';
 @use 'sass:math';
@@ -18,27 +17,19 @@
     position: fixed;
     bottom: $spacing-medium;
     left: $spacing-medium;
-
     box-sizing: content-box;
-
     padding: $spacing-extra-small;
-
     aspect-ratio: 1;
     width: $spacing-medium + 0.25rem;
     height: $spacing-medium + 0.25rem;
-
     background: linear-gradient(var(--g-angle), list.nth(map.get($accent-colors, primary), 1), list.nth(map.get($accent-colors, primary), 2));
     color: var(--body-bg);
-
     border: none;
     border-radius: 50%;
-
     display: grid;
     place-items: center;
-
     font-size: 14px;
-    box-shadow: 0 0 10px hsl(from var(--body-text) h s l / 0.5);
-
+    box-shadow: 0 0 10px hsl(from var(--body-text) h s l / 50%);
     cursor: pointer;
     z-index: $z-index-theme-switcher;
 
@@ -51,9 +42,10 @@
     // Enhanced hover effect
     &:hover {
         --g-angle: 60deg;
+
         scale: 1.1;
         rotate: 10deg;
-        box-shadow: 0 0 15px hsl(from var(--body-text) h s l / 0.7);
+        box-shadow: 0 0 15px hsl(from var(--body-text) h s l / 70%);
     }
 
     &:focus-visible {
@@ -89,7 +81,7 @@
         transition: opacity $transition-base $ease-out,
                     translate $transition-base $ease-out,
                     scale $transition-base $ease-out;
-        box-shadow: 0 4px 8px hsl(from var(--body-text) h s l / 0.2);
+        box-shadow: 0 4px 8px hsl(from var(--body-text) h s l / 20%);
         z-index: 1;
     }
 
@@ -108,7 +100,7 @@
 
 
 /* Mobile responsiveness for contrast toggle */
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .theme-switcher {
         padding: 10px 12px;
         font-size: 12px;

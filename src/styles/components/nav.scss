@@ -17,14 +17,17 @@
         &:hover, &:focus-visible {
             background-color: color.adjust($section-title-light, $lightness: -10%);
         }
+
         &.active {
             background-color: color.adjust($section-title-light, $lightness: 10%);
             font-weight: $font-weight-semibold;
+
             &:hover, &:focus-visible {
                 background-color: color.adjust($section-title-light, $lightness: 5%);
             }
         }
     }
+
     &:not(.lite) .nav-btn {
         background-color: $section-title-light;
         color: var(--header-text);
@@ -48,9 +51,10 @@
     }
 }
   
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .header-nav {
         gap: 10px;
+
         .nav-btn {
             padding: 6px 10px;
             font-size: 0.95rem;

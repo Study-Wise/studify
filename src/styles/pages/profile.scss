@@ -4,6 +4,6 @@
     padding: 0 1rem;
 }
 
-body:has([role=dialog][aria-modal=true]) > *:not([role=dialog]) {
+body:has([role="dialog"][aria-modal="true"]) > *:not([role="dialog"]) {
     filter: none !important;
 }

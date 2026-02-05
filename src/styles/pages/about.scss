@@ -26,12 +26,15 @@
     display: flex;
     justify-content: center;
     align-items: end;
+
     // text-align: center;
     gap: $spacing-medium;
+
     // flex-wrap: wrap;
 
     @media (width < 500px) {
         flex-wrap: wrap;
+
         p {
             text-align: center;
         }
@@ -60,6 +63,7 @@
     &:not(:last-child) {
         margin-block-end: 1.2em;
     }
+
     font-size: 1.05em;
 
     &:has(.material-symbols-outlined) {

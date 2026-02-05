@@ -38,11 +38,11 @@
 /* Touch feedback for buttons */
 @media (hover: none) and (pointer: coarse) {
     button, .nav-btn, .fancy-button {
-        -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+        -webkit-tap-highlight-color: rgb(0 0 0 / 10%);
         transition: background-color 0.1s $ease;
 
         &:active {
-            background-color: rgba(0, 0, 0, 0.1);
+            background-color: rgb(0 0 0 / 10%);
             scale: 0.98;
         }
     }

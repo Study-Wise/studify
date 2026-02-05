@@ -8,22 +8,17 @@ $color: list.nth(map.get($accent-colors, primary), 1);
 .content-actions {
     position: sticky;
     top: $spacing-medium;
-
     margin-bottom: $spacing-medium;
     margin-inline: #{-1 * $spacing-medium};
     padding: $spacing-medium $spacing-large;
     background-color: var(--card-bg);
-
     border: 1px solid var(--card-border);
     border-radius: $border-radius-extra-large;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: $spacing-medium;
-
-    box-shadow: 0 0 $spacing-medium rgba(from var(--body-text) r g b / 0.25);
-
+    box-shadow: 0 0 $spacing-medium rgb(from var(--body-text) r g b / 25%);
     z-index: 10;
 
     .action-btn {
@@ -69,7 +64,7 @@ $color: list.nth(map.get($accent-colors, primary), 1);
         }
     }
 
-    @media (max-width: 600px) {
+    @media (width <= 600px) {
         flex-direction: column;
         gap: $spacing-small;
 

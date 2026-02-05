@@ -19,24 +19,24 @@
         
         .message-content {
             $brdr: 15px;
+
             background: linear-gradient($gradient-angle, list.nth(map.get($accent-colors, primary), 1), list.nth(map.get($accent-colors, primary), 2));
             border-radius: $brdr;
             padding: $spacing-extra-large;
             text-align: center;
             box-shadow: 0 10px 30px var(--card-shadow);
             border: 1px solid var(--card-border);
-
             isolation: isolate;
             position: relative;
 
             &::before {
                 $space: 10px;
+
                 content: '';
                 position: absolute;
                 inset: $space;
                 background-color: var(--card-bg);
                 z-index: -1;
-
                 border-radius: #{$brdr - $space};
             }
             
@@ -84,6 +84,7 @@ body:has(.chat-page) {
 .chat-header {
     inset-block-start: 0;
 }
+
 footer, .chat-toolbar {
     inset-block-end: 0;
 }
@@ -98,14 +99,14 @@ footer, .chat-toolbar {
 .chat-header {
     box-sizing: border-box;
     padding: $spacing-medium + 0.25rem $spacing-large;
-    border-block-end: 1px solid rgba(from var(--section-title) r g b / 0.1);
+    border-block-end: 1px solid rgb(from var(--section-title) r g b / 10%);
     background: linear-gradient($gradient-angle, list.nth(map.get($accent-colors, primary), 1), list.nth(map.get($accent-colors, primary), 2));
     
     --bd: blur(10px);
-    -webkit-backdrop-filter: var(--bd);
-    backdrop-filter: var(--bd);
 
-    box-shadow: 0 2px 20px rgba(from var(--card-shadow) r g b / 0.1);
+    backdrop-filter: var(--bd);
+    backdrop-filter: var(--bd);
+    box-shadow: 0 2px 20px rgb(from var(--card-shadow) r g b / 10%);
 
     .chat-title-container {
         display: flex;
@@ -114,15 +115,15 @@ footer, .chat-toolbar {
     }
 
     h2 {
-        background-color: rgba(from $card-bg-light r g b / 0.95);
+        background-color: rgba(from $card-bg-light r g b / 95%);
         color: $section-title-light;
         width: fit-content;
         padding: $spacing-small + 0.25rem $spacing-large;
         border-radius: $border-radius-large;
         box-shadow:
-            0 8px 24px rgba(from var(--card-shadow) r g b / 0.12),
-            0 2px 8px rgba(from var(--card-shadow) r g b / 0.08);
-        border: 1px solid rgba(from var(--card-border) r g b / 0.6);
+            0 8px 24px rgb(from var(--card-shadow) r g b / 12%),
+            0 2px 8px rgb(from var(--card-shadow) r g b / 8%);
+        border: 1px solid rgb(from var(--card-border) r g b / 60%);
         margin: 0;
         display: flex;
         align-items: center;
@@ -134,8 +135,8 @@ footer, .chat-toolbar {
 
         &:hover {
             box-shadow:
-                0 12px 32px rgba(from var(--card-shadow) r g b / 0.15),
-                0 4px 12px rgba(from var(--card-shadow) r g b / 0.1);
+                0 12px 32px rgb(from var(--card-shadow) r g b / 15%),
+                0 4px 12px rgb(from var(--card-shadow) r g b / 10%);
             translate: 0 -1px;
         }
 
@@ -146,9 +147,9 @@ footer, .chat-toolbar {
 
     .share-button {
         padding: $spacing-extra-small + 0.25rem $spacing-medium;
-        background-color: rgba(from $card-bg-light r g b / 0.95);
+        background-color: rgba(from $card-bg-light r g b / 95%);
         color: $section-title-light;
-        border: 1px solid rgba(from var(--card-border) r g b / 0.6);
+        border: 1px solid rgb(from var(--card-border) r g b / 60%);
         border-radius: $spacing-extra-small + 0.25rem;
         display: flex;
         align-items: center;
@@ -156,24 +157,24 @@ footer, .chat-toolbar {
         font-size: $font-size-small;
         font-weight: $font-weight-medium;
         box-shadow:
-            0 4px 12px rgba(from var(--card-shadow) r g b / 0.08),
-            0 2px 6px rgba(from var(--card-shadow) r g b / 0.05);
+            0 4px 12px rgb(from var(--card-shadow) r g b / 8%),
+            0 2px 6px rgb(from var(--card-shadow) r g b / 5%);
         cursor: pointer;
         transition: all $transition-base $ease-in-out;
 
         &:hover {
-            background-color: rgba(from $card-bg-light r g b / 1);
+            background-color: rgba(from $card-bg-light r g b / 100%);
             translate: 0 -2px;
             box-shadow:
-                0 8px 20px rgba(from var(--card-shadow) r g b / 0.12),
-                0 4px 8px rgba(from var(--card-shadow) r g b / 0.08);
+                0 8px 20px rgb(from var(--card-shadow) r g b / 12%),
+                0 4px 8px rgb(from var(--card-shadow) r g b / 8%);
         }
 
         &:active {
             translate: 0 0;
             box-shadow:
-                0 4px 12px rgba(from var(--card-shadow) r g b / 0.08),
-                0 2px 6px rgba(from var(--card-shadow) r g b / 0.05);
+                0 4px 12px rgb(from var(--card-shadow) r g b / 8%),
+                0 2px 6px rgb(from var(--card-shadow) r g b / 5%);
         }
 
         &.active {
@@ -181,8 +182,8 @@ footer, .chat-toolbar {
             color: var(--header-text);
             border-color: transparent;
             box-shadow:
-                0 6px 16px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 0.3),
-                0 2px 8px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 0.2);
+                0 6px 16px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 30%),
+                0 2px 8px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 20%);
         }
 
         .material-symbols-outlined {
@@ -201,20 +202,16 @@ footer, .chat-toolbar {
 
 .chat-container {
     flex: 1;
-
     display: grid;
     grid-template-columns: auto 1fr auto;
     max-height: 100%;
-
     overflow: hidden;
-
     position: relative;
 }
 
 /* Card Container */
 .chat-section {
     flex: 1;
-
     display: grid;
     grid-template-rows: 1fr auto;
     min-height: 0; // Critical for grid items to respect overflow
@@ -233,8 +230,8 @@ footer, .chat-toolbar {
 
     // Subtle background pattern
     background-image:
-        radial-gradient(circle at 20% 50%, rgba(from var(--section-title) r g b / 0.015) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(from var(--section-title) r g b / 0.015) 0%, transparent 50%);
+        radial-gradient(circle at 20% 50%, rgb(from var(--section-title) r g b / 1.5%) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgb(from var(--section-title) r g b / 1.5%) 0%, transparent 50%);
 
     // Adds space for the scrollbar to prevent layout shift in supporting browsers.
     // Note: Not supported in Safari or any iOS Browser (WebKit).
@@ -253,14 +250,14 @@ footer, .chat-toolbar {
     }
 
     &::-webkit-scrollbar-thumb {
-        background-color: rgba(from var(--section-title) r g b / 0.15);
+        background-color: rgb(from var(--section-title) r g b / 15%);
         border-radius: 9999px;
         border: 2px solid transparent;
         background-clip: padding-box;
         transition: background-color $transition-fast $ease;
 
         &:hover {
-            background-color: rgba(from var(--section-title) r g b / 0.3);
+            background-color: rgb(from var(--section-title) r g b / 30%);
             background-clip: padding-box;
         }
     }
@@ -284,22 +281,22 @@ footer, .chat-toolbar {
             padding: $_message-space $spacing-large;
             background-color: var(--message-bg);
             border-radius: inherit;
-            border: 1px solid rgba(from var(--card-border) r g b / 0.3);
+            border: 1px solid rgb(from var(--card-border) r g b / 30%);
             position: relative;
             overflow: hidden;
 
             // Modern layered shadows
             box-shadow:
-                0 1px 3px rgba(from var(--card-shadow) r g b / 0.08),
-                0 4px 12px rgba(from var(--card-shadow) r g b / 0.06),
-                inset 0 1px 0 rgba(from var(--header-text) r g b / 0.02);
+                0 1px 3px rgb(from var(--card-shadow) r g b / 8%),
+                0 4px 12px rgb(from var(--card-shadow) r g b / 6%),
+                inset 0 1px 0 rgb(from var(--header-text) r g b / 2%);
 
             // Subtle gradient overlay for depth
             &::before {
                 content: '';
                 position: absolute;
                 inset: 0;
-                background: linear-gradient(135deg, rgba(from var(--header-text) r g b / 0.02) 0%, transparent 50%);
+                background: linear-gradient(135deg, rgb(from var(--header-text) r g b / 2%) 0%, transparent 50%);
                 pointer-events: none;
                 opacity: 0;
                 transition: opacity $transition-base $ease;
@@ -316,10 +313,10 @@ footer, .chat-toolbar {
             // Better code block styling (Phase 3)
             pre,
             code {
-                background-color: rgba(from var(--card-text) r g b / 0.08);
+                background-color: rgb(from var(--card-text) r g b / 8%);
                 padding: $spacing-tiny $spacing-extra-small;
                 border-radius: $border-radius-extra-small;
-                font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+                font-family: Consolas, Monaco, 'Courier New', monospace;
                 font-size: 0.9em;
             }
 
@@ -327,7 +324,7 @@ footer, .chat-toolbar {
                 padding: $spacing-small;
                 margin: $spacing-extra-small 0;
                 overflow-x: auto;
-                border-inline-start: 3px solid rgba(from var(--section-title) r g b / 0.3);
+                border-inline-start: 3px solid rgb(from var(--section-title) r g b / 30%);
 
                 code {
                     background-color: transparent;
@@ -346,6 +343,7 @@ footer, .chat-toolbar {
                 }
             }
         }
+
         &-timestamp {
             align-self: end;
             padding: 0 math.div($_message-space, 2);
@@ -369,24 +367,24 @@ footer, .chat-toolbar {
                     color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: 10%),
                     color.adjust(list.nth(map.get($accent-colors, primary), 2), $lightness: 10%));
                 color: var(--header-text);
-                border-color: rgba(from var(--header-text) r g b / 0.15);
+                border-color: rgb(from var(--header-text) r g b / 15%);
                 box-shadow:
-                    0 2px 8px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 0.25),
-                    0 8px 24px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 0.15),
-                    inset 0 1px 0 rgba(from var(--header-text) r g b / 0.15);
+                    0 2px 8px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 25%),
+                    0 8px 24px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 15%),
+                    inset 0 1px 0 rgb(from var(--header-text) r g b / 15%);
 
                 // Glossy effect for user messages
                 &::before {
                     background: linear-gradient(135deg,
-                        rgba(from var(--header-text) r g b / 0.15) 0%,
+                        rgb(from var(--header-text) r g b / 15%) 0%,
                         transparent 40%);
                 }
 
                 &:hover {
                     box-shadow:
-                        0 4px 12px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 0.3),
-                        0 12px 32px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 0.2),
-                        inset 0 1px 0 rgba(from var(--header-text) r g b / 0.15);
+                        0 4px 12px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 30%),
+                        0 12px 32px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 20%),
+                        inset 0 1px 0 rgb(from var(--header-text) r g b / 15%);
                 }
             }
         }
@@ -432,6 +430,7 @@ footer, .chat-toolbar {
         opacity: 0.4;
         scale: 1;
     }
+
     30% {
         opacity: 1;
         scale: 1.2;
@@ -445,6 +444,7 @@ footer, .chat-toolbar {
         translate: -20px 10px;
         scale: 0.95;
     }
+
     to {
         opacity: 1;
         translate: 0 0;
@@ -458,6 +458,7 @@ footer, .chat-toolbar {
         translate: 20px 10px;
         scale: 0.95;
     }
+
     to {
         opacity: 1;
         translate: 0 0;
@@ -466,7 +467,7 @@ footer, .chat-toolbar {
 }
 
 // Responsive design for tablets
-@media (max-width: 1200px) {
+@media (width <= 1200px) {
     .chat-container {
         grid-template-columns: auto 1fr;
 
@@ -477,7 +478,7 @@ footer, .chat-toolbar {
 }
 
 // Responsive design for mobile
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .chat-container {
         grid-template-columns: 1fr;
 

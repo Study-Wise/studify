@@ -1,5 +1,4 @@
 @use 'open-props/easings' as *;
-
 @use './variables/globals' as *;
 @use './variables/tokens' as *;
 @use './variables/mixins' as *;
@@ -9,7 +8,6 @@
 @use './utils/accessibility' as *;
 @use './utils/buttons' as *;
 @use './utils/card' as *;
-
 @use 'sass:color';
 @use 'sass:list';
 @use 'sass:map';
@@ -38,6 +36,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+
     &:is(ul, ol) {
         padding-inline-start: 1.5em;
     }
@@ -55,7 +54,8 @@ imput, textarea, select, button {
         &, &::before, &::after {
             padding: revert;
         }
-        &:not(:first-child):not(:last-child) {
+
+        &:not(:first-child, :last-child) {
             &, &::before, &::after {
                 margin: revert;
             }
@@ -78,8 +78,6 @@ imput, textarea, select, button {
         style(--theme: "dark"): var(--body-bg-dark);
         else: light-dark(var(--body-bg-light), var(--body-bg-dark))
     );
-
-
     --body-text-ld: #{$body-text};
     --body-text: light-dark(var(--body-text-ld), var(--body-bg-light));
     --body-text: if(
@@ -102,7 +100,6 @@ imput, textarea, select, button {
         style(--theme: "dark"): var(--card-bg-dark);
         else: light-dark(var(--card-bg-light), var(--card-bg-dark))
     );
-    
     --card-text-ld: #{$card-text};
     --card-text: light-dark(var(--card-text-ld), var(--card-bg-light));
     --card-text: if(
@@ -110,7 +107,6 @@ imput, textarea, select, button {
         style(--theme: "dark"): var(--card-bg-light);
         else: light-dark(var(--card-text-ld), var(--card-bg-light))
     );
-
     --card-shadow-light: #{$card-shadow-light};
     --card-shadow-dark: #{$card-shadow-dark};
     --card-shadow: light-dark(var(--card-shadow-light), var(--card-shadow-dark));
@@ -119,7 +115,6 @@ imput, textarea, select, button {
         style(--theme: "dark"): var(--card-shadow-dark);
         else: light-dark(var(--card-shadow-light), var(--card-shadow-dark))
     );
-
     --card-border-light: #{$card-border-light};
     --card-border-dark: #{$card-border-dark};
     --card-border: light-dark(var(--card-border-light), var(--card-border-dark));
@@ -138,7 +133,6 @@ imput, textarea, select, button {
         style(--theme: "dark"): var(--section-title-dark);
         else: light-dark(var(--section-title-light), var(--section-title-dark))
     );
-
     --section-title-border: #{$section-title-border};
     
     // Footer Colors
@@ -154,7 +148,6 @@ imput, textarea, select, button {
         style(--theme: "dark"): var(--message-bg-dark);
         else: light-dark(var(--message-bg-light), var(--message-bg-dark))
     );
-
     --chat-message-shadow: #{$chat-message-shadow};
     
     // Input Colors
@@ -172,6 +165,7 @@ imput, textarea, select, button {
             scrollbar-gutter: stable;
         }
     }
+
     @supports (view-transition-name: root) {
         view-transition-name: root;
     }
@@ -192,6 +186,7 @@ body {
         &:first-child {
             margin-block-start: 0;
         }
+
         &:last-child {
             margin-block-end: 0;
         }
@@ -204,12 +199,10 @@ body {
 
 select.fancy-select,
 ::picker(select) {
-    box-sizing: border-box;
     appearance: base-select;
     width: clamp(250px, 18%, 500px);
     box-sizing: border-box;
     max-height: 100%;
-
     padding: 0.25rem;
     gap: 0.5rem;
 
@@ -229,14 +222,11 @@ select.fancy-select {
         box-sizing: border-box;
         margin-block: 0.25rem;
         padding: 0.25rem 0.5rem;
-
         height: 1.25lh;
-
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        
-        background-color: hsl(from var(--body-bg) h s l / 0.5);
+        background-color: hsl(from var(--body-bg) h s l / 50%);
         border-radius: 0.25rem;
         
         &::checkmark {
@@ -246,6 +236,7 @@ select.fancy-select {
         &:first-child {
             margin-block-start: 0;
         }
+
         &:last-child {
             margin-block-end: 0;
         }
@@ -280,7 +271,6 @@ main {
 :is(section, .chat-page) {
     h2 {
         color: var(--section-title);
-
         font-size: clamp(1.4rem, 4vw, 1.6rem);
         display: flex;
         align-items: center;
@@ -322,6 +312,7 @@ mjx-container {
     line-height: normal !important;
     vertical-align: middle !important;
     text-align: left !important;
+
     // overflow-x: auto;
     max-width: 100%;
 }
@@ -329,7 +320,9 @@ mjx-container {
 mjx-container[display="true"] {
     display: block !important;
     height: fit-content !important;
+
     /* margin-top: 0.8em !important; */
+
     /* margin-bottom: 0.8em !important; */
     text-align: center !important;
 }

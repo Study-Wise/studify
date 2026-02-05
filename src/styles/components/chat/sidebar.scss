@@ -24,12 +24,12 @@
     }
 
     &::-webkit-scrollbar-thumb {
-        background-color: rgba(from var(--section-title) r g b / 0.15);
+        background-color: rgb(from var(--section-title) r g b / 15%);
         border-radius: $border-radius-full;
         transition: background-color $transition-fast $ease;
 
         &:hover {
-            background-color: rgba(from var(--section-title) r g b / 0.3);
+            background-color: rgb(from var(--section-title) r g b / 30%);
         }
     }
 }
@@ -53,12 +53,12 @@
     }
 
     &::-webkit-scrollbar-thumb {
-        background-color: rgba(from var(--section-title) r g b / 0.15);
+        background-color: rgb(from var(--section-title) r g b / 15%);
         border-radius: $border-radius-full;
         transition: background-color $transition-fast $ease;
 
         &:hover {
-            background-color: rgba(from var(--section-title) r g b / 0.3);
+            background-color: rgb(from var(--section-title) r g b / 30%);
         }
     }
 }
@@ -67,8 +67,8 @@
 .sidebar-section {
     display: flex;
     flex-direction: column;
-    background-color: rgba(from var(--card-bg) h s calc(l + 2%));
-    border: 1px solid rgba(from var(--card-border) r g b / 0.3);
+    background-color: rgb(from var(--card-bg) h s calc(l + 2%));
+    border: 1px solid rgb(from var(--card-border) r g b / 30%);
     border-radius: $border-radius-large;
 
     .section-header {
@@ -76,8 +76,8 @@
         align-items: center;
         justify-content: space-between;
         padding: $spacing-medium $spacing-medium + 0.25rem;
-        border-bottom: 1px solid rgba(from var(--card-border) r g b / 0.2);
-        background-color: rgba(from var(--card-bg) h s calc(l - 1%));
+        border-bottom: 1px solid rgb(from var(--card-border) r g b / 20%);
+        background-color: rgb(from var(--card-bg) h s calc(l - 1%));
 
         .section-title {
             display: flex;
@@ -100,7 +100,7 @@
         .regenerate-btn {
             padding: $spacing-extra-small;
             background-color: transparent;
-            border: 1px solid rgba(from var(--card-border) r g b / 0.6);
+            border: 1px solid rgb(from var(--card-border) r g b / 60%);
             border-radius: $border-radius-medium;
             color: var(--card-text);
             cursor: pointer;
@@ -114,7 +114,7 @@
             }
 
             &:hover {
-                background-color: rgba(from var(--card-text) r g b / 0.05);
+                background-color: rgb(from var(--card-text) r g b / 5%);
                 border-color: list.nth(map.get($accent-colors, primary), 1);
                 color: list.nth(map.get($accent-colors, primary), 1);
             }
@@ -251,7 +251,7 @@
                             background-color: list.nth(map.get($accent-colors, primary), 1);
                         }
 
-                        &:checked + .toggle-slider:before {
+                        &:checked + .toggle-slider::before {
                             transform: translateX(22px);
                         }
 
@@ -265,11 +265,11 @@
                         position: absolute;
                         cursor: pointer;
                         inset: 0;
-                        background-color: rgba(from var(--card-text) r g b / 0.2);
+                        background-color: rgb(from var(--card-text) r g b / 20%);
                         transition: all $transition-slow $ease-in-out;
                         border-radius: 26px;
 
-                        &:before {
+                        &::before {
                             position: absolute;
                             content: "";
                             height: 20px;
@@ -279,7 +279,7 @@
                             background-color: white;
                             transition: transform $transition-slow $ease-in-out;
                             border-radius: 50%;
-                            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                            box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
                         }
                     }
                 }
@@ -300,6 +300,7 @@
     from {
         rotate: 0deg;
     }
+
     to {
         rotate: 360deg;
     }

@@ -28,24 +28,24 @@ $border-radius-full: 100vw;          // Pill shape / circular
 // SHADOW SYSTEM (Elevation-based)
 // Light mode shadows
 
-$box-shadow-extra-small: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-$box-shadow-small: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
-$box-shadow-medium: 0 4px 8px 0 rgba(0, 0, 0, 0.10);
-$box-shadow-large: 0 8px 16px 0 rgba(0, 0, 0, 0.12);
-$box-shadow-extra-large: 0 12px 24px 0 rgba(0, 0, 0, 0.15);
-$box-shadow-huge: 0 20px 40px 0 rgba(0, 0, 0, 0.20);
+$box-shadow-extra-small: 0 1px 2px 0 rgb(0 0 0 / 5%);
+$box-shadow-small: 0 2px 4px 0 rgb(0 0 0 / 8%);
+$box-shadow-medium: 0 4px 8px 0 rgb(0 0 0 / 10%);
+$box-shadow-large: 0 8px 16px 0 rgb(0 0 0 / 12%);
+$box-shadow-extra-large: 0 12px 24px 0 rgb(0 0 0 / 15%);
+$box-shadow-huge: 0 20px 40px 0 rgb(0 0 0 / 20%);
 
 // Dark mode shadows (lighter for visibility on dark backgrounds)
-$box-shadow-dark-extra-small: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-$box-shadow-dark-small: 0 2px 4px 0 rgba(0, 0, 0, 0.4);
-$box-shadow-dark-medium: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
-$box-shadow-dark-large: 0 8px 16px 0 rgba(0, 0, 0, 0.6);
-$box-shadow-dark-extra-large: 0 12px 24px 0 rgba(0, 0, 0, 0.7);
-$box-shadow-dark-huge: 0 20px 40px 0 rgba(0, 0, 0, 0.8);
+$box-shadow-dark-extra-small: 0 1px 2px 0 rgb(0 0 0 / 30%);
+$box-shadow-dark-small: 0 2px 4px 0 rgb(0 0 0 / 40%);
+$box-shadow-dark-medium: 0 4px 8px 0 rgb(0 0 0 / 50%);
+$box-shadow-dark-large: 0 8px 16px 0 rgb(0 0 0 / 60%);
+$box-shadow-dark-extra-large: 0 12px 24px 0 rgb(0 0 0 / 70%);
+$box-shadow-dark-huge: 0 20px 40px 0 rgb(0 0 0 / 80%);
 
 // Inner shadows (for depth)
-$box-shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
-$box-shadow-inner-dark: inset 0 2px 4px 0 rgba(0, 0, 0, 0.4);
+$box-shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 6%);
+$box-shadow-inner-dark: inset 0 2px 4px 0 rgb(0 0 0 / 40%);
 
 // TRANSITION SYSTEM
 // Durations
@@ -66,11 +66,8 @@ $ease-spring: var(--ease-elastic-4);
 $transition-colors: color $transition-base $ease-out,
                     background-color $transition-base $ease-out,
                     border-color $transition-base $ease-out;
-
 $transition-transform: transform $transition-base $ease-out;
-
 $transition-opacity: opacity $transition-base $ease-out;
-
 $transition-all: all $transition-base $ease-out;
 
 // Z-INDEX SCALE

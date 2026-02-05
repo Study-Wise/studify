@@ -19,6 +19,7 @@
 
         .empty-icon {
             font-size: 4rem;
+
             // color: list.nth(map.get($accent-colors, primary), 1);
             opacity: 0.5;
             margin-bottom: $spacing-large;
@@ -27,6 +28,7 @@
         h2 {
             font-size: $font-size-extra-large;
             font-weight: $font-weight-semibold;
+
             // color: var(--header-text);
             margin-bottom: $spacing-medium;
         }
@@ -45,6 +47,7 @@
                 list.nth(map.get($accent-colors, primary), 1),
                 list.nth(map.get($accent-colors, primary), 2)
             );
+
             // color: var(--header-text);
             text-decoration: none;
             border-radius: $border-radius-large;
@@ -77,7 +80,6 @@
             margin-bottom: $spacing-large;
             padding-bottom: $spacing-medium;
             border-bottom: 2px solid var(--card-border);
-
             position: relative;
             display: inline-block;
 
@@ -109,7 +111,6 @@
             padding: $spacing-medium $spacing-large;
             text-decoration: none;
             color: inherit;
-
             box-shadow: $box-shadow-small;
             transition: scale $transition-base $ease-out,
                         box-shadow $transition-base $ease-out,
@@ -158,9 +159,8 @@
                         .thread-title {
                             font-size: $font-size-base;
                             font-weight: $font-weight-semibold;
-                            margin: 0 0 $spacing-extra-small 0;
+                            margin: 0 0 $spacing-extra-small;
                             transition: color $transition-base $ease-out;
-
                             overflow: hidden;
                             text-overflow: ellipsis;
                             white-space: nowrap;
@@ -193,7 +193,7 @@
 }
 
 // Responsive design
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .my-chats-container {
         padding: $spacing-large $spacing-small;
 

@@ -4,9 +4,9 @@
     padding: 2rem 1rem;
 
     article {
-        background: var(--background-secondary, #ffffff);
+        background: var(--background-secondary, #fff);
         border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
         overflow: hidden;
     }
 }
@@ -26,7 +26,7 @@
     color: var(--text-primary, #1f2937);
     margin: 0 0 1rem;
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
         font-size: 1.5rem;
     }
 }
@@ -197,7 +197,7 @@
         }
     }
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
         padding: 1.5rem;
         font-size: 1rem;
     }
@@ -224,7 +224,7 @@
     gap: 1rem;
     flex-wrap: wrap;
 
-    @media (max-width: 640px) {
+    @media (width <= 640px) {
         flex-direction: column;
 
         a {
@@ -312,7 +312,7 @@
     &:hover {
         background: var(--primary-hover, #2563eb);
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        box-shadow: 0 4px 12px rgb(59 130 246 / 30%);
     }
 }
 

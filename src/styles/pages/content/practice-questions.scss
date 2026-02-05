@@ -16,8 +16,7 @@
     .practice-questions-content {
         h1, h2, h3, h4, h5, h6 {
             color: var(--section-title);
-            margin-block-start: 1.5rem;
-            margin-block-end: 1rem;
+            margin-block: 1.5rem 1rem;
         }
 
         h1 {
@@ -139,7 +138,7 @@
         }
 
         h2 {
-            margin: 1rem 0 0.5rem 0;
+            margin: 1rem 0 0.5rem;
             color: var(--section-title);
         }
 

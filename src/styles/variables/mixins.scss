@@ -140,9 +140,9 @@
 
 // Glassmorphism effect
 @mixin glass($blur: 10px, $opacity: 0.8) {
-    background-color: rgba(from var(--card-bg) r g b / $opacity);
+    background-color: rgb(from var(--card-bg) r g b / $opacity);
     backdrop-filter: blur($blur);
-    -webkit-backdrop-filter: blur($blur);
+    backdrop-filter: blur($blur);
 }
 
 // Gradient overlay (useful for hover effects)
@@ -155,7 +155,7 @@
         position: absolute;
         inset: 0;
         background: linear-gradient($angle,
-            rgba(from var(--section-title) r g b / $opacity),
+            rgb(from var(--section-title) r g b / $opacity),
             transparent
         );
         border-radius: inherit;
@@ -190,7 +190,7 @@
         border-radius: $border-radius-full;
 
         &:hover {
-            background-color: hsl(from var(--section-title) h s l / 0.5);
+            background-color: hsl(from var(--section-title) h s l / 50%);
         }
     }
 
@@ -198,6 +198,7 @@
     @supports(scrollbar-width: thin) {
         scrollbar-width: thin;
     }
+
     @supports(scrollbar-color: $thumb-color $track-color) {
         scrollbar-color: $thumb-color $track-color;
     }

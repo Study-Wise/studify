@@ -20,6 +20,7 @@
 
     // Set margin-block-end to 0 for all cards that are the last visible child of their parent
     $max: 10;
+
     @for $i from 1 through $max {
         // Select the parent of all ".card"'s
         :has(> &) {

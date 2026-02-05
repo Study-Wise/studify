@@ -46,18 +46,15 @@
 
                 width: 2.5rem;
                 height: 2.5rem;
-
                 background: linear-gradient(135deg,
                     list.nth(map.get($accent-colors, primary), 1),
                     list.nth(map.get($accent-colors, primary), 2)
                 );
                 color: var(--header-text);
                 border-radius: 50%;
-
                 font-weight: $font-weight-bold;
                 font-size: $font-size-large;
                 box-shadow: $box-shadow-medium;
-
                 transition: scale $transition-base $ease-spring;
             }
 
@@ -69,7 +66,6 @@
                 inset-block-start: 2.5rem;
                 width: 2px;
                 height: calc(100% - 1.5rem);
-
                 background: linear-gradient(180deg,
                     rgba(list.nth(map.get($accent-colors, primary), 1), 0.4),
                     rgba(list.nth(map.get($accent-colors, primary), 2), 0.1)
@@ -107,7 +103,6 @@
         background-color: var(--card-bg);
         border-radius: $border-radius-extra-large;
         padding: $spacing-large;
-
         display: flex;
         flex-direction: column;
         gap: $spacing-medium;
@@ -139,6 +134,7 @@
         animation: fadeIn 0.5s $ease-out forwards;
 
         $_max: 10;
+
         @for $i from 1 through $_max {
             &:nth-child(#{$_max}n - #{$_max - $i}) {
                 animation-delay: #{$i * 0.1}s;
@@ -152,6 +148,7 @@
             line-height: $line-height-tight;
             font-weight: $font-weight-semibold;
             color: var(--section-title);
+
             // margin-bottom: $spacing-extra-small;
             width: fit-content;
 
@@ -195,7 +192,6 @@
                 border-radius: $border-radius-large;
                 box-shadow: $box-shadow-small;
                 border: 1px solid var(--card-border);
-
                 text-decoration: none;
                 color: inherit;
 

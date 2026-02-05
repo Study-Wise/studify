@@ -13,14 +13,11 @@ $container-padding: $spacing-medium + 0.25rem;
 
 // Card
 $card-spacing: #{$container-padding * 1.5};
-
 $card-bg-light: #fff;
 $card-bg-dark: #222;
 $card-text: #000;
-
-$card-shadow-light: rgba(0, 0, 0, 0.07);
-$card-shadow-dark: rgba(255, 255, 255, 0.15);
-
+$card-shadow-light: rgb(0 0 0 / 7%);
+$card-shadow-dark: rgb(255 255 255 / 15%);
 $card-border-light: #e0e0e0;
 $card-border-dark: #555;
 
@@ -41,14 +38,14 @@ $body-text: #444;
 // Message
 $message-bg-light: #ebeef1;
 $message-bg-dark: color.adjust($message-bg-light, $lightness: -50%);
-$chat-message-shadow: rgba(0, 0, 0, 0.5);
+$chat-message-shadow: rgb(0 0 0 / 50%);
 
 // Input
 $input-border: #ccc;
 
 // Profile
 $profile-border: #eee;
-$profile-shadow: rgba(0, 0, 0, 0.1);
+$profile-shadow: rgb(0 0 0 / 10%);
 
 // About
 $about-link: #007bff; 

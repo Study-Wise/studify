@@ -29,7 +29,7 @@
     border: 1px solid var(--card-border);
     transition: $transition-all;
 
-    @media (max-width: 640px) {
+    @media (width <= 640px) {
         padding: $spacing-extra-large;
     }
 }
@@ -39,7 +39,7 @@
     font-size: $font-size-3x-large;
     font-weight: $font-weight-bold;
     text-align: center;
-    margin: 0 0 $spacing-extra-small 0;
+    margin: 0 0 $spacing-extra-small;
     color: var(--card-text);
     line-height: $line-height-tight;
 }
@@ -47,8 +47,8 @@
 .auth-subtitle {
     font-size: $font-size-base;
     text-align: center;
-    margin: 0 0 $spacing-extra-large 0;
-    color: hsl(from var(--card-text) h s l / 0.6);
+    margin: 0 0 $spacing-extra-large;
+    color: hsl(from var(--card-text) h s l / 60%);
     line-height: $line-height-normal;
 }
 
@@ -86,12 +86,12 @@
     outline: none;
 
     &::placeholder {
-        color: hsl(from var(--card-text) h s l / 0.4);
+        color: hsl(from var(--card-text) h s l / 40%);
     }
 
     &:focus {
         border-color: list.nth(map.get(colors.$accent-colors, 'primary'), 1);
-        box-shadow: 0 0 0 3px hsl(from #{list.nth(map.get(colors.$accent-colors, 'primary'), 1)} h s l / 0.15);
+        box-shadow: 0 0 0 3px hsl(from #{list.nth(map.get(colors.$accent-colors, 'primary'), 1)} h s l / 15%);
     }
 
     &:disabled {
@@ -103,18 +103,18 @@
 // Error message
 .error-message {
     padding: $spacing-small $spacing-medium;
-    background: hsl(0 100% 96% / 1);
-    color: hsl(0 60% 40% / 1);
-    border: 1px solid hsl(0 100% 90% / 1);
+    background: hsl(0deg 100% 96% / 100%);
+    color: hsl(0deg 60% 40% / 100%);
+    border: 1px solid hsl(0deg 100% 90% / 100%);
     border-radius: $border-radius-medium;
     font-size: $font-size-small;
     line-height: $line-height-normal;
     margin-top: -$spacing-small;
 
     @media (prefers-color-scheme: dark) {
-        background: hsl(0 40% 20% / 1);
-        color: hsl(0 100% 90% / 1);
-        border-color: hsl(0 40% 30% / 1);
+        background: hsl(0deg 40% 20% / 100%);
+        color: hsl(0deg 100% 90% / 100%);
+        border-color: hsl(0deg 40% 30% / 100%);
     }
 }
 
@@ -167,7 +167,7 @@
     align-items: center;
     text-align: center;
     margin: $spacing-large 0;
-    color: hsl(from var(--card-text) h s l / 0.5);
+    color: hsl(from var(--card-text) h s l / 50%);
     font-size: $font-size-small;
 
     &::before,
@@ -204,7 +204,6 @@
     box-shadow: $box-shadow-extra-small;
     outline: none;
     text-decoration: none;
-
     display: flex;
     align-items: center;
     justify-content: center;
@@ -248,7 +247,7 @@
     p {
         margin: 0;
         font-size: $font-size-small;
-        color: hsl(from var(--card-text) h s l / 0.6);
+        color: hsl(from var(--card-text) h s l / 60%);
         line-height: $line-height-normal;
     }
 }
@@ -276,7 +275,7 @@
     width: 40px;
     height: 40px;
     margin: $spacing-extra-large auto;
-    border: 4px solid hsl(from var(--card-border) h s l / 0.3);
+    border: 4px solid hsl(from var(--card-border) h s l / 30%);
     border-top: 4px solid list.nth(map.get(colors.$accent-colors, 'primary'), 1);
     border-radius: $border-radius-full;
     animation: spin 1s linear infinite;
@@ -286,13 +285,14 @@
     0% {
         transform: rotate(0deg);
     }
+
     100% {
         transform: rotate(360deg);
     }
 }
 
 // Responsive adjustments
-@media (max-width: 640px) {
+@media (width <= 640px) {
     .auth-page {
         padding: $spacing-medium;
     }
@@ -311,6 +311,7 @@ $border-size: 0.1em;
 
 .form-btns {
     --border-size: #{$border-size};
+
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(10em, 1fr));
     gap: calc(var(--border-size) * 7);
@@ -320,6 +321,7 @@ $border-size: 0.1em;
 
 .btn.lite {
     --border-size: #{$border-size};
+
     padding: 0.2em 0.4em;
     margin-block: 0;
 }

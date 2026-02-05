@@ -19,7 +19,7 @@
     transition: background-color 0.2s;
 
     &:hover {
-        background-color: rgba(0, 0, 0, 0.05);
+        background-color: rgb(0 0 0 / 5%);
     }
 
     .material-symbols-outlined {
@@ -38,17 +38,13 @@
     position: absolute;
     top: 100%;
     right: 0;
-
     margin-top: 0.5rem;
     padding: 0.5rem 0;
-
     min-width: 200px;
-
     background: white;
     border: 1px solid #e5e7eb;
     border-radius: 0.5rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -1px rgb(0 0 0 / 6%);
     z-index: $z-index-dropdown;
 
     &[hidden] {
@@ -89,7 +85,7 @@
 @media (prefers-color-scheme: dark) {
     .user-button {
         &:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: rgb(255 255 255 / 10%);
         }
     }
 

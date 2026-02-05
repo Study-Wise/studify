@@ -113,7 +113,7 @@
 
             &:hover {
                 transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
                 border-color: var(--primary);
 
                 .resource-icon {
@@ -165,9 +165,9 @@
                     display: -webkit-box;
 
                     --lc: 2;
+
                     -webkit-line-clamp: var(--lc);
                     line-clamp: var(--lc);
-
                     -webkit-box-orient: vertical;
                     overflow: hidden;
                 }
@@ -180,9 +180,9 @@
                     display: -webkit-box;
 
                     --lc: 3;
+
                     -webkit-line-clamp: var(--lc);
                     line-clamp: var(--lc);
-
                     -webkit-box-orient: vertical;
                     overflow: hidden;
                     flex: 1;
@@ -211,7 +211,7 @@
     }
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .resources-page {
         padding: 1rem;
 

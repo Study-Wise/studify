@@ -126,6 +126,7 @@ $accent-colors: (
     0%, 100% {
         background-position: 0% 50%;
     }
+
     50% {
         background-position: 100% 50%;
     }
@@ -137,7 +138,7 @@ $accent-colors: (
         list.nth(map.get($accent-colors, $color-key), 1),
         list.nth(map.get($accent-colors, $color-key), 2)
     );
-    -webkit-background-clip: text;
+    background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;

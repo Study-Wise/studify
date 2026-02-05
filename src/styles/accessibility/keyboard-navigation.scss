@@ -10,7 +10,7 @@
 /* Custom focus styles for specific elements */
 .nav-btn:focus-visible,
 .fancy-button:focus-visible {
-    box-shadow: 0 0 0 2px #4F46E5, 0 0 0 4px rgba(79, 70, 229, 0.2);
+    box-shadow: 0 0 0 2px #4F46E5, 0 0 0 4px rgb(79 70 229 / 20%);
 }
 
 /* Skip links */
@@ -20,20 +20,14 @@
     position: absolute;
     top: 0;
     left: $_pos;
-
     padding: $spacing-small;
-
     background-color: #000;
     color: #fff;
-
     border-radius: $border-radius-extra-small;
-
     font-size: 14px;
     text-decoration: none;
     line-height: $line-height-none;
-
     z-index: $z-index-dropdown;
-
     transition: translate $transition-slow;
     translate: 0 -100%;
 
@@ -53,7 +47,7 @@
 .nav-btn:focus-visible,
 .fancy-button:focus-visible,
 button:focus-visible {
-    box-shadow: 0 0 0 2px #4F46E5, 0 0 0 4px rgba(79, 70, 229, 0.2);
+    box-shadow: 0 0 0 2px #4F46E5, 0 0 0 4px rgb(79 70 229 / 20%);
 }
 
 /* Keyboard activatable elements */

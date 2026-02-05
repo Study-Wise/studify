@@ -12,7 +12,7 @@
         padding: $spacing-medium - 0.0625rem;
         border: 1px solid var(--input-border);
         border-radius: $border-radius-small;
-        font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier,
+        font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier,
             monospace;
         font-size: 0.95em;
         resize: vertical;
@@ -29,7 +29,6 @@
 
 .toolbar {
     margin-block-start: $spacing-extra-small;
-
     display: flex;
     gap: $spacing-medium;
     justify-content: space-between;
@@ -46,7 +45,7 @@
 
 .spinner {
     display: inline-block;
-    border: 3px solid rgba(255, 255, 255, 0.3);
+    border: 3px solid rgb(255 255 255 / 30%);
     border-radius: 50%;
     border-top-color: var(--header-text);
     width: 1.2em;
@@ -126,6 +125,7 @@
         opacity: 0;
         translate: 0 10px;
     }
+
     to {
         opacity: 1;
         translate: 0 0;
@@ -142,8 +142,7 @@
 
     h3, h4 {
         color: #0056b3;
-        margin-block-start: $spacing-extra-large - 0.2rem;
-        margin-block-end: $spacing-medium;
+        margin-block: $spacing-extra-large - 0.2rem $spacing-medium;
         padding-block-end: $border-radius-small;
         border-block-end: 1px solid #eee;
         font-weight: $font-weight-semibold;

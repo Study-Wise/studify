@@ -5,24 +5,21 @@
     position: fixed;
     inset: 50%;
     translate: -50% -50%;
-
     padding: 0;
-
     width: 90%;
     max-width: 500px;
-
-    background-color: var(--card-background, #ffffff);
-    color: var(--text-color, #333333);
-
+    background-color: var(--card-background, #fff);
+    color: var(--text-color, #333);
     border: none;
     border-radius: $border-radius-large;
-
     box-shadow: $box-shadow-huge;
+
     &::backdrop {
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: rgb(0 0 0 / 50%);
 
         --bd: blur(4px);
-        -webkit-backdrop-filter: var(--bd);
+
+        backdrop-filter: var(--bd);
         backdrop-filter: var(--bd);
     }
 
@@ -37,6 +34,7 @@
             scale: 0.95;
             translate: 0 -10px;
         }
+
         to {
             opacity: 1;
             scale: 1;
@@ -56,8 +54,10 @@
         .dialog-icon {
             color: #ef4444;
         }
+
         .dialog-button-primary {
             background-color: #ef4444;
+
             &:hover {
                 background-color: #dc2626;
             }
@@ -68,8 +68,10 @@
         .dialog-icon {
             color: #f59e0b;
         }
+
         .dialog-button-primary {
             background-color: #f59e0b;
+
             &:hover {
                 background-color: #d97706;
             }
@@ -80,8 +82,10 @@
         .dialog-icon {
             color: #10b981;
         }
+
         .dialog-button-primary {
             background-color: #10b981;
+
             &:hover {
                 background-color: #059669;
             }
@@ -92,8 +96,10 @@
         .dialog-icon {
             color: #3b82f6;
         }
+
         .dialog-button-primary {
             background-color: #3b82f6;
+
             &:hover {
                 background-color: #2563eb;
             }
@@ -129,7 +135,7 @@
     margin: 0;
     font-size: $font-size-base;
     line-height: $line-height-relaxed;
-    color: var(--text-color-secondary, #666666);
+    color: var(--text-color-secondary, #666);
 }
 
 .dialog-footer {
@@ -150,7 +156,7 @@
     outline: none;
 
     &:focus-visible {
-        outline: 2px solid currentColor;
+        outline: 2px solid currentcolor;
         outline-offset: 2px;
     }
 
@@ -185,7 +191,7 @@
 }
 
 // Responsive design
-@media (max-width: 640px) {
+@media (width <= 640px) {
     .app-dialog {
         width: 95%;
         max-width: none;

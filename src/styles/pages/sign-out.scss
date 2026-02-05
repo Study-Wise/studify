@@ -16,7 +16,7 @@
     max-width: 400px;
     width: 100%;
     text-align: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
 }
 
 .sign-out-icon {
@@ -32,7 +32,7 @@ h1 {
 }
 
 p {
-    color: rgba(from var(--card-text) r g b / 0.7);
+    color: rgb(from var(--card-text) r g b / 70%);
     margin-block-end: $spacing-extra-large;
     font-size: $font-size-base;
 }
@@ -66,7 +66,7 @@ p {
     &:hover {
         background-color: #dc2626;
         transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
+        box-shadow: 0 4px 8px rgb(239 68 68 / 30%);
     }
 
     &:active {
@@ -80,8 +80,8 @@ p {
     border: 1px solid var(--card-border);
 
     &:hover {
-        background-color: rgba(from var(--card-text) r g b / 0.05);
-        border-color: rgba(from var(--card-border) r g b / 0.8);
+        background-color: rgb(from var(--card-text) r g b / 5%);
+        border-color: rgb(from var(--card-border) r g b / 80%);
     }
 }
 

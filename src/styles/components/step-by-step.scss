@@ -16,10 +16,9 @@
     --pad: #{$spacing-medium};
 
     box-sizing: border-box;
-
     background-color: var(--card-bg);
 
-    @include stepsBorder();
+    @include stepsBorder;
 
     display: flex;
     flex-direction: column;
@@ -41,9 +40,8 @@
             box-sizing: border-box;
             margin-block-start: var(--pad);
             padding: var(--pad);
-            background-color: rgba(from var(--card-bg) h s calc(l - 3%));
+            background-color: rgb(from var(--card-bg) h s calc(l - 3%));
             border-radius: $_bdr;
-
             position: relative;
             overflow: hidden;
 
@@ -53,7 +51,7 @@
                 inset: 0;
                 width: $_bdr;
                 height: 100%;
-                background-color: hsl(120 73% 50%);
+                background-color: hsl(120deg 73% 50%);
             }
         }
 
@@ -61,6 +59,7 @@
             display: flex;
             flex-direction: column;
             gap: $spacing-medium;
+
             @include stepsBorder($depth: 1);
 
             .step-question-choice {
@@ -72,7 +71,7 @@
                 transition: background-color $transition-fast $ease, scale 0.1s $ease;
 
                 &:hover:not([data-state]) {
-                    background-color: rgba(from lightblue r g b / 0.3);
+                    background-color: rgb(from lightblue r g b / 30%);
                 }
 
                 &:active {
@@ -81,22 +80,22 @@
 
                 // Selected and correct
                 &[data-state="selected-correct"] {
-                    background-color: hsl(120 73% 75%);
+                    background-color: hsl(120deg 73% 75%);
                 }
 
                 // Correct but not selected (shown as hint)
                 &[data-state="hint-correct"] {
-                    background-color: hsl(120 73% 75% / 0.5);
+                    background-color: hsl(120deg 73% 75% / 50%);
                 }
 
                 // Selected and incorrect
                 &[data-state="selected-incorrect"] {
-                    background-color: hsl(0 100% 80%);
+                    background-color: hsl(0deg 100% 80%);
                 }
 
                 // Incorrect but not selected (shown as hint)
                 &[data-state="hint-incorrect"] {
-                    background-color: hsl(0 100% 80% / 0.5);
+                    background-color: hsl(0deg 100% 80% / 50%);
                 }
 
                 .step-question-radio {

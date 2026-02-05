@@ -14,8 +14,7 @@
     h2 {
         color: var(--primary);
         font-size: 1.8rem;
-        margin-block-start: $spacing-extra-large;
-        margin-block-end: $spacing-medium;
+        margin-block: $spacing-extra-large $spacing-medium;
         border-block-end: 2px solid var(--accent);
         padding-block-end: $spacing-extra-small;
     }
@@ -23,8 +22,7 @@
     h3 {
         color: var(--text);
         font-size: 1.3rem;
-        margin-block-start: $spacing-large;
-        margin-block-end: $spacing-small + 0.05rem;
+        margin-block: $spacing-large $spacing-small + 0.05rem;
     }
 
     p {

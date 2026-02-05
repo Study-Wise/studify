@@ -72,8 +72,8 @@
         padding: 1cm !important;
         border: none !important;
         box-shadow: none !important;
-        page-break-before: auto;
-        page-break-after: auto;
+        break-before: auto;
+        break-after: auto;
         animation: none !important;
 
         > article {
@@ -97,8 +97,8 @@
     h3,
     h4,
     pre {
-        page-break-before: auto !important;
-        page-break-after: avoid !important;
+        break-before: auto !important;
+        break-after: avoid !important;
     }
 
     // Prevent breaking inside these elements
@@ -109,13 +109,13 @@
     pre,
     code,
     mjx-container {
-        page-break-inside: avoid !important;
+        break-inside: avoid !important;
     }
 
     // Typography Adjustments
     code {
         font-size: 9pt;
-        word-wrap: break-word;
+        overflow-wrap: break-word;
     }
 
     pre {
@@ -133,9 +133,9 @@
 
     // Desmos Graph Handling
     .desmos-graph {
-        page-break-inside: avoid !important;
-        page-break-after: auto !important;
-        page-break-before: auto !important;
+        break-inside: avoid !important;
+        break-after: auto !important;
+        break-before: auto !important;
         break-inside: avoid !important;
         break-after: auto !important;
         break-before: auto !important;

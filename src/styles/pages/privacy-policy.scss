@@ -12,7 +12,7 @@
     }
 
     .last-updated {
-        color: rgba(from var(--card-text) r g b / 0.6);
+        color: rgb(from var(--card-text) r g b / 60%);
         font-size: 0.9rem;
         margin-block-end: $spacing-extra-large;
         font-style: italic;
@@ -26,8 +26,7 @@
         color: var(--card-text);
         font-size: 1.75rem;
         font-weight: $font-weight-semibold;
-        margin-block-start: $spacing-extra-large;
-        margin-block-end: $spacing-medium;
+        margin-block: $spacing-extra-large $spacing-medium;
         padding-block-end: $spacing-extra-small;
         border-block-end: 2px solid var(--card-border);
     }
@@ -36,12 +35,11 @@
         color: var(--card-text);
         font-size: $font-size-extra-large;
         font-weight: $font-weight-semibold;
-        margin-block-start: $spacing-large;
-        margin-block-end: $spacing-small;
+        margin-block: $spacing-large $spacing-small;
     }
 
     p {
-        color: rgba(from var(--card-text) r g b / 0.85);
+        color: rgb(from var(--card-text) r g b / 85%);
         line-height: $line-height-relaxed + 0.075;
         margin-block-end: $spacing-medium;
     }
@@ -49,7 +47,7 @@
     ul {
         margin-block: $spacing-medium;
         margin-inline-start: $spacing-large;
-        color: rgba(from var(--card-text) r g b / 0.85);
+        color: rgb(from var(--card-text) r g b / 85%);
     }
 
     li {
@@ -74,12 +72,12 @@
     }
 
     .acknowledgment {
-        background-color: rgba(from var(--card-border) r g b / 0.1);
+        background-color: rgb(from var(--card-border) r g b / 10%);
         padding: $spacing-large;
         border-radius: $border-radius-medium;
         margin-top: $spacing-huge;
-
         position: relative;
+
         &::before {
             content: '';
             position: absolute;
@@ -98,7 +96,7 @@
     }
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .legal-content {
         h1 {
             font-size: $spacing-extra-large;

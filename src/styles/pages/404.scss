@@ -17,7 +17,6 @@
         max-width: 600px;
         text-align: center;
         padding: $spacing-extra-large * 2;
-
         animation: fadeIn 0.6s $ease-out forwards;
 
         .error-icon {
@@ -36,15 +35,13 @@
             font-weight: $font-weight-bold;
             line-height: 1;
             margin-bottom: $spacing-small;
-
             background: linear-gradient(135deg,
                 list.nth(map.get($accent-colors, primary), 1),
                 list.nth(map.get($accent-colors, primary), 2)
             );
-            -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-
             animation: slideInDown 0.6s $ease-out forwards;
         }
 
@@ -53,17 +50,14 @@
             font-weight: $font-weight-semibold;
             color: var(--header-text);
             margin-bottom: $spacing-large;
-
             animation: slideInUp 0.6s $ease-out forwards;
         }
 
         .error-message {
             font-size: $font-size-large;
             color: var(--body-text);
-            opacity: 0.8;
             margin-bottom: $spacing-extra-large;
             line-height: $line-height-relaxed;
-
             animation: fadeIn 0.6s 0.2s $ease-out forwards;
             opacity: 0;
         }
@@ -74,7 +68,6 @@
             justify-content: center;
             flex-wrap: wrap;
             margin-bottom: $spacing-extra-large;
-
             animation: fadeIn 0.6s 0.3s $ease-out forwards;
             opacity: 0;
 
@@ -88,7 +81,6 @@
                 font-weight: $font-weight-semibold;
                 font-size: $font-size-base;
                 box-shadow: $box-shadow-medium;
-
                 transition: scale $transition-base $ease-out,
                             box-shadow $transition-base $ease-out,
                             translate $transition-base $ease-out;
@@ -132,7 +124,6 @@
             margin-top: $spacing-extra-large;
             padding-top: $spacing-extra-large;
             border-top: 2px solid var(--card-border);
-
             animation: fadeIn 0.6s 0.4s $ease-out forwards;
             opacity: 0;
 
@@ -160,7 +151,6 @@
                     text-decoration: none;
                     color: inherit;
                     box-shadow: $box-shadow-small;
-
                     transition: scale $transition-base $ease-out,
                                 box-shadow $transition-base $ease-out,
                                 translate $transition-base $ease-out,
@@ -204,6 +194,7 @@
     0%, 100% {
         transform: translateY(0);
     }
+
     50% {
         transform: translateY(-20px);
     }
@@ -214,6 +205,7 @@
         opacity: 0;
         transform: translateY(-30px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -225,6 +217,7 @@
         opacity: 0;
         transform: translateY(30px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -232,7 +225,7 @@
 }
 
 // Responsive design
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .error-404-container {
         padding: $spacing-large $spacing-small;
 
@@ -275,7 +268,7 @@
     }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
     .error-404-container {
         .error-content {
             .error-title {

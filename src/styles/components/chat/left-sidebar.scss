@@ -2,7 +2,7 @@
 @use '../../variables/tokens' as *;
 
 .chat-sidebar.left {
-    border-right: 1px solid rgba(from var(--card-border) r g b / 0.3);
+    border-right: 1px solid rgb(from var(--card-border) r g b / 30%);
     display: grid;
     grid-template-rows: 1fr;
     grid-template-columns: 1fr;
@@ -65,7 +65,7 @@
                         justify-content: center;
                         width: 40px;
                         height: 40px;
-                        background-color: rgba(from var(--primary) r g b / 0.1);
+                        background-color: rgb(from var(--primary) r g b / 10%);
                         border-radius: $border-radius-small;
                         flex-shrink: 0;
 
@@ -118,7 +118,7 @@
                         }
 
                         &:hover {
-                            background-color: rgba(from var(--danger) r g b / 0.1);
+                            background-color: rgb(from var(--danger) r g b / 10%);
                         }
 
                         &:disabled {
@@ -137,7 +137,7 @@
 }
 
 // Responsive behavior
-@media (max-width: 1024px) {
+@media (width <= 1024px) {
     .chat-sidebar.left {
         width: 0;
         min-width: 0;
