@@ -205,12 +205,25 @@ export const POST: APIRoute = async ({ request, locals }) => {
             hasConfigPrompt: !!config.systemPrompt
         });
         
-        const systemPrompt = await (modeObj.prompt || Promise.resolve(config.systemPrompt));
+        const baseSystemPrompt = await (modeObj.prompt || Promise.resolve(config.systemPrompt));
+
+        // Add thread context to the system prompt so AI can use tools that need threadId
+        const threadContext = `
+<thread-context>
+threadId: ${current_thread_id}
+category: ${category || config.defaultCategory}
+mode: ${mode || config.defaultMode}
+</thread-context>
+
+Use the above thread context when calling tools that require threadId, category, or mode parameters.
+`;
+        const systemPrompt = baseSystemPrompt + threadContext;
+
         console.log(`📝 [${requestId}] System prompt loaded:`, {
             promptLength: systemPrompt.length,
             promptPreview: systemPrompt.substring(0, 200) + '...'
         });
-        
+
         const systemObj: Message = {
             role: 'system',
             content: systemPrompt,
@@ -392,9 +405,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
                 console.log(`💾 [${requestId}] Saving initial conversation to database`);
                 const convoHistoryWithoutSystem = convoHistory.filter(msg => msg.role !== 'system');
 
-                if (isNewThread) {
-                    // Thread was already created, just update it
-                    console.log(`🔄 [${requestId}] Updating newly created thread with first message`);
+                if (isNewThread || userData) {
+                    // Thread already exists, update it
+                    console.log(`🔄 [${requestId}] Updating thread with first message`);
                     await db.update(threadsTable)
                         .set({
                             thread: { messages: convoHistoryWithoutSystem },
@@ -406,7 +419,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
                         })
                         .where(eq(threadsTable.id, current_thread_id!));
                 } else {
-                    // Thread doesn't exist yet, insert it
+                    // Thread doesn't exist yet, insert it with ON CONFLICT handling
                     console.log(`🆕 [${requestId}] Inserting new thread with first message`);
                     await db.insert(threadsTable).values({
                         id: current_thread_id,
@@ -419,7 +432,17 @@ export const POST: APIRoute = async ({ request, locals }) => {
                         provider: provider,
                         isPublic: isPublic,
                         isDev: process.env.NODE_ENV === 'development'
-                    } as ThreadInsert);
+                    } as ThreadInsert).onConflictDoUpdate({
+                        target: threadsTable.id,
+                        set: {
+                            thread: { messages: convoHistoryWithoutSystem },
+                            category: category || config.defaultCategory,
+                            mode: mode || config.defaultMode,
+                            model: userModel,
+                            provider: provider,
+                            updatedAt: new Date()
+                        }
+                    });
                 }
                 console.log(`✅ [${requestId}] Initial conversation saved`);
 

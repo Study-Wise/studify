@@ -58,7 +58,12 @@ const { page, category, mode, id } = Astro.props;
 
         // Get text based on page
         const userMessage = messageInput.value;
-        
+
+        // Clear the input immediately after capturing the value
+        messageInput.value = '';
+        messageInput.style.height = 'auto';
+        if (sendButton) sendButton.disabled = true;
+
         // For chat page, add user message first
         if (page === 'chat') {
             await addMessage('user', userMessage);
@@ -227,17 +232,87 @@ const { page, category, mode, id } = Astro.props;
         }
     }
 
+    // Update sidebar section to show content exists
+    function updateSidebarSection(contentType, url) {
+        // Find the sidebar section by its ID
+        const section = document.querySelector(`#generate-${contentType}-btn`)?.closest('.sidebar-section');
+        if (!section) return;
+
+        const sectionBody = section.querySelector('.section-body');
+        if (!sectionBody) return;
+
+        // Get the view button text based on content type
+        const viewButtonTexts = {
+            'study-guide': 'View Full Study Guide',
+            'reference-sheet': 'View Full Reference Sheet',
+            'infographic': 'View Infographic',
+            'flashcards': 'View Flashcards',
+            'practice-questions': 'View Practice Questions',
+            'webpage': 'View Webpage',
+            'mind-map': 'View Mind Map',
+            'additional-resources': 'View Resources',
+        };
+
+        const buttonText = viewButtonTexts[contentType] || `View ${contentType}`;
+
+        // Replace empty state with view button
+        sectionBody.innerHTML = `
+            <a href="${url}" class="view-full-btn" target="_blank">
+                <span class="material-symbols-outlined">open_in_new</span>
+                <span>${buttonText}</span>
+            </a>
+        `;
+
+        // Add regenerate button to header if not already present
+        const sectionHeader = section.querySelector('.section-header');
+        if (sectionHeader && !section.querySelector('.regenerate-btn')) {
+            const threadIdAttr = document.querySelector(`[data-thread-id]`)?.getAttribute('data-thread-id') || '';
+            const regenerateBtn = document.createElement('button');
+            regenerateBtn.className = 'regenerate-btn';
+            regenerateBtn.id = `regenerate-${contentType}-btn`;
+            regenerateBtn.title = `Regenerate`;
+            regenerateBtn.setAttribute('data-thread-id', threadIdAttr);
+            regenerateBtn.innerHTML = '<span class="material-symbols-outlined">refresh</span>';
+            sectionHeader.appendChild(regenerateBtn);
+        }
+    }
+
     // Handle client-side tool calls from the AI
-    function executeClientToolCalls(toolCalls) {
+    async function executeClientToolCalls(toolCalls) {
         if (!toolCalls || !Array.isArray(toolCalls)) return;
 
         for (const toolCall of toolCalls) {
             if (toolCall.toolName === 'open-content') {
-                const { type, threadId, category: cat, mode: m } = toolCall.args;
-                if (type && threadId && cat && m) {
-                    const url = `/${cat}/${m}/${type}/${threadId}`;
-                    console.log(`🔗 Opening content: ${url}`);
-                    window.open(url, '_blank');
+                const { type, threadId: tid, category: cat, mode: m } = toolCall.args;
+                if (type && tid && cat && m) {
+                    const url = `/${cat}/${m}/${type}/${tid}`;
+                    const apiEndpoint = `/api/${type}/generate`;
+
+                    console.log(`🔗 Ensuring content exists and opening: ${url}`);
+
+                    try {
+                        // First, generate the content if it doesn't exist
+                        const response = await fetch(apiEndpoint, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ threadId: tid }),
+                        });
+
+                        const data = await response.json();
+
+                        if (data.status === 'success' || data.content) {
+                            // Update the sidebar to show content exists
+                            updateSidebarSection(type, url);
+                            // Open the content in a new tab
+                            window.open(url, '_blank');
+                        } else {
+                            console.error(`Failed to generate ${type}:`, data.error);
+                        }
+                    } catch (error) {
+                        console.error(`Error generating ${type}:`, error);
+                        // Try to open anyway in case content already exists
+                        window.open(url, '_blank');
+                    }
                 }
             }
             // Add more client-side tool handlers here as needed
@@ -252,7 +327,7 @@ const { page, category, mode, id } = Astro.props;
 
         // Execute any client-side tool calls
         if (data.clientToolCalls) {
-            executeClientToolCalls(data.clientToolCalls);
+            await executeClientToolCalls(data.clientToolCalls);
         }
 
         if (page === 'home' && data.id && category && mode) {
@@ -516,8 +591,6 @@ const { page, category, mode, id } = Astro.props;
         if (sendButton && messageInput) {
             sendButton.addEventListener('click', () => {
                 generateOutput();
-                messageInput.value = '';
-                messageInput.style.height = 'auto';
                 messageInput.focus();
             });
         }

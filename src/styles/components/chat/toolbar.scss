@@ -60,14 +60,17 @@ $color: list.nth(map.get($accent-colors, primary), 1);
                 0 4px 12px rgba(from var(--card-shadow) r g b / 0.08),
                 inset 0 1px 2px rgba(from var(--header-text) r g b / 0.02);
         }
-        &:has([aria-invalid=true]) {
-            border-color: #ef4444;
-            box-shadow: 0 0 0 1px #ef4444;
+        // User-valid state - only shows after user interaction
+        &:has(:user-valid) {
+            border-color: $color;
+        }
 
-            [aria-invalid=true] {
-                border: none;
-                box-shadow: none;
-            }
+        // User-invalid state - only shows after user interaction
+        &:has(:user-invalid) {
+            border-color: #ef4444;
+            box-shadow:
+                0 2px 8px rgba(from #ef4444 r g b / 0.1),
+                0 0 0 2px rgba(from #ef4444 r g b / 0.1);
         }
     }
 
