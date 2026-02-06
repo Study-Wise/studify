@@ -61,9 +61,7 @@ const parsedContent = latestPracticeQuestions ? await marked.parse(latestPractic
                     chatUrl={chatUrl}
                 />
                 {parsedContent ? (
-                    <div class="content-container">
-                        <div class="practice-questions-content" set:html={parsedContent} />
-                    </div>
+                    <div class="content-container practice-questions-container" set:html={parsedContent} />
                 ) : (
                     <div class="empty-state">
                         <span class="material-symbols-outlined">quiz</span>

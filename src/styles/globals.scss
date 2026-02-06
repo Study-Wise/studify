@@ -60,6 +60,14 @@ input, textarea, select, button {
                 margin: revert;
             }
         }
+
+        &:first-child {
+            margin-top: 0;
+        }
+        
+        &:last-child {
+            margin-bottom: 0;
+        }
     }
 }
 
