@@ -69,43 +69,41 @@ const hasContent = !!(isStructured ? (flashcardData && flashcardData.questions.l
                     chatUrl={chatUrl}
                 />
                 {isStructured && flashcardData && flashcardData.questions.length > 0 ? (
-                    <div class="content-container">
-                        <div class="quizlet-flashcards">
-                            {flashcardData.text && (
-                                <div class="flashcard-intro" set:html={marked.parse(flashcardData.text)} />
-                            )}
-                            <div class="flashcard-deck" data-current="0">
-                                <div class="flashcard-progress">
-                                    <span class="current">1</span> / <span class="total">{flashcardData.questions.length}</span>
-                                </div>
-                                <div class="flashcard-container">
-                                    {flashcardData.questions.map((card, index) => (
-                                        <div class="flashcard" data-index={index} data-flipped="false">
-                                            <div class="flashcard-inner">
-                                                <div class="flashcard-front">
-                                                    <div class="card-label">Question</div>
-                                                    <div class="card-content" set:html={marked.parse(card.front)} />
-                                                </div>
-                                                <div class="flashcard-back">
-                                                    <div class="card-label">Answer</div>
-                                                    <div class="card-content" set:html={marked.parse(card.back)} />
-                                                </div>
+                    <div class="content-container quizlet-flashcards">
+                        {flashcardData.text && (
+                            <div class="flashcard-intro" set:html={marked.parse(flashcardData.text)} />
+                        )}
+                        <div class="flashcard-deck" data-current="0">
+                            <div class="flashcard-progress">
+                                <span class="current">1</span> / <span class="total">{flashcardData.questions.length}</span>
+                            </div>
+                            <div class="flashcard-container">
+                                {flashcardData.questions.map((card, index) => (
+                                    <div class="flashcard" data-index={index} data-flipped="false">
+                                        <div class="flashcard-inner">
+                                            <div class="flashcard-front">
+                                                <div class="card-label">Question</div>
+                                                <div class="card-content" set:html={marked.parse(card.front)} />
+                                            </div>
+                                            <div class="flashcard-back">
+                                                <div class="card-label">Answer</div>
+                                                <div class="card-content" set:html={marked.parse(card.back)} />
                                             </div>
                                         </div>
-                                    ))}
-                                </div>
-                                <div class="flashcard-controls">
-                                    <button class="control-btn prev" disabled>
-                                        <span class="material-symbols-outlined">chevron_left</span>
-                                    </button>
-                                    <button class="control-btn flip">
-                                        <span class="material-symbols-outlined">flip</span>
-                                        Flip
-                                    </button>
-                                    <button class="control-btn next">
-                                        <span class="material-symbols-outlined">chevron_right</span>
-                                    </button>
-                                </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <div class="flashcard-controls">
+                                <button class="control-btn prev" disabled>
+                                    <span class="material-symbols-outlined">chevron_left</span>
+                                </button>
+                                <button class="control-btn flip">
+                                    <span class="material-symbols-outlined">flip</span>
+                                    Flip
+                                </button>
+                                <button class="control-btn next">
+                                    <span class="material-symbols-outlined">chevron_right</span>
+                                </button>
                             </div>
                         </div>
                     </div>

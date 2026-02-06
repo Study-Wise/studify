@@ -67,116 +67,116 @@ if (latestResourcesJSON) {
                     chatUrl={chatUrl}
                 />
                 {resourcesData ? (
-            <div class="content-container">
-                <div class="resources-header">
-                    <h1 class="resources-title">{resourcesData.topic}</h1>
-                    <p class="resources-subtitle">Curated educational resources to enhance your learning</p>
-                </div>
+                    <div class="content-container">
+                        <div class="resources-header">
+                            <h1 class="resources-title">{resourcesData.topic}</h1>
+                            <p class="resources-subtitle">Curated educational resources to enhance your learning</p>
+                        </div>
 
-                {resourcesData.videos && resourcesData.videos.length > 0 && (
-                    <section class="resource-section">
-                        <div class="section-header">
-                            <span class="material-symbols-outlined">play_circle</span>
-                            <h2>Video Tutorials</h2>
-                        </div>
-                        <div class="resource-grid">
-                            {resourcesData.videos.map((resource: Resource) => (
-                                <a href={resource.url} target="_blank" rel="noopener noreferrer" class="resource-card">
-                                    <div class="resource-icon video">
-                                        <span class="material-symbols-outlined">play_circle</span>
-                                    </div>
-                                    <div class="resource-content">
-                                        <h3 class="resource-title">{resource.title}</h3>
-                                        <p class="resource-snippet">{resource.snippet}</p>
-                                        <div class="resource-footer">
-                                            <span class="resource-source">{resource.source}</span>
-                                            <span class="material-symbols-outlined">open_in_new</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            ))}
-                        </div>
-                    </section>
-                )}
+                        {resourcesData.videos && resourcesData.videos.length > 0 && (
+                            <section class="resource-section">
+                                <div class="section-header">
+                                    <span class="material-symbols-outlined">play_circle</span>
+                                    <h2>Video Tutorials</h2>
+                                </div>
+                                <div class="resource-grid">
+                                    {resourcesData.videos.map((resource: Resource) => (
+                                        <a href={resource.url} target="_blank" rel="noopener noreferrer" class="resource-card">
+                                            <div class="resource-icon video">
+                                                <span class="material-symbols-outlined">play_circle</span>
+                                            </div>
+                                            <div class="resource-content">
+                                                <h3 class="resource-title">{resource.title}</h3>
+                                                <p class="resource-snippet">{resource.snippet}</p>
+                                                <div class="resource-footer">
+                                                    <span class="resource-source">{resource.source}</span>
+                                                    <span class="material-symbols-outlined">open_in_new</span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    ))}
+                                </div>
+                            </section>
+                        )}
 
-                {resourcesData.articles && resourcesData.articles.length > 0 && (
-                    <section class="resource-section">
-                        <div class="section-header">
-                            <span class="material-symbols-outlined">article</span>
-                            <h2>Articles & Guides</h2>
-                        </div>
-                        <div class="resource-grid">
-                            {resourcesData.articles.map((resource: Resource) => (
-                                <a href={resource.url} target="_blank" rel="noopener noreferrer" class="resource-card">
-                                    <div class="resource-icon article">
-                                        <span class="material-symbols-outlined">article</span>
-                                    </div>
-                                    <div class="resource-content">
-                                        <h3 class="resource-title">{resource.title}</h3>
-                                        <p class="resource-snippet">{resource.snippet}</p>
-                                        <div class="resource-footer">
-                                            <span class="resource-source">{resource.source}</span>
-                                            <span class="material-symbols-outlined">open_in_new</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            ))}
-                        </div>
-                    </section>
-                )}
+                        {resourcesData.articles && resourcesData.articles.length > 0 && (
+                            <section class="resource-section">
+                                <div class="section-header">
+                                    <span class="material-symbols-outlined">article</span>
+                                    <h2>Articles & Guides</h2>
+                                </div>
+                                <div class="resource-grid">
+                                    {resourcesData.articles.map((resource: Resource) => (
+                                        <a href={resource.url} target="_blank" rel="noopener noreferrer" class="resource-card">
+                                            <div class="resource-icon article">
+                                                <span class="material-symbols-outlined">article</span>
+                                            </div>
+                                            <div class="resource-content">
+                                                <h3 class="resource-title">{resource.title}</h3>
+                                                <p class="resource-snippet">{resource.snippet}</p>
+                                                <div class="resource-footer">
+                                                    <span class="resource-source">{resource.source}</span>
+                                                    <span class="material-symbols-outlined">open_in_new</span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    ))}
+                                </div>
+                            </section>
+                        )}
 
-                {resourcesData.tutorials && resourcesData.tutorials.length > 0 && (
-                    <section class="resource-section">
-                        <div class="section-header">
-                            <span class="material-symbols-outlined">school</span>
-                            <h2>Step-by-Step Tutorials</h2>
-                        </div>
-                        <div class="resource-grid">
-                            {resourcesData.tutorials.map((resource: Resource) => (
-                                <a href={resource.url} target="_blank" rel="noopener noreferrer" class="resource-card">
-                                    <div class="resource-icon tutorial">
-                                        <span class="material-symbols-outlined">school</span>
-                                    </div>
-                                    <div class="resource-content">
-                                        <h3 class="resource-title">{resource.title}</h3>
-                                        <p class="resource-snippet">{resource.snippet}</p>
-                                        <div class="resource-footer">
-                                            <span class="resource-source">{resource.source}</span>
-                                            <span class="material-symbols-outlined">open_in_new</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            ))}
-                        </div>
-                    </section>
-                )}
+                        {resourcesData.tutorials && resourcesData.tutorials.length > 0 && (
+                            <section class="resource-section">
+                                <div class="section-header">
+                                    <span class="material-symbols-outlined">school</span>
+                                    <h2>Step-by-Step Tutorials</h2>
+                                </div>
+                                <div class="resource-grid">
+                                    {resourcesData.tutorials.map((resource: Resource) => (
+                                        <a href={resource.url} target="_blank" rel="noopener noreferrer" class="resource-card">
+                                            <div class="resource-icon tutorial">
+                                                <span class="material-symbols-outlined">school</span>
+                                            </div>
+                                            <div class="resource-content">
+                                                <h3 class="resource-title">{resource.title}</h3>
+                                                <p class="resource-snippet">{resource.snippet}</p>
+                                                <div class="resource-footer">
+                                                    <span class="resource-source">{resource.source}</span>
+                                                    <span class="material-symbols-outlined">open_in_new</span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    ))}
+                                </div>
+                            </section>
+                        )}
 
-                {resourcesData.documentation && resourcesData.documentation.length > 0 && (
-                    <section class="resource-section">
-                        <div class="section-header">
-                            <span class="material-symbols-outlined">menu_book</span>
-                            <h2>Documentation & References</h2>
-                        </div>
-                        <div class="resource-grid">
-                            {resourcesData.documentation.map((resource: Resource) => (
-                                <a href={resource.url} target="_blank" rel="noopener noreferrer" class="resource-card">
-                                    <div class="resource-icon documentation">
-                                        <span class="material-symbols-outlined">menu_book</span>
-                                    </div>
-                                    <div class="resource-content">
-                                        <h3 class="resource-title">{resource.title}</h3>
-                                        <p class="resource-snippet">{resource.snippet}</p>
-                                        <div class="resource-footer">
-                                            <span class="resource-source">{resource.source}</span>
-                                            <span class="material-symbols-outlined">open_in_new</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            ))}
-                        </div>
-                    </section>
-                )}
-            </div>
+                        {resourcesData.documentation && resourcesData.documentation.length > 0 && (
+                            <section class="resource-section">
+                                <div class="section-header">
+                                    <span class="material-symbols-outlined">menu_book</span>
+                                    <h2>Documentation & References</h2>
+                                </div>
+                                <div class="resource-grid">
+                                    {resourcesData.documentation.map((resource: Resource) => (
+                                        <a href={resource.url} target="_blank" rel="noopener noreferrer" class="resource-card">
+                                            <div class="resource-icon documentation">
+                                                <span class="material-symbols-outlined">menu_book</span>
+                                            </div>
+                                            <div class="resource-content">
+                                                <h3 class="resource-title">{resource.title}</h3>
+                                                <p class="resource-snippet">{resource.snippet}</p>
+                                                <div class="resource-footer">
+                                                    <span class="resource-source">{resource.source}</span>
+                                                    <span class="material-symbols-outlined">open_in_new</span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    ))}
+                                </div>
+                            </section>
+                        )}
+                    </div>
                 ) : (
                     <div class="empty-state">
                         <span class="material-symbols-outlined">search</span>

@@ -61,9 +61,7 @@ const parsedContent = latestReferenceSheet ? await marked.parse(latestReferenceS
                     chatUrl={chatUrl}
                 />
                 {parsedContent ? (
-                    <div class="content-container">
-                        <div class="reference-sheet-content" set:html={parsedContent} />
-                    </div>
+                    <div class="content-container reference-sheet-content" set:html={parsedContent} />
                 ) : (
                     <div class="empty-state">
                         <span class="material-symbols-outlined">description</span>

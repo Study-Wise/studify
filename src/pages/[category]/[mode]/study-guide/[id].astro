@@ -61,9 +61,7 @@ const parsedContent = latestStudyGuide ? await marked.parse(latestStudyGuide) : 
                     chatUrl={chatUrl}
                 />
                 {parsedContent ? (
-                    <div class="content-container">
-                        <div class="study-guide-content" set:html={parsedContent} />
-                    </div>
+                    <div class="content-container study-guide-content" set:html={parsedContent} />
                 ) : (
                     <div class="empty-state">
                         <span class="material-symbols-outlined">menu_book</span>

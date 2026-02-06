@@ -37,7 +37,7 @@ const { content: latestMindMap } = (isAuthorized || isPublic)
     : { content: null };
 ---
 
-<Layout title={`Mind Map | ${modeName} | ${categoryName}`}  container={false}>
+<Layout title={`Mind Map | ${modeName} | ${categoryName}`}  container={true}>
     <div class="mind-map-page">
         {!isAuthorized && !isPublic ? (
             <div class="empty-state">
@@ -56,7 +56,7 @@ const { content: latestMindMap } = (isAuthorized || isPublic)
                     chatUrl={chatUrl}
                 />
                 {latestMindMap ? (
-                    <div class="mind-map-container">
+                    <div class="content-container mind-map-container">
                         <iframe
                             srcdoc={latestMindMap}
                             title="Mind Map"
