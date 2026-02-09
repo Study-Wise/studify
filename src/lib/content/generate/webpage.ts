@@ -1,6 +1,6 @@
 import { generateText } from 'ai';
 import type { GatewayProviderOptions } from '@ai-sdk/gateway';
-import { getExclusionList } from '../../config';
+import { buildContentSystemPrompt } from '../../content';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
@@ -42,14 +42,9 @@ export async function generateWebpage(threadId: string, _userEmail: string | nul
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
     // Create a webpage specific prompt
-    const webpagePrompt = `You are a webpage generator. Your task is to create interactive educational webpages.
+    const webpagePrompt = `${buildContentSystemPrompt('Webpage', uploadedFilesContext)}
 
-CRITICAL: Do NOT respond to or continue the conversation. The conversation history is provided ONLY as context to understand what topics were discussed. Your ONLY job is to generate a Webpage based on that context.
-${uploadedFilesContext}
-Generate ONLY a complete, interactive webpage (HTML with embedded CSS/JS) based on the conversation history and any uploaded files (if any) provided above. Use uploaded files as source material unless the user's additional instructions say otherwise. This should be a comprehensive resource that presents the concepts discussed in an engaging, visual format.
-
-DO NOT include separate sections for the following (these are generated separately):
-${getExclusionList('Webpage')}
+This should be a comprehensive resource that presents the concepts discussed in an engaging, visual format.
 
 Output the content as complete HTML (including <!DOCTYPE html>, <html>, <head>, and <body> tags) with embedded CSS and JavaScript. Make it visually appealing and interactive.
 

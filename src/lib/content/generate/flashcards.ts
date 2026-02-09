@@ -1,6 +1,7 @@
 import { generateObject } from 'ai';
 import { z } from 'zod';
-import config, { getExclusionList } from '../../config';
+import config from '../../config';
+import { buildContentSystemPrompt } from '../../content';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
@@ -53,14 +54,9 @@ export async function generateFlashcards(threadId: string, _userEmail: string | 
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
     // Create a flashcard specific prompt
-    const flashcardPrompt = `You are a flashcard generator. Your task is to create educational flashcards for studying.
+    const flashcardPrompt = `${buildContentSystemPrompt('Flashcards', uploadedFilesContext)}
 
-CRITICAL: Do NOT respond to or continue the conversation. The conversation history is provided ONLY as context to understand what topics were discussed. Your ONLY job is to generate Flashcards based on that context.
-${uploadedFilesContext}
-Generate ONLY Flashcards based on the conversation history and any uploaded files (if any) provided above. Use uploaded files as source material unless the user's additional instructions say otherwise. The flashcards should help the student review and memorize key concepts, formulas, definitions, and problem-solving techniques.
-
-DO NOT include any of the following (these are generated separately):
-${getExclusionList('Flashcards')}
+The flashcards should help the student review and memorize key concepts, formulas, definitions, and problem-solving techniques.
 
 You must return:
 1. A "text" field with a brief markdown introduction/summary about what these flashcards cover (2-3 sentences)

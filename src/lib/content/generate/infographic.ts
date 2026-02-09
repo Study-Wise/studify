@@ -1,5 +1,5 @@
 import { generateText } from 'ai';
-import { getExclusionList } from '../../config';
+import { buildContentSystemPrompt } from '../../content';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
@@ -54,14 +54,7 @@ export async function generateInfographic(
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
     // Step 1: Generate a description of what the infographic should show
-    const systemPrompt = `You are an infographic concept generator. Your task is to create descriptions for educational infographics.
-
-CRITICAL: Do NOT respond to or continue the conversation. The conversation history is provided ONLY as context to understand what topics were discussed. Your ONLY job is to generate an infographic description based on that context.
-${uploadedFilesContext}
-Generate ONLY a description for an educational infographic image based on the conversation history and any uploaded files (if any) provided above. Use uploaded files as source material unless the user's additional instructions say otherwise.
-
-DO NOT include content that belongs in these separate documents:
-${getExclusionList('Infographic')}
+    const systemPrompt = `${buildContentSystemPrompt('Infographic', uploadedFilesContext)}
 
 Your description should be clear, visual, and specific about:
 - Main topic/title at the top

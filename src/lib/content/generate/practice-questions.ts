@@ -1,5 +1,6 @@
 import { generateText } from 'ai';
-import config, { getExclusionList } from '../../config';
+import config from '../../config';
+import { buildContentSystemPrompt } from '../../content';
 import stepByStepHTML from '../../promptTemplates/stepByStepHTML';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
@@ -45,14 +46,7 @@ export async function generatePracticeQuestions(threadId: string, _userEmail: st
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
     // Create a practice questions specific prompt
-    const practiceQuestionsPrompt = `You are a practice questions generator. Your task is to create educational practice questions for studying.
-
-CRITICAL: Do NOT respond to or continue the conversation. The conversation history is provided ONLY as context to understand what topics were discussed. Your ONLY job is to generate Practice Questions based on that context.
-${uploadedFilesContext}
-Generate ONLY Practice Questions based on the conversation history and any uploaded files (if any) provided above. Use uploaded files as source material unless the user's additional instructions say otherwise.
-
-DO NOT include any of the following (these are generated separately):
-${getExclusionList('Practice Questions')}
+    const practiceQuestionsPrompt = `${buildContentSystemPrompt('Practice Questions', uploadedFilesContext)}
 
 Output the content directly without any wrapping HTML tags or dialog elements.
 

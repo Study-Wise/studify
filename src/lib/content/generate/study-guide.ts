@@ -1,5 +1,6 @@
 import { generateText } from 'ai';
-import config, { getExclusionList } from '../../config';
+import config from '../../config';
+import { buildContentSystemPrompt } from '../../content';
 import categories from '../../modes';
 import desmosSection from '../../promptTemplates/desmos';
 import { db } from '@/db/initialize';
@@ -53,16 +54,9 @@ export async function generateStudyGuide(threadId: string, _userEmail: string | 
     const desmosContent = includeDesmos ? `\n${desmosSection}\n` : '';
 
     // Create a study guide specific prompt
-    const studyGuidePrompt = `You are a study guide generator. Generate ONLY a Study Guide - nothing else.
-${uploadedFilesContext}
-
-STRICT RULES - FOLLOW EXACTLY:
-1. Generate ONLY the Study Guide sections listed below
-2. Use BOTH the conversation history AND any uploaded files content (if any) provided above as source material, unless the user's additional instructions say otherwise
-3. Do NOT respond to or continue any conversation
-4. Do NOT generate ANY of the following content types (they are generated separately by other systems):
-${getExclusionList('Study Guide')}
-   - Interactive Mock Quiz
+    const studyGuidePrompt = `${buildContentSystemPrompt('Study Guide', uploadedFilesContext)}
+You should also not generate any if these things as well: 
+    - Interactive Mock Quiz
    - Practice Problems
    - Quiz questions
    - Multiple choice questions

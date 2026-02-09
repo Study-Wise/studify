@@ -1,5 +1,6 @@
 import { generateText } from 'ai';
-import config, { getExclusionList } from '../../config';
+import config from '../../config';
+import { buildContentSystemPrompt } from '../../content';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
@@ -25,8 +26,6 @@ export async function generateSlideshow(threadId: string, _userEmail: string | n
     }
 
     const thread = threads[0];
-    const category = thread.category;
-    const mode = thread.mode;
     // Always use default model for content generation (more reliable)
     const userModel = config.model;
     const provider = config.provider;
@@ -46,15 +45,7 @@ export async function generateSlideshow(threadId: string, _userEmail: string | n
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
     // Create a slideshow specific prompt
-    const slideshowPrompt = `You are a slideshow generator. Generate ONLY a Slidev-format markdown slideshow - nothing else.
-${uploadedFilesContext}
-
-STRICT RULES - FOLLOW EXACTLY:
-1. Generate ONLY Slidev-format markdown for the slideshow
-2. Use BOTH the conversation history AND any uploaded files content (if any) provided above as source material for the slides, unless the user's additional instructions say otherwise
-3. Do NOT respond to or continue any conversation
-4. Do NOT generate ANY of the following content types (they are generated separately by other systems):
-${getExclusionList('Slideshow')}
+    const slideshowPrompt = `${buildContentSystemPrompt('Slideshow', uploadedFilesContext)}
 
 OUTPUT FORMAT - Slidev Markdown:
 

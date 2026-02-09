@@ -1,5 +1,6 @@
 import { generateText } from 'ai';
-import config, { getExclusionList } from '../../config';
+import config from '../../config';
+import { buildContentSystemPrompt } from '../../content';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
@@ -44,14 +45,7 @@ export async function generateReferenceSheet(threadId: string, _userEmail: strin
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
     // Create a reference sheet specific prompt
-    const referenceSheetPrompt = `You are a reference sheet generator. Your task is to create concise reference materials.
-
-CRITICAL: Do NOT respond to or continue the conversation. The conversation history is provided ONLY as context to understand what topics were discussed. Your ONLY job is to generate a Reference Sheet based on that context.
-${uploadedFilesContext}
-Generate ONLY a Reference Sheet based on the conversation history and any uploaded files (if any) provided above. Use uploaded files as source material unless the user's additional instructions say otherwise.
-
-DO NOT include any of the following (these are generated separately):
-${getExclusionList('Reference Sheet')}
+    const referenceSheetPrompt = `${buildContentSystemPrompt('Reference Sheet', uploadedFilesContext)}
 
 Output the content directly without any wrapping HTML tags or dialog elements.
 

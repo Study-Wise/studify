@@ -1,6 +1,6 @@
 import { generateText } from 'ai';
 import type { GatewayProviderOptions } from '@ai-sdk/gateway';
-import { getExclusionList } from '../../config';
+import { buildContentSystemPrompt } from '../../content';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
@@ -42,14 +42,9 @@ export async function generateMindMap(threadId: string, _userEmail: string | nul
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
     // Create a mind map specific prompt
-    const mindMapPrompt = `You are a mind map generator. Your task is to create interactive visual mind maps.
+    const mindMapPrompt = `${buildContentSystemPrompt('Mind Map', uploadedFilesContext)}
 
-CRITICAL: Do NOT respond to or continue the conversation. The conversation history is provided ONLY as context to understand what topics were discussed. Your ONLY job is to generate a Mind Map based on that context.
-${uploadedFilesContext}
-Generate ONLY a Mind Map (as interactive HTML) based on the conversation history and any uploaded files (if any) provided above. Use uploaded files as source material unless the user's additional instructions say otherwise. Create a comprehensive visual representation of the concepts, relationships, and key ideas discussed.
-
-DO NOT include any of the following (these are generated separately):
-${getExclusionList('Mind Map')}
+Create a comprehensive visual representation of the concepts, relationships, and key ideas discussed.
 
 Output the content as a complete, interactive HTML mind map with embedded CSS and JavaScript. The mind map should be visually engaging, interactive, and clearly show relationships between concepts.
 
