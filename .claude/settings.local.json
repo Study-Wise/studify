@@ -42,7 +42,10 @@
       "Bash(git fsck:*)",
       "Bash(git branch:*)",
       "Bash(npx stylelint:*)",
-      "WebFetch(domain:caniuse.com)"
+      "WebFetch(domain:caniuse.com)",
+      "Bash(git fetch:*)",
+      "Bash(git rebase:*)",
+      "Bash(git stash:*)"
     ],
     "deny": [],
     "ask": []
