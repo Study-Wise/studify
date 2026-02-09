@@ -1,7 +1,7 @@
 import { generateText } from 'ai';
 import config from '../../config';
 import { buildContentSystemPrompt } from '../../content';
-import stepByStepHTML from '../../promptTemplates/stepByStepHTML';
+import stepByStepHTML from '../../prompt-templates/step-by-step-html';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';

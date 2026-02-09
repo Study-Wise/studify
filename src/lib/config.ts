@@ -2,7 +2,7 @@
  * Application Configuration
  */
 
-import { generateTutorPrompt } from './promptGenerator';
+import { generateTutorPrompt } from './prompt-generator';
 
 import type { Config } from './types';
 

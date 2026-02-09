@@ -12,7 +12,7 @@ import {
     generateAIResponse,
     generateTitle,
 } from '@/lib/ai-service';
-import { generateWelcomeMessage } from '@/lib/generateWelcomeMessage';
+import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
 
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';

@@ -2,7 +2,7 @@ import { generateText } from 'ai';
 import config from '../../config';
 import { buildContentSystemPrompt } from '../../content';
 import categories from '../../modes';
-import desmosSection from '../../promptTemplates/desmos';
+import desmosSection from '../../prompt-templates/desmos';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';

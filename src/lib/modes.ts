@@ -1,6 +1,6 @@
 import type { Category } from './types';
 import tools from './tools';
-import { generateTutorPrompt } from './promptGenerator';
+import { generateTutorPrompt } from './prompt-generator';
 
 
 const categories: Record<string, Category> = {
