@@ -4,7 +4,7 @@
  * This module checks if a thread has only one message and generates a welcome message if needed.
  */
 
-import { generateWelcomeMessage } from './generateWelcomeMessage';
+import { generateWelcomeMessage } from './generate-welcome-message';
 import categories from './modes';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
