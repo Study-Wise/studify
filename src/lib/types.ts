@@ -52,6 +52,10 @@ export interface PracticeQuestionsResult {
     content: string | null;
 }
 
+export interface SlideshowResult {
+    content: string | null;
+}
+
 export interface ThreadAccessResult {
     isAuthorized: boolean;
     isPublic: boolean;
@@ -86,6 +90,7 @@ export interface ChatRightSidebarProps {
     hasAdditionalResources: boolean;
     hasFlashcard: boolean;
     hasPracticeQuestions: boolean;
+    hasSlideshow: boolean;
     threadId: string;
     category: string;
     mode: string;

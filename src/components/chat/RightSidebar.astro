@@ -12,8 +12,9 @@ const {
     hasMindMap, 
     hasAdditionalResources, 
     hasFlashcard, 
-    hasPracticeQuestions, 
-    threadId, 
+    hasPracticeQuestions,
+    hasSlideshow,
+    threadId,
     category, 
     mode, 
     isAuthorized
@@ -27,6 +28,7 @@ const mindMapUrl = `/${category}/${mode}/mind-map/${threadId}`;
 const additionalResourcesUrl = `/${category}/${mode}/additional-resources/${threadId}`;
 const flashcardUrl = `/${category}/${mode}/flashcards/${threadId}`;
 const practiceQuestionsUrl = `/${category}/${mode}/practice-questions/${threadId}`;
+const slideshowUrl = `/${category}/${mode}/slideshow/${threadId}`;
 ---
 <aside class="chat-sidebar right">
     <div class="chat-sidebar-content right">
@@ -125,6 +127,18 @@ const practiceQuestionsUrl = `/${category}/${mode}/practice-questions/${threadId
             id="additional-resources"
             generateVerb="Find"
             regenerateVerb="Find New"
+            isAuthorized={isAuthorized}
+        />
+
+        <SidebarSection
+            title="Slideshow"
+            icon="slideshow"
+            hasContent={hasSlideshow}
+            threadId={threadId}
+            viewUrl={slideshowUrl}
+            viewButtonText="View Slideshow"
+            emptyMessage="No slideshow generated yet."
+            id="slideshow"
             isAuthorized={isAuthorized}
         />
     </div>

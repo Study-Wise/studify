@@ -45,7 +45,8 @@
       "WebFetch(domain:caniuse.com)",
       "Bash(git fetch:*)",
       "Bash(git rebase:*)",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Bash(npm run check:*)"
     ],
     "deny": [],
     "ask": []

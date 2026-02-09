@@ -34,6 +34,7 @@ export const contentTypes = [
     'Webpage',
     'Infographic',
     'Additional Resources',
+    'Slideshow',
 ] as const;
 
 // Helper to get exclusion list for a specific content type

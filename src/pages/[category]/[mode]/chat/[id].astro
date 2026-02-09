@@ -24,6 +24,7 @@ import { getLatestMindMap } from '@/lib/content/latest/mind-map';
 import { getLatestResources } from '@/lib/content/latest/additional-resources';
 import { getLatestFlashcards } from '@/lib/content/latest/flashcards';
 import { getLatestPracticeQuestions } from '@/lib/content/latest/practice-questions';
+import { getLatestSlideshow } from '@/lib/content/latest/slideshow';
 
 import { checkForOneMessage } from '@/lib/checkForOneMessage';
 import categories from '@/lib/modes';
@@ -97,6 +98,7 @@ let hasMindMap = false;
 let hasAdditionalResources = false;
 let hasFlashcard = false;
 let hasPracticeQuestions = false;
+let hasSlideshow = false;
 
 if (!isNewChat && (isAuthorized || isPublic) && id) {
     const referenceSheetResult = await getLatestReferenceSheet(id);
@@ -107,6 +109,7 @@ if (!isNewChat && (isAuthorized || isPublic) && id) {
     const additionalResourcesResult = await getLatestResources(id);
     const flashcardResult = await getLatestFlashcards(id);
     const practiceQuestionsResult = await getLatestPracticeQuestions(id);
+    const slideshowResult = await getLatestSlideshow(id);
 
     hasReferenceSheet = !!referenceSheetResult.content;
     hasStudyGuide = !!studyGuideResult.content;
@@ -116,6 +119,7 @@ if (!isNewChat && (isAuthorized || isPublic) && id) {
     hasAdditionalResources = !!additionalResourcesResult.content;
     hasFlashcard = !!flashcardResult.content;
     hasPracticeQuestions = !!practiceQuestionsResult.content;
+    hasSlideshow = !!slideshowResult.content;
 }
 
 // Pre-process messages to convert markdown to HTML (server-side)
@@ -182,6 +186,7 @@ export const inNav = 'hide';
             hasAdditionalResources={hasAdditionalResources}
             hasFlashcard={hasFlashcard}
             hasPracticeQuestions={hasPracticeQuestions}
+            hasSlideshow={hasSlideshow}
             threadId={id || ''}
             category={category || ''}
             mode={mode || ''}

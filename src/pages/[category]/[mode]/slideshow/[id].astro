@@ -1,0 +1,74 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import ContentActions from '@/components/ContentActions.astro';
+import { getLatestSlideshow } from '@/lib/content/latest/slideshow';
+import { checkThreadAccess } from '@/lib/auth/checkThreadAccess';
+import '@/styles/pages/content/slideshow.scss';
+import categories from '@/lib/modes';
+
+const { category, mode, id } = Astro.params;
+const chatUrl = `/${category}/${mode}/chat/${id}`;
+
+const categoryObj = category ? categories[category] : null;
+const modeObj = categoryObj?.modes?.[mode || ''];
+
+// Validate category and mode exist
+if (!categoryObj || !modeObj) {
+    return Astro.redirect('/404');
+}
+
+const categoryName = categoryObj?.name || category;
+const modeName = modeObj?.name || mode;
+
+// Get user authentication
+const user = Astro.locals.user;
+
+// Check thread access first
+const { isAuthorized, isPublic } = await checkThreadAccess(id || '', user, category, mode);
+
+// Redirect to sign-in only if not authenticated AND thread is not public
+if (!user && !isPublic) {
+    return Astro.redirect("/user/sign-in");
+}
+
+// Get the latest slideshow only if authorized or public
+const { content: latestSlideshow } = (isAuthorized || isPublic)
+    ? await getLatestSlideshow(id || '')
+    : { content: null };
+
+const slideshowUrl = `https://slides.studywise.onl/generate/${id}`;
+---
+
+<Layout title={`Slideshow | ${modeName} | ${categoryName}`} container={false}>
+    <div class="slideshow-page">
+        {!isAuthorized && !isPublic ? (
+            <div class="empty-state">
+                <span class="material-symbols-outlined">lock</span>
+                <h2>Access Denied</h2>
+                <p>You don't have permission to view this slideshow. This thread belongs to another user.</p>
+                <a href="/" class="btn-primary">Go Home</a>
+            </div>
+        ) : (
+            <>
+                <ContentActions
+                    contentType="slideshow"
+                    threadId={id || ''}
+                    hasContent={!!latestSlideshow}
+                    isAuthorized={isAuthorized}
+                    chatUrl={chatUrl}
+                />
+                {latestSlideshow ? (
+                    <div class="slideshow-container">
+                        <iframe src={slideshowUrl} title="Generated Slideshow" sandbox="allow-scripts allow-same-origin" />
+                    </div>
+                ) : (
+                    <div class="empty-state">
+                        <span class="material-symbols-outlined">slideshow</span>
+                        <h2>No Slideshow Found</h2>
+                        <p>There is no slideshow generated for this conversation yet.</p>
+                    </div>
+                )}
+            </>
+        )}
+    </div>
+</Layout>
