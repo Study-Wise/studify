@@ -1,8 +1,8 @@
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
-import { isUserAdmin as checkIsUserAdmin } from './admin';
-import { isDev, getDevUser, isDevUserAdmin } from './dev';
+import { isUserAdmin as checkIsUserAdmin } from '@/lib/auth/admin';
+import { isDev, getDevUser, isDevUserAdmin } from '@/lib/auth/dev';
 import type { ThreadAccessResult } from '@/lib/types';
 import type { User } from "better-auth";
 
