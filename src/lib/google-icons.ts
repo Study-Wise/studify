@@ -1,4 +1,4 @@
-import { google_icons, custom_icons } from "./icons-list";
+import { google_icons, custom_icons } from "@/lib/icons-list";
 
 const icon_map = {
     about: 'info',

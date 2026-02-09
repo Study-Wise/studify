@@ -1,5 +1,5 @@
 import { UTApi } from 'uploadthing/server';
-import type { UploadOptions } from './types';
+import type { UploadOptions } from '@/lib/types';
 
 // Factory function to create UploadThing utilities with custom config
 export function createUploadThingUtils(envVar: string, appId: string) {

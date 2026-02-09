@@ -1,6 +1,6 @@
-import type { Category } from './types';
-import tools from './tools';
-import { generateTutorPrompt } from './prompt-generator';
+import type { Category } from '@/lib/types';
+import tools from '@/lib/tools';
+import { generateTutorPrompt } from '@/lib/prompt-generator';
 
 
 const categories: Record<string, Category> = {

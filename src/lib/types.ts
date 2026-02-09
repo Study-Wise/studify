@@ -1,5 +1,5 @@
 import type { Tool } from 'ai';
-import type { CategoryName, ModeName } from './modes';
+import type { CategoryName, ModeName } from '@/lib/modes';
 
 // User roles
 export type UserRole = "user" | "premium" | "moderator" | "admin";

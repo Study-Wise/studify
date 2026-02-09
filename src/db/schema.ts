@@ -41,6 +41,6 @@ const questionTable = pgTable('questions', {
 });
 
 // Export Better Auth tables
-export * from './auth-schema';
+export * from '@/db/auth-schema';
 
 export { threadsTable, questionTable };

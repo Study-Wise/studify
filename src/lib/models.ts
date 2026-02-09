@@ -1,4 +1,4 @@
-import type { ModelOption, Providers } from './types';
+import type { ModelOption, Providers } from '@/lib/types';
 
 const providers: Providers = {
     openai: {
