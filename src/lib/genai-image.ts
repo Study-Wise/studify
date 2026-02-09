@@ -1,5 +1,5 @@
-import { uploadFile } from './uploadthing';
-import config from './config';
+import { uploadFile } from '@/lib/uploadthing';
+import config from '@/lib/config';
 import OpenAI from 'openai';
 
 const openai = new OpenAI({

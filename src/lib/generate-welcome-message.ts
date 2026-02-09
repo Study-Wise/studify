@@ -4,9 +4,9 @@
  * This module handles generating the welcome message for the first message in a conversation.
  */
 
-import { generateAIResponse } from './ai-service';
-import config from './config';
-import type { GenerateWelcomeMessageParams } from './types';
+import { generateAIResponse } from '@/lib/ai-service';
+import config from '@/lib/config';
+import type { GenerateWelcomeMessageParams } from '@/lib/types';
 
 export async function generateWelcomeMessage({
     systemPrompt,

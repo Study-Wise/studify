@@ -2,10 +2,10 @@ import 'dotenv/config';
 
 import { generateText, stepCountIs } from 'ai';
 
-import config from './config';
-import { providers } from './models';
+import config from '@/lib/config';
+import { providers } from '@/lib/models';
 import { nanoid } from 'nanoid';
-import type { AIGenerationOptions, TitleGenerationOptions, AIGenerationResult, ClientToolCall } from './types';
+import type { AIGenerationOptions, TitleGenerationOptions, AIGenerationResult, ClientToolCall } from '@/lib/types';
 
 /**
  * Validates and returns a proper model-provider pair

@@ -2,9 +2,9 @@
  * Application Configuration
  */
 
-import { generateTutorPrompt } from './prompt-generator';
+import { generateTutorPrompt } from '@/lib/prompt-generator';
 
-import type { Config } from './types';
+import type { Config } from '@/lib/types';
 
 const defaultCategory = 'general';
 const defaultMode = 'general';

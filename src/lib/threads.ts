@@ -2,7 +2,7 @@ import { eq, desc } from 'drizzle-orm';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 import type { InferSelectModel } from "drizzle-orm";
-import type { ThreadData } from './types';
+import type { ThreadData } from '@/lib/types';
 
 type Thread = InferSelectModel<typeof threadsTable>;
 
