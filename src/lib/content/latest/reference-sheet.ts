@@ -1,4 +1,4 @@
-import type { ReferenceSheetResult } from '../../types';
+import type { ReferenceSheetResult } from '@/lib/types';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';

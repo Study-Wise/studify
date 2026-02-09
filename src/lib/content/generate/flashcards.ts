@@ -1,11 +1,11 @@
 import { generateObject } from 'ai';
 import { z } from 'zod';
-import config from '../../config';
-import { buildContentSystemPrompt } from '../../content';
+import config from '@/lib/config';
+import { buildContentSystemPrompt } from '@/lib/content';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
-import type { ThreadData, UploadedFile, FlashcardData } from '../../types';
+import type { ThreadData, UploadedFile, FlashcardData } from '@/lib/types';
 
 const flashcardSchema = z.object({
     text: z.string().describe('A brief markdown summary/introduction about the flashcards topic'),

@@ -1,4 +1,4 @@
-import type { MindMapResult } from '../../types';
+import type { MindMapResult } from '@/lib/types';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';

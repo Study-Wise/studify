@@ -1,10 +1,10 @@
 import { generateText } from 'ai';
-import { buildContentSystemPrompt } from '../../content';
+import { buildContentSystemPrompt } from '@/lib/content';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
-import { generateImage } from '../../genai-image';
-import type { ThreadData, UploadedFile } from '../../types';
+import { generateImage } from '@/lib/genai-image';
+import type { ThreadData, UploadedFile } from '@/lib/types';
 
 function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
     const filesWithText = uploadedFiles.filter(f => f.extractedText);

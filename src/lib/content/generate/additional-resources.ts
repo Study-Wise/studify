@@ -1,7 +1,7 @@
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
-import type { ThreadData, UploadedFile } from '../../types';
+import type { ThreadData, UploadedFile } from '@/lib/types';
 import Exa from "exa-js";
 
 const exa = new Exa(import.meta.env.EXA_SEARCH_API_KEY || process.env.EXA_SEARCH_API_KEY);

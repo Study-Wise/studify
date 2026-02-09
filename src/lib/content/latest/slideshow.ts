@@ -1,4 +1,4 @@
-import type { SlideshowResult } from '../../types';
+import type { SlideshowResult } from '@/lib/types';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';

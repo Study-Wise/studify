@@ -1,4 +1,4 @@
-import type { FlashcardResult, FlashcardData } from '../../types';
+import type { FlashcardResult, FlashcardData } from '@/lib/types';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';

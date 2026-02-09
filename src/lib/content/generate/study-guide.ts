@@ -1,12 +1,12 @@
 import { generateText } from 'ai';
-import config from '../../config';
-import { buildContentSystemPrompt } from '../../content';
-import categories from '../../modes';
-import desmosSection from '../../prompt-templates/desmos';
+import config from '@/lib/config';
+import { buildContentSystemPrompt } from '@/lib/content';
+import categories from '@/lib/modes';
+import desmosSection from '@/lib/prompt-templates/desmos';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
-import type { ThreadData, UploadedFile } from '../../types';
+import type { ThreadData, UploadedFile } from '@/lib/types';
 
 function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
     const filesWithText = uploadedFiles.filter(f => f.extractedText);

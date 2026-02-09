@@ -1,6 +1,6 @@
 import { tool } from 'ai';
 import { z } from 'zod';
-import config from '../config';
+import config from '@/lib/config';
 
 // Convert kebab-case to camelCase
 const toCamelCase = (str: string) => str.replace(/-([a-z])/g, (_, c) => c.toUpperCase());

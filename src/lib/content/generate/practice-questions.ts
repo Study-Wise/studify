@@ -1,11 +1,11 @@
 import { generateText } from 'ai';
-import config from '../../config';
-import { buildContentSystemPrompt } from '../../content';
-import stepByStepHTML from '../../prompt-templates/step-by-step-html';
+import config from '@/lib/config';
+import { buildContentSystemPrompt } from '@/lib/content';
+import stepByStepHTML from '@/lib/prompt-templates/step-by-step-html';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
-import type { ThreadData, UploadedFile } from '../../types';
+import type { ThreadData, UploadedFile } from '@/lib/types';
 
 function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
     const filesWithText = uploadedFiles.filter(f => f.extractedText);
