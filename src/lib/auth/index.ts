@@ -4,7 +4,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@/db/initialize";
 import { magicLink } from "better-auth/plugins";
 import { user, session, account, verification } from "@/db/auth-schema";
-import type { UserRole } from "../types";
+import type { UserRole } from "@/lib/types";
 
 // Admin email whitelist
 const ADMIN_EMAILS = [

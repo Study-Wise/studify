@@ -4,7 +4,7 @@
 import { db } from "@/db/initialize";
 import { user as userTable } from "@/db/auth-schema";
 import { eq } from "drizzle-orm";
-import type { UserRole } from "../types";
+import type { UserRole } from "@/lib/types";
 
 /**
  * Get user role from database by email

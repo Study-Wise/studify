@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
 import { isUserAdmin as checkIsUserAdmin } from './admin';
 import { isDev, getDevUser, isDevUserAdmin } from './dev';
-import type { ThreadAccessResult } from '../types';
+import type { ThreadAccessResult } from '@/lib/types';
 import type { User } from "better-auth";
 
 export async function checkThreadAccess(

@@ -5,7 +5,7 @@ import { db } from "@/db/initialize";
 import { account, user as userTable } from "@/db/auth-schema";
 import { threadsTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import type { UserRole, ThreadAccessResult, ExtendedUser } from "../types";
+import type { UserRole, ThreadAccessResult, ExtendedUser } from "@/lib/types";
 
 /**
  * Check if we're in development environment
