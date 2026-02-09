@@ -1,7 +1,5 @@
 import { generateText } from 'ai';
 import config, { getExclusionList } from '../../config';
-import categories from '../../modes';
-import desmosSection from '../../promptTemplates/desmos';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
@@ -47,19 +45,15 @@ export async function generateSlideshow(threadId: string, _userEmail: string | n
     // Build uploaded files context
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
-    // Only include Desmos section for modes with desmos: true
-    const modeConfig = categories[category]?.modes?.[mode];
-    const includeDesmos = modeConfig?.desmos === true;
-    const desmosContent = includeDesmos ? `\n${desmosSection}\n` : '';
-
     // Create a slideshow specific prompt
     const slideshowPrompt = `You are a slideshow generator. Generate ONLY a Slidev-format markdown slideshow - nothing else.
 ${uploadedFilesContext}
 
 STRICT RULES - FOLLOW EXACTLY:
 1. Generate ONLY Slidev-format markdown for the slideshow
-2. Do NOT respond to or continue any conversation
-3. Do NOT generate ANY of the following content types (they are generated separately by other systems):
+2. Use BOTH the conversation history AND any uploaded files content (if any) provided above as source material for the slides, unless the user's additional instructions say otherwise
+3. Do NOT respond to or continue any conversation
+4. Do NOT generate ANY of the following content types (they are generated separately by other systems):
 ${getExclusionList('Slideshow')}
 
 OUTPUT FORMAT - Slidev Markdown:
@@ -86,7 +80,7 @@ mdc: true
    - Use code blocks with syntax highlighting for any code examples
    - Use bullet points with \`v-click\` for progressive reveal where it aids understanding
    - Final slide: Summary or key takeaways
-${desmosContent}
+
 4. **Content guidelines:**
    - Create 6-12 slides covering the key topics from the conversation
    - Each slide should have a clear heading

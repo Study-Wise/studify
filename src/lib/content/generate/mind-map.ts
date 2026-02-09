@@ -46,7 +46,7 @@ export async function generateMindMap(threadId: string, _userEmail: string | nul
 
 CRITICAL: Do NOT respond to or continue the conversation. The conversation history is provided ONLY as context to understand what topics were discussed. Your ONLY job is to generate a Mind Map based on that context.
 ${uploadedFilesContext}
-Generate ONLY a Mind Map (as interactive HTML) based on the conversation history and any uploaded files. Create a comprehensive visual representation of the concepts, relationships, and key ideas discussed.
+Generate ONLY a Mind Map (as interactive HTML) based on the conversation history and any uploaded files (if any) provided above. Use uploaded files as source material unless the user's additional instructions say otherwise. Create a comprehensive visual representation of the concepts, relationships, and key ideas discussed.
 
 DO NOT include any of the following (these are generated separately):
 ${getExclusionList('Mind Map')}

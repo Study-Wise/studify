@@ -48,7 +48,7 @@ export async function generateReferenceSheet(threadId: string, _userEmail: strin
 
 CRITICAL: Do NOT respond to or continue the conversation. The conversation history is provided ONLY as context to understand what topics were discussed. Your ONLY job is to generate a Reference Sheet based on that context.
 ${uploadedFilesContext}
-Generate ONLY a Reference Sheet based on the conversation history and any uploaded files.
+Generate ONLY a Reference Sheet based on the conversation history and any uploaded files (if any) provided above. Use uploaded files as source material unless the user's additional instructions say otherwise.
 
 DO NOT include any of the following (these are generated separately):
 ${getExclusionList('Reference Sheet')}

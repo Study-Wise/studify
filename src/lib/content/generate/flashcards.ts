@@ -57,7 +57,7 @@ export async function generateFlashcards(threadId: string, _userEmail: string | 
 
 CRITICAL: Do NOT respond to or continue the conversation. The conversation history is provided ONLY as context to understand what topics were discussed. Your ONLY job is to generate Flashcards based on that context.
 ${uploadedFilesContext}
-Generate ONLY Flashcards based on the conversation history and any uploaded files. The flashcards should help the student review and memorize key concepts, formulas, definitions, and problem-solving techniques.
+Generate ONLY Flashcards based on the conversation history and any uploaded files (if any) provided above. Use uploaded files as source material unless the user's additional instructions say otherwise. The flashcards should help the student review and memorize key concepts, formulas, definitions, and problem-solving techniques.
 
 DO NOT include any of the following (these are generated separately):
 ${getExclusionList('Flashcards')}

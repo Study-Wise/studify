@@ -58,8 +58,9 @@ ${uploadedFilesContext}
 
 STRICT RULES - FOLLOW EXACTLY:
 1. Generate ONLY the Study Guide sections listed below
-2. Do NOT respond to or continue any conversation
-3. Do NOT generate ANY of the following content types (they are generated separately by other systems):
+2. Use BOTH the conversation history AND any uploaded files content (if any) provided above as source material, unless the user's additional instructions say otherwise
+3. Do NOT respond to or continue any conversation
+4. Do NOT generate ANY of the following content types (they are generated separately by other systems):
 ${getExclusionList('Study Guide')}
    - Interactive Mock Quiz
    - Practice Problems

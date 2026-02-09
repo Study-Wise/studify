@@ -58,7 +58,7 @@ export async function generateInfographic(
 
 CRITICAL: Do NOT respond to or continue the conversation. The conversation history is provided ONLY as context to understand what topics were discussed. Your ONLY job is to generate an infographic description based on that context.
 ${uploadedFilesContext}
-Generate ONLY a description for an educational infographic image based on the conversation history and any uploaded files.
+Generate ONLY a description for an educational infographic image based on the conversation history and any uploaded files (if any) provided above. Use uploaded files as source material unless the user's additional instructions say otherwise.
 
 DO NOT include content that belongs in these separate documents:
 ${getExclusionList('Infographic')}

@@ -49,7 +49,7 @@ export async function generatePracticeQuestions(threadId: string, _userEmail: st
 
 CRITICAL: Do NOT respond to or continue the conversation. The conversation history is provided ONLY as context to understand what topics were discussed. Your ONLY job is to generate Practice Questions based on that context.
 ${uploadedFilesContext}
-Generate ONLY Practice Questions based on the conversation history and any uploaded files.
+Generate ONLY Practice Questions based on the conversation history and any uploaded files (if any) provided above. Use uploaded files as source material unless the user's additional instructions say otherwise.
 
 DO NOT include any of the following (these are generated separately):
 ${getExclusionList('Practice Questions')}

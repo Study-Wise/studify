@@ -46,7 +46,7 @@ export async function generateWebpage(threadId: string, _userEmail: string | nul
 
 CRITICAL: Do NOT respond to or continue the conversation. The conversation history is provided ONLY as context to understand what topics were discussed. Your ONLY job is to generate a Webpage based on that context.
 ${uploadedFilesContext}
-Generate ONLY a complete, interactive webpage (HTML with embedded CSS/JS) based on the conversation history and any uploaded files. This should be a comprehensive resource that presents the concepts discussed in an engaging, visual format.
+Generate ONLY a complete, interactive webpage (HTML with embedded CSS/JS) based on the conversation history and any uploaded files (if any) provided above. Use uploaded files as source material unless the user's additional instructions say otherwise. This should be a comprehensive resource that presents the concepts discussed in an engaging, visual format.
 
 DO NOT include separate sections for the following (these are generated separately):
 ${getExclusionList('Webpage')}
