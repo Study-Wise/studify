@@ -1,4 +1,21 @@
-import { getExclusionList } from './config';
+// Content types that can be generated - used for exclusion lists in prompts
+export const contentTypes = [
+    'Study Guide',
+    'Reference Sheet',
+    'Flashcards',
+    'Practice Questions',
+    'Mind Map',
+    'Webpage',
+    'Infographic',
+    'Additional Resources',
+    'Slideshow',
+] as const;
+
+// Helper to get exclusion list for a specific content type
+export function getExclusionList(currentType: string): string {
+    const exclusions = contentTypes.filter(type => type !== currentType);
+    return exclusions.map(type => `- ${type}`).join('\n');
+}
 
 // Maps content type name to its specific "Generate ONLY ..." instruction
 const contentTypeDescriptions: Record<string, string> = {
