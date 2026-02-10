@@ -24,8 +24,13 @@
     },
     "devDependencies": {
         "@astrojs/ts-plugin": "^1.10.6",
+        "@types/cheerio": "^0.22.35",
+        "@types/crypto-js": "^4.2.2",
         "@types/fs-extra": "^11.0.4",
+        "@types/highlight.js": "^9.12.4",
+        "@types/jade": "^0.0.34",
         "@types/jsdom": "^21.1.7",
+        "@types/lodash": "^4.17.23",
         "@types/uuid": "^10.0.0",
         "@vite-pwa/astro": "^1.1.0",
         "astro": "^5.15.0",

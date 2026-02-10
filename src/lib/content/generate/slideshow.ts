@@ -1,10 +1,25 @@
+import { createRequire } from 'module';
+import { dirname, join } from 'path';
+
+import jade from 'jade';
+import fm from 'front-matter';
+import cheerio from 'cheerio';
+import highlight from 'highlight.js';
+import CryptoJS from 'crypto-js';
+import _ from 'lodash';
+
 import config from '@/lib/config';
 import { generateAIResponse } from '@/lib/ai-service';
 import { buildContentSystemPrompt } from '@/lib/content';
+
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
 import type { ThreadData, UploadedFile } from '@/lib/types';
+
+// Use createRequire for marked only - project has marked v15 but slideshow-generator needs v0.3
+const require_ = createRequire(import.meta.url);
+const oldMarked = require_('slideshow-generator/node_modules/marked');
 
 function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
     const filesWithText = uploadedFiles.filter(f => f.extractedText);
@@ -15,6 +30,50 @@ function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
         .join('\n\n');
 
     return `\n\n### Uploaded Files Content\nThe user has uploaded the following files. Include this content in your analysis:\n\n${fileContents}`;
+}
+
+function markdownToSlideshowHTML(markdown: string): string {
+    const content = fm(markdown);
+    const tokens = oldMarked.lexer(content.body, {
+        gfm: true, tables: true, breaks: true,
+        pedantic: true, sanitize: true, smartLists: true, smartypants: true
+    });
+
+    let title: string | undefined;
+    const pages: { tokens?: any[]; html?: string }[] = [];
+
+    tokens.forEach((token: any) => {
+        if (token.type === 'heading' || pages.length === 0) {
+            pages.push({ tokens: [] });
+        }
+        if (!title) {
+            const t: any = [token]; t.links = {};
+            const h = oldMarked.parser(t);
+            const $ = cheerio.load(h);
+            title = $('*').text();
+        }
+        pages[pages.length - 1].tokens!.push(token);
+    });
+
+    pages.forEach((page) => {
+        const renderer = new oldMarked.Renderer();
+        renderer.heading = (text: string, level: number) => `<h${level}>${text}</h${level}>`;
+        const pt: any = _.cloneDeep(page.tokens);
+        pt.links = {};
+        page.html = oldMarked.parser(pt, {
+            renderer,
+            highlight: (code: string) => highlight.highlightAuto(code).value
+        });
+        delete page.tokens;
+    });
+
+    const data = { attributes: content.attributes, title, pages };
+    const jadePath = join(dirname(require_.resolve('slideshow-generator/package.json')), 'src', 'index.jade');
+    const fn = jade.compileFile(jadePath);
+    const jsonContent = JSON.stringify(data);
+    const encrypted = CryptoJS.AES.encrypt(jsonContent, '-').toString();
+
+    return fn({ data: encrypted, process });
 }
 
 export async function generateSlideshow(threadId: string, _userEmail: string | null, userPrompt?: string) {
@@ -44,59 +103,41 @@ export async function generateSlideshow(threadId: string, _userEmail: string | n
     // Build uploaded files context
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
-    // Create a slideshow specific prompt
+    // Create a slideshow specific prompt - uses standard markdown with headings as slide separators
     const slideshowPrompt = `${buildContentSystemPrompt('Slideshow', uploadedFilesContext)}
 
-OUTPUT FORMAT - Slidev Markdown:
+OUTPUT FORMAT - Markdown Slideshow:
 
-Your output MUST be valid Slidev markdown with:
+Your output MUST be standard markdown where each heading (# or ##) starts a new slide.
 
-1. **Frontmatter** at the very beginning:
-\`\`\`
----
-theme: default
-title: [Topic Title]
-transition: slide-left
-mdc: true
----
-\`\`\`
-
-2. **Slides separated by \`---\`** (three dashes on their own line)
-
-3. **Slide structure guidelines:**
-   - First slide: Title slide with the main topic and a brief subtitle
-   - Content slides: Use clear headings (#, ##), bullet points, and concise text
-   - Use layouts where appropriate (e.g., \`layout: two-cols\`, \`layout: center\`, \`layout: image-right\`)
+1. **Slide structure guidelines:**
+   - First heading: Title slide with the main topic
+   - Each subsequent heading starts a new slide
    - Keep each slide focused on ONE key concept
+   - Use concise bullet points (not paragraphs)
    - Use code blocks with syntax highlighting for any code examples
-   - Use bullet points with \`v-click\` for progressive reveal where it aids understanding
    - Final slide: Summary or key takeaways
 
-4. **Content guidelines:**
+2. **Content guidelines:**
    - Create 6-12 slides covering the key topics from the conversation
-   - Each slide should have a clear heading
-   - Use concise bullet points (not paragraphs)
-   - Include relevant examples, diagrams (mermaid), or code snippets where helpful
-   - Use $...$ for inline math and $$...$$ for block math where appropriate
+   - Each slide MUST start with a heading (# or ##)
+   - Use bullet points and short text under each heading
+   - Include relevant examples or code snippets where helpful
    - Keep text minimal - slides should be visual aids, not essays
 
-5. **Do NOT use:**
-   - Vue/React/Next/Astro/Svelte/etc. components like <Counter>, <Tweet>, <Youtube>
+3. **Do NOT use:**
    - External image URLs
-   - Monaco editor blocks
-   - Draggable elements
-   - External file imports (<<< @/...)
+   - HTML tags
+   - Framework-specific syntax (Vue, React, Svelte, etc.)
 
-Math formatting: use \`$…$\` for inline math and \`$$…$$\` for block math.
-
-REMEMBER: Output ONLY the Slidev markdown. No quizzes, no practice questions, no flashcards, no other content types.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
+REMEMBER: Output ONLY the markdown content. No quizzes, no practice questions, no flashcards, no other content types.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
 
     const conversationMessages = messages.filter(msg => msg.role !== 'system');
 
-    // Generate the slideshow
+    // Generate the slideshow markdown
     const result = await generateAIResponse({
         systemPrompt: slideshowPrompt,
-        userPrompt: 'Now generate the Slidev markdown slideshow based on the above conversation. Output ONLY the raw Slidev markdown starting with the frontmatter (---). Do not include any explanations, commentary, or conversation - just the Slidev markdown content.',
+        userPrompt: 'Now generate the markdown slideshow based on the above conversation. Output ONLY the raw markdown. Do not include any explanations, commentary, or conversation - just the slideshow markdown content.',
         convoHistory: [...conversationMessages],
         userModel,
         provider,
