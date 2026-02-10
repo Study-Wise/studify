@@ -1,5 +1,5 @@
-import { generateText } from 'ai';
 import config from '@/lib/config';
+import { generateText } from '@/lib/ai-service';
 import { buildContentSystemPrompt } from '@/lib/content';
 import categories from '@/lib/modes';
 import desmosSection from '@/lib/prompt-templates/desmos';
@@ -105,7 +105,7 @@ REMEMBER: Output ONLY the Study Guide. No quizzes, no practice questions, no fla
     const result = await generateText({
         model: `${provider}/${userModel}`,
         messages: messagesForAI,
-        tools: {},
+        excludeTools: ['get-content', 'get-content-types', 'open-content'],
         temperature: 0.7,
     });
 

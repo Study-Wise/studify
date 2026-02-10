@@ -1,5 +1,5 @@
-import { generateText } from 'ai';
 import config from '@/lib/config';
+import { generateText } from '@/lib/ai-service';
 import { buildContentSystemPrompt } from '@/lib/content';
 import stepByStepHTML from '@/lib/prompt-templates/step-by-step-html';
 import { db } from '@/db/initialize';
@@ -151,6 +151,7 @@ You may remove or modify sections as you see fit based on relevance to the topic
     const result = await generateText({
         model: `${provider}/${userModel}`,
         messages: messagesForAI,
+        excludeTools: ['get-content', 'get-content-types', 'open-content'],
         temperature: 0.7,
     });
 

@@ -1,4 +1,4 @@
-import { generateText } from 'ai';
+import { generateText } from '@/lib/ai-service';
 import { buildContentSystemPrompt } from '@/lib/content';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
@@ -77,6 +77,7 @@ You may remove or modify elements as you see fit based on relevance to the topic
     const descriptionResult = await generateText({
         model: `${provider}/${userModel}`,
         messages: messagesForAI,
+        excludeTools: ['get-content', 'get-content-types', 'open-content'],
         temperature: 0.7,
     });
 

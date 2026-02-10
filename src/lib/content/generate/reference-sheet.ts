@@ -1,5 +1,5 @@
-import { generateText } from 'ai';
 import config from '@/lib/config';
+import { generateText } from '@/lib/ai-service';
 import { buildContentSystemPrompt } from '@/lib/content';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
@@ -77,11 +77,11 @@ Math formatting: use \`$…$\` for displaying math formulas/equations inline and
         }
     ];
 
-    // Generate the reference sheet (no tools - content generators must not have tool access)
+    // Generate the reference sheet
     const result = await generateText({
         model: `${provider}/${userModel}`,
         messages: messagesForAI,
-        tools: {},
+        excludeTools: ['get-content', 'get-content-types', 'open-content'],
         temperature: 0.7,
     });
 

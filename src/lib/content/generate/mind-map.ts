@@ -1,5 +1,5 @@
-import { generateText } from 'ai';
 import type { GatewayProviderOptions } from '@ai-sdk/gateway';
+import { generateText } from '@/lib/ai-service';
 import { buildContentSystemPrompt } from '@/lib/content';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
@@ -109,7 +109,7 @@ You may remove or modify sections as you see fit based on relevance to the topic
     const result = await generateText({
         model: 'vercel/v0-1.5-md',
         messages: messagesForAI,
-        tools: {},
+        excludeTools: ['get-content', 'get-content-types', 'open-content'],
         temperature: 0.7,
         providerOptions: {
             gateway: {
