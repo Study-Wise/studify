@@ -1,4 +1,4 @@
-import { generateText } from '@/lib/ai-service';
+import { generateAIResponse } from '@/lib/ai-service';
 import { buildContentSystemPrompt } from '@/lib/content';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
@@ -60,25 +60,15 @@ Keep it under 1000 characters. Be specific about visual elements, diagrams, icon
 
 You may remove or modify elements as you see fit based on relevance to the topic.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
 
-    // Build messages array with system prompt first, then conversation history, then a final user message to explicitly request infographic generation
     const conversationMessages = messages.filter(msg => msg.role !== 'system');
-    const messagesForAI = [
-        {
-            role: 'system' as const,
-            content: systemPrompt
-        },
-        ...conversationMessages,
-        {
-            role: 'user' as const,
-            content: 'Now generate the infographic description based on the above conversation. Output ONLY the visual description for the infographic. Do not include any explanations, commentary, or conversation - just the infographic description.'
-        }
-    ];
 
-    const descriptionResult = await generateText({
-        model: `${provider}/${userModel}`,
-        messages: messagesForAI,
+    const descriptionResult = await generateAIResponse({
+        systemPrompt,
+        userPrompt: 'Now generate the infographic description based on the above conversation. Output ONLY the visual description for the infographic. Do not include any explanations, commentary, or conversation - just the infographic description.',
+        convoHistory: [...conversationMessages],
+        userModel,
+        provider,
         excludeTools: ['get-content', 'get-content-types', 'open-content'],
-        temperature: 0.7,
     });
 
     // Step 2: Generate the actual image using Google GenAI

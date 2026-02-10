@@ -1,5 +1,5 @@
 import config from '@/lib/config';
-import { generateText } from '@/lib/ai-service';
+import { generateAIResponse } from '@/lib/ai-service';
 import { buildContentSystemPrompt } from '@/lib/content';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
@@ -93,22 +93,14 @@ REMEMBER: Output ONLY the Slidev markdown. No quizzes, no practice questions, no
 
     // Build messages array with system prompt first, then conversation history, then a final user message to explicitly request slideshow generation
     const conversationMessages = messages.filter(msg => msg.role !== 'system');
-    const messagesForAI = [
-        {
-            role: 'system' as const,
-            content: slideshowPrompt
-        },
-        ...conversationMessages,
-        {
-            role: 'user' as const,
-            content: 'Now generate the Slidev markdown slideshow based on the above conversation. Output ONLY the raw Slidev markdown starting with the frontmatter (---). Do not include any explanations, commentary, or conversation - just the Slidev markdown content.'
-        }
-    ];
 
     // Generate the slideshow
-    const result = await generateText({
-        model: `${provider}/${userModel}`,
-        messages: messagesForAI,
+    const result = await generateAIResponse({
+        systemPrompt: slideshowPrompt,
+        userPrompt: 'Now generate the Slidev markdown slideshow based on the above conversation. Output ONLY the raw Slidev markdown starting with the frontmatter (---). Do not include any explanations, commentary, or conversation - just the Slidev markdown content.',
+        convoHistory: [...conversationMessages],
+        userModel,
+        provider,
         excludeTools: ['get-content', 'get-content-types', 'open-content'],
         temperature: 0.7,
     });

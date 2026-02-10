@@ -4,6 +4,7 @@ import { generateText, stepCountIs } from 'ai';
 
 import config from '@/lib/config';
 import { providers } from '@/lib/models';
+import allTools from '@/lib/tools';
 import { nanoid } from 'nanoid';
 import type { AIGenerationOptions, TitleGenerationOptions, AIGenerationResult, ClientToolCall } from '@/lib/types';
 
@@ -48,16 +49,24 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
         userModel,
         provider,
         tools = {},
+        excludeTools,
         maxSteps = 25,
         requestId = nanoid()
     } = options;
 
+    // Filter out excluded tools from the global tools
+    const resolvedTools = excludeTools
+        ? Object.fromEntries(
+            Object.entries(allTools).filter(([key]) => !excludeTools.includes(key))
+        )
+        : tools;
+
     // Identify client-side tools
-    const clientSideToolNames = getClientSideToolNames(tools);
+    const clientSideToolNames = getClientSideToolNames(resolvedTools);
 
     console.log(`🛠️ [${requestId}] AI generation setup:`, {
-        toolsCount: Object.keys(tools).length,
-        toolsList: Object.keys(tools),
+        toolsCount: Object.keys(resolvedTools).length,
+        toolsList: Object.keys(resolvedTools),
         clientSideTools: Array.from(clientSideToolNames),
         conversationHistoryLength: convoHistory.length,
         systemMessageIncluded: convoHistory[0]?.role === 'system'
@@ -94,14 +103,14 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
             messageCount: convoHistory.length,
             firstMessageRole: convoHistory[0]?.role,
             lastMessageRole: convoHistory[convoHistory.length - 1]?.role,
-            toolsEnabled: Object.keys(tools).length > 0,
+            toolsEnabled: Object.keys(resolvedTools).length > 0,
             maxSteps
         });
 
         const result = await generateText({
             model: aiModel,
             messages: convoHistory,
-            tools: tools,
+            tools: resolvedTools,
             stopWhen: stepCountIs(maxSteps),
         });
 

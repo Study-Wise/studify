@@ -1,5 +1,5 @@
 import config from '@/lib/config';
-import { generateText } from '@/lib/ai-service';
+import { generateAIResponse } from '@/lib/ai-service';
 import { buildContentSystemPrompt } from '@/lib/content';
 import stepByStepHTML from '@/lib/prompt-templates/step-by-step-html';
 import { db } from '@/db/initialize';
@@ -133,26 +133,16 @@ Ensure all questions are directly related to topics discussed in the conversatio
 
 You may remove or modify sections as you see fit based on relevance to the topic.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
 
-    // Build messages array with system prompt first, then conversation history
     const conversationMessages = messages.filter(msg => msg.role !== 'system');
-    const messagesForAI = [
-        {
-            role: 'system' as const,
-            content: practiceQuestionsPrompt
-        },
-        ...conversationMessages,
-        {
-            role: 'user' as const,
-            content: 'Now generate the practice questions based on the above conversation. Output ONLY the practice questions content in markdown format. Do not include any explanations, commentary, or conversation - just the practice questions.'
-        }
-    ];
 
     // Generate the practice questions
-    const result = await generateText({
-        model: `${provider}/${userModel}`,
-        messages: messagesForAI,
+    const result = await generateAIResponse({
+        systemPrompt: practiceQuestionsPrompt,
+        userPrompt: 'Now generate the practice questions based on the above conversation. Output ONLY the practice questions content in markdown format. Do not include any explanations, commentary, or conversation - just the practice questions.',
+        convoHistory: [...conversationMessages],
+        userModel,
+        provider,
         excludeTools: ['get-content', 'get-content-types', 'open-content'],
-        temperature: 0.7,
     });
 
     if (!result.text || result.text.length === 0) {

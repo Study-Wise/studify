@@ -1,5 +1,5 @@
 import config from '@/lib/config';
-import { generateText } from '@/lib/ai-service';
+import { generateAIResponse } from '@/lib/ai-service';
 import { buildContentSystemPrompt } from '@/lib/content';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
@@ -63,26 +63,16 @@ You may remove or modify sections below as you see fit based on relevance to the
 
 Math formatting: use \`$…$\` for displaying math formulas/equations inline and \`$$…$$\` for displaying them on their own; never use backticks for complex math.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
 
-    // Build messages array with system prompt first, then conversation history
     const conversationMessages = messages.filter(msg => msg.role !== 'system');
-    const messagesForAI = [
-        {
-            role: 'system' as const,
-            content: referenceSheetPrompt
-        },
-        ...conversationMessages,
-        {
-            role: 'user' as const,
-            content: 'Now generate the reference sheet based on the above conversation. Output ONLY the reference sheet content in markdown format. Do not include any explanations, commentary, or conversation - just the reference sheet.'
-        }
-    ];
 
     // Generate the reference sheet
-    const result = await generateText({
-        model: `${provider}/${userModel}`,
-        messages: messagesForAI,
+    const result = await generateAIResponse({
+        systemPrompt: referenceSheetPrompt,
+        userPrompt: 'Now generate the reference sheet based on the above conversation. Output ONLY the reference sheet content in markdown format. Do not include any explanations, commentary, or conversation - just the reference sheet.',
+        convoHistory: [...conversationMessages],
+        userModel,
+        provider,
         excludeTools: ['get-content', 'get-content-types', 'open-content'],
-        temperature: 0.7,
     });
 
     if (!result.text || result.text.length === 0) {
