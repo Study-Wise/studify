@@ -1,5 +1,5 @@
 import config from '@/lib/config';
-import { generateText } from '@/lib/ai-service';
+import { generateAIResponse } from '@/lib/ai-service';
 import { buildContentSystemPrompt } from '@/lib/content';
 import categories from '@/lib/modes';
 import desmosSection from '@/lib/prompt-templates/desmos';
@@ -87,26 +87,16 @@ Math formatting: use \`$…$\` for inline math and \`$$…$$\` for block math.
 
 REMEMBER: Output ONLY the Study Guide. No quizzes, no practice questions, no flashcards, no other content types.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
 
-    // Build messages array with system prompt first, then conversation history
     const conversationMessages = messages.filter(msg => msg.role !== 'system');
-    const messagesForAI = [
-        {
-            role: 'system' as const,
-            content: studyGuidePrompt
-        },
-        ...conversationMessages,
-        {
-            role: 'user' as const,
-            content: 'Now generate the study guide based on the above conversation. Output ONLY the study guide content in markdown format. Do not include any explanations, commentary, or conversation - just the study guide.'
-        }
-    ];
 
     // Generate the study guide
-    const result = await generateText({
-        model: `${provider}/${userModel}`,
-        messages: messagesForAI,
+    const result = await generateAIResponse({
+        systemPrompt: studyGuidePrompt,
+        userPrompt: 'Now generate the study guide based on the above conversation. Output ONLY the study guide content in markdown format. Do not include any explanations, commentary, or conversation - just the study guide.',
+        convoHistory: [...conversationMessages],
+        userModel,
+        provider,
         excludeTools: ['get-content', 'get-content-types', 'open-content'],
-        temperature: 0.7,
     });
 
     if (!result.text || result.text.length === 0) {

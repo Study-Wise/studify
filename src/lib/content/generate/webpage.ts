@@ -1,5 +1,6 @@
 import type { GatewayProviderOptions } from '@ai-sdk/gateway';
-import { generateText } from '@/lib/ai-service';
+import { generateText } from 'ai';
+import allTools from '@/lib/tools';
 import { buildContentSystemPrompt } from '@/lib/content';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
@@ -90,10 +91,13 @@ ONLY INCLUDE THE HTML CONTENT IN YOUR RESPONSE. DO NOT RESPOND WITH ANYTHING ELS
 
     // Generate the webpage using Vercel's v0 model (optimized for HTML generation)
     // with automatic fallback to Claude Sonnet 4.5 via AI Gateway
+    const excludeTools = ['get-content', 'get-content-types', 'open-content'];
     const result = await generateText({
         model: 'vercel/v0-1.5-md',
         messages: messagesForAI,
-        excludeTools: ['get-content', 'get-content-types', 'open-content'],
+        tools: Object.fromEntries(
+            Object.entries(allTools).filter(([key]) => !excludeTools.includes(key))
+        ),
         temperature: 0.7,
         providerOptions: {
             gateway: {

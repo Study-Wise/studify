@@ -91,7 +91,6 @@ Math formatting: use \`$…$\` for inline math and \`$$…$$\` for block math.
 
 REMEMBER: Output ONLY the Slidev markdown. No quizzes, no practice questions, no flashcards, no other content types.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
 
-    // Build messages array with system prompt first, then conversation history, then a final user message to explicitly request slideshow generation
     const conversationMessages = messages.filter(msg => msg.role !== 'system');
 
     // Generate the slideshow
@@ -102,7 +101,6 @@ REMEMBER: Output ONLY the Slidev markdown. No quizzes, no practice questions, no
         userModel,
         provider,
         excludeTools: ['get-content', 'get-content-types', 'open-content'],
-        temperature: 0.7,
     });
 
     if (!result.text || result.text.length === 0) {
