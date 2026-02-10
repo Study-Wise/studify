@@ -114,14 +114,7 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
             }
 
             if (iframe) {
-                if (contentType === 'slideshow' && iframe.src) {
-                    // Reload the iframe by resetting its src
-                    const src = iframe.src;
-                    iframe.src = 'about:blank';
-                    iframe.src = src;
-                } else {
-                    iframe.srcdoc = content;
-                }
+                iframe.srcdoc = content;
             }
         } else if (imageTypes.includes(contentType)) {
             // For infographic, content is an object with imageUrl
