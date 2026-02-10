@@ -54,6 +54,7 @@ export interface PracticeQuestionsResult {
 
 export interface SlideshowResult {
     content: string | null;
+    html: string | null;
 }
 
 export interface ThreadAccessResult {
