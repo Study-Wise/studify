@@ -50,7 +50,8 @@
       "WebFetch(domain:www.npmjs.com)",
       "WebFetch(domain:registry.npmjs.org)",
       "Bash(npx slideshow-generator:*)",
-      "Bash(git ls-files:*)"
+      "Bash(git ls-files:*)",
+      "Bash(npm ls:*)"
     ],
     "deny": [],
     "ask": []

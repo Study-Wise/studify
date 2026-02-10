@@ -1,7 +1,6 @@
 import { createRequire } from 'module';
 import { dirname, join } from 'path';
 
-import jade from 'jade';
 import fm from 'front-matter';
 import cheerio from 'cheerio';
 import highlight from 'highlight.js';
@@ -17,9 +16,10 @@ import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
 import type { ThreadData, UploadedFile } from '@/lib/types';
 
-// Use createRequire for marked only - project has marked v15 but slideshow-generator needs v0.3
+// Use createRequire for certain ones only - project has marked v15 but slideshow-generator needs v0.3
 const require_ = createRequire(import.meta.url);
-const oldMarked = require_('slideshow-generator/node_modules/marked');
+const marked = require_('slideshow-generator/node_modules/marked');
+const jade = require_('slideshow-generator/node_modules/jade');
 
 function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
     const filesWithText = uploadedFiles.filter(f => f.extractedText);
@@ -34,7 +34,7 @@ function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
 
 function markdownToSlideshowHTML(markdown: string): string {
     const content = fm(markdown);
-    const tokens = oldMarked.lexer(content.body, {
+    const tokens = marked.lexer(content.body, {
         gfm: true, tables: true, breaks: true,
         pedantic: true, sanitize: true, smartLists: true, smartypants: true
     });
@@ -48,7 +48,7 @@ function markdownToSlideshowHTML(markdown: string): string {
         }
         if (!title) {
             const t: any = [token]; t.links = {};
-            const h = oldMarked.parser(t);
+            const h = marked.parser(t);
             const $ = cheerio.load(h);
             title = $('*').text();
         }
@@ -56,11 +56,11 @@ function markdownToSlideshowHTML(markdown: string): string {
     });
 
     pages.forEach((page) => {
-        const renderer = new oldMarked.Renderer();
+        const renderer = new marked.Renderer();
         renderer.heading = (text: string, level: number) => `<h${level}>${text}</h${level}>`;
         const pt: any = _.cloneDeep(page.tokens);
         pt.links = {};
-        page.html = oldMarked.parser(pt, {
+        page.html = marked.parser(pt, {
             renderer,
             highlight: (code: string) => highlight.highlightAuto(code).value
         });
