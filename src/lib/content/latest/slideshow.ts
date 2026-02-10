@@ -10,10 +10,11 @@ export async function getLatestSlideshow(
     try {
         const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
         if (threads.length > 0 && threads[0].generatedSlideshow) {
-            const slideshow = threads[0].generatedSlideshow as { content?: string };
+            const slideshow = threads[0].generatedSlideshow as { content?: string; html?: string };
             if (slideshow.content) {
                 return {
-                    content: slideshow.content
+                    content: slideshow.content,
+                    html: slideshow.html ?? null
                 };
             }
         }
@@ -23,6 +24,7 @@ export async function getLatestSlideshow(
 
     // No slideshow found
     return {
-        content: null
+        content: null,
+        html: null
     };
 }

@@ -98,20 +98,14 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
         // Generate the slideshow (saves to DB automatically)
         console.log(`🤖 [${requestId}] Generating slideshow`);
-        const content = await generateSlideshow(threadId, user_email);
+        const result = await generateSlideshow(threadId, user_email);
 
         console.log(`🎉 [${requestId}] Slideshow generation completed successfully`);
-
-        // Fire-and-forget request to queue up the md-to-interactive-html conversion
-        const slidesUrl = `https://slides.studywise.onl/generate/${threadId}`;
-        fetch(slidesUrl).catch(err => {
-            console.error(`⚠️ [${requestId}] Failed to queue slideshow conversion:`, err);
-        });
 
         return new Response(
             JSON.stringify({
                 status: 'success',
-                content: content
+                content: result.html
             }),
             {
                 status: 200,

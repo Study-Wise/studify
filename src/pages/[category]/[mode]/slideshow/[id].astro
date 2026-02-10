@@ -32,11 +32,9 @@ if (!user && !isPublic) {
 }
 
 // Get the latest slideshow only if authorized or public
-const { content: latestSlideshow } = (isAuthorized || isPublic)
+const { html: slideshowHtml } = (isAuthorized || isPublic)
     ? await getLatestSlideshow(id || '')
-    : { content: null };
-
-const slideshowUrl = `https://slides.studywise.onl/generate/${id}`;
+    : { html: null };
 ---
 
 <Layout title={`Slideshow | ${modeName} | ${categoryName}`} container={false}>
@@ -53,13 +51,13 @@ const slideshowUrl = `https://slides.studywise.onl/generate/${id}`;
                 <ContentActions
                     contentType="slideshow"
                     threadId={id || ''}
-                    hasContent={!!latestSlideshow}
+                    hasContent={!!slideshowHtml}
                     isAuthorized={isAuthorized}
                     chatUrl={chatUrl}
                 />
-                {latestSlideshow ? (
+                {slideshowHtml ? (
                     <div class="slideshow-container">
-                        <iframe src={slideshowUrl} title="Generated Slideshow" sandbox="allow-scripts allow-same-origin" />
+                        <iframe srcdoc={slideshowHtml} title="Generated Slideshow" sandbox="allow-scripts allow-same-origin" />
                     </div>
                 ) : (
                     <div class="empty-state">

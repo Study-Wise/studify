@@ -148,10 +148,13 @@ REMEMBER: Output ONLY the markdown content. No quizzes, no practice questions, n
         throw new Error('Generated slideshow is empty');
     }
 
-    // Save to database as JSONB object with content key and needsGeneration flag
+    // Convert markdown to self-contained HTML slideshow
+    const html = markdownToSlideshowHTML(result.text);
+
+    // Save to database with both markdown content and generated HTML
     await db.update(threadsTable)
-        .set({ generatedSlideshow: { content: result.text, needsGeneration: true }, updatedAt: new Date() })
+        .set({ generatedSlideshow: { content: result.text, html }, updatedAt: new Date() })
         .where(eq(threadsTable.id, threadId));
 
-    return result.text;
+    return { content: result.text, html };
 }
