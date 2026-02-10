@@ -97,7 +97,11 @@ You may remove or modify sections as you see fit based on relevance to the topic
             role: 'system' as const,
             content: mindMapPrompt
         },
-        ...conversationMessages
+        ...conversationMessages,
+        {
+            role: 'user' as const,
+            content: 'Now generate the interactive HTML mind map based on the above conversation. Output ONLY the complete HTML document starting with <!DOCTYPE html>. Do not include any explanations, commentary, or conversation - just the HTML content.'
+        }
     ];
 
     // Generate the mind map using Vercel's v0 model (optimized for HTML generation)
@@ -105,6 +109,7 @@ You may remove or modify sections as you see fit based on relevance to the topic
     const result = await generateText({
         model: 'vercel/v0-1.5-md',
         messages: messagesForAI,
+        tools: {},
         temperature: 0.7,
         providerOptions: {
             gateway: {

@@ -140,7 +140,11 @@ You may remove or modify sections as you see fit based on relevance to the topic
             role: 'system' as const,
             content: practiceQuestionsPrompt
         },
-        ...conversationMessages
+        ...conversationMessages,
+        {
+            role: 'user' as const,
+            content: 'Now generate the practice questions based on the above conversation. Output ONLY the practice questions content in markdown format. Do not include any explanations, commentary, or conversation - just the practice questions.'
+        }
     ];
 
     // Generate the practice questions

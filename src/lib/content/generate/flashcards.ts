@@ -84,7 +84,11 @@ Math formatting: use $â€¦$ for displaying math formulas/equations inline and $$â
             role: 'system' as const,
             content: flashcardPrompt
         },
-        ...conversationMessages
+        ...conversationMessages,
+        {
+            role: 'user' as const,
+            content: 'Now generate the flashcards based on the above conversation. Return ONLY the structured flashcard data with the text summary and questions array. Do not include any explanations or commentary.'
+        }
     ];
 
     // Generate the flashcards using structured output

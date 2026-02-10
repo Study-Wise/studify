@@ -94,13 +94,18 @@ REMEMBER: Output ONLY the Study Guide. No quizzes, no practice questions, no fla
             role: 'system' as const,
             content: studyGuidePrompt
         },
-        ...conversationMessages
+        ...conversationMessages,
+        {
+            role: 'user' as const,
+            content: 'Now generate the study guide based on the above conversation. Output ONLY the study guide content in markdown format. Do not include any explanations, commentary, or conversation - just the study guide.'
+        }
     ];
 
     // Generate the study guide
     const result = await generateText({
         model: `${provider}/${userModel}`,
         messages: messagesForAI,
+        tools: {},
         temperature: 0.7,
     });
 

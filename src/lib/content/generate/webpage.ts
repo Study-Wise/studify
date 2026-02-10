@@ -81,7 +81,11 @@ ONLY INCLUDE THE HTML CONTENT IN YOUR RESPONSE. DO NOT RESPOND WITH ANYTHING ELS
             role: 'system' as const,
             content: webpagePrompt
         },
-        ...conversationMessages
+        ...conversationMessages,
+        {
+            role: 'user' as const,
+            content: 'Now generate the webpage based on the above conversation. Output ONLY the complete HTML document starting with <!DOCTYPE html>. Do not include any explanations, commentary, or conversation - just the HTML content.'
+        }
     ];
 
     // Generate the webpage using Vercel's v0 model (optimized for HTML generation)
@@ -89,6 +93,7 @@ ONLY INCLUDE THE HTML CONTENT IN YOUR RESPONSE. DO NOT RESPOND WITH ANYTHING ELS
     const result = await generateText({
         model: 'vercel/v0-1.5-md',
         messages: messagesForAI,
+        tools: {},
         temperature: 0.7,
         providerOptions: {
             gateway: {

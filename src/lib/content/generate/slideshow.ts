@@ -81,7 +81,7 @@ mdc: true
    - Keep text minimal - slides should be visual aids, not essays
 
 5. **Do NOT use:**
-   - Vue components like <Counter>, <Tweet>, <Youtube>
+   - Vue/React/Next/Astro/Svelte/etc. components like <Counter>, <Tweet>, <Youtube>
    - External image URLs
    - Monaco editor blocks
    - Draggable elements
@@ -91,20 +91,25 @@ Math formatting: use \`$…$\` for inline math and \`$$…$$\` for block math.
 
 REMEMBER: Output ONLY the Slidev markdown. No quizzes, no practice questions, no flashcards, no other content types.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
 
-    // Build messages array with system prompt first, then conversation history
+    // Build messages array with system prompt first, then conversation history, then a final user message to explicitly request slideshow generation
     const conversationMessages = messages.filter(msg => msg.role !== 'system');
     const messagesForAI = [
         {
             role: 'system' as const,
             content: slideshowPrompt
         },
-        ...conversationMessages
+        ...conversationMessages,
+        {
+            role: 'user' as const,
+            content: 'Now generate the Slidev markdown slideshow based on the above conversation. Output ONLY the raw Slidev markdown starting with the frontmatter (---). Do not include any explanations, commentary, or conversation - just the Slidev markdown content.'
+        }
     ];
 
-    // Generate the slideshow
+    // Generate the slideshow (no tools - content generators must not have tool access)
     const result = await generateText({
         model: `${provider}/${userModel}`,
         messages: messagesForAI,
+        tools: {},
         temperature: 0.7,
     });
 

@@ -70,13 +70,18 @@ Math formatting: use \`$…$\` for displaying math formulas/equations inline and
             role: 'system' as const,
             content: referenceSheetPrompt
         },
-        ...conversationMessages
+        ...conversationMessages,
+        {
+            role: 'user' as const,
+            content: 'Now generate the reference sheet based on the above conversation. Output ONLY the reference sheet content in markdown format. Do not include any explanations, commentary, or conversation - just the reference sheet.'
+        }
     ];
 
-    // Generate the reference sheet
+    // Generate the reference sheet (no tools - content generators must not have tool access)
     const result = await generateText({
         model: `${provider}/${userModel}`,
         messages: messagesForAI,
+        tools: {},
         temperature: 0.7,
     });
 

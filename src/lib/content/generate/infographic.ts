@@ -44,12 +44,6 @@ export async function generateInfographic(
         throw new Error('No messages found in thread');
     }
 
-    // Build conversation context for the AI
-    const conversationContext = messages
-        .filter(msg => msg.role !== 'system')
-        .map(msg => `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`)
-        .join('\n\n');
-
     // Build uploaded files context
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
@@ -66,18 +60,23 @@ Keep it under 1000 characters. Be specific about visual elements, diagrams, icon
 
 You may remove or modify elements as you see fit based on relevance to the topic.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
 
+    // Build messages array with system prompt first, then conversation history, then a final user message to explicitly request infographic generation
+    const conversationMessages = messages.filter(msg => msg.role !== 'system');
+    const messagesForAI = [
+        {
+            role: 'system' as const,
+            content: systemPrompt
+        },
+        ...conversationMessages,
+        {
+            role: 'user' as const,
+            content: 'Now generate the infographic description based on the above conversation. Output ONLY the visual description for the infographic. Do not include any explanations, commentary, or conversation - just the infographic description.'
+        }
+    ];
+
     const descriptionResult = await generateText({
         model: `${provider}/${userModel}`,
-        messages: [
-            {
-                role: 'system',
-                content: systemPrompt
-            },
-            {
-                role: 'user',
-                content: `Create an infographic description based on this conversation:\n\n${conversationContext.substring(0, 3000)}`
-            }
-        ],
+        messages: messagesForAI,
         temperature: 0.7,
     });
 
