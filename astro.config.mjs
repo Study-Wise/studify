@@ -86,10 +86,7 @@ export default defineConfig({
                 enabled: true
             }
         }), 
-        sentryAstro({
-            dsn: "https://109d03667fa49f8fdeff6863d919d1fb@o4510689442529280.ingest.us.sentry.io/4510689443512320",
-            tracesSampleRate: 1.0,
-        }),
+        sentryAstro(),
         sitemap({
             filter: (page) =>
                 !page.includes('/api/') &&
