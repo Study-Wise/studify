@@ -46,7 +46,11 @@
       "Bash(git fetch:*)",
       "Bash(git rebase:*)",
       "Bash(git stash:*)",
-      "Bash(npm run check:*)"
+      "Bash(npm run check:*)",
+      "WebFetch(domain:www.npmjs.com)",
+      "WebFetch(domain:registry.npmjs.org)",
+      "Bash(npx slideshow-generator:*)",
+      "Bash(git ls-files:*)"
     ],
     "deny": [],
     "ask": []
