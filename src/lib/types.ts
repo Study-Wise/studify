@@ -161,6 +161,7 @@ export interface AIGenerationOptions {
     userModel: string;
     provider: string;
     tools?: Record<string, any>;
+    excludeTools?: string[];
     maxSteps?: number;
     requestId?: string;
 }
