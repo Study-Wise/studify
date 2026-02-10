@@ -1,5 +1,5 @@
-import { generateText } from 'ai';
 import type { GatewayProviderOptions } from '@ai-sdk/gateway';
+import { generateText } from '@/lib/ai-service';
 import { buildContentSystemPrompt } from '@/lib/content';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
@@ -93,7 +93,7 @@ ONLY INCLUDE THE HTML CONTENT IN YOUR RESPONSE. DO NOT RESPOND WITH ANYTHING ELS
     const result = await generateText({
         model: 'vercel/v0-1.5-md',
         messages: messagesForAI,
-        tools: {},
+        excludeTools: ['get-content', 'get-content-types', 'open-content'],
         temperature: 0.7,
         providerOptions: {
             gateway: {

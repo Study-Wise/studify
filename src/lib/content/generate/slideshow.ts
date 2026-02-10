@@ -1,5 +1,5 @@
-import { generateText } from 'ai';
 import config from '@/lib/config';
+import { generateText } from '@/lib/ai-service';
 import { buildContentSystemPrompt } from '@/lib/content';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
@@ -105,11 +105,11 @@ REMEMBER: Output ONLY the Slidev markdown. No quizzes, no practice questions, no
         }
     ];
 
-    // Generate the slideshow (no tools - content generators must not have tool access)
+    // Generate the slideshow
     const result = await generateText({
         model: `${provider}/${userModel}`,
         messages: messagesForAI,
-        tools: {},
+        excludeTools: ['get-content', 'get-content-types', 'open-content'],
         temperature: 0.7,
     });
 
