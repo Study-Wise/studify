@@ -81,7 +81,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
 
         // Generate the study guide (saves to DB automatically)
-        const content = await generateStudyGuide(threadId, user_email);
+        const content = await generateStudyGuide(threadId);
 
         return new Response(
             JSON.stringify({

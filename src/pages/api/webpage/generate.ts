@@ -81,7 +81,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
 
         // Generate the webpage (saves to DB automatically)
-        const content = await generateWebpage(threadId, user_email);
+        const content = await generateWebpage(threadId);
 
         return new Response(
             JSON.stringify({

@@ -81,7 +81,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
 
         // Generate the reference sheet (saves to DB automatically)
-        const content = await generateReferenceSheet(threadId, user_email);
+        const content = await generateReferenceSheet(threadId);
 
         return new Response(
             JSON.stringify({

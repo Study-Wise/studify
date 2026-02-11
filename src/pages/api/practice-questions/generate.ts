@@ -81,7 +81,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
 
         // Generate the practice questions (saves to DB automatically)
-        const content = await generatePracticeQuestions(threadId, user_email);
+        const content = await generatePracticeQuestions(threadId);
 
         return new Response(
             JSON.stringify({

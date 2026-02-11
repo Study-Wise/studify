@@ -81,7 +81,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
 
         // Generate the mind map (saves to DB automatically)
-        const content = await generateMindMap(threadId, user_email);
+        const content = await generateMindMap(threadId);
 
         return new Response(
             JSON.stringify({

@@ -80,7 +80,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
 
         // Generate the flashcards (saves to DB automatically)
-        const content = await generateFlashcards(threadId, user_email);
+        const content = await generateFlashcards(threadId);
 
         return new Response(
             JSON.stringify({

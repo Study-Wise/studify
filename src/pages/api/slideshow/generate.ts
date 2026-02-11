@@ -81,7 +81,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
 
         // Generate the slideshow (saves to DB automatically)
-        const result = await generateSlideshow(threadId, user_email);
+        const result = await generateSlideshow(threadId);
 
         return new Response(
             JSON.stringify({

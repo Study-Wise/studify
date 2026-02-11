@@ -81,7 +81,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
 
         // Generate the resources (saves to DB automatically)
-        const content = await generateResources(threadId, user_email);
+        const content = await generateResources(threadId);
 
         return new Response(
             JSON.stringify({

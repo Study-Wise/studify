@@ -76,7 +76,7 @@ function markdownToSlideshowHTML(markdown: string): string {
     return fn({ data: encrypted, process });
 }
 
-export async function generateSlideshow(threadId: string, _userEmail: string | null, userPrompt?: string) {
+export async function generateSlideshow(threadId: string, userPrompt?: string) {
     // Fetch the thread from database
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 

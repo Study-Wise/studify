@@ -18,7 +18,7 @@ function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
     return `\n\n### Uploaded Files Content\nThe user has uploaded the following files. Include this content in your analysis:\n\n${fileContents}`;
 }
 
-export async function generatePracticeQuestions(threadId: string, _userEmail: string | null, userPrompt?: string) {
+export async function generatePracticeQuestions(threadId: string, userPrompt?: string) {
     // Fetch the thread from database
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
