@@ -1,16 +1,17 @@
 // Keyboard navigation styles
 @use '../variables/tokens' as *;
+@use '../variables/colors/statuses' as *;
 
 /* Focus indicators */
 *:focus-visible {
-    outline: 2px solid #4F46E5;
+    outline: 2px solid $color-focus;
     outline-offset: 2px;
 }
 
 /* Custom focus styles for specific elements */
 .nav-btn:focus-visible,
 .fancy-button:focus-visible {
-    box-shadow: 0 0 0 2px #4F46E5, 0 0 0 4px rgb(79 70 229 / 20%);
+    box-shadow: 0 0 0 2px $color-focus, 0 0 0 4px rgb(from $color-focus r g b / 20%);
 }
 
 /* Skip links */
@@ -24,7 +25,7 @@
     background-color: #000;
     color: #fff;
     border-radius: $border-radius-extra-small;
-    font-size: 14px;
+    font-size: $font-size-small;
     text-decoration: none;
     line-height: $line-height-none;
     z-index: $z-index-dropdown;
@@ -47,7 +48,7 @@
 .nav-btn:focus-visible,
 .fancy-button:focus-visible,
 button:focus-visible {
-    box-shadow: 0 0 0 2px #4F46E5, 0 0 0 4px rgb(79 70 229 / 20%);
+    box-shadow: 0 0 0 2px $color-focus, 0 0 0 4px rgb(from $color-focus r g b / 20%);
 }
 
 /* Keyboard activatable elements */
@@ -55,15 +56,15 @@ button:focus-visible {
     cursor: pointer;
 
     &:focus-visible {
-        outline: 2px solid #4F46E5;
+        outline: 2px solid $color-focus;
         outline-offset: 2px;
     }
 }
 
 /* Form validation styles */
 :not(.message-input):user-invalid {
-    border-color: #ef4444;
-    box-shadow: 0 0 0 1px #ef4444;
+    border-color: $color-error;
+    box-shadow: 0 0 0 1px $color-error;
 }
 
 /* High contrast mode support */

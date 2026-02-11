@@ -1,5 +1,6 @@
 // Dialog Component Styles
 @use '../variables/tokens' as *;
+@use '../variables/colors/statuses' as *;
 
 .app-dialog {
     position: fixed;
@@ -52,56 +53,56 @@
     // Type-specific styling
     &.dialog-error {
         .dialog-icon {
-            color: #ef4444;
+            color: $color-error;
         }
 
         .dialog-button-primary {
-            background-color: #ef4444;
+            background-color: $color-error;
 
             &:hover {
-                background-color: #dc2626;
+                background-color: $color-error-hover;
             }
         }
     }
 
     &.dialog-warning {
         .dialog-icon {
-            color: #f59e0b;
+            color: $color-warning;
         }
 
         .dialog-button-primary {
-            background-color: #f59e0b;
+            background-color: $color-warning;
 
             &:hover {
-                background-color: #d97706;
+                background-color: $color-warning-hover;
             }
         }
     }
 
     &.dialog-success {
         .dialog-icon {
-            color: #10b981;
+            color: $color-success;
         }
 
         .dialog-button-primary {
-            background-color: #10b981;
+            background-color: $color-success;
 
             &:hover {
-                background-color: #059669;
+                background-color: $color-success-hover;
             }
         }
     }
 
     &.dialog-info {
         .dialog-icon {
-            color: #3b82f6;
+            color: $color-info;
         }
 
         .dialog-button-primary {
-            background-color: #3b82f6;
+            background-color: $color-info;
 
             &:hover {
-                background-color: #2563eb;
+                background-color: $color-info-hover;
             }
         }
     }
@@ -166,11 +167,11 @@
 }
 
 .dialog-button-primary {
-    background-color: #3b82f6;
+    background-color: $color-info;
     color: white;
 
     &:hover {
-        background-color: #2563eb;
+        background-color: $color-info-hover;
     }
 }
 

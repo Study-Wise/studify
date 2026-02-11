@@ -28,7 +28,7 @@
     border-radius: 50%;
     display: grid;
     place-items: center;
-    font-size: 14px;
+    font-size: $font-size-small;
     box-shadow: 0 0 10px hsl(from var(--body-text) h s l / 50%);
     cursor: pointer;
     z-index: $z-index-theme-switcher;
@@ -92,7 +92,7 @@
     }
 
     .material-symbols-outlined {
-        font-size: 20px;
+        font-size: $font-size-extra-large;
         aspect-ratio: 1;
         transition: scale $transition-slower $ease-spring;
     }
@@ -102,11 +102,11 @@
 /* Mobile responsiveness for contrast toggle */
 @media (width <= 768px) {
     .theme-switcher {
-        padding: 10px 12px;
-        font-size: 12px;
+        padding: $spacing-small $spacing-small;
+        font-size: $font-size-extra-small;
 
         .material-symbols-outlined {
-            font-size: 18px;
+            font-size: $font-size-large;
         }
     }
 }

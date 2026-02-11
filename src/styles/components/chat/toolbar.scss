@@ -1,5 +1,6 @@
 @use '../../variables/globals' as *;
 @use '../../variables/tokens' as *;
+@use '../../variables/colors/statuses' as *;
 @use 'sass:map';
 @use 'sass:color';
 @use 'sass:list';
@@ -66,10 +67,10 @@ $color: list.nth(map.get($accent-colors, primary), 1);
 
         // User-invalid state - only shows after user interaction
         &:has(:user-invalid) {
-            border-color: #ef4444;
+            border-color: $color-error;
             box-shadow:
-                0 2px 8px rgba(from #ef4444 r g b / 10%),
-                0 0 0 2px rgba(from #ef4444 r g b / 10%);
+                0 2px 8px rgba(from $color-error r g b / 10%),
+                0 0 0 2px rgba(from $color-error r g b / 10%);
         }
 
         // Disabled state - when AI is responding
