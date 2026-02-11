@@ -11,15 +11,8 @@ import { generateStudyGuide } from '@/lib/content/generate/study-guide';
 export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();
 
-    console.log(`📚 [${requestId}] Starting study guide generation request`);
-
     try {
-        console.log(`📥 [${requestId}] Parsing request body`);
         const { threadId } = await request.json();
-
-        console.log(`📝 [${requestId}] Request payload:`, {
-            threadId: threadId || 'none'
-        });
 
         if (!threadId) {
             console.error(`❌ [${requestId}] No thread ID provided`);
@@ -45,15 +38,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        console.log(`🔐 [${requestId}] Authentication found, extracting user info`);
-
         const user_email = user.email;
-
-        console.log(`✅ [${requestId}] Successfully retrieved user from session`);
-        console.log(`👤 [${requestId}] User info:`, {
-            userId: user.id,
-            userEmail: user_email
-        });
 
         // Validate email
         if (!isValidEmail(user_email)) {
@@ -68,7 +53,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
 
         // Fetch the thread
-        console.log(`🔍 [${requestId}] Fetching thread from database`);
         const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
         if (threads.length === 0) {
@@ -97,10 +81,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
 
         // Generate the study guide (saves to DB automatically)
-        console.log(`🤖 [${requestId}] Generating study guide`);
         const content = await generateStudyGuide(threadId, user_email);
-
-        console.log(`🎉 [${requestId}] Study guide generation completed successfully`);
 
         return new Response(
             JSON.stringify({
