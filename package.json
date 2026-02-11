@@ -28,19 +28,14 @@
         "@types/crypto-js": "^4.2.2",
         "@types/fs-extra": "^11.0.4",
         "@types/highlight.js": "^9.12.4",
-        "@types/jade": "^0.0.34",
-        "@types/jsdom": "^21.1.7",
         "@types/lodash": "^4.17.23",
-        "@types/uuid": "^10.0.0",
         "@vite-pwa/astro": "^1.1.0",
         "astro": "^5.15.0",
-        "baseline-browser-mapping": "^2.8.32",
         "drizzle-kit": "^0.31.8",
         "sass": "^1.89.0",
         "sass-embedded": "^1.89.0",
         "stylelint": "^17.1.1",
-        "stylelint-config-standard-scss": "^17.0.0",
-        "wait-on": "^9.0.3"
+        "stylelint-config-standard-scss": "^17.0.0"
     },
     "dependencies": {
         "@astrojs/check": "^0.9.6",
