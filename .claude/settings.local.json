@@ -54,7 +54,8 @@
       "Bash(npm ls:*)",
       "Bash(cd *)",
       "Bash(grep:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(npm uninstall:*)"
     ],
     "deny": [],
     "ask": []
