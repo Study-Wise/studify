@@ -28,46 +28,17 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();
     const startTime = Date.now();
 
-    console.log(`🚀 [${requestId}] Starting message generation request`);
-    console.log(`📊 [${requestId}] Request metadata:`, {
-        timestamp: new Date().toISOString(),
-        userAgent: request.headers.get('user-agent'),
-        contentType: request.headers.get('content-type'),
-        origin: request.headers.get('origin'),
-        referer: request.headers.get('referer')
-    });
-
     try {
-        console.log(`📥 [${requestId}] Parsing request body`);
         const { text: userPrompt, id: thread_id, model, settings: userSettings, isPublic = false, category, mode } = await request.json();
-        
-        console.log(`📝 [${requestId}] Request payload:`, {
-            userPromptLength: userPrompt?.length || 0,
-            userPromptPreview: userPrompt?.substring(0, 100) + (userPrompt?.length > 100 ? '...' : ''),
-            threadId: thread_id || 'none',
-            model: model || config.model,
-            settingsKeys: Object.keys(userSettings || {}),
-            isPublic,
-            category: category || 'none',
-            mode: mode || 'none'
-        });
-        
+
         // Get mode object for context-specific prompts
         let modeObj: Mode = {name: '', description: ''};
         if (category && mode) {
             modeObj = categories[category]?.modes?.[mode];
-            console.log(`🎯 [${requestId}] Mode object loaded:`, {
-                category,
-                mode,
-                modeName: modeObj.name,
-                modeDescription: modeObj.description?.substring(0, 100) + '...',
-                hasTools: !!modeObj.tools,
-                toolsCount: Object.keys(modeObj.tools || {}).length
-            });
         } else {
-            console.log(`⚠️ [${requestId}] No category/mode specified, using default mode`);
+            console.warn(`⚠️ [${requestId}] No category/mode specified, using default mode`);
         }
-        
+
         // TODO: Use category and mode for context-specific prompts
         let current_thread_id: string | undefined = thread_id;
 
@@ -84,24 +55,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        console.log(`🔐 [${requestId}] Authentication found, extracting user info`);
-
         const user_email = user.email;
         const isAdmin = await isUserAdmin(user_email);
 
-        console.log(`✅ [${requestId}] Successfully retrieved user from session`);
-        console.log(`🔐 [${requestId}] Admin check (from email whitelist):`, {
-            isAdmin: isAdmin
-        });
-
-        console.log(`👤 [${requestId}] User info:`, {
-            userId: user.id,
-            userEmail: user_email,
-            isAdmin: isAdmin
-        });
-
         // Validate email
-        console.log(`✅ [${requestId}] Validating user email`);
         if (!isValidEmail(user_email)) {
             console.error(`❌ [${requestId}] Invalid email format:`, user_email);
             return new Response(
@@ -112,24 +69,18 @@ export const POST: APIRoute = async ({ request, locals }) => {
                 }
             );
         }
-        console.log(`✅ [${requestId}] Email validation passed`);
 
         // Create a new thread if none provided
         let isNewThread = false;
 
         if (!current_thread_id) {
-            console.log(`🆕 [${requestId}] No thread ID provided, creating new thread`);
             try {
 
                 // Check thread limit for user (skip for admins)
                 if (user_email) {
                     // Explicitly skip thread limit check for admin users
-                    if (isAdmin) {
-                        console.log(`👑 [${requestId}] Admin user detected - skipping thread limit check for:`, user_email);
-                    } else {
-                        console.log(`🔍 [${requestId}] Checking thread limit for user:`, user_email);
+                    if (!isAdmin) {
                         const userThreads = await db.select().from(threadsTable).where(eq(threadsTable.email, user_email));
-                        console.log(`📊 [${requestId}] User thread count:`, userThreads.length, '/', config.maxThreadsPerUser);
 
                         if (userThreads.length >= config.maxThreadsPerUser) {
                             console.error(`❌ [${requestId}] Thread limit exceeded for user:`, user_email);
@@ -147,7 +98,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
                     }
                 }
 
-                console.log(`🆔 [${requestId}] Generating new thread ID`);
                 const newThreadId = nanoid();
                 if (!newThreadId) {
                     console.error(`❌ [${requestId}] Failed to generate thread ID`);
@@ -168,21 +118,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
                     isPublic: isPublic,
                     isDev: (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development'
                 };
-                
-                console.log(`💾 [${requestId}] Inserting new thread into database:`, {
-                    threadId: newThreadId,
-                    isPublic,
-                    isDev: newThread.isDev
-                });
-                
-                const dbResponse = await db.insert(threadsTable).values(newThread);
+
+                await db.insert(threadsTable).values(newThread);
                 current_thread_id = newThreadId;
                 isNewThread = true;
-                
-                console.log(`✅ [${requestId}] Thread created successfully:`, {
-                    threadId: newThreadId,
-                    dbResponse: !!dbResponse
-                });
             } catch (error) {
                 console.error(`❌ [${requestId}] Error generating thread:`, error);
                 return new Response(
@@ -193,18 +132,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
                     }
                 );
             }
-        } else {
-            console.log(`🔄 [${requestId}] Using existing thread ID:`, current_thread_id);
         }
 
         // --- Load System Prompt and Initialize Conversation History ---
-        console.log(`🎯 [${requestId}] Loading system prompt for mode:`, {
-            category,
-            mode,
-            hasModePrompt: !!modeObj.prompt,
-            hasConfigPrompt: !!config.systemPrompt
-        });
-        
         const baseSystemPrompt = await (modeObj.prompt || Promise.resolve(config.systemPrompt));
 
         // Add thread context to the system prompt so AI can use tools that need threadId
@@ -219,43 +149,22 @@ Use the above thread context when calling tools that require threadId, category,
 `;
         const systemPrompt = baseSystemPrompt + threadContext;
 
-        console.log(`📝 [${requestId}] System prompt loaded:`, {
-            promptLength: systemPrompt.length,
-            promptPreview: systemPrompt.substring(0, 200) + '...'
-        });
-
         const systemObj: Message = {
             role: 'system',
             content: systemPrompt,
         }
 
         let convoHistory: Message[] = [systemObj];
-        console.log(`🔄 [${requestId}] Initialized conversation history with system message`);
 
         // --- Conversation History Fetch from DB ---
-        console.log(`📚 [${requestId}] Fetching conversation history for thread:`, current_thread_id);
         let userData: Thread | undefined = undefined;
         if (current_thread_id) {
             try {
-                console.log(`🔍 [${requestId}] Querying database for thread data`);
                 const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, current_thread_id));
-                console.log(`📊 [${requestId}] Database query result:`, {
-                    threadCount: threads.length,
-                    foundThread: threads.length > 0
-                });
-                
+
                 if (threads.length > 0) {
                     userData = threads[0];
-                    console.log(`📋 [${requestId}] Thread data loaded:`, {
-                        threadId: userData.id,
-                        title: userData.title || 'untitled',
-                        email: userData.email || 'none',
-                        isPublic: userData.isPublic,
-                        hasThreadData: !!userData.thread,
-                        createdAt: userData.createdAt,
-                        updatedAt: userData.updatedAt
-                    });
-                    
+
                     // Check thread ownership
                     if (userData.email && userData.email !== user_email) {
                         console.error(`❌ [${requestId}] Unauthorized access attempt:`, {
@@ -270,7 +179,7 @@ Use the above thread context when calling tools that require threadId, category,
                             }
                         );
                     }
-                    
+
                     if (
                         userData.thread &&
                         typeof userData.thread === 'object' &&
@@ -278,17 +187,11 @@ Use the above thread context when calling tools that require threadId, category,
                         Array.isArray((userData.thread as ThreadData).messages)
                     ) {
                         convoHistory = [systemObj, ...(userData.thread as ThreadData).messages];
-                        console.log(`💬 [${requestId}] Conversation history loaded with system message:`, {
-                            totalMessageCount: convoHistory.length,
-                            systemMessageIncluded: true,
-                            userMessagesCount: (userData.thread as ThreadData).messages.length,
-                            lastMessageRole: convoHistory[convoHistory.length - 1]?.role || 'none'
-                        });
                     } else {
-                        console.log(`⚠️ [${requestId}] No valid conversation history found in thread data, keeping system message only`);
+                        console.warn(`⚠️ [${requestId}] No valid conversation history found in thread data, keeping system message only`);
                     }
                 } else {
-                    console.log(`⚠️ [${requestId}] Thread not found in database, using system message only:`, current_thread_id);
+                    console.warn(`⚠️ [${requestId}] Thread not found in database, using system message only:`, current_thread_id);
                 }
             } catch (error) {
                 console.error(`❌ [${requestId}] Error fetching conversation history:`, error);
@@ -300,25 +203,14 @@ Use the above thread context when calling tools that require threadId, category,
                     }
                 );
             }
-        } else {
-            console.log(`🆕 [${requestId}] No thread ID provided, using system message only`);
         }
 
         // --- Check message limit per thread (skip for admins) ---
-        if (isAdmin) {
-            console.log(`👑 [${requestId}] Admin user detected - skipping message limit check for:`, user_email);
-        } else {
-            console.log(`🔍 [${requestId}] Checking message limit for thread:`, current_thread_id);
+        if (!isAdmin) {
             // Count current user messages only
             const currentUserMessageCount = convoHistory.filter(msg => msg.role === 'user').length;
             // Adding one more user message
             const newUserMessageCount = currentUserMessageCount + 1;
-
-            console.log(`📊 [${requestId}] User message count:`, {
-                current: currentUserMessageCount,
-                afterNewMessage: newUserMessageCount,
-                limit: config.maxMessagesPerThread
-            });
 
             if (newUserMessageCount > config.maxMessagesPerThread) {
                 console.error(`❌ [${requestId}] User message limit exceeded for thread:`, current_thread_id);
@@ -336,20 +228,17 @@ Use the above thread context when calling tools that require threadId, category,
         }
 
         // --- Model/Provider selection ---
-        console.log(`🤖 [${requestId}] Selecting AI model and provider`);
         let userModel: string;
         let provider: string;
 
         // Use existing model/provider from database if thread exists, otherwise use client selection
         if (userData && userData.model && userData.provider) {
-            console.log(`🔄 [${requestId}] Validating existing model/provider from database`);
-
             // Validate the stored model/provider are still valid
             const { model: validatedModel, provider: validatedProvider } = await getValidModelAndProvider(userData.model);
 
             // Check if validation changed the model/provider (meaning the stored ones were invalid)
             if (validatedModel !== userData.model || validatedProvider !== userData.provider) {
-                console.log(`⚠️ [${requestId}] Stored model/provider invalid, using validated:`, {
+                console.warn(`⚠️ [${requestId}] Stored model/provider invalid, using validated:`, {
                     storedModel: userData.model,
                     storedProvider: userData.provider,
                     validatedModel,
@@ -359,30 +248,16 @@ Use the above thread context when calling tools that require threadId, category,
 
             userModel = validatedModel;
             provider = validatedProvider;
-
-            console.log(`✅ [${requestId}] Using model/provider:`, {
-                model: userModel,
-                provider: provider
-            });
         } else {
-            console.log(`🆕 [${requestId}] Determining model/provider from client selection`);
             const requestedModel = model || userSettings.model;
             const { model: validatedModel, provider: validatedProvider } = await getValidModelAndProvider(requestedModel);
 
             userModel = validatedModel;
             provider = validatedProvider;
-
-            console.log(`✅ [${requestId}] Final model/provider selection:`, {
-                requestedModel: requestedModel || 'none',
-                model: userModel,
-                provider: provider
-            });
         }
 
         // --- Special handling for first message: Generate AI welcome response ---
         if (convoHistory.length === 1) {
-            console.log(`🎯 [${requestId}] First message detected, generating AI welcome response`);
-
             try {
                 // Add user message to conversation history first
                 convoHistory.push({ role: 'user', content: userPrompt } as Message);
@@ -402,12 +277,10 @@ Use the above thread context when calling tools that require threadId, category,
                 convoHistory.push({ role: 'assistant', content: welcomeMessage } as Message);
 
                 // Save the conversation to database
-                console.log(`💾 [${requestId}] Saving initial conversation to database`);
                 const convoHistoryWithoutSystem = convoHistory.filter(msg => msg.role !== 'system');
 
                 if (isNewThread || userData) {
                     // Thread already exists, update it
-                    console.log(`🔄 [${requestId}] Updating thread with first message`);
                     await db.update(threadsTable)
                         .set({
                             thread: { messages: convoHistoryWithoutSystem },
@@ -420,7 +293,6 @@ Use the above thread context when calling tools that require threadId, category,
                         .where(eq(threadsTable.id, current_thread_id!));
                 } else {
                     // Thread doesn't exist yet, insert it with ON CONFLICT handling
-                    console.log(`🆕 [${requestId}] Inserting new thread with first message`);
                     await db.insert(threadsTable).values({
                         id: current_thread_id,
                         title: '',
@@ -444,16 +316,13 @@ Use the above thread context when calling tools that require threadId, category,
                         }
                     });
                 }
-                console.log(`✅ [${requestId}] Initial conversation saved`);
 
                 // Generate title
-                console.log(`🏷️ [${requestId}] Generating conversation title`);
                 const convoTitle = await generateTitle({
                     convoHistory,
                     userModel: config.model,
                     provider: config.provider as string
                 });
-                console.log(`✅ [${requestId}] Title generated: ${convoTitle}`);
 
                 // Update thread with title
                 await db.update(threadsTable)
@@ -467,13 +336,6 @@ Use the above thread context when calling tools that require threadId, category,
                 const { marked } = await import('marked');
                 marked.setOptions({ breaks: true, gfm: true });
                 const htmlText = await marked.parse(welcomeMessage);
-
-                const totalDuration = Date.now() - startTime;
-                console.log(`🎉 [${requestId}] Request completed successfully:`, {
-                    totalDuration: `${totalDuration}ms`,
-                    threadId: current_thread_id,
-                    finalTitle: convoTitle
-                });
 
                 return new Response(
                     JSON.stringify({
@@ -520,46 +382,28 @@ Use the above thread context when calling tools that require threadId, category,
         }
 
         // --- Append AI response to history ---
-        console.log(`➕ [${requestId}] Adding AI response to conversation history`);
         convoHistory.push({ role: 'assistant', content: generatedText } as Message);
-        console.log(`📊 [${requestId}] Final conversation history:`, {
-            totalMessages: convoHistory.length,
-            aiResponseLength: generatedText.length
-        });
 
         // --- Generate conversation title ---
         let convoTitle = userData?.title;
         if (!convoTitle) {
-            console.log(`🏷️ [${requestId}] Generating conversation title`);
-            const titleStartTime = Date.now();
             try {
                 convoTitle = await generateTitle({
                     convoHistory,
                     userModel,
                     provider
                 });
-                const titleEndTime = Date.now();
-                const titleDuration = titleEndTime - titleStartTime;
-                console.log(`✅ [${requestId}] Title generated successfully:`, {
-                    title: convoTitle,
-                    duration: `${titleDuration}ms`
-                });
             } catch (error) {
                 console.error(`❌ [${requestId}] Error generating title:`, error);
                 convoTitle = 'Untitled Conversation';
             }
-        } else {
-            console.log(`🏷️ [${requestId}] Using existing title:`, convoTitle);
         }
 
         // --- Save updated history back to DB ---
-        console.log(`💾 [${requestId}] Saving conversation to database`);
-        const saveStartTime = Date.now();
         // Filter out system message before saving to database
         const convoHistoryWithoutSystem = convoHistory.filter(msg => msg.role !== 'system');
         try {
             if (current_thread_id && userData) {
-                console.log(`🔄 [${requestId}] Updating existing thread`);
                 await db
                     .update(threadsTable)
                     .set({
@@ -569,9 +413,7 @@ Use the above thread context when calling tools that require threadId, category,
                         isDev: (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development' ? true : false,
                     })
                     .where(eq(threadsTable.id, current_thread_id));
-                console.log(`✅ [${requestId}] Thread updated successfully`);
             } else if (current_thread_id && !userData && !isNewThread) {
-                console.log(`🆕 [${requestId}] Inserting new thread with provided ID`);
                 if (!current_thread_id) {
                     throw new Error('Thread ID is null or undefined');
                 }
@@ -587,9 +429,7 @@ Use the above thread context when calling tools that require threadId, category,
                     isPublic: isPublic,
                     isDev: (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development'
                 } as ThreadInsert);
-                console.log(`✅ [${requestId}] New thread inserted successfully`);
             } else if (isNewThread) {
-                console.log(`🔄 [${requestId}] Updating newly created thread`);
                 await db
                     .update(threadsTable)
                     .set({
@@ -599,12 +439,7 @@ Use the above thread context when calling tools that require threadId, category,
                         isDev: (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development' ? true : false,
                     })
                     .where(eq(threadsTable.id, current_thread_id));
-                console.log(`✅ [${requestId}] New thread updated successfully`);
             }
-            
-            const saveEndTime = Date.now();
-            const saveDuration = saveEndTime - saveStartTime;
-            console.log(`💾 [${requestId}] Database save completed in ${saveDuration}ms`);
         } catch (error) {
             console.error(`❌ [${requestId}] Error saving conversation to database:`, error);
             return new Response(
@@ -617,33 +452,10 @@ Use the above thread context when calling tools that require threadId, category,
         }
 
         // --- Format response ---
-        console.log(`🔧 [${requestId}] Formatting response`);
-        const formatStartTime = Date.now();
-
         // Convert markdown to HTML
         const { marked } = await import('marked');
         marked.setOptions({ breaks: true, gfm: true });
         const htmlText = await marked.parse(generatedText);
-
-        const formatEndTime = Date.now();
-        const formatDuration = formatEndTime - formatStartTime;
-
-        console.log(`✅ [${requestId}] Response formatting completed:`, {
-            duration: `${formatDuration}ms`,
-            htmlTextLength: htmlText.length
-        });
-
-        const totalDuration = Date.now() - startTime;
-        console.log(`🎉 [${requestId}] Request completed successfully:`, {
-            totalDuration: `${totalDuration}ms`,
-            threadId: current_thread_id,
-            finalTitle: convoTitle,
-            responseSize: JSON.stringify({
-                generatedText: htmlText,
-                generatedTitle: true,
-                id: current_thread_id,
-            }).length
-        });
 
         return new Response(
             JSON.stringify({
