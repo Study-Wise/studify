@@ -39,7 +39,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
             console.warn(`⚠️ [${requestId}] No category/mode specified, using default mode`);
         }
 
-        // TODO: Use category and mode for context-specific prompts
         let current_thread_id: string | undefined = thread_id;
 
         // Check authentication
