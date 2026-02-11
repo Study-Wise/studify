@@ -1,5 +1,6 @@
 @use '../../variables/globals' as *;
 @use '../../variables/tokens' as *;
+@use '../../variables/mixins' as *;
 
 .practice-questions-page {
     min-height: 60vh;
@@ -123,46 +124,6 @@
     }
 
     .empty-state {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 4rem 2rem;
-        text-align: center;
-        opacity: 0.7;
-
-        .material-symbols-outlined {
-            font-size: 4rem;
-            margin-block-end: 1rem;
-            opacity: 0.5;
-        }
-
-        h2 {
-            margin: 1rem 0 0.5rem;
-            color: var(--section-title);
-        }
-
-        p {
-            color: var(--body-text);
-            opacity: 0.8;
-            margin-block-end: 1.5rem;
-        }
-
-        .btn-primary {
-            display: inline-block;
-            background-color: var(--card-bg);
-            color: var(--body-text);
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            text-decoration: none;
-            border: 1px solid var(--card-border);
-            transition: all 0.3s $ease;
-
-            &:hover {
-                background-color: hsl(from var(--card-bg) h s calc(l - 5%));
-                translate: 0 -2px;
-                box-shadow: 0 5px 15px var(--card-shadow);
-            }
-        }
+        @include empty-state;
     }
 }

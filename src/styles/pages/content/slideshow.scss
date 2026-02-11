@@ -1,5 +1,6 @@
 @use '../../variables/globals' as *;
 @use '../../variables/tokens' as *;
+@use '../../variables/mixins' as *;
 
 .slideshow-page {
     display: flex;
@@ -7,43 +8,43 @@
     height: calc(100vh - var(--header-height, 60px));
 
     .empty-state {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+        @include empty-state;
         flex: 1;
         padding: $spacing-extra-large;
-        text-align: center;
+        opacity: 1;
         color: var(--card-text);
 
         .material-symbols-outlined {
-            font-size: 4rem;
             color: var(--muted-text);
+            opacity: 1;
             margin-block-end: $spacing-medium;
         }
 
         h2 {
             font-size: $font-size-extra-large;
-            margin-block-end: $spacing-small;
+            margin: 0 0 $spacing-small;
         }
 
         p {
             color: var(--muted-text);
+            opacity: 1;
             margin-block-end: $spacing-large;
         }
 
         .btn-primary {
-            display: inline-block;
             padding: $spacing-medium $spacing-large;
             background-color: var(--primary-color);
             color: white;
-            text-decoration: none;
+            border: none;
             border-radius: $border-radius-medium;
             font-weight: 500;
             transition: background-color $transition-base $ease;
 
             &:hover {
+                background-color: var(--primary-color);
                 filter: brightness(1.1);
+                translate: none;
+                box-shadow: none;
             }
         }
     }
