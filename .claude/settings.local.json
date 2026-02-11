@@ -53,7 +53,8 @@
       "Bash(git ls-files:*)",
       "Bash(npm ls:*)",
       "Bash(cd *)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(ls:*)"
     ],
     "deny": [],
     "ask": []
