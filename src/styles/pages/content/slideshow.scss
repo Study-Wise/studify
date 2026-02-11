@@ -9,6 +9,7 @@
 
     .empty-state {
         @include empty-state;
+
         flex: 1;
         padding: $spacing-extra-large;
         opacity: 1;
