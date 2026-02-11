@@ -115,7 +115,7 @@ export const auth = betterAuth({
         magicLink({
             sendMagicLink: async ({ email, token, url }) => {
                 // TODO: Configure email service (Resend, SendGrid, etc.)
-                console.log(`Magic link for ${email}: ${url}`);
+                // console.log(`Magic link for ${email}: ${url}`);
                 // Example with Resend:
                 // await sendEmail({
                 //   to: email,

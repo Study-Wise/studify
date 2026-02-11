@@ -64,14 +64,6 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
     // Identify client-side tools
     const clientSideToolNames = getClientSideToolNames(resolvedTools);
 
-    console.log(`🛠️ [${requestId}] AI generation setup:`, {
-        toolsCount: Object.keys(resolvedTools).length,
-        toolsList: Object.keys(resolvedTools),
-        clientSideTools: Array.from(clientSideToolNames),
-        conversationHistoryLength: convoHistory.length,
-        systemMessageIncluded: convoHistory[0]?.role === 'system'
-    });
-
     // Add system prompt to beginning of conversation history if not already present
     if (convoHistory[0]?.role !== 'system') {
         convoHistory.unshift({
@@ -93,20 +85,10 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
     const aiModel = `${provider}/${userModel}`;
 
     // AI Generation
-    console.log(`🧠 [${requestId}] Starting AI text generation with pre-built conversation history`);
     const aiStartTime = Date.now();
+    console.log(`[${requestId}] AI request: model=${aiModel}, messages=${convoHistory.length}, tools=${Object.keys(resolvedTools).length}`);
 
     try {
-        console.log(`📤 [${requestId}] Sending to AI model:`, {
-            model: userModel,
-            provider: provider,
-            messageCount: convoHistory.length,
-            firstMessageRole: convoHistory[0]?.role,
-            lastMessageRole: convoHistory[convoHistory.length - 1]?.role,
-            toolsEnabled: Object.keys(resolvedTools).length > 0,
-            maxSteps
-        });
-
         const result = await generateText({
             model: aiModel,
             messages: convoHistory,
@@ -114,40 +96,22 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
             stopWhen: stepCountIs(maxSteps),
         });
 
-        const aiEndTime = Date.now();
-        const aiDuration = aiEndTime - aiStartTime;
+        console.log(`[${requestId}] AI response received in ${Date.now() - aiStartTime}ms`);
 
         // Extract client-side actions from tool results
         const clientToolCalls: ClientToolCall[] = [];
 
-        console.log(`🔧 [${requestId}] Tool execution results:`, {
-            hasToolResults: !!result.toolResults,
-            toolResultsLength: result.toolResults?.length || 0,
-            hasToolCalls: !!result.toolCalls,
-            toolCallsLength: result.toolCalls?.length || 0,
-            hasSteps: !!result.steps,
-            stepsLength: result.steps?.length || 0,
-        });
-
         // Check tool results for actions that need client-side handling
         if (result.toolResults && result.toolResults.length > 0) {
-            console.log(`🔧 [${requestId}] Processing ${result.toolResults.length} tool results`);
             for (const toolResult of result.toolResults) {
                 try {
                     // Tool results are JSON strings, so we need to parse them
                     // Cast to access the result property which varies by type
                     const rawResult = (toolResult as unknown as { result?: unknown }).result;
-                    console.log(`🔧 [${requestId}] Raw tool result:`, {
-                        toolCallId: toolResult.toolCallId,
-                        toolName: (toolResult as any).toolName,
-                        rawResultType: typeof rawResult,
-                        rawResultPreview: typeof rawResult === 'string' ? rawResult.substring(0, 200) : JSON.stringify(rawResult)?.substring(0, 200),
-                    });
                     const resultString = rawResult as string;
                     const resultValue = typeof resultString === 'string' ? JSON.parse(resultString) : resultString;
 
                     if (resultValue && resultValue.action === 'open-content') {
-                        console.log(`✅ [${requestId}] Found open-content action in tool result`);
                         clientToolCalls.push({
                             toolName: 'open-content',
                             toolCallId: toolResult.toolCallId,
@@ -161,7 +125,6 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
                         });
                     }
                 } catch (parseError) {
-                    console.log(`⚠️ [${requestId}] Failed to parse tool result:`, parseError);
                     // Not a JSON result or not an open-content action, skip
                 }
             }
@@ -169,20 +132,13 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
 
         // Also check steps for tool results (multi-step scenarios)
         if (result.steps && result.steps.length > 0) {
-            console.log(`🔧 [${requestId}] Processing ${result.steps.length} steps for tool results`);
             for (const step of result.steps) {
                 if (step.toolResults && step.toolResults.length > 0) {
                     for (const toolResult of step.toolResults) {
                         try {
                             const rawResult = (toolResult as any).result;
-                            console.log(`🔧 [${requestId}] Step tool result:`, {
-                                toolName: (toolResult as any).toolName,
-                                rawResultType: typeof rawResult,
-                                rawResultPreview: typeof rawResult === 'string' ? rawResult.substring(0, 200) : JSON.stringify(rawResult)?.substring(0, 200),
-                            });
                             const resultValue = typeof rawResult === 'string' ? JSON.parse(rawResult) : rawResult;
                             if (resultValue && resultValue.action === 'open-content') {
-                                console.log(`✅ [${requestId}] Found open-content action in step tool result`);
                                 clientToolCalls.push({
                                     toolName: 'open-content',
                                     toolCallId: (toolResult as any).toolCallId,
@@ -218,19 +174,6 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
             }
         }
 
-        console.log(`✅ [${requestId}] AI generation completed:`, {
-            duration: `${aiDuration}ms`,
-            generatedTextLength: result.text.length,
-            generatedTextPreview: result.text.substring(0, 200) + (result.text.length > 200 ? '...' : ''),
-            clientToolCalls: clientToolCalls.length,
-            hasUsage: !!result.usage,
-            usageTokens: result.usage ? {
-                inputTokens: result.usage.inputTokens,
-                outputTokens: result.usage.outputTokens,
-                totalTokens: result.usage.totalTokens
-            } : 'none'
-        });
-
         return {
             text: result.text,
             clientToolCalls,
@@ -255,12 +198,6 @@ export async function generateTitle(options: TitleGenerationOptions): Promise<st
     const { convoHistory, userModel, provider } = options;
     const titleRequestId = nanoid();
 
-    console.log(`🏷️ [${titleRequestId}] Starting title generation:`, {
-        conversationLength: convoHistory.length,
-        model: userModel,
-        provider: provider
-    });
-
     try {
         const titleStartTime = Date.now();
         const { text: generatedText } = await generateText({
@@ -278,15 +215,7 @@ export async function generateTitle(options: TitleGenerationOptions): Promise<st
             ],
         });
 
-        const titleEndTime = Date.now();
-        const titleDuration = titleEndTime - titleStartTime;
-
-        console.log(`✅ [${titleRequestId}] Title generation completed:`, {
-            duration: `${titleDuration}ms`,
-            generatedTitle: generatedText,
-            titleLength: generatedText.length
-        });
-
+        console.log(`[${titleRequestId}] Title generated in ${Date.now() - titleStartTime}ms`);
         return generatedText;
     } catch (error) {
         console.error(`❌ [${titleRequestId}] Error in generateTitle:`, error);
@@ -307,13 +236,6 @@ export async function generateTitle(options: TitleGenerationOptions): Promise<st
 export async function paraphraseQuestion(question: string, category: string, mode: string): Promise<string> {
     const paraphraseRequestId = nanoid();
 
-    console.log(`✍️ [${paraphraseRequestId}] Starting question paraphrasing:`, {
-        originalQuestion: question,
-        questionLength: question.length,
-        category,
-        mode
-    });
-
     try {
         const paraphraseStartTime = Date.now();
         const { text: paraphrasedQuestion } = await generateText({
@@ -332,16 +254,7 @@ IMPORTANT: Only output the paraphrased question, nothing else. Do not add any ex
             ],
         });
 
-        const paraphraseEndTime = Date.now();
-        const paraphraseDuration = paraphraseEndTime - paraphraseStartTime;
-
-        console.log(`✅ [${paraphraseRequestId}] Question paraphrasing completed:`, {
-            duration: `${paraphraseDuration}ms`,
-            originalQuestion: question,
-            paraphrasedQuestion: paraphrasedQuestion,
-            paraphrasedLength: paraphrasedQuestion.length
-        });
-
+        console.log(`[${paraphraseRequestId}] Question paraphrased in ${Date.now() - paraphraseStartTime}ms`);
         return paraphrasedQuestion;
     } catch (error) {
         console.error(`❌ [${paraphraseRequestId}] Error in paraphraseQuestion:`, error);
@@ -353,7 +266,7 @@ IMPORTANT: Only output the paraphrased question, nothing else. Do not add any ex
             mode
         });
         // Return original question as fallback
-        console.log(`⚠️ [${paraphraseRequestId}] Falling back to original question`);
+        console.warn(`⚠️ [${paraphraseRequestId}] Falling back to original question`);
         return question;
     }
 }

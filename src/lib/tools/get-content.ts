@@ -80,8 +80,6 @@ const getContentTool = tool({
             }
 
             // Content doesn't exist or regenerate requested, generate it
-            console.log(`📝 ${regenerate ? 'Regenerating' : 'Generating'} ${type} for thread ${threadId}`);
-
             // Dynamically import the content generation function
             const generateModule = await import(`../content/generate/${type}.ts`);
             const generateFn = generateModule[generateFnName];
@@ -105,8 +103,6 @@ const getContentTool = tool({
             }
 
             // Each generate function saves to DB on its own
-            console.log(`✅ ${type} ${regenerate ? 'regenerated' : 'generated'} for thread ${threadId}`);
-
             return {
                 status: 'success',
                 message: regenerate ? `Regenerated ${type}` : `Generated new ${type}`,

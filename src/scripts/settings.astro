@@ -42,7 +42,6 @@ const { settings } = Astro.props;
             dependentSettings.forEach(s => {
         const sEl = document.getElementById(s.id);
         const id = `${s.id}s`;
-        console.log(setting.options)
         const options = setting.options[value][id]
         sEl.querySelectorAll('option').forEach(o => o.remove());
         Object.keys(options).forEach(o => {
@@ -79,8 +78,6 @@ const { settings } = Astro.props;
     for (const settingId of settingIds) {
             if (userSettings[settingId]) {
         const el = document.getElementById(settingId);
-        console.log(userSettings[settingId])
-
         if (el) el.value = userSettings[setting];
             }
     }

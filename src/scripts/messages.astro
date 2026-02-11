@@ -297,8 +297,6 @@ const { page, category, mode, id } = Astro.props;
                 if (url && type) {
                     const apiEndpoint = `/api/${type}/generate`;
 
-                    console.log(`🔗 Ensuring content exists and opening: ${url}`);
-
                     try {
                         // First, generate the content if it doesn't exist
                         const response = await fetch(apiEndpoint, {

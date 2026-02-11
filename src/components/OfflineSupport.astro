@@ -48,7 +48,6 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
 
     async function swRegistration() {
         const registration = await navigator.serviceWorker.register('/sw.js');
-        console.log('Service Worker registered successfully:', registration);
 
         // Handle updates
         registration.addEventListener('updatefound', () => {

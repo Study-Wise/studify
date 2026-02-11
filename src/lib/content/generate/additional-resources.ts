@@ -71,7 +71,6 @@ export async function generateResources(threadId: string, _userEmail: string | n
 
     try {
         // Search for YouTube educational videos
-        console.log('Searching for educational videos...');
         const videoResults = await exa.searchAndContents(
             `${topicSummary} educational video tutorial explanation`,
             {
@@ -90,7 +89,6 @@ export async function generateResources(threadId: string, _userEmail: string | n
         }));
 
         // Search for articles and explanations
-        console.log('Searching for articles...');
         const articleResults = await exa.searchAndContents(
             `${topicSummary} explanation guide article`,
             {
@@ -109,7 +107,6 @@ export async function generateResources(threadId: string, _userEmail: string | n
         }));
 
         // Search for tutorials and step-by-step guides
-        console.log('Searching for tutorials...');
         const tutorialResults = await exa.searchAndContents(
             `${topicSummary} tutorial step by step how to`,
             {
@@ -128,7 +125,6 @@ export async function generateResources(threadId: string, _userEmail: string | n
         }));
 
         // Search for official documentation and reference materials
-        console.log('Searching for documentation...');
         const docResults = await exa.searchAndContents(
             `${topicSummary} documentation reference official`,
             {
