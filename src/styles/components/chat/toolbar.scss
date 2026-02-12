@@ -61,12 +61,12 @@ $color: list.nth(map.get($accent-colors, primary), 1);
         }
 
         // User-valid state - only shows after user interaction
-        &:has(:user-valid) {
+        &:has(textarea:user-valid) {
             border-color: $color;
         }
 
         // User-invalid state - only shows after user interaction
-        &:has(:user-invalid) {
+        &:has(textarea:user-invalid) {
             border-color: $color-error;
             box-shadow:
                 0 2px 8px rgba(from $color-error r g b / 10%),
@@ -74,7 +74,7 @@ $color: list.nth(map.get($accent-colors, primary), 1);
         }
 
         // Disabled state - when AI is responding
-        &:has(:disabled) {
+        &:has(textarea:disabled) {
             opacity: 0.7;
             pointer-events: none;
             border-color: rgb(from var(--card-border) r g b / 30%);
