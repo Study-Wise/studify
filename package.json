@@ -19,7 +19,7 @@
         "test:nopause:chrome:headed": "npx playwright test tests/browser.test.nopause.ts --headed --browser=chromium",
         "test:nopause:firefox:headed": "npx playwright test tests/browser.test.nopause.ts --headed --browser=firefox",
         "test:nopause:safari:headed": "npx playwright test tests/browser.test.nopause.ts --headed --browser=webkit",
-        "check": "astro check && stylelint \"src/**/*.scss\"",
+        "check": "astro check && stylelint \"src/**/*.scss\" && astro build",
         "stylelint:fix": "stylelint \"src/**/*.scss\" --fix"
     },
     "devDependencies": {
