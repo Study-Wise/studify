@@ -5,7 +5,7 @@ import UserButton from './UserButton.astro';
 import { hasIcon,  getIcon } from '@/lib/google-icons';
 const { pages, pTitle, mode } = Astro.props;
 ---
-<!-- Navigation -->
+{/* Navigation */}
 <nav class:list={['header-nav', mode]} role="navigation" aria-label="Main navigation" id="main-navigation">
     {pages.filter((page: { name: string; path: string; hiddenFromNav: boolean }) => !page.hiddenFromNav).map((page: { name: string; path: string; hiddenFromNav: boolean }) => {
         const hasAnIcon = hasIcon(page.name.toLowerCase().replace(/\s+/g, '_'));
