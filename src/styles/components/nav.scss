@@ -8,7 +8,15 @@
     flex-wrap: wrap;
 
     .nav-btn {
-        transition: all $transition-fast $ease; 
+        display: flex;
+        align-items: center;
+        gap: 0.25em;
+        text-decoration: none;
+        padding: 8px 12px;
+        border-radius: $border-radius-medium;
+        font-weight: $font-weight-medium;
+        white-space: nowrap;
+        transition: all $transition-fast $ease;
 
         &:hover, &:focus-visible, &.active {
             color: var(--header-text);
@@ -38,21 +46,8 @@
             color: $section-title-light;
         }
     }
-  
-    .nav-btn {
-        display: flex;
-        align-items: center;
-        gap: 0.25em;
-        text-decoration: none;
-        padding: 8px 12px;
-        border-radius: $border-radius-medium;
-        font-weight: $font-weight-medium;
-        white-space: nowrap;
-    }
-}
-  
-@media (width <= 768px) {
-    .header-nav {
+
+    @media (width <= 768px) {
         gap: 10px;
 
         .nav-btn {
@@ -60,4 +55,4 @@
             font-size: 0.95rem;
         }
     }
-}    
+}

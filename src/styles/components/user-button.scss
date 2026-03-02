@@ -32,6 +32,12 @@
         text-overflow: ellipsis;
         white-space: nowrap;
     }
+
+    @media (prefers-color-scheme: dark) {
+        &:hover {
+            background-color: rgb(255 255 255 / 10%);
+        }
+    }
 }
 
 .user-menu {
@@ -49,6 +55,11 @@
 
     &[hidden] {
         display: none;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        background: #1f2937;
+        border-color: #374151;
     }
 }
 
@@ -79,34 +90,20 @@
             background-color: #fef2f2;
         }
     }
-}
 
-// Dark mode support
-@media (prefers-color-scheme: dark) {
-    .user-button {
+    @media (prefers-color-scheme: dark) {
+        color: #e5e7eb;
+
         &:hover {
-            background-color: rgb(255 255 255 / 10%);
+            background-color: #374151;
         }
-    }
 
-    .user-menu {
-        background: #1f2937;
-        border-color: #374151;
-
-        .user-menu-item {
-            color: #e5e7eb;
+        &.signout {
+            color: #f87171;
+            border-top-color: #374151;
 
             &:hover {
-                background-color: #374151;
-            }
-
-            &.signout {
-                color: #f87171;
-                border-top-color: #374151;
-
-                &:hover {
-                    background-color: #450a0a;
-                }
+                background-color: #450a0a;
             }
         }
     }

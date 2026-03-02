@@ -7,6 +7,14 @@
     grid-template-rows: 1fr;
     grid-template-columns: 1fr;
 
+    // Responsive behavior
+    @media (width <= 1024px) {
+        width: 0;
+        min-width: 0;
+        overflow: hidden;
+        border-right: none;
+    }
+
     .chat-sidebar-content.left {
         .upload-button {
             display: flex;
@@ -133,15 +141,5 @@
                 }
             }
         }
-    }
-}
-
-// Responsive behavior
-@media (width <= 1024px) {
-    .chat-sidebar.left {
-        width: 0;
-        min-width: 0;
-        overflow: hidden;
-        border-right: none;
     }
 }

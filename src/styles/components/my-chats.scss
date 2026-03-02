@@ -190,11 +190,9 @@
             }
         }
     }
-}
 
-// Responsive design
-@media (width <= 768px) {
-    .my-chats-container {
+    // Responsive design
+    @media (width <= 768px) {
         padding: $spacing-large $spacing-small;
 
         .page-header {
