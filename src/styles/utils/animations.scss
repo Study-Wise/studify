@@ -146,6 +146,43 @@ $transition-bounce: 500ms;
     }
 }
 
+// Float animation (gentle up-down for decorative elements)
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+// Slide in from top
+@keyframes slide-in-down {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// Slide in from bottom
+@keyframes slide-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 // Accessibility
 // Respect user's motion preferences
 @media (prefers-reduced-motion: reduce) {

@@ -9,6 +9,12 @@
         box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
         overflow: hidden;
     }
+
+    @media (prefers-color-scheme: dark) {
+        article {
+            background: var(--background-secondary, #1f2937);
+        }
+    }
 }
 
 .question-content,
@@ -28,6 +34,10 @@
 
     @media (width <= 768px) {
         font-size: 1.5rem;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        color: var(--text-primary, #f9fafb);
     }
 }
 
@@ -201,12 +211,40 @@
         padding: 1.5rem;
         font-size: 1rem;
     }
+
+    @media (prefers-color-scheme: dark) {
+        color: var(--text-primary, #f9fafb);
+
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-primary, #f9fafb);
+        }
+
+        code {
+            background: var(--code-background, #374151);
+        }
+
+        pre {
+            background: var(--code-background, #374151);
+        }
+
+        blockquote {
+            background: var(--blockquote-background, #374151);
+        }
+
+        table th {
+            background: var(--table-header-background, #374151);
+        }
+    }
 }
 
 .question-footer {
     padding: 2rem;
     border-top: 1px solid var(--border-color, #e5e7eb);
     background: var(--background-tertiary, #f9fafb);
+
+    @media (prefers-color-scheme: dark) {
+        background: var(--background-tertiary, #111827);
+    }
 }
 
 .question-helpful {
@@ -245,6 +283,12 @@
     p {
         color: var(--text-secondary, #6b7280);
         margin-bottom: 1rem;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        h2 {
+            color: var(--text-primary, #f9fafb);
+        }
     }
 }
 
@@ -292,6 +336,12 @@
     .btn-primary {
         margin-top: 1.5rem;
     }
+
+    @media (prefers-color-scheme: dark) {
+        h2 {
+            color: var(--text-primary, #f9fafb);
+        }
+    }
 }
 
 .btn-primary,
@@ -325,52 +375,8 @@
         background: var(--secondary-hover, #e5e7eb);
         border-color: var(--border-hover, #d1d5db);
     }
-}
 
-@media (prefers-color-scheme: dark) {
-    .question-page {
-        article {
-            background: var(--background-secondary, #1f2937);
-        }
-    }
-
-    .question-question,
-    .question-answer h1,
-    .question-answer h2,
-    .question-answer h3,
-    .question-answer h4,
-    .question-answer h5,
-    .question-answer h6,
-    .question-related h2,
-    .empty-state h2 {
-        color: var(--text-primary, #f9fafb);
-    }
-
-    .question-answer {
-        color: var(--text-primary, #f9fafb);
-
-        code {
-            background: var(--code-background, #374151);
-        }
-
-        pre {
-            background: var(--code-background, #374151);
-        }
-
-        blockquote {
-            background: var(--blockquote-background, #374151);
-        }
-
-        table th {
-            background: var(--table-header-background, #374151);
-        }
-    }
-
-    .question-footer {
-        background: var(--background-tertiary, #111827);
-    }
-
-    .btn-secondary {
+    @media (prefers-color-scheme: dark) {
         background: var(--secondary-color, #374151);
         color: var(--text-primary, #f9fafb);
     }

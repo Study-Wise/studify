@@ -6,26 +6,30 @@
 @use 'sass:map';
 
 @each $variant, $colors in $accent-colors {
-    .bg-#{$variant}:not(.btn.tab) {
-        --bg-clr-1: #{list.nth($colors, 1)};
-        --bg-clr-2: #{list.nth($colors, 2)};
+    .bg-#{$variant} {
+        &:not(.btn.tab) {
+            --bg-clr-1: #{list.nth($colors, 1)};
+            --bg-clr-2: #{list.nth($colors, 2)};
 
-        background-color: var(--background, list.nth($colors, 1));
+            background-color: var(--background, list.nth($colors, 1));
 
-        &:hover {
-            background-color: var(--background, list.nth($colors, 2));
+            &:hover {
+                background-color: var(--background, list.nth($colors, 2));
+            }
+        }
+
+        &.btn.tab {
+            --bg-clr-1: #{list.nth($colors, 1)};
+            --bg-clr-2: #{list.nth($colors, 2)};
+
+            color: var(--background, list.nth($colors, 1));
+
+            &:hover {
+                color: var(--background, list.nth($colors, 2));
+            }
         }
     }
-    .bg-#{$variant}.btn.tab {
-        --bg-clr-1: #{list.nth($colors, 1)};
-        --bg-clr-2: #{list.nth($colors, 2)};
 
-        color: var(--background, list.nth($colors, 1));
-
-        &:hover {
-            color: var(--background, list.nth($colors, 2));
-        }
-    }
     .clr-#{$variant} {
         --text-clr-1: #{list.nth($colors, 3)};
         --text-clr-2: #{list.nth($colors, 4)};
@@ -47,6 +51,7 @@
             box-shadow: var(--box-shadow, 0 1px 0 0) var(--body-bg, var(--background, color.adjust(list.nth($colors, 2), $alpha: -0.5)));
         }
     }
+
     .ts-#{$variant} {
         --text-shadow-clr-1: #{list.nth($colors, 3)};
         --text-shadow-clr-2: #{list.nth($colors, 4)};
