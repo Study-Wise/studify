@@ -42,6 +42,26 @@
             translate: 0 0;
         }
     }
+
+    // Dark mode support
+    @media (prefers-color-scheme: dark) {
+        background-color: var(--card-background-dark, #1f2937);
+        color: var(--text-color-dark, #f3f4f6);
+
+        .dialog-header {
+            border-block-end-color: var(--border-color-dark, #374151);
+        }
+
+        .dialog-message {
+            color: var(--text-color-secondary-dark, #d1d5db);
+        }
+    }
+
+    // Responsive design
+    @media (width <= 640px) {
+        width: 95%;
+        max-width: none;
+    }
 }
 
 .dialog-content {
@@ -106,6 +126,11 @@
             }
         }
     }
+
+    @media (width <= 640px) {
+        padding: $spacing-medium + 0.25rem;
+        gap: $spacing-medium + 0.25rem;
+    }
 }
 
 .dialog-header {
@@ -126,6 +151,10 @@
     font-size: $font-size-extra-large;
     font-weight: $font-weight-semibold;
     flex: 1;
+
+    @media (width <= 640px) {
+        font-size: $font-size-large;
+    }
 }
 
 .dialog-body {
@@ -137,6 +166,10 @@
     font-size: $font-size-base;
     line-height: $line-height-relaxed;
     color: var(--text-color-secondary, #666);
+
+    @media (width <= 640px) {
+        font-size: 0.9375rem;
+    }
 }
 
 .dialog-footer {
@@ -172,42 +205,5 @@
 
     &:hover {
         background-color: $color-info-hover;
-    }
-}
-
-// Dark mode support
-@media (prefers-color-scheme: dark) {
-    .app-dialog {
-        background-color: var(--card-background-dark, #1f2937);
-        color: var(--text-color-dark, #f3f4f6);
-
-        .dialog-header {
-            border-block-end-color: var(--border-color-dark, #374151);
-        }
-
-        .dialog-message {
-            color: var(--text-color-secondary-dark, #d1d5db);
-        }
-    }
-}
-
-// Responsive design
-@media (width <= 640px) {
-    .app-dialog {
-        width: 95%;
-        max-width: none;
-    }
-
-    .dialog-content {
-        padding: $spacing-medium + 0.25rem;
-        gap: $spacing-medium + 0.25rem;
-    }
-
-    .dialog-title {
-        font-size: $font-size-large;
-    }
-
-    .dialog-message {
-        font-size: 0.9375rem;
     }
 }

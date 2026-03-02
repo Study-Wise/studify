@@ -46,10 +46,7 @@
             scale: 0.98;
         }
     }
-}
 
-/* Improve touch targets */
-@media (hover: none) and (pointer: coarse) {
     button, .nav-btn, input, select, textarea {
         min-height: 1rem;
         min-width: 1rem;

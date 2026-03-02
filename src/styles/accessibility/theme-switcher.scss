@@ -96,12 +96,9 @@
         aspect-ratio: 1;
         transition: scale $transition-slower $ease-spring;
     }
-}
 
-
-/* Mobile responsiveness for contrast toggle */
-@media (width <= 768px) {
-    .theme-switcher {
+    /* Mobile responsiveness for contrast toggle */
+    @media (width <= 768px) {
         padding: $spacing-small $spacing-small;
         font-size: $font-size-extra-small;
 
@@ -109,11 +106,9 @@
             font-size: $font-size-large;
         }
     }
-}
 
-/* Hide toggle in print mode */
-@media print {
-    .theme-switcher {
+    /* Hide toggle in print mode */
+    @media print {
         display: none !important;
     }
 }
