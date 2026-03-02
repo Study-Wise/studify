@@ -12,11 +12,11 @@
     align-items: center;
     height: 100%;
     padding: $spacing-extra-large;
-    
+
     .message.assistant {
         max-width: 500px;
         width: 100%;
-        
+
         .message-content {
             $brdr: 15px;
 
@@ -39,7 +39,7 @@
                 z-index: -1;
                 border-radius: #{$brdr - $space};
             }
-            
+
             .unauthorized-content {
                 h3 {
                     color: var(--section-title);
@@ -52,7 +52,7 @@
                     margin-block-end: $spacing-large;
                     line-height: $line-height-relaxed;
                 }
-                
+
                 .btn-primary {
                     display: inline-block;
                     background-color: var(--card-bg);
@@ -98,7 +98,7 @@ footer, .chat-toolbar {
     padding: $spacing-medium + 0.25rem $spacing-large;
     border-block-end: 1px solid rgb(from var(--section-title) r g b / 10%);
     background: linear-gradient($gradient-angle, list.nth(map.get($accent-colors, primary), 1), list.nth(map.get($accent-colors, primary), 2));
-    
+
     --bd: blur(10px);
 
     -webkit-backdrop-filter: var(--bd);
@@ -204,6 +204,28 @@ footer, .chat-toolbar {
     max-height: 100%;
     overflow: hidden;
     position: relative;
+
+    // Responsive design for tablets
+    @media (width <= 1200px) {
+        grid-template-columns: auto 1fr;
+
+        .chat-right-sidebar {
+            display: none;
+        }
+    }
+
+    // Responsive design for mobile
+    @media (width <= 768px) {
+        grid-template-columns: 1fr;
+
+        .chat-left-sidebar {
+            display: none;
+        }
+
+        .chat-right-sidebar {
+            display: none;
+        }
+    }
 }
 
 /* Card Container */
@@ -213,6 +235,9 @@ footer, .chat-toolbar {
     grid-template-rows: 1fr auto;
     min-height: 0; // Critical for grid items to respect overflow
 
+    @media (width <= 768px) {
+        padding: $spacing-large + 0.25rem;
+    }
 }
 
 .chat-messages {
@@ -385,6 +410,10 @@ footer, .chat-toolbar {
                 }
             }
         }
+
+        @media (width <= 768px) {
+            max-width: 100%;
+        }
     }
 
     // Typing Indicator (Phase 3)
@@ -460,39 +489,5 @@ footer, .chat-toolbar {
         opacity: 1;
         translate: 0 0;
         scale: 1;
-    }
-}
-
-// Responsive design for tablets
-@media (width <= 1200px) {
-    .chat-container {
-        grid-template-columns: auto 1fr;
-
-        .chat-right-sidebar {
-            display: none;
-        }
-    }
-}
-
-// Responsive design for mobile
-@media (width <= 768px) {
-    .chat-container {
-        grid-template-columns: 1fr;
-
-        .chat-left-sidebar {
-            display: none;
-        }
-
-        .chat-right-sidebar {
-            display: none;
-        }
-    }
-
-    .chat-section {
-        padding: $spacing-large + 0.25rem;
-    }
-
-    .chat-messages .message {
-        max-width: 100%;
     }
 }

@@ -12,6 +12,10 @@
     justify-content: center;
     padding: $spacing-large;
     background: var(--body-bg);
+
+    @media (width <= 640px) {
+        padding: $spacing-medium;
+    }
 }
 
 // Auth container and card
@@ -42,6 +46,10 @@
     margin: 0 0 $spacing-extra-small;
     color: var(--card-text);
     line-height: $line-height-tight;
+
+    @media (width <= 640px) {
+        font-size: $font-size-2x-large;
+    }
 }
 
 .auth-subtitle {
@@ -50,6 +58,10 @@
     margin: 0 0 $spacing-extra-large;
     color: hsl(from var(--card-text) h s l / 60%);
     line-height: $line-height-normal;
+
+    @media (width <= 640px) {
+        font-size: $font-size-small;
+    }
 }
 
 // Form elements
@@ -288,21 +300,6 @@
 
     100% {
         transform: rotate(360deg);
-    }
-}
-
-// Responsive adjustments
-@media (width <= 640px) {
-    .auth-page {
-        padding: $spacing-medium;
-    }
-
-    .auth-title {
-        font-size: $font-size-2x-large;
-    }
-
-    .auth-subtitle {
-        font-size: $font-size-small;
     }
 }
 

@@ -208,10 +208,8 @@
             }
         }
     }
-}
 
-@media (width <= 768px) {
-    .resources-page {
+    @media (width <= 768px) {
         padding: 1rem;
 
         .resources-header {

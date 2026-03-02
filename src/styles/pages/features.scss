@@ -53,11 +53,11 @@
     ol {
         margin-block-end: $spacing-medium;
         padding-inline-start: $spacing-large;
-    }
 
-    ol li {
-        color: var(--text-secondary);
-        margin-block-end: $spacing-extra-small;
-        line-height: $line-height-relaxed;
+        li {
+            color: var(--text-secondary);
+            margin-block-end: $spacing-extra-small;
+            line-height: $line-height-relaxed;
+        }
     }
 }

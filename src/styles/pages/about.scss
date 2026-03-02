@@ -3,91 +3,95 @@
 
 // Styles specific to about.astro page
 
-.about-section .about-content {
-    display: flex;
-    flex-wrap: wrap;
-    gap: $spacing-extra-large;
-    align-items: flex-start;
-    justify-content: start;
-}
+.about-section  {
+    .profile-picture {
+        flex-shrink: 0;
+        width: clamp(120px, 20vw, 150px);
+        height: clamp(120px, 20vw, 150px);
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid var(--profile-border);
+        box-shadow: 0 2px 5px var(--profile-shadow);
+    }
 
-.about-section .profile-picture {
-    flex-shrink: 0;
-    width: clamp(120px, 20vw, 150px);
-    height: clamp(120px, 20vw, 150px);
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid var(--profile-border);
-    box-shadow: 0 2px 5px var(--profile-shadow);
-}
+    .image-intro {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: end;
 
-.about-section .image-intro {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: end;
+        // text-align: center;
+        gap: $spacing-medium;
 
-    // text-align: center;
-    gap: $spacing-medium;
+        // flex-wrap: wrap;
 
-    // flex-wrap: wrap;
+        @media (width < 500px) {
+            flex-wrap: wrap;
 
-    @media (width < 500px) {
-        flex-wrap: wrap;
+            p {
+                text-align: center;
+            }
+        }
+
+        $lh: 1.5;
+
+        img {
+            height: #{2.5lh * $lh};
+            width: #{2.5lh * $lh};
+            aspect-ratio: 1;
+        }
 
         p {
-            text-align: center;
+            line-height: $lh;
+            font-size: 2em;
         }
     }
 
-    $lh: 1.5;
-
-    img {
-        height: #{2.5lh * $lh};
-        width: #{2.5lh * $lh};
-        aspect-ratio: 1;
+    .about-text {
+        flex-grow: 1;
+        min-width: min(300px, 100%);
     }
 
-    p {
-        line-height: $lh;
-        font-size: 2em;
-    }
-}
+    .about-content {
+        display: flex;
+        flex-wrap: wrap;
+        gap: $spacing-extra-large;
+        align-items: flex-start;
+        justify-content: start;
 
-.about-section .about-text {
-    flex-grow: 1;
-    min-width: min(300px, 100%);
-}
+        p {
+            &:not(.image-intro p) {
+                &:not(:last-child) {
+                    margin-block-end: 1.2em;
+                }
 
-.about-section .about-content p:not(.image-intro p) {
-    &:not(:last-child) {
-        margin-block-end: 1.2em;
-    }
+                font-size: 1.05em;
 
-    font-size: 1.05em;
+                &:has(.material-symbols-outlined) {
+                    &, * {
+                        vertical-align: middle;
+                    }
+                }
+            }
 
-    &:has(.material-symbols-outlined) {
-        &, * {
-            vertical-align: middle;
+            a {
+                color: var(--about-link);
+                text-decoration: none;
+                font-weight: $font-weight-medium;
+
+                .social-icon {
+                    height: 1em;
+                    width: auto;
+                }
+
+                .material-symbols-outlined {
+                    font-size: 1.2em;
+                }
+
+                &:hover .text {
+                    text-decoration: underline;
+                }
+            }
         }
     }
-}
-
-.about-section .about-content p a {
-    color: var(--about-link);
-    text-decoration: none;
-    font-weight: $font-weight-medium;
-}
-
-.about-section .about-content p a .social-icon {
-    height: 1em;
-    width: auto;
-}
-
-.about-section .about-content p a .material-symbols-outlined {
-    font-size: 1.2em;
-}
-
-.about-section .about-content p a:hover .text {
-    text-decoration: underline;
 }

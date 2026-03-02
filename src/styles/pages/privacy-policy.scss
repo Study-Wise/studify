@@ -95,10 +95,8 @@
             font-weight: $font-weight-medium;
         }
     }
-}
 
-@media (width <= 768px) {
-    .legal-content {
+    @media (width <= 768px) {
         h1 {
             font-size: $spacing-extra-large;
         }
