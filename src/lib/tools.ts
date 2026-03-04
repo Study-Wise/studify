@@ -1,5 +1,5 @@
 import type { Tool } from 'ai';
-import type { ToolModule } from './types';
+import type { ToolModule } from '@/lib/ai-service';
 
 const tools: Record<string, Tool> = {};
 
