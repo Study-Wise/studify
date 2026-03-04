@@ -4,7 +4,7 @@ import { threadsTable } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { userFilesUpload } from '@/lib/uploadthing';
 import { extractTextFromFile } from '@/lib/file-processing';
-import type { UploadedFile } from '@/lib/types';
+import type { UploadedFile } from '@/lib/threads';
 
 export const POST: APIRoute = async ({ request }) => {
     try {

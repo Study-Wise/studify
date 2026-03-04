@@ -2,7 +2,10 @@ import { db } from '@/db/initialize';
 import { eq, sql } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
 import { getContentTypesList } from '../get-types';
-import type { InfographicData, FlashcardData, SlideshowData, JSONValue } from '@/lib/types';
+import type { JSONValue } from '@/lib/threads';
+import type { InfographicData } from './infographic';
+import type { FlashcardData } from './flashcards';
+import type { SlideshowData } from './slideshow';
 
 export interface ThreadContentStatus {
     hasReferenceSheet: boolean;
@@ -31,22 +34,12 @@ export interface ThreadContent {
     'summary'?: string;
 }
 
-/**
- * Mapping between content type IDs (kebab-case) and their status keys (camelCase)
- */
-const typeToKeyMap: Record<string, keyof ThreadContentStatus> = {
-    'reference-sheet': 'hasReferenceSheet',
-    'study-guide': 'hasStudyGuide',
-    'infographic': 'hasInfographic',
-    'webpage': 'hasWebpage',
-    'mind-map': 'hasMindMap',
-    'additional-resources': 'hasAdditionalResources',
-    'flashcards': 'hasFlashcard',
-    'practice-questions': 'hasPracticeQuestions',
-    'slideshow': 'hasSlideshow',
-    'summary': 'hasSummary',
-};
-
+// Mapping between content type IDs (kebab-case) and their status keys (camelCase)
+function typeToKey(type: string): keyof ThreadContentStatus | null {
+    const replacedType = type.replace(/-([a-z])/g, (match, p1) => p1.toUpperCase());
+    const key = `has${replacedType.charAt(0).toUpperCase()}${replacedType.slice(1)}` as keyof ThreadContentStatus;
+    return key in ({} as ThreadContentStatus) ? key : null;
+}
 export async function getThreadContentStatus(
     threadId: string,
     isAuthorized: boolean,
@@ -77,7 +70,7 @@ export async function getThreadContentStatus(
                 const contentTypes = getContentTypesList();
                 
                 contentTypes.forEach(type => {
-                    const key = typeToKeyMap[type];
+                    const key = typeToKey[type];
                     if (!key) return;
                     
                     // Check if content exists for this type in the JSON column

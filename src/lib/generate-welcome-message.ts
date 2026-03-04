@@ -6,7 +6,8 @@
 
 import { generateAIResponse } from '@/lib/ai-service';
 import config from '@/lib/config';
-import type { Message, ToolRecord } from '@/lib/types';
+import type { Message } from '@/lib/threads';
+import type { ToolRecord } from '@/lib/ai-service';
 
 export interface GenerateWelcomeMessageParams {
     systemPrompt: string;

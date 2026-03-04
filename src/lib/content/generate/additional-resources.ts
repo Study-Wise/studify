@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
 import type { ThreadData, UploadedFile } from '@/lib/threads';
 import Exa from 'exa-js';
-import { saveContent } from '../latest';
+import { saveContent } from '@/lib/content/latest';
 
 const exa = new Exa(import.meta.env.EXA_SEARCH_API_KEY || process.env.EXA_SEARCH_API_KEY);
 

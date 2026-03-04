@@ -6,8 +6,8 @@ import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
 import type { ThreadData, UploadedFile } from '@/lib/threads';
-import type { FlashcardData } from '../latest/flashcards';
-import { saveContent } from '../latest';
+import type { FlashcardData } from '@/lib/content/latest/flashcards';
+import { saveContent } from '@/lib/content/latest';
 
 const flashcardSchema = z.object({
     text: z.string().describe('A brief markdown summary/introduction about the flashcards topic'),

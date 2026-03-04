@@ -14,8 +14,8 @@ import { buildContentSystemPrompt } from '@/lib/content';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
-import type { ThreadData, UploadedFile, JSONValue } from '@/lib/types';
-import { saveContent } from '../latest';
+import type { ThreadData, UploadedFile, JSONValue } from '@/lib/threads';
+import { saveContent } from '@/lib/content/latest';
 
 export interface MarkedToken {
     type: string;

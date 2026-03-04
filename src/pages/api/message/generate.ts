@@ -16,7 +16,8 @@ import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
 
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
-import type { Mode, ThreadData, Message } from '@/lib/types';
+import type { Mode } from '@/lib/modes';
+import type { ThreadData, Message } from '@/lib/threads';
 
 import { isValidEmail } from '@/lib/validation';
 import { isUserAdmin } from '@/lib/auth/admin';

@@ -18,7 +18,7 @@ import { checkThreadAccess } from '@/lib/auth/checkThreadAccess';
 
 import { checkForOneMessage } from '@/lib/check-for-one-message';
 import categories from '@/lib/modes';
-import type { Message } from '@/lib/types';
+import type { Message } from '@/lib/threads';
 
 let { category, mode, id } = Astro.params || { category: '', mode: '', id: '' };
 
