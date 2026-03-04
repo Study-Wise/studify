@@ -5,7 +5,7 @@ import fm from 'front-matter';
 import cheerio from 'cheerio';
 import highlight from 'highlight.js';
 import CryptoJS from 'crypto-js';
-import _ from 'lodash';
+import lodash from 'lodash';
 
 import config from '@/lib/config';
 import { generateAIResponse } from '@/lib/ai-service';
@@ -14,13 +14,13 @@ import { buildContentSystemPrompt } from '@/lib/content';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
-import type { ThreadData, UploadedFile } from '@/lib/types';
+import type { ThreadData, UploadedFile, MarkedToken } from '@/lib/types';
 import { saveContent } from '../latest';
 
 // Use createRequire for certain ones only - project has marked v15 but slideshow-generator needs v0.3
-const require_ = createRequire(import.meta.url);
-const marked = require_('slideshow-generator/node_modules/marked');
-const jade = require_('slideshow-generator/node_modules/jade');
+const node_require = createRequire(import.meta.url);
+const marked = node_require('slideshow-generator/node_modules/marked');
+const jade = node_require('slideshow-generator/node_modules/jade');
 
 function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
     const filesWithText = uploadedFiles.filter(f => f.extractedText);
@@ -35,20 +35,21 @@ function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
 
 function markdownToSlideshowHTML(markdown: string): string {
     const content = fm(markdown);
-    const tokens = marked.lexer(content.body, {
+    const tokens = (marked.lexer(content.body, {
         gfm: true, tables: true, breaks: true,
         pedantic: true, sanitize: true, smartLists: true, smartypants: true
-    });
+    }) as MarkedToken[]);
 
     let title: string | undefined;
-    const pages: { tokens?: any[]; html?: string }[] = [];
+    const pages: { tokens?: MarkedToken[]; html?: string }[] = [];
 
-    tokens.forEach((token: any) => {
+    tokens.forEach((token: MarkedToken) => {
         if (token.type === 'heading' || pages.length === 0) {
             pages.push({ tokens: [] });
         }
         if (!title) {
-            const t: any = [token]; t.links = {};
+            const t: MarkedToken[] = [token]; 
+            (t as unknown as { links: Record<string, unknown> }).links = {};
             const h = marked.parser(t);
             const $ = cheerio.load(h);
             title = $('*').text();
@@ -59,7 +60,7 @@ function markdownToSlideshowHTML(markdown: string): string {
     pages.forEach((page) => {
         const renderer = new marked.Renderer();
         renderer.heading = (text: string, level: number) => `<h${level}>${text}</h${level}>`;
-        const pt: any = _.cloneDeep(page.tokens);
+        const pt = lodash.cloneDeep(page.tokens) as (MarkedToken[] & { links?: Record<string, unknown> });
         pt.links = {};
         page.html = marked.parser(pt, {
             renderer,
@@ -69,7 +70,7 @@ function markdownToSlideshowHTML(markdown: string): string {
     });
 
     const data = { attributes: content.attributes, title, pages };
-    const jadePath = join(dirname(require_.resolve('slideshow-generator/package.json')), 'src', 'index.jade');
+    const jadePath = join(dirname(node_require.resolve('slideshow-generator/package.json')), 'src', 'index.jade');
     const fn = jade.compileFile(jadePath);
     const jsonContent = JSON.stringify(data);
     const encrypted = CryptoJS.AES.encrypt(jsonContent, '-').toString();

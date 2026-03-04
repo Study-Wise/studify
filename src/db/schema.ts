@@ -6,7 +6,7 @@ import type { ThreadContent, ThreadData, UploadedFile } from '@/lib/types';
 const threadsTable = pgTable('threads', {
     id: text('id').primaryKey(),
     title: varchar({ length: 255 }).notNull(),
-    thread: jsonb('thread').$type<ThreadData>().notNull().default({} as ThreadData),
+    thread: jsonb('thread').$type<ThreadData | string>().notNull().default({} as ThreadData),
     uploadedFiles: jsonb('uploadedFiles').$type<UploadedFile[]>().notNull().default([]),
     content: jsonb('content').$type<ThreadContent>().notNull().default({}),
     email: text('email'),

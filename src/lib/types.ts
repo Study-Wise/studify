@@ -14,11 +14,17 @@ export interface Mode {
     name: ModeName;
     description: string;
     icon?: string;
-    prompt?: Promise<any>;
-    tools?: Record<string, Tool>;
+    prompt?: Promise<string>;
+    tools?: ToolRecord;
     show?: true | false;
     desmos?: boolean;
 }
+
+export interface ToolModule {
+    default: Tool & { ready?: boolean; clientSide?: boolean };
+}
+
+export type ToolRecord = Record<string, Tool & { clientSide?: boolean }>;
 
 export interface ReferenceSheetResult {
     content: string | null;
@@ -57,6 +63,7 @@ export interface SlideshowData {
 }
 
 export interface ThreadContent {
+    [key: string]: string | InfographicData | FlashcardData | SlideshowData | undefined;
     'study-guide'?: string;
     'reference-sheet'?: string;
     'infographic'?: InfographicData;
@@ -67,7 +74,11 @@ export interface ThreadContent {
     'practice-questions'?: string;
     'slideshow'?: SlideshowData;
     'summary'?: string;
-    [key: string]: any;
+}
+
+export interface MarkedToken {
+    type: string;
+    [key: string]: string | number | boolean | undefined | object | unknown;
 }
 
 export interface FlashcardResult {
@@ -98,7 +109,7 @@ export interface GenerateWelcomeMessageParams {
     convoHistory: Message[];
     userModel: string;
     provider: string;
-    tools: Record<string, any>;
+    tools: ToolRecord;
     requestId: string;
 }
 
@@ -196,7 +207,7 @@ export interface AIGenerationOptions {
     convoHistory: Message[];
     userModel: string;
     provider: string;
-    tools?: Record<string, any>;
+    tools?: ToolRecord;
     excludeTools?: string[];
     maxSteps?: number;
     requestId?: string;
@@ -267,11 +278,18 @@ export interface ExtendedUser extends BetterAuthUser {
 export interface ClientToolCall {
     toolName: string;
     toolCallId: string;
-    args: Record<string, unknown>;
+    args: Record<string, string | number | boolean | undefined>;
 }
 
 // AI generation result with potential client-side tool calls
 export interface AIGenerationResult {
     text: string;
     clientToolCalls: ClientToolCall[];
+}
+
+export interface AuthUtils {
+    showError: (message: string) => void;
+    hideError: () => void;
+    getRedirectUrl: () => void;
+    callbackURL: string;
 }

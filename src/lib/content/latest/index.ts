@@ -1,4 +1,4 @@
-import type { ThreadContentStatus } from '@/lib/types';
+import type { ThreadContentStatus, ThreadContent, InfographicData, FlashcardData, SlideshowData } from '@/lib/types';
 import { db } from '@/db/initialize';
 import { eq, sql } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
@@ -13,7 +13,7 @@ export async function getThreadContentStatus(
     
     // Default status with all known types set to false
     const contentTypes = getContentTypesList();
-    const status: any = {};
+    const status: Record<string, boolean> = {};
     
     // Initialize status with camelCase has* keys
     contentTypes.forEach(type => {
@@ -27,25 +27,25 @@ export async function getThreadContentStatus(
             const threads = await db.select({ content: threadsTable.content }).from(threadsTable).where(eq(threadsTable.id, threadId));
             
             if (threads.length > 0) {
-                const content = (threads[0].content as any) || {};
+                const content = threads[0].content || {};
                 
                 contentTypes.forEach(type => {
                     const camelCase = type.split('-').map((part, i) => i === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1)).join('');
                     const key = `has${camelCase.charAt(0).toUpperCase()}${camelCase.slice(1)}`;
                     
                     // Check if content exists for this type in the JSON column
-                    const contentValue = content[type];
+                    const contentValue = content[type as keyof ThreadContent];
                     if (contentValue) {
                         // For special types like infographic or flashcards that might be objects
-                        if (typeof contentValue === 'object') {
+                        if (typeof contentValue === 'object' && contentValue !== null) {
                             if (type === 'infographic') {
-                                status[key] = !!contentValue.imageUrl;
+                                status[key] = !!(contentValue as InfographicData).imageUrl;
                             } else if (type === 'flashcards') {
-                                status[key] = !!contentValue.questions;
+                                status[key] = !!(contentValue as FlashcardData).questions;
                             } else if (type === 'slideshow') {
-                                status[key] = !!contentValue.content;
+                                status[key] = !!(contentValue as SlideshowData).content;
                             } else {
-                                status[key] = Object.keys(contentValue).length > 0;
+                                status[key] = Object.keys(contentValue as object).length > 0;
                             }
                         } else {
                             status[key] = !!contentValue;
@@ -64,12 +64,12 @@ export async function getThreadContentStatus(
 /**
  * Gets the latest content for a specific type from the thread's content JSON column.
  */
-export async function getLatestContent(threadId: string, type: string): Promise<any> {
+export async function getLatestContent<T = string>(threadId: string, type: string): Promise<T | null> {
     try {
         const threads = await db.select({ content: threadsTable.content }).from(threadsTable).where(eq(threadsTable.id, threadId));
         if (threads.length > 0) {
-            const content = (threads[0].content as any) || {};
-            return content[type] || null;
+            const content = threads[0].content || {};
+            return (content[type as keyof ThreadContent] as T) || null;
         }
     } catch (error) {
         console.error(`Error fetching ${type} from database:`, error);
@@ -80,7 +80,7 @@ export async function getLatestContent(threadId: string, type: string): Promise<
 /**
  * Saves content for a specific type into the thread's content JSON column.
  */
-export async function saveContent(threadId: string, type: string, data: any): Promise<void> {
+export async function saveContent<T>(threadId: string, type: string, data: T): Promise<void> {
     try {
         // Use JSONB concatenation/update to update only the specific key
         // This is more efficient than fetching, updating in JS, and saving back
