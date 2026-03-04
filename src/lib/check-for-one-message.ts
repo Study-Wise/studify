@@ -31,7 +31,7 @@ export async function checkForOneMessage({
                 const modeObj = categories[category || '']?.modes?.[mode || ''];
 
                 // Get system prompt
-                const systemPrompt = await (modeObj?.prompt || Promise.resolve(''));
+                const systemPrompt = await (modeObj?.prompt || Promise.resolve('')) as string;
 
                 // Prepare conversation history with system message
                 const convoHistory: Message[] = [
@@ -58,7 +58,10 @@ export async function checkForOneMessage({
                 // Update the database with the new message
                 await db.update(threadsTable)
                     .set({
-                        thread: { messages: updatedMessages },
+                        thread: { 
+                            ...thread.thread,
+                            messages: updatedMessages 
+                        },
                         updatedAt: new Date()
                     })
                     .where(eq(threadsTable.id, threadId));
