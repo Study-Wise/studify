@@ -6,6 +6,7 @@ import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
 import type { ThreadData, UploadedFile } from '@/lib/types';
+import { saveContent } from '../latest';
 
 function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
     const filesWithText = uploadedFiles.filter(f => f.extractedText);
@@ -127,9 +128,7 @@ You may remove or modify sections as you see fit based on relevance to the topic
     }
 
     // Save to database
-    await db.update(threadsTable)
-        .set({ generatedMindMap: result.text, updatedAt: new Date() })
-        .where(eq(threadsTable.id, threadId));
+    await saveContent(threadId, 'mind-map', result.text);
 
     return result.text;
 }

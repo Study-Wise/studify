@@ -44,6 +44,32 @@ export interface FlashcardData {
     questions: Flashcard[];
 }
 
+export interface InfographicData {
+    imageUrl: string;
+    description: string;
+    generatedAt: string;
+    fileKey: string;
+}
+
+export interface SlideshowData {
+    content: string;
+    html: string;
+}
+
+export interface ThreadContent {
+    'study-guide'?: string;
+    'reference-sheet'?: string;
+    'infographic'?: InfographicData;
+    'webpage'?: string;
+    'mind-map'?: string;
+    'additional-resources'?: string;
+    'flashcards'?: FlashcardData | string;
+    'practice-questions'?: string;
+    'slideshow'?: SlideshowData;
+    'summary'?: string;
+    [key: string]: any;
+}
+
 export interface FlashcardResult {
     content: FlashcardData | string | null;
 }
@@ -130,10 +156,10 @@ export interface SelectorSettings {
 }
 
 export interface ThreadData {
-    title: string;
-    isDev: boolean;
-    createdAt: Date;
-    updatedAt: Date;
+    title?: string;
+    isDev?: boolean;
+    createdAt?: Date;
+    updatedAt?: Date;
     messages: Message[];
 }
 

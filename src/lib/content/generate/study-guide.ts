@@ -7,6 +7,7 @@ import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
 import type { ThreadData, UploadedFile } from '@/lib/types';
+import { saveContent } from '../latest';
 
 function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
     const filesWithText = uploadedFiles.filter(f => f.extractedText);
@@ -104,9 +105,7 @@ REMEMBER: Output ONLY the Study Guide. No quizzes, no practice questions, no fla
     }
 
     // Save to database
-    await db.update(threadsTable)
-        .set({ generatedStudyGuide: result.text, updatedAt: new Date() })
-        .where(eq(threadsTable.id, threadId));
+    await saveContent(threadId, 'study-guide', result.text);
 
     return result.text;
 }

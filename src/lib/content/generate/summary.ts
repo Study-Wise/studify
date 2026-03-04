@@ -5,6 +5,7 @@ import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
 import type { ThreadData, UploadedFile } from '@/lib/types';
+import { saveContent } from '../latest';
 
 function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
     const filesWithText = uploadedFiles.filter(f => f.extractedText);
@@ -80,9 +81,7 @@ REMEMBER: Output ONLY the Chat Summary in markdown format. No other content type
     }
 
     // Save to database
-    await db.update(threadsTable)
-        .set({ generatedSummary: result.text, updatedAt: new Date() })
-        .where(eq(threadsTable.id, threadId));
+    await saveContent(threadId, 'summary', result.text);
 
     return result.text;
 }

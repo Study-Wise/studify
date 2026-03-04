@@ -6,6 +6,7 @@ import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
 import type { ThreadData, UploadedFile } from '@/lib/types';
+import { saveContent } from '../latest';
 
 function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
     const filesWithText = uploadedFiles.filter(f => f.extractedText);
@@ -120,9 +121,7 @@ ONLY INCLUDE THE HTML CONTENT IN YOUR RESPONSE. DO NOT RESPOND WITH ANYTHING ELS
         : text;
 
     // Save to database
-    await db.update(threadsTable)
-        .set({ generatedWebpage: content, updatedAt: new Date() })
-        .where(eq(threadsTable.id, threadId));
+    await saveContent(threadId, 'webpage', content);
 
     return content;
 }

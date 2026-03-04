@@ -3,6 +3,7 @@ import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
 import type { ThreadData, UploadedFile } from '@/lib/types';
 import Exa from "exa-js";
+import { saveContent } from '../latest';
 
 const exa = new Exa(import.meta.env.EXA_SEARCH_API_KEY || process.env.EXA_SEARCH_API_KEY);
 
@@ -150,9 +151,7 @@ export async function generateResources(threadId: string): Promise<string> {
     const content = JSON.stringify(resourceCollection, null, 2);
 
     // Save to database
-    await db.update(threadsTable)
-        .set({ generatedAdditionalResources: content, updatedAt: new Date() })
-        .where(eq(threadsTable.id, threadId));
+    await saveContent(threadId, 'additional-resources', content);
 
     return content;
 }

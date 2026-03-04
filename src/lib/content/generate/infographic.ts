@@ -5,6 +5,7 @@ import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
 import { generateImage } from '@/lib/genai-image';
 import type { ThreadData, UploadedFile } from '@/lib/types';
+import { saveContent } from '../latest';
 
 function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
     const filesWithText = uploadedFiles.filter(f => f.extractedText);
@@ -108,12 +109,7 @@ Style: Clean, modern, professional educational infographic. Use a white backgrou
     };
 
     // Save to database
-    await db.update(threadsTable)
-        .set({
-            generatedInfographic: infographic,
-            updatedAt: new Date()
-        })
-        .where(eq(threadsTable.id, threadId));
+    await saveContent(threadId, 'infographic', infographic);
 
     return infographic;
 }

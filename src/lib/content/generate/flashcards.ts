@@ -6,6 +6,7 @@ import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
 import type { ThreadData, UploadedFile, FlashcardData } from '@/lib/types';
+import { saveContent } from '../latest';
 
 const flashcardSchema = z.object({
     text: z.string().describe('A brief markdown summary/introduction about the flashcards topic'),
@@ -108,10 +109,8 @@ Math formatting: use $â€¦$ for displaying math formulas/equations inline and $$â
         questions: result.object.questions
     };
 
-    // Save to database as JSON string
-    await db.update(threadsTable)
-        .set({ generatedFlashcards: JSON.stringify(flashcardData), updatedAt: new Date() })
-        .where(eq(threadsTable.id, threadId));
+    // Save to database
+    await saveContent(threadId, 'flashcards', flashcardData);
 
     return flashcardData;
 }

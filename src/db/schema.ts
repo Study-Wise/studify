@@ -1,27 +1,19 @@
 import { pgTable, varchar, timestamp, jsonb, boolean, text } from 'drizzle-orm/pg-core';
 
 import config from '@/lib/config';
+import type { ThreadContent, ThreadData, UploadedFile } from '@/lib/types';
 
 const threadsTable = pgTable('threads', {
     id: text('id').primaryKey(),
     title: varchar({ length: 255 }).notNull(),
-    thread: jsonb('thread').notNull().default({}),
-    uploadedFiles: jsonb('uploadedFiles').notNull().default([]),
+    thread: jsonb('thread').$type<ThreadData>().notNull().default({} as ThreadData),
+    uploadedFiles: jsonb('uploadedFiles').$type<UploadedFile[]>().notNull().default([]),
+    content: jsonb('content').$type<ThreadContent>().notNull().default({}),
     email: text('email'),
     category: text('category').notNull().default(config.defaultCategory),
     mode: text('mode').notNull().default(config.defaultMode),
     model: text('model').notNull().default(config.model),
     provider: text('provider').notNull().default(config.provider),
-    generatedStudyGuide: text('generatedStudyGuide'),
-    generatedReferenceSheet: text('generatedReferenceSheet'),
-    generatedInfographic: jsonb('generatedInfographic').notNull().default({}),
-    generatedWebpage: text('generatedWebpage'),
-    generatedMindMap: text('generatedMindMap'),
-    generatedAdditionalResources: text('generatedAdditionalResources'),
-    generatedFlashcards: text('generatedFlashcards'),
-    generatedPracticeQuestions: text('generatedPracticeQuestions'),
-    generatedSlideshow: jsonb('generatedSlideshow').notNull().default({}),
-    generatedSummary: text('generatedSummary'),
     isPublic: boolean('isPublic').notNull().default(false),
     createdAt: timestamp('createdAt').notNull().defaultNow(),
     updatedAt: timestamp('updatedAt').notNull().defaultNow(),

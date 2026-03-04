@@ -1,25 +1,11 @@
 import type { PracticeQuestionsResult } from '@/lib/types';
-import { db } from '@/db/initialize';
-import { eq } from 'drizzle-orm';
-import { threadsTable } from '@/db/schema';
+import { getLatestContent } from './index';
 
 export async function getLatestPracticeQuestions(
     threadId: string,
 ): Promise<PracticeQuestionsResult> {
-    // Get the practice questions from the database
-    try {
-        const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
-        if (threads.length > 0 && threads[0].generatedPracticeQuestions) {
-            return {
-                content: threads[0].generatedPracticeQuestions
-            };
-        }
-    } catch (error) {
-        console.error('Error fetching practice questions from database:', error);
-    }
-
-    // No practice questions found
+    const content = await getLatestContent(threadId, 'practice-questions');
     return {
-        content: null
+        content: content as string | null
     };
 }

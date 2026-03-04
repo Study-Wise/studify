@@ -15,6 +15,7 @@ import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
 import type { ThreadData, UploadedFile } from '@/lib/types';
+import { saveContent } from '../latest';
 
 // Use createRequire for certain ones only - project has marked v15 but slideshow-generator needs v0.3
 const require_ = createRequire(import.meta.url);
@@ -151,10 +152,10 @@ REMEMBER: Output ONLY the markdown content. No quizzes, no practice questions, n
     // Convert markdown to self-contained HTML slideshow
     const html = markdownToSlideshowHTML(result.text);
 
-    // Save to database with both markdown content and generated HTML
-    await db.update(threadsTable)
-        .set({ generatedSlideshow: { content: result.text, html }, updatedAt: new Date() })
-        .where(eq(threadsTable.id, threadId));
+    const slideshowData = { content: result.text, html };
 
-    return { content: result.text, html };
+    // Save to database with both markdown content and generated HTML
+    await saveContent(threadId, 'slideshow', slideshowData);
+
+    return slideshowData;
 }
