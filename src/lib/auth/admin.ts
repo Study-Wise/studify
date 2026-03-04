@@ -6,9 +6,7 @@ import { user as userTable } from '@/db/auth-schema';
 import { eq } from 'drizzle-orm';
 import type { UserRole } from './index';
 
-/**
- * Get user role from database by email
- */
+// Get user role from database by email
 export async function getUserRole(email: string): Promise<UserRole> {
     const users = await db
         .select({ role: userTable.role })
@@ -19,9 +17,7 @@ export async function getUserRole(email: string): Promise<UserRole> {
     return users[0]?.role || "user";
 }
 
-/**
- * Get user role from database by user ID
- */
+// Get user role from database by user ID
 export async function getUserRoleById(userId: string): Promise<UserRole> {
     const users = await db
         .select({ role: userTable.role })
@@ -32,41 +28,31 @@ export async function getUserRoleById(userId: string): Promise<UserRole> {
     return users[0]?.role || "user";
 }
 
-/**
- * Check if a user is an admin based on their email
- */
+// Check if a user is an admin based on their email
 export async function isUserAdmin(email: string): Promise<boolean> {
     const role = await getUserRole(email);
     return role === "admin";
 }
 
-/**
- * Check if a user is an admin based on their ID
- */
+// Check if a user is an admin based on their ID
 export async function isUserAdminById(userId: string): Promise<boolean> {
     const role = await getUserRoleById(userId);
     return role === "admin";
 }
 
-/**
- * Check if a user is a moderator or admin
- */
+// Check if a user is a moderator or admin
 export async function isUserModerator(email: string): Promise<boolean> {
     const role = await getUserRole(email);
     return role === "moderator" || role === "admin";
 }
 
-/**
- * Check if a user has premium access
- */
+// Check if a user has premium access
 export async function isUserPremium(email: string): Promise<boolean> {
     const role = await getUserRole(email);
     return role === "premium" || role === "moderator" || role === "admin";
 }
 
-/**
- * Update user role in database
- */
+// Update user role in database
 export async function updateUserRole(email: string, newRole: UserRole): Promise<void> {
     await db
         .update(userTable)

@@ -1,6 +1,4 @@
-/**
- * Generates tutor prompts programmatically based on subject and category
- */
+// Generates tutor prompts programmatically based on subject and category
 
 const MATH_CATEGORIES = ['decision-sciences', 'engineering', 'math', 'science'];
 

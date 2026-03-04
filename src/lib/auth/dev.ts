@@ -8,16 +8,12 @@ import { eq } from 'drizzle-orm';
 import type { UserRole, ExtendedUser } from './index';
 import type { ThreadAccessResult } from './checkThreadAccess';
 
-/**
- * Check if we're in development environment
- */
+// Check if we're in development environment
 export function isDev(): boolean {
     return (import.meta.env.NODE_ENV || process.env.NODE_ENV) === "development";
 }
 
-/**
- * Get the USER_ACCESS_TOKEN from environment
- */
+// Get the USER_ACCESS_TOKEN from environment
 function getDevAccessToken(): string | null {
     if (!isDev()) {
         return null;
@@ -25,9 +21,7 @@ function getDevAccessToken(): string | null {
     return import.meta.env.USER_ACCESS_TOKEN || process.env.USER_ACCESS_TOKEN || null;
 }
 
-/**
- * Get the user ID from the account table using the access token
- */
+// Get the user ID from the account table using the access token
 export async function getDevUserId(): Promise<string | null> {
     const accessToken = getDevAccessToken();
     if (!accessToken) {
@@ -48,9 +42,7 @@ export async function getDevUserId(): Promise<string | null> {
     }
 }
 
-/**
- * Get the full user record from the user table using the dev access token
- */
+// Get the full user record from the user table using the dev access token
 export async function getDevUser(): Promise<ExtendedUser | null> {
     const userId = await getDevUserId();
     if (!userId) {
@@ -85,33 +77,25 @@ export async function getDevUser(): Promise<ExtendedUser | null> {
     }
 }
 
-/**
- * Get the dev user's role
- */
+// Get the dev user's role
 export async function getDevUserRole(): Promise<UserRole | null> {
     const user = await getDevUser();
     return user?.role || null;
 }
 
-/**
- * Check if the dev user is an admin
- */
+// Check if the dev user is an admin
 export async function isDevUserAdmin(): Promise<boolean> {
     const role = await getDevUserRole();
     return role === "admin";
 }
 
-/**
- * Check if the dev user is a moderator or admin
- */
+// Check if the dev user is a moderator or admin
 export async function isDevUserModerator(): Promise<boolean> {
     const role = await getDevUserRole();
     return role === "moderator" || role === "admin";
 }
 
-/**
- * Check if the dev user has premium access
- */
+// Check if the dev user has premium access
 export async function isDevUserPremium(): Promise<boolean> {
     const role = await getDevUserRole();
     return role === "premium" || role === "moderator" || role === "admin";

@@ -46,9 +46,7 @@ export interface TitleGenerationOptions {
     provider: string;
 }
 
-/**
- * Validates and returns a proper model-provider pair
- */
+// Validates and returns a proper model-provider pair
 export async function getValidModelAndProvider(requestedModel: string | null): Promise<{ model: string, provider: string }> {
     let modelToUse = requestedModel || config.model;
 
@@ -62,9 +60,7 @@ export async function getValidModelAndProvider(requestedModel: string | null): P
     return { model: modelToUse, provider: providerName };
 }
 
-/**
- * Identifies which tools are client-side (no execute function or marked as clientSide)
- */
+// Identifies which tools are client-side (no execute function or marked as clientSide)
 function getClientSideToolNames(tools: ToolRecord): Set<string> {
     const clientTools = new Set<string>();
     for (const [name, tool] of Object.entries(tools)) {
@@ -76,9 +72,7 @@ function getClientSideToolNames(tools: ToolRecord): Set<string> {
     return clientTools;
 }
 
-/**
- * Generates AI response for a conversation
- */
+// Generates AI response for a conversation
 export async function generateAIResponse(options: AIGenerationOptions): Promise<AIGenerationResult> {
     const {
         systemPrompt,
@@ -242,9 +236,7 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
     }
 }
 
-/**
- * Generates a title for a conversation
- */
+// Generates a title for a conversation
 export async function generateTitle(options: TitleGenerationOptions): Promise<string> {
     const { convoHistory, userModel, provider } = options;
     const titleRequestId = nanoid();
@@ -281,9 +273,7 @@ export async function generateTitle(options: TitleGenerationOptions): Promise<st
     }
 }
 
-/**
- * Paraphrases a user's question to make it clearer and more concise
- */
+// Paraphrases a user's question to make it clearer and more concise
 export async function paraphraseQuestion(question: string, category: string, mode: string): Promise<string> {
     const paraphraseRequestId = nanoid();
 
