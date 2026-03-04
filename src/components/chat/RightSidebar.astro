@@ -3,22 +3,28 @@ import '@/styles/components/chat/sidebar.scss';
 import '@/styles/components/chat/right-sidebar.scss';
 import type { ChatRightSidebarProps } from '@/lib/types';
 import SidebarSection from './SidebarSection.astro';
+import { getThreadContentStatus } from '@/lib/content/latest';
 
 const { 
-    hasReferenceSheet, 
-    hasStudyGuide, 
-    hasInfographic, 
-    hasWebpage, 
-    hasMindMap, 
-    hasAdditionalResources, 
-    hasFlashcard, 
-    hasPracticeQuestions,
-    hasSlideshow,
     threadId,
     category, 
     mode, 
-    isAuthorized
+    isAuthorized,
+    isPublic
 } = Astro.props as ChatRightSidebarProps;
+
+const {
+    hasReferenceSheet,
+    hasStudyGuide,
+    hasInfographic,
+    hasWebpage,
+    hasMindMap,
+    hasAdditionalResources,
+    hasFlashcard,
+    hasPracticeQuestions,
+    hasSlideshow,
+    hasSummary,
+} = await getThreadContentStatus(threadId, isAuthorized, isPublic);
 
 const referenceSheetUrl = `/${category}/${mode}/reference-sheet/${threadId}`;
 const studyGuideUrl = `/${category}/${mode}/study-guide/${threadId}`;
@@ -29,9 +35,22 @@ const additionalResourcesUrl = `/${category}/${mode}/additional-resources/${thre
 const flashcardUrl = `/${category}/${mode}/flashcards/${threadId}`;
 const practiceQuestionsUrl = `/${category}/${mode}/practice-questions/${threadId}`;
 const slideshowUrl = `/${category}/${mode}/slideshow/${threadId}`;
+const summaryUrl = `/${category}/${mode}/summary/${threadId}`;
 ---
 <aside class="chat-sidebar right">
     <div class="chat-sidebar-content right">
+        <SidebarSection
+            title="Chat Summary"
+            icon="summarize"
+            hasContent={hasSummary}
+            threadId={threadId}
+            viewUrl={summaryUrl}
+            viewButtonText="View Summary"
+            emptyMessage="No summary generated yet."
+            id="summary"
+            isAuthorized={isAuthorized}
+        />
+
         <SidebarSection
             title="Study Guide"
             icon="menu_book"

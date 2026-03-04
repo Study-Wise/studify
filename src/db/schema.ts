@@ -21,6 +21,7 @@ const threadsTable = pgTable('threads', {
     generatedFlashcards: text('generatedFlashcards'),
     generatedPracticeQuestions: text('generatedPracticeQuestions'),
     generatedSlideshow: jsonb('generatedSlideshow').notNull().default({}),
+    generatedSummary: text('generatedSummary'),
     isPublic: boolean('isPublic').notNull().default(false),
     createdAt: timestamp('createdAt').notNull().defaultNow(),
     updatedAt: timestamp('updatedAt').notNull().defaultNow(),

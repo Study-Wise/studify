@@ -9,6 +9,7 @@ export const contentTypes = [
     'Infographic',
     'Additional Resources',
     'Slideshow',
+    'Chat Summary',
 ] as const;
 
 // Helper to get exclusion list for a specific content type
@@ -27,6 +28,7 @@ const contentTypeDescriptions: Record<string, string> = {
     'Webpage': 'a complete, interactive webpage (HTML with embedded CSS/JS)',
     'Infographic': 'a description for an educational infographic image',
     'Slideshow': 'Slidev-format markdown for the slideshow',
+    'Chat Summary': 'a Summary of the current Chat',
 };
 
 /**

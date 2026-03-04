@@ -52,6 +52,10 @@ export interface PracticeQuestionsResult {
     content: string | null;
 }
 
+export interface SummaryResult {
+    content: string | null;
+}
+
 export interface SlideshowResult {
     content: string | null;
     html: string | null;
@@ -83,6 +87,14 @@ export interface ChatLeftSidebarProps {
 }
 
 export interface ChatRightSidebarProps {
+    threadId: string;
+    category: string;
+    mode: string;
+    isAuthorized: boolean;
+    isPublic: boolean;
+}
+
+export interface ThreadContentStatus {
     hasReferenceSheet: boolean;
     hasStudyGuide: boolean;
     hasInfographic: boolean;
@@ -92,10 +104,7 @@ export interface ChatRightSidebarProps {
     hasFlashcard: boolean;
     hasPracticeQuestions: boolean;
     hasSlideshow: boolean;
-    threadId: string;
-    category: string;
-    mode: string;
-    isAuthorized: boolean;
+    hasSummary: boolean;
 }
 
 // OpenAI gpt-image models supported sizes

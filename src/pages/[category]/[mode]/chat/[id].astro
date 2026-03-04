@@ -16,16 +16,6 @@ import { marked } from 'marked';
 import { getMessages, getMessagesLength, getThreadByToken } from '@/lib/threads';
 import { checkThreadAccess } from '@/lib/auth/checkThreadAccess';
 
-import { getLatestReferenceSheet } from '@/lib/content/latest/reference-sheet';
-import { getLatestStudyGuide } from '@/lib/content/latest/study-guide';
-import { getLatestInfographic } from '@/lib/content/latest/infographic';
-import { getLatestWebpage } from '@/lib/content/latest/webpage';
-import { getLatestMindMap } from '@/lib/content/latest/mind-map';
-import { getLatestResources } from '@/lib/content/latest/additional-resources';
-import { getLatestFlashcards } from '@/lib/content/latest/flashcards';
-import { getLatestPracticeQuestions } from '@/lib/content/latest/practice-questions';
-import { getLatestSlideshow } from '@/lib/content/latest/slideshow';
-
 import { checkForOneMessage } from '@/lib/check-for-one-message';
 import categories from '@/lib/modes';
 import type { Message } from '@/lib/types';
@@ -89,39 +79,6 @@ if (!isNewChat) {
     });
 }
 
-// Check if reference sheet, study guide, infographic, webpage, mind map, additional resources, flashcard, and practice questions exist
-let hasReferenceSheet = false;
-let hasStudyGuide = false;
-let hasInfographic = false;
-let hasWebpage = false;
-let hasMindMap = false;
-let hasAdditionalResources = false;
-let hasFlashcard = false;
-let hasPracticeQuestions = false;
-let hasSlideshow = false;
-
-if (!isNewChat && (isAuthorized || isPublic) && id) {
-    const referenceSheetResult = await getLatestReferenceSheet(id);
-    const studyGuideResult = await getLatestStudyGuide(id);
-    const infographic = await getLatestInfographic(id);
-    const webpageResult = await getLatestWebpage(id);
-    const mindMapResult = await getLatestMindMap(id);
-    const additionalResourcesResult = await getLatestResources(id);
-    const flashcardResult = await getLatestFlashcards(id);
-    const practiceQuestionsResult = await getLatestPracticeQuestions(id);
-    const slideshowResult = await getLatestSlideshow(id);
-
-    hasReferenceSheet = !!referenceSheetResult.content;
-    hasStudyGuide = !!studyGuideResult.content;
-    hasInfographic = !!infographic;
-    hasWebpage = !!webpageResult.content;
-    hasMindMap = !!mindMapResult.content;
-    hasAdditionalResources = !!additionalResourcesResult.content;
-    hasFlashcard = !!flashcardResult.content;
-    hasPracticeQuestions = !!practiceQuestionsResult.content;
-    hasSlideshow = !!slideshowResult.content;
-}
-
 // Pre-process messages to convert markdown to HTML (server-side)
 marked.setOptions({ breaks: true, gfm: true });
 const processedMessages = await Promise.all(
@@ -178,19 +135,11 @@ export const inNav = 'hide';
             <Footer hideCopyright={true} />
         </section>
         <RightSidebar
-            hasReferenceSheet={hasReferenceSheet}
-            hasStudyGuide={hasStudyGuide}
-            hasInfographic={hasInfographic}
-            hasWebpage={hasWebpage}
-            hasMindMap={hasMindMap}
-            hasAdditionalResources={hasAdditionalResources}
-            hasFlashcard={hasFlashcard}
-            hasPracticeQuestions={hasPracticeQuestions}
-            hasSlideshow={hasSlideshow}
             threadId={id || ''}
             category={category || ''}
             mode={mode || ''}
             isAuthorized={isAuthorized}
+            isPublic={isPublic}
         />
     </section>
     <script is:inline>
@@ -222,4 +171,4 @@ export const inNav = 'hide';
     </script>
     <MessagesScript page="chat" category={category} mode={mode} id={id} />
     <StepByStepScript />
-</Layout> 
+</Layout>
