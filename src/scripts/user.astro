@@ -41,7 +41,7 @@
     });
 
     // Expose utilities for page-specific scripts
-    (window as unknown as { authUtils: AuthUtils }).authUtils = {
+    (window as object as { authUtils: AuthUtils }).authUtils = {
         showError,
         hideError,
         getRedirectUrl,

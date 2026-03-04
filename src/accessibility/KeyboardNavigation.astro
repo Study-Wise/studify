@@ -50,7 +50,8 @@ import '@/styles/accessibility/keyboard-navigation.scss';
                     e.preventDefault();
                     (focusableElements[focusableElements.length - 1] as HTMLElement).focus();
                 }
-            } else {
+            }
+            else {
                 // Tab: Move forwards
                 if (currentIndex >= focusableElements.length - 1) {
                     e.preventDefault();

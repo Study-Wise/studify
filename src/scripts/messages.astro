@@ -152,7 +152,8 @@ const { page, category, mode, id } = Astro.props;
                     errorMessageDiv.style.display = 'none';
                     errorMessageDiv.textContent = '';
                 }
-            } else {
+            }
+            else {
                 spinner && (spinner.style.display = 'none');
                 if (sendButton) sendButton.disabled = false;
                 if (messageInput) {
@@ -174,9 +175,11 @@ const { page, category, mode, id } = Astro.props;
             let messageToShow = 'An unknown error occurred.';
             if (typeof message === 'string' && message.trim() !== '') {
                 messageToShow = message;
-            } else if (message instanceof Error && message.message) {
+            }
+            else if (message instanceof Error && message.message) {
                 messageToShow = message.message;
-            } else if (typeof message === 'object' && message !== null) {
+            }
+            else if (typeof message === 'object' && message !== null) {
                 try {
                     messageToShow = JSON.stringify(message);
                 } catch {
@@ -192,7 +195,8 @@ const { page, category, mode, id } = Astro.props;
                 errorDiv.textContent = `${showErrorText}${messageToShow}`;
                 errorDiv.style.display = 'block';
                 console.warn('displayError: Error text set.');
-            } else {
+            }
+            else {
                 console.error('CRITICAL FAILURE in displayError: #error-message element not found:', messageToShow);
                 window.showError('Critical error occurred; error display area missing.\nHint: ' + messageToShow);
             }
@@ -209,7 +213,8 @@ const { page, category, mode, id } = Astro.props;
             if (errorDiv) {
                 errorDiv.textContent = 'Error: Critical UI failure during error reporting.';
                 errorDiv.style.display = 'block';
-            } else {
+            }
+            else {
                 window.showError('Error: Critical UI failure during error reporting.');
             }
             console.error('Original message causing displayError failure:', message);
@@ -230,7 +235,8 @@ const { page, category, mode, id } = Astro.props;
                         console.error('MathJax typesetting error:', err);
                         validElements.forEach(el => el?.classList?.remove('mathjax-pending'));
                     });
-            } else {
+            }
+            else {
                 console.warn('MathJax not ready.');
                 return Promise.resolve();
             }
@@ -313,7 +319,8 @@ const { page, category, mode, id } = Astro.props;
                             updateSidebarSection(type, url);
                             // Open the content in a new tab
                             window.open(url, '_blank');
-                        } else {
+                        }
+                        else {
                             console.error(`Failed to generate ${type}:`, data.error);
                             // Try to open anyway
                             window.open(url, '_blank');
@@ -343,17 +350,20 @@ const { page, category, mode, id } = Astro.props;
         if (page === 'home' && data.id && category && mode) {
             // Redirect to chat page for first message
             window.location.href = `/${category}/${mode}/chat/${data.id}`;
-        } else if (page === 'chat') {
+        }
+        else if (page === 'chat') {
             // Check if this is a new chat (URL ends with /chat/new)
             const isNewChat = (id === 'new');
 
             if (isNewChat && data.id && category && mode) {
                 // Redirect to the actual thread ID after first message
                 window.location.href = `/${category}/${mode}/chat/${data.id}`;
-            } else {
+            }
+            else {
                 await addMessage('assistant', data);
             }
-        } else if (page === 'home') {
+        }
+        else if (page === 'home') {
             displayError('Failed to redirect to chat page.');
         }
     }
@@ -361,7 +371,8 @@ const { page, category, mode, id } = Astro.props;
     async function addMessage(role, data) {
         if (role === 'assistant') {
             await addAssistantMessage(data);
-        } else if (role === 'user') {
+        }
+        else if (role === 'user') {
             createPlainMessage(role, data);
         }
     }
@@ -526,7 +537,8 @@ const { page, category, mode, id } = Astro.props;
                         LaTeX.forEach((l, i) => {
                             if (typeof l === 'string') {
                                 calculator.setExpression({ id: `exp${i + 1}`, latex: l });
-                            } else {
+                            }
+                            else {
                                 console.warn(`Desmos expression at index ${i} is not a string:`, l);
                             }
                         });
@@ -540,7 +552,8 @@ const { page, category, mode, id } = Astro.props;
                     console.error('Problematic LaTeX string:', graph.getAttribute('latex'));
                     graph.innerHTML = `<p><i>Error loading graph. Check console for details.</i><pre>${e}</pre></p>`;
                 }
-            } else {
+            }
+            else {
                 console.warn('Desmos graph "latex" attribute missing or empty.');
                 graph.innerHTML = '<p><i>No graph data provided.</i></p>';
             }
@@ -628,7 +641,8 @@ const { page, category, mode, id } = Astro.props;
     async function initializePage() {
         if (page === 'home') {
             onDomLoadHome();
-        } else if (page === 'chat') {
+        }
+        else if (page === 'chat') {
             onDomLoadChat();
             
             // Chat-specific MathJax and Desmos initialization

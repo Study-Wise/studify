@@ -181,10 +181,12 @@ const hasContent = !!(isStructured ? (flashcardData && flashcardData.questions.l
             if (e.key === 'ArrowLeft' && currentIndex > 0) {
                 currentIndex--;
                 updateDisplay();
-            } else if (e.key === 'ArrowRight' && currentIndex < flashcards.length - 1) {
+            }
+            else if (e.key === 'ArrowRight' && currentIndex < flashcards.length - 1) {
                 currentIndex++;
                 updateDisplay();
-            } else if (e.key === ' ' || e.key === 'Enter') {
+            }
+            else if (e.key === ' ' || e.key === 'Enter') {
                 e.preventDefault();
                 flipCurrent();
             }

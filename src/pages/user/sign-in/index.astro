@@ -85,7 +85,7 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
     import type { AuthUtils } from '@/lib/types';
 
     const form = document.getElementById('signin-form') as HTMLFormElement;
-    const { showError, hideError } = (window as unknown as { authUtils: AuthUtils }).authUtils;
+    const { showError, hideError } = (window as object as { authUtils: AuthUtils }).authUtils;
 
     form?.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -103,7 +103,8 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
 
             if (error) {
                 showError(error.message || 'Sign in failed. Please check your credentials.');
-            } else {
+            }
+            else {
                 window.location.href = new URLSearchParams(window.location.search).get('returnBackUrl') || '/';
             }
         } catch (error) {

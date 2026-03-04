@@ -35,7 +35,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
         let modeObj: Mode = {name: '', description: ''};
         if (category && mode) {
             modeObj = categories[category]?.modes?.[mode];
-        } else {
+        }
+        else {
             console.warn(`⚠️ [${requestId}] No category/mode specified, using default mode`);
         }
 
@@ -186,10 +187,12 @@ Use the above thread context when calling tools that require threadId, category,
                         Array.isArray((userData.thread as ThreadData).messages)
                     ) {
                         convoHistory = [systemObj, ...(userData.thread as ThreadData).messages];
-                    } else {
+                    }
+                    else {
                         console.warn(`⚠️ [${requestId}] No valid conversation history found in thread data, keeping system message only`);
                     }
-                } else {
+                }
+                else {
                     console.warn(`⚠️ [${requestId}] Thread not found in database, using system message only:`, current_thread_id);
                 }
             } catch (error) {
@@ -247,7 +250,8 @@ Use the above thread context when calling tools that require threadId, category,
 
             userModel = validatedModel;
             provider = validatedProvider;
-        } else {
+        }
+        else {
             const requestedModel = model || userSettings.model;
             const { model: validatedModel, provider: validatedProvider } = await getValidModelAndProvider(requestedModel);
 
@@ -290,7 +294,8 @@ Use the above thread context when calling tools that require threadId, category,
                             updatedAt: new Date()
                         })
                         .where(eq(threadsTable.id, current_thread_id!));
-                } else {
+                }
+                else {
                     // Thread doesn't exist yet, insert it with ON CONFLICT handling
                     await db.insert(threadsTable).values({
                         id: current_thread_id,
@@ -356,7 +361,7 @@ Use the above thread context when calling tools that require threadId, category,
         // --- AI Generation ---
         const tools = modeObj.tools || {};
         let generatedText: string;
-        let clientToolCalls: { toolName: string; toolCallId: string; args: Record<string, unknown> }[] = [];
+        let clientToolCalls: { toolName: string; toolCallId: string; args: Record<string, string | number | boolean | undefined> }[] = [];
         try {
             const aiResult = await generateAIResponse({
                 systemPrompt,
@@ -412,7 +417,8 @@ Use the above thread context when calling tools that require threadId, category,
                         isDev: (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development' ? true : false,
                     })
                     .where(eq(threadsTable.id, current_thread_id));
-            } else if (current_thread_id && !userData && !isNewThread) {
+            }
+            else if (current_thread_id && !userData && !isNewThread) {
                 if (!current_thread_id) {
                     throw new Error('Thread ID is null or undefined');
                 }
@@ -428,7 +434,8 @@ Use the above thread context when calling tools that require threadId, category,
                     isPublic: isPublic,
                     isDev: (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development'
                 } as ThreadInsert);
-            } else if (isNewThread) {
+            }
+            else if (isNewThread) {
                 await db
                     .update(threadsTable)
                     .set({

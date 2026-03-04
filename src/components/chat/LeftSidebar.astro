@@ -161,7 +161,8 @@ const {
                             ? 'Thread is now public. Anyone with the link can view it.'
                             : 'Thread is now private. Only you can view it.'
                     );
-                } else {
+                }
+                else {
                     throw new Error(data.error || 'Failed to update sharing settings');
                 }
             } catch (error) {
@@ -205,7 +206,8 @@ const {
                     // Update the URL
                     const newUrl = `/${category}/${mode}/chat/${data.id}`;
                     window.history.replaceState({}, '', newUrl);
-                } else {
+                }
+                else {
                     throw new Error(data.error || 'Failed to create thread');
                 }
             } catch (error) {
@@ -272,7 +274,8 @@ const {
                     if (remainingCount === 0) {
                         window.showSuccess?.(`${file.name} uploaded successfully`);
                     }
-                } else {
+                }
+                else {
                     throw new Error(data.error || 'Upload failed');
                 }
             } catch (error) {
@@ -357,7 +360,8 @@ const {
                 }
 
                 window.showSuccess?.('File deleted successfully');
-            } else {
+            }
+            else {
                 throw new Error(data.error || 'Deletion failed');
             }
         } catch (error) {
@@ -378,13 +382,17 @@ const {
         let iconName = 'insert_drive_file';
         if (file.type.startsWith('image/')) {
             iconName = 'image';
-        } else if (file.type === 'application/pdf') {
+        }
+        else if (file.type === 'application/pdf') {
             iconName = 'picture_as_pdf';
-        } else if (file.type.includes('spreadsheet') || file.type.includes('excel')) {
+        }
+        else if (file.type.includes('spreadsheet') || file.type.includes('excel')) {
             iconName = 'table_chart';
-        } else if (file.type.includes('presentation') || file.type.includes('powerpoint')) {
+        }
+        else if (file.type.includes('presentation') || file.type.includes('powerpoint')) {
             iconName = 'slideshow';
-        } else if (file.type.includes('word')) {
+        }
+        else if (file.type.includes('word')) {
             iconName = 'description';
         }
 

@@ -30,7 +30,8 @@ async function getMessages(id: string, user_email?: string | null) {
             threadData = JSON.parse(cleanedJson) as ThreadData;
             // Fix the data in DB
             await db.update(threadsTable).set({ thread: threadData }).where(eq(threadsTable.id, id));
-        } else {
+        }
+        else {
             threadData = rawThread as ThreadData;
         }
         return threadData?.messages ?? [];
@@ -59,7 +60,8 @@ async function getMessagesLength(id: string) {
             threadData = JSON.parse(cleanedJson) as ThreadData;
             // Fix the data in DB
             await db.update(threadsTable).set({ thread: threadData }).where(eq(threadsTable.id, id));
-        } else {
+        }
+        else {
             threadData = rawThread as ThreadData;
         }
         return threadData?.messages?.length ?? 0;
