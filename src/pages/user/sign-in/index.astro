@@ -82,9 +82,10 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
 
 <script>
     import { signIn } from '@/lib/auth/client';
+    import type { AuthUtils } from '@/lib/types';
 
     const form = document.getElementById('signin-form') as HTMLFormElement;
-    const { showError, hideError } = (window as any).authUtils;
+    const { showError, hideError } = (window as unknown as { authUtils: AuthUtils }).authUtils;
 
     form?.addEventListener('submit', async (e) => {
         e.preventDefault();

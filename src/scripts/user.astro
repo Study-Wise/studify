@@ -1,5 +1,6 @@
 <script>
     import { signIn } from '@/lib/auth/client';
+    import type { AuthUtils } from '@/lib/types';
 
     const errorMessage = document.getElementById('error-message');
     const socialButtonsContainer = document.querySelector('.social-buttons') as HTMLElement;
@@ -40,7 +41,7 @@
     });
 
     // Expose utilities for page-specific scripts
-    (window as any).authUtils = {
+    (window as unknown as { authUtils: AuthUtils }).authUtils = {
         showError,
         hideError,
         getRedirectUrl,
