@@ -260,6 +260,14 @@ This ensures:
 - Single source of truth for all type definitions
 - Better IDE autocomplete and type checking
 
+### CRITICAL: No 'any' Type
+
+**NEVER use the `any` type anywhere in the codebase.**
+
+- Using `any` defeats the purpose of TypeScript and introduces potential runtime errors.
+- If a type is unknown or complex, define a proper interface or use `unknown` with type guards.
+- If you encounter a type error, investigate the root cause and fix the type definition instead of bypassing it with `any`.
+
 ### CRITICAL: Error Investigation Protocol
 
 **ALWAYS investigate and search for root causes when encountering errors. NEVER implement tangential fixes without understanding the problem.**
