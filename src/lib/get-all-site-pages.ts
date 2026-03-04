@@ -2,7 +2,7 @@ const pagesToHide = ['chat', 'settings', 'admin', '404'];
 
 export default function getAllSitePages() {
     const pages = Object.entries(import.meta.glob('/src/pages/*.astro', { eager: true }))
-        .map(([path, mod]: [string, any]) => {
+        .map(([path, mod]: [string, unknown]) => {
             const fileName = path.split('/').pop();
             if (!fileName) return null;
 
@@ -12,15 +12,18 @@ export default function getAllSitePages() {
             if (name.startsWith('_')) return null;
 
             const route = `/${name === 'index' ? '' : name}`;
-            const hiddenFromNav = mod?.inNav ? mod.inNav[0] === 'hide' : false;
+            
+            // Astro module type checking
+            const module = mod as { inNav?: string; title?: string | string[] };
+            const hiddenFromNav = module?.inNav === 'hide';
             const isHidden = pagesToHide.includes(name);
 
-            let pageTitle = mod?.title ? mod.title : `${name.charAt(0).toUpperCase()}${name.slice(1)}`
+            let pageTitle = module?.title ? module.title : `${name.charAt(0).toUpperCase()}${name.slice(1)}`
 
             if (name === 'index') pageTitle = 'Home';
 
             // Ensure pageTitle is a string before replacing
-            const pageTitleStr = Array.isArray(pageTitle) ? pageTitle.join(' ') : pageTitle;
+            const pageTitleStr = Array.isArray(pageTitle) ? pageTitle.join(' ') : (pageTitle as string);
             const finalPageTitle = pageTitleStr.replaceAll('-', ' ');
 
             return {
