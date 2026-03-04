@@ -82,7 +82,7 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
 
 <script>
     import { signIn } from '@/lib/auth/client';
-    import type { AuthUtils } from '@/lib/types';
+    import type { AuthUtils } from '@/scripts/user.astro';
 
     const form = document.getElementById('signin-form') as HTMLFormElement;
     const { showError, hideError } = (window as object as { authUtils: AuthUtils }).authUtils;
