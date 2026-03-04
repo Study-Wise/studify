@@ -14,6 +14,13 @@ export interface ExtendedUser extends BetterAuthUser {
     role?: UserRole;
 }
 
+export interface AuthUtils {
+    showError: (message: string) => void;
+    hideError: () => void;
+    getRedirectUrl: () => void;
+    callbackURL: string;
+}
+
 // Admin email whitelist
 const ADMIN_EMAILS = [
     'adarshravikumar2@gmail.com',
