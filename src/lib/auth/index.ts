@@ -113,7 +113,7 @@ export const auth = betterAuth({
 
     plugins: [
         magicLink({
-            sendMagicLink: async ({ email, token, url }) => {
+            sendMagicLink: async ({ email: _email, token: _token, url: _url }) => {
                 // TODO: Configure email service (Resend, SendGrid, etc.)
                 // console.log(`Magic link for ${email}: ${url}`);
                 // Example with Resend:
