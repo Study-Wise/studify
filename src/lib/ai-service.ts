@@ -6,7 +6,7 @@ import config from '@/lib/config';
 import { providers } from '@/lib/models';
 import allTools from '@/lib/tools';
 import { nanoid } from 'nanoid';
-import type { AIGenerationOptions, TitleGenerationOptions, AIGenerationResult, ClientToolCall } from '@/lib/types';
+import type { AIGenerationOptions, TitleGenerationOptions, AIGenerationResult, ClientToolCall, ToolRecord } from '@/lib/types';
 
 /**
  * Validates and returns a proper model-provider pair
@@ -27,7 +27,7 @@ export async function getValidModelAndProvider(requestedModel: string | null): P
 /**
  * Identifies which tools are client-side (no execute function or marked as clientSide)
  */
-function getClientSideToolNames(tools: Record<string, any>): Set<string> {
+function getClientSideToolNames(tools: ToolRecord): Set<string> {
     const clientTools = new Set<string>();
     for (const [name, tool] of Object.entries(tools)) {
         // A tool is client-side if it has clientSide: true or has no execute function
@@ -107,7 +107,7 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
                 try {
                     // Tool results are JSON strings, so we need to parse them
                     // Cast to access the result property which varies by type
-                    const rawResult = (toolResult as unknown as { result?: unknown }).result;
+                    const rawResult = (toolResult as { result?: unknown }).result;
                     const resultString = rawResult as string;
                     const resultValue = typeof resultString === 'string' ? JSON.parse(resultString) : resultString;
 
@@ -136,18 +136,21 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
                 if (step.toolResults && step.toolResults.length > 0) {
                     for (const toolResult of step.toolResults) {
                         try {
-                            const rawResult = (toolResult as any).result;
+                            const typedToolResult = toolResult as { result?: unknown, toolCallId: string };
+                            const rawResult = typedToolResult.result;
                             const resultValue = typeof rawResult === 'string' ? JSON.parse(rawResult) : rawResult;
-                            if (resultValue && resultValue.action === 'open-content') {
+                            
+                            if (resultValue && typeof resultValue === 'object' && 'action' in resultValue && resultValue.action === 'open-content') {
+                                const openContentResult = resultValue as { type: string, threadId: string, category: string, mode: string, url?: string };
                                 clientToolCalls.push({
                                     toolName: 'open-content',
-                                    toolCallId: (toolResult as any).toolCallId,
+                                    toolCallId: typedToolResult.toolCallId,
                                     args: {
-                                        type: resultValue.type,
-                                        threadId: resultValue.threadId,
-                                        category: resultValue.category,
-                                        mode: resultValue.mode,
-                                        url: resultValue.url,
+                                        type: openContentResult.type,
+                                        threadId: openContentResult.threadId,
+                                        category: openContentResult.category,
+                                        mode: openContentResult.mode,
+                                        url: openContentResult.url,
                                     },
                                 });
                             }
@@ -163,8 +166,16 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
         if (result.toolCalls && result.toolCalls.length > 0) {
             for (const toolCall of result.toolCalls) {
                 if (clientSideToolNames.has(toolCall.toolName)) {
-                    // Cast to any to access args since the type varies between TypedToolCall and DynamicToolCall
-                    const args = (toolCall as unknown as { args?: Record<string, unknown> }).args ?? {};
+                    // Extract args safely
+                    const untypedArgs = (toolCall as { args?: Record<string, unknown> }).args ?? {};
+                    const args: Record<string, string | number | boolean | undefined> = {};
+                    
+                    for (const [key, value] of Object.entries(untypedArgs)) {
+                        if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean' || value === undefined) {
+                            args[key] = value;
+                        }
+                    }
+
                     clientToolCalls.push({
                         toolName: toolCall.toolName,
                         toolCallId: toolCall.toolCallId,
