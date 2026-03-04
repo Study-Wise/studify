@@ -132,7 +132,8 @@ const regenerateButtonId = `regenerate-${id}-btn`;
                     btn.removeAttribute('disabled');
                     btn.innerHTML = '<span class="material-symbols-outlined">refresh</span>';
                 }
-            } else {
+            }
+            else {
                 throw new Error(data.error || `Failed to generate ${title.toLowerCase()}`);
             }
         } catch (error) {
