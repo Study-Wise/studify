@@ -27,7 +27,7 @@ async function getMessages(id: string, user_email?: string | null) {
         if (typeof rawThread === 'string') {
             // Remove trailing commas before ] or } (invalid JSON but sometimes stored)
             const cleanedJson = rawThread.replace(/,\s*([\]}])/g, '$1');
-            threadData = JSON.parse(cleanedJson);
+            threadData = JSON.parse(cleanedJson) as ThreadData;
             // Fix the data in DB
             await db.update(threadsTable).set({ thread: threadData }).where(eq(threadsTable.id, id));
         } else {
@@ -56,7 +56,7 @@ async function getMessagesLength(id: string) {
         if (typeof rawThread === 'string') {
             // Remove trailing commas before ] or } (invalid JSON but sometimes stored)
             const cleanedJson = rawThread.replace(/,\s*([\]}])/g, '$1');
-            threadData = JSON.parse(cleanedJson);
+            threadData = JSON.parse(cleanedJson) as ThreadData;
             // Fix the data in DB
             await db.update(threadsTable).set({ thread: threadData }).where(eq(threadsTable.id, id));
         } else {
