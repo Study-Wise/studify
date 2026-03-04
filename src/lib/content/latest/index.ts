@@ -14,7 +14,7 @@ export interface ThreadContentStatus {
     hasWebpage: boolean;
     hasMindMap: boolean;
     hasAdditionalResources: boolean;
-    hasFlashcard: boolean;
+    hasFlashcards: boolean;
     hasPracticeQuestions: boolean;
     hasSlideshow: boolean;
     hasSummary: boolean;
@@ -35,11 +35,12 @@ export interface ThreadContent {
 }
 
 // Mapping between content type IDs (kebab-case) and their status keys (camelCase)
-function typeToKey(type: string): keyof ThreadContentStatus | null {
-    const replacedType = type.replace(/-([a-z])/g, (match, p1) => p1.toUpperCase());
-    const key = `has${replacedType.charAt(0).toUpperCase()}${replacedType.slice(1)}` as keyof ThreadContentStatus;
-    return key in ({} as ThreadContentStatus) ? key : null;
+function typeToKey(type: string): keyof ThreadContentStatus {
+    const camelCase = type.replace(/-([a-z])/g, (_, p1) => p1.toUpperCase());
+    const pascalCase = camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
+    return `has${pascalCase}` as keyof ThreadContentStatus;
 }
+
 export async function getThreadContentStatus(
     threadId: string,
     isAuthorized: boolean,
@@ -55,7 +56,7 @@ export async function getThreadContentStatus(
         hasWebpage: false,
         hasMindMap: false,
         hasAdditionalResources: false,
-        hasFlashcard: false,
+        hasFlashcards: false,
         hasPracticeQuestions: false,
         hasSlideshow: false,
         hasSummary: false,
@@ -70,7 +71,7 @@ export async function getThreadContentStatus(
                 const contentTypes = getContentTypesList();
                 
                 contentTypes.forEach(type => {
-                    const key = typeToKey[type];
+                    const key = typeToKey[type as keyof typeof typeToKey];
                     if (!key) return;
                     
                     // Check if content exists for this type in the JSON column
@@ -79,20 +80,20 @@ export async function getThreadContentStatus(
                         // For special types like infographic or flashcards that might be objects
                         if (typeof contentValue === 'object' && contentValue !== null) {
                             if (type === 'infographic') {
-                                status[key] = !!(contentValue as InfographicData).imageUrl;
+                                status[key as keyof ThreadContentStatus] = !!(contentValue as InfographicData).imageUrl;
                             }
                             else if (type === 'flashcards') {
-                                status[key] = !!(contentValue as FlashcardData).questions;
+                                status[key as keyof ThreadContentStatus] = !!(contentValue as FlashcardData).questions;
                             }
                             else if (type === 'slideshow') {
-                                status[key] = !!(contentValue as SlideshowData).content;
+                                status[key as keyof ThreadContentStatus] = !!(contentValue as SlideshowData).content;
                             }
                             else {
-                                status[key] = Object.keys(contentValue as object).length > 0;
+                                status[key as keyof ThreadContentStatus] = Object.keys(contentValue as object).length > 0;
                             }
                         }
                         else {
-                            status[key] = !!contentValue;
+                            status[key as keyof ThreadContentStatus] = !!contentValue;
                         }
                     }
                 });

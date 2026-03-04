@@ -27,7 +27,7 @@ const {
     hasWebpage,
     hasMindMap,
     hasAdditionalResources,
-    hasFlashcard,
+    hasFlashcards,
     hasPracticeQuestions,
     hasSlideshow,
     hasSummary,
@@ -97,7 +97,7 @@ const summaryUrl = `/${category}/${mode}/summary/${threadId}`;
         <SidebarSection
             title="Flashcards"
             icon="style"
-            hasContent={hasFlashcard}
+            hasContent={hasFlashcards}
             threadId={threadId}
             viewUrl={flashcardUrl}
             viewButtonText="View Flashcards"
