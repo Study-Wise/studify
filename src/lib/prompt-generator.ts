@@ -2,7 +2,7 @@
 
 const MATH_CATEGORIES = ['decision-sciences', 'engineering', 'math', 'science'];
 
-export function generateTutorPrompt(subject: string, category: string): string {
+export function generateModePrompt(subject: string, category: string): string {
     let prompt = '';
 
     // Base prompt

@@ -1,4 +1,4 @@
-import type { JSONValue } from './types';
+import type { JSONValue } from '@/lib/threads';
 
 const pagesToHide = ['chat', 'settings', 'admin', '404'];
 

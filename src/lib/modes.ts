@@ -1,6 +1,6 @@
 import tools from '@/lib/tools';
-import { generateTutorPrompt } from '@/lib/prompt-generator';
-import type { ToolRecord } from './types';
+import { generateModePrompt } from '@/lib/prompt-generator';
+import type { ToolRecord } from '@/lib/ai-service';
 
 export interface Mode {
     name: string;
@@ -389,7 +389,7 @@ for (const topicKey of Object.keys(categories)) {
         const mode = modes[modeKey];
 
         // Generate the prompt using the mode's name and category
-        const prompt = generateTutorPrompt(mode.name, topicKey);
+        const prompt = generateModePrompt(mode.name, topicKey);
         mode.prompt = Promise.resolve(prompt);
 
         // Set default tools if not specified

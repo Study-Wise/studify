@@ -64,7 +64,7 @@ The application is organized around educational categories and modes defined in 
 
 Each category contains multiple modes (e.g., Math → Algebra, Geometry, Calculus). Each mode:
 
-- Has a dynamically generated tutor prompt via `generateTutorPrompt()`
+- Has a dynamically generated mode prompt via `generateModePrompt()`
 - Can define custom AI tools (defaults to global tools from `src/lib/tools.ts`)
 - Maps to URL structure: `/[category]/[mode]/chat/[id]`
 

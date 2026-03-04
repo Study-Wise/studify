@@ -1,6 +1,6 @@
 // Application Configuration
 
-import { generateTutorPrompt } from '@/lib/prompt-generator';
+import { generateModePrompt } from '@/lib/prompt-generator';
 import type { CategoryName, ModeName } from '@/lib/modes';
 import type { ImageSize } from '@/lib/models';
 
@@ -20,7 +20,7 @@ export interface Config {
 const defaultCategory = 'general';
 const defaultMode = 'general';
 
-const prompt = generateTutorPrompt(defaultCategory, defaultMode);
+const prompt = generateModePrompt(defaultCategory, defaultMode);
 
 const config: Config = {
     provider: 'openai',
