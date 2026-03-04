@@ -98,7 +98,8 @@ const getContentTool = tool({
                     config.provider,
                     promptToPass
                 );
-            } else {
+            }
+            else {
                 generatedContent = await generateFn(threadId, userEmail || null, promptToPass);
             }
 

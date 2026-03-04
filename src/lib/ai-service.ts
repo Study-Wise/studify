@@ -6,7 +6,7 @@ import config from '@/lib/config';
 import { providers } from '@/lib/models';
 import allTools from '@/lib/tools';
 import { nanoid } from 'nanoid';
-import type { AIGenerationOptions, TitleGenerationOptions, AIGenerationResult, ClientToolCall, ToolRecord } from '@/lib/types';
+import type { AIGenerationOptions, TitleGenerationOptions, AIGenerationResult, ClientToolCall, ToolRecord, JSONValue } from '@/lib/types';
 
 /**
  * Validates and returns a proper model-provider pair
@@ -107,20 +107,21 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
                 try {
                     // Tool results are JSON strings, so we need to parse them
                     // Cast to access the result property which varies by type
-                    const rawResult = (toolResult as { result?: unknown }).result;
+                    const rawResult = (toolResult as { result?: JSONValue }).result;
                     const resultString = rawResult as string;
                     const resultValue = typeof resultString === 'string' ? JSON.parse(resultString) : resultString;
 
-                    if (resultValue && resultValue.action === 'open-content') {
+                    if (resultValue && typeof resultValue === 'object' && 'action' in resultValue && resultValue.action === 'open-content') {
+                        const openContentResult = resultValue as { type: string, threadId: string, category: string, mode: string, url?: string };
                         clientToolCalls.push({
                             toolName: 'open-content',
                             toolCallId: toolResult.toolCallId,
                             args: {
-                                type: resultValue.type,
-                                threadId: resultValue.threadId,
-                                category: resultValue.category,
-                                mode: resultValue.mode,
-                                url: resultValue.url,
+                                type: openContentResult.type,
+                                threadId: openContentResult.threadId,
+                                category: openContentResult.category,
+                                mode: openContentResult.mode,
+                                url: openContentResult.url,
                             },
                         });
                     }
@@ -136,11 +137,11 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
                 if (step.toolResults && step.toolResults.length > 0) {
                     for (const toolResult of step.toolResults) {
                         try {
-                            const typedToolResult = toolResult as { result?: unknown, toolCallId: string };
+                            const typedToolResult = toolResult as { result?: JSONValue, toolCallId: string };
                             const rawResult = typedToolResult.result;
                             const resultValue = typeof rawResult === 'string' ? JSON.parse(rawResult) : rawResult;
                             
-                            if (resultValue && typeof resultValue === 'object' && 'action' in resultValue && resultValue.action === 'open-content') {
+                            if (resultValue && typeof resultValue === 'object' && resultValue !== null && 'action' in resultValue && resultValue.action === 'open-content') {
                                 const openContentResult = resultValue as { type: string, threadId: string, category: string, mode: string, url?: string };
                                 clientToolCalls.push({
                                     toolName: 'open-content',
@@ -167,7 +168,7 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
             for (const toolCall of result.toolCalls) {
                 if (clientSideToolNames.has(toolCall.toolName)) {
                     // Extract args safely
-                    const untypedArgs = (toolCall as { args?: Record<string, unknown> }).args ?? {};
+                    const untypedArgs = (toolCall as { args?: Record<string, JSONValue> }).args ?? {};
                     const args: Record<string, string | number | boolean | undefined> = {};
                     
                     for (const [key, value] of Object.entries(untypedArgs)) {
@@ -189,7 +190,7 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
             text: result.text,
             clientToolCalls,
         };
-    } catch (error) {
+    } catch (error: unknown) {
         const aiEndTime = Date.now();
         const aiDuration = aiEndTime - aiStartTime;
         console.error(`❌ [${requestId}] AI generation failed after ${aiDuration}ms:`, error);
@@ -228,7 +229,7 @@ export async function generateTitle(options: TitleGenerationOptions): Promise<st
 
         console.log(`[${titleRequestId}] Title generated in ${Date.now() - titleStartTime}ms`);
         return generatedText;
-    } catch (error) {
+    } catch (error: unknown) {
         console.error(`❌ [${titleRequestId}] Error in generateTitle:`, error);
         console.error(`❌ [${titleRequestId}] Title generation error details:`, {
             errorName: error instanceof Error ? error.name : 'Unknown',
@@ -267,7 +268,7 @@ IMPORTANT: Only output the paraphrased question, nothing else. Do not add any ex
 
         console.log(`[${paraphraseRequestId}] Question paraphrased in ${Date.now() - paraphraseStartTime}ms`);
         return paraphrasedQuestion;
-    } catch (error) {
+    } catch (error: unknown) {
         console.error(`❌ [${paraphraseRequestId}] Error in paraphraseQuestion:`, error);
         console.error(`❌ [${paraphraseRequestId}] Paraphrase error details:`, {
             errorName: error instanceof Error ? error.name : 'Unknown',

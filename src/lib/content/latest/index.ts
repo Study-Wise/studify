@@ -4,6 +4,12 @@ import { eq, sql } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
 import { getContentTypesList } from '../get-types';
 
+// Mapping between content type IDs (kebab-case) and their status keys (camelCase)
+function typeToKey(type: string): keyof ThreadContentStatus | null {
+    const typeReplaced = type.split('-').map((part, index) => index === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1)).join('');
+    const key = `has${typeReplaced.charAt(0).toUpperCase()}${typeReplaced.slice(1)}` as keyof ThreadContentStatus;
+    return key in ({} as ThreadContentStatus) ? key : null;
+}
 export async function getThreadContentStatus(
     threadId: string,
     isAuthorized: boolean,
@@ -12,15 +18,18 @@ export async function getThreadContentStatus(
     const isNewChat = (threadId === 'new');
     
     // Default status with all known types set to false
-    const contentTypes = getContentTypesList();
-    const status: Record<string, boolean> = {};
-    
-    // Initialize status with camelCase has* keys
-    contentTypes.forEach(type => {
-        const camelCase = type.split('-').map((part, i) => i === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1)).join('');
-        const key = `has${camelCase.charAt(0).toUpperCase()}${camelCase.slice(1)}`;
-        status[key] = false;
-    });
+    const status: ThreadContentStatus = {
+        hasReferenceSheet: false,
+        hasStudyGuide: false,
+        hasInfographic: false,
+        hasWebpage: false,
+        hasMindMap: false,
+        hasAdditionalResources: false,
+        hasFlashcard: false,
+        hasPracticeQuestions: false,
+        hasSlideshow: false,
+        hasSummary: false,
+    };
 
     if (!isNewChat && (isAuthorized || isPublic) && threadId) {
         try {
@@ -28,10 +37,11 @@ export async function getThreadContentStatus(
             
             if (threads.length > 0) {
                 const content = threads[0].content || {};
+                const contentTypes = getContentTypesList();
                 
                 contentTypes.forEach(type => {
-                    const camelCase = type.split('-').map((part, i) => i === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1)).join('');
-                    const key = `has${camelCase.charAt(0).toUpperCase()}${camelCase.slice(1)}`;
+                    const key = typeToKey(type);
+                    if (!key) return;
                     
                     // Check if content exists for this type in the JSON column
                     const contentValue = content[type as keyof ThreadContent];
@@ -58,7 +68,7 @@ export async function getThreadContentStatus(
         }
     }
 
-    return status as ThreadContentStatus;
+    return status;
 }
 
 /**

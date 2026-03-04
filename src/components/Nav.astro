@@ -12,7 +12,8 @@ const { pages, pTitle, mode } = Astro.props;
         let icon = '';
         if (hasAnIcon === 'google') {
             icon = <span class="material-symbols-outlined" aria-hidden="true">{getIcon(page.name.toLowerCase().replace(/\s+/g, '_'))}</span>;
-        } else if (hasAnIcon === 'custom') {
+        }
+        else if (hasAnIcon === 'custom') {
             icon = <img src={`/assets/icons/${getIcon(page.name.toLowerCase().replace(/\s+/g, '_'))}.svg`} alt={page.name} class="nav-icon" aria-hidden="true" />;
         }
         return <a href={page.path} class:list={['nav-btn', { 'active': pTitle === page.name }]} aria-current={pTitle === page.name ? 'page' : undefined}>

@@ -88,7 +88,8 @@ import '@/styles/accessibility/touch-gestures.scss';
             
             if (deltaY >= this.pullThreshold) {
                 this.triggerRefresh();
-            } else {
+            }
+            else {
                 this.hideRefreshIndicator();
             }
 
@@ -104,7 +105,8 @@ import '@/styles/accessibility/touch-gestures.scss';
 
             if (progress >= 1) {
                 (this.refreshIndicator.querySelector('.material-symbols-outlined') as HTMLElement)!.style.animation = 'spin 1s linear infinite';
-            } else {
+            }
+            else {
                 (this.refreshIndicator.querySelector('.material-symbols-outlined') as HTMLElement)!.style.animation = 'none';
             }
         }

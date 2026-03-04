@@ -95,7 +95,7 @@ import '@/styles/accessibility/keyboard-navigation.scss';
 
     // Initialize keyboard navigation when DOM is loaded
     document.addEventListener('DOMContentLoaded', () => {
-        (window as unknown as { keyboardNavigation: KeyboardNavigation }).keyboardNavigation = new KeyboardNavigation();
+        (window as object as { keyboardNavigation: KeyboardNavigation }).keyboardNavigation = new KeyboardNavigation();
 
         // Enhance form elements
         const formElements = document.querySelectorAll('input, select, textarea');

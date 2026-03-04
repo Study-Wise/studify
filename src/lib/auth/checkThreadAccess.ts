@@ -30,7 +30,8 @@ export async function checkThreadAccess(
         } catch (error) {
             console.error('Error checking admin status:', error);
         }
-    } else if (isDev()) {
+    }
+    else if (isDev()) {
         // In dev mode without a user email, check dev user admin status directly
         try {
             isUserAdminFlag = await isDevUserAdmin();

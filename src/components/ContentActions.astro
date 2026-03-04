@@ -98,7 +98,8 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
             if (contentDiv) {
                 contentDiv.innerHTML = parsedContent;
             }
-        } else if (iframeTypes.includes(contentType)) {
+        }
+        else if (iframeTypes.includes(contentType)) {
             let container = page.querySelector(`.${contentType}-container`);
             let iframe = page.querySelector('iframe');
 
@@ -116,7 +117,8 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
             if (iframe) {
                 iframe.srcdoc = content;
             }
-        } else if (imageTypes.includes(contentType)) {
+        }
+        else if (imageTypes.includes(contentType)) {
             // For infographic, content is an object with imageUrl
             const imageUrl = typeof content === 'object' ? content.imageUrl : content;
             let contentContainer = page.querySelector('.content-container');
@@ -175,7 +177,8 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
                     actionBtn.setAttribute('data-has-content', 'true');
                     actionBtn.innerHTML = `<span class="material-symbols-outlined">refresh</span><span>${regenerateVerb} ${contentTypeName}</span>`;
                     actionBtn.removeAttribute('disabled');
-                } else {
+                }
+                else {
                     throw new Error(data.error || `Failed to generate ${contentTypeName.toLowerCase()}`);
                 }
             } catch (error) {
