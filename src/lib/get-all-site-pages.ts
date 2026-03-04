@@ -1,8 +1,10 @@
+import type { JSONValue } from './types';
+
 const pagesToHide = ['chat', 'settings', 'admin', '404'];
 
 export default function getAllSitePages() {
-    const pages = Object.entries(import.meta.glob('/src/pages/*.astro', { eager: true }))
-        .map(([path, mod]: [string, unknown]) => {
+    const pages = (Object.entries(import.meta.glob('/src/pages/*.astro', { eager: true })) as [string, Record<string, JSONValue>][])
+        .map(([path, mod]) => {
             const fileName = path.split('/').pop();
             if (!fileName) return null;
 

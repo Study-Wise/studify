@@ -107,15 +107,16 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
                 try {
                     // Tool results are JSON strings, so we need to parse them
                     // Cast to access the result property which varies by type
-                    const rawResult = (toolResult as { result?: JSONValue }).result;
+                    const typedToolResult = toolResult as { result?: JSONValue, toolCallId: string };
+                    const rawResult = typedToolResult.result;
                     const resultString = rawResult as string;
                     const resultValue = typeof resultString === 'string' ? JSON.parse(resultString) : resultString;
 
-                    if (resultValue && typeof resultValue === 'object' && 'action' in resultValue && resultValue.action === 'open-content') {
+                    if (resultValue && typeof resultValue === 'object' && resultValue !== null && 'action' in resultValue && resultValue.action === 'open-content') {
                         const openContentResult = resultValue as { type: string, threadId: string, category: string, mode: string, url?: string };
                         clientToolCalls.push({
                             toolName: 'open-content',
-                            toolCallId: toolResult.toolCallId,
+                            toolCallId: typedToolResult.toolCallId,
                             args: {
                                 type: openContentResult.type,
                                 threadId: openContentResult.threadId,
@@ -190,7 +191,7 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
             text: result.text,
             clientToolCalls,
         };
-    } catch (error: unknown) {
+    } catch (error) {
         const aiEndTime = Date.now();
         const aiDuration = aiEndTime - aiStartTime;
         console.error(`❌ [${requestId}] AI generation failed after ${aiDuration}ms:`, error);
@@ -229,7 +230,7 @@ export async function generateTitle(options: TitleGenerationOptions): Promise<st
 
         console.log(`[${titleRequestId}] Title generated in ${Date.now() - titleStartTime}ms`);
         return generatedText;
-    } catch (error: unknown) {
+    } catch (error) {
         console.error(`❌ [${titleRequestId}] Error in generateTitle:`, error);
         console.error(`❌ [${titleRequestId}] Title generation error details:`, {
             errorName: error instanceof Error ? error.name : 'Unknown',
@@ -268,7 +269,7 @@ IMPORTANT: Only output the paraphrased question, nothing else. Do not add any ex
 
         console.log(`[${paraphraseRequestId}] Question paraphrased in ${Date.now() - paraphraseStartTime}ms`);
         return paraphrasedQuestion;
-    } catch (error: unknown) {
+    } catch (error) {
         console.error(`❌ [${paraphraseRequestId}] Error in paraphraseQuestion:`, error);
         console.error(`❌ [${paraphraseRequestId}] Paraphrase error details:`, {
             errorName: error instanceof Error ? error.name : 'Unknown',

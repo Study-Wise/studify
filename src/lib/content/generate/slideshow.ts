@@ -14,7 +14,7 @@ import { buildContentSystemPrompt } from '@/lib/content';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
-import type { ThreadData, UploadedFile, MarkedToken } from '@/lib/types';
+import type { ThreadData, UploadedFile, MarkedToken, JSONValue } from '@/lib/types';
 import { saveContent } from '../latest';
 
 // Use createRequire for certain ones only - project has marked v15 but slideshow-generator needs v0.3
@@ -49,7 +49,7 @@ function markdownToSlideshowHTML(markdown: string): string {
         }
         if (!title) {
             const t: MarkedToken[] = [token]; 
-            (t as unknown as { links: Record<string, unknown> }).links = {};
+            (t as object as { links: Record<string, JSONValue> }).links = {};
             const h = marked.parser(t);
             const $ = cheerio.load(h);
             title = $('*').text();
@@ -60,7 +60,7 @@ function markdownToSlideshowHTML(markdown: string): string {
     pages.forEach((page) => {
         const renderer = new marked.Renderer();
         renderer.heading = (text: string, level: number) => `<h${level}>${text}</h${level}>`;
-        const pt = lodash.cloneDeep(page.tokens) as (MarkedToken[] & { links?: Record<string, unknown> });
+        const pt = lodash.cloneDeep(page.tokens) as (MarkedToken[] & { links?: Record<string, JSONValue> });
         pt.links = {};
         page.html = marked.parser(pt, {
             renderer,

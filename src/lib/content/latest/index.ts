@@ -4,12 +4,22 @@ import { eq, sql } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
 import { getContentTypesList } from '../get-types';
 
-// Mapping between content type IDs (kebab-case) and their status keys (camelCase)
-function typeToKey(type: string): keyof ThreadContentStatus | null {
-    const typeReplaced = type.split('-').map((part, index) => index === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1)).join('');
-    const key = `has${typeReplaced.charAt(0).toUpperCase()}${typeReplaced.slice(1)}` as keyof ThreadContentStatus;
-    return key in ({} as ThreadContentStatus) ? key : null;
-}
+/**
+ * Mapping between content type IDs (kebab-case) and their status keys (camelCase)
+ */
+const typeToKeyMap: Record<string, keyof ThreadContentStatus> = {
+    'reference-sheet': 'hasReferenceSheet',
+    'study-guide': 'hasStudyGuide',
+    'infographic': 'hasInfographic',
+    'webpage': 'hasWebpage',
+    'mind-map': 'hasMindMap',
+    'additional-resources': 'hasAdditionalResources',
+    'flashcards': 'hasFlashcard',
+    'practice-questions': 'hasPracticeQuestions',
+    'slideshow': 'hasSlideshow',
+    'summary': 'hasSummary',
+};
+
 export async function getThreadContentStatus(
     threadId: string,
     isAuthorized: boolean,
@@ -40,7 +50,7 @@ export async function getThreadContentStatus(
                 const contentTypes = getContentTypesList();
                 
                 contentTypes.forEach(type => {
-                    const key = typeToKey(type);
+                    const key = typeToKeyMap[type];
                     if (!key) return;
                     
                     // Check if content exists for this type in the JSON column
@@ -50,14 +60,18 @@ export async function getThreadContentStatus(
                         if (typeof contentValue === 'object' && contentValue !== null) {
                             if (type === 'infographic') {
                                 status[key] = !!(contentValue as InfographicData).imageUrl;
-                            } else if (type === 'flashcards') {
+                            }
+                            else if (type === 'flashcards') {
                                 status[key] = !!(contentValue as FlashcardData).questions;
-                            } else if (type === 'slideshow') {
+                            }
+                            else if (type === 'slideshow') {
                                 status[key] = !!(contentValue as SlideshowData).content;
-                            } else {
+                            }
+                            else {
                                 status[key] = Object.keys(contentValue as object).length > 0;
                             }
-                        } else {
+                        }
+                        else {
                             status[key] = !!contentValue;
                         }
                     }

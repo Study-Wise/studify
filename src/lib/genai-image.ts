@@ -26,15 +26,17 @@ async function generateImageBuffer(prompt: string) {
         }
 
         throw new Error('OpenAI API returned no images in response');
-    } catch (error: unknown) {
+    } catch (error) {
         let errorMessage = 'OpenAI image generation error';
 
         if (error instanceof Error) {
             errorMessage = `OpenAI API error: ${error.message}`;
-        } else if (error && typeof error === 'object') {
+        }
+        else if (error && typeof error === 'object') {
             if ('status' in error && error.status === 429) {
                 errorMessage = 'OpenAI API rate limit exceeded - Please wait a moment and try again.';
-            } else if ('status' in error && (error.status === 401 || error.status === 403)) {
+            }
+            else if ('status' in error && (error.status === 401 || error.status === 403)) {
                 errorMessage = 'OpenAI API authentication failed - Please check your API key.';
             }
         }

@@ -1,6 +1,9 @@
 import type { Tool } from 'ai';
 import type { CategoryName, ModeName } from '@/lib/modes';
 
+// JSON-serializable value type
+export type JSONValue = string | number | boolean | null | { [key: string]: JSONValue } | JSONValue[];
+
 // User roles
 export type UserRole = "user" | "premium" | "moderator" | "admin";
 
@@ -63,7 +66,7 @@ export interface SlideshowData {
 }
 
 export interface ThreadContent {
-    [key: string]: string | InfographicData | FlashcardData | SlideshowData | undefined;
+    [key: string]: string | InfographicData | FlashcardData | SlideshowData | undefined | JSONValue;
     'study-guide'?: string;
     'reference-sheet'?: string;
     'infographic'?: InfographicData;
@@ -78,7 +81,7 @@ export interface ThreadContent {
 
 export interface MarkedToken {
     type: string;
-    [key: string]: string | number | boolean | undefined | object | unknown;
+    [key: string]: string | number | boolean | undefined | object | JSONValue;
 }
 
 export interface FlashcardResult {
