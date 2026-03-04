@@ -1,10 +1,21 @@
-/*
- * Application Configuration
- */
+// Application Configuration
 
 import { generateTutorPrompt } from '@/lib/prompt-generator';
+import type { CategoryName, ModeName } from '@/lib/modes';
+import type { ImageSize } from '@/lib/models';
 
-import type { Config } from '@/lib/types';
+export interface Config {
+    provider: string;
+    model: string;
+    imageModel: string;
+    imageSize: ImageSize;
+    systemPrompt: string;
+    welcomeMessagePrompt: string;
+    maxThreadsPerUser: number;
+    maxMessagesPerThread: number;
+    defaultCategory: CategoryName;
+    defaultMode: ModeName;
+}
 
 const defaultCategory = 'general';
 const defaultMode = 'general';

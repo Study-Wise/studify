@@ -1,6 +1,6 @@
 import { tool } from 'ai';
 import { z } from 'zod';
-import Exa from "exa-js";
+import Exa from 'exa-js';
 
 const exa = new Exa(import.meta.env.EXA_SEARCH_API_KEY || process.env.EXA_SEARCH_API_KEY);
 

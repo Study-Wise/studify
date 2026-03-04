@@ -1,5 +1,5 @@
-import type { APIRoute } from "astro";
-import { auth } from "@/lib/auth";
+import type { APIRoute } from 'astro';
+import { auth } from '@/lib/auth';
 
 const handler: APIRoute = async (ctx) => {
     try {

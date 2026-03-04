@@ -1,8 +1,19 @@
 ---
 import '@/styles/components/chat/sidebar.scss';
 import '@/styles/components/chat/left-sidebar.scss';
-import type { ChatLeftSidebarProps } from '@/lib/types';
+
 import SidebarSection from './SidebarSection.astro';
+import type { UploadedFile } from '@/lib/threads';
+
+export interface ChatLeftSidebarProps {
+    isPublic: boolean;
+    isAuthorized: boolean;
+    threadId: string;
+    uploadedFiles: UploadedFile[];
+    email: string;
+    category: string;
+    mode: string;
+}
 
 const {
     isPublic,

@@ -1,7 +1,8 @@
 import { pgTable, varchar, timestamp, jsonb, boolean, text } from 'drizzle-orm/pg-core';
 
 import config from '@/lib/config';
-import type { ThreadContent, ThreadData, UploadedFile } from '@/lib/types';
+import type { ThreadData, UploadedFile } from '@/lib/threads';
+import type { ThreadContent } from '@/lib/content/latest/index';
 
 const threadsTable = pgTable('threads', {
     id: text('id').primaryKey(),

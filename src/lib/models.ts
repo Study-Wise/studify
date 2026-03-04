@@ -1,4 +1,17 @@
-import type { ModelOption, Providers } from '@/lib/types';
+// OpenAI gpt-image models supported sizes
+export type ImageSize = '1024x1024' | '1024x1536' | '1536x1024' | 'auto';
+
+export interface ModelOption {
+    name: string;
+    selectableInUI?: boolean;
+}
+
+export interface Provider {
+    name: string;
+    models: Record<string, ModelOption>;
+}
+
+export type Providers = Record<string, Provider>;
 
 const providers: Providers = {
     openai: {

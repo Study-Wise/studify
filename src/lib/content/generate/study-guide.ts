@@ -6,7 +6,7 @@ import desmosSection from '@/lib/prompt-templates/desmos';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
-import type { ThreadData, UploadedFile } from '@/lib/types';
+import type { ThreadData, UploadedFile } from '@/lib/threads';
 import { saveContent } from '../latest';
 
 function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {

@@ -1,9 +1,16 @@
-import type { SlideshowResult } from '@/lib/types';
 import { getLatestContent } from './index';
 
-export async function getLatestSlideshow(
-    threadId: string,
-): Promise<SlideshowResult> {
+export interface SlideshowData {
+    content: string;
+    html: string;
+}
+
+export interface SlideshowResult {
+    content: string | null;
+    html: string | null;
+}
+
+export async function getLatestSlideshow(threadId: string): Promise<SlideshowResult> {
     const content = await getLatestContent(threadId, 'slideshow');
     
     if (content && typeof content === 'object') {

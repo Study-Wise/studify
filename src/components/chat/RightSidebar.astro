@@ -1,9 +1,16 @@
 ---
 import '@/styles/components/chat/sidebar.scss';
 import '@/styles/components/chat/right-sidebar.scss';
-import type { ChatRightSidebarProps } from '@/lib/types';
 import SidebarSection from './SidebarSection.astro';
 import { getThreadContentStatus } from '@/lib/content/latest';
+
+export interface ChatRightSidebarProps {
+    threadId: string;
+    category: string;
+    mode: string;
+    isAuthorized: boolean;
+    isPublic: boolean;
+}
 
 const { 
     threadId,

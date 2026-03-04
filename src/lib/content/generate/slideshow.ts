@@ -14,8 +14,13 @@ import { buildContentSystemPrompt } from '@/lib/content';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
-import type { ThreadData, UploadedFile, MarkedToken, JSONValue } from '@/lib/types';
+import type { ThreadData, UploadedFile, JSONValue } from '@/lib/types';
 import { saveContent } from '../latest';
+
+export interface MarkedToken {
+    type: string;
+    [key: string]: string | number | boolean | undefined | object | JSONValue;
+}
 
 // Use createRequire for certain ones only - project has marked v15 but slideshow-generator needs v0.3
 const node_require = createRequire(import.meta.url);

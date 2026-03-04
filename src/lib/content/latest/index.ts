@@ -1,8 +1,35 @@
-import type { ThreadContentStatus, ThreadContent, InfographicData, FlashcardData, SlideshowData } from '@/lib/types';
 import { db } from '@/db/initialize';
 import { eq, sql } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
 import { getContentTypesList } from '../get-types';
+import type { InfographicData, FlashcardData, SlideshowData, JSONValue } from '@/lib/types';
+
+export interface ThreadContentStatus {
+    hasReferenceSheet: boolean;
+    hasStudyGuide: boolean;
+    hasInfographic: boolean;
+    hasWebpage: boolean;
+    hasMindMap: boolean;
+    hasAdditionalResources: boolean;
+    hasFlashcard: boolean;
+    hasPracticeQuestions: boolean;
+    hasSlideshow: boolean;
+    hasSummary: boolean;
+}
+
+export interface ThreadContent {
+    [key: string]: string | InfographicData | FlashcardData | SlideshowData | undefined | JSONValue;
+    'study-guide'?: string;
+    'reference-sheet'?: string;
+    'infographic'?: InfographicData;
+    'webpage'?: string;
+    'mind-map'?: string;
+    'additional-resources'?: string;
+    'flashcards'?: FlashcardData | string;
+    'practice-questions'?: string;
+    'slideshow'?: SlideshowData;
+    'summary'?: string;
+}
 
 /**
  * Mapping between content type IDs (kebab-case) and their status keys (camelCase)

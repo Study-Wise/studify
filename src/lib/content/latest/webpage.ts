@@ -4,9 +4,7 @@ export interface WebpageResult {
     content: string | null;
 }
 
-export async function getLatestWebpage(
-    threadId: string,
-): Promise<WebpageResult> {
+export async function getLatestWebpage(threadId: string): Promise<WebpageResult> {
     const content = await getLatestContent(threadId, 'webpage');
     return {
         content: content as string | null

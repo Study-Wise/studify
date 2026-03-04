@@ -1,5 +1,5 @@
 // Client-side Better Auth utilities
-import { createAuthClient } from "better-auth/client";
+import { createAuthClient } from 'better-auth/client';
 
 const resolveBaseURL = (): string => {
     if (typeof import.meta !== "undefined" && import.meta.env?.BETTER_AUTH_URL) {

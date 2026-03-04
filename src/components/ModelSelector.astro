@@ -2,7 +2,14 @@
 // import '@/styles/pages/settings.scss';
 
 import { models, providers } from '@/lib/models';
-import type { ModelOption, SelectorSettings } from '@/lib/types';
+import type { ModelOption } from '@/lib/models';
+
+export interface SelectorSettings {
+    id: string;
+    name: string;
+    options: ModelOption[] | Record<string, ModelOption>;
+    default: string;
+}
 
 // Filter out models that are not selectable in UI
 const selectableModels = models.filter((model) => model.selectableInUI !== false);

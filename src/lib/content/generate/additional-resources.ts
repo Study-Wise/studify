@@ -1,13 +1,13 @@
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
-import type { ThreadData, UploadedFile } from '@/lib/types';
-import Exa from "exa-js";
+import type { ThreadData, UploadedFile } from '@/lib/threads';
+import Exa from 'exa-js';
 import { saveContent } from '../latest';
 
 const exa = new Exa(import.meta.env.EXA_SEARCH_API_KEY || process.env.EXA_SEARCH_API_KEY);
 
-interface Resource {
+export interface Resource {
     title: string;
     url: string;
     snippet: string;

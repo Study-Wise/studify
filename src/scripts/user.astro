@@ -1,6 +1,12 @@
 <script>
     import { signIn } from '@/lib/auth/client';
-    import type { AuthUtils } from '@/lib/types';
+
+    export interface AuthUtils {
+        showError: (message: string) => void;
+        hideError: () => void;
+        getRedirectUrl: () => void;
+        callbackURL: string;
+    }
 
     const errorMessage = document.getElementById('error-message');
     const socialButtonsContainer = document.querySelector('.social-buttons') as HTMLElement;

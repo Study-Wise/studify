@@ -1,12 +1,50 @@
 import 'dotenv/config';
 
-import { generateText, stepCountIs } from 'ai';
+import { generateText, stepCountIs, type Tool } from 'ai';
 
 import config from '@/lib/config';
 import { providers } from '@/lib/models';
 import allTools from '@/lib/tools';
 import { nanoid } from 'nanoid';
-import type { AIGenerationOptions, TitleGenerationOptions, AIGenerationResult, ClientToolCall, ToolRecord, JSONValue } from '@/lib/types';
+import type { JSONValue, Message } from '@/lib/threads';
+
+// Tool related types
+export type ToolRecord = Record<string, Tool & { clientSide?: boolean }>;
+
+export interface ToolModule {
+    default: Tool & { ready?: boolean; clientSide?: boolean };
+}
+
+// Client-side tool call that needs to be executed in the browser
+export interface ClientToolCall {
+    toolName: string;
+    toolCallId: string;
+    args: Record<string, string | number | boolean | undefined>;
+}
+
+// AI generation result with potential client-side tool calls
+export interface AIGenerationResult {
+    text: string;
+    clientToolCalls: ClientToolCall[];
+}
+
+export interface AIGenerationOptions {
+    systemPrompt: string;
+    userPrompt: string;
+    convoHistory: Message[];
+    userModel: string;
+    provider: string;
+    tools?: ToolRecord;
+    excludeTools?: string[];
+    maxSteps?: number;
+    requestId?: string;
+}
+
+export interface TitleGenerationOptions {
+    convoHistory: Message[];
+    userModel: string;
+    provider: string;
+}
 
 /**
  * Validates and returns a proper model-provider pair

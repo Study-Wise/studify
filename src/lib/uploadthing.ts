@@ -1,5 +1,10 @@
 import { UTApi } from 'uploadthing/server';
-import type { UploadOptions } from '@/lib/types';
+
+export interface UploadOptions {
+    metadata?: Record<string, string>;
+    contentDisposition?: 'inline' | 'attachment';
+    acl?: 'public-read' | 'private';
+}
 
 // Factory function to create UploadThing utilities with custom config
 export function createUploadThingUtils(envVar: string, appId: string) {

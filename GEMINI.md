@@ -250,7 +250,7 @@ interface User {
 }
 
 // ✅ CORRECT - Import from centralized types
-import type { User, Session } from "better-auth";
+import type { User, Session } from 'better-auth';
 ```
 
 This ensures:

@@ -1,8 +1,34 @@
 import { eq, desc } from 'drizzle-orm';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
-import type { InferSelectModel } from "drizzle-orm";
-import type { ThreadData } from '@/lib/types';
+import type { InferSelectModel } from 'drizzle-orm';
+
+// JSON-serializable value type
+export type JSONValue = string | number | boolean | null | { [key: string]: JSONValue } | JSONValue[];
+
+// Message type for AI conversations
+export interface Message {
+    role: 'system' | 'user' | 'assistant';
+    content: string;
+}
+
+export interface ThreadData {
+    title?: string;
+    isDev?: boolean;
+    createdAt?: Date;
+    updatedAt?: Date;
+    messages: Message[];
+}
+
+export interface UploadedFile {
+    key: string;
+    name: string;
+    url: string;
+    size: number;
+    type: string;
+    uploadedAt?: string;
+    extractedText?: string | null;
+}
 
 type Thread = InferSelectModel<typeof threadsTable>;
 

@@ -1,5 +1,11 @@
-import type { InfographicData } from '@/lib/types';
 import { getLatestContent } from './index';
+
+export interface InfographicData {
+    imageUrl: string;
+    description: string;
+    generatedAt: string;
+    fileKey: string;
+}
 
 export async function getLatestInfographic(threadId: string): Promise<InfographicData | null> {
     const content = await getLatestContent(threadId, 'infographic');

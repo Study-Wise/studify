@@ -1,11 +1,12 @@
 // Dev environment authentication helper
 // Uses USER_ACCESS_TOKEN env variable to authenticate in development
 
-import { db } from "@/db/initialize";
-import { account, user as userTable } from "@/db/auth-schema";
-import { threadsTable } from "@/db/schema";
-import { eq } from "drizzle-orm";
-import type { UserRole, ThreadAccessResult, ExtendedUser } from "@/lib/types";
+import { db } from '@/db/initialize';
+import { account, user as userTable } from '@/db/auth-schema';
+import { threadsTable } from '@/db/schema';
+import { eq } from 'drizzle-orm';
+import type { UserRole, ExtendedUser } from './index';
+import type { ThreadAccessResult } from './checkThreadAccess';
 
 /**
  * Check if we're in development environment

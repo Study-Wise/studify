@@ -4,7 +4,7 @@ import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
 import { generateImage } from '@/lib/genai-image';
-import type { ThreadData, UploadedFile } from '@/lib/types';
+import type { ThreadData, UploadedFile } from '@/lib/threads';
 import { saveContent } from '../latest';
 
 function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {

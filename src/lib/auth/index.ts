@@ -1,10 +1,18 @@
 // Server-side Better Auth configuration
-import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { db } from "@/db/initialize";
-import { magicLink } from "better-auth/plugins";
-import { user, session, account, verification } from "@/db/auth-schema";
-import type { UserRole } from "@/lib/types";
+import { betterAuth } from 'better-auth';
+import { drizzleAdapter } from 'better-auth/adapters/drizzle';
+import { db } from '@/db/initialize';
+import { magicLink } from 'better-auth/plugins';
+import { user, session, account, verification } from '@/db/auth-schema';
+import type { User as BetterAuthUser } from "better-auth";
+
+// User roles
+export type UserRole = "user" | "premium" | "moderator" | "admin";
+
+// Better Auth's User type with our custom role field
+export interface ExtendedUser extends BetterAuthUser {
+    role?: UserRole;
+}
 
 // Admin email whitelist
 const ADMIN_EMAILS = [

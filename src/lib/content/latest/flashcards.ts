@@ -1,9 +1,22 @@
-import type { FlashcardResult, FlashcardData } from '@/lib/types';
 import { getLatestContent } from './index';
 
-export async function getLatestFlashcards(
-    threadId: string,
-): Promise<FlashcardResult> {
+// Structured flashcard type for generateObject output
+export interface Flashcard {
+    front: string;
+    back: string;
+}
+
+// Flashcard data stored in database - includes both text summary and structured questions
+export interface FlashcardData {
+    text: string;
+    questions: Flashcard[];
+}
+
+export interface FlashcardResult {
+    content: FlashcardData | string | null;
+}
+
+export async function getLatestFlashcards(threadId: string): Promise<FlashcardResult> {
     const content = await getLatestContent(threadId, 'flashcards');
     
     if (content) {

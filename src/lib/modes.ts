@@ -1,7 +1,22 @@
-import type { Category } from '@/lib/types';
 import tools from '@/lib/tools';
 import { generateTutorPrompt } from '@/lib/prompt-generator';
+import type { ToolRecord } from './types';
 
+export interface Mode {
+    name: string;
+    description: string;
+    icon?: string;
+    prompt?: Promise<string>;
+    tools?: ToolRecord;
+    show?: boolean;
+    desmos?: boolean;
+}
+
+export interface Category {
+    name: string;
+    description: string;
+    modes: Record<string, Mode>;
+}
 
 const categories: Record<string, Category> = {
     science: {
@@ -366,13 +381,12 @@ const categories: Record<string, Category> = {
 
 // Generate prompts programmatically for each mode
 for (const topicKey of Object.keys(categories)) {
-    const topicKeyTyped: keyof typeof categories = topicKey;
+    const topicKeyTyped = topicKey;
     const topic = categories[topicKeyTyped];
     const modes = topic.modes;
 
     for (const modeKey of Object.keys(modes)) {
-        const modeKeyTyped: keyof typeof modes = modeKey;
-        const mode = modes[modeKeyTyped];
+        const mode = modes[modeKey];
 
         // Generate the prompt using the mode's name and category
         const prompt = generateTutorPrompt(mode.name, topicKey);
@@ -383,7 +397,7 @@ for (const topicKey of Object.keys(categories)) {
             mode.tools = tools;
         }
 
-        modes[modeKeyTyped] = mode;
+        modes[modeKey] = mode;
     }
 
     categories[topicKeyTyped] = topic;

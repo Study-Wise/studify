@@ -1,4 +1,4 @@
-import * as Sentry from "@sentry/astro";
+import * as Sentry from '@sentry/astro';
 
 Sentry.init({
     dsn: "https://109d03667fa49f8fdeff6863d919d1fb@o4510689442529280.ingest.us.sentry.io/4510689443512320",

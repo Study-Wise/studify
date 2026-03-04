@@ -9,7 +9,15 @@ import categories from '@/lib/modes';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
-import type { CheckForOneMessageParams, Message } from '@/lib/types';
+import type { Message } from '@/lib/threads';
+
+export interface CheckForOneMessageParams {
+    messages: Message[];
+    threadId: string;
+    category: string;
+    mode: string;
+    isAuthorized: boolean;
+}
 
 export async function checkForOneMessage({
     messages,

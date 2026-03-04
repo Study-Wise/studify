@@ -6,7 +6,16 @@
 
 import { generateAIResponse } from '@/lib/ai-service';
 import config from '@/lib/config';
-import type { GenerateWelcomeMessageParams } from '@/lib/types';
+import type { Message, ToolRecord } from '@/lib/types';
+
+export interface GenerateWelcomeMessageParams {
+    systemPrompt: string;
+    convoHistory: Message[];
+    userModel: string;
+    provider: string;
+    tools: ToolRecord;
+    requestId: string;
+}
 
 export async function generateWelcomeMessage({
     systemPrompt,
