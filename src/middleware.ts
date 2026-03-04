@@ -56,17 +56,20 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
 
         locals.user = extendedUser;
         locals.session = session.session;
-    } else if (isDev()) {
+    }
+    else if (isDev()) {
         // In dev mode, try to authenticate using USER_ACCESS_TOKEN
         const devUser = await getDevUser();
         if (devUser) {
             locals.user = devUser;
             locals.session = null; // No actual session, but user is authenticated via token
-        } else {
+        }
+        else {
             locals.user = null;
             locals.session = null;
         }
-    } else {
+    }
+    else {
         locals.user = null;
         locals.session = null;
     }
