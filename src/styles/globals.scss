@@ -30,7 +30,7 @@
 }
 
 // CSS reset for all elements except AI-generated content container descendants (preserves their native styling)
-// Selects: everything EXCEPT descendants of content containers/assistant messages, unless they are step-by-step, or are pre, code, or anchor elements
+// Selects: everything EXCEPT descendants of content containers/assistant messages, unless they are step-by-step, in step-by-step, or are pre, code, or anchor elements
 :not(:is(.content-container[class$="-content"], .message.assistant .message-content) :not(.step-by-step, .step-by-step *, pre, code, a)) {
     &, &::before, &::after {
         box-sizing: border-box;
