@@ -9,10 +9,10 @@ import { nanoid } from 'nanoid';
 import type { JSONValue, Message } from '@/lib/threads';
 
 // Tool related types
-export type ToolRecord = Record<string, Tool & { clientSide?: boolean }>;
+export type ToolRecord = Record<string, Tool>;
 
 export interface ToolModule {
-    default: Tool & { ready?: boolean; clientSide?: boolean };
+    default: Tool & { ready?: boolean };
 }
 
 // Client-side tool call that needs to be executed in the browser
@@ -60,18 +60,6 @@ export async function getValidModelAndProvider(requestedModel: string | null): P
     return { model: modelToUse, provider: providerName };
 }
 
-// Identifies which tools are client-side (no execute function or marked as clientSide)
-function getClientSideToolNames(tools: ToolRecord): Set<string> {
-    const clientTools = new Set<string>();
-    for (const [name, tool] of Object.entries(tools)) {
-        // A tool is client-side if it has clientSide: true or has no execute function
-        if (tool.clientSide === true || !tool.execute) {
-            clientTools.add(name);
-        }
-    }
-    return clientTools;
-}
-
 // Generates AI response for a conversation
 export async function generateAIResponse(options: AIGenerationOptions): Promise<AIGenerationResult> {
     const {
@@ -92,9 +80,6 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
             Object.entries(allTools).filter(([key]) => !excludeTools.includes(key))
         )
         : tools;
-
-    // Identify client-side tools
-    const clientSideToolNames = getClientSideToolNames(resolvedTools);
 
     // Add system prompt to beginning of conversation history if not already present
     if (convoHistory[0]?.role !== 'system') {
@@ -192,29 +177,6 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
                             // Not a JSON result or not an open-content action, skip
                         }
                     }
-                }
-            }
-        }
-
-        // Also check for client-side tools that weren't executed (fallback)
-        if (result.toolCalls && result.toolCalls.length > 0) {
-            for (const toolCall of result.toolCalls) {
-                if (clientSideToolNames.has(toolCall.toolName)) {
-                    // Extract args safely
-                    const untypedArgs = (toolCall as { args?: Record<string, JSONValue> }).args ?? {};
-                    const args: Record<string, string | number | boolean | undefined> = {};
-                    
-                    for (const [key, value] of Object.entries(untypedArgs)) {
-                        if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean' || value === undefined) {
-                            args[key] = value;
-                        }
-                    }
-
-                    clientToolCalls.push({
-                        toolName: toolCall.toolName,
-                        toolCallId: toolCall.toolCallId,
-                        args,
-                    });
                 }
             }
         }
