@@ -65,28 +65,39 @@ You should also not generate any if these things as well:
    - Fill in the blank
    - Any quiz or test content
 
-OUTPUT FORMAT - Use ONLY these sections (you may omit irrelevant ones):
+Generate a DETAILED and COMPREHENSIVE study guide. Be thorough — cover every major topic and subtopic discussed in the conversation. Do not summarize briefly; expand on each concept with clear explanations, examples, and connections between ideas.
+
+OUTPUT FORMAT - Use ONLY these sections (you may omit irrelevant relevant sections):
 
 ### Study Guide
 
 #### Core Concepts Identified
-(list main topics from the conversation)
+(list ALL main topics and subtopics from the conversation — be exhaustive)
 
-#### Explanation: What is this about?
-(brief, level-appropriate explanation)
+#### Detailed Explanations
+(for EACH core concept, provide a thorough explanation with examples, context, and why it matters — this should be the longest section)
 ${desmosContent}
+#### Key Relationships & Connections
+(explain how the concepts relate to each other, cause-and-effect chains, and broader themes)
+
 #### Key Skills to Practice
-(list skills - NOT practice problems or questions)
+(list specific skills with brief guidance on how to practice each one — NOT practice problems or questions)
 
-#### Vocabulary
-(define 3-5 relevant terms)
+#### Real-World Applications & Examples
+(provide concrete examples and real-world scenarios where these concepts apply)
 
-#### Quick Tip / Common Pitfall
-(one tip)
+#### Common Misconceptions & Pitfalls
+(list multiple common mistakes and how to avoid them)
+
+#### Historical Context & Background
+(if applicable, provide relevant historical context, key figures, or origin of the concepts)
+
+#### Comparison & Contrast
+(if applicable, compare and contrast similar or related concepts to clarify distinctions)
 
 Math formatting: use \`$…$\` for inline math and \`$$…$$\` for block math.
 
-REMEMBER: Output ONLY the Study Guide. No quizzes, no practice questions, no flashcards, no other content types.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
+REMEMBER: Output ONLY the Study Guide. No quizzes, no practice questions, no flashcards, no other content types. Be DETAILED and THOROUGH — a student should be able to study for an exam using only this guide.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
 
     const conversationMessages = messages.filter(msg => msg.role !== 'system');
 
