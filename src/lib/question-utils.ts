@@ -1,12 +1,6 @@
 // Utility functions for question ID generation and management
 
-/**
- * Converts a question string to a URL-friendly ID
- * - Replaces spaces with hyphens
- * - Removes special characters
- * - Converts to lowercase
- * - Trims and removes duplicate hyphens
- */
+// Converts a question string to a URL-friendly ID
 export function questionToId(question: string): string {
     return question
         .toLowerCase()

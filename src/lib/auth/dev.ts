@@ -101,10 +101,8 @@ export async function isDevUserPremium(): Promise<boolean> {
     return role === "premium" || role === "moderator" || role === "admin";
 }
 
-/**
- * Check thread access for the dev user
- * Similar to checkThreadAccess but uses the dev access token
- */
+// Check thread access for the dev user
+// Similar to checkThreadAccess but uses the dev access token
 export async function checkDevThreadAccess(
     threadId: string,
     urlCategory?: string,

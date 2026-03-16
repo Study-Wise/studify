@@ -1,8 +1,5 @@
-/**
- * Welcome Message Generation
- *
- * This module handles generating the welcome message for the first message in a conversation.
- */
+// Welcome Message Generation
+// This module handles generating the welcome message for the first message in a conversation.
 
 import { generateAIResponse } from '@/lib/ai-service';
 import config from '@/lib/config';

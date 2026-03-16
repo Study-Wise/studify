@@ -31,10 +31,8 @@ const contentTypeDescriptions: Record<string, string> = {
     'Chat Summary': 'a Summary of the current Chat',
 };
 
-/**
- * Generates the common system prompt header for content generation.
- * Each content generator should prepend this to its specific instructions.
- */
+// Generates the common system prompt header for content generation.
+// Each content generator should prepend this to its specific instructions.
 export function buildContentSystemPrompt(contentTypeName: string, uploadedFilesContext: string): string {
     const description = contentTypeDescriptions[contentTypeName] || contentTypeName.toLowerCase();
 

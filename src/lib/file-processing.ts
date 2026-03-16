@@ -1,7 +1,5 @@
-/**
- * File Processing Utilities
- * Extracts text content from various file types for AI context
- */
+// File Processing Utilities
+// Extracts text content from various file types for AI context
 
 // Extract text from PDF (basic implementation)
 export async function extractTextFromPDF(file: File): Promise<string | null> {
