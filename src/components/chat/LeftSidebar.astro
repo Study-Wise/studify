@@ -268,7 +268,13 @@ const {
                     body: formData
                 });
 
-                const data = await response.json();
+                const responseText = await response.text();
+                let data;
+                try {
+                    data = JSON.parse(responseText);
+                } catch {
+                    throw new Error(`Server error (${response.status}): ${responseText.substring(0, 200)}`);
+                }
 
                 if (data.status === 'success') {
                     // Remove empty message if it exists
