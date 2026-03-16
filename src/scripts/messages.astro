@@ -31,10 +31,12 @@ const { page, category, mode, id } = Astro.props;
 
     const API_ENDPOINT = '/api/message/generate';
 
+    let isGenerating = false;
+
     function handleEnterKey(event) {
         if (event.key === 'Enter' && !event.shiftKey && event.target.value.trim() !== '') {
             event.preventDefault();
-            if (!sendButton.disabled) generateOutput();
+            if (!isGenerating && !sendButton.disabled) generateOutput();
         }
     }
 
@@ -139,11 +141,11 @@ const { page, category, mode, id } = Astro.props;
 
     function setLoadingState(isLoading) {
         try {
+            isGenerating = isLoading;
             if (isLoading) {
                 spinner && (spinner.style.display = 'inline-block');
                 if (sendButton) sendButton.disabled = true;
                 if (messageInput) {
-                    messageInput.disabled = true;
                     messageInput.placeholder = 'Waiting for response...';
                 }
                 const icon = sendButton?.querySelector('i.material-symbols-outlined');
@@ -155,9 +157,8 @@ const { page, category, mode, id } = Astro.props;
             }
             else {
                 spinner && (spinner.style.display = 'none');
-                if (sendButton) sendButton.disabled = false;
+                if (sendButton) sendButton.disabled = !messageInput?.value?.trim();
                 if (messageInput) {
-                    messageInput.disabled = false;
                     messageInput.placeholder = 'Type your message...';
                     messageInput.focus();
                 }
@@ -588,8 +589,10 @@ const { page, category, mode, id } = Astro.props;
 
         if (sendButton && messageInput) {
             sendButton.addEventListener('click', () => {
-                generateOutput();
-                messageInput.focus();
+                if (!isGenerating) {
+                    generateOutput();
+                    messageInput.focus();
+                }
             });
         }
 
