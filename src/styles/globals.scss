@@ -42,7 +42,7 @@ ul, ol {
     padding-inline-start: 1.5em;
 }
 
-.content-container[class$="-content"],
+.content-container,
 .message.assistant .message-content {
     :not(.step-by-step, .step-by-step *, pre, code, a) {
         &, &::before, &::after {
