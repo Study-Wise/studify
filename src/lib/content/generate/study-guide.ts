@@ -108,7 +108,7 @@ REMEMBER: Output ONLY the Study Guide. No quizzes, no practice questions, no fla
         convoHistory: [...conversationMessages],
         userModel,
         provider,
-        excludeTools: ['get-content', 'get-content-types', 'open-content'],
+        excludeTools: config.contentGenerationExcludeTools,
     });
 
     if (!result.text || result.text.length === 0) {

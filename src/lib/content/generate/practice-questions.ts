@@ -143,7 +143,7 @@ You may remove or modify sections as you see fit based on relevance to the topic
         convoHistory: [...conversationMessages],
         userModel,
         provider,
-        excludeTools: ['get-content', 'get-content-types', 'open-content'],
+        excludeTools: config.contentGenerationExcludeTools,
     });
 
     if (!result.text || result.text.length === 0) {

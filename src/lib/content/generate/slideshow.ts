@@ -148,7 +148,7 @@ REMEMBER: Output ONLY the markdown content. No quizzes, no practice questions, n
         convoHistory: [...conversationMessages],
         userModel,
         provider,
-        excludeTools: ['get-content', 'get-content-types', 'open-content'],
+        excludeTools: config.contentGenerationExcludeTools,
     });
 
     if (!result.text || result.text.length === 0) {

@@ -73,7 +73,7 @@ Math formatting: use \`$…$\` for displaying math formulas/equations inline and
         convoHistory: [...conversationMessages],
         userModel,
         provider,
-        excludeTools: ['get-content', 'get-content-types', 'open-content'],
+        excludeTools: config.contentGenerationExcludeTools,
     });
 
     if (!result.text || result.text.length === 0) {

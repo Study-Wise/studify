@@ -73,7 +73,7 @@ REMEMBER: Output ONLY the Chat Summary in markdown format. No other content type
         convoHistory: [...conversationMessages],
         userModel,
         provider,
-        excludeTools: ['get-content', 'get-content-types', 'open-content'],
+        excludeTools: config.contentGenerationExcludeTools,
     });
 
     if (!result.text || result.text.length === 0) {

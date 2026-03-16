@@ -2,6 +2,7 @@ import type { GatewayProviderOptions } from '@ai-sdk/gateway';
 import { generateText } from 'ai';
 import allTools from '@/lib/tools';
 import { buildContentSystemPrompt } from '@/lib/content';
+import config from '@/lib/config';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
@@ -108,7 +109,7 @@ You may remove or modify sections as you see fit based on relevance to the topic
 
     // Generate the mind map using Vercel's v0 model (optimized for HTML generation)
     // with automatic fallback to Claude Sonnet 4.5 via AI Gateway
-    const excludeTools = ['get-content', 'get-content-types', 'open-content'];
+    const excludeTools = config.contentGenerationExcludeTools;
     const result = await generateText({
         model: 'vercel/v0-1.5-md',
         messages: messagesForAI,

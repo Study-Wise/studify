@@ -1,5 +1,6 @@
 import { generateAIResponse } from '@/lib/ai-service';
 import { buildContentSystemPrompt } from '@/lib/content';
+import config from '@/lib/config';
 import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
 import { threadsTable } from '@/db/schema';
@@ -69,7 +70,7 @@ You may remove or modify elements as you see fit based on relevance to the topic
         convoHistory: [...conversationMessages],
         userModel,
         provider,
-        excludeTools: ['get-content', 'get-content-types', 'open-content'],
+        excludeTools: config.contentGenerationExcludeTools,
     });
 
     // Step 2: Generate the actual image using Google GenAI
