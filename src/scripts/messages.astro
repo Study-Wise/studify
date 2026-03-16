@@ -303,11 +303,8 @@ const { page, category, mode, id } = Astro.props;
 
                 if (url && type) {
                     updateSidebarSection(type, url);
-                    const newTab = window.open(url, '_blank');
-                    // If popup was blocked, fall back to navigating current page
-                    if (!newTab) {
-                        window.location.href = url;
-                    }
+                    // Open in new tab; if popup blocked, sidebar is already updated
+                    window.open(url, '_blank');
                 }
             }
             // Add more client-side tool handlers here as needed
