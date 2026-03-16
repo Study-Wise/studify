@@ -302,25 +302,10 @@ const { page, category, mode, id } = Astro.props;
                 const url = providedUrl || (type && tid && cat && m ? `/${cat}/${m}/${type}/${tid}` : null);
 
                 if (url && type) {
-                    // Open the tab immediately to avoid popup blocker
-                    // (window.open after async fetch loses the user-gesture context)
+                    updateSidebarSection(type, url);
                     const newTab = window.open(url, '_blank');
-
-                    // Also trigger generation in the background so content is ready
-                    const apiEndpoint = `/api/${type}/generate`;
-                    fetch(apiEndpoint, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ threadId: tid || threadId }),
-                    }).then(() => {
-                        updateSidebarSection(type, url);
-                    }).catch((error) => {
-                        console.error(`Error generating ${type}:`, error);
-                    });
-
                     // If popup was blocked, fall back to navigating current page
                     if (!newTab) {
-                        updateSidebarSection(type, url);
                         window.location.href = url;
                     }
                 }
