@@ -17,7 +17,7 @@ import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 import type { Mode } from '@/lib/modes';
-import type { ThreadData, Message } from '@/lib/threads';
+import type { ThreadData, Message, UploadedFile } from '@/lib/threads';
 
 import { isValidEmail } from '@/lib/validation';
 import { isUserAdmin } from '@/lib/auth/admin';
@@ -148,7 +148,8 @@ mode: ${mode || config.defaultMode}
 
 Use the above thread context when calling tools that require threadId, category, or mode parameters.
 `;
-        const systemPrompt = baseSystemPrompt + threadContext;
+
+        let systemPrompt = baseSystemPrompt + threadContext;
 
         const systemObj: Message = {
             role: 'system',
@@ -205,6 +206,23 @@ Use the above thread context when calling tools that require threadId, category,
                         headers: { 'Content-Type': 'application/json' },
                     }
                 );
+            }
+        }
+
+        // --- Build uploaded files context from thread data ---
+        if (userData) {
+            const uploadedFiles = (userData.uploadedFiles as UploadedFile[]) || [];
+            if (uploadedFiles.length > 0) {
+                const fileList = uploadedFiles
+                    .map(f => {
+                        const header = `--- File: ${f.name} (${f.type}, ${f.size} bytes) ---`;
+                        return f.extractedText ? `${header}\n${f.extractedText}` : header;
+                    })
+                    .join('\n\n');
+                systemPrompt += `\n\n### Uploaded Files\nThe user has uploaded the following files to this conversation. Use this content to inform your responses:\n\n${fileList}`;
+
+                // Update the system message in convoHistory
+                convoHistory[0] = { role: 'system', content: systemPrompt };
             }
         }
 
