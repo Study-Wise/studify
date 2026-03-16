@@ -1,6 +1,7 @@
-import { db } from '@/db/initialize';
 import { eq, sql } from 'drizzle-orm';
+import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
+
 import { getContentTypesList } from '../get-types';
 import type { JSONValue } from '@/lib/threads';
 import type { InfographicData } from './infographic';

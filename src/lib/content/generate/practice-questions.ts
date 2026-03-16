@@ -1,10 +1,11 @@
+import { eq } from 'drizzle-orm';
+import { db } from '@/db/initialize';
+import { threadsTable } from '@/db/schema';
+
 import config from '@/lib/config';
 import { generateAIResponse } from '@/lib/ai-service';
 import { buildContentSystemPrompt } from '@/lib/content';
 import stepByStepHTML from '@/lib/prompt-templates/step-by-step-html';
-import { db } from '@/db/initialize';
-import { eq } from 'drizzle-orm';
-import { threadsTable } from '@/db/schema';
 import type { ThreadData, UploadedFile } from '@/lib/threads';
 import { saveContent } from '@/lib/content/latest';
 
@@ -47,7 +48,8 @@ export async function generatePracticeQuestions(threadId: string, userPrompt?: s
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
     // Create a practice questions specific prompt
-    const practiceQuestionsPrompt = `${buildContentSystemPrompt('Practice Questions', uploadedFilesContext)}
+    const practiceQuestionsPrompt = 
+`${buildContentSystemPrompt('Practice Questions', uploadedFilesContext)}
 
 Output the content directly without any wrapping HTML tags or dialog elements.
 

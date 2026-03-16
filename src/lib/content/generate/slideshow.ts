@@ -1,19 +1,18 @@
 import { createRequire } from 'module';
 import { dirname, join } from 'path';
-
 import fm from 'front-matter';
 import cheerio from 'cheerio';
 import highlight from 'highlight.js';
 import CryptoJS from 'crypto-js';
 import lodash from 'lodash';
 
+import { eq } from 'drizzle-orm';
+import { db } from '@/db/initialize';
+import { threadsTable } from '@/db/schema';
+
 import config from '@/lib/config';
 import { generateAIResponse } from '@/lib/ai-service';
 import { buildContentSystemPrompt } from '@/lib/content';
-
-import { db } from '@/db/initialize';
-import { eq } from 'drizzle-orm';
-import { threadsTable } from '@/db/schema';
 import type { ThreadData, UploadedFile, JSONValue } from '@/lib/threads';
 import { saveContent } from '@/lib/content/latest';
 
@@ -111,7 +110,8 @@ export async function generateSlideshow(threadId: string, userPrompt?: string) {
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
     // Create a slideshow specific prompt - uses standard markdown with headings as slide separators
-    const slideshowPrompt = `${buildContentSystemPrompt('Slideshow', uploadedFilesContext)}
+    const slideshowPrompt = 
+`${buildContentSystemPrompt('Slideshow', uploadedFilesContext)}
 
 OUTPUT FORMAT - Markdown Slideshow:
 

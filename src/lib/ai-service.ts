@@ -1,11 +1,10 @@
 import 'dotenv/config';
-
 import { generateText, stepCountIs, type Tool } from 'ai';
+import { nanoid } from 'nanoid';
 
 import config from '@/lib/config';
 import { providers } from '@/lib/models';
-import allTools from '@/lib/tools';
-import { nanoid } from 'nanoid';
+import tools from '@/lib/tools';
 import type { JSONValue, Message } from '@/lib/threads';
 
 // Tool related types
@@ -77,7 +76,7 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
     // Filter out excluded tools from the global tools
     const resolvedTools = excludeTools
         ? Object.fromEntries(
-            Object.entries(allTools).filter(([key]) => !excludeTools.includes(key))
+            Object.entries(tools).filter(([key]) => !excludeTools.includes(key))
         )
         : tools;
 

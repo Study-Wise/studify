@@ -1,11 +1,13 @@
 import type { GatewayProviderOptions } from '@ai-sdk/gateway';
 import { generateText } from 'ai';
-import allTools from '@/lib/tools';
+
+import { eq } from 'drizzle-orm';
+import { db } from '@/db/initialize';
+import { threadsTable } from '@/db/schema';
+
+import tools from '@/lib/tools';
 import { buildContentSystemPrompt } from '@/lib/content';
 import config from '@/lib/config';
-import { db } from '@/db/initialize';
-import { eq } from 'drizzle-orm';
-import { threadsTable } from '@/db/schema';
 import type { ThreadData, UploadedFile } from '@/lib/threads';
 import { saveContent } from '@/lib/content/latest';
 
@@ -45,7 +47,8 @@ export async function generateMindMap(threadId: string, userPrompt?: string) {
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
     // Create a mind map specific prompt
-    const mindMapPrompt = `${buildContentSystemPrompt('Mind Map', uploadedFilesContext)}
+    const mindMapPrompt = 
+`${buildContentSystemPrompt('Mind Map', uploadedFilesContext)}
 
 Create a comprehensive visual representation of the concepts, relationships, and key ideas discussed.
 
@@ -114,7 +117,7 @@ You may remove or modify sections as you see fit based on relevance to the topic
         model: 'vercel/v0-1.5-md',
         messages: messagesForAI,
         tools: Object.fromEntries(
-            Object.entries(allTools).filter(([key]) => !excludeTools.includes(key))
+            Object.entries(tools).filter(([key]) => !excludeTools.includes(key))
         ),
         temperature: 0.7,
         providerOptions: {

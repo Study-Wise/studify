@@ -1,9 +1,10 @@
+import { eq } from 'drizzle-orm';
+import { db } from '@/db/initialize';
+import { threadsTable } from '@/db/schema';
+
 import { generateAIResponse } from '@/lib/ai-service';
 import { buildContentSystemPrompt } from '@/lib/content';
 import config from '@/lib/config';
-import { db } from '@/db/initialize';
-import { eq } from 'drizzle-orm';
-import { threadsTable } from '@/db/schema';
 import { generateImage } from '@/lib/genai-image';
 import type { ThreadData, UploadedFile } from '@/lib/threads';
 import { saveContent } from '@/lib/content/latest';
@@ -50,7 +51,8 @@ export async function generateInfographic(
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
     // Step 1: Generate a description of what the infographic should show
-    const systemPrompt = `${buildContentSystemPrompt('Infographic', uploadedFilesContext)}
+    const systemPrompt = 
+`${buildContentSystemPrompt('Infographic', uploadedFilesContext)}
 
 Your description should be clear, visual, and specific about:
 - Main topic/title at the top
@@ -74,7 +76,8 @@ You may remove or modify elements as you see fit based on relevance to the topic
     });
 
     // Step 2: Generate the actual image using Google GenAI
-    const imagePrompt = `Create an educational infographic image with the following specifications:
+    const imagePrompt = 
+`Create an educational infographic image with the following specifications:
 
 ${descriptionResult.text}
 

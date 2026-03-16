@@ -1,11 +1,13 @@
 import type { GatewayProviderOptions } from '@ai-sdk/gateway';
 import { generateText } from 'ai';
-import allTools from '@/lib/tools';
+
+import { eq } from 'drizzle-orm';
+import { db } from '@/db/initialize';
+import { threadsTable } from '@/db/schema';
+
+import tools from '@/lib/tools';
 import { buildContentSystemPrompt } from '@/lib/content';
 import config from '@/lib/config';
-import { db } from '@/db/initialize';
-import { eq } from 'drizzle-orm';
-import { threadsTable } from '@/db/schema';
 import type { ThreadData, UploadedFile } from '@/lib/threads';
 import { saveContent } from '@/lib/content/latest';
 
@@ -45,7 +47,8 @@ export async function generateWebpage(threadId: string, userPrompt?: string) {
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
     // Create a webpage specific prompt
-    const webpagePrompt = `${buildContentSystemPrompt('Webpage', uploadedFilesContext)}
+    const webpagePrompt = 
+`${buildContentSystemPrompt('Webpage', uploadedFilesContext)}
 
 This should be a comprehensive resource that presents the concepts discussed in an engaging, visual format.
 
@@ -98,7 +101,7 @@ ONLY INCLUDE THE HTML CONTENT IN YOUR RESPONSE. DO NOT RESPOND WITH ANYTHING ELS
         model: 'vercel/v0-1.5-md',
         messages: messagesForAI,
         tools: Object.fromEntries(
-            Object.entries(allTools).filter(([key]) => !excludeTools.includes(key))
+            Object.entries(tools).filter(([key]) => !excludeTools.includes(key))
         ),
         temperature: 0.7,
         providerOptions: {
