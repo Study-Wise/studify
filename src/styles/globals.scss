@@ -48,7 +48,7 @@ input, textarea, select, button {
     color: inherit;
 }
 
-.content-container [class$="-content"] {
+.content-container[class$="-content"] {
     h1, h2, h3, h4, h5, h6, h6, ol, ul, p, pre {
         + & {
             margin-block-start: 1em;
@@ -56,7 +56,7 @@ input, textarea, select, button {
     }
 }
 
-.content-container [class$="-content"],
+.content-container[class$="-content"],
 .message.assistant .message-content {
     *:not(.step-by-step, .step-by-step *, pre, code, a) {
         &, &::before, &::after {
