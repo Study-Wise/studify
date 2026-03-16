@@ -10,7 +10,7 @@ $color: list.nth(map.get($accent-colors, primary), 1);
     top: $spacing-medium;
     margin-bottom: $spacing-medium;
     margin-inline: #{-1 * $spacing-medium};
-    padding: $spacing-medium $spacing-large;
+    padding: $spacing-medium;
     background-color: var(--card-bg);
     border: 1px solid var(--card-border);
     border-radius: $border-radius-extra-large;
