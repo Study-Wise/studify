@@ -46,6 +46,10 @@
 .content-container[class$="-content"],
 .message.assistant .message-content {
     :not(.step-by-step, .step-by-step *, pre, code, a) {
+        &, &::before, &::after {
+            margin: revert;
+        }
+
         &:first-child {
             margin-top: 0;
         }
