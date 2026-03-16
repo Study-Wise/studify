@@ -302,33 +302,26 @@ const { page, category, mode, id } = Astro.props;
                 const url = providedUrl || (type && tid && cat && m ? `/${cat}/${m}/${type}/${tid}` : null);
 
                 if (url && type) {
+                    // Open the tab immediately to avoid popup blocker
+                    // (window.open after async fetch loses the user-gesture context)
+                    const newTab = window.open(url, '_blank');
+
+                    // Also trigger generation in the background so content is ready
                     const apiEndpoint = `/api/${type}/generate`;
-
-                    try {
-                        // First, generate the content if it doesn't exist
-                        const response = await fetch(apiEndpoint, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ threadId: tid || threadId }),
-                        });
-
-                        const data = await response.json();
-
-                        if (data.status === 'success' || data.content) {
-                            // Update the sidebar to show content exists
-                            updateSidebarSection(type, url);
-                            // Open the content in a new tab
-                            window.open(url, '_blank');
-                        }
-                        else {
-                            console.error(`Failed to generate ${type}:`, data.error);
-                            // Try to open anyway
-                            window.open(url, '_blank');
-                        }
-                    } catch (error) {
+                    fetch(apiEndpoint, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ threadId: tid || threadId }),
+                    }).then(() => {
+                        updateSidebarSection(type, url);
+                    }).catch((error) => {
                         console.error(`Error generating ${type}:`, error);
-                        // Try to open anyway in case content already exists
-                        window.open(url, '_blank');
+                    });
+
+                    // If popup was blocked, fall back to navigating current page
+                    if (!newTab) {
+                        updateSidebarSection(type, url);
+                        window.location.href = url;
                     }
                 }
             }
