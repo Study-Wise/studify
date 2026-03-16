@@ -188,7 +188,7 @@ export async function generateAIResponse(options: AIGenerationOptions): Promise<
                                     },
                                 });
                             }
-                        } catch {
+                        } catch (_e) {
                             // Not a JSON result or not an open-content action, skip
                         }
                     }

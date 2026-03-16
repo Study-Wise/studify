@@ -276,7 +276,7 @@ const {
                     const responseText = await response.text();
                     try {
                         data = JSON.parse(responseText);
-                    } catch {
+                    } catch (_e) {
                         throw new Error(`Server error (${response.status}): ${responseText.substring(0, 200)}`);
                     }
                 }
@@ -313,7 +313,7 @@ const {
                         let chunkData;
                         try {
                             chunkData = JSON.parse(chunkText);
-                        } catch {
+                        } catch (_e) {
                             throw new Error(`Server error (${chunkRes.status}): ${chunkText.substring(0, 200)}`);
                         }
 
@@ -333,7 +333,7 @@ const {
                     const completeText = await completeRes.text();
                     try {
                         data = JSON.parse(completeText);
-                    } catch {
+                    } catch (_e) {
                         throw new Error(`Server error (${completeRes.status}): ${completeText.substring(0, 200)}`);
                     }
                 }

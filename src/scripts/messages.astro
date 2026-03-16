@@ -10,7 +10,7 @@ const { page, category, mode, id } = Astro.props;
     function loadUserSettings() {
         try {
             userSettings = JSON.parse(localStorage?.getItem('settings') || '{}') || {};
-        } catch {
+        } catch (_e) {
             userSettings = {};
         }
     }
@@ -182,7 +182,7 @@ const { page, category, mode, id } = Astro.props;
             else if (typeof message === 'object' && message !== null) {
                 try {
                     messageToShow = JSON.stringify(message);
-                } catch {
+                } catch (_e) {
                     messageToShow = '[Complex Error Object]';
                 }
             }
