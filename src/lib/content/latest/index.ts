@@ -133,9 +133,9 @@ export async function saveContent<T>(threadId: string, type: string, data: T): P
         // Use JSONB concatenation/update to update only the specific key
         // This is more efficient than fetching, updating in JS, and saving back
         await db.update(threadsTable)
-            .set({ 
-                content: sql`${threadsTable.content} || jsonb_build_object(${contentKey}, ${JSON.stringify(data)}::jsonb)`,
-                updatedAt: new Date() 
+            .set({
+                content: sql`${threadsTable.content} || jsonb_build_object(${sql.raw(`'${contentKey}'`)}, ${JSON.stringify(data)}::jsonb)`,
+                updatedAt: new Date()
             })
             .where(eq(threadsTable.id, threadId));
     } catch (error) {
