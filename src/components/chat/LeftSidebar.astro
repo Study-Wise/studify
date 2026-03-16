@@ -258,22 +258,83 @@ const {
                     : `Uploading ${file.name}...`;
                 window.showInfo?.(progressMsg);
 
-                const formData = new FormData();
-                formData.append('file', file);
-                formData.append('threadId', activeThreadId);
-                formData.append('email', email);
-
-                const response = await fetch('/api/files/upload', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const responseText = await response.text();
+                const CHUNK_THRESHOLD = 3.5 * 1024 * 1024; // 3.5MB - under Vercel's 4.5MB limit with overhead
                 let data;
-                try {
-                    data = JSON.parse(responseText);
-                } catch {
-                    throw new Error(`Server error (${response.status}): ${responseText.substring(0, 200)}`);
+
+                if (file.size <= CHUNK_THRESHOLD) {
+                    // Direct upload for small files
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('threadId', activeThreadId);
+                    formData.append('email', email);
+
+                    const response = await fetch('/api/files/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const responseText = await response.text();
+                    try {
+                        data = JSON.parse(responseText);
+                    } catch {
+                        throw new Error(`Server error (${response.status}): ${responseText.substring(0, 200)}`);
+                    }
+                } else {
+                    // Chunked upload for large files
+                    const CHUNK_SIZE = 3 * 1024 * 1024; // 3MB chunks
+                    const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
+                    const uploadId = crypto.randomUUID();
+
+                    for (let i = 0; i < totalChunks; i++) {
+                        const start = i * CHUNK_SIZE;
+                        const end = Math.min(start + CHUNK_SIZE, file.size);
+                        const chunk = file.slice(start, end);
+
+                        window.showInfo?.(`Uploading ${file.name}... chunk ${i + 1}/${totalChunks}`);
+
+                        const chunkForm = new FormData();
+                        chunkForm.append('chunk', chunk);
+                        chunkForm.append('uploadId', uploadId);
+                        chunkForm.append('chunkIndex', String(i));
+                        chunkForm.append('totalChunks', String(totalChunks));
+                        chunkForm.append('fileName', file.name);
+                        chunkForm.append('fileType', file.type);
+                        chunkForm.append('fileSize', String(file.size));
+                        chunkForm.append('threadId', activeThreadId);
+                        chunkForm.append('email', email);
+
+                        const chunkRes = await fetch('/api/files/upload-chunk', {
+                            method: 'POST',
+                            body: chunkForm
+                        });
+
+                        const chunkText = await chunkRes.text();
+                        let chunkData;
+                        try {
+                            chunkData = JSON.parse(chunkText);
+                        } catch {
+                            throw new Error(`Server error (${chunkRes.status}): ${chunkText.substring(0, 200)}`);
+                        }
+
+                        if (chunkData.status !== 'success') {
+                            throw new Error(chunkData.error || 'Chunk upload failed');
+                        }
+                    }
+
+                    // Complete the upload
+                    window.showInfo?.(`Processing ${file.name}...`);
+                    const completeRes = await fetch('/api/files/upload-complete', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ uploadId })
+                    });
+
+                    const completeText = await completeRes.text();
+                    try {
+                        data = JSON.parse(completeText);
+                    } catch {
+                        throw new Error(`Server error (${completeRes.status}): ${completeText.substring(0, 200)}`);
+                    }
                 }
 
                 if (data.status === 'success') {
