@@ -279,7 +279,8 @@ const {
                     } catch {
                         throw new Error(`Server error (${response.status}): ${responseText.substring(0, 200)}`);
                     }
-                } else {
+                }
+                else {
                     // Chunked upload for large files
                     const CHUNK_SIZE = 3 * 1024 * 1024; // 3MB chunks
                     const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
