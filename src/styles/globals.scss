@@ -29,7 +29,7 @@
     }
 }
 
-*:not(:is(.content-container[class$="-content"], .message.assistant .message-content) *:not(.step-by-step, .step-by-step *, pre, code, a)) {
+:not(:is(.content-container[class$="-content"], .message.assistant .message-content) :not(.step-by-step, .step-by-step *, pre, code, a)) {
     &, &::before, &::after {
         box-sizing: border-box;
         margin: 0;
@@ -41,16 +41,13 @@
     }
 }
 
-.content-container[class$="-content"],
-.message.assistant .message-content {
-    *:not(.step-by-step, .step-by-step *, pre, code, a) {
-        &:first-child {
-            margin-top: 0;
-        }
-        
-        &:last-child {
-            margin-bottom: 0;
-        }
+:is(.content-container[class$="-content"], .message.assistant .message-content) :not(.step-by-step, .step-by-step *, pre, code, a) {
+    &:first-child {
+        margin-top: 0;
+    }
+    
+    &:last-child {
+        margin-bottom: 0;
     }
 }
 
