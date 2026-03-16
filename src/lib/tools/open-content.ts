@@ -8,7 +8,7 @@ const contentTypes = getContentTypesList();
 // Tool for opening content in a new browser tab.
 // Checks if content exists before signaling the client to open the URL.
 const openContentTool = tool({
-    description: "Open existing study content (study guide, reference sheet, flashcards, etc.) in a new browser tab. Only opens content that has already been generated — does not generate anything. If no content exists, returns an error. Use after 'get-content' has successfully generated content, or when the user asks to open/view their existing content.",
+    description: "Open existing study content (study guide, reference sheet, flashcards, etc.) in a new browser tab. Only opens content that has already been generated — does not generate anything. If no content exists, returns an error. Use after 'generate-content' has successfully generated content, or when the user asks to open/view their existing content.",
     inputSchema: z.object({
         type: z.enum(contentTypes as [string, ...string[]]).describe('The content type to open'),
         threadId: z.string().describe('The thread ID'),
@@ -22,7 +22,7 @@ const openContentTool = tool({
         if (!content) {
             return JSON.stringify({
                 error: true,
-                message: `No ${type.replace(/-/g, ' ')} has been generated yet for this thread. Please use the 'get-content' tool to generate it first.`
+                message: `No ${type.replace(/-/g, ' ')} has been generated yet for this thread. Please use the 'generate-content' tool to generate it first.`
             });
         }
 

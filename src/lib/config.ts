@@ -15,6 +15,7 @@ export interface Config {
     maxMessagesPerThread: number;
     defaultCategory: CategoryName;
     defaultMode: ModeName;
+    contentGenerationExcludeTools: string[];
 }
 
 const defaultCategory = 'general';
@@ -25,7 +26,7 @@ const prompt = generateModePrompt(defaultCategory, defaultMode);
 const config: Config = {
     provider: 'openai',
     model: 'gpt-4.1',
-    imageModel: 'gpt-image-1',
+    imageModel: 'gpt-image-1.5',
     imageSize: '1024x1536', // portrait
     systemPrompt: prompt,
     welcomeMessagePrompt: 'Based on the user\'s question or homework, ask them what specifically they want to study. Be friendly and encouraging.',
@@ -33,6 +34,7 @@ const config: Config = {
     maxMessagesPerThread: 10, // Maximum number of messages per thread
     defaultCategory: defaultCategory,
     defaultMode: defaultMode,
+    contentGenerationExcludeTools: ['generate-content', 'get-content-types', 'open-content'],
 };
 
 
