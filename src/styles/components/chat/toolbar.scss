@@ -8,6 +8,10 @@
 $color: list.nth(map.get($accent-colors, primary), 1);
 
 .chat-toolbar {
+    $radius: $border-radius-large;
+    $padding-block: $spacing-medium;
+    $padding-inline: $spacing-large;
+
     position: sticky;
     display: flex;
     flex-direction: column;
@@ -24,7 +28,7 @@ $color: list.nth(map.get($accent-colors, primary), 1);
     border-top-color: rgb(from var(--card-border) r g b / 40%);
 
     .chat-input-container {
-        padding: $spacing-medium $spacing-large;
+        padding: $padding-block $padding-inline;
         min-width: min(1000px, 100%);
         margin: 0 auto;
         max-width: 100%;
@@ -37,7 +41,7 @@ $color: list.nth(map.get($accent-colors, primary), 1);
         gap: $spacing-small;
         background-color: var(--card-bg);
         border: 2px solid rgb(from var(--card-border) r g b / 40%);
-        border-radius: $border-radius-large;
+        border-radius: $radius;
         padding: $spacing-medium;
         transition: all $transition-slow $ease-in-out;
         box-shadow:
@@ -131,7 +135,7 @@ $color: list.nth(map.get($accent-colors, primary), 1);
         background: linear-gradient(135deg, $color, color.adjust($color, $hue: 15deg));
         color: white;
         border: none;
-        border-radius: $border-radius-large;
+        border-radius: $radius - ($padding-inline * 2); 
         cursor: pointer;
         transition: all $transition-slow $ease-in-out;
         flex-shrink: 0;
