@@ -29,13 +29,12 @@
     }
 }
 
-// Base Styles & CSS Reset
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+*:not(:is(.content-container[class$="-content"], .message.assistant .message-content) *:not(.step-by-step, .step-by-step *, pre, code, a)) {
+    &, &::before, &::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
 
     &:is(ul, ol) {
         padding-inline-start: 1.5em;
@@ -51,16 +50,6 @@ input, textarea, select, button {
 .content-container[class$="-content"],
 .message.assistant .message-content {
     *:not(.step-by-step, .step-by-step *, pre, code, a) {
-        &, &::before, &::after {
-            padding: revert;
-        }
-
-        &:not(:first-child, :last-child) {
-            &, &::before, &::after {
-                margin: revert;
-            }
-        }
-
         &:first-child {
             margin-top: 0;
         }
