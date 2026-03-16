@@ -5,10 +5,8 @@ import { getLatestContent } from '@/lib/content/latest';
 
 const contentTypes = getContentTypesList();
 
-/**
- * Tool for opening content in a new browser tab.
- * Checks if content exists before signaling the client to open the URL.
- */
+// Tool for opening content in a new browser tab.
+// Checks if content exists before signaling the client to open the URL.
 const openContentTool = tool({
     description: "Open study content (study guide, reference sheet, flashcards, etc.) in a new browser tab. Use this tool in two scenarios: 1) When the user explicitly asks you to open or show their generated content, 2) After successfully using 'get-content' tool to retrieve or generate content - you should call this tool to open it for the user. Note: Users can also access generated content via the sidebar panel on the right side of the chat, or directly from the content pages which have their own generate/regenerate buttons.",
     inputSchema: z.object({
