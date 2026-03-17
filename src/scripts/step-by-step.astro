@@ -40,10 +40,9 @@
 
                         const isCorrect = choice.dataset.type === 'correct';
                         if (isCorrect) {
-                            // Show all explanations
                             allExplanations.forEach(exp => exp.dataset.visible = '');
-                        } else {
-                            // Show only the clicked choice's explanation
+                        }
+                        else {
                             const exp = choice.querySelector('.answer-explanation');
                             if (exp) exp.dataset.visible = '';
                         }
