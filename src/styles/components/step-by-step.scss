@@ -69,7 +69,7 @@
                 position: relative;
                 background-color: var(--card-bg);
                 cursor: pointer;
-                border-radius: 100dvw;
+                border-radius: calc(var(--bdr) / 16);
                 padding: 1ex;
                 transition: background-color $transition-fast $ease, scale 0.1s $ease;
 
