@@ -33,6 +33,20 @@
                         if (choicesContainer) {
                             choicesContainer.dataset.answered = '';
                         }
+
+                        // Hide all explanations first
+                        const allExplanations = step.querySelectorAll('.answer-explanation');
+                        allExplanations.forEach(exp => delete exp.dataset.visible);
+
+                        const isCorrect = choice.dataset.type === 'correct';
+                        if (isCorrect) {
+                            // Show all explanations
+                            allExplanations.forEach(exp => exp.dataset.visible = '');
+                        } else {
+                            // Show only the clicked choice's explanation
+                            const exp = choice.querySelector('.answer-explanation');
+                            if (exp) exp.dataset.visible = '';
+                        }
                     });
                 });
             });

@@ -117,7 +117,7 @@ $pad: $spacing-medium;
                 background-color: hsl(0deg 100% 80% / 50%);
             }
 
-            &[data-answered] .answer-explanation {
+            .answer-explanation[data-visible] {
                 display: block;
             }
         }
