@@ -4,6 +4,7 @@ import { threadsTable } from '@/db/schema';
 
 import { getContentTypesList } from '../get-types';
 import type { JSONValue } from '@/lib/threads';
+
 import type { InfographicData } from './infographic';
 import type { FlashcardData } from './flashcards';
 import type { SlideshowData } from './slideshow';
