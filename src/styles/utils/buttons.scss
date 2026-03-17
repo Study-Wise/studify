@@ -28,7 +28,6 @@ $border-radius: $button-border-radius;
     text-decoration: none;
     isolation: isolate;
     transition: color $ease-in-out $transition-duration;
-
     transition-timing-function: $ease-out;
 
     &:disabled {
