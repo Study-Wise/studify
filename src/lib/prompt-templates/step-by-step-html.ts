@@ -3,8 +3,8 @@ export default `<section class="step-by-step">
         <p class="step-description">…</p>
         <p class="step-question">…</p>
         <div class="step-question-choices">
-            <label for="q#o1" class="step-question-choice correct">
-                <input id="q#o1" name="question#" type="radio" class="step-question-radio correct">
+            <label for="q#o1" class="step-question-choice" data-type="correct">
+                <input id="q#o1" name="question#" type="radio" class="step-question-radio">
                 <div class="step-question-choice-content">…</div>
                 <p class="answer-explanation">… (explain why this is correct)</p>
             </label>

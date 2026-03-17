@@ -26,38 +26,18 @@
                             radio.checked = true;
                         }
 
-                        // Remove all previous selections from this step
+                        // Remove all previous variant selections
                         choices.forEach(c => {
-                            delete c.dataset.state;
+                            delete c.dataset.variant;
                         });
 
-                        // Check if correct or incorrect
-                        const isCorrect = choice.classList.contains('correct');
+                        // Mark clicked choice as selected
+                        choice.dataset.variant = 'selected';
 
-                        if (isCorrect) {
-                            // Mark clicked choice as selected-correct
-                            choice.dataset.state = 'selected-correct';
-                            // Show all other correct answers as hint
-                            choices.forEach(c => {
-                                if (c !== choice && c.classList.contains('correct')) {
-                                    c.dataset.state = 'hint-correct';
-                                }
-                            });
-                        }
-                        else {
-                            // Mark clicked choice as selected-incorrect
-                            choice.dataset.state = 'selected-incorrect';
-                            // Show correct answers as hint and incorrect as dimmed
-                            choices.forEach(c => {
-                                if (c !== choice) {
-                                    if (c.classList.contains('correct')) {
-                                        c.dataset.state = 'hint-correct';
-                                    }
-                                    else {
-                                        c.dataset.state = 'hint-incorrect';
-                                    }
-                                }
-                            });
+                        // Mark the choices container as answered
+                        const choicesContainer = step.querySelector('.step-question-choices');
+                        if (choicesContainer) {
+                            choicesContainer.dataset.answered = '';
                         }
 
                         // Show the explanation(s)

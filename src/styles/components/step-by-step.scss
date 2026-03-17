@@ -52,7 +52,7 @@
                 padding: calc(var(--pad) / 2) var(--pad);
                 transition: background-color $transition-fast $ease, scale 0.1s $ease;
 
-                &:hover:not([data-state]) {
+                &:hover:not([data-variant]) .step-question-choice-content {
                     background-color: rgb(from lightblue r g b / 30%);
                 }
 
@@ -60,24 +60,20 @@
                     scale: 0.98;
                 }
 
-                // Selected and correct
-                &[data-state="selected-correct"] {
+                .step-question-choice-content {
+                    border-radius: calc(var(--bdr) / 16);
+                    padding: calc(var(--pad) / 2) var(--pad);
+                    transition: background-color $transition-fast $ease;
+                }
+
+                // Correct + selected
+                &[data-type="correct"][data-variant="selected"] .step-question-choice-content {
                     background-color: hsl(120deg 73% 75%);
                 }
 
-                // Correct but not selected (shown as hint)
-                &[data-state="hint-correct"] {
-                    background-color: hsl(120deg 73% 75% / 50%);
-                }
-
-                // Selected and incorrect
-                &[data-state="selected-incorrect"] {
+                // Incorrect + selected
+                &:not([data-type="correct"])[data-variant="selected"] .step-question-choice-content {
                     background-color: hsl(0deg 100% 80%);
-                }
-
-                // Incorrect but not selected (shown as hint)
-                &[data-state="hint-incorrect"] {
-                    background-color: hsl(0deg 100% 80% / 50%);
                 }
 
                 .answer-explanation {
@@ -101,7 +97,7 @@
                     }
                 }
 
-                &.correct .answer-explanation::before {
+                &[data-type="correct"] .answer-explanation::before {
                     background-color: hsl(120deg 73% 50%);
                 }
 
@@ -113,6 +109,15 @@
                     inset-block-start: -1px;
                     inset-inline-start: -1px;
                 }
+            }
+
+            // Hint states (only after answered)
+            &[data-answered] .step-question-choice[data-type="correct"]:not([data-variant]) .step-question-choice-content {
+                background-color: hsl(120deg 73% 75% / 50%);
+            }
+
+            &[data-answered] .step-question-choice:not([data-type="correct"]):not([data-variant]) .step-question-choice-content {
+                background-color: hsl(0deg 100% 80% / 50%);
             }
         }
     }
