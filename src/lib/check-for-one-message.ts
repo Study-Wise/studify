@@ -1,13 +1,14 @@
 // Check For One Message
 // This module checks if a thread has only one message and generates a welcome message if needed.
 
-import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
-import categories from '@/lib/modes';
 import { eq } from 'drizzle-orm';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
-import type { Message } from '@/lib/threads';
+
+import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
+import categories from '@/lib/modes';
 import config from '@/lib/config';
+import type { Message } from '@/lib/threads';
 
 export interface CheckForOneMessageParams {
     messages: Message[];
