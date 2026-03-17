@@ -35,7 +35,7 @@
     to { rotate: 360deg; }
 }
 
-/* Touch feedback for buttons */
+// Touch feedback for buttons
 @media (hover: none) and (pointer: coarse) {
     button, .nav-btn, .fancy-button {
         -webkit-tap-highlight-color: rgb(0 0 0 / 10%);

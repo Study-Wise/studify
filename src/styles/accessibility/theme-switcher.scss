@@ -97,7 +97,7 @@
         transition: scale $transition-slower $ease-spring;
     }
 
-    /* Mobile responsiveness for contrast toggle */
+    // Mobile responsiveness for contrast toggle
     @media (width <= 768px) {
         padding: $spacing-small $spacing-small;
         font-size: $font-size-extra-small;
@@ -107,7 +107,7 @@
         }
     }
 
-    /* Hide toggle in print mode */
+    // Hide toggle in print mode
     @media print {
         display: none !important;
     }

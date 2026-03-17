@@ -1,20 +1,19 @@
-// Keyboard navigation styles
 @use '../variables/tokens' as *;
 @use '../variables/colors/statuses' as *;
 
-/* Focus indicators */
+// Focus indicators
 *:focus-visible {
     outline: 2px solid $color-focus;
     outline-offset: 2px;
 }
 
-/* Custom focus styles for specific elements */
+// Custom focus styles for specific elements
 .nav-btn:focus-visible,
 .fancy-button:focus-visible {
     box-shadow: 0 0 0 2px $color-focus, 0 0 0 4px rgb(from $color-focus r g b / 20%);
 }
 
-/* Skip links */
+// Skip links
 .skip-link {
     $pos: 6px;
 
@@ -43,19 +42,19 @@
     }
 }
 
-/* Focus management */
+// Focus management
 .using-mouse *:focus {
     outline: none;
 }
 
-/* Enhanced focus styles */
+// Enhanced focus styles
 .nav-btn:focus-visible,
 .fancy-button:focus-visible,
 button:focus-visible {
     box-shadow: 0 0 0 2px $color-focus, 0 0 0 4px rgb(from $color-focus r g b / 20%);
 }
 
-/* Keyboard activatable elements */
+// Keyboard activatable elements
 .keyboard-activatable {
     cursor: pointer;
 
@@ -65,13 +64,13 @@ button:focus-visible {
     }
 }
 
-/* Form validation styles */
+// Form validation styles
 :not(.message-input):user-invalid {
     border-color: $color-error;
     box-shadow: 0 0 0 1px $color-error;
 }
 
-/* High contrast mode support */
+// High contrast mode support
 @media (prefers-contrast: high) {
     *:focus-visible {
         outline: 3px solid;
@@ -79,7 +78,7 @@ button:focus-visible {
     }
 }
 
-/* Reduced motion support */
+// Reduced motion support
 @media (prefers-reduced-motion: reduce) {
     * {
         scroll-behavior: auto !important;
