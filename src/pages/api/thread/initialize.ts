@@ -1,7 +1,8 @@
 import type { APIRoute } from 'astro';
-import { nanoid } from 'nanoid';
-import { eq } from 'drizzle-orm';
 
+import { nanoid } from 'nanoid';
+
+import { eq } from 'drizzle-orm';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 
