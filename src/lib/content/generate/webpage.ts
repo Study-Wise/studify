@@ -1,6 +1,5 @@
 import type { GatewayProviderOptions } from '@ai-sdk/gateway';
 import { generateText } from 'ai';
-
 import { eq } from 'drizzle-orm';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';

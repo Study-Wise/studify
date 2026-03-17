@@ -1,10 +1,12 @@
 import { generateObject } from 'ai';
 import { z } from 'zod';
+
+import { eq } from 'drizzle-orm';
+import { db } from '@/db/initialize';
+import { threadsTable } from '@/db/schema';
+
 import config from '@/lib/config';
 import { buildContentSystemPrompt } from '@/lib/content';
-import { db } from '@/db/initialize';
-import { eq } from 'drizzle-orm';
-import { threadsTable } from '@/db/schema';
 import type { ThreadData, UploadedFile } from '@/lib/threads';
 import type { FlashcardData } from '@/lib/content/latest/flashcards';
 import { saveContent } from '@/lib/content/latest';
