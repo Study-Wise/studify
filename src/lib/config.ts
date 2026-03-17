@@ -25,7 +25,7 @@ const prompt = generateModePrompt(defaultCategory, defaultMode);
 
 const config: Config = {
     provider: 'openai',
-    model: 'gpt-4.1',
+    model: 'gpt-5.1',
     imageModel: 'gpt-image-1.5',
     imageSize: '1024x1536', // portrait
     systemPrompt: prompt,

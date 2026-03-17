@@ -3,10 +3,11 @@
 
 import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
 import categories from '@/lib/modes';
-import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
+import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 import type { Message } from '@/lib/threads';
+import config from '@/lib/config';
 
 export interface CheckForOneMessageParams {
     messages: Message[];
@@ -48,7 +49,7 @@ export async function checkForOneMessage({
                 const welcomeMessage = await generateWelcomeMessage({
                     systemPrompt,
                     convoHistory: [...convoHistory],
-                    userModel: thread.model || 'gpt-4.1',
+                    userModel: thread.model || config.model,
                     provider: thread.provider || 'openai',
                     tools: modeObj?.tools || {},
                     requestId: `page-load-${threadId}`

@@ -17,9 +17,9 @@ const providers: Providers = {
     openai: {
         name: 'OpenAI',
         models: {
-            'gpt-4.1': { name: 'GPT-4.1' },
-            'gpt-4.1-mini': { name: 'GPT-4.1 Mini' },
-            'gpt-4.1-nano': { name: 'GPT-4.1 Nano' },
+            'gpt-5.1': { name: 'GPT-5.1' },
+            'gpt-5-mini': { name: 'GPT-5 Mini' },
+            'gpt-5-nano': { name: 'GPT-5 Nano' },
             'o3': { name: 'o3' },
             'o4-mini': { name: 'o4-mini' },
         },
