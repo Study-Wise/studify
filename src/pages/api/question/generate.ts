@@ -1,8 +1,10 @@
 import type { APIRoute } from 'astro';
 import { nanoid } from 'nanoid';
-import { db } from '@/db/initialize';
+
 import { eq } from 'drizzle-orm';
+import { db } from '@/db/initialize';
 import { questionTable } from '@/db/schema';
+
 import { questionToId } from '@/lib/question-utils';
 import { generateAIResponse, paraphraseQuestion } from '@/lib/ai-service';
 import config from '@/lib/config';

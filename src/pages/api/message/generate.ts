@@ -1,24 +1,20 @@
 import type { APIRoute } from 'astro';
-
 import { nanoid } from 'nanoid';
 
-import { eq } from 'drizzle-orm';
-import type { InferSelectModel, InferInsertModel } from 'drizzle-orm';
+import { eq, type InferSelectModel, type InferInsertModel } from 'drizzle-orm';
+import { db } from '@/db/initialize';
+import { threadsTable } from '@/db/schema';
 
 import config from '@/lib/config';
 import categories from '@/lib/modes';
+import type { Mode } from '@/lib/modes';
 import {
     getValidModelAndProvider,
     generateAIResponse,
     generateTitle,
 } from '@/lib/ai-service';
 import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
-
-import { db } from '@/db/initialize';
-import { threadsTable } from '@/db/schema';
-import type { Mode } from '@/lib/modes';
 import type { ThreadData, Message, UploadedFile } from '@/lib/threads';
-
 import { isValidEmail } from '@/lib/validation';
 import { isUserAdmin } from '@/lib/auth/admin';
 

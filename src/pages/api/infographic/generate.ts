@@ -1,9 +1,10 @@
 import type { APIRoute } from 'astro';
 import { nanoid } from 'nanoid';
 
-import { db } from '@/db/initialize';
 import { eq } from 'drizzle-orm';
+import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
+
 import { isValidEmail } from '@/lib/validation';
 import { generateInfographic } from '@/lib/content/generate/infographic';
 import config from '@/lib/config';
