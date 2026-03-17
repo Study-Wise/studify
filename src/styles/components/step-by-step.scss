@@ -1,19 +1,20 @@
 @use '../variables/globals' as *;
 @use '../variables/tokens' as *;
-@use 'sass:math';
+@use 'sass:math' as math;
 
-@mixin steps-border($bor: var(--card-border), $bdr: $spacing-extra-large, $pad: $spacing-medium, $depth: 0) {
-    padding: $pad;
+$bdr: $spacing-extra-large;
+$pad: $spacing-medium;
+
+@mixin steps-border($bor: var(--card-border), $local-bdr: $bdr, $local-pad: $spacing-medium, $depth: 0) {
+    padding: $local-pad;
     border: solid 1px $bor;
-    border-radius: #{$bdr - $pad * $depth};
+    border-radius: #{$local-bdr - $local-pad * $depth};
 }
 
-/* Interactive Steps Component */
+// Interactive Steps Component
 .step-by-step {
-    /* Custom properties for consistent styling */
+    // Custom properties for consistent styling
     --bor: var(--card-border);
-    --bdr: #{$spacing-extra-large};
-    --pad: #{$spacing-medium};
 
     box-sizing: border-box;
     background-color: var(--card-bg);
@@ -22,7 +23,7 @@
 
     display: flex;
     flex-direction: column;
-    gap: var(--pad);
+    gap: $pad;
 
     .divider {
         border: none;
@@ -35,7 +36,7 @@
         background-color: var(--card-bg);
         display: flex;
         flex-direction: column;
-        gap: var(--pad);
+        gap: $pad;
 
         .step-question-choices {
             display: flex;
@@ -48,8 +49,8 @@
                 position: relative;
                 background-color: var(--card-bg);
                 cursor: pointer;
-                border-radius: calc(var(--bdr) / 8);
-                padding: calc(var(--pad) / 2) var(--pad);
+                border-radius: math.div($bdr, 8);
+                padding: math.div($pad, 2) $pad;
                 transition: background-color $transition-fast $ease, scale 0.1s $ease;
 
                 &:hover:not([data-variant]) .step-question-choice-content {
@@ -61,8 +62,8 @@
                 }
 
                 .step-question-choice-content {
-                    border-radius: calc(var(--bdr) / 16);
-                    padding: calc(var(--pad) / 2) var(--pad);
+                    border-radius: math.div($bdr, 16);
+                    padding: math.div($pad, 2) $pad;
                     transition: background-color $transition-fast $ease;
                 }
 
@@ -77,11 +78,12 @@
                 }
 
                 .answer-explanation {
-                    $bdr: calc(var(--bdr) / 8);
+                    $bdr: math.div($bdr, 8);
 
+                    display: none;
                     box-sizing: border-box;
-                    margin-block-start: var(--pad);
-                    padding: var(--pad);
+                    margin-block-start: $pad;
+                    padding: $pad;
                     background-color: rgb(from var(--card-bg) h s calc(l - 3%));
                     border-radius: $bdr;
                     position: relative;
@@ -118,6 +120,10 @@
 
             &[data-answered] .step-question-choice:not([data-type="correct"]):not([data-variant]) .step-question-choice-content {
                 background-color: hsl(0deg 100% 80% / 50%);
+            }
+
+            &[data-answered] .answer-explanation {
+                display: block;
             }
         }
     }

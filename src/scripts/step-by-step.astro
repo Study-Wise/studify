@@ -10,12 +10,6 @@
 
             steps.forEach(step => {
                 const choices = step.querySelectorAll('.step-question-choice');
-                const answerExplanations = step.querySelectorAll('.answer-explanation');
-
-                // Hide explanations initially
-                answerExplanations.forEach(exp => {
-                    exp.style.display = 'none';
-                });
 
                 choices.forEach(choice => {
                     const radio = choice.querySelector('.step-question-radio');
@@ -39,11 +33,6 @@
                         if (choicesContainer) {
                             choicesContainer.dataset.answered = '';
                         }
-
-                        // Show the explanation(s)
-                        answerExplanations.forEach(exp => {
-                            exp.style.display = 'block';
-                        });
                     });
                 });
             });
