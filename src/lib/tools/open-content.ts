@@ -1,5 +1,6 @@
 import { tool } from 'ai';
 import { z } from 'zod';
+
 import { getContentTypesList } from '@/lib/content/get-types';
 import { getLatestContent } from '@/lib/content/latest';
 
