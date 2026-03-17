@@ -1,6 +1,6 @@
 ---
-// Step-by-step interactive quiz script
 ---
+
 <script is:inline>
     function initializeStepByStep() {
         const stepByStepSections = document.querySelectorAll('.step-by-step');
@@ -15,26 +15,21 @@
                     const radio = choice.querySelector('.step-question-radio');
 
                     choice.addEventListener('click', () => {
-                        // Check the radio button
                         if (radio) {
                             radio.checked = true;
                         }
 
-                        // Remove all previous variant selections
                         choices.forEach(c => {
                             delete c.dataset.variant;
                         });
 
-                        // Mark clicked choice as selected
                         choice.dataset.variant = 'selected';
 
-                        // Mark the choices container as answered
                         const choicesContainer = step.querySelector('.step-question-choices');
                         if (choicesContainer) {
                             choicesContainer.dataset.answered = '';
                         }
 
-                        // Hide all explanations first
                         const allExplanations = step.querySelectorAll('.answer-explanation');
                         allExplanations.forEach(exp => delete exp.dataset.visible);
 
