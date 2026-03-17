@@ -6,12 +6,17 @@ export default `<section class="step-by-step">
             <label for="q#o1" class="step-question-choice correct">
                 <input id="q#o1" name="question#" type="radio" class="step-question-radio correct">
                 <div class="step-question-choice-content">…</div>
+                <p class="answer-explanation">… (explain why this is correct)</p>
             </label>
             <hr class="divider">
-            (repeat for other answer options without the hr after the last option but instrad of "o1" use "o#")
-            (make sure to not always make the correct question as the first)
-        </div>
-        <p class="correct-explanation">…</p>
+            <label for="q#o2" class="step-question-choice">
+                <input id="q#o2" name="question#" type="radio" class="step-question-radio">
+                <div class="step-question-choice-content">…</div>
+                <p class="answer-explanation">… (explain why this is wrong)</p>
+            </label>
+            <hr class="divider">
+            (repeat for other answer options without the hr after the last option, using "o#" for ids)
+            (make sure to not always make the correct answer first)
     </div>
     <hr class="divider">
     (repeat for questions 2 and 3 with different question numbers)

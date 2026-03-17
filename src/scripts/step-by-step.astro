@@ -10,12 +10,12 @@
 
             steps.forEach(step => {
                 const choices = step.querySelectorAll('.step-question-choice');
-                const correctExplanation = step.querySelector('.correct-explanation');
+                const answerExplanations = step.querySelectorAll('.answer-explanation');
 
-                // Hide explanation initially
-                if (correctExplanation) {
-                    correctExplanation.style.display = 'none';
-                }
+                // Hide explanations initially
+                answerExplanations.forEach(exp => {
+                    exp.style.display = 'none';
+                });
 
                 choices.forEach(choice => {
                     const radio = choice.querySelector('.step-question-radio');
@@ -60,10 +60,10 @@
                             });
                         }
 
-                        // Show the explanation
-                        if (correctExplanation) {
-                            correctExplanation.style.display = 'block';
-                        }
+                        // Show the explanation(s)
+                        answerExplanations.forEach(exp => {
+                            exp.style.display = 'block';
+                        });
                     });
                 });
             });

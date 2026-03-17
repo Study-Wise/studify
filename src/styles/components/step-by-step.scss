@@ -37,27 +37,6 @@
         flex-direction: column;
         gap: var(--pad);
 
-        .correct-explanation {
-            $bdr: calc(var(--bdr) / 8);
-
-            box-sizing: border-box;
-            margin-block-start: var(--pad);
-            padding: var(--pad);
-            background-color: rgb(from var(--card-bg) h s calc(l - 3%));
-            border-radius: $bdr;
-            position: relative;
-            overflow: hidden;
-
-            &::before {
-                content: '';
-                position: absolute;
-                inset: 0;
-                width: $bdr;
-                height: 100%;
-                background-color: hsl(120deg 73% 50%);
-            }
-        }
-
         .step-question-choices {
             display: flex;
             flex-direction: column;
@@ -99,6 +78,31 @@
                 // Incorrect but not selected (shown as hint)
                 &[data-state="hint-incorrect"] {
                     background-color: hsl(0deg 100% 80% / 50%);
+                }
+
+                .answer-explanation {
+                    $bdr: calc(var(--bdr) / 8);
+
+                    box-sizing: border-box;
+                    margin-block-start: var(--pad);
+                    padding: var(--pad);
+                    background-color: rgb(from var(--card-bg) h s calc(l - 3%));
+                    border-radius: $bdr;
+                    position: relative;
+                    overflow: hidden;
+
+                    &::before {
+                        content: '';
+                        position: absolute;
+                        inset: 0;
+                        width: $bdr;
+                        height: 100%;
+                        background-color: hsl(0deg 100% 50%);
+                    }
+                }
+
+                &.correct .answer-explanation::before {
+                    background-color: hsl(120deg 73% 50%);
                 }
 
                 .step-question-radio {
