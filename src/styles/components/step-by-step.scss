@@ -48,8 +48,8 @@
                 position: relative;
                 background-color: var(--card-bg);
                 cursor: pointer;
-                border-radius: calc(var(--bdr) / 16);
-                padding: 1ex;
+                border-radius: calc(var(--bdr) / 8);
+                padding: calc(var(--pad) / 2) var(--pad);
                 transition: background-color $transition-fast $ease, scale 0.1s $ease;
 
                 &:hover:not([data-state]) {
