@@ -1,14 +1,12 @@
 import type { APIRoute } from 'astro';
-
 import { nanoid } from 'nanoid';
 import { eq } from 'drizzle-orm';
-
-import config from '@/lib/config';
-import { getValidModelAndProvider } from '@/lib/ai-service';
 
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 
+import config from '@/lib/config';
+import { getValidModelAndProvider } from '@/lib/ai-service';
 import { isUserAdmin } from '@/lib/auth/admin';
 
 export const POST: APIRoute = async ({ request, locals }) => {
