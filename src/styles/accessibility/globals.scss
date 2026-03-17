@@ -1,0 +1,94 @@
+@use '../variables/tokens' as *;
+
+%sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+.sr-only {
+    @extend %sr-only;
+}
+
+.sr-only-focusable {
+    @extend %sr-only;
+
+    &:active,
+    &:focus {
+        position: static;
+        width: auto;
+        height: auto;
+        overflow: visible;
+        clip-path: none;
+        white-space: normal;
+    }
+}
+
+button,
+a:not(.skip-link),
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+.clickable,
+.interactive {
+    min-height: 1rem;
+    min-width: 1rem;
+
+    &:is(a:not([class])) {
+        @supports (min-height: auto) {
+            min-height: auto;
+        }
+
+        min-width: auto;
+    }
+}
+
+.keyboard-navigation-active {
+    *:focus {
+        outline: 3px solid var(--section-title);
+        outline-offset: 3px;
+    }
+}
+
+[aria-live="polite"],
+[aria-live="assertive"] {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+
+    &:not(:empty) {
+        position: static;
+        width: auto;
+        height: auto;
+        overflow: visible;
+        padding: 1rem;
+        background-color: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 0.5rem;
+        margin-block: 1rem;
+    }
+}
+
+:disabled,
+[aria-disabled="true"] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+body:has([role="dialog"][aria-modal="true"]) {
+    overflow: hidden;
+
+    > *:not([role="dialog"]) {
+        filter: blur(2px);
+        pointer-events: none;
+    }
+}

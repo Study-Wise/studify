@@ -5,7 +5,7 @@
 @use './utils/helpers' as *;
 @use './utils/animations' as *;
 @use './utils/print' as *;
-@use './utils/accessibility' as *;
+@use './accessibility/globals' as *;
 @use './utils/buttons' as *;
 @use './utils/card' as *;
 @use 'sass:color';

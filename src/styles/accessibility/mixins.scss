@@ -1,0 +1,29 @@
+@use '../variables/tokens' as *;
+
+@mixin focus-ring($color: var(--section-title), $width: 2px, $offset: 2px) {
+    outline: $width solid $color;
+    outline-offset: $offset;
+    border-radius: $border-radius-small;
+}
+
+@mixin focus-visible-only {
+    &:focus-visible {
+        @include focus-ring;
+    }
+
+    &:focus:not(:focus-visible) {
+        outline: none;
+    }
+}
+
+@mixin visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border-width: 0;
+}

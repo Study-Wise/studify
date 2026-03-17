@@ -292,23 +292,3 @@
         transform: rotate(360deg);
     }
 }
-
-// Legacy classes (for backwards compatibility)
-$border-size: 0.1em;
-
-.form-btns {
-    --border-size: #{$border-size};
-
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(10em, 1fr));
-    gap: calc(var(--border-size) * 7);
-    margin-block: 1em;
-    max-width: max-content;
-}
-
-.btn.lite {
-    --border-size: #{$border-size};
-
-    padding: 0.2em 0.4em;
-    margin-block: 0;
-}

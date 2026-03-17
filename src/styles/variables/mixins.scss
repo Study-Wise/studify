@@ -2,24 +2,6 @@
 // Import tokens for use in mixins
 @use './tokens' as *;
 
-// Consistent focus ring for accessibility
-@mixin focus-ring($color: var(--section-title), $width: 2px, $offset: 2px) {
-    outline: $width solid $color;
-    outline-offset: $offset;
-    border-radius: $border-radius-small;
-}
-
-// Remove focus outline for mouse users, keep for keyboard
-@mixin focus-visible-only {
-    &:focus-visible {
-        @include focus-ring;
-    }
-
-    &:focus:not(:focus-visible) {
-        outline: none;
-    }
-}
-
 // TEXT UTILITIES
 
 // Single line text overflow with ellipsis
@@ -35,19 +17,6 @@
     -webkit-line-clamp: $lines;
     -webkit-box-orient: vertical;
     overflow: hidden;
-}
-
-// Visually hide but keep for screen readers
-@mixin visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-    border-width: 0;
 }
 
 // LAYOUT UTILITIES

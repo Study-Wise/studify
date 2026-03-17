@@ -445,32 +445,3 @@ footer, .chat-toolbar {
         scale: 1.2;
     }
 }
-
-// Enhanced slide-in animations
-@keyframes slide-in-from-left {
-    from {
-        opacity: 0;
-        translate: -20px 10px;
-        scale: 0.95;
-    }
-
-    to {
-        opacity: 1;
-        translate: 0 0;
-        scale: 1;
-    }
-}
-
-@keyframes slide-in-from-right {
-    from {
-        opacity: 0;
-        translate: 20px 10px;
-        scale: 0.95;
-    }
-
-    to {
-        opacity: 1;
-        translate: 0 0;
-        scale: 1;
-    }
-}
