@@ -1,6 +1,6 @@
 @use '../variables/tokens' as *;
 
-%sr-only {
+.sr-only {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -10,23 +10,17 @@
     clip-path: inset(50%);
     white-space: nowrap;
     border-width: 0;
-}
 
-.sr-only {
-    @extend %sr-only;
-}
-
-.sr-only-focusable {
-    @extend %sr-only;
-
-    &:active,
-    &:focus {
-        position: static;
-        width: auto;
-        height: auto;
-        overflow: visible;
-        clip-path: none;
-        white-space: normal;
+    &[data-focusable] {
+        &:active,
+        &:focus {
+            position: static;
+            width: auto;
+            height: auto;
+            overflow: visible;
+            clip-path: none;
+            white-space: normal;
+        }
     }
 }
 
@@ -74,21 +68,5 @@ input[type="reset"],
         border: 1px solid var(--card-border);
         border-radius: 0.5rem;
         margin-block: 1rem;
-    }
-}
-
-:disabled,
-[aria-disabled="true"] {
-    opacity: 0.6;
-    cursor: not-allowed;
-    pointer-events: none;
-}
-
-body:has([role="dialog"][aria-modal="true"]) {
-    overflow: hidden;
-
-    > *:not([role="dialog"]) {
-        filter: blur(2px);
-        pointer-events: none;
     }
 }
