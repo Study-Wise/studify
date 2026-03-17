@@ -1,5 +1,6 @@
-import 'dotenv/config';
 import type { APIRoute } from 'astro';
+
+import 'dotenv/config';
 import { nanoid } from 'nanoid';
 
 import { eq } from 'drizzle-orm';
