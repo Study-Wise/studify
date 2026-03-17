@@ -1,7 +1,8 @@
 ---
 import Layout from '@/layouts/Layout.astro';
-import { isUserAdmin } from '@/lib/auth/admin';
 import '@/styles/pages/admin.scss';
+
+import { isUserAdmin } from '@/lib/auth/admin';
 
 const user = Astro.locals.user;
 
