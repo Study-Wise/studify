@@ -1,7 +1,8 @@
+import type { MiddlewareHandler } from 'astro';
+
 import { auth } from '@/lib/auth';
 import { getUserRole } from '@/lib/auth/admin';
 import { isDev, getDevUser } from '@/lib/auth/dev';
-import type { MiddlewareHandler } from 'astro';
 import type { ExtendedUser } from '@/lib/auth/index';
 
 // Define protected routes (same as before)

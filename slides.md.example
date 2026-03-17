@@ -142,8 +142,7 @@ image: https://cover.sli.dev
 Use code snippets and get the highlighting directly, and even types hover!
 
 ```ts [filename-example.ts] {all|4|6|6-7|9|all} twoslash
-// TwoSlash enables TypeScript hover information
-// and errors in markdown code blocks
+// TwoSlash enables TypeScript hover information and errors in markdown code blocks
 // More at https://shiki.style/packages/twoslash
 import { computed, ref } from 'vue'
 
