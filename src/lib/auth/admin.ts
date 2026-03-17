@@ -1,9 +1,10 @@
 // Admin role management for Better Auth
 // Roles are stored in the database and auto-promoted based on email/domain
 
+import { eq } from 'drizzle-orm';
 import { db } from '@/db/initialize';
 import { user as userTable } from '@/db/auth-schema';
-import { eq } from 'drizzle-orm';
+
 import type { UserRole } from './index';
 
 // Get user role from database by email

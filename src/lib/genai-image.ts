@@ -1,6 +1,7 @@
+import OpenAI from 'openai';
+
 import { uploadFile } from '@/lib/uploadthing';
 import config from '@/lib/config';
-import OpenAI from 'openai';
 
 const openai = new OpenAI({
     apiKey: import.meta.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY,

@@ -1,10 +1,10 @@
 // Server-side Better Auth configuration
-import { betterAuth } from 'better-auth';
-import { drizzleAdapter } from 'better-auth/adapters/drizzle';
-import { db } from '@/db/initialize';
+import { betterAuth, type User as BetterAuthUser } from 'better-auth';
 import { magicLink } from 'better-auth/plugins';
+import { drizzleAdapter } from 'better-auth/adapters/drizzle';
+
+import { db } from '@/db/initialize';
 import { user, session, account, verification } from '@/db/auth-schema';
-import type { User as BetterAuthUser } from "better-auth";
 
 // User roles
 export type UserRole = "user" | "premium" | "moderator" | "admin";
