@@ -32,7 +32,6 @@
     box-shadow: 0 0 10px hsl(from var(--body-text) h s l / 50%);
     cursor: pointer;
     z-index: $z-index-theme-switcher;
-
     transition: scale $transition-base $ease-out,
                 rotate $transition-base $ease-out,
                 box-shadow $transition-base $ease-out;

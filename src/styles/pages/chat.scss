@@ -246,7 +246,6 @@ footer, .chat-toolbar {
     flex-direction: column;
     gap: $spacing-medium + 0.25rem;
     position: relative;
-
     background-image:
         radial-gradient(circle at 20% 50%, rgb(from var(--section-title) r g b / 1.5%) 0%, transparent 50%),
         radial-gradient(circle at 80% 80%, rgb(from var(--section-title) r g b / 1.5%) 0%, transparent 50%);
@@ -287,7 +286,6 @@ footer, .chat-toolbar {
         border-radius: $message-space;
         max-width: min(calc(600px + 4 * $message-space), 100%);
         position: relative;
-
         animation: slide-in-from-left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 
         &-content {
@@ -298,7 +296,6 @@ footer, .chat-toolbar {
             border: 1px solid rgb(from var(--card-border) r g b / 30%);
             position: relative;
             overflow: hidden;
-
             box-shadow:
                 0 1px 3px rgb(from var(--card-shadow) r g b / 8%),
                 0 4px 12px rgb(from var(--card-shadow) r g b / 6%),
@@ -368,7 +365,6 @@ footer, .chat-toolbar {
 
         &.user {
             align-self: end;
-
             animation: slide-in-from-right 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 
             .message-content {

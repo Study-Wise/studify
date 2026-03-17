@@ -71,7 +71,6 @@ input, textarea, select, button {
     scroll-padding-top: 20px;
 
     --theme: attr(data-theme);
-    
     --body-bg-light: #{$body-bg-light};
     --body-bg-dark: #{$body-bg-dark};
     --body-bg: light-dark(var(--body-bg-light), var(--body-bg-dark));
@@ -87,10 +86,8 @@ input, textarea, select, button {
         style(--theme: "dark"): var(--body-bg-light);
         else: light-dark(var(--body-text-ld), var(--body-bg-light))
     );
-
     --header-text: #{$header-text};
     --header-tagline: #{$header-tagline};
-    
     --card-bg-light: #{$card-bg-light};
     --card-bg-dark: #{$card-bg-dark};
     --card-bg: light-dark(var(--card-bg-light), var(--card-bg-dark));
@@ -122,7 +119,6 @@ input, textarea, select, button {
         style(--theme: "dark"): var(--card-border-dark);
         else: light-dark(var(--card-border-light), var(--card-border-dark))
     );
-
     --section-title-light: #{$section-title-light};
     --section-title-dark: #{$section-title-dark};
     --section-title: light-dark(var(--section-title-light), var(--section-title-dark));
@@ -132,10 +128,8 @@ input, textarea, select, button {
         else: light-dark(var(--section-title-light), var(--section-title-dark))
     );
     --section-title-border: #{$section-title-border};
-    
     --footer-bg: #{$footer-bg};
     --footer-text: #{$footer-text};
-    
     --message-bg-light: #{$message-bg-light};
     --message-bg-dark: #{$message-bg-dark};
     --message-bg: light-dark(var(--message-bg-light), var(--message-bg-dark));
@@ -145,12 +139,9 @@ input, textarea, select, button {
         else: light-dark(var(--message-bg-light), var(--message-bg-dark))
     );
     --chat-message-shadow: #{$chat-message-shadow};
-    
     --input-border: #{$input-border};
-    
     --profile-border: #{$profile-border};
     --profile-shadow: #{$profile-shadow};
-    
     --about-link: #{$about-link};
     
     &:not(:has(.chat-page)) {
@@ -299,7 +290,6 @@ mjx-container {
     line-height: normal !important;
     vertical-align: middle !important;
     text-align: left !important;
-
     max-width: 100%;
 
     &[display="true"] {

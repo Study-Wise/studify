@@ -114,7 +114,7 @@ $pad: $spacing-medium;
                 background-color: hsl(120deg 73% 75% / 50%);
             }
 
-            &[data-answered] .step-question-choice:not([data-type="correct"]):not([data-variant]) .step-question-choice-content {
+            &[data-answered] .step-question-choice:not([data-type="correct"], [data-variant]) .step-question-choice-content {
                 background-color: hsl(0deg 100% 80% / 50%);
             }
 

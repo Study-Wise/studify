@@ -17,7 +17,6 @@
 
         .empty-icon {
             font-size: 4rem;
-
             opacity: 0.5;
             margin-bottom: $spacing-large;
         }
@@ -25,7 +24,6 @@
         h2 {
             font-size: $font-size-extra-large;
             font-weight: $font-weight-semibold;
-
             margin-bottom: $spacing-medium;
         }
 
@@ -42,7 +40,6 @@
                 list.nth(map.get($accent-colors, primary), 1),
                 list.nth(map.get($accent-colors, primary), 2)
             );
-
             text-decoration: none;
             border-radius: $border-radius-large;
             font-weight: $font-weight-semibold;
