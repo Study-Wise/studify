@@ -4,7 +4,6 @@
 @use 'sass:list';
 @use 'sass:map';
 
-// Auth page layout
 .auth-page {
     min-height: 100vh;
     display: flex;
@@ -18,7 +17,6 @@
     }
 }
 
-// Auth container and card
 .auth-container {
     width: 100%;
     max-width: 28rem;
@@ -38,7 +36,6 @@
     }
 }
 
-// Title and subtitle
 .auth-title {
     font-size: $font-size-3x-large;
     font-weight: $font-weight-bold;
@@ -64,7 +61,6 @@
     }
 }
 
-// Form elements
 .auth-form {
     display: flex;
     flex-direction: column;
@@ -112,7 +108,6 @@
     }
 }
 
-// Error message
 .error-message {
     padding: $spacing-small $spacing-medium;
     background: hsl(0deg 100% 96% / 100%);
@@ -130,7 +125,6 @@
     }
 }
 
-// Auth button
 .auth-button {
     width: 100%;
     padding: $spacing-small $spacing-large;
@@ -173,7 +167,6 @@
     }
 }
 
-// Divider
 .auth-divider {
     display: flex;
     align-items: center;
@@ -194,7 +187,6 @@
     }
 }
 
-// Social buttons
 .social-buttons {
     display: flex;
     flex-direction: column;
@@ -251,7 +243,6 @@
     }
 }
 
-// Footer links
 .footer-links {
     margin-top: $spacing-large;
     text-align: center;
@@ -282,7 +273,6 @@
     }
 }
 
-// Loading spinner (for SSO callback)
 .loading-spinner {
     width: 40px;
     height: 40px;

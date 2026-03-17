@@ -66,12 +66,10 @@ $pad: $spacing-medium;
                     transition: background-color $transition-fast $ease;
                 }
 
-                // Correct + selected
                 &[data-type="correct"][data-variant="selected"] .step-question-choice-content {
                     background-color: hsl(120deg 73% 75%);
                 }
 
-                // Incorrect + selected
                 &:not([data-type="correct"])[data-variant="selected"] .step-question-choice-content {
                     background-color: hsl(0deg 100% 80%);
                 }
@@ -112,7 +110,6 @@ $pad: $spacing-medium;
                 }
             }
 
-            // Hint states (only after answered)
             &[data-answered] .step-question-choice[data-type="correct"]:not([data-variant]) .step-question-choice-content {
                 background-color: hsl(120deg 73% 75% / 50%);
             }

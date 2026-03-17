@@ -1,9 +1,6 @@
-// SCSS Mixins for StudyWise v2
 // Reusable patterns for common CSS needs
 // Import tokens for use in mixins
 @use './tokens' as *;
-
-// FOCUS STATES
 
 // Consistent focus ring for accessibility
 @mixin focus-ring($color: var(--section-title), $width: 2px, $offset: 2px) {
@@ -176,7 +173,6 @@
     $track-color: transparent,
     $thumb-color: hsl(from var(--section-title) h s l / 0.3)
 ) {
-    // Firefox
     @supports (scrollbar-width: thin) {
         scrollbar-width: thin; // stylelint-disable-line no-invalid-position-declaration
     }
@@ -210,7 +206,6 @@
 @mixin aspect-ratio($width, $height) {
     aspect-ratio: #{$width} / #{$height};
 
-    // Fallback for older browsers
     @supports not (aspect-ratio: 1) {
         &::before {
             content: '';

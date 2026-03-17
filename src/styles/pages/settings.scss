@@ -1,8 +1,6 @@
 @use '../variables/globals' as *;
 @use '../variables/tokens' as *;
 
-// Styles specific to index.astro page
-
 .introduction-section {
     p {
         margin-block-end: 1.2em;

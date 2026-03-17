@@ -4,8 +4,6 @@
 @use 'sass:list';
 @use 'sass:map';
 
-// Styles specific to my-chats.astro page
-
 .my-chats-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -20,7 +18,6 @@
         .empty-icon {
             font-size: 4rem;
 
-            // color: list.nth(map.get($accent-colors, primary), 1);
             opacity: 0.5;
             margin-bottom: $spacing-large;
         }
@@ -29,12 +26,10 @@
             font-size: $font-size-extra-large;
             font-weight: $font-weight-semibold;
 
-            // color: var(--header-text);
             margin-bottom: $spacing-medium;
         }
 
         p {
-            // color: var(--body-text);
             opacity: 0.8;
             margin-bottom: $spacing-large;
             font-size: $font-size-base;
@@ -48,7 +43,6 @@
                 list.nth(map.get($accent-colors, primary), 2)
             );
 
-            // color: var(--header-text);
             text-decoration: none;
             border-radius: $border-radius-large;
             font-weight: $font-weight-semibold;
@@ -191,7 +185,6 @@
         }
     }
 
-    // Responsive design
     @media (width <= 768px) {
         padding: $spacing-large $spacing-small;
 

@@ -1,6 +1,3 @@
-// Animation utilities for StudyWise v2
-// Provides reusable animations and utility classes for consistent micro-interactions
-
 // Easing curves
 $ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 $ease-out: cubic-bezier(0, 0, 0.2, 1);
@@ -14,7 +11,6 @@ $transition-slow: 350ms;
 $transition-bounce: 500ms;
 
 // Entrance Animations
-// Fade in from slightly below
 @keyframes fade-in {
     from {
         opacity: 0;
@@ -27,7 +23,6 @@ $transition-bounce: 500ms;
     }
 }
 
-// Slide in from left
 @keyframes slide-in-from-left {
     from {
         opacity: 0;
@@ -40,7 +35,6 @@ $transition-bounce: 500ms;
     }
 }
 
-// Slide in from right
 @keyframes slide-in-from-right {
     from {
         opacity: 0;
@@ -53,7 +47,6 @@ $transition-bounce: 500ms;
     }
 }
 
-// Scale in
 @keyframes scale-in {
     from {
         opacity: 0;
@@ -67,7 +60,6 @@ $transition-bounce: 500ms;
 }
 
 // Loading Animations
-// Shimmer effect for loading states
 @keyframes shimmer {
     0% {
         background-position: -1000px 0;
@@ -78,7 +70,6 @@ $transition-bounce: 500ms;
     }
 }
 
-// Pulse for notifications or loading
 @keyframes pulse {
     0%, 100% {
         opacity: 1;
@@ -89,7 +80,6 @@ $transition-bounce: 500ms;
     }
 }
 
-// Spin for spinners
 @keyframes spin {
     from {
         rotate: 0deg;
@@ -100,7 +90,6 @@ $transition-bounce: 500ms;
     }
 }
 
-// Blinking cursor for typing indicator
 @keyframes blink {
     0%, 100% {
         opacity: 1;
@@ -112,33 +101,26 @@ $transition-bounce: 500ms;
 }
 
 // Utility Classes
-// Apply fade-in animation
 .animate-fade-in {
     animation: fade-in 0.5s $ease-out;
 }
 
-// Apply slide-in from left
 .animate-slide-in-left {
     animation: slide-in-from-left 0.4s $ease-out;
 }
 
-// Apply slide-in from right
 .animate-slide-in-right {
     animation: slide-in-from-right 0.4s $ease-out;
 }
 
-// Apply scale-in animation
 .animate-scale-in {
     animation: scale-in 0.3s $ease-out;
 }
 
-// Stagger children animations
-// Apply to parent container to have children fade in sequentially
 .stagger-children > * {
     opacity: 0;
     animation: fade-in 0.5s $ease-out forwards;
 
-    // Stagger delay for first 10 children
     @for $i from 1 through 10 {
         &:nth-child(#{$i}) {
             animation-delay: #{$i * 0.05}s;
@@ -146,7 +128,6 @@ $transition-bounce: 500ms;
     }
 }
 
-// Float animation (gentle up-down for decorative elements)
 @keyframes float {
     0%, 100% {
         transform: translateY(0);
@@ -157,7 +138,6 @@ $transition-bounce: 500ms;
     }
 }
 
-// Slide in from top
 @keyframes slide-in-down {
     from {
         opacity: 0;
@@ -170,7 +150,6 @@ $transition-bounce: 500ms;
     }
 }
 
-// Slide in from bottom
 @keyframes slide-in-up {
     from {
         opacity: 0;
@@ -184,7 +163,6 @@ $transition-bounce: 500ms;
 }
 
 // Accessibility
-// Respect user's motion preferences
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,

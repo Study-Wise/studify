@@ -5,7 +5,6 @@
 @use 'sass:list';
 @use 'sass:map';
 
-// Unauthorized message styling
 .unauthorized-message {
     display: flex;
     justify-content: center;
@@ -205,7 +204,6 @@ footer, .chat-toolbar {
     overflow: hidden;
     position: relative;
 
-    // Responsive design for tablets
     @media (width <= 1200px) {
         grid-template-columns: auto 1fr;
 
@@ -214,7 +212,6 @@ footer, .chat-toolbar {
         }
     }
 
-    // Responsive design for mobile
     @media (width <= 768px) {
         grid-template-columns: 1fr;
 
@@ -233,7 +230,7 @@ footer, .chat-toolbar {
     flex: 1;
     display: grid;
     grid-template-rows: 1fr auto;
-    min-height: 0; // Critical for grid items to respect overflow
+    min-height: 0;
 
     @media (width <= 768px) {
         padding: $spacing-large + 0.25rem;
@@ -242,7 +239,7 @@ footer, .chat-toolbar {
 
 .chat-messages {
     overflow-y: auto;
-    min-height: 0; // Critical for grid items to respect overflow
+    min-height: 0;
     box-sizing: border-box;
     padding: $spacing-extra-large;
     display: flex;
@@ -250,18 +247,14 @@ footer, .chat-toolbar {
     gap: $spacing-medium + 0.25rem;
     position: relative;
 
-    // Subtle background pattern
     background-image:
         radial-gradient(circle at 20% 50%, rgb(from var(--section-title) r g b / 1.5%) 0%, transparent 50%),
         radial-gradient(circle at 80% 80%, rgb(from var(--section-title) r g b / 1.5%) 0%, transparent 50%);
 
-    // Adds space for the scrollbar to prevent layout shift in supporting browsers.
-    // Note: Not supported in Safari or any iOS Browser (WebKit).
     @supports (scrollbar-gutter: stable) {
         scrollbar-gutter: stable;
     }
 
-    // Custom scrollbar styling
     &::-webkit-scrollbar {
         width: 10px;
     }
@@ -295,7 +288,6 @@ footer, .chat-toolbar {
         max-width: min(calc(600px + 4 * $message-space), 100%);
         position: relative;
 
-        // Slide-in animation from left (assistant messages)
         animation: slide-in-from-left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 
         &-content {
@@ -307,13 +299,11 @@ footer, .chat-toolbar {
             position: relative;
             overflow: hidden;
 
-            // Modern layered shadows
             box-shadow:
                 0 1px 3px rgb(from var(--card-shadow) r g b / 8%),
                 0 4px 12px rgb(from var(--card-shadow) r g b / 6%),
                 inset 0 1px 0 rgb(from var(--header-text) r g b / 2%);
 
-            // Subtle gradient overlay for depth
             &::before {
                 content: '';
                 position: absolute;
@@ -332,7 +322,6 @@ footer, .chat-toolbar {
                 width: fit-content;
             }
 
-            // Better code block styling (Phase 3)
             pre,
             code {
                 background-color: rgb(from var(--card-text) r g b / 8%);
@@ -354,7 +343,6 @@ footer, .chat-toolbar {
                 }
             }
 
-            // Better link styling
             a {
                 color: list.nth(map.get($accent-colors, primary), 1);
                 text-decoration: underline;
@@ -381,7 +369,6 @@ footer, .chat-toolbar {
         &.user {
             align-self: end;
 
-            // Slide-in animation from right (user messages)
             animation: slide-in-from-right 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 
             .message-content {
@@ -395,7 +382,6 @@ footer, .chat-toolbar {
                     0 8px 24px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 15%),
                     inset 0 1px 0 rgb(from var(--header-text) r g b / 15%);
 
-                // Glossy effect for user messages
                 &::before {
                     background: linear-gradient(135deg,
                         rgb(from var(--header-text) r g b / 15%) 0%,
@@ -416,8 +402,6 @@ footer, .chat-toolbar {
         }
     }
 
-    // Typing Indicator (Phase 3)
-    // Add class "typing" to message when AI is generating
     .message.typing {
         .message-content {
             display: flex;
@@ -426,7 +410,6 @@ footer, .chat-toolbar {
             padding: $spacing-medium $spacing-large;
         }
 
-        // Animated dots
         .typing-dots {
             display: flex;
             gap: $spacing-tiny;

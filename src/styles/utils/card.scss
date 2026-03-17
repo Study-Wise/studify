@@ -18,15 +18,11 @@
         margin-block-end: 0;
     }
 
-    // Set margin-block-end to 0 for all cards that are the last visible child of their parent
     $max: 10;
 
     @for $i from 1 through $max {
-        // Select the parent of all ".card"'s
         :has(> &) {
-            // Where the ith element is display: none;
             &:has(> :nth-child(#{$i})[style*="display: none"]) {
-                // And set the margin-block-end of the (i-1)th card to 0
                 > .card:nth-child(#{$i - 1}) {
                     margin-block-end: 0;
                 }
@@ -34,8 +30,6 @@
         }
     }
 
-    // Card Variants (Phase 3 enhancements)
-    // Interactive variant - adds hover effect
     &.interactive {
         cursor: pointer;
         transition: translate $transition-base $ease-out,
@@ -51,18 +45,15 @@
         }
     }
 
-    // Compact variant - less padding
     &.compact {
         padding: calc(#{$card-spacing} / 1.5);
         border-radius: $border-radius-medium;
     }
 
-    // Bordered variant - adds visible border
     &.bordered {
         border: 1px solid var(--card-border);
     }
 
-    // Elevated variant - stronger shadow for emphasis
     &.elevated {
         box-shadow: $box-shadow-large;
     }

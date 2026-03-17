@@ -33,13 +33,11 @@
     cursor: pointer;
     z-index: $z-index-theme-switcher;
 
-    // Smooth transitions
     transition: scale $transition-base $ease-out,
                 rotate $transition-base $ease-out,
                 box-shadow $transition-base $ease-out;
     user-select: none;
 
-    // Enhanced hover effect
     &:hover {
         --g-angle: 60deg;
 
@@ -62,7 +60,6 @@
         }
     }
 
-    // Tooltip
     &::before {
         content: attr(aria-label);
         position: absolute;
@@ -97,7 +94,6 @@
         transition: scale $transition-slower $ease-spring;
     }
 
-    // Mobile responsiveness for contrast toggle
     @media (width <= 768px) {
         padding: $spacing-small $spacing-small;
         font-size: $font-size-extra-small;
@@ -107,7 +103,6 @@
         }
     }
 
-    // Hide toggle in print mode
     @media print {
         display: none !important;
     }

@@ -4,7 +4,6 @@
 @use 'sass:list';
 @use 'sass:map';
 
-// Common sidebar styles
 .chat-sidebar {
     box-sizing: border-box;
     width: 350px;
@@ -14,7 +13,6 @@
     transition: width $transition-slow $ease-in-out;
     overflow-y: auto;
 
-    // Custom scrollbar styling
     &::-webkit-scrollbar {
         width: 8px;
     }
@@ -34,7 +32,6 @@
     }
 }
 
-// Common sidebar content
 .chat-sidebar-content {
     height: 100%;
     display: flex;
@@ -43,7 +40,6 @@
     padding: $spacing-medium;
     overflow-y: auto;
 
-    // Custom scrollbar styling
     &::-webkit-scrollbar {
         width: 8px;
     }
@@ -63,7 +59,6 @@
     }
 }
 
-// Common sidebar section
 .sidebar-section {
     display: flex;
     flex-direction: column;

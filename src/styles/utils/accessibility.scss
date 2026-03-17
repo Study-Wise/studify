@@ -2,15 +2,12 @@
 // Ensures the application is usable for all users including those using
 // assistive technologies, keyboard navigation, and motion preferences
 
-// Focus States
-// Apply consistent focus styles to all interactive elements
 :focus-visible {
     outline: 2px solid var(--section-title);
     outline-offset: 2px;
     border-radius: 0.25rem;
 }
 
-// Remove default outline for mouse users (keyboard users still get focus-visible)
 :focus:not(:focus-visible) {
     outline: none;
 }
@@ -97,7 +94,6 @@ textarea:focus-visible {
 // High Contrast Mode
 // Support for high contrast mode (Windows High Contrast Mode)
 @media (prefers-contrast: high) {
-    // Ensure borders are visible
     .card,
     .button,
     input,
@@ -106,12 +102,10 @@ textarea:focus-visible {
         border: 2px solid currentcolor;
     }
 
-    // Ensure sufficient contrast
     a {
         text-decoration: underline;
     }
 
-    // Remove subtle shadows that may not be visible
     * {
         box-shadow: none;
         text-shadow: none;
@@ -130,7 +124,6 @@ input[type="reset"],
     min-height: 1rem;
     min-width: 1rem;
 
-    // Exception for inline text links
     &:is(a:not([class])) {
         @supports (min-height: auto) {
             min-height: auto;
@@ -160,7 +153,6 @@ input[type="reset"],
     height: 1px;
     overflow: hidden;
 
-    // Make visible when there's content
     &:not(:empty) {
         position: static;
         width: auto;
@@ -186,10 +178,8 @@ input[type="reset"],
 // Focus Trapping
 // When a modal or dialog is open, prevent focus on background content
 body:has([role="dialog"][aria-modal="true"]) {
-    // Prevent background scroll
     overflow: hidden;
 
-    // Reduce visibility of background
     > *:not([role="dialog"]) {
         filter: blur(2px);
         pointer-events: none;

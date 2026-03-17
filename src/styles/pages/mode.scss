@@ -3,8 +3,6 @@
 @use 'sass:list';
 @use 'sass:map';
 
-// Styles specific to index.astro page
-
 .input-section {
     #text-paste {
         width: 100%;
@@ -117,8 +115,6 @@
         margin-block-start: $spacing-small - 0.125rem;
         padding: 0 5px;
     }
-
-    // Print styles consolidated in utils/print.scss
 
     h3, h4 {
         color: #0056b3;

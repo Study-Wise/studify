@@ -5,8 +5,6 @@
 @use 'sass:map';
 @use 'sass:math';
 
-// Styles specific to index.astro page
-
 .introduction-section {
     p {
         margin-bottom: 1.2em;
@@ -18,7 +16,6 @@
         color: var(--body-text);
     }
 
-    // Numbered Steps (Phase 3 enhancement)
     .steps-list {
         counter-reset: step-counter;
         list-style: none;
@@ -35,7 +32,6 @@
                 margin-block-end: $spacing-medium;
             }
 
-            // Gradient numbered circle
             &::before {
                 content: counter(step-counter);
                 position: absolute;
@@ -58,7 +54,6 @@
                 transition: scale $transition-base $ease-spring;
             }
 
-            // Connecting line
             &:not(:last-child)::after {
                 content: '';
                 position: absolute;
@@ -72,12 +67,10 @@
                 );
             }
 
-            // Hover effect on number
             &:hover::before {
                 scale: 1.1;
             }
 
-            // Nested list styling
             ul {
                 margin-block-start: $spacing-small;
                 margin-inline-start: $spacing-large;
@@ -107,11 +100,9 @@
         flex-direction: column;
         gap: $spacing-medium;
 
-        // Enhanced elevation
         box-shadow: $box-shadow-medium;
         border: 1px solid var(--card-border);
 
-        // Subtle gradient overlay
         position: relative;
         isolation: isolate;
         overflow: hidden;
@@ -129,7 +120,6 @@
             z-index: -1;
         }
 
-        // Entrance animation with stagger
         opacity: 0;
         animation: fade-in 0.5s $ease-out forwards;
 
@@ -141,7 +131,6 @@
             }
         }
 
-        // Subtle lift on hover
         @include interactive-lift;
 
         .category-title {
@@ -149,10 +138,8 @@
             font-weight: $font-weight-semibold;
             color: var(--section-title);
 
-            // margin-bottom: $spacing-extra-small;
             width: fit-content;
 
-            // Subtle accent underline
             position: relative;
             display: inline-block;
 
@@ -174,8 +161,6 @@
         }
 
         .category-description {
-            // padding-bottom: $spacing-medium;
-            // margin-bottom: $spacing-extra-small;
             color: var(--body-text);
             line-height: $line-height-relaxed;
             opacity: 0.9;
@@ -195,18 +180,15 @@
                 text-decoration: none;
                 color: inherit;
 
-                // Smooth transitions
                 transition: scale $transition-base $ease-out,
                             box-shadow $transition-base $ease-out,
                             translate $transition-base $ease-out;
 
-                // Hover effects
                 &:hover {
                     scale: 1.05;
                     translate: 0 -4px;
                     box-shadow: $box-shadow-large;
 
-                    // Scale up icon with bounce effect
                     .material-symbols-outlined {
                         scale: 1.15;
                     }
@@ -217,7 +199,6 @@
                     translate: 0 -2px;
                 }
 
-                // Icon transition with spring easing
                 .material-symbols-outlined {
                     transition: scale $transition-slow $ease-spring;
                 }

@@ -5,56 +5,56 @@
 // Accent Colors
 $accent-colors: (
     primary: (
-        // Base, Accent, Text, Text Accent (In Order)
+
         $primary-base, 
         color.adjust($primary-base, $hue: $hue-adjustment, $lightness: $lightness-adjustment), 
         color.adjust($primary-base, $hue: $text-hue-adjustment), 
         color.adjust($primary-base, $hue: $text-hue-adjustment, $lightness: $lightness-adjustment)
     ),
     secondary: (
-        // Base, Accent, Text, Text Accent (In Order)
+
         $secondary-base, 
         color.adjust($secondary-base, $hue: $hue-adjustment, $lightness: $lightness-adjustment), 
         color.adjust($secondary-base, $hue: $text-hue-adjustment), 
         color.adjust($secondary-base, $hue: $text-hue-adjustment, $lightness: $lightness-adjustment)
     ),
     tertiary: (
-        // Base, Accent, Text, Text Accent (In Order)
+
         $tertiary-base, 
         color.adjust($tertiary-base, $hue: $hue-adjustment, $lightness: $lightness-adjustment), 
         color.adjust($tertiary-base, $hue: $text-hue-adjustment), 
         color.adjust($tertiary-base, $hue: $text-hue-adjustment, $lightness: $lightness-adjustment)
     ),
     quaternary: (
-        // Base, Accent, Text, Text Accent (In Order)
+
         $quaternary-base, 
         color.adjust($quaternary-base, $hue: $hue-adjustment, $lightness: $lightness-adjustment), 
         color.adjust($quaternary-base, $hue: $text-hue-adjustment), 
         color.adjust($quaternary-base, $hue: $text-hue-adjustment, $lightness: $lightness-adjustment)
     ),
     quinary: (
-        // Base, Accent, Text, Text Accent (In Order)
+
         $quinary-base, 
         color.adjust($quinary-base, $hue: $hue-adjustment, $lightness: $lightness-adjustment), 
         color.adjust($quinary-base, $hue: $text-hue-adjustment), 
         color.adjust($quinary-base, $hue: $text-hue-adjustment, $lightness: $lightness-adjustment)
     ),
     nonary: (
-        // Base, Accent, Text, Text Accent (In Order)
+
         $nonary-base, 
         color.adjust($nonary-base, $hue: $hue-adjustment, $lightness: $lightness-adjustment), 
         color.adjust($nonary-base, $hue: $text-hue-adjustment),
         color.adjust($nonary-base, $hue: $text-hue-adjustment, $lightness: $lightness-adjustment)
     ),
     denary: (
-        // Base, Accent, Text, Text Accent (In Order)
+
         $denary-base, 
         color.adjust($denary-base, $hue: $hue-adjustment, $lightness: $lightness-adjustment), 
         color.adjust($denary-base, $hue: $text-hue-adjustment),
         color.adjust($denary-base, $hue: $text-hue-adjustment, $lightness: $lightness-adjustment)
     ),
     unary: (
-        // Base, Accent, Text, Text Accent (In Order)
+
         $unary-base,
         color.adjust($unary-base, $hue: $hue-adjustment, $lightness: $lightness-adjustment),
         color.adjust($unary-base, $hue: $text-hue-adjustment),

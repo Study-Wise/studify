@@ -1,8 +1,6 @@
 @use '../variables/globals' as *;
 @use '../variables/tokens' as *;
 
-// Styles specific to about.astro page
-
 .about-section  {
     .profile-picture {
         flex-shrink: 0;
@@ -20,10 +18,8 @@
         justify-content: center;
         align-items: end;
 
-        // text-align: center;
         gap: $spacing-medium;
 
-        // flex-wrap: wrap;
 
         @media (width < 500px) {
             flex-wrap: wrap;

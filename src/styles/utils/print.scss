@@ -1,9 +1,7 @@
-// Print Styles for StudyWise v2
 // Consolidated print styles from globals.scss and mode.scss
 // Ensures clean PDF generation for study materials
 
 @media print {
-    // General Print Settings
     body {
         font-size: 10pt;
         color: #000 !important;
@@ -11,8 +9,6 @@
         line-height: 1.4;
     }
 
-    // Hide Non-Printable Elements
-    // Hide navigation, headers, footers
     body > header,
     body > footer,
     .chat-toolbar,
@@ -25,7 +21,6 @@
         visibility: hidden !important;
     }
 
-    // Hide input/introduction sections
     body > main > .introduction-section,
     body > main > .input-section,
     body > main > .about-section,
@@ -34,13 +29,10 @@
         visibility: hidden !important;
     }
 
-    // Theme switcher
     .theme-switcher {
         display: none !important;
     }
 
-    // Show Printable Content
-    // Ensure main container and output section are visible
     body,
     body > main,
     body > main > #output-section {
@@ -54,15 +46,12 @@
         max-width: none !important;
     }
 
-    // Output Content Visibility
-    // Hide all output content by default
     .output-section-title,
     .output-content {
         display: none !important;
         visibility: hidden !important;
     }
 
-    // ONLY show the output content with 'print-target-container' class
     .output-content.print-target-container,
     .output-section:not(:has(.output-content.print-target-container)) .output-content {
         display: block !important;
@@ -91,8 +80,6 @@
         }
     }
 
-    // Page Break Control
-    // Avoid breaking these elements
     h2,
     h3,
     h4,
@@ -101,7 +88,6 @@
         break-after: avoid !important;
     }
 
-    // Prevent breaking inside these elements
     ul,
     ol,
     p,
@@ -112,7 +98,6 @@
         break-inside: avoid !important;
     }
 
-    // Typography Adjustments
     code {
         font-size: 9pt;
         overflow-wrap: break-word;
@@ -122,7 +107,6 @@
         white-space: pre-wrap;
     }
 
-    // MathJax Print Handling
     mjx-container {
         visibility: visible !important;
     }
@@ -131,7 +115,6 @@
         visibility: hidden !important;
     }
 
-    // Desmos Graph Handling
     .desmos-graph {
         break-inside: avoid !important;
         break-after: auto !important;
