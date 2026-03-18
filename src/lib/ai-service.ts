@@ -268,16 +268,17 @@ export async function generateTitle(options: TitleGenerationOptions): Promise<st
 
 // Paraphrases a user's question to make it clearer and more concise
 export async function paraphraseQuestion(question: string, category: string, mode: string): Promise<string> {
-    const paraphraseRequestId = nanoid();
+    const requestId = nanoid();
 
     try {
         const paraphraseStartTime = Date.now();
-        const { text: paraphrasedQuestion } = await ai.generateText({
+        const { text } = await ai.generateText({
             model: `${config.provider}/${config.model}`,
             messages: [
                 {
                     role: 'system',
-                    content: `You are a helpful assistant that paraphrases student questions to make them clearer and more concise while preserving their original meaning. The question is in the context of ${category} - ${mode}.
+                    content: 
+`You are a helpful assistant that paraphrases student questions to make them clearer and more concise while preserving their original meaning. The question is in the context of ${category} - ${mode}.
 
 IMPORTANT: Only output the paraphrased question, nothing else. Do not add any explanations, quotation marks, or additional text.`,
                 },
@@ -288,11 +289,11 @@ IMPORTANT: Only output the paraphrased question, nothing else. Do not add any ex
             ],
         });
 
-        console.log(`[${paraphraseRequestId}] Question paraphrased in ${Date.now() - paraphraseStartTime}ms`);
-        return paraphrasedQuestion;
+        console.log(`[${requestId}] Question paraphrased in ${Date.now() - paraphraseStartTime}ms`);
+        return text;
     } catch (error) {
-        console.error(`❌ [${paraphraseRequestId}] Error in paraphraseQuestion:`, error);
-        console.error(`❌ [${paraphraseRequestId}] Paraphrase error details:`, {
+        console.error(`❌ [${requestId}] Error in paraphraseQuestion:`, error);
+        console.error(`❌ [${requestId}] Paraphrase error details:`, {
             errorName: error instanceof Error ? error.name : 'Unknown',
             errorMessage: error instanceof Error ? error.message : String(error),
             originalQuestion: question,
@@ -300,7 +301,7 @@ IMPORTANT: Only output the paraphrased question, nothing else. Do not add any ex
             mode
         });
         // Return original question as fallback
-        console.warn(`⚠️ [${paraphraseRequestId}] Falling back to original question`);
+        console.warn(`⚠️ [${requestId}] Falling back to original question`);
         return question;
     }
 }
