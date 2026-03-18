@@ -66,13 +66,12 @@ You may remove or modify sections below as you see fit based on relevance to the
 
 Math formatting: use \`$…$\` for displaying math formulas/equations inline and \`$$…$$\` for displaying them on their own; never use backticks for complex math.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
 
-    const conversationMessages = messages.filter(msg => msg.role !== 'system');
 
     // Generate the reference sheet
     const result = await generateText(
         referenceSheetPrompt,
         'Now generate the reference sheet based on the above conversation. Output ONLY the reference sheet content in markdown format. Do not include any explanations, commentary, or conversation - just the reference sheet.',
-        [...conversationMessages],
+        messages,
         userModel,
         provider,
         {},

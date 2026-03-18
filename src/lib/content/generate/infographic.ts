@@ -66,12 +66,11 @@ Keep it under 1000 characters. Be specific about visual elements, diagrams, icon
 
 You may remove or modify elements as you see fit based on relevance to the topic.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
 
-    const conversationMessages = messages.filter(msg => msg.role !== 'system');
 
     const descriptionResult = await generateText(
         systemPrompt,
         'Now generate the infographic description based on the above conversation. Output ONLY the visual description for the infographic. Do not include any explanations, commentary, or conversation - just the infographic description.',
-        [...conversationMessages],
+        messages,
         userModel,
         provider,
         {},

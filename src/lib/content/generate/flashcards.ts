@@ -1,15 +1,16 @@
-import { generateObject } from 'ai';
 import { z } from 'zod';
 
 import { eq } from 'drizzle-orm';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 
-import config from '@/lib/config';
 import { buildContentSystemPrompt } from '@/lib/content';
 import type { ThreadData, UploadedFile } from '@/lib/threads';
 import type { FlashcardData } from '@/lib/content/latest/flashcards';
 import { saveContent } from '@/lib/content/latest';
+
+import { generateObject } from '@/lib/ai-service';
+import config from '@/lib/config';
 
 const flashcardSchema = z.object({
     text: z.string().describe('A brief markdown summary/introduction about the flashcards topic'),
@@ -81,35 +82,23 @@ Guidelines for questions:
 
 Math formatting: use $…$ for displaying math formulas/equations inline and $$…$$ for displaying them on their own.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
 
-    // Build messages array with system prompt first, then conversation history
-    const conversationMessages = messages.filter(msg => msg.role !== 'system');
-    const messagesForAI = [
-        {
-            role: 'system' as const,
-            content: flashcardPrompt
-        },
-        ...conversationMessages,
-        {
-            role: 'user' as const,
-            content: 'Now generate the flashcards based on the above conversation. Return ONLY the structured flashcard data with the text summary and questions array. Do not include any explanations or commentary.'
-        }
-    ];
-
     // Generate the flashcards using structured output
-    const result = await generateObject({
-        model: `${provider}/${userModel}`,
-        messages: messagesForAI,
-        schema: flashcardSchema,
-        temperature: 0.7,
-    });
+    const generated = await generateObject(
+        flashcardPrompt,
+        'Now generate the flashcards based on the above conversation. Return ONLY the structured flashcard data with the text summary and questions array. Do not include any explanations or commentary.',
+        messages,
+        userModel,
+        provider,
+        flashcardSchema,
+    );
 
-    if (!result.object || !result.object.questions || result.object.questions.length === 0) {
+    if (!generated.questions || generated.questions.length === 0) {
         throw new Error('Generated flashcards are empty');
     }
 
     const flashcardData: FlashcardData = {
-        text: result.object.text,
-        questions: result.object.questions
+        text: generated.text,
+        questions: generated.questions
     };
 
     // Save to database

@@ -136,13 +136,12 @@ Ensure all questions are directly related to topics discussed in the conversatio
 
 You may remove or modify sections as you see fit based on relevance to the topic.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
 
-    const conversationMessages = messages.filter(msg => msg.role !== 'system');
 
     // Generate the practice questions
     const result = await generateText(
         practiceQuestionsPrompt,
         'Now generate the practice questions based on the above conversation. Output ONLY the practice questions content in markdown format. Do not include any explanations, commentary, or conversation - just the practice questions.',
-        [...conversationMessages],
+        messages,
         userModel,
         provider,
         {},

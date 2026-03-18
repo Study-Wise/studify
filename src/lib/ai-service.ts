@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import * as ai from 'ai';
 import { stepCountIs, type Tool } from 'ai';
+import type { ZodSchema } from 'zod';
 import { nanoid } from 'nanoid';
 
 import config from '@/lib/config';
@@ -75,8 +76,8 @@ export async function generateText(
         )
         : tools;
 
-    // Filter out empty content messages
-    convoHistory = convoHistory.filter(msg => msg.content !== '');
+    // Filter out system and empty content messages
+    convoHistory = convoHistory.filter(msg => msg.role !== 'system' && msg.content !== '');
 
     // Add system prompt to beginning of conversation history if not already present
     if (convoHistory[0]?.role !== 'system') {
@@ -303,5 +304,54 @@ IMPORTANT: Only output the paraphrased question, nothing else. Do not add any ex
         // Return original question as fallback
         console.warn(`⚠️ [${requestId}] Falling back to original question`);
         return question;
+    }
+}
+
+// Generates a structured object using AI
+export async function generateObject<T>(
+    systemPrompt: string,
+    userPrompt: string,
+    convoHistory: Message[],
+    userModel: string,
+    provider: string,
+    schema: ZodSchema<T>,
+    requestId: string = nanoid()
+): Promise<T> {
+    // Filter out system and empty content messages
+    convoHistory = convoHistory.filter(msg => msg.role !== 'system' && msg.content !== '');
+
+    // Add system prompt to beginning of conversation history if not already present
+    if (convoHistory[0]?.role !== 'system') {
+        convoHistory.unshift({
+            role: 'system',
+            content: systemPrompt
+        });
+    }
+
+    // Add user prompt to end
+    const lastMessage = convoHistory[convoHistory.length - 1];
+    if (lastMessage?.role !== 'user' || lastMessage?.content !== userPrompt) {
+        convoHistory.push({
+            role: 'user',
+            content: userPrompt
+        });
+    }
+
+    const aiModel = `${provider}/${userModel}`;
+    const aiStartTime = Date.now();
+    console.log(`[${requestId}] AI generateObject request: model=${aiModel}, messages=${convoHistory.length}`);
+
+    try {
+        const result = await ai.generateObject({
+            model: aiModel,
+            messages: convoHistory,
+            schema,
+        });
+
+        console.log(`[${requestId}] AI generateObject response received in ${Date.now() - aiStartTime}ms`);
+        return result.object;
+    } catch (error) {
+        console.error(`❌ [${requestId}] AI generateObject failed after ${Date.now() - aiStartTime}ms:`, error);
+        throw error;
     }
 }

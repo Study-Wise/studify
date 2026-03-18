@@ -60,7 +60,8 @@
       "Bash(for f:*)",
       "Bash(do)",
       "Bash(echo \"=== $f ===\")",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(echo \"Fixed $f\")"
     ],
     "deny": [],
     "ask": []
