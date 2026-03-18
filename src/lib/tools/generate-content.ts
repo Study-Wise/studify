@@ -136,7 +136,8 @@ const getContentTool = tool({
                 if (error.cause) {
                     errorMessage += ` | cause: ${JSON.stringify(error.cause)}`;
                 }
-            } else {
+            }
+            else {
                 errorMessage = JSON.stringify(error);
             }
 
