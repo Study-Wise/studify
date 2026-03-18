@@ -45,4 +45,5 @@ const openContentTool = tool({
 export default {
     ...openContentTool,
     ready: true,
+    label: 'Opening content',
 };

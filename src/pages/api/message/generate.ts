@@ -13,6 +13,7 @@ import {
     getValidModelAndProvider,
     generateAIResponse,
     generateTitle,
+    type ToolCallLogEntry,
 } from '@/lib/ai-service';
 import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
 import type { ThreadData, Message, UploadedFile } from '@/lib/threads';
@@ -378,6 +379,7 @@ Use the above thread context when calling tools that require threadId, category,
         const tools = modeObj.tools || {};
         let generatedText: string;
         let clientToolCalls: { toolName: string; toolCallId: string; args: Record<string, string | number | boolean | undefined> }[] = [];
+        let toolCallLog: ToolCallLogEntry[] = [];
         try {
             const aiResult = await generateAIResponse(
                 systemPrompt,
@@ -392,6 +394,7 @@ Use the above thread context when calling tools that require threadId, category,
             );
             generatedText = aiResult.text;
             clientToolCalls = aiResult.clientToolCalls;
+            toolCallLog = aiResult.toolCallLog;
         } catch (error) {
             return new Response(
                 JSON.stringify({ error: `Failed to generate AI response: ${error}` }),
@@ -486,6 +489,7 @@ Use the above thread context when calling tools that require threadId, category,
                 generatedTitle: true,
                 id: current_thread_id,
                 clientToolCalls: clientToolCalls.length > 0 ? clientToolCalls : undefined,
+                toolCallLog: toolCallLog.length > 0 ? toolCallLog : undefined,
             }),
             {
                 status: 200,

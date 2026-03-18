@@ -30,18 +30,15 @@ const specialCases: Record<string, { latestFn?: string; generateFn?: string }> =
 };
 
 // Types that require model/provider for generation
-const requiresModelProvider = ['infographic'];
-
 const getContentTool = tool({
     description: "Generate or retrieve study materials for a thread. Returns existing content if available; otherwise automatically generates new content based on the conversation history and uploaded files. Use regenerate=true to force regeneration even if content already exists. After successfully generating content, call the 'open-content' tool to open it in a new tab for the user.",
     inputSchema: z.object({
         type: z.enum(validTypes).describe('The content type to retrieve or generate'),
         threadId: z.string().describe('The thread ID to get/generate content for'),
-        userEmail: z.string().optional().describe('The user email for authorization (optional)'),
         regenerate: z.boolean().optional().describe('Force regeneration even if content already exists (default: false)'),
         userPrompt: z.string().optional().describe('Additional instructions from the user for content generation (only used when regenerate=true)'),
     }),
-    execute: async ({ type, threadId, userEmail, regenerate = false, userPrompt }) => {
+    execute: async ({ type, threadId, regenerate = false, userPrompt }) => {
         let stage = 'initializing';
         try {
             const pascalCase = toPascalCase(type);
@@ -153,4 +150,5 @@ const getContentTool = tool({
 export default {
     ...getContentTool,
     ready: true,
+    label: 'Generating content',
 };

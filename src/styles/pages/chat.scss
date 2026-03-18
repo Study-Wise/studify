@@ -401,6 +401,42 @@ footer, .chat-toolbar {
         }
     }
 
+    .tool-call-log {
+        display: flex;
+        flex-direction: column;
+        gap: $spacing-tiny;
+        max-width: min(calc(600px + 4 * ($spacing-medium + 0.25rem)), 100%);
+
+        .tool-call-entry {
+            display: flex;
+            align-items: center;
+            gap: $spacing-extra-small;
+            padding: $spacing-tiny $spacing-small;
+            border-radius: $border-radius-extra-small;
+            background-color: rgb(from var(--card-border) r g b / 20%);
+            border: 1px solid rgb(from var(--card-border) r g b / 40%);
+            font-size: $font-size-extra-small;
+            color: var(--text-secondary);
+            width: fit-content;
+
+            .material-symbols-outlined {
+                font-size: 0.9rem;
+
+                &[data-state="success"] {
+                    color: var(--success, #4caf50);
+                }
+
+                &[data-state="error"] {
+                    color: var(--error, #f44336);
+                }
+            }
+
+            .tool-name {
+                font-weight: 500;
+            }
+        }
+    }
+
     .message.typing {
         .message-content {
             display: flex;

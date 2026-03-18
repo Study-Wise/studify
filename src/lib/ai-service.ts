@@ -4,14 +4,13 @@ import { nanoid } from 'nanoid';
 
 import config from '@/lib/config';
 import { providers } from '@/lib/models';
-// import tools from '@/lib/tools';
 import type { JSONValue, Message } from '@/lib/threads';
 
 // Tool related types
 export type ToolRecord = Record<string, Tool>;
 
 export interface ToolModule {
-    default: Tool & { ready?: boolean };
+    default: Tool & { ready?: boolean; label?: string };
 }
 
 // Client-side tool call that needs to be executed in the browser
@@ -21,10 +20,18 @@ export interface ClientToolCall {
     args: Record<string, string | number | boolean | undefined>;
 }
 
+export interface ToolCallLogEntry {
+    toolName: string;
+    args: object;
+    status: 'success' | 'error';
+    result: string;
+}
+
 // AI generation result with potential client-side tool calls
 export interface AIGenerationResult {
     text: string;
     clientToolCalls: ClientToolCall[];
+    toolCallLog: ToolCallLogEntry[];
 }
 
 export interface TitleGenerationOptions {
@@ -103,6 +110,39 @@ export async function generateAIResponse(
 
         // Extract client-side actions from tool results
         const clientToolCalls: ClientToolCall[] = [];
+        const toolCallLog: ToolCallLogEntry[] = [];
+
+        // Collect all tool calls from steps
+        if (result.steps && result.steps.length > 0) {
+            for (const step of result.steps) {
+                const stepToolCalls = step.toolCalls ?? [];
+                const stepToolResults = step.toolResults ?? [];
+
+                for (const tc of stepToolCalls) {
+                    const matchingResult = (stepToolResults as Array<{ toolCallId: string; result?: unknown }>)
+                        .find(tr => tr.toolCallId === tc.toolCallId);
+
+                    let resultStr = '';
+                    let status: 'success' | 'error' = 'success';
+
+                    if (matchingResult?.result) {
+                        const raw = matchingResult.result;
+                        resultStr = typeof raw === 'string' ? raw : JSON.stringify(raw);
+                        try {
+                            const parsed = JSON.parse(resultStr);
+                            if (parsed?.status === 'error') status = 'error';
+                        } catch (_e) { /* not JSON, leave as success */ }
+                    }
+
+                    toolCallLog.push({
+                        toolName: tc.toolName,
+                        args: tc.input ?? {},
+                        status,
+                        result: resultStr,
+                    });
+                }
+            }
+        }
 
         // Check tool results for actions that need client-side handling
         if (result.toolResults && result.toolResults.length > 0) {
@@ -170,6 +210,7 @@ export async function generateAIResponse(
         return {
             text: result.text,
             clientToolCalls,
+            toolCallLog,
         };
     } catch (error) {
         const aiEndTime = Date.now();

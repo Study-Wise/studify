@@ -30,4 +30,5 @@ const searchTool = tool({
 export default {
     ...searchTool,
     ready: true,
+    label: 'Searching the web',
 };

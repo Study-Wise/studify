@@ -1,4 +1,4 @@
-import tools from '@/lib/tools';
+import { modules } from '@/lib/tools';
 import { generateModePrompt } from '@/lib/prompt-generator';
 import type { ToolRecord } from '@/lib/ai-service';
 
@@ -394,7 +394,7 @@ for (const topicKey of Object.keys(categories)) {
 
         // Set default tools if not specified
         if (!mode.tools) {
-            mode.tools = tools;
+            mode.tools = modules;
         }
 
         modes[modeKey] = mode;

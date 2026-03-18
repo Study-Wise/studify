@@ -5,7 +5,7 @@ import { eq } from 'drizzle-orm';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 
-import tools from '@/lib/tools';
+import { modules } from '@/lib/tools';
 import { buildContentSystemPrompt } from '@/lib/content';
 import config from '@/lib/config';
 import type { ThreadData, UploadedFile } from '@/lib/threads';
@@ -117,7 +117,7 @@ You may remove or modify sections as you see fit based on relevance to the topic
         model: 'vercel/v0-1.5-md',
         messages: messagesForAI,
         tools: Object.fromEntries(
-            Object.entries(tools).filter(([key]) => !excludeTools.includes(key))
+            Object.entries(modules).filter(([key]) => !excludeTools.includes(key))
         ),
         temperature: 0.7,
         providerOptions: {

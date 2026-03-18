@@ -14,4 +14,5 @@ const searchTool = tool({
 export default {
     ...searchTool,
     ready: true,
+    label: 'Fetching content types',
 };

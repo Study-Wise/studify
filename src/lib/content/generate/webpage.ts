@@ -6,7 +6,7 @@ import { buildContentSystemPrompt } from '@/lib/content';
 import { saveContent } from '@/lib/content/latest';
 
 import { generateAIResponse } from '@/lib/ai-service';
-import tools from '@/lib/tools';
+import { modules } from '@/lib/tools';
 import config from '@/lib/config';
 import type { ThreadData, UploadedFile } from '@/lib/threads';
 
@@ -88,7 +88,7 @@ ONLY INCLUDE THE HTML CONTENT IN YOUR RESPONSE. DO NOT RESPOND WITH ANYTHING ELS
         conversationMessages,
         'v0-1.5-md',
         'vercel',
-        tools,
+        modules,
         config.contentGenerationExcludeTools,
     );
 

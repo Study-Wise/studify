@@ -1,7 +1,9 @@
 ---
+import { labels } from '@/lib/tools';
+
 const { page, category, mode, id } = Astro.props;
 ---
-<script is:inline define:vars={{ page, category, mode, id }}>
+<script is:inline define:vars={{ page, category, mode, id, toolLabels: labels }}>
     let threadId = 0;
     let userSettings = {};
 
@@ -408,6 +410,33 @@ const { page, category, mode, id } = Astro.props;
         }
     }
 
+    function renderToolCallLog(toolCallLog, container) {
+        if (!toolCallLog || toolCallLog.length === 0) return;
+
+        const logDiv = document.createElement('div');
+        logDiv.className = 'tool-call-log';
+
+        for (const entry of toolCallLog) {
+            const entryDiv = document.createElement('div');
+            entryDiv.className = 'tool-call-entry';
+
+            const icon = document.createElement('span');
+            icon.className = 'material-symbols-outlined';
+            icon.dataset.state = entry.status;
+            icon.textContent = entry.status === 'success' ? 'check_circle' : 'error';
+
+            const label = document.createElement('span');
+            label.className = 'tool-name';
+            label.textContent = toolLabels[entry.toolName] || entry.toolName;
+
+            entryDiv.appendChild(icon);
+            entryDiv.appendChild(label);
+            logDiv.appendChild(entryDiv);
+        }
+
+        container.appendChild(logDiv);
+    }
+
     // Chat message display (for chat page)
     async function addAssistantMessage(data) {
         if (!data || typeof data !== 'object') {
@@ -422,6 +451,17 @@ const { page, category, mode, id } = Astro.props;
         }
 
         try {
+            // Render tool call log above the message
+            if (data.toolCallLog && data.toolCallLog.length > 0) {
+                renderToolCallLog(data.toolCallLog, chatMessages);
+            }
+
+            // Skip empty assistant messages (e.g. those that only made tool calls)
+            if (!data.generatedText || !data.generatedText.trim()) {
+                chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
+                return;
+            }
+
             // Create message container
             const messageDiv = document.createElement('div');
             messageDiv.className = 'message assistant';
