@@ -126,21 +126,13 @@ const getContentTool = tool({
         } catch (error) {
             console.error(`❌ Error getting/generating ${type}:`, error);
 
-            let errorMessage: string;
-            if (error instanceof Error) {
-                errorMessage = error.message;
-                // Include cause if present (AI SDK errors often nest the root cause)
-                if (error.cause) {
-                    errorMessage += ` | cause: ${JSON.stringify(error.cause)}`;
-                }
-            }
-            else {
-                errorMessage = JSON.stringify(error);
-            }
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            const errorCause = error instanceof Error && error.cause ? error.cause : undefined;
 
             return {
                 status: 'error',
                 message: `Failed while ${stage}: ${errorMessage}`,
+                cause: errorCause,
                 content: null
             };
         }
