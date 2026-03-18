@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid';
 
 import config from '@/lib/config';
 import { providers } from '@/lib/models';
-import tools from '@/lib/tools';
+// import tools from '@/lib/tools';
 import type { JSONValue, Message } from '@/lib/threads';
 
 // Tool related types
