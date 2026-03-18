@@ -66,14 +66,15 @@ You may remove or modify elements as you see fit based on relevance to the topic
 
     const conversationMessages = messages.filter(msg => msg.role !== 'system');
 
-    const descriptionResult = await generateAIResponse({
+    const descriptionResult = await generateAIResponse(
         systemPrompt,
-        userPrompt: 'Now generate the infographic description based on the above conversation. Output ONLY the visual description for the infographic. Do not include any explanations, commentary, or conversation - just the infographic description.',
-        convoHistory: [...conversationMessages],
+        'Now generate the infographic description based on the above conversation. Output ONLY the visual description for the infographic. Do not include any explanations, commentary, or conversation - just the infographic description.',
+        [...conversationMessages],
         userModel,
         provider,
-        excludeTools: config.contentGenerationExcludeTools,
-    });
+        {},
+        config.contentGenerationExcludeTools,
+    );
 
     // Step 2: Generate the actual image using Google GenAI
     const imagePrompt = 

@@ -82,15 +82,15 @@ ONLY INCLUDE THE HTML CONTENT IN YOUR RESPONSE. DO NOT RESPOND WITH ANYTHING ELS
     const conversationMessages = messages.filter(msg => msg.role !== 'system');
 
     // Generate the webpage using Vercel's v0 model (optimized for HTML generation)
-    const result = await generateAIResponse({
-        systemPrompt: webpagePrompt,
-        userPrompt: 'Now generate the webpage based on the above conversation. Output ONLY the complete HTML document starting with <!DOCTYPE html>. Do not include any explanations, commentary, or conversation - just the HTML content.',
-        convoHistory: [...conversationMessages],
-        userModel: 'v0-1.5-md',
-        provider: 'vercel',
+    const result = await generateAIResponse(
+        webpagePrompt,
+        'Now generate the webpage based on the above conversation. Output ONLY the complete HTML document starting with <!DOCTYPE html>. Do not include any explanations, commentary, or conversation - just the HTML content.',
+        conversationMessages,
+        'v0-1.5-md',
+        'vercel',
         tools,
-        excludeTools: config.contentGenerationExcludeTools,
-    });
+        config.contentGenerationExcludeTools,
+    );
 
     if (!result.text || result.text.length === 0) {
         throw new Error('Generated webpage is empty');

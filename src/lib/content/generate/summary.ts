@@ -69,14 +69,15 @@ REMEMBER: Output ONLY the Chat Summary in markdown format. No other content type
     const conversationMessages = messages.filter(msg => msg.role !== 'system');
 
     // Generate the summary
-    const result = await generateAIResponse({
-        systemPrompt: summaryPrompt,
-        userPrompt: 'Now generate a comprehensive summary based on the above conversation. Output ONLY the summary content in markdown format. Do not include any explanations, commentary, or conversation - just the summary.',
-        convoHistory: [...conversationMessages],
+    const result = await generateAIResponse(
+        summaryPrompt,
+        'Now generate a comprehensive summary based on the above conversation. Output ONLY the summary content in markdown format. Do not include any explanations, commentary, or conversation - just the summary.',
+        [...conversationMessages],
         userModel,
         provider,
-        excludeTools: config.contentGenerationExcludeTools,
-    });
+        {},
+        config.contentGenerationExcludeTools,
+    );
 
     if (!result.text || result.text.length === 0) {
         throw new Error('Generated summary is empty');

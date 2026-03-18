@@ -104,14 +104,15 @@ REMEMBER: Output ONLY the Study Guide. No quizzes, no practice questions, no fla
     const conversationMessages = messages.filter(msg => msg.role !== 'system');
 
     // Generate the study guide
-    const result = await generateAIResponse({
-        systemPrompt: studyGuidePrompt,
-        userPrompt: 'Now generate the study guide based on the above conversation. Output ONLY the study guide content in markdown format. Do not include any explanations, commentary, or conversation - just the study guide.',
-        convoHistory: [...conversationMessages],
+    const result = await generateAIResponse(
+        studyGuidePrompt,
+        'Now generate the study guide based on the above conversation. Output ONLY the study guide content in markdown format. Do not include any explanations, commentary, or conversation - just the study guide.',
+        [...conversationMessages],
         userModel,
         provider,
-        excludeTools: config.contentGenerationExcludeTools,
-    });
+        {},
+        config.contentGenerationExcludeTools,
+    );
 
     if (!result.text || result.text.length === 0) {
         throw new Error('Generated study guide is empty');

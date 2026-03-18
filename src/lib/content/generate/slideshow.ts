@@ -142,14 +142,15 @@ REMEMBER: Output ONLY the markdown content. No quizzes, no practice questions, n
     const conversationMessages = messages.filter(msg => msg.role !== 'system');
 
     // Generate the slideshow markdown
-    const result = await generateAIResponse({
-        systemPrompt: slideshowPrompt,
-        userPrompt: 'Now generate the markdown slideshow based on the above conversation. Output ONLY the raw markdown. Do not include any explanations, commentary, or conversation - just the slideshow markdown content.',
-        convoHistory: [...conversationMessages],
+    const result = await generateAIResponse(
+        slideshowPrompt,
+        'Now generate the markdown slideshow based on the above conversation. Output ONLY the raw markdown. Do not include any explanations, commentary, or conversation - just the slideshow markdown content.',
+        [...conversationMessages],
         userModel,
         provider,
-        excludeTools: config.contentGenerationExcludeTools,
-    });
+        {},
+        config.contentGenerationExcludeTools,
+    );
 
     if (!result.text || result.text.length === 0) {
         throw new Error('Generated slideshow is empty');
