@@ -83,7 +83,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
 
         // Generate the infographic (always use default model for reliability)
-        const infographic = await generateInfographic(threadId, user_email, config.model, config.provider);
+        const infographic = await generateInfographic(threadId);
 
         return new Response(
             JSON.stringify({

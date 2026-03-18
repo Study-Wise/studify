@@ -1,8 +1,6 @@
 import { tool } from 'ai';
 import { z } from 'zod';
 
-import config from '@/lib/config';
-
 // Convert kebab-case to camelCase
 const toCamelCase = (str: string) => str.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
 
@@ -109,18 +107,7 @@ const getContentTool = tool({
             stage = `generating "${type}" for thread "${threadId}"`;
 
             // Handle types that require model/provider (always use default for reliability)
-            if (requiresModelProvider.includes(type)) {
-                generatedContent = await generateFn(
-                    threadId,
-                    userEmail || null,
-                    config.model,
-                    config.provider,
-                    promptToPass
-                );
-            }
-            else {
-                generatedContent = await generateFn(threadId, promptToPass);
-            }
+            generatedContent = await generateFn(threadId, promptToPass || null);
 
             if (generatedContent === null || generatedContent === undefined) {
                 return {
@@ -142,7 +129,16 @@ const getContentTool = tool({
         } catch (error) {
             console.error(`❌ Error getting/generating ${type}:`, error);
 
-            const errorMessage = error instanceof Error ? error.message : String(error);
+            let errorMessage: string;
+            if (error instanceof Error) {
+                errorMessage = error.message;
+                // Include cause if present (AI SDK errors often nest the root cause)
+                if (error.cause) {
+                    errorMessage += ` | cause: ${JSON.stringify(error.cause)}`;
+                }
+            } else {
+                errorMessage = JSON.stringify(error);
+            }
 
             return {
                 status: 'error',

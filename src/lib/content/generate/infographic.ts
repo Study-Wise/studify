@@ -22,11 +22,13 @@ function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
 
 export async function generateInfographic(
     threadId: string,
-    _userEmail: string | null,
-    userModel: string,
-    provider: string,
-    userPrompt?: string
+    userPrompt?: string,
+    userModel?: string,
+    provider?: string,
 ) {
+    userModel ??= config.model;
+    provider ??= config.provider;
+
     // Fetch the thread from database to get conversation history
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
