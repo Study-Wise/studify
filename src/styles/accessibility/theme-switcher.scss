@@ -20,8 +20,6 @@
     box-sizing: content-box;
     padding: $spacing-extra-small;
     aspect-ratio: 1;
-    width: $spacing-medium + 0.25rem;
-    height: $spacing-medium + 0.25rem;
     background: linear-gradient(var(--g-angle), list.nth(map.get($accent-colors, primary), 1), list.nth(map.get($accent-colors, primary), 2));
     color: var(--body-bg);
     border: none;
