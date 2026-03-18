@@ -2,7 +2,7 @@
 @use '../variables/tokens' as *;
 @use 'sass:math';
 
-/* Card Container */
+// Card Container
 .card {
     background-color: var(--card-bg);
     padding: clamp($spacing-large, 4vw, $spacing-extra-large);

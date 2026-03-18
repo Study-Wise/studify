@@ -225,9 +225,9 @@ footer, .chat-toolbar {
     }
 }
 
-/* Card Container */
+// Card Container
 .chat-section {
-    grid-row: 1 / -1;
+    grid-row: span 2;
     display: grid;
     grid-template-rows: 1fr auto;
     min-height: 0;
