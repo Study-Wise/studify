@@ -119,7 +119,7 @@ const getContentTool = tool({
                 );
             }
             else {
-                generatedContent = await generateFn(threadId, userEmail || null, promptToPass);
+                generatedContent = await generateFn(threadId, promptToPass);
             }
 
             if (generatedContent === null || generatedContent === undefined) {
