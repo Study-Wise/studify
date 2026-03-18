@@ -207,7 +207,7 @@ footer, .chat-toolbar {
     @media (width <= 1200px) {
         grid-template-columns: auto 1fr;
 
-        .chat-right-sidebar {
+        .chat-sidebar.right {
             display: none;
         }
     }
@@ -215,11 +215,11 @@ footer, .chat-toolbar {
     @media (width <= 768px) {
         grid-template-columns: 1fr;
 
-        .chat-left-sidebar {
+        .chat-sidebar.left {
             display: none;
         }
 
-        .chat-right-sidebar {
+        .chat-sidebar.right {
             display: none;
         }
     }
