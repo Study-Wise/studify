@@ -53,7 +53,7 @@ Default configuration in `src/lib/config.ts`:
 The `src/lib/ai-service.ts` module handles:
 
 - Model/provider validation via `getValidModelAndProvider()`
-- AI response generation via `generateAIResponse()` with tool support
+- AI response generation via `generateText()` with tool support
 - Conversation title generation via `generateTitle()`
 
 ### Category and Mode System

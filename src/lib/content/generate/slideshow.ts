@@ -11,7 +11,7 @@ import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 
 import config from '@/lib/config';
-import { generateAIResponse } from '@/lib/ai-service';
+import { generateText } from '@/lib/ai-service';
 import { buildContentSystemPrompt } from '@/lib/content';
 import type { ThreadData, UploadedFile, JSONValue } from '@/lib/threads';
 import { saveContent } from '@/lib/content/latest';
@@ -142,7 +142,7 @@ REMEMBER: Output ONLY the markdown content. No quizzes, no practice questions, n
     const conversationMessages = messages.filter(msg => msg.role !== 'system');
 
     // Generate the slideshow markdown
-    const result = await generateAIResponse(
+    const result = await generateText(
         slideshowPrompt,
         'Now generate the markdown slideshow based on the above conversation. Output ONLY the raw markdown. Do not include any explanations, commentary, or conversation - just the slideshow markdown content.',
         [...conversationMessages],

@@ -11,7 +11,7 @@ import categories from '@/lib/modes';
 import type { Mode } from '@/lib/modes';
 import {
     getValidModelAndProvider,
-    generateAIResponse,
+    generateText,
     generateTitle,
     type ToolCallLogEntry,
 } from '@/lib/ai-service';
@@ -381,7 +381,7 @@ Use the above thread context when calling tools that require threadId, category,
         let clientToolCalls: { toolName: string; toolCallId: string; args: Record<string, string | number | boolean | undefined> }[] = [];
         let toolCallLog: ToolCallLogEntry[] = [];
         try {
-            const aiResult = await generateAIResponse(
+            const aiResult = await generateText(
                 systemPrompt,
                 userPrompt,
                 convoHistory,

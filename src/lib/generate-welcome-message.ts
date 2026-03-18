@@ -1,7 +1,7 @@
 // Welcome Message Generation
 // This module handles generating the welcome message for the first message in a conversation.
 
-import { generateAIResponse } from '@/lib/ai-service';
+import { generateText } from '@/lib/ai-service';
 import config from '@/lib/config';
 import type { Message } from '@/lib/threads';
 import type { ToolRecord } from '@/lib/ai-service';
@@ -26,7 +26,7 @@ export async function generateWelcomeMessage({
     // Create a copy of convoHistory to avoid polluting the original with the welcome prompt
     const convoHistoryCopy = structuredClone(convoHistory);
 
-    const result = await generateAIResponse(
+    const result = await generateText(
         systemPrompt,
         config.welcomeMessagePrompt,
         convoHistoryCopy,

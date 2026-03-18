@@ -3,7 +3,7 @@ import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 
 import config from '@/lib/config';
-import { generateAIResponse } from '@/lib/ai-service';
+import { generateText } from '@/lib/ai-service';
 import { buildContentSystemPrompt } from '@/lib/content';
 import type { ThreadData, UploadedFile } from '@/lib/threads';
 import { saveContent } from '@/lib/content/latest';
@@ -69,7 +69,7 @@ REMEMBER: Output ONLY the Chat Summary in markdown format. No other content type
     const conversationMessages = messages.filter(msg => msg.role !== 'system');
 
     // Generate the summary
-    const result = await generateAIResponse(
+    const result = await generateText(
         summaryPrompt,
         'Now generate a comprehensive summary based on the above conversation. Output ONLY the summary content in markdown format. Do not include any explanations, commentary, or conversation - just the summary.',
         [...conversationMessages],

@@ -3,7 +3,7 @@ import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 
 import config from '@/lib/config';
-import { generateAIResponse } from '@/lib/ai-service';
+import { generateText } from '@/lib/ai-service';
 import { buildContentSystemPrompt } from '@/lib/content';
 import stepByStepHTML from '@/lib/prompt-templates/step-by-step-html';
 import type { ThreadData, UploadedFile } from '@/lib/threads';
@@ -139,7 +139,7 @@ You may remove or modify sections as you see fit based on relevance to the topic
     const conversationMessages = messages.filter(msg => msg.role !== 'system');
 
     // Generate the practice questions
-    const result = await generateAIResponse(
+    const result = await generateText(
         practiceQuestionsPrompt,
         'Now generate the practice questions based on the above conversation. Output ONLY the practice questions content in markdown format. Do not include any explanations, commentary, or conversation - just the practice questions.',
         [...conversationMessages],

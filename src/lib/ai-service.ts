@@ -1,5 +1,6 @@
 import 'dotenv/config';
-import { generateText, stepCountIs, type Tool } from 'ai';
+import * as ai from 'ai';
+import { stepCountIs, type Tool } from 'ai';
 import { nanoid } from 'nanoid';
 
 import config from '@/lib/config';
@@ -55,7 +56,7 @@ export async function getValidModelAndProvider(requestedModel: string | null): P
 }
 
 // Generates AI response for a conversation
-export async function generateAIResponse(
+export async function generateText(
     systemPrompt: string,
     userPrompt: string,
     convoHistory: Message[],
@@ -73,6 +74,9 @@ export async function generateAIResponse(
             Object.entries(tools).filter(([key]) => !excludeTools.includes(key))
         )
         : tools;
+
+    // Filter out empty content messages
+    convoHistory = convoHistory.filter(msg => msg.content !== '');
 
     // Add system prompt to beginning of conversation history if not already present
     if (convoHistory[0]?.role !== 'system') {
@@ -99,7 +103,7 @@ export async function generateAIResponse(
     console.log(`[${requestId}] AI request: model=${aiModel}, messages=${convoHistory.length}, tools=${Object.keys(resolvedTools).length}`);
 
     try {
-        const result = await generateText({
+        const result = await ai.generateText({
             model: aiModel,
             messages: convoHistory,
             tools: resolvedTools,
@@ -232,7 +236,7 @@ export async function generateTitle(options: TitleGenerationOptions): Promise<st
 
     try {
         const titleStartTime = Date.now();
-        const { text: generatedText } = await generateText({
+        const { text: generatedText } = await ai.generateText({
             model: `${provider}/${userModel}`,
             messages: [
                 {
@@ -268,7 +272,7 @@ export async function paraphraseQuestion(question: string, category: string, mod
 
     try {
         const paraphraseStartTime = Date.now();
-        const { text: paraphrasedQuestion } = await generateText({
+        const { text: paraphrasedQuestion } = await ai.generateText({
             model: `${config.provider}/${config.model}`,
             messages: [
                 {

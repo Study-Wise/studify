@@ -3,7 +3,7 @@ import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 
 import config from '@/lib/config';
-import { generateAIResponse } from '@/lib/ai-service';
+import { generateText } from '@/lib/ai-service';
 import { buildContentSystemPrompt } from '@/lib/content';
 import type { ThreadData, UploadedFile } from '@/lib/threads';
 import { saveContent } from '@/lib/content/latest';
@@ -69,7 +69,7 @@ Math formatting: use \`$…$\` for displaying math formulas/equations inline and
     const conversationMessages = messages.filter(msg => msg.role !== 'system');
 
     // Generate the reference sheet
-    const result = await generateAIResponse(
+    const result = await generateText(
         referenceSheetPrompt,
         'Now generate the reference sheet based on the above conversation. Output ONLY the reference sheet content in markdown format. Do not include any explanations, commentary, or conversation - just the reference sheet.',
         [...conversationMessages],

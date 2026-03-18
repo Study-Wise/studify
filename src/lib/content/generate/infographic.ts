@@ -2,7 +2,7 @@ import { eq } from 'drizzle-orm';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 
-import { generateAIResponse } from '@/lib/ai-service';
+import { generateText } from '@/lib/ai-service';
 import { buildContentSystemPrompt } from '@/lib/content';
 import config from '@/lib/config';
 import { generateImage } from '@/lib/genai-image';
@@ -68,7 +68,7 @@ You may remove or modify elements as you see fit based on relevance to the topic
 
     const conversationMessages = messages.filter(msg => msg.role !== 'system');
 
-    const descriptionResult = await generateAIResponse(
+    const descriptionResult = await generateText(
         systemPrompt,
         'Now generate the infographic description based on the above conversation. Output ONLY the visual description for the infographic. Do not include any explanations, commentary, or conversation - just the infographic description.',
         [...conversationMessages],

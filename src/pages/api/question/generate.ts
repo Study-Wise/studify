@@ -7,7 +7,7 @@ import { db } from '@/db/initialize';
 import { questionTable } from '@/db/schema';
 
 import { questionToId } from '@/lib/question-utils';
-import { generateAIResponse, paraphraseQuestion } from '@/lib/ai-service';
+import { generateText, paraphraseQuestion } from '@/lib/ai-service';
 import config from '@/lib/config';
 
 export const POST: APIRoute = async ({ request }) => {
@@ -69,7 +69,7 @@ Your answer should be:
             { role: 'user' as const, content: paraphrasedQuestion }
         ];
 
-        const aiResult = await generateAIResponse(
+        const aiResult = await generateText(
             systemPrompt,
             paraphrasedQuestion,
             convoHistory,

@@ -5,7 +5,7 @@ import { threadsTable } from '@/db/schema';
 import { buildContentSystemPrompt } from '@/lib/content';
 import { saveContent } from '@/lib/content/latest';
 
-import { generateAIResponse } from '@/lib/ai-service';
+import { generateText } from '@/lib/ai-service';
 import { modules } from '@/lib/tools';
 import config from '@/lib/config';
 import type { ThreadData, UploadedFile } from '@/lib/threads';
@@ -82,7 +82,7 @@ ONLY INCLUDE THE HTML CONTENT IN YOUR RESPONSE. DO NOT RESPOND WITH ANYTHING ELS
     const conversationMessages = messages.filter(msg => msg.role !== 'system');
 
     // Generate the webpage using Vercel's v0 model (optimized for HTML generation)
-    const result = await generateAIResponse(
+    const result = await generateText(
         webpagePrompt,
         'Now generate the webpage based on the above conversation. Output ONLY the complete HTML document starting with <!DOCTYPE html>. Do not include any explanations, commentary, or conversation - just the HTML content.',
         conversationMessages,

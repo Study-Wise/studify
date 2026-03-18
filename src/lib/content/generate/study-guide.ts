@@ -3,7 +3,7 @@ import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 
 import config from '@/lib/config';
-import { generateAIResponse } from '@/lib/ai-service';
+import { generateText } from '@/lib/ai-service';
 import { buildContentSystemPrompt } from '@/lib/content';
 import categories from '@/lib/modes';
 import desmosSection from '@/lib/prompt-templates/desmos';
@@ -104,7 +104,7 @@ REMEMBER: Output ONLY the Study Guide. No quizzes, no practice questions, no fla
     const conversationMessages = messages.filter(msg => msg.role !== 'system');
 
     // Generate the study guide
-    const result = await generateAIResponse(
+    const result = await generateText(
         studyGuidePrompt,
         'Now generate the study guide based on the above conversation. Output ONLY the study guide content in markdown format. Do not include any explanations, commentary, or conversation - just the study guide.',
         [...conversationMessages],
