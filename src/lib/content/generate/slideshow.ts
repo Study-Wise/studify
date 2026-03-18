@@ -139,13 +139,12 @@ Your output MUST be standard markdown where each heading (# or ##) starts a new 
 
 REMEMBER: Output ONLY the markdown content. No quizzes, no practice questions, no flashcards, no other content types.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
 
-    const conversationMessages = messages.filter(msg => msg.role !== 'system');
 
     // Generate the slideshow markdown
     const result = await generateText(
         slideshowPrompt,
         'Now generate the markdown slideshow based on the above conversation. Output ONLY the raw markdown. Do not include any explanations, commentary, or conversation - just the slideshow markdown content.',
-        [...conversationMessages],
+        messages,
         userModel,
         provider,
         {},

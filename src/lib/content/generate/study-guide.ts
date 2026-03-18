@@ -101,13 +101,12 @@ Math formatting: use \`$…$\` for inline math and \`$$…$$\` for block math.
 
 REMEMBER: Output ONLY the Study Guide. No quizzes, no practice questions, no flashcards, no other content types. Be DETAILED and THOROUGH — a student should be able to study for an exam using only this guide.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
 
-    const conversationMessages = messages.filter(msg => msg.role !== 'system');
 
     // Generate the study guide
     const result = await generateText(
         studyGuidePrompt,
         'Now generate the study guide based on the above conversation. Output ONLY the study guide content in markdown format. Do not include any explanations, commentary, or conversation - just the study guide.',
-        [...conversationMessages],
+        messages,
         userModel,
         provider,
         {},

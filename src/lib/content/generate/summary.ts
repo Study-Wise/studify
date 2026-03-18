@@ -66,13 +66,12 @@ Math formatting: use \`$…$\` for inline math and \`$$…$$\` for block math.
 
 REMEMBER: Output ONLY the Chat Summary in markdown format. No other content types.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
 
-    const conversationMessages = messages.filter(msg => msg.role !== 'system');
 
     // Generate the summary
     const result = await generateText(
         summaryPrompt,
         'Now generate a comprehensive summary based on the above conversation. Output ONLY the summary content in markdown format. Do not include any explanations, commentary, or conversation - just the summary.',
-        [...conversationMessages],
+        messages,
         userModel,
         provider,
         {},
