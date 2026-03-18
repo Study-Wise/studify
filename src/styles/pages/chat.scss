@@ -227,7 +227,7 @@ footer, .chat-toolbar {
 
 /* Card Container */
 .chat-section {
-    flex: 1;
+    grid-row: 1 / -1;
     display: grid;
     grid-template-rows: 1fr auto;
     min-height: 0;

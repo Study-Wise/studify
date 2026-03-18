@@ -8,7 +8,7 @@
 $color: list.nth(map.get($accent-colors, primary), 1);
 
 .chat-toolbar {
-    $radius: $border-radius-large;
+    $radius: $border-radius-extra-large;
     $padding: $spacing-medium;
 
     position: sticky;
