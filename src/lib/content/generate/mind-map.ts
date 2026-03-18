@@ -97,7 +97,7 @@ Output a complete HTML document (including <!DOCTYPE html>, <html>, <head>, and 
 You may remove or modify sections as you see fit based on relevance to the topic.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
 
     // Build messages array with system prompt first, then conversation history
-    const conversationMessages = messages.filter(msg => msg.role !== 'system');
+    const conversationMessages = messages.filter(msg => msg.role !== 'system' && msg.content !== '');
     const messagesForAI = [
         {
             role: 'system' as const,
