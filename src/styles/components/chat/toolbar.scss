@@ -6,11 +6,10 @@
 @use 'sass:list';
 
 $color: list.nth(map.get($accent-colors, primary), 1);
+$radius: $border-radius-huge;
+$padding: $spacing-medium;
 
 .chat-toolbar {
-    $radius: $border-radius-extra-large;
-    $padding: $spacing-medium;
-
     position: sticky;
     display: flex;
     flex-direction: column;
