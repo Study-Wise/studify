@@ -56,7 +56,11 @@
       "Bash(grep:*)",
       "Bash(ls:*)",
       "Bash(npm uninstall:*)",
-      "Bash(npx tsx:*)"
+      "Bash(npx tsx:*)",
+      "Bash(for f:*)",
+      "Bash(do)",
+      "Bash(echo \"=== $f ===\")",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": []
