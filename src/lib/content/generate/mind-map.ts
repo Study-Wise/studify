@@ -54,6 +54,8 @@ Create a comprehensive visual representation of the concepts, relationships, and
 
 Output the content as a complete, interactive HTML mind map with embedded CSS and JavaScript. The mind map should be visually engaging, interactive, and clearly show relationships between concepts.
 
+IMPORTANT: Output the raw HTML directly — do NOT wrap it in a markdown code block (no \`\`\`html or \`\`\`).
+
 Requirements:
 1. Create a hierarchical mind map structure with the main topic at the center
 2. Branch out to major concepts, then to sub-concepts and details
