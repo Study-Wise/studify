@@ -5,14 +5,6 @@
 .practice-questions-page {
     min-height: 60vh;
 
-    .content-container {
-        background-color: var(--card-bg);
-        border-radius: 1rem;
-        padding: 2rem;
-        box-shadow: 0 4px 12px var(--card-shadow);
-        border: 1px solid var(--card-border);
-    }
-
     .practice-questions-content {
         h1, h2, h3, h4, h5, h6 {
             color: var(--section-title);

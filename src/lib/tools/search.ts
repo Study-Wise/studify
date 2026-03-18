@@ -10,15 +10,20 @@ const searchTool = tool({
         query: z.string().describe('The query to search for'),
     }),
     execute: async ({ query }) => {
-        const searchResult = await exa.searchAndContents(
-            query,
-            {
-                text: true,
-                numResults: 5
-            }
-        );
+        try {
+            const searchResult = await exa.searchAndContents(
+                query,
+                {
+                    text: true,
+                    numResults: 5
+                }
+            );
 
-        return JSON.stringify(searchResult, null, 2);
+            return JSON.stringify(searchResult, null, 2);
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            return JSON.stringify({ error: true, message: `Search failed for query "${query}": ${errorMessage}` }, null, 2);
+        }
     },
 });
 

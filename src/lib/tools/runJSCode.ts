@@ -18,35 +18,35 @@ const runJSCodeTool = tool({
         code: z.string().describe('The JavaScript code to run'),
     }),
     execute: async ({ code }) => {
-        let ranCode = (code.includes('\n') ? code.split('\n') : [code])
-            .map((line: string) => (
-                line.includes(';') ? line.split(';') : [line]
-            ))
-            .flat()
-            .map((line: string) => (line.trim()))
-            .map((line: string) => (
-                lineReplacements
-                    .map(replacement => (
-                        (line[replacement.func as keyof string] as Function)(replacement.key)
-                    ))
-                    .filter((replaced: boolean) => replaced).length < 1 ? line : null
-            ))
-            .filter((line: string | null) => line)
+        try {
+            let ranCode = (code.includes('\n') ? code.split('\n') : [code])
+                .map((line: string) => (
+                    line.includes(';') ? line.split(';') : [line]
+                ))
+                .flat()
+                .map((line: string) => (line.trim()))
+                .map((line: string) => (
+                    lineReplacements
+                        .map(replacement => (
+                            (line[replacement.func as keyof string] as Function)(replacement.key)
+                        ))
+                        .filter((replaced: boolean) => replaced).length < 1 ? line : null
+                ))
+                .filter((line: string | null) => line)
 
-        const last = ranCode[ranCode.length - 1]
-        if (last && !last.includes('return')) {
-            ranCode[ranCode.length - 1] = 'return ' + last
+            const last = ranCode[ranCode.length - 1]
+            if (last && !last.includes('return')) {
+                ranCode[ranCode.length - 1] = 'return ' + last
+            }
+            const joinedCode = ranCode.join(';') || ''
+
+            const codeResult = await Function(joinedCode)();
+
+            return JSON.stringify({ codeResult, ranCode }, null, 2);
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            return JSON.stringify({ error: true, message: `Code execution failed: ${errorMessage}` }, null, 2);
         }
-        const joinedCode = ranCode.join(';') || ''
-
-        const codeResult = await Function(joinedCode)();
-
-        const result = {
-            codeResult,
-            ranCode,
-        }
-
-        return JSON.stringify(result, null, 2);
     },
 });
 
