@@ -223,6 +223,10 @@ footer, .chat-toolbar {
             display: none;
         }
 
+        .chat-section {
+            grid-row: span 1;
+        }
+
         .chat-sidebar.right {
             display: none;
         }
