@@ -143,29 +143,10 @@ const getContentTool = tool({
             console.error(`❌ Error getting/generating ${type}:`, error);
 
             const errorMessage = error instanceof Error ? error.message : String(error);
-            const errorName = error instanceof Error ? error.constructor.name : 'UnknownError';
-
-            // Provide context-specific hints for common failure scenarios
-            let hint = '';
-            if (errorMessage.includes('not found') || errorMessage.includes('does not exist')) {
-                hint = ` The thread "${threadId}" may not exist or may have been deleted.`;
-            }
-            else if (errorMessage.includes('unauthorized') || errorMessage.includes('403') || errorMessage.includes('401')) {
-                hint = ` Authorization failed — the provided email "${userEmail}" may not have access to thread "${threadId}".`;
-            }
-            else if (errorMessage.includes('rate limit') || errorMessage.includes('429')) {
-                hint = ' The AI provider is rate-limiting requests. Try again in a moment.';
-            }
-            else if (errorMessage.includes('timeout') || errorMessage.includes('ETIMEDOUT')) {
-                hint = ' The request timed out. The thread may be very long, or the AI provider may be slow.';
-            }
-            else if (errorMessage.includes('Cannot find module') || errorMessage.includes('Failed to resolve')) {
-                hint = ` The content module for type "${type}" could not be loaded. This is likely a bug.`;
-            }
 
             return {
                 status: 'error',
-                message: `${errorName} while ${stage}: ${errorMessage}.${hint}`,
+                message: `Failed while ${stage}: ${errorMessage}`,
                 content: null
             };
         }
