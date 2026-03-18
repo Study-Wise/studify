@@ -379,16 +379,17 @@ Use the above thread context when calling tools that require threadId, category,
         let generatedText: string;
         let clientToolCalls: { toolName: string; toolCallId: string; args: Record<string, string | number | boolean | undefined> }[] = [];
         try {
-            const aiResult = await generateAIResponse({
+            const aiResult = await generateAIResponse(
                 systemPrompt,
                 userPrompt,
                 convoHistory,
                 userModel,
                 provider,
                 tools,
-                maxSteps: 25,
+                undefined,
+                25,
                 requestId
-            });
+            );
             generatedText = aiResult.text;
             clientToolCalls = aiResult.clientToolCalls;
         } catch (error) {

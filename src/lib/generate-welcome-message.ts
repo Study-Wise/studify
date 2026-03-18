@@ -24,18 +24,19 @@ export async function generateWelcomeMessage({
     requestId
 }: GenerateWelcomeMessageParams): Promise<string> {
     // Create a copy of convoHistory to avoid polluting the original with the welcome prompt
-    const convoHistoryCopy = JSON.parse(JSON.stringify(convoHistory));
+    const convoHistoryCopy = structuredClone(convoHistory);
 
-    const result = await generateAIResponse({
+    const result = await generateAIResponse(
         systemPrompt,
-        userPrompt: config.welcomeMessagePrompt,
-        convoHistory: convoHistoryCopy,
+        config.welcomeMessagePrompt,
+        convoHistoryCopy,
         userModel,
         provider,
         tools,
-        maxSteps: 25,
+        undefined,
+        25,
         requestId
-    });
+    );
 
     // Note: Client tool calls from welcome message are currently ignored
     // since the welcome message flow handles things differently

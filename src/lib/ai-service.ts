@@ -27,18 +27,6 @@ export interface AIGenerationResult {
     clientToolCalls: ClientToolCall[];
 }
 
-export interface AIGenerationOptions {
-    systemPrompt: string;
-    userPrompt: string;
-    convoHistory: Message[];
-    userModel: string;
-    provider: string;
-    tools?: ToolRecord;
-    excludeTools?: string[];
-    maxSteps?: number;
-    requestId?: string;
-}
-
 export interface TitleGenerationOptions {
     convoHistory: Message[];
     userModel: string;
@@ -60,18 +48,17 @@ export async function getValidModelAndProvider(requestedModel: string | null): P
 }
 
 // Generates AI response for a conversation
-export async function generateAIResponse(options: AIGenerationOptions): Promise<AIGenerationResult> {
-    const {
-        systemPrompt,
-        userPrompt,
-        convoHistory,
-        userModel,
-        provider,
-        tools = {},
-        excludeTools,
-        maxSteps = 25,
-        requestId = nanoid()
-    } = options;
+export async function generateAIResponse(
+    systemPrompt: string,
+    userPrompt: string,
+    convoHistory: Message[],
+    userModel: string,
+    provider: string,
+    tools: ToolRecord = {},
+    excludeTools?: string[],
+    maxSteps: number = 25,
+    requestId: string = nanoid()
+): Promise<AIGenerationResult> {
 
     // Filter out excluded tools from the global tools
     const resolvedTools = excludeTools

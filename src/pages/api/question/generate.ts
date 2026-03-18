@@ -69,16 +69,17 @@ Your answer should be:
             { role: 'user' as const, content: paraphrasedQuestion }
         ];
 
-        const aiResult = await generateAIResponse({
+        const aiResult = await generateAIResponse(
             systemPrompt,
-            userPrompt: paraphrasedQuestion,
+            paraphrasedQuestion,
             convoHistory,
-            userModel: config.model,
-            provider: config.provider,
-            tools: {},
-            maxSteps: 5,
+            config.model,
+            config.provider,
+            {},
+            undefined,
+            5,
             requestId
-        });
+        );
         const answer = aiResult.text;
 
         // Save to database

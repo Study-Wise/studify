@@ -69,14 +69,15 @@ Math formatting: use \`$…$\` for displaying math formulas/equations inline and
     const conversationMessages = messages.filter(msg => msg.role !== 'system');
 
     // Generate the reference sheet
-    const result = await generateAIResponse({
-        systemPrompt: referenceSheetPrompt,
-        userPrompt: 'Now generate the reference sheet based on the above conversation. Output ONLY the reference sheet content in markdown format. Do not include any explanations, commentary, or conversation - just the reference sheet.',
-        convoHistory: [...conversationMessages],
+    const result = await generateAIResponse(
+        referenceSheetPrompt,
+        'Now generate the reference sheet based on the above conversation. Output ONLY the reference sheet content in markdown format. Do not include any explanations, commentary, or conversation - just the reference sheet.',
+        [...conversationMessages],
         userModel,
         provider,
-        excludeTools: config.contentGenerationExcludeTools,
-    });
+        {},
+        config.contentGenerationExcludeTools,
+    );
 
     if (!result.text || result.text.length === 0) {
         throw new Error('Generated reference sheet is empty');
