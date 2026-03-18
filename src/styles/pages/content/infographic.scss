@@ -1,6 +1,5 @@
 @use '../../variables/globals' as *;
 @use '../../variables/tokens' as *;
-@use '../../variables/mixins' as *;
 
 .infographic-page {
     min-height: 60vh;
@@ -16,9 +15,5 @@
             border-radius: 0.5rem;
             box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
         }
-    }
-
-    .empty-state {
-        @include empty-state;
     }
 }

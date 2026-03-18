@@ -1,6 +1,5 @@
 @use '../../variables/globals' as *;
 @use '../../variables/tokens' as *;
-@use '../../variables/mixins' as *;
 
 .slideshow-page {
     display: flex;
@@ -8,8 +7,6 @@
     height: calc(100vh - var(--header-height, 60px));
 
     .empty-state {
-        @include empty-state;
-
         flex: 1;
         padding: $spacing-extra-large;
         opacity: 1;

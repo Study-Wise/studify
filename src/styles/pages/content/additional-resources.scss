@@ -1,6 +1,4 @@
 @use '../../variables/globals' as *;
-@use '../../variables/mixins' as *;
-@use '../../variables/tokens' as *;
 
 .resources-page {
     min-height: calc(100vh - 4rem);

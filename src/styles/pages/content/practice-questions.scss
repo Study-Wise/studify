@@ -1,6 +1,5 @@
 @use '../../variables/globals' as *;
 @use '../../variables/tokens' as *;
-@use '../../variables/mixins' as *;
 
 .practice-questions-page {
     min-height: 60vh;
@@ -112,9 +111,5 @@
                 margin: 2rem 0;
             }
         }
-    }
-
-    .empty-state {
-        @include empty-state;
     }
 }

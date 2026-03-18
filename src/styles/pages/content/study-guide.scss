@@ -1,11 +1,3 @@
-@use '../../variables/globals' as *;
-@use '../../variables/tokens' as *;
-@use '../../variables/mixins' as *;
-
 .study-guide-page {
     min-height: 60vh;
-
-    .empty-state {
-        @include empty-state;
-    }
 }

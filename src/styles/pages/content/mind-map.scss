@@ -1,5 +1,4 @@
 @use '../../variables/globals' as *;
-@use '../../variables/mixins' as *;
 
 .mind-map-page {
     width: 100%;
@@ -10,8 +9,6 @@
     overflow: hidden;
 
     .empty-state {
-        @include empty-state;
-
         height: 100%;
         opacity: 1;
 
