@@ -2,7 +2,6 @@
 import Layout from '@/layouts/Layout.astro';
 import ContentActions from '@/components/ContentActions.astro';
 import StepByStepScript from '@/scripts/step-by-step.astro';
-import '@/styles/pages/content/study-guide.scss';
 import '@/styles/pages/content/summary.scss';
 import '@/styles/pages/content/globals.scss';
 
@@ -46,35 +45,33 @@ const { content: latestSummary } = (isAuthorized || isPublic)
 const parsedContent = latestSummary ? await marked.parse(latestSummary) : null;
 ---
 
-<Layout title={`Chat Summary | ${modeName} | ${categoryName}`}  container={true}>
-    <div class="summary-page">
-        {!isAuthorized && !isPublic ? (
-            <div class="empty-state">
-                <span class="material-symbols-outlined">lock</span>
-                <h2>Access Denied</h2>
-                <p>You don't have permission to view this summary. This thread belongs to another user.</p>
-                <a href="/" class="btn-primary">Go Home</a>
-            </div>
-        ) : (
-            <>
-                <ContentActions
-                    contentType="summary"
-                    threadId={id || ''}
-                    hasContent={!!parsedContent}
-                    isAuthorized={isAuthorized}
-                    chatUrl={chatUrl}
-                />
-                {parsedContent ? (
-                    <div class="content-container summary-content" set:html={parsedContent} />
-                ) : (
-                    <div class="empty-state">
-                        <span class="material-symbols-outlined">summarize</span>
-                        <h2>No Summary Found</h2>
-                        <p>There is no summary generated for this conversation yet.</p>
-                    </div>
-                )}
-            </>
-        )}
-    </div>
+<Layout title={`Chat Summary | ${modeName} | ${categoryName}`} className="summary-page content-page" container={true}>
+    {!isAuthorized && !isPublic ? (
+        <div class="empty-state">
+            <span class="material-symbols-outlined">lock</span>
+            <h2>Access Denied</h2>
+            <p>You don't have permission to view this summary. This thread belongs to another user.</p>
+            <a href="/" class="btn-primary">Go Home</a>
+        </div>
+    ) : (
+        <>
+            <ContentActions
+                contentType="summary"
+                threadId={id || ''}
+                hasContent={!!parsedContent}
+                isAuthorized={isAuthorized}
+                chatUrl={chatUrl}
+            />
+            {parsedContent ? (
+                <div class="content-container summary-content" set:html={parsedContent} />
+            ) : (
+                <div class="empty-state">
+                    <span class="material-symbols-outlined">summarize</span>
+                    <h2>No Summary Found</h2>
+                    <p>There is no summary generated for this conversation yet.</p>
+                </div>
+            )}
+        </>
+    )}
     <StepByStepScript />
 </Layout>
