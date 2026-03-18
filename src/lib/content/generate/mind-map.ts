@@ -111,7 +111,6 @@ You may remove or modify sections as you see fit based on relevance to the topic
     ];
 
     // Generate the mind map using Vercel's v0 model (optimized for HTML generation)
-    // with automatic fallback to Claude Sonnet 4.5 via AI Gateway
     const excludeTools = config.contentGenerationExcludeTools;
     const result = await generateText({
         model: 'vercel/v0-1.5-md',
@@ -122,7 +121,7 @@ You may remove or modify sections as you see fit based on relevance to the topic
         temperature: 0.7,
         providerOptions: {
             gateway: {
-                models: ['anthropic/claude-sonnet-4.5']
+                models: ['anthropic/claude-sonnet-4.6'],
             } satisfies GatewayProviderOptions
         }
     });
