@@ -3,6 +3,7 @@ import Layout from '@/layouts/Layout.astro';
 import ContentActions from '@/components/ContentActions.astro';
 import StepByStepScript from '@/scripts/step-by-step.astro';
 import '@/styles/pages/content/study-guide.scss';
+import '@/styles/pages/content/globals.scss';
 
 import { marked } from 'marked';
 
@@ -44,35 +45,33 @@ const { content: latestStudyGuide } = (isAuthorized || isPublic)
 const parsedContent = latestStudyGuide ? await marked.parse(latestStudyGuide) : null;
 ---
 
-<Layout title={`Study Guide | ${modeName} | ${categoryName}`}  container={true}>
-    <div class="study-guide-page">
-        {!isAuthorized && !isPublic ? (
-            <div class="empty-state">
-                <span class="material-symbols-outlined">lock</span>
-                <h2>Access Denied</h2>
-                <p>You don't have permission to view this study guide. This thread belongs to another user.</p>
-                <a href="/" class="btn-primary">Go Home</a>
-            </div>
-        ) : (
-            <>
-                <ContentActions
-                    contentType="study-guide"
-                    threadId={id || ''}
-                    hasContent={!!parsedContent}
-                    isAuthorized={isAuthorized}
-                    chatUrl={chatUrl}
-                />
-                {parsedContent ? (
-                    <div class="content-container study-guide-content" set:html={parsedContent} />
-                ) : (
-                    <div class="empty-state">
-                        <span class="material-symbols-outlined">menu_book</span>
-                        <h2>No Study Guide Found</h2>
-                        <p>There is no study guide generated for this conversation yet.</p>
-                    </div>
-                )}
-            </>
-        )}
-    </div>
+<Layout title={`Study Guide | ${modeName} | ${categoryName}`} className="study-guide-page content-page" container={true}>
+    {!isAuthorized && !isPublic ? (
+        <div class="empty-state">
+            <span class="material-symbols-outlined">lock</span>
+            <h2>Access Denied</h2>
+            <p>You don't have permission to view this study guide. This thread belongs to another user.</p>
+            <a href="/" class="btn-primary">Go Home</a>
+        </div>
+    ) : (
+        <>
+            <ContentActions
+                contentType="study-guide"
+                threadId={id || ''}
+                hasContent={!!parsedContent}
+                isAuthorized={isAuthorized}
+                chatUrl={chatUrl}
+            />
+            {parsedContent ? (
+                <div class="content-container study-guide-content" set:html={parsedContent} />
+            ) : (
+                <div class="empty-state">
+                    <span class="material-symbols-outlined">menu_book</span>
+                    <h2>No Study Guide Found</h2>
+                    <p>There is no study guide generated for this conversation yet.</p>
+                </div>
+            )}
+        </>
+    )}
     <StepByStepScript />
 </Layout>

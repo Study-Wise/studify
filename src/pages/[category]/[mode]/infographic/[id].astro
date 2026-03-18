@@ -2,6 +2,7 @@
 import Layout from '@/layouts/Layout.astro';
 import ContentActions from '@/components/ContentActions.astro';
 import '@/styles/pages/content/infographic.scss';
+import '@/styles/pages/content/globals.scss';
 
 import { getLatestInfographic } from '@/lib/content/latest/infographic';
 import { checkThreadAccess } from '@/lib/auth/checkThreadAccess';
@@ -41,36 +42,34 @@ const infographic = (isAuthorized || isPublic) && id
 const infographicUrl = infographic?.imageUrl || null;
 ---
 
-<Layout title={`Infographic | ${modeName} | ${categoryName}`}  container={true}>
-    <div class="infographic-page">
-        {!isAuthorized && !isPublic ? (
-            <div class="empty-state">
-                <span class="material-symbols-outlined">lock</span>
-                <h2>Access Denied</h2>
-                <p>You don't have permission to view this infographic. This thread belongs to another user.</p>
-                <a href="/" class="btn-primary">Go Home</a>
-            </div>
-        ) : (
-            <>
-                <ContentActions
-                    contentType="infographic"
-                    threadId={id || ''}
-                    hasContent={!!infographicUrl}
-                    isAuthorized={isAuthorized}
-                    chatUrl={chatUrl}
-                />
-                {infographicUrl ? (
-                    <div class="content-container">
-                        <img src={infographicUrl} alt="Generated Infographic" class="infographic-image" />
-                    </div>
-                ) : (
-                    <div class="empty-state">
-                        <span class="material-symbols-outlined">image</span>
-                        <h2>No Infographic Found</h2>
-                        <p>There is no infographic generated for this conversation yet.</p>
-                    </div>
-                )}
-            </>
-        )}
-    </div>
+<Layout title={`Infographic | ${modeName} | ${categoryName}`} className="infographic-page content-page" container={true}>
+    {!isAuthorized && !isPublic ? (
+        <div class="empty-state">
+            <span class="material-symbols-outlined">lock</span>
+            <h2>Access Denied</h2>
+            <p>You don't have permission to view this infographic. This thread belongs to another user.</p>
+            <a href="/" class="btn-primary">Go Home</a>
+        </div>
+    ) : (
+        <>
+            <ContentActions
+                contentType="infographic"
+                threadId={id || ''}
+                hasContent={!!infographicUrl}
+                isAuthorized={isAuthorized}
+                chatUrl={chatUrl}
+            />
+            {infographicUrl ? (
+                <div class="content-container">
+                    <img src={infographicUrl} alt="Generated Infographic" class="infographic-image" />
+                </div>
+            ) : (
+                <div class="empty-state">
+                    <span class="material-symbols-outlined">image</span>
+                    <h2>No Infographic Found</h2>
+                    <p>There is no infographic generated for this conversation yet.</p>
+                </div>
+            )}
+        </>
+    )}
 </Layout>

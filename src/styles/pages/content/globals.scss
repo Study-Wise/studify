@@ -1,0 +1,21 @@
+.content-container {
+    background-color: var(--card-bg);
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 4px 12px var(--card-shadow);
+    border: 1px solid var(--card-border);
+
+    > :first-child {
+        &:is(h1, h2, h3, h4, h5, h6) {
+            $spacing: $spacing-medium;
+
+            margin-bottom: $spacing;
+            padding-bottom: $spacing;
+            border-bottom: solid 1px var(--section-title-border);
+        }
+    }
+}
+
+.empty-state {
+    @include empty-state;
+}

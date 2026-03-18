@@ -2,6 +2,7 @@
 import Layout from '@/layouts/Layout.astro';
 import ContentActions from '@/components/ContentActions.astro';
 import '@/styles/pages/content/flashcards.scss';
+import '@/styles/pages/content/globals.scss';
 
 import { marked } from 'marked';
 
@@ -51,77 +52,75 @@ const parsedContent = (!isStructured && typeof latestFlashcards === 'string')
 const hasContent = !!(isStructured ? (flashcardData && flashcardData.questions.length > 0) : parsedContent);
 ---
 
-<Layout title={`Flashcards | ${modeName} | ${categoryName}`} container={true}>
-    <div class="flashcard-page">
-        {!isAuthorized && !isPublic ? (
-            <div class="empty-state">
-                <span class="material-symbols-outlined">lock</span>
-                <h2>Access Denied</h2>
-                <p>You don't have permission to view these flashcards. This thread belongs to another user.</p>
-                <a href="/" class="btn-primary">Go Home</a>
-            </div>
-        ) : (
-            <>
-                <ContentActions
-                    contentType="flashcards"
-                    threadId={id || ''}
-                    hasContent={hasContent}
-                    isAuthorized={isAuthorized}
-                    chatUrl={chatUrl}
-                />
-                {isStructured && flashcardData && flashcardData.questions.length > 0 ? (
-                    <div class="content-container quizlet-flashcards">
-                        {flashcardData.text && (
-                            <div class="flashcard-intro" set:html={marked.parse(flashcardData.text)} />
-                        )}
-                        <div class="flashcard-deck" data-current="0">
-                            <div class="flashcard-progress">
-                                <span class="current">1</span> / <span class="total">{flashcardData.questions.length}</span>
-                            </div>
-                            <div class="flashcard-container">
-                                {flashcardData.questions.map((card, index) => (
-                                    <div class="flashcard" data-index={index} data-flipped="false">
-                                        <div class="flashcard-inner">
-                                            <div class="flashcard-front">
-                                                <div class="card-label">Question</div>
-                                                <div class="card-content" set:html={marked.parse(card.front)} />
-                                            </div>
-                                            <div class="flashcard-back">
-                                                <div class="card-label">Answer</div>
-                                                <div class="card-content" set:html={marked.parse(card.back)} />
-                                            </div>
+<Layout title={`Flashcards | ${modeName} | ${categoryName}`} className="flashcard-page content-page" container={true}>
+    {!isAuthorized && !isPublic ? (
+        <div class="empty-state">
+            <span class="material-symbols-outlined">lock</span>
+            <h2>Access Denied</h2>
+            <p>You don't have permission to view these flashcards. This thread belongs to another user.</p>
+            <a href="/" class="btn-primary">Go Home</a>
+        </div>
+    ) : (
+        <>
+            <ContentActions
+                contentType="flashcards"
+                threadId={id || ''}
+                hasContent={hasContent}
+                isAuthorized={isAuthorized}
+                chatUrl={chatUrl}
+            />
+            {isStructured && flashcardData && flashcardData.questions.length > 0 ? (
+                <div class="content-container quizlet-flashcards">
+                    {flashcardData.text && (
+                        <div class="flashcard-intro" set:html={marked.parse(flashcardData.text)} />
+                    )}
+                    <div class="flashcard-deck" data-current="0">
+                        <div class="flashcard-progress">
+                            <span class="current">1</span> / <span class="total">{flashcardData.questions.length}</span>
+                        </div>
+                        <div class="flashcard-container">
+                            {flashcardData.questions.map((card, index) => (
+                                <div class="flashcard" data-index={index} data-flipped="false">
+                                    <div class="flashcard-inner">
+                                        <div class="flashcard-front">
+                                            <div class="card-label">Question</div>
+                                            <div class="card-content" set:html={marked.parse(card.front)} />
+                                        </div>
+                                        <div class="flashcard-back">
+                                            <div class="card-label">Answer</div>
+                                            <div class="card-content" set:html={marked.parse(card.back)} />
                                         </div>
                                     </div>
-                                ))}
-                            </div>
-                            <div class="flashcard-controls">
-                                <button class="control-btn prev" disabled>
-                                    <span class="material-symbols-outlined">chevron_left</span>
-                                </button>
-                                <button class="control-btn flip">
-                                    <span class="material-symbols-outlined">flip</span>
-                                    Flip
-                                </button>
-                                <button class="control-btn next">
-                                    <span class="material-symbols-outlined">chevron_right</span>
-                                </button>
-                            </div>
+                                </div>
+                            ))}
+                        </div>
+                        <div class="flashcard-controls">
+                            <button class="control-btn prev" disabled>
+                                <span class="material-symbols-outlined">chevron_left</span>
+                            </button>
+                            <button class="control-btn flip">
+                                <span class="material-symbols-outlined">flip</span>
+                                Flip
+                            </button>
+                            <button class="control-btn next">
+                                <span class="material-symbols-outlined">chevron_right</span>
+                            </button>
                         </div>
                     </div>
-                ) : parsedContent ? (
-                    <div class="content-container">
-                        <div class="flashcard-content" set:html={parsedContent} />
-                    </div>
-                ) : (
-                    <div class="empty-state">
-                        <span class="material-symbols-outlined">style</span>
-                        <h2>No Flashcards Found</h2>
-                        <p>There are no flashcards generated for this conversation yet.</p>
-                    </div>
-                )}
-            </>
-        )}
-    </div>
+                </div>
+            ) : parsedContent ? (
+                <div class="content-container">
+                    <div class="flashcard-content" set:html={parsedContent} />
+                </div>
+            ) : (
+                <div class="empty-state">
+                    <span class="material-symbols-outlined">style</span>
+                    <h2>No Flashcards Found</h2>
+                    <p>There are no flashcards generated for this conversation yet.</p>
+                </div>
+            )}
+        </>
+    )}
 </Layout>
 
 <script>

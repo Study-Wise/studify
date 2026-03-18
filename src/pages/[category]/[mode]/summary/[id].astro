@@ -2,7 +2,9 @@
 import Layout from '@/layouts/Layout.astro';
 import ContentActions from '@/components/ContentActions.astro';
 import StepByStepScript from '@/scripts/step-by-step.astro';
-import '@/styles/pages/content/study-guide.scss'; // Reuse study guide styles for now
+import '@/styles/pages/content/study-guide.scss';
+import '@/styles/pages/content/summary.scss';
+import '@/styles/pages/content/globals.scss';
 
 import { marked } from 'marked';
 
@@ -76,64 +78,3 @@ const parsedContent = latestSummary ? await marked.parse(latestSummary) : null;
     </div>
     <StepByStepScript />
 </Layout>
-
-<style lang="scss">
-    .summary-page {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 2rem 1rem;
-    }
-    
-    .empty-state {
-        text-align: center;
-        padding: 4rem 2rem;
-        background: var(--surface-card);
-        border-radius: 1rem;
-        border: 1px solid var(--border-subtle);
-        
-        span {
-            font-size: 4rem;
-            color: var(--text-muted);
-            margin-bottom: 1rem;
-        }
-        
-        h2 {
-            margin-bottom: 0.5rem;
-        }
-        
-        p {
-            color: var(--text-muted);
-            margin-bottom: 2rem;
-        }
-    }
-    
-    .summary-content {
-        background: var(--surface-card);
-        padding: 2.5rem;
-        border-radius: 1rem;
-        border: 1px solid var(--border-subtle);
-        line-height: 1.6;
-        
-        :global(h3) {
-            margin-top: 0;
-            border-bottom: 2px solid var(--primary);
-            padding-bottom: 0.5rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        :global(h4) {
-            color: var(--primary);
-            margin-top: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        :global(ul), :global(ol) {
-            margin-bottom: 1rem;
-            padding-left: 1.5rem;
-        }
-        
-        :global(li) {
-            margin-bottom: 0.5rem;
-        }
-    }
-</style>

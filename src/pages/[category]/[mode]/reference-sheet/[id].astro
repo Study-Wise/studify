@@ -3,6 +3,7 @@ import Layout from '@/layouts/Layout.astro';
 import ContentActions from '@/components/ContentActions.astro';
 import StepByStepScript from '@/scripts/step-by-step.astro';
 import '@/styles/pages/content/reference-sheet.scss';
+import '@/styles/pages/content/globals.scss';
 
 import { marked } from 'marked';
 
@@ -44,35 +45,33 @@ const { content: latestReferenceSheet } = (isAuthorized || isPublic)
 const parsedContent = latestReferenceSheet ? await marked.parse(latestReferenceSheet) : null;
 ---
 
-<Layout title={`Reference Sheet | ${modeName} | ${categoryName}`}  container={true}>
-    <div class="reference-sheet-page">
-        {!isAuthorized && !isPublic ? (
-            <div class="empty-state">
-                <span class="material-symbols-outlined">lock</span>
-                <h2>Access Denied</h2>
-                <p>You don't have permission to view this reference sheet. This thread belongs to another user.</p>
-                <a href="/" class="btn-primary">Go Home</a>
-            </div>
-        ) : (
-            <>
-                <ContentActions
-                    contentType="reference-sheet"
-                    threadId={id || ''}
-                    hasContent={!!parsedContent}
-                    isAuthorized={isAuthorized}
-                    chatUrl={chatUrl}
-                />
-                {parsedContent ? (
-                    <div class="content-container reference-sheet-content" set:html={parsedContent} />
-                ) : (
-                    <div class="empty-state">
-                        <span class="material-symbols-outlined">description</span>
-                        <h2>No Reference Sheet Found</h2>
-                        <p>There is no reference sheet generated for this conversation yet.</p>
-                    </div>
-                )}
-            </>
-        )}
-    </div>
+<Layout title={`Reference Sheet | ${modeName} | ${categoryName}`} className="reference-sheet-page content-page" container={true}>
+    {!isAuthorized && !isPublic ? (
+        <div class="empty-state">
+            <span class="material-symbols-outlined">lock</span>
+            <h2>Access Denied</h2>
+            <p>You don't have permission to view this reference sheet. This thread belongs to another user.</p>
+            <a href="/" class="btn-primary">Go Home</a>
+        </div>
+    ) : (
+        <>
+            <ContentActions
+                contentType="reference-sheet"
+                threadId={id || ''}
+                hasContent={!!parsedContent}
+                isAuthorized={isAuthorized}
+                chatUrl={chatUrl}
+            />
+            {parsedContent ? (
+                <div class="content-container reference-sheet-content" set:html={parsedContent} />
+            ) : (
+                <div class="empty-state">
+                    <span class="material-symbols-outlined">description</span>
+                    <h2>No Reference Sheet Found</h2>
+                    <p>There is no reference sheet generated for this conversation yet.</p>
+                </div>
+            )}
+        </>
+    )}
     <StepByStepScript />
 </Layout>

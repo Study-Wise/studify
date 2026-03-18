@@ -2,6 +2,7 @@
 import Layout from '@/layouts/Layout.astro';
 import ContentActions from '@/components/ContentActions.astro';
 import '@/styles/pages/content/webpage.scss';
+import '@/styles/pages/content/globals.scss';
 
 import { getLatestWebpage } from '@/lib/content/latest/webpage';
 import { checkThreadAccess } from '@/lib/auth/checkThreadAccess';
@@ -38,36 +39,34 @@ const { content: latestWebpage } = (isAuthorized || isPublic)
     : { content: null };
 ---
 
-<Layout title={`Webpage | ${modeName} | ${categoryName}`} container={false}>
-    <div class="webpage-page">
-        {!isAuthorized && !isPublic ? (
-            <div class="empty-state">
-                <span class="material-symbols-outlined">lock</span>
-                <h2>Access Denied</h2>
-                <p>You don't have permission to view this webpage. This thread belongs to another user.</p>
-                <a href="/" class="btn-primary">Go Home</a>
-            </div>
-        ) : (
-            <>
-                <ContentActions
-                    contentType="webpage"
-                    threadId={id || ''}
-                    hasContent={!!latestWebpage}
-                    isAuthorized={isAuthorized}
-                    chatUrl={chatUrl}
-                />
-                {latestWebpage ? (
-                    <div class="content-container webpage-content">
-                        <iframe srcdoc={latestWebpage} title="Generated Webpage" sandbox="allow-scripts allow-same-origin" />
-                    </div>
-                ) : (
-                    <div class="empty-state">
-                        <span class="material-symbols-outlined">web</span>
-                        <h2>No Webpage Found</h2>
-                        <p>There is no webpage generated for this conversation yet.</p>
-                    </div>
-                )}
-            </>
-        )}
-    </div>
+<Layout title={`Webpage | ${modeName} | ${categoryName}`} className="webpage-page" container={false}>
+    {!isAuthorized && !isPublic ? (
+        <div class="empty-state">
+            <span class="material-symbols-outlined">lock</span>
+            <h2>Access Denied</h2>
+            <p>You don't have permission to view this webpage. This thread belongs to another user.</p>
+            <a href="/" class="btn-primary">Go Home</a>
+        </div>
+    ) : (
+        <>
+            <ContentActions
+                contentType="webpage"
+                threadId={id || ''}
+                hasContent={!!latestWebpage}
+                isAuthorized={isAuthorized}
+                chatUrl={chatUrl}
+            />
+            {latestWebpage ? (
+                <div class="content-container webpage-content">
+                    <iframe srcdoc={latestWebpage} title="Generated Webpage" sandbox="allow-scripts allow-same-origin" />
+                </div>
+            ) : (
+                <div class="empty-state">
+                    <span class="material-symbols-outlined">web</span>
+                    <h2>No Webpage Found</h2>
+                    <p>There is no webpage generated for this conversation yet.</p>
+                </div>
+            )}
+        </>
+    )}
 </Layout>

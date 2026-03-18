@@ -2,6 +2,7 @@
 import Layout from '@/layouts/Layout.astro';
 import ContentActions from '@/components/ContentActions.astro';
 import '@/styles/pages/content/mind-map.scss';
+import '@/styles/pages/content/globals.scss';
 
 import { getLatestMindMap } from '@/lib/content/latest/mind-map';
 import { checkThreadAccess } from '@/lib/auth/checkThreadAccess';
@@ -38,41 +39,39 @@ const { content: latestMindMap } = (isAuthorized || isPublic)
     : { content: null };
 ---
 
-<Layout title={`Mind Map | ${modeName} | ${categoryName}`}  container={true}>
-    <div class="mind-map-page">
-        {!isAuthorized && !isPublic ? (
-            <div class="empty-state">
-                <span class="material-symbols-outlined">lock</span>
-                <h2>Access Denied</h2>
-                <p>You don't have permission to view this mind map. This thread belongs to another user.</p>
-                <a href="/" class="btn-primary">Go Home</a>
-            </div>
-        ) : (
-            <>
-                <ContentActions
-                    contentType="mind-map"
-                    threadId={id || ''}
-                    hasContent={!!latestMindMap}
-                    isAuthorized={isAuthorized}
-                    chatUrl={chatUrl}
-                />
-                {latestMindMap ? (
-                    <div class="content-container mind-map-container">
-                        <iframe
-                            srcdoc={latestMindMap}
-                            title="Mind Map"
-                            class="mind-map-iframe"
-                            sandbox="allow-scripts allow-same-origin"
-                        />
-                    </div>
-                ) : (
-                    <div class="empty-state">
-                        <span class="material-symbols-outlined">hub</span>
-                        <h2>No Mind Map Found</h2>
-                        <p>There is no mind map generated for this conversation yet.</p>
-                    </div>
-                )}
-            </>
-        )}
-    </div>
+<Layout title={`Mind Map | ${modeName} | ${categoryName}`} className="mind-map-page content-page" container={true}>
+    {!isAuthorized && !isPublic ? (
+        <div class="empty-state">
+            <span class="material-symbols-outlined">lock</span>
+            <h2>Access Denied</h2>
+            <p>You don't have permission to view this mind map. This thread belongs to another user.</p>
+            <a href="/" class="btn-primary">Go Home</a>
+        </div>
+    ) : (
+        <>
+            <ContentActions
+                contentType="mind-map"
+                threadId={id || ''}
+                hasContent={!!latestMindMap}
+                isAuthorized={isAuthorized}
+                chatUrl={chatUrl}
+            />
+            {latestMindMap ? (
+                <div class="content-container mind-map-container">
+                    <iframe
+                        srcdoc={latestMindMap}
+                        title="Mind Map"
+                        class="mind-map-iframe"
+                        sandbox="allow-scripts allow-same-origin"
+                    />
+                </div>
+            ) : (
+                <div class="empty-state">
+                    <span class="material-symbols-outlined">hub</span>
+                    <h2>No Mind Map Found</h2>
+                    <p>There is no mind map generated for this conversation yet.</p>
+                </div>
+            )}
+        </>
+    )}
 </Layout>
