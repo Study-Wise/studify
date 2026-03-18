@@ -1,14 +1,14 @@
-import type { GatewayProviderOptions } from '@ai-sdk/gateway';
-import { generateText } from 'ai';
 import { eq } from 'drizzle-orm';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 
-import tools from '@/lib/tools';
 import { buildContentSystemPrompt } from '@/lib/content';
+import { saveContent } from '@/lib/content/latest';
+
+import { generateAIResponse } from '@/lib/ai-service';
+import tools from '@/lib/tools';
 import config from '@/lib/config';
 import type { ThreadData, UploadedFile } from '@/lib/threads';
-import { saveContent } from '@/lib/content/latest';
 
 function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
     const filesWithText = uploadedFiles.filter(f => f.extractedText);
@@ -79,35 +79,17 @@ You may remove or modify sections as you see fit based on relevance to the topic
 
 ONLY INCLUDE THE HTML CONTENT IN YOUR RESPONSE. DO NOT RESPOND WITH ANYTHING ELSE BEFORE OR AFTER THE HTML.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
 
-    // Build messages array with system prompt first, then conversation history
     const conversationMessages = messages.filter(msg => msg.role !== 'system');
-    const messagesForAI = [
-        {
-            role: 'system' as const,
-            content: webpagePrompt
-        },
-        ...conversationMessages,
-        {
-            role: 'user' as const,
-            content: 'Now generate the webpage based on the above conversation. Output ONLY the complete HTML document starting with <!DOCTYPE html>. Do not include any explanations, commentary, or conversation - just the HTML content.'
-        }
-    ];
 
     // Generate the webpage using Vercel's v0 model (optimized for HTML generation)
-    // with automatic fallback to Claude Sonnet 4.5 via AI Gateway
-    const excludeTools = config.contentGenerationExcludeTools;
-    const result = await generateText({
-        model: 'vercel/v0-1.5-md',
-        messages: messagesForAI,
-        tools: Object.fromEntries(
-            Object.entries(tools).filter(([key]) => !excludeTools.includes(key))
-        ),
-        temperature: 0.7,
-        providerOptions: {
-            gateway: {
-                models: ['anthropic/claude-sonnet-4.5']
-            } satisfies GatewayProviderOptions
-        }
+    const result = await generateAIResponse({
+        systemPrompt: webpagePrompt,
+        userPrompt: 'Now generate the webpage based on the above conversation. Output ONLY the complete HTML document starting with <!DOCTYPE html>. Do not include any explanations, commentary, or conversation - just the HTML content.',
+        convoHistory: [...conversationMessages],
+        userModel: 'v0-1.5-md',
+        provider: 'vercel',
+        tools,
+        excludeTools: config.contentGenerationExcludeTools,
     });
 
     if (!result.text || result.text.length === 0) {
