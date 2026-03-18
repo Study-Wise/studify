@@ -44,6 +44,7 @@ const getContentTool = tool({
         userPrompt: z.string().optional().describe('Additional instructions from the user for content generation (only used when regenerate=true)'),
     }),
     execute: async ({ type, threadId, userEmail, regenerate = false, userPrompt }) => {
+        let stage = 'initializing';
         try {
             const pascalCase = toPascalCase(type);
 
@@ -54,11 +55,19 @@ const getContentTool = tool({
 
             // Skip checking for existing content if regenerate is true
             if (!regenerate) {
-                // Dynamically import the latest content retrieval function
+                stage = `loading retrieval module for "${type}"`;
                 const latestModule = await import(`../content/latest/${type}.ts`);
                 const getLatestFn = latestModule[latestFnName];
 
-                // First, try to get existing content
+                if (typeof getLatestFn !== 'function') {
+                    return {
+                        status: 'error',
+                        message: `Internal error: retrieval function "${latestFnName}" not found in module for type "${type}". This is a bug — the content module may be missing or incorrectly named.`,
+                        content: null
+                    };
+                }
+
+                stage = `retrieving existing "${type}" for thread "${threadId}"`;
                 const existingContent = await getLatestFn(threadId);
 
                 // Check if content exists (handle different return types)
@@ -80,15 +89,24 @@ const getContentTool = tool({
                 }
             }
 
-            // Content doesn't exist or regenerate requested, generate it
-            // Dynamically import the content generation function
+            stage = `loading generation module for "${type}"`;
             const generateModule = await import(`../content/generate/${type}.ts`);
             const generateFn = generateModule[generateFnName];
+
+            if (typeof generateFn !== 'function') {
+                return {
+                    status: 'error',
+                    message: `Internal error: generation function "${generateFnName}" not found in module for type "${type}". This is a bug — the content module may be missing or incorrectly named.`,
+                    content: null
+                };
+            }
 
             let generatedContent;
 
             // Only pass userPrompt when regenerating
             const promptToPass = regenerate ? userPrompt : undefined;
+
+            stage = `generating "${type}" for thread "${threadId}"`;
 
             // Handle types that require model/provider (always use default for reliability)
             if (requiresModelProvider.includes(type)) {
@@ -104,6 +122,14 @@ const getContentTool = tool({
                 generatedContent = await generateFn(threadId, userEmail || null, promptToPass);
             }
 
+            if (generatedContent === null || generatedContent === undefined) {
+                return {
+                    status: 'error',
+                    message: `Generation of "${type}" completed but returned empty content for thread "${threadId}". The thread may have no messages, or an upstream AI/API call may have returned nothing.`,
+                    content: null
+                };
+            }
+
             // Each generate function saves to DB on its own
             return {
                 status: 'success',
@@ -115,9 +141,31 @@ const getContentTool = tool({
 
         } catch (error) {
             console.error(`❌ Error getting/generating ${type}:`, error);
+
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            const errorName = error instanceof Error ? error.constructor.name : 'UnknownError';
+
+            // Provide context-specific hints for common failure scenarios
+            let hint = '';
+            if (errorMessage.includes('not found') || errorMessage.includes('does not exist')) {
+                hint = ` The thread "${threadId}" may not exist or may have been deleted.`;
+            }
+            else if (errorMessage.includes('unauthorized') || errorMessage.includes('403') || errorMessage.includes('401')) {
+                hint = ` Authorization failed — the provided email "${userEmail}" may not have access to thread "${threadId}".`;
+            }
+            else if (errorMessage.includes('rate limit') || errorMessage.includes('429')) {
+                hint = ' The AI provider is rate-limiting requests. Try again in a moment.';
+            }
+            else if (errorMessage.includes('timeout') || errorMessage.includes('ETIMEDOUT')) {
+                hint = ' The request timed out. The thread may be very long, or the AI provider may be slow.';
+            }
+            else if (errorMessage.includes('Cannot find module') || errorMessage.includes('Failed to resolve')) {
+                hint = ` The content module for type "${type}" could not be loaded. This is likely a bug.`;
+            }
+
             return {
                 status: 'error',
-                message: error instanceof Error ? error.message : `Failed to get/generate ${type}`,
+                message: `${errorName} while ${stage}: ${errorMessage}.${hint}`,
                 content: null
             };
         }
