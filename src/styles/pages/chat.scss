@@ -207,10 +207,6 @@ footer, .chat-toolbar {
     @media (width <= 1200px) {
         grid-template-columns: auto 1fr;
 
-        .chat-sidebar.right {
-            display: none;
-        }
-
         .chat-section {
             grid-row: span 2;
         }
