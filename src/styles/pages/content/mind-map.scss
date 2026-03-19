@@ -46,10 +46,12 @@
     .mind-map-container {
         flex: 1;
         width: 100%;
+        display: flex;
+        flex-direction: column;
 
         .mind-map-iframe {
+            flex: 1;
             width: 100%;
-            height: 100%;
             border: none;
             background-color: white;
         }

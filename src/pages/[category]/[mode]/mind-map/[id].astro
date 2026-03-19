@@ -37,9 +37,16 @@ if (!user && !isPublic) {
 const { content: latestMindMap } = (isAuthorized || isPublic)
     ? await getLatestMindMap(id || '')
     : { content: null };
+
+// Convert to data URL to avoid attribute escaping
+let mindMapDataUrl = '';
+if (latestMindMap) {
+    const base64 = Buffer.from(latestMindMap).toString('base64');
+    mindMapDataUrl = `data:text/html;base64,${base64}`;
+}
 ---
 
-<Layout title={`Mind Map | ${modeName} | ${categoryName}`} className="mind-map-page content-page">
+<Layout title={`Mind Map | ${modeName} | ${categoryName}`} className="mind-map-page content-page" container={false}>
     {!isAuthorized && !isPublic ? (
         <div class="empty-state">
             <span class="material-symbols-outlined">lock</span>
@@ -56,10 +63,10 @@ const { content: latestMindMap } = (isAuthorized || isPublic)
                 isAuthorized={isAuthorized}
                 chatUrl={chatUrl}
             />
-            {latestMindMap ? (
+            {mindMapDataUrl ? (
                 <div class="content-container mind-map-container">
                     <iframe
-                        srcdoc={latestMindMap}
+                        src={mindMapDataUrl}
                         title="Mind Map"
                         class="mind-map-iframe"
                         sandbox="allow-scripts allow-same-origin"
