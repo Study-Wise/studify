@@ -167,9 +167,7 @@ export async function generateText(
                             },
                         });
                     }
-                } catch (parseError) {
-                    // Not a JSON result or not an open-content action, skip
-                }
+                } catch {}
             }
         }
 
