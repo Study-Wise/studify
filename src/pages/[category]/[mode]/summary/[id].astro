@@ -45,7 +45,7 @@ const { content: latestSummary } = (isAuthorized || isPublic)
 const parsedContent = latestSummary ? await marked.parse(latestSummary) : null;
 ---
 
-<Layout title={`Chat Summary | ${modeName} | ${categoryName}`} className="summary-page content-page" container={true}>
+<Layout title={`Chat Summary | ${modeName} | ${categoryName}`} className="summary-page content-page">
     {!isAuthorized && !isPublic ? (
         <div class="empty-state">
             <span class="material-symbols-outlined">lock</span>

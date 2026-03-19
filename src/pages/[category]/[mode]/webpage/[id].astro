@@ -46,7 +46,7 @@ if (latestWebpage) {
 }
 ---
 
-<Layout title={`Webpage | ${modeName} | ${categoryName}`} className="webpage-page content-page" container={true}>
+<Layout title={`Webpage | ${modeName} | ${categoryName}`} className="webpage-page content-page" container={false}>
     {!isAuthorized && !isPublic ? (
         <div class="empty-state">
             <span class="material-symbols-outlined">lock</span>

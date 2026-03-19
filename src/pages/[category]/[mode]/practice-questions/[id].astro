@@ -45,7 +45,7 @@ const { content: latestPracticeQuestions } = (isAuthorized || isPublic)
 const parsedContent = latestPracticeQuestions ? await marked.parse(latestPracticeQuestions) : null;
 ---
 
-<Layout title={`Practice Questions | ${modeName} | ${categoryName}`} className="practice-questions-page content-page" container={true}>
+<Layout title={`Practice Questions | ${modeName} | ${categoryName}`} className="practice-questions-page content-page">
     {!isAuthorized && !isPublic ? (
         <div class="empty-state">
             <span class="material-symbols-outlined">lock</span>

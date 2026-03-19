@@ -39,7 +39,7 @@ const { content: latestMindMap } = (isAuthorized || isPublic)
     : { content: null };
 ---
 
-<Layout title={`Mind Map | ${modeName} | ${categoryName}`} className="mind-map-page content-page" container={true}>
+<Layout title={`Mind Map | ${modeName} | ${categoryName}`} className="mind-map-page content-page">
     {!isAuthorized && !isPublic ? (
         <div class="empty-state">
             <span class="material-symbols-outlined">lock</span>
