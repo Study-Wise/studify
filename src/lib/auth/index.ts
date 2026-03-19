@@ -1,22 +1,11 @@
 // Server-side Better Auth configuration
-import { betterAuth, type User as BetterAuthUser } from 'better-auth';
+import { betterAuth } from 'better-auth';
 import { magicLink } from 'better-auth/plugins';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 
 import { db } from '@/db/initialize';
 import { user, session, account, verification } from '@/db/auth-schema';
-
-// Better Auth's User type with our custom role field
-export interface User extends BetterAuthUser {
-    role?: UserRole;
-}
-
-export interface AuthUtils {
-    showError: (message: string) => void;
-    hideError: () => void;
-    getRedirectUrl: () => void;
-    callbackURL: string;
-}
+import type { UserRole, SocialProviderConfig } from '@/lib/auth/types';
 
 // Admin email whitelist
 const ADMIN_EMAILS = [
@@ -69,12 +58,6 @@ function getEnvVar(key: string): string | undefined {
     return undefined;
 }
 
-// Build social providers configuration
-// Each provider is only added if both clientId and clientSecret are available
-type SocialProviderConfig = {
-    google?: { clientId: string; clientSecret: string };
-    github?: { clientId: string; clientSecret: string };
-};
 
 function buildSocialProviders(): SocialProviderConfig {
     const providers: SocialProviderConfig = {};
