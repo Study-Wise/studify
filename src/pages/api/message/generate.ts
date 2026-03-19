@@ -456,7 +456,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                                 const raw = (part as Record<string, unknown>).result || (part as Record<string, unknown>).output;
                                 const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
                                 if ((parsed as { status?: string })?.status === 'error') status = 'error';
-                            } catch (_) { /* not JSON */ }
+                            } catch {}
                             controller.enqueue(sendEvent({ type: 'tool-result', toolCallId, toolName, status }));
                         }
                     }
