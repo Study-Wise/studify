@@ -55,6 +55,11 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
             extendedUser.role = role;
         }
 
+        // Check if user is banned
+        if (extendedUser.role === 'banned') {
+            return new Response(`Access Denied: Your account has been ${extendedUser.role}.`, { status: 403 });
+        }
+
         locals.user = extendedUser;
         locals.session = session.session;
     }

@@ -2,12 +2,14 @@
 import { betterAuth, type User as BetterAuthUser } from 'better-auth';
 import { magicLink } from 'better-auth/plugins';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
+import { z } from 'zod';
 
 import { db } from '@/db/initialize';
 import { user, session, account, verification } from '@/db/auth-schema';
 
-// User roles
-export type UserRole = "user" | "premium" | "moderator" | "admin";
+// User role enum and type
+export const userRoleSchema = z.enum(["user", "premium", "moderator", "admin", "banned"]);
+export type UserRole = z.infer<typeof userRoleSchema>;
 
 // Better Auth's User type with our custom role field
 export interface ExtendedUser extends BetterAuthUser {

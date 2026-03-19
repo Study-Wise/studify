@@ -1,8 +1,10 @@
 import { relations } from 'drizzle-orm';
 import { pgTable, text, timestamp, boolean, index, pgEnum } from 'drizzle-orm/pg-core';
+import { userRoleSchema } from '@/lib/auth/index';
 
-// User role enum
-export const userRoleEnum = pgEnum("user_role", ["user", "premium", "moderator", "admin"]);
+// User role enum - synced with userRoleSchema in @/lib/auth/index
+const userRoleValues = userRoleSchema.options;
+export const userRoleEnum = pgEnum("user_role", userRoleValues);
 
 export const user = pgTable("user", {
     id: text("id").primaryKey(),
