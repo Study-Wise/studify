@@ -106,7 +106,7 @@ ONLY INCLUDE THE HTML CONTENT IN YOUR RESPONSE. DO NOT RESPOND WITH ANYTHING ELS
         temperature: 0.7,
         providerOptions: {
             gateway: {
-                models: ['anthropic/claude-sonnet-4.6'],
+                models: ['anthropic/claude-sonnet-4.6', 'openai/gpt-5.3-codex'],
             } satisfies GatewayProviderOptions
         }
     });

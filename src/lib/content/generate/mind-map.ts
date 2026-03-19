@@ -123,7 +123,7 @@ You may remove or modify sections as you see fit based on relevance to the topic
         temperature: 0.7,
         providerOptions: {
             gateway: {
-                models: ['anthropic/claude-sonnet-4.6'],
+                models: ['anthropic/claude-sonnet-4.6', 'openai/gpt-5.3-codex'],
             } satisfies GatewayProviderOptions
         }
     });
