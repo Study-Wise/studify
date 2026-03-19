@@ -28,9 +28,9 @@ const runJSCodeTool = tool({
                 .map((line: string) => (
                     lineReplacements
                         .map(replacement => (
-                            (line[replacement.func as keyof string] as Function)(replacement.key)
+                            (line[replacement.func as keyof string] as (...args: unknown[]) => unknown)(replacement.key)
                         ))
-                        .filter((replaced: boolean) => replaced).length < 1 ? line : null
+                        .filter(Boolean).length < 1 ? line : null
                 ))
                 .filter((line: string | null) => line)
 

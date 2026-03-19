@@ -281,7 +281,7 @@ export function extractToolData(steps: Awaited<Awaited<ReturnType<typeof ai.stre
         const stepToolResults = step.toolResults ?? [];
 
         for (const tc of stepToolCalls) {
-            const matchingResult = (stepToolResults as Array<{ toolCallId: string; result?: unknown; output }>)
+            const matchingResult = (stepToolResults as Array<{ toolCallId: string; result?: unknown; output?: unknown }>)
                 .find(tr => tr.toolCallId === tc.toolCallId);
 
             let resultStr = '';
