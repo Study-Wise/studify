@@ -1,0 +1,10 @@
+{
+    "functions": {
+        "api/**/*.ts": {
+            "maxDuration": 600
+        },
+        "pages/**/*.astro": {
+            "maxDuration": 600
+        }
+    }
+}
