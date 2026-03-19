@@ -1,5 +1,5 @@
 import type { GatewayProviderOptions } from '@ai-sdk/gateway';
-import { generateText } from 'ai';
+import { generateText, stepCountIs } from 'ai';
 
 import { eq } from 'drizzle-orm';
 import { db } from '@/db/initialize';
@@ -103,6 +103,7 @@ ONLY INCLUDE THE HTML CONTENT IN YOUR RESPONSE. DO NOT RESPOND WITH ANYTHING ELS
         tools: Object.fromEntries(
             Object.entries(modules).filter(([key]) => !excludeTools.includes(key))
         ),
+        stopWhen: stepCountIs(5),
         temperature: 0.7,
         providerOptions: {
             gateway: {

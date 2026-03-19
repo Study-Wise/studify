@@ -1,5 +1,5 @@
 import type { GatewayProviderOptions } from '@ai-sdk/gateway';
-import { generateText } from 'ai';
+import { generateText, stepCountIs } from 'ai';
 
 import { eq } from 'drizzle-orm';
 import { db } from '@/db/initialize';
@@ -120,6 +120,7 @@ You may remove or modify sections as you see fit based on relevance to the topic
         tools: Object.fromEntries(
             Object.entries(modules).filter(([key]) => !excludeTools.includes(key))
         ),
+        stopWhen: stepCountIs(5),
         temperature: 0.7,
         providerOptions: {
             gateway: {
