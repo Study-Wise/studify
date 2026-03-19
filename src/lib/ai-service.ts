@@ -117,7 +117,7 @@ export async function generateText(
                 const stepToolResults = step.toolResults ?? [];
 
                 for (const tc of stepToolCalls) {
-                    const matchingResult = (stepToolResults as Array<{ toolCallId: string; result?: unknown }>)
+                    const matchingResult = (stepToolResults as Array<{ toolCallId: string; result?: JSONValue }>)
                         .find(tr => tr.toolCallId === tc.toolCallId);
 
                     let resultStr = '';
@@ -281,7 +281,7 @@ export function extractToolData(steps: Awaited<Awaited<ReturnType<typeof ai.stre
         const stepToolResults = step.toolResults ?? [];
 
         for (const tc of stepToolCalls) {
-            const matchingResult = (stepToolResults as Array<{ toolCallId: string; result?: unknown; output?: unknown }>)
+            const matchingResult = (stepToolResults as Array<{ toolCallId: string; result?: JSONValue; output?: JSONValue }>)
                 .find(tr => tr.toolCallId === tc.toolCallId);
 
             let resultStr = '';

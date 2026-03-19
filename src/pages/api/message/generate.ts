@@ -23,6 +23,11 @@ import { isUserAdmin } from '@/lib/auth/admin';
 type Thread = InferSelectModel<typeof threadsTable>;
 type ThreadInsert = InferInsertModel<typeof threadsTable>;
 
+type StreamPart =
+    | { type: 'text-delta'; text?: string; textDelta?: string }
+    | { type: 'tool-call'; toolCallId: string; toolName: string }
+    | { type: 'tool-result'; toolCallId: string; toolName: string; result?: string | Record<string, unknown>; output?: string | Record<string, unknown> };
+
 export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();
     const startTime = Date.now();
@@ -438,22 +443,23 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                     const pendingCalls = new Map<string, string>(); // toolCallId -> toolName
 
                     for await (const part of streamResult.fullStream) {
-                        if (part.type === 'text-delta') {
-                            const textDelta = (part as Record<string, unknown>).text as string || (part as Record<string, unknown>).textDelta as string || '';
+                        const streamPart = part as StreamPart;
+                        if (streamPart.type === 'text-delta') {
+                            const textDelta = streamPart.text || streamPart.textDelta || '';
                             controller.enqueue(sendEvent({ type: 'text', text: textDelta }));
                         }
-                        else if (part.type === 'tool-call') {
-                            const toolCallId = (part as Record<string, unknown>).toolCallId as string || '';
-                            const toolName = (part as Record<string, unknown>).toolName as string || '';
+                        else if (streamPart.type === 'tool-call') {
+                            const toolCallId = streamPart.toolCallId || '';
+                            const toolName = streamPart.toolName || '';
                             pendingCalls.set(toolCallId, toolName);
                             controller.enqueue(sendEvent({ type: 'tool-call', toolCallId, toolName }));
                         }
-                        else if (part.type === 'tool-result') {
-                            const toolCallId = (part as Record<string, unknown>).toolCallId as string || '';
-                            const toolName = (part as Record<string, unknown>).toolName as string || '';
+                        else if (streamPart.type === 'tool-result') {
+                            const toolCallId = streamPart.toolCallId || '';
+                            const toolName = streamPart.toolName || '';
                             let status: 'success' | 'error' = 'success';
                             try {
-                                const raw = (part as Record<string, unknown>).result || (part as Record<string, unknown>).output;
+                                const raw = streamPart.result || streamPart.output;
                                 const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
                                 if ((parsed as { status?: string })?.status === 'error') status = 'error';
                             } catch {
