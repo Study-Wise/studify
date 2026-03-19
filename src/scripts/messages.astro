@@ -96,42 +96,37 @@ const { page, category, mode, id } = Astro.props;
                     mode: mode
                 }),
             });
-            
+
             if (!response.ok) {
                 let errorMsg = `API Error (${response.status} ${response.statusText})`;
-                let errorObj = null;
                 try {
-                    errorObj = await response.json();
+                    const errorObj = await response.json();
                     if (errorObj?.error) errorMsg = errorObj.error;
-                    else {
-                        const txt = await response.text();
-                        console.error('API error body:', txt);
-                        errorMsg = `API Error (${response.status}): ${response.statusText || 'Server error'}. Check logs: ${txt.substring(0, 100)}`;
-                    }
                 } catch (e) {
-                    const rawTxt = await response
-                        .text()
+                    const rawTxt = await response.text()
                         .catch(() => 'Unreadable error body.');
-                    console.error('Error parsing API error:', e);
-                    console.error('Raw API error body:', rawTxt);
-                    errorMsg = `API Error (${response.status}): ${response.statusText || 'Unreadable error'}. Check logs.`;
+                    console.error('Error parsing API error:', e, rawTxt);
                 }
                 throw new Error(errorMsg);
             }
-            
-            const data = await response.json();
-            // Check if we have valid response data
-            if (!data?.generatedText && !data?.id) {
-                console.error('Invalid data format:', data);
-                throw new Error('Invalid/empty response from AI.');
-            }
 
-            // Page-specific result handling
-            await displayResults(data);
-            if (page === 'home') {
-                await showOpenInChatBtn(data.id);
-                threadId = data.id;
-                localStorage.setItem('threadId', data.id);
+            const contentType = response.headers.get('Content-Type') || '';
+            if (contentType.includes('text/event-stream')) {
+                // Handle streaming response
+                await readStream(response);
+            } else {
+                // Handle JSON response (welcome message)
+                const data = await response.json();
+                if (!data?.generatedText && !data?.id) {
+                    console.error('Invalid data format:', data);
+                    throw new Error('Invalid/empty response from AI.');
+                }
+                await displayResults(data);
+                if (page === 'home') {
+                    await showOpenInChatBtn(data.id);
+                    threadId = data.id;
+                    localStorage.setItem('threadId', data.id);
+                }
             }
         } catch (error) {
             console.error('Full error caught in generateOutput:', error);
@@ -312,6 +307,117 @@ const { page, category, mode, id } = Astro.props;
             }
             // Add more client-side tool handlers here as needed
         }
+    }
+
+    async function readStream(response) {
+        const chatMessages = document.querySelector('.chat-messages');
+        if (!chatMessages) return;
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+        let messageDiv = null;
+        let messageContent = null;
+        let toolCallLogDiv = null;
+        let accumulatedText = '';
+        let doneData = null;
+        const toolCallMap = new Map();
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            buffer += decoder.decode(value, { stream: true });
+            const events = buffer.split('\n\n');
+            buffer = events.pop() || '';
+
+            for (const event of events) {
+                if (!event.startsWith('data: ')) continue;
+                try {
+                    const data = JSON.parse(event.slice(6));
+
+                    if (data.type === 'text') {
+                        // Create message div on first text chunk
+                        if (!messageDiv) {
+                            messageDiv = document.createElement('div');
+                            messageDiv.className = 'message assistant';
+                            messageContent = document.createElement('div');
+                            messageContent.className = 'message-content';
+                            messageDiv.appendChild(messageContent);
+                            chatMessages.appendChild(messageDiv);
+                        }
+                        accumulatedText += data.text;
+                        messageContent.textContent = accumulatedText;
+                        chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
+
+                    } else if (data.type === 'tool-call') {
+                        if (!toolCallLogDiv) {
+                            toolCallLogDiv = document.createElement('div');
+                            toolCallLogDiv.className = 'tool-call-log';
+                            chatMessages.insertBefore(toolCallLogDiv, messageDiv || messageContent?.parentElement);
+                        }
+                        const entry = document.createElement('div');
+                        entry.className = 'tool-call-entry';
+                        const icon = document.createElement('span');
+                        icon.className = 'material-symbols-outlined';
+                        icon.dataset.state = 'pending';
+                        icon.textContent = 'schedule';
+                        const label = document.createElement('span');
+                        label.className = 'tool-name';
+                        label.textContent = toolLabels[data.toolName] || data.toolName;
+                        entry.appendChild(icon);
+                        entry.appendChild(label);
+                        toolCallLogDiv.appendChild(entry);
+                        toolCallMap.set(data.toolCallId, { icon, toolName: data.toolName });
+                        chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
+
+                    } else if (data.type === 'tool-result') {
+                        const call = toolCallMap.get(data.toolCallId);
+                        if (call) {
+                            call.icon.dataset.state = data.status;
+                            call.icon.textContent = data.status === 'success' ? 'check_circle' : 'error';
+                        }
+
+                    } else if (data.type === 'done') {
+                        doneData = data;
+                        // Replace raw text with rendered HTML
+                        if (messageContent && data.generatedText) {
+                            messageContent.innerHTML = data.generatedText;
+                        }
+
+                    } else if (data.type === 'error') {
+                        throw new Error(data.error);
+                    }
+                } catch (e) {
+                    console.error('Error parsing stream event:', e, event);
+                }
+            }
+        }
+
+        // Post-process message
+        if (messageContent) {
+            await typesetMathJax([messageContent]);
+            if (typeof activateDesmos === 'function') {
+                try { activateDesmos(); } catch (e) { console.warn('Desmos error:', e); }
+            }
+            if (typeof window.initializeStepByStep === 'function') {
+                try { window.initializeStepByStep(); } catch (e) { console.warn('Step-by-step error:', e); }
+            }
+        }
+
+        // Handle done data
+        if (doneData) {
+            if (doneData.clientToolCalls) await executeClientToolCalls(doneData.clientToolCalls);
+
+            const isNewChat = id === 'new';
+            if (isNewChat && doneData.id && category && mode) {
+                window.location.href = `/${category}/${mode}/chat/${doneData.id}`;
+            } else if (doneData.id) {
+                threadId = doneData.id;
+            }
+        }
+
+        chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
     }
 
     async function displayResults(data) {

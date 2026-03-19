@@ -11,7 +11,8 @@ import categories from '@/lib/modes';
 import type { Mode } from '@/lib/modes';
 import {
     getValidModelAndProvider,
-    generateText,
+    streamText,
+    extractToolData,
     generateTitle,
 } from '@/lib/ai-service';
 import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
@@ -135,7 +136,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         // --- Load System Prompt and Initialize Conversation History ---
         const baseSystemPrompt = await (modeObj.prompt || Promise.resolve(config.systemPrompt));
 
-        // Add thread context to the system prompt so AI can use tools that need threadId
+        // Add thread context and tool calling instructions to the system prompt
         const threadContext = `
 <thread-context>
 threadId: ${current_thread_id}
@@ -144,6 +145,8 @@ mode: ${mode || config.defaultMode}
 </thread-context>
 
 Use the above thread context when calling tools that require threadId, category, or mode parameters.
+
+IMPORTANT: When the user asks you to search, look up information, or use a tool, you MUST actually call the appropriate tool. Do NOT pretend or hallucinate that you used a tool—instead make the actual tool call and use the real results. If a tool call is available and relevant to the user's request, use it.
 `;
 
         let systemPrompt = baseSystemPrompt + threadContext;
@@ -374,13 +377,11 @@ Use the above thread context when calling tools that require threadId, category,
             }
         }
 
-        // --- AI Generation ---
+        // AI Generation
         const tools = modeObj.tools || {};
-        let generatedText: string;
-        let clientToolCalls: { toolName: string; toolCallId: string; args: Record<string, string | number | boolean | undefined> }[] = [];
-        let toolCallLog: ToolCallLogEntry[] = [];
+        let streamResult: Awaited<ReturnType<typeof streamText>>;
         try {
-            const aiResult = await generateText(
+            streamResult = await streamText(
                 systemPrompt,
                 userPrompt,
                 convoHistory,
@@ -391,112 +392,114 @@ Use the above thread context when calling tools that require threadId, category,
                 25,
                 requestId
             );
-            generatedText = aiResult.text;
-            clientToolCalls = aiResult.clientToolCalls;
-            toolCallLog = aiResult.toolCallLog;
         } catch (error) {
             return new Response(
-                JSON.stringify({ error: `Failed to generate AI response: ${error}` }),
-                {
-                    status: 500,
-                    headers: { 'Content-Type': 'application/json' },
-                }
+                JSON.stringify({ error: `Failed to start AI stream: ${error}` }),
+                { status: 500, headers: { 'Content-Type': 'application/json' } }
             );
         }
 
-        // --- Append AI response to history ---
-        const assistantMessage: Message = { role: 'assistant', content: generatedText };
-        if (toolCallLog.length > 0) assistantMessage.toolCallLog = toolCallLog;
-        convoHistory.push(assistantMessage);
+        const encoder = new TextEncoder();
+        const sendEvent = (data: object) => encoder.encode(`data: ${JSON.stringify(data)}\n\n`);
+        const isDev = (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development';
 
-        // --- Generate conversation title ---
-        let convoTitle = userData?.title;
-        if (!convoTitle) {
-            try {
-                convoTitle = await generateTitle({
-                    convoHistory,
-                    userModel,
-                    provider
-                });
-            } catch (error) {
-                console.error(`❌ [${requestId}] Error generating title:`, error);
-                convoTitle = 'Untitled Conversation';
-            }
-        }
-
-        // --- Save updated history back to DB ---
-        // Filter out system message before saving to database
-        const convoHistoryWithoutSystem = convoHistory.filter(msg => msg.role !== 'system');
-        try {
+        const saveConvo = async (messages: Message[], title?: string) => {
+            const set = {
+                title: title ?? userData?.title ?? 'Untitled Conversation',
+                thread: { messages },
+                updatedAt: new Date(),
+                isDev,
+            };
             if (current_thread_id && userData) {
-                await db
-                    .update(threadsTable)
-                    .set({
-                        title: convoTitle,
-                        thread: { messages: convoHistoryWithoutSystem },
-                        updatedAt: new Date(),
-                        isDev: (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development' ? true : false,
-                    })
-                    .where(eq(threadsTable.id, current_thread_id));
-            }
-            else if (current_thread_id && !userData && !isNewThread) {
-                if (!current_thread_id) {
-                    throw new Error('Thread ID is null or undefined');
-                }
+                await db.update(threadsTable).set(set).where(eq(threadsTable.id, current_thread_id!));
+            } else if (current_thread_id) {
                 await db.insert(threadsTable).values({
                     id: current_thread_id,
-                    title: convoTitle || '',
-                    thread: { messages: convoHistoryWithoutSystem },
+                    title: set.title,
+                    thread: { messages },
                     email: user_email,
                     category: category || config.defaultCategory,
                     mode: mode || config.defaultMode,
                     model: userModel,
                     provider: provider,
                     isPublic: isPublic,
-                    isDev: (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development'
-                } as ThreadInsert);
+                    isDev,
+                } as ThreadInsert).onConflictDoUpdate({
+                    target: threadsTable.id,
+                    set: { thread: { messages }, updatedAt: new Date(), isDev },
+                });
             }
-            else if (isNewThread) {
-                await db
-                    .update(threadsTable)
-                    .set({
-                        title: convoTitle,
-                        thread: { messages: convoHistoryWithoutSystem },
-                        updatedAt: new Date(),
-                        isDev: (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development' ? true : false,
-                    })
-                    .where(eq(threadsTable.id, current_thread_id));
-            }
-        } catch (error) {
-            console.error(`❌ [${requestId}] Error saving conversation to database:`, error);
-            return new Response(
-                JSON.stringify({ error: `Failed to save conversation: ${error}` }),
-                {
-                    status: 500,
-                    headers: { 'Content-Type': 'application/json' },
+        };
+
+        const responseStream = new ReadableStream({
+            async start(controller) {
+                try {
+                    const pendingCalls = new Map<string, string>(); // toolCallId -> toolName
+
+                    for await (const part of streamResult.fullStream) {
+                        if (part.type === 'text-delta') {
+                            controller.enqueue(sendEvent({ type: 'text', text: part.textDelta }));
+                        } else if (part.type === 'tool-call') {
+                            pendingCalls.set(part.toolCallId, part.toolName);
+                            controller.enqueue(sendEvent({ type: 'tool-call', toolCallId: part.toolCallId, toolName: part.toolName }));
+                        } else if (part.type === 'tool-result') {
+                            let status: 'success' | 'error' = 'success';
+                            try {
+                                const parsed = typeof part.result === 'string' ? JSON.parse(part.result as string) : part.result;
+                                if ((parsed as { status?: string })?.status === 'error') status = 'error';
+                            } catch (_e) { /* not JSON */ }
+                            controller.enqueue(sendEvent({ type: 'tool-result', toolCallId: part.toolCallId, toolName: part.toolName, status }));
+                        }
+                    }
+
+                    // Stream finished — collect full text and tool data
+                    const [fullText, steps] = await Promise.all([streamResult.text, streamResult.steps]);
+                    const { clientToolCalls, toolCallLog } = extractToolData(steps);
+
+                    // Render markdown to HTML
+                    const { marked } = await import('marked');
+                    marked.setOptions({ breaks: true, gfm: true });
+                    const htmlText = await marked.parse(fullText);
+
+                    // Save to DB
+                    const assistantMessage: Message = { role: 'assistant', content: fullText };
+                    if (toolCallLog.length > 0) assistantMessage.toolCallLog = toolCallLog;
+                    convoHistory.push(assistantMessage);
+                    const convoHistoryWithoutSystem = convoHistory.filter(msg => msg.role !== 'system');
+                    await saveConvo(convoHistoryWithoutSystem);
+
+                    // Generate title in background if not already set
+                    if (!userData?.title) {
+                        generateTitle({ convoHistory, userModel, provider })
+                            .then(title => saveConvo(convoHistoryWithoutSystem, title))
+                            .catch(err => console.error(`❌ [${requestId}] Title generation failed:`, err));
+                    }
+
+                    // Send done event with rendered HTML
+                    controller.enqueue(sendEvent({
+                        type: 'done',
+                        id: current_thread_id,
+                        generatedText: htmlText,
+                        toolCallLog: toolCallLog.length > 0 ? toolCallLog : undefined,
+                        clientToolCalls: clientToolCalls.length > 0 ? clientToolCalls : undefined,
+                    }));
+                    controller.close();
+                } catch (error) {
+                    console.error(`❌ [${requestId}] Stream error:`, error);
+                    controller.enqueue(sendEvent({ type: 'error', error: String(error) }));
+                    controller.close();
                 }
-            );
-        }
-
-        // --- Format response ---
-        // Convert markdown to HTML
-        const { marked } = await import('marked');
-        marked.setOptions({ breaks: true, gfm: true });
-        const htmlText = await marked.parse(generatedText);
-
-        return new Response(
-            JSON.stringify({
-                generatedText: htmlText,
-                generatedTitle: true,
-                id: current_thread_id,
-                clientToolCalls: clientToolCalls.length > 0 ? clientToolCalls : undefined,
-                toolCallLog: toolCallLog.length > 0 ? toolCallLog : undefined,
-            }),
-            {
-                status: 200,
-                headers: { 'Content-Type': 'application/json' },
             }
-        );
+        });
+
+        return new Response(responseStream, {
+            status: 200,
+            headers: {
+                'Content-Type': 'text/event-stream',
+                'Cache-Control': 'no-cache',
+                'Connection': 'keep-alive',
+            },
+        });
     } catch (error) {
         const totalDuration = Date.now() - startTime;
         console.error(`💥 [${requestId}] Fatal error in generate.ts after ${totalDuration}ms:`, error);

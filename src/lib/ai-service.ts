@@ -223,6 +223,99 @@ export async function generateText(
     }
 }
 
+// Streams AI response for a conversation, returning the streamText result for the caller to pipe
+export async function streamText(
+    systemPrompt: string,
+    userPrompt: string,
+    convoHistory: Message[],
+    userModel: string,
+    provider: string,
+    tools: ToolRecord = {},
+    excludeTools?: string[],
+    maxSteps: number = 25,
+    requestId: string = nanoid()
+): Promise<ReturnType<typeof ai.streamText>> {
+
+    const resolvedTools = excludeTools
+        ? Object.fromEntries(
+            Object.entries(tools).filter(([key]) => !excludeTools.includes(key))
+        )
+        : tools;
+
+    convoHistory = convoHistory.filter(msg => msg.role !== 'system' && msg.content !== '');
+
+    if (convoHistory[0]?.role !== 'system') {
+        convoHistory.unshift({ role: 'system', content: systemPrompt });
+    }
+
+    const lastMessage = convoHistory[convoHistory.length - 1];
+    if (lastMessage?.role !== 'user' || lastMessage?.content !== userPrompt) {
+        convoHistory.push({ role: 'user', content: userPrompt });
+    }
+
+    const aiModel = `${provider}/${userModel}`;
+    console.log(`[${requestId}] AI stream request: model=${aiModel}, messages=${convoHistory.length}, tools=${Object.keys(resolvedTools).length}`);
+
+    return ai.streamText({
+        model: aiModel,
+        messages: convoHistory,
+        tools: resolvedTools,
+        stopWhen: stepCountIs(maxSteps),
+    });
+}
+
+// Extracts clientToolCalls and toolCallLog from a completed streamText result's steps
+export function extractToolData(steps: Awaited<ReturnType<typeof ai.streamText>>['steps']): {
+    clientToolCalls: ClientToolCall[];
+    toolCallLog: ToolCallLogEntry[];
+} {
+    const clientToolCalls: ClientToolCall[] = [];
+    const toolCallLog: ToolCallLogEntry[] = [];
+
+    for (const step of steps) {
+        const stepToolCalls = step.toolCalls ?? [];
+        const stepToolResults = step.toolResults ?? [];
+
+        for (const tc of stepToolCalls) {
+            const matchingResult = (stepToolResults as Array<{ toolCallId: string; result?: unknown }>)
+                .find(tr => tr.toolCallId === tc.toolCallId);
+
+            let resultStr = '';
+            let status: 'success' | 'error' = 'success';
+
+            if (matchingResult?.result) {
+                const raw = matchingResult.result;
+                resultStr = typeof raw === 'string' ? raw : JSON.stringify(raw);
+                try {
+                    const parsed = JSON.parse(resultStr);
+                    if (parsed?.status === 'error') status = 'error';
+                } catch (_e) { /* not JSON */ }
+            }
+
+            toolCallLog.push({ toolName: tc.toolName, args: tc.input ?? {}, status, result: resultStr });
+
+            try {
+                const resultValue = typeof resultStr === 'string' ? JSON.parse(resultStr) : resultStr;
+                if (resultValue?.action === 'open-content') {
+                    clientToolCalls.push({
+                        toolName: 'open-content',
+                        toolCallId: tc.toolCallId,
+                        args: {
+                            type: resultValue.type,
+                            threadId: resultValue.threadId,
+                            category: resultValue.category,
+                            mode: resultValue.mode,
+                            url: resultValue.url,
+                        },
+                    });
+                }
+            } catch (_e) { /* not an open-content result */ }
+        }
+    }
+
+    return { clientToolCalls, toolCallLog };
+}
+
 // Generates a title for a conversation
 export async function generateTitle(options: TitleGenerationOptions): Promise<string> {
     const { convoHistory, userModel, provider } = options;
