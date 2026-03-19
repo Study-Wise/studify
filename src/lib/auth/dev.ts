@@ -6,7 +6,7 @@ import { db } from '@/db/initialize';
 import { account, user as userTable } from '@/db/auth-schema';
 import { threadsTable } from '@/db/schema';
 
-import type { UserRole, User } from './index';
+import type { UserRole, User } from './types';
 import type { ThreadAccessResult } from './checkThreadAccess';
 
 // Check if we're in development environment
