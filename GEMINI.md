@@ -41,7 +41,7 @@ StudyWise is an AI-powered educational platform built with Astro that provides p
 The application supports multiple AI providers defined in `src/lib/models.ts`:
 
 - **OpenAI**: gpt-4.1, gpt-4.1-mini, gpt-4.1-nano, o3, o4-mini
-- **Google**: gemini-2.5-pro, gemini-2.5-flash, gemini-2.5-flash-lite
+- **Google**: gemini-3-pro, gemini-2.5-flash, gemini-2.5-flash-lite
 - **Vercel**: v0-1.5-md, v0-1.5-lg (internal use only)
 
 Default configuration in `src/lib/config.ts`:
