@@ -26,7 +26,7 @@ StudyWise offers a comprehensive suite of AI-generated study materials:
 - **Database**: PostgreSQL via Vercel Postgres with Drizzle ORM
 - **AI Integration**: Multiple providers via Vercel AI SDK
   - OpenAI: gpt-4.1, gpt-4.1-mini, gpt-4.1-nano, o3, o4-mini
-  - Google: gemini-3-pro, gemini-2.5-flash, gemini-2.5-flash-lite
+  - Google: gemini-3-pro-preview, gemini-2.5-flash, gemini-2.5-flash-lite
 - **PWA**: Progressive Web App support via @vite-pwa/astro
 - **File Uploads**: UploadThing
 - **Search**: Exa API for web search
