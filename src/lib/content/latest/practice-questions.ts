@@ -1,4 +1,4 @@
-import { getLatestContent } from './index';
+import { getLatestContent } from '@/lib/content/latest/';
 
 export interface PracticeQuestionsResult {
     content: string | null;

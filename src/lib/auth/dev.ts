@@ -6,8 +6,8 @@ import { db } from '@/db/initialize';
 import { account, user as userTable } from '@/db/auth-schema';
 import { threadsTable } from '@/db/schema';
 
-import type { UserRole, User } from './types';
-import type { ThreadAccessResult } from './checkThreadAccess';
+import type { UserRole, User } from '@/lib/auth/types';
+import type { ThreadAccessResult } from '@/lib/auth/checkThreadAccess';
 
 // Check if we're in development environment
 export function isDev(): boolean {

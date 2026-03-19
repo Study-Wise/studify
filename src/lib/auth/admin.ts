@@ -5,7 +5,7 @@ import { eq } from 'drizzle-orm';
 import { db } from '@/db/initialize';
 import { user as userTable } from '@/db/auth-schema';
 
-import type { UserRole } from './types';
+import type { UserRole } from '@/lib/auth/types';
 
 // Get user role from database by email
 export async function getUserRole(email: string): Promise<UserRole> {

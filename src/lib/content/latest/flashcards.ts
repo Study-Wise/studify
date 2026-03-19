@@ -1,4 +1,4 @@
-import { getLatestContent } from './index';
+import { getLatestContent } from '@/lib/content/latest/';
 
 // Structured flashcard type for generateObject output
 export interface Flashcard {

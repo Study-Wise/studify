@@ -1,4 +1,4 @@
-import { getLatestContent } from './index';
+import { getLatestContent } from '@/lib/content/latest/';
 
 export interface MindMapResult {
     content: string | null;

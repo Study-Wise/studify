@@ -5,9 +5,9 @@ import { threadsTable } from '@/db/schema';
 import { getContentTypesList } from '../get-types';
 import type { JSONValue } from '@/lib/threads';
 
-import type { InfographicData } from './infographic';
-import type { FlashcardData } from './flashcards';
-import type { SlideshowData } from './slideshow';
+import type { InfographicData } from '@/lib/content/latest/infographic';
+import type { FlashcardData } from '@/lib/content/latest/flashcards';
+import type { SlideshowData } from '@/lib/content/latest/slideshow';
 
 export interface ThreadContentStatus {
     hasReferenceSheet: boolean;
