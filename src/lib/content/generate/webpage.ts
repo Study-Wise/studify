@@ -98,7 +98,7 @@ ONLY INCLUDE THE HTML CONTENT IN YOUR RESPONSE. DO NOT RESPOND WITH ANYTHING ELS
     // Generate the webpage using Vercel's v0 model (optimized for HTML generation)
     const excludeTools = config.contentGenerationExcludeTools;
     const result = await generateText({
-        model: 'anthropic/claude-sonnet-4.6',
+        model: 'anthropic/claude-haiku-4.5',
         messages: messagesForAI,
         tools: Object.fromEntries(
             Object.entries(modules).filter(([key]) => !excludeTools.includes(key))

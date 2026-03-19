@@ -115,7 +115,7 @@ You may remove or modify sections as you see fit based on relevance to the topic
     // Generate the mind map using Vercel's v0 model (optimized for HTML generation)
     const excludeTools = config.contentGenerationExcludeTools;
     const result = await generateText({
-        model: 'anthropic/claude-sonnet-4.6',
+        model: 'anthropic/claude-haiku-4.5',
         messages: messagesForAI,
         tools: Object.fromEntries(
             Object.entries(modules).filter(([key]) => !excludeTools.includes(key))
