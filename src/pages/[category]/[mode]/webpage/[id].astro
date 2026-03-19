@@ -39,7 +39,7 @@ const { content: latestWebpage } = (isAuthorized || isPublic)
     : { content: null };
 ---
 
-<Layout title={`Webpage | ${modeName} | ${categoryName}`} className="webpage-page content-page" container={false}>
+<Layout title={`Webpage | ${modeName} | ${categoryName}`} className="webpage-page content-page" container={true}>
     {!isAuthorized && !isPublic ? (
         <div class="empty-state">
             <span class="material-symbols-outlined">lock</span>
@@ -57,7 +57,7 @@ const { content: latestWebpage } = (isAuthorized || isPublic)
                 chatUrl={chatUrl}
             />
             {latestWebpage ? (
-                <div class="content-container webpage-content">
+                <div class="content-container webpage-container">
                     <iframe srcdoc={latestWebpage} title="Generated Webpage" sandbox="allow-scripts allow-same-origin" />
                 </div>
             ) : (

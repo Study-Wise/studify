@@ -10,6 +10,12 @@
         box-shadow: 0 4px 12px var(--card-shadow);
         border: 1px solid var(--card-border);
 
+        &.mind-map-container,
+        &.webpage-container {
+            padding: 0;
+            overflow: hidden;
+        }
+
         > :first-child {
             &:is(h1, h2, h3, h4, h5, h6) {
                 $spacing: $spacing-medium;
