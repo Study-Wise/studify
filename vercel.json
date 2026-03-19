@@ -1,9 +1,6 @@
 {
     "functions": {
-        "src/pages/**/*.ts": {
-            "maxDuration": 600
-        },
-        "src/pages/**/*.astro": {
+        "**": {
             "maxDuration": 600
         }
     }
