@@ -68,6 +68,7 @@
         "typescript": "^5.9.3",
         "uploadthing": "^7.7.4",
         "vercel": "^25.2.0",
+        "web-streams-polyfill": "^4.2.0",
         "zod": "^3.25.76"
     }
 }
