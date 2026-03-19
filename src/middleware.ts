@@ -3,7 +3,7 @@ import type { MiddlewareHandler } from 'astro';
 import { auth } from '@/lib/auth';
 import { getUserRole } from '@/lib/auth/admin';
 import { isDev, getDevUser } from '@/lib/auth/dev';
-import type { ExtendedUser } from '@/lib/auth/index';
+import type { User } from '@/lib/auth/index';
 
 // Define protected routes (same as before)
 const protectedRoutes = [
@@ -46,8 +46,8 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
     const session = await auth.api.getSession({ headers: request.headers });
 
     if (session) {
-        // Cast to ExtendedUser to include role field
-        const extendedUser: ExtendedUser = session.user;
+        // Cast to User to include role field
+        const extendedUser: User = session.user;
 
         // Ensure role is populated (fetch from DB if not in session)
         if (!extendedUser.role && extendedUser.email) {

@@ -12,7 +12,7 @@ export const userRoleSchema = z.enum(["user", "premium", "moderator", "admin", "
 export type UserRole = z.infer<typeof userRoleSchema>;
 
 // Better Auth's User type with our custom role field
-export interface ExtendedUser extends BetterAuthUser {
+export interface User extends BetterAuthUser {
     role?: UserRole;
 }
 

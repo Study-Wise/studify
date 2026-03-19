@@ -6,7 +6,7 @@ import { db } from '@/db/initialize';
 import { account, user as userTable } from '@/db/auth-schema';
 import { threadsTable } from '@/db/schema';
 
-import type { UserRole, ExtendedUser } from './index';
+import type { UserRole, User } from './index';
 import type { ThreadAccessResult } from './checkThreadAccess';
 
 // Check if we're in development environment
@@ -44,7 +44,7 @@ export async function getDevUserId(): Promise<string | null> {
 }
 
 // Get the full user record from the user table using the dev access token
-export async function getDevUser(): Promise<ExtendedUser | null> {
+export async function getDevUser(): Promise<User | null> {
     const userId = await getDevUserId();
     if (!userId) {
         return null;
