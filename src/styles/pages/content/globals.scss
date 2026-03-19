@@ -2,13 +2,17 @@
 @use '../../variables/mixins' as *;
 
 .content-page {
+    &.container .content-container {
+        border-inline: 1px solid var(--card-border);
+        border-radius: 1rem;
+    }
+    
     .content-container {
         min-height: 100%;
         background-color: var(--card-bg);
-        border-radius: 1rem;
         padding: 2rem;
+        border-block: 1px solid var(--card-border);
         box-shadow: 0 4px 12px var(--card-shadow);
-        border: 1px solid var(--card-border);
 
         &.mind-map-container,
         &.webpage-container {

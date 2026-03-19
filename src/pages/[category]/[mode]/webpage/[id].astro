@@ -37,6 +37,13 @@ if (!user && !isPublic) {
 const { content: latestWebpage } = (isAuthorized || isPublic)
     ? await getLatestWebpage(id || '')
     : { content: null };
+
+// Convert to data URL to avoid attribute escaping
+let webpageDataUrl = '';
+if (latestWebpage) {
+    const base64 = Buffer.from(latestWebpage).toString('base64');
+    webpageDataUrl = `data:text/html;base64,${base64}`;
+}
 ---
 
 <Layout title={`Webpage | ${modeName} | ${categoryName}`} className="webpage-page content-page" container={true}>
@@ -56,9 +63,9 @@ const { content: latestWebpage } = (isAuthorized || isPublic)
                 isAuthorized={isAuthorized}
                 chatUrl={chatUrl}
             />
-            {latestWebpage ? (
+            {webpageDataUrl ? (
                 <div class="content-container webpage-container">
-                    <iframe srcdoc={latestWebpage} title="Generated Webpage" sandbox="allow-scripts allow-same-origin" />
+                    <iframe src={webpageDataUrl} title="Generated Webpage" sandbox="allow-scripts allow-same-origin" />
                 </div>
             ) : (
                 <div class="empty-state">

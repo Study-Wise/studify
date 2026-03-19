@@ -61,7 +61,8 @@
       "Bash(do)",
       "Bash(echo \"=== $f ===\")",
       "Bash(done)",
-      "Bash(echo \"Fixed $f\")"
+      "Bash(echo \"Fixed $f\")",
+      "WebFetch(domain:docs.astro.build)"
     ],
     "deny": [],
     "ask": []
