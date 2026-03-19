@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import type { ReadableStream } from 'web-streams-polyfill';
+// import type { ReadableStream } from 'web-streams-polyfill';
 
 import { nanoid } from 'nanoid';
 
