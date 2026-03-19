@@ -412,7 +412,8 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
             };
             if (current_thread_id && userData) {
                 await db.update(threadsTable).set(set).where(eq(threadsTable.id, current_thread_id!));
-            } else if (current_thread_id) {
+            }
+            else if (current_thread_id) {
                 await db.insert(threadsTable).values({
                     id: current_thread_id,
                     title: set.title,
@@ -440,12 +441,14 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                         if (part.type === 'text-delta') {
                             const textDelta = (part as Record<string, unknown>).text as string || (part as Record<string, unknown>).textDelta as string || '';
                             controller.enqueue(sendEvent({ type: 'text', text: textDelta }));
-                        } else if (part.type === 'tool-call') {
+                        }
+                        else if (part.type === 'tool-call') {
                             const toolCallId = (part as Record<string, unknown>).toolCallId as string || '';
                             const toolName = (part as Record<string, unknown>).toolName as string || '';
                             pendingCalls.set(toolCallId, toolName);
                             controller.enqueue(sendEvent({ type: 'tool-call', toolCallId, toolName }));
-                        } else if (part.type === 'tool-result') {
+                        }
+                        else if (part.type === 'tool-result') {
                             const toolCallId = (part as Record<string, unknown>).toolCallId as string || '';
                             const toolName = (part as Record<string, unknown>).toolName as string || '';
                             let status: 'success' | 'error' = 'success';
@@ -526,3 +529,4 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
 };
 
 export const prerender = false;
+declare const TextEncoder: typeof globalThis.TextEncoder;
