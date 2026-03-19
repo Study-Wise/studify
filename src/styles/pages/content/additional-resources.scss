@@ -1,7 +1,7 @@
 @use '../../variables/tokens' as *;
 
 .resources-page {
-    min-height: calc(100vh - 4rem);
+    min-height: calc(100dvh - 4rem);
 
     // .content-container {
     //     max-width: 1200px;
