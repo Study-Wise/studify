@@ -3,7 +3,7 @@ import type { MiddlewareHandler } from 'astro';
 import { auth } from '@/lib/auth';
 import { getUserRole } from '@/lib/auth/admin';
 import { isDev, getDevUser } from '@/lib/auth/dev';
-import type { User } from '@/lib/auth/index';
+import type { User } from '@/lib/auth/types';
 
 // Define protected routes (same as before)
 const protectedRoutes = [
