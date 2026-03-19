@@ -47,20 +47,20 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
 
     if (session) {
         // Cast to User to include role field
-        const extendedUser: User = session.user;
+        const user: User = session.user;
 
         // Ensure role is populated (fetch from DB if not in session)
-        if (!extendedUser.role && extendedUser.email) {
-            const role = await getUserRole(extendedUser.email);
-            extendedUser.role = role;
+        if (!user.role && user.email) {
+            const role = await getUserRole(user.email);
+            user.role = role;
         }
 
         // Check if user is banned
-        if (extendedUser.role === 'banned') {
-            return new Response(`Access Denied: Your account has been ${extendedUser.role}.`, { status: 403 });
+        if (user.role === 'banned') {
+            return new Response(`Access Denied: Your account has been ${user.role}.`, { status: 403 });
         }
 
-        locals.user = extendedUser;
+        locals.user = user;
         locals.session = session.session;
     }
     else if (isDev()) {
