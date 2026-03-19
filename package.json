@@ -24,6 +24,7 @@
     },
     "devDependencies": {
         "@astrojs/ts-plugin": "^1.10.6",
+        "@eslint/js": "^10.0.1",
         "@types/cheerio": "^0.22.35",
         "@types/crypto-js": "^4.2.2",
         "@types/fs-extra": "^11.0.4",
@@ -33,6 +34,7 @@
         "astro": "^5.15.0",
         "drizzle-kit": "^0.31.8",
         "eslint": "^10.0.3",
+        "eslint-plugin-astro": "^1.6.0",
         "sass": "^1.89.0",
         "sass-embedded": "^1.89.0",
         "stylelint": "^17.1.1",
