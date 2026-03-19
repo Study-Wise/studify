@@ -123,7 +123,7 @@ You may remove or modify sections as you see fit based on relevance to the topic
         temperature: 0.7,
         providerOptions: {
             gateway: {
-                models: ['openai/gpt-4.1'],
+                models: ['anthropic/claude-sonnet-4.6'],
             } satisfies GatewayProviderOptions
         }
     });
