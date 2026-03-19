@@ -265,26 +265,28 @@ export async function streamText(
 }
 
 // Extracts clientToolCalls and toolCallLog from a completed streamText result's steps
-export function extractToolData(steps: Awaited<ReturnType<typeof ai.streamText>>['steps']): {
+export function extractToolData(steps: Awaited<Awaited<ReturnType<typeof ai.streamText>>['steps']>): {
     clientToolCalls: ClientToolCall[];
     toolCallLog: ToolCallLogEntry[];
 } {
     const clientToolCalls: ClientToolCall[] = [];
     const toolCallLog: ToolCallLogEntry[] = [];
 
+    if (!steps || !Array.isArray(steps)) return { clientToolCalls, toolCallLog };
+
     for (const step of steps) {
         const stepToolCalls = step.toolCalls ?? [];
         const stepToolResults = step.toolResults ?? [];
 
         for (const tc of stepToolCalls) {
-            const matchingResult = (stepToolResults as Array<{ toolCallId: string; result?: unknown }>)
+            const matchingResult = (stepToolResults as Array<{ toolCallId: string; result?: unknown; output }>)
                 .find(tr => tr.toolCallId === tc.toolCallId);
 
             let resultStr = '';
             let status: 'success' | 'error' = 'success';
 
-            if (matchingResult?.result) {
-                const raw = matchingResult.result;
+            if (matchingResult?.result || matchingResult?.output) {
+                const raw = matchingResult.result ?? matchingResult.output;
                 resultStr = typeof raw === 'string' ? raw : JSON.stringify(raw);
                 try {
                     const parsed = JSON.parse(resultStr);

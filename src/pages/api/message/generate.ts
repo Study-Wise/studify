@@ -16,7 +16,7 @@ import {
     generateTitle,
 } from '@/lib/ai-service';
 import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
-import type { ThreadData, Message, UploadedFile, ToolCallLogEntry } from '@/lib/threads';
+import type { ThreadData, Message, UploadedFile } from '@/lib/threads';
 import { isValidEmail } from '@/lib/validation';
 import { isUserAdmin } from '@/lib/auth/admin';
 

@@ -19,7 +19,7 @@
         "test:nopause:chrome:headed": "npx playwright test tests/browser.test.nopause.ts --headed --browser=chromium",
         "test:nopause:firefox:headed": "npx playwright test tests/browser.test.nopause.ts --headed --browser=firefox",
         "test:nopause:safari:headed": "npx playwright test tests/browser.test.nopause.ts --headed --browser=webkit",
-        "check": "astro check && stylelint \"src/**/*.scss\" && astro build",
+        "check": "eslint src --max-warnings 0 && astro check && stylelint \"src/**/*.scss\" && astro build",
         "stylelint:fix": "stylelint \"src/**/*.scss\" --fix"
     },
     "devDependencies": {
@@ -32,6 +32,7 @@
         "@vite-pwa/astro": "^1.1.0",
         "astro": "^5.15.0",
         "drizzle-kit": "^0.31.8",
+        "eslint": "^10.0.3",
         "sass": "^1.89.0",
         "sass-embedded": "^1.89.0",
         "stylelint": "^17.1.1",
