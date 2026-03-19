@@ -7,7 +7,7 @@ import type { ExtendedUser } from '@/lib/auth/index';
 
 // Define protected routes (same as before)
 const protectedRoutes = [
-    /^\/[^\/]+\/[^\/]+\/chat\/.*/,
+    /^\/[^/]+\/[^/]+\/chat\/.*/,
     /^\/settings.*/,
     /^\/admin.*/,
     /^\/user\/profile.*/,

@@ -147,7 +147,7 @@ export async function generateResources(threadId: string): Promise<string> {
 
     } catch (error) {
         console.error('Error searching for resources:', error);
-        throw new Error('Failed to search for educational resources');
+        throw new Error('Failed to search for educational resources', { cause: error });
     }
 
     const content = JSON.stringify(resourceCollection, null, 2);

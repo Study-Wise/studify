@@ -129,7 +129,9 @@ export async function generateText(
                         try {
                             const parsed = JSON.parse(resultStr);
                             if (parsed?.status === 'error') status = 'error';
-                        } catch {}
+                        } catch {
+                            // JSON parse error ignored, status remains as initial value
+                        }
                     }
 
                     toolCallLog.push({
@@ -167,7 +169,9 @@ export async function generateText(
                             },
                         });
                     }
-                } catch {}
+                } catch {
+                    // JSON parse error ignored, client tool call skipped
+                }
             }
         }
 
@@ -195,7 +199,9 @@ export async function generateText(
                                     },
                                 });
                             }
-                        } catch {}
+                        } catch {
+                            // JSON parse error ignored, client tool call skipped
+                        }
                     }
                 }
             }
@@ -287,7 +293,9 @@ export function extractToolData(steps: Awaited<Awaited<ReturnType<typeof ai.stre
                 try {
                     const parsed = JSON.parse(resultStr);
                     if (parsed?.status === 'error') status = 'error';
-                } catch {}
+                } catch {
+                    // JSON parse error ignored, status remains as initial value
+                }
             }
 
             toolCallLog.push({ toolName: tc.toolName, args: tc.input ?? {}, status, result: resultStr });
@@ -307,7 +315,9 @@ export function extractToolData(steps: Awaited<Awaited<ReturnType<typeof ai.stre
                         },
                     });
                 }
-            } catch {}
+            } catch {
+                // JSON parse error ignored, client tool call skipped
+            }
         }
     }
 

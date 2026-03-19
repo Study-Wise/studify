@@ -41,7 +41,7 @@ async function generateImageBuffer(prompt: string) {
             }
         }
 
-        throw new Error(errorMessage);
+        throw new Error(errorMessage, { cause: error });
     }
 }
 

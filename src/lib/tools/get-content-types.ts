@@ -5,8 +5,8 @@ import getContentTypes from '@/lib/content/get-types';
 
 const searchTool = tool({
     description: 'Get a list of content generation types supported by the system',
-    inputSchema: z.object({ /* unused */ }),
-    execute: async ({ /* unused */ }) => {
+    inputSchema: z.object({}),
+    execute: async () => {
         return getContentTypes();
     },
 });
