@@ -8,7 +8,6 @@ import { threadsTable } from '@/db/schema';
 
 import { isValidEmail } from '@/lib/validation';
 import { generateInfographic } from '@/lib/content/generate/infographic';
-import config from '@/lib/config';
 
 export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();
