@@ -3,8 +3,7 @@ import { pgTable, text, timestamp, boolean, index, pgEnum } from 'drizzle-orm/pg
 import { userRoleSchema } from '@/lib/auth/index';
 
 // User role enum - synced with userRoleSchema in @/lib/auth/index
-const userRoleValues = userRoleSchema.options;
-export const userRoleEnum = pgEnum("user_role", userRoleValues);
+export const userRoleEnum = pgEnum("user_role", userRoleSchema.options);
 
 export const user = pgTable("user", {
     id: text("id").primaryKey(),
