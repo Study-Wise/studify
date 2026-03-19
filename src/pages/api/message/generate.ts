@@ -532,3 +532,4 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
 
 export const prerender = false;
 declare const TextEncoder: typeof globalThis.TextEncoder;
+declare const ReadableStream: typeof globalThis.ReadableStream;
