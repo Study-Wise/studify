@@ -438,11 +438,16 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
 
                     for await (const part of streamResult.fullStream) {
                         if (part.type === 'text-delta') {
-                            controller.enqueue(sendEvent({ type: 'text', text: part.textDelta }));
+                            const textDelta = (part as Record<string, unknown>).text as string || (part as Record<string, unknown>).textDelta as string || '';
+                            controller.enqueue(sendEvent({ type: 'text', text: textDelta }));
                         } else if (part.type === 'tool-call') {
-                            pendingCalls.set(part.toolCallId, part.toolName);
-                            controller.enqueue(sendEvent({ type: 'tool-call', toolCallId: part.toolCallId, toolName: part.toolName }));
+                            const toolCallId = (part as Record<string, unknown>).toolCallId as string || '';
+                            const toolName = (part as Record<string, unknown>).toolName as string || '';
+                            pendingCalls.set(toolCallId, toolName);
+                            controller.enqueue(sendEvent({ type: 'tool-call', toolCallId, toolName }));
                         } else if (part.type === 'tool-result') {
+                            const toolCallId = (part as Record<string, unknown>).toolCallId as string || '';
+                            const toolName = (part as Record<string, unknown>).toolName as string || '';
                             let status: 'success' | 'error' = 'success';
                             try {
                                 const parsed = typeof part.result === 'string' ? JSON.parse(part.result as string) : part.result;
