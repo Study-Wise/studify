@@ -38,6 +38,7 @@
 
 // Content wrapper with max width and padding
 @mixin content-wrapper($max-width: $container-max-width, $padding: $container-padding) {
+    width: 100%;
     max-width: $max-width;
     margin-inline: auto;
     padding: $padding;
