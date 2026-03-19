@@ -16,7 +16,6 @@ async function generateImageBuffer(prompt: string) {
             prompt: prompt,
             n: 1,
             size: config.imageSize === 'auto' ? '1024x1024' : config.imageSize,
-            // @ts-ignore - OpenAI SDK types may not be updated yet for gpt-image models
             output_format: 'png'
         });
 

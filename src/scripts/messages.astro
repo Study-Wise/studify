@@ -114,7 +114,8 @@ const { page, category, mode, id } = Astro.props;
             if (contentType.includes('text/event-stream')) {
                 // Handle streaming response
                 await readStream(response);
-            } else {
+            }
+            else {
                 // Handle JSON response (welcome message)
                 const data = await response.json();
                 if (!data?.generatedText && !data?.id) {
@@ -371,21 +372,24 @@ const { page, category, mode, id } = Astro.props;
                         toolCallMap.set(data.toolCallId, { icon, toolName: data.toolName });
                         chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
 
-                    } else if (data.type === 'tool-result') {
+                    }
+                    else if (data.type === 'tool-result') {
                         const call = toolCallMap.get(data.toolCallId);
                         if (call) {
                             call.icon.dataset.state = data.status;
                             call.icon.textContent = data.status === 'success' ? 'check_circle' : 'error';
                         }
 
-                    } else if (data.type === 'done') {
+                    }
+                    else if (data.type === 'done') {
                         doneData = data;
                         // Replace raw text with rendered HTML
                         if (messageContent && data.generatedText) {
                             messageContent.innerHTML = data.generatedText;
                         }
 
-                    } else if (data.type === 'error') {
+                    }
+                    else if (data.type === 'error') {
                         throw new Error(data.error);
                     }
                 } catch (e) {

@@ -129,7 +129,7 @@ export async function generateText(
                         try {
                             const parsed = JSON.parse(resultStr);
                             if (parsed?.status === 'error') status = 'error';
-                        } catch (_e) { /* not JSON, leave as success */ }
+                        } catch {}
                     }
 
                     toolCallLog.push({
@@ -197,9 +197,7 @@ export async function generateText(
                                     },
                                 });
                             }
-                        } catch (_e) {
-                            // Not a JSON result or not an open-content action, skip
-                        }
+                        } catch {}
                     }
                 }
             }
@@ -291,7 +289,7 @@ export function extractToolData(steps: Awaited<Awaited<ReturnType<typeof ai.stre
                 try {
                     const parsed = JSON.parse(resultStr);
                     if (parsed?.status === 'error') status = 'error';
-                } catch (_e) { /* not JSON */ }
+                } catch {}
             }
 
             toolCallLog.push({ toolName: tc.toolName, args: tc.input ?? {}, status, result: resultStr });
@@ -311,7 +309,7 @@ export function extractToolData(steps: Awaited<Awaited<ReturnType<typeof ai.stre
                         },
                     });
                 }
-            } catch (_e) { /* not an open-content result */ }
+            } catch {}
         }
     }
 

@@ -1,3 +1,4 @@
+declare const window: typeof globalThis;
 // Client-side Better Auth utilities
 import { createAuthClient } from 'better-auth/client';
 

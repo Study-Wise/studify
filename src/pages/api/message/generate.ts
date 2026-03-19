@@ -450,10 +450,11 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                             const toolName = (part as Record<string, unknown>).toolName as string || '';
                             let status: 'success' | 'error' = 'success';
                             try {
-                                const parsed = typeof part.result === 'string' ? JSON.parse(part.result as string) : part.result;
+                                const raw = (part as Record<string, unknown>).result || (part as Record<string, unknown>).output;
+                                const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
                                 if ((parsed as { status?: string })?.status === 'error') status = 'error';
-                            } catch (_e) { /* not JSON */ }
-                            controller.enqueue(sendEvent({ type: 'tool-result', toolCallId: part.toolCallId, toolName: part.toolName, status }));
+                            } catch (_) { /* not JSON */ }
+                            controller.enqueue(sendEvent({ type: 'tool-result', toolCallId, toolName, status }));
                         }
                     }
 
