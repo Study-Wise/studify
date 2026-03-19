@@ -1,95 +1,108 @@
 ---
-const { settings } = Astro.props;
+const { providers, defaultProvider, defaultTier } = Astro.props;
 ---
-<script is:inline data-settings={settings && typeof settings === 'object' ? JSON.stringify(settings) : '{}'}>
-    const settings = JSON.parse(document.currentScript.dataset.settings);
-    document.currentScript.removeAttribute('data-settings');
-
-    // Add change listeners for all settings
-    settings.forEach(setting => {
-    const el = document.getElementById(setting.id);
-    if (el) {
-            el.addEventListener('change', function () {
-        setSetting(setting.id, this.value);
-            });
-    }
-    });
-
-    function activateDependencies() {
-    // Dependency logic (if any)
-    settings.forEach(setting => {
-            if (setting.dependencies) {
-        setting.dependencies.forEach(dependency => {
-                    const el = document.getElementById(dependency);
-                    if (el) {
-            handleDependentChanges(el, dependency)
-                    }
-        });
-            }
-    });
-    }
-
-    function handleDependentChanges(el, dep) {
-    el.addEventListener('change', () => {
-            dependentChangeActions(el, dep);
-    });
-    }
-
-    function dependentChangeActions(el, dep) {
-    const value = el.value;
-            const setting = settings.find(s => s.id === dep);
-            const dependentSettings = settings.filter(s => s.dependencies && s.dependencies.includes(dep));
-            dependentSettings.forEach(s => {
-        const sEl = document.getElementById(s.id);
-        const id = `${s.id}s`;
-        const options = setting.options[value][id]
-        sEl.querySelectorAll('option').forEach(o => o.remove());
-        Object.keys(options).forEach(o => {
-                    const option = document.createElement('option');
-                    option.value = o;
-                    option.textContent = options[o].name;
-                    sEl.appendChild(option);
-        });
-
-            setSetting(s.id, Object.keys(options)[0]);
-    });
-    }
-
+<script is:inline define:vars={{ providers, defaultProvider, defaultTier }}>
     function getSettings() {
-    try {
+        try {
             return JSON.parse(localStorage.getItem('settings')) || {};
-    } catch (e) {
+        } catch (e) {
             return {};
-    }
+        }
     }
 
     function setSetting(key, value) {
-    const userSettings = getSettings();
-    userSettings[key] = value;
-    localStorage.setItem('settings', JSON.stringify(userSettings));
+        const userSettings = getSettings();
+        userSettings[key] = value;
+        localStorage.setItem('settings', JSON.stringify(userSettings));
     }
 
-    // Initialize form values from localStorage
-    window.addEventListener('DOMContentLoaded', () => {
-    const userSettings = getSettings();
-    const settingIds = settings.map(s => s.id);
-    
-    activateDependencies()
-    for (const settingId of settingIds) {
-            if (userSettings[settingId]) {
-        const el = document.getElementById(settingId);
-        if (el) el.value = userSettings[setting];
+    // Initialize provider button states and tier visibility
+    function initializeUI() {
+        const userSettings = getSettings();
+        const currentProvider = userSettings['provider'] || defaultProvider;
+        const currentTier = userSettings['tier'] || defaultTier;
+
+        // Set active provider button
+        document.querySelectorAll('.provider-button').forEach(btn => {
+            const providerKey = btn.dataset.provider;
+            if (providerKey === currentProvider) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
             }
-    }
-    settings.forEach(setting => {
-            if (setting.dependencies) {
-        setting.dependencies.forEach(dependency => {
-                    const elem = document.getElementById(dependency);
-                    if (elem) {
-            dependentChangeActions(elem, dependency)
-                    }
         });
+
+        // Show only tiers for current provider
+        document.querySelectorAll('.tier-group').forEach(group => {
+            group.style.display = 'none';
+        });
+        const currentTierGroup = document.getElementById(`tiers-${currentProvider}`);
+        if (currentTierGroup) {
+            currentTierGroup.style.display = 'flex';
+        }
+
+        // Set active tier button
+        document.querySelectorAll('.tier-button').forEach(btn => {
+            const tierKey = btn.dataset.tier;
+            if (tierKey === currentTier) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
             }
+        });
+    }
+
+    // Handle provider selection
+    document.querySelectorAll('.provider-button').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const providerKey = btn.dataset.provider;
+            setSetting('provider', providerKey);
+
+            // Update UI: deactivate all providers, activate clicked one
+            document.querySelectorAll('.provider-button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Hide all tier groups, show tiers for selected provider
+            document.querySelectorAll('.tier-group').forEach(group => {
+                group.style.display = 'none';
+            });
+            const tierGroup = document.getElementById(`tiers-${providerKey}`);
+            if (tierGroup) {
+                tierGroup.style.display = 'flex';
+                // Auto-select first tier
+                const firstTierBtn = tierGroup.querySelector('.tier-button');
+                if (firstTierBtn) {
+                    firstTierBtn.click();
+                }
+            }
+        });
     });
+
+    // Handle tier selection
+    document.querySelectorAll('.tier-button').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const tierKey = btn.dataset.tier;
+            setSetting('tier', tierKey);
+
+            // Update UI: deactivate all tiers in current group, activate clicked one
+            document.querySelectorAll('.tier-button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
     });
+
+    // Prevent form submission
+    const settingsForm = document.getElementById('settings-form');
+    if (settingsForm) {
+        settingsForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+        });
+    }
+
+    // Initialize on DOMContentLoaded
+    window.addEventListener('DOMContentLoaded', initializeUI);
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        initializeUI();
+    }
 </script>

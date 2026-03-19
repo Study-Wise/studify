@@ -1,14 +1,17 @@
+import config from '@/lib/config';
+
 // OpenAI gpt-image models supported sizes
 export type ImageSize = '1024x1024' | '1024x1536' | '1536x1024' | 'auto';
 
-export interface ModelOption {
+export interface TierOption {
     name: string;
+    model: string;
     selectableInUI?: boolean;
 }
 
 export interface Provider {
     name: string;
-    models: Record<string, ModelOption>;
+    tiers: Record<string, TierOption>;
 }
 
 export type Providers = Record<string, Provider>;
@@ -16,48 +19,51 @@ export type Providers = Record<string, Provider>;
 const providers: Providers = {
     openai: {
         name: 'OpenAI',
-        models: {
-            'gpt-5.1': { name: 'GPT-5.1' },
-            'gpt-5-mini': { name: 'GPT-5 Mini' },
-            'gpt-5-nano': { name: 'GPT-5 Nano' },
-            'o3': { name: 'o3' },
-            'o4-mini': { name: 'o4-mini' },
+        tiers: {
+            default: { name: 'Default', model: 'gpt-5.1' },
+            mini: { name: 'Mini', model: 'gpt-5-mini' },
+            nano: { name: 'Nano', model: 'gpt-5-nano' },
+            reasoning: { name: 'Reasoning', model: 'o3' },
+            'reasoning-mini': { name: 'Reasoning Mini', model: 'o4-mini' },
         },
     },
-    // anthropic: {
-    //     name: 'Anthropic',
-    //     models: {
-    //         'claude-3-7-sonnet': { name: 'Claude 3.7 Sonnet' },
-    //         'claude-3-7-haiku': { name: 'Claude 3.7 Haiku' },
-    //         'claude-4-sonnet': { name: 'Claude 4 Sonnet' },
-    //         'claude-4-opus': { name: 'Claude 4 Opus' },
-    //     },
-    // },
     google: {
         name: 'Google',
-        models: {
-            // 'gemini-3-pro-preview': { name: 'Gemini 3 Pro' },
-            'gemini-3-pro-preview': { name: 'Gemini 2.5 Pro' },
-            'gemini-2.5-flash': { name: 'Gemini 2.5 Flash' },
-            'gemini-2.5-flash-lite': { name: 'Gemini 2.5 Flash Lite' },
+        tiers: {
+            default: { name: 'Default', model: 'gemini-3-pro-preview' },
+            mini: { name: 'Mini', model: 'gemini-2.5-flash' },
+            nano: { name: 'Nano', model: 'gemini-2.5-flash-lite' },
         },
     },
-    // xai: {
-    //     name: 'xAI (Grok)',
-    //     models: {
-    //         'grok-3': { name: 'Grok 3' },
-    //         'grok-3-mini': { name: 'Grok 3 Mini' },
-    //     },
-    // },
     vercel: {
         name: 'Vercel',
-        models: {
-            'v0-1.5-md': { name: 'Vercel 1.5 Medium', selectableInUI: false },
-            'v0-1.5-lg': { name: 'Vercel 1.5 Large', selectableInUI: false },
+        tiers: {
+            default: { name: 'Medium', model: 'v0-1.5-md', selectableInUI: false },
+            large: { name: 'Large', model: 'v0-1.5-lg', selectableInUI: false },
         },
     },
 };
 
-const models: ModelOption[] = Object.values(providers).flatMap(p => Object.values(p.models));
+// Get selectable providers (hide Vercel from UI)
+export function getSelectableProviders(): Providers {
+    const selectable: Providers = {};
+    for (const [key, provider] of Object.entries(providers)) {
+        if (key === 'vercel') continue;
+        selectable[key] = provider;
+    }
+    return selectable;
+}
 
-export { providers, models };
+// Validates and returns a proper model-provider-tier tuple
+export async function getValidModelAndProvider(
+    providerKey: string | null,
+    tierKey: string | null
+): Promise<{ model: string; provider: string; tier: string }> {
+    const provider = providerKey || config.provider;
+    const tier = tierKey || config.tier;
+    const model = providers[provider]?.tiers[tier]?.model ?? config.model;
+
+    return { model, provider, tier };
+}
+
+export { providers };

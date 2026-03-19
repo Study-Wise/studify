@@ -10,11 +10,11 @@ import config from '@/lib/config';
 import categories from '@/lib/modes';
 import type { Mode } from '@/lib/modes';
 import {
-    getValidModelAndProvider,
     streamText,
     extractToolData,
     generateTitle,
 } from '@/lib/ai-service';
+import { getValidModelAndProvider } from '@/lib/models';
 import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
 import type { ThreadData, Message, UploadedFile } from '@/lib/threads';
 import { isValidEmail } from '@/lib/validation';
@@ -33,7 +33,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const startTime = Date.now();
 
     try {
-        const { text: userPrompt, id: thread_id, model, settings: userSettings, isPublic = false, category, mode } = await request.json();
+        const { text: userPrompt, id: thread_id, provider, tier, isPublic = false, category, mode } = await request.json();
 
         // Get mode object for context-specific prompts
         let modeObj: Mode = {name: '', description: ''};
@@ -108,7 +108,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
                     throw new Error('Failed to generate thread ID');
                 }
 
-                const { model: initialModel, provider: initialProvider } = await getValidModelAndProvider(model);
+                const { model: initialModel, provider: initialProvider } = await getValidModelAndProvider(provider, tier);
 
                 const newThread = {
                     id: newThreadId,
@@ -255,32 +255,20 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
 
         // --- Model/Provider selection ---
         let userModel: string;
-        let provider: string;
+        let selectedProvider: string;
 
         // Use existing model/provider from database if thread exists, otherwise use client selection
         if (userData && userData.model && userData.provider) {
-            // Validate the stored model/provider are still valid
-            const { model: validatedModel, provider: validatedProvider } = await getValidModelAndProvider(userData.model);
-
-            // Check if validation changed the model/provider (meaning the stored ones were invalid)
-            if (validatedModel !== userData.model || validatedProvider !== userData.provider) {
-                console.warn(`⚠️ [${requestId}] Stored model/provider invalid, using validated:`, {
-                    storedModel: userData.model,
-                    storedProvider: userData.provider,
-                    validatedModel,
-                    validatedProvider
-                });
-            }
-
-            userModel = validatedModel;
-            provider = validatedProvider;
+            // Use stored model and provider directly (already resolved at thread creation)
+            userModel = userData.model;
+            selectedProvider = userData.provider;
         }
         else {
-            const requestedModel = model || userSettings.model;
-            const { model: validatedModel, provider: validatedProvider } = await getValidModelAndProvider(requestedModel);
+            // New thread: resolve from client-provided provider + tier
+            const { model: resolvedModel, provider: resolvedProvider } = await getValidModelAndProvider(provider, tier);
 
-            userModel = validatedModel;
-            provider = validatedProvider;
+            userModel = resolvedModel;
+            selectedProvider = resolvedProvider;
         }
 
         // --- Special handling for first message: Generate AI welcome response ---
@@ -295,7 +283,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                     systemPrompt,
                     convoHistory,
                     userModel,
-                    provider,
+                    provider: selectedProvider,
                     tools,
                     requestId
                 });
@@ -314,7 +302,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                             category: category || config.defaultCategory,
                             mode: mode || config.defaultMode,
                             model: userModel,
-                            provider: provider,
+                            provider: selectedProvider,
                             updatedAt: new Date()
                         })
                         .where(eq(threadsTable.id, current_thread_id!));
@@ -391,7 +379,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                 userPrompt,
                 convoHistory,
                 userModel,
-                provider,
+                selectedProvider,
                 tools,
                 undefined,
                 25,
@@ -427,7 +415,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                     category: category || config.defaultCategory,
                     mode: mode || config.defaultMode,
                     model: userModel,
-                    provider: provider,
+                    provider: selectedProvider,
                     isPublic: isPublic,
                     isDev,
                 } as ThreadInsert).onConflictDoUpdate({
@@ -487,7 +475,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
 
                     // Generate title in background if not already set
                     if (!userData?.title) {
-                        generateTitle({ convoHistory, userModel, provider })
+                        generateTitle({ convoHistory, userModel, provider: selectedProvider })
                             .then(title => saveConvo(convoHistoryWithoutSystem, title))
                             .catch(err => console.error(`❌ [${requestId}] Title generation failed:`, err));
                     }

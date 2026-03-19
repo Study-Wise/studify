@@ -5,7 +5,6 @@ import type { ZodSchema } from 'zod';
 import { nanoid } from 'nanoid';
 
 import config from '@/lib/config';
-import { providers } from '@/lib/models';
 import type { JSONValue, Message, ToolCallLogEntry } from '@/lib/threads';
 
 // Tool related types
@@ -33,20 +32,6 @@ export interface TitleGenerationOptions {
     convoHistory: Message[];
     userModel: string;
     provider: string;
-}
-
-// Validates and returns a proper model-provider pair
-export async function getValidModelAndProvider(requestedModel: string | null): Promise<{ model: string, provider: string }> {
-    let modelToUse = requestedModel || config.model;
-
-    // Find which provider has this model
-    let providerName =
-        (Object.keys(providers) as Array<keyof typeof providers>).find(
-            (provider: keyof typeof providers) => (providers[provider].models as Record<string, { name: string }>)[modelToUse]
-        ) || config.provider;
-
-
-    return { model: modelToUse, provider: providerName };
 }
 
 // Generates AI response for a conversation

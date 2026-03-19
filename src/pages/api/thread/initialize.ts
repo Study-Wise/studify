@@ -7,12 +7,12 @@ import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 
 import config from '@/lib/config';
-import { getValidModelAndProvider } from '@/lib/ai-service';
+import { getValidModelAndProvider } from '@/lib/models';
 import { isUserAdmin } from '@/lib/auth/admin';
 
 export const POST: APIRoute = async ({ request, locals }) => {
     try {
-        const { category, mode, model } = await request.json();
+        const { category, mode, provider, tier } = await request.json();
 
         // Check authentication
         const user = locals.user;
@@ -50,7 +50,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         // Generate new thread ID
         const newThreadId = nanoid();
 
-        const { model: initialModel, provider: initialProvider } = await getValidModelAndProvider(model);
+        const { model: initialModel, provider: initialProvider } = await getValidModelAndProvider(provider, tier);
 
         const newThread = {
             id: newThreadId,

@@ -1,76 +1,82 @@
 ---
-// import '@/styles/pages/settings.scss';
+import { getSelectableProviders } from '@/lib/models';
 
-import { models, providers } from '@/lib/models';
-import type { ModelOption } from '@/lib/models';
+const selectableProviders = getSelectableProviders();
+
+// Build a flat list of tier options from all providers
+const tierOptions = [] as Array<{ key: string; provider: string; tierKey: string; name: string }>;
+for (const [providerKey, provider] of Object.entries(selectableProviders)) {
+    for (const [tierKey, tierOption] of Object.entries(provider.tiers)) {
+        if (tierOption.selectableInUI !== false) {
+            tierOptions.push({
+                key: `${providerKey}/${tierKey}`,
+                provider: providerKey,
+                tierKey: tierKey,
+                name: tierOption.name
+            });
+        }
+    }
+}
 
 export interface SelectorSettings {
     id: string;
     name: string;
-    options: ModelOption[] | Record<string, ModelOption>;
+    options: Array<{ key: string; provider: string; tierKey: string; name: string }>;
     default: string;
 }
 
-// Filter out models that are not selectable in UI
-const selectableModels = models.filter((model) => model.selectableInUI !== false);
-
 const selectorSettings: SelectorSettings = {
-    id: 'model',
-    name: 'Model',
-    options: selectableModels as ModelOption[],
-    default: '',
+    id: 'tier-selector',
+    name: 'Model Tier',
+    options: tierOptions,
+    default: ''
 };
-
-if (Array.isArray(selectorSettings.options) && selectorSettings.options.length > 0 && selectorSettings.options[0].name !== 'Select A Model') {
-    selectorSettings.options.unshift({ name: 'Select A Model' });
-}
-(providers)['studywise'] = {
-    name: 'MW',
-    models: {
-        '': { name: 'Select A Model' },
-    },
-}
-
-const modelOptionRecord = selectorSettings.options as Record<string, ModelOption>;
-
-
 ---
+
 <div class="model-selector">
     <label for={selectorSettings.id}>{selectorSettings.name}:</label>
-    {Array.isArray(selectorSettings.options) ? (
-        <select class="fancy-select" id={selectorSettings.id} name={selectorSettings.id} value={selectorSettings.default}>
-            {/* <selectedcontent /> */}
-            {selectorSettings.options.map(option => {
-                const providerKey = option.name === 'Select A Model' ? 'studywise' : Object.keys(providers).find(p =>
-                    Object.keys(providers[p].models).find(m => providers[p].models[m].name === option.name)
-                );
-                const currKey = providerKey
-                    ? Object.keys(providers[providerKey].models).find(m => providers[providerKey].models[m].name === option.name)
-                    : '';
-                
-                return (
-                    <option value={currKey} selected={currKey === selectorSettings.default} disabled={option.name === 'Select A Model'}>
-                        {option.name === 'Select A Model' ? '' : <img src={`/assets/providers/${providerKey || 'default'}.svg`} alt={providerKey ? providers[providerKey].name : 'Provider'} />}
-                        {option.name || currKey}
-                    </option>
-                );
-            })}
-        </select>
-    ) : typeof selectorSettings.options === 'object' ? (
-        <>
-            <select id={selectorSettings.id} name={selectorSettings.id} value={selectorSettings.options[selectorSettings.default]?.name}>
-                {Object.keys(selectorSettings.options).map(option => (
-                    <option value={option} selected={option === selectorSettings.default}>{modelOptionRecord[option].name || option}</option>
-                ))}
-            </select>
-        </>
-    ) : (
-        <input type="text" id={selectorSettings.id} name={selectorSettings.id} value={modelOptionRecord[selectorSettings.default]?.name} />
-    )}
+    <select class="fancy-select" id={selectorSettings.id} name={selectorSettings.id} value={selectorSettings.default}>
+        <option value="" disabled>Select A Tier</option>
+        {selectorSettings.options.map(option => (
+            <option value={option.key}>
+                {selectableProviders[option.provider]?.name || 'Unknown'} - {option.name}
+            </option>
+        ))}
+    </select>
 </div>
-<script>
-    document.querySelectorAll('select.fancy-select selectedcontent').forEach(sc => sc.outerHTML = `<button>${sc.outerHTML}</button>`)
-</script>
+
 <script is:inline>
-    window.addEventListener('DOMContentLoaded', () => window.activateLocalStorageInput('model'));
+    window.addEventListener('DOMContentLoaded', () => {
+        const selector = document.getElementById('tier-selector');
+        if (!selector) return;
+
+        function getSettings() {
+            try {
+                return JSON.parse(localStorage.getItem('settings') || '{}');
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function setSetting(key, value) {
+            const userSettings = getSettings();
+            userSettings[key] = value;
+            localStorage.setItem('settings', JSON.stringify(userSettings));
+        }
+
+        // Initialize from localStorage
+        const userSettings = getSettings();
+        const provider = userSettings['provider'] || 'openai';
+        const tier = userSettings['tier'] || 'default';
+        selector.value = `${provider}/${tier}`;
+
+        // Handle changes
+        selector.addEventListener('change', (e) => {
+            const value = e.target.value;
+            if (!value) return;
+            const [providerKey, tierKey] = value.split('/');
+            setSetting('provider', providerKey);
+            setSetting('tier', tierKey);
+        });
+    });
 </script>

@@ -1,74 +1,10 @@
 ---
 import Layout from '@/layouts/Layout.astro';
-
-import SettingsScript from '@/scripts/settings.astro';
 import '@/styles/pages/settings.scss';
-
-import config from '@/lib/config';
-import { providers, models } from '@/lib/models';
-import type { ModelOption } from '@/lib/models';
-
-export interface SettingItem {
-    id: string;
-    name: string;
-    options: ModelOption[] | Record<string, ModelOption>;
-    default: string;
-}
-
-const settings: SettingItem[] = [
-    {
-        id: 'model',
-        name: 'Model',
-        options: models,
-        default: config.model,
-    }
-];
 ---
+
 <Layout title="Settings">
     <section class="settings-section card">
         <h2><span class="material-symbols-outlined">settings</span>&nbsp;Settings</h2>
-        <form id="settings-form">
-            {settings.map(setting => (
-                <div class="settings-row">
-                <label for={setting.id}>{setting.name}:</label>
-                    {Array.isArray(setting.options) ? (
-                        <select class="fancy-select" id={setting.id} name={setting.id} value={setting.default}>
-                            <selectedcontent />
-                            {setting.options.map(option => {
-                                const providerKey = Object.keys(providers).find(p =>
-                                    Object.keys(providers[p].models).find(m => providers[p].models[m].name === option.name)
-                                );
-                                const currKey = providerKey
-                                    ? Object.keys(providers[providerKey].models).find(m => providers[providerKey].models[m].name === option.name)
-                                    : '';
-                                return (
-                                    <option value={currKey} selected={currKey === setting.default}>
-                                        <img
-                                            src={`/assets/providers/${providerKey || 'default'}.svg`}
-                                            alt={providerKey ? providers[providerKey].name : 'Provider'}
-                                        />
-                                        {option.name || currKey}
-                                    </option>
-                                );
-                            })}
-                        </select>
-                    ) : (
-                        <input type="text" id={setting.id} name={setting.id} value={setting.default} />
-                    )}
-                </div>
-            ))}
-        </form>
     </section>
-    <script>
-        document.querySelectorAll('select.fancy-select selectedcontent').forEach(sc => sc.outerHTML = `<button>${sc.outerHTML}</button>`)
-
-        // Prevent form submission
-        const settingsForm = document.getElementById('settings-form');
-        if (settingsForm) {
-            settingsForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-            });
-        }
-    </script>
-    <SettingsScript settings={settings} />
-</Layout> 
+</Layout>

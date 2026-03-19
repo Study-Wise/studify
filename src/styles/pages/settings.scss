@@ -24,14 +24,6 @@
     margin-inline-start: $spacing-small - 0.125rem;
 }
 
-.settings-row {
-    height: 1.1lh;
-    vertical-align: middle;
-    display: flex;
-    align-items: center;
-    gap: $spacing-small - 0.125rem;
-}
-
 @keyframes spin {
     to {
         rotate: 360deg;

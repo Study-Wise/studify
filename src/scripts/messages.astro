@@ -23,6 +23,14 @@ const { page, category, mode, id } = Astro.props;
         if (id) threadId = null;
     }
 
+    function getProviderAndTier() {
+        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        return {
+            provider: settings.provider || 'openai',
+            tier: settings.tier || 'default',
+        };
+    }
+
     let state = 'off';
     document.addEventListener('visibilitychange', async () => {
         if (document.visibilityState === 'hidden' && state === 'on') {
@@ -55,8 +63,9 @@ const { page, category, mode, id } = Astro.props;
         }
 
         // Common validation
-        if (typeof localStorage.getItem !== 'function' || !(localStorage.getItem('model') || '')) {
-            displayError('Model not selected!');
+        const { provider, tier } = getProviderAndTier();
+        if (!provider || !tier) {
+            displayError('Provider or tier not selected!');
             return;
         }
 
@@ -80,6 +89,7 @@ const { page, category, mode, id } = Astro.props;
             const shareButton = document.getElementById('share-button');
             const isPublic = shareButton ? shareButton.classList.contains('active') : false;
 
+            const { provider, tier } = getProviderAndTier();
             const response = await fetch(API_ENDPOINT, {
                 method: 'POST',
                 headers: {
@@ -88,7 +98,8 @@ const { page, category, mode, id } = Astro.props;
                 },
                 body: JSON.stringify({
                     text: userMessage,
-                    model: localStorage.getItem('model'),
+                    provider: provider,
+                    tier: tier,
                     id: threadId || null,
                     settings: userSettings || {},
                     isPublic: isPublic,

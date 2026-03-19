@@ -6,6 +6,7 @@ import type { ImageSize } from '@/lib/models';
 
 export interface Config {
     provider: string;
+    tier: string;
     model: string;
     imageModel: string;
     imageSize: ImageSize;
@@ -25,6 +26,7 @@ const prompt = generateModePrompt(defaultCategory, defaultMode);
 
 const config: Config = {
     provider: 'openai',
+    tier: 'default',
     model: 'gpt-5.1',
     imageModel: 'gpt-image-1.5',
     imageSize: '1024x1536', // portrait
