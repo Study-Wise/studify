@@ -6,7 +6,7 @@ import { nanoid } from 'nanoid';
 
 import config from '@/lib/config';
 import { providers } from '@/lib/models';
-import type { JSONValue, Message } from '@/lib/threads';
+import type { JSONValue, Message, ToolCallLogEntry } from '@/lib/threads';
 
 // Tool related types
 export type ToolRecord = Record<string, Tool>;
@@ -20,13 +20,6 @@ export interface ClientToolCall {
     toolName: string;
     toolCallId: string;
     args: Record<string, string | number | boolean | undefined>;
-}
-
-export interface ToolCallLogEntry {
-    toolName: string;
-    args: object;
-    status: 'success' | 'error';
-    result: string;
 }
 
 // AI generation result with potential client-side tool calls

@@ -14,6 +14,7 @@ import '@/styles/pages/chat.scss';
 import { marked } from 'marked';
 
 import { getMessages, getMessagesLength, getThreadByToken, type Message } from '@/lib/threads';
+import { labels } from '@/lib/tools';
 import { checkThreadAccess } from '@/lib/auth/checkThreadAccess';
 import { checkForOneMessage } from '@/lib/check-for-one-message';
 import categories from '@/lib/modes';
@@ -84,7 +85,8 @@ const processedMessages = await Promise.all(
         .filter(message => message.role !== 'system')
         .map(async message => ({
             role: message.role,
-            htmlContent: await marked.parse(message.content)
+            htmlContent: await marked.parse(message.content),
+            toolCallLog: message.toolCallLog ?? []
         }))
 );
 
@@ -111,9 +113,23 @@ export const inNav = 'hide';
             <div class="chat-messages">
                 {isAuthorized || isPublic ? (
                     processedMessages.map(message => (
-                        <div class:list={['message', message.role]}>
-                            <div class:list={['message-content', { 'bg-primary': message.role === 'user' }]} set:html={message.htmlContent} />
-                        </div>
+                        <>
+                            {message.toolCallLog.length > 0 && (
+                                <div class="tool-call-log">
+                                    {message.toolCallLog.map(entry => (
+                                        <div class="tool-call-entry">
+                                            <span class="material-symbols-outlined" data-state={entry.status}>
+                                                {entry.status === 'success' ? 'check_circle' : 'error'}
+                                            </span>
+                                            <span class="tool-name">{labels[entry.toolName] ?? entry.toolName}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                            <div class:list={['message', message.role]}>
+                                <div class:list={['message-content', { 'bg-primary': message.role === 'user' }]} set:html={message.htmlContent} />
+                            </div>
+                        </>
                     ))
                 ) : (
                     <div class="unauthorized-message">

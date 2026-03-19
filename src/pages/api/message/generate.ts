@@ -13,10 +13,9 @@ import {
     getValidModelAndProvider,
     generateText,
     generateTitle,
-    type ToolCallLogEntry,
 } from '@/lib/ai-service';
 import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
-import type { ThreadData, Message, UploadedFile } from '@/lib/threads';
+import type { ThreadData, Message, UploadedFile, ToolCallLogEntry } from '@/lib/threads';
 import { isValidEmail } from '@/lib/validation';
 import { isUserAdmin } from '@/lib/auth/admin';
 
@@ -406,7 +405,9 @@ Use the above thread context when calling tools that require threadId, category,
         }
 
         // --- Append AI response to history ---
-        convoHistory.push({ role: 'assistant', content: generatedText } as Message);
+        const assistantMessage: Message = { role: 'assistant', content: generatedText };
+        if (toolCallLog.length > 0) assistantMessage.toolCallLog = toolCallLog;
+        convoHistory.push(assistantMessage);
 
         // --- Generate conversation title ---
         let convoTitle = userData?.title;

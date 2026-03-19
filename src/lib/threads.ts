@@ -7,10 +7,18 @@ import { threadsTable } from '@/db/schema';
 // JSON-serializable value type
 export type JSONValue = string | number | boolean | null | { [key: string]: JSONValue } | JSONValue[];
 
+export interface ToolCallLogEntry {
+    toolName: string;
+    args: object;
+    status: 'success' | 'error';
+    result: string;
+}
+
 // Message type for AI conversations
 export interface Message {
     role: 'system' | 'user' | 'assistant';
     content: string;
+    toolCallLog?: ToolCallLogEntry[];
 }
 
 export interface ThreadData {
