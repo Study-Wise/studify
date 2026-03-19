@@ -98,7 +98,7 @@ ONLY INCLUDE THE HTML CONTENT IN YOUR RESPONSE. DO NOT RESPOND WITH ANYTHING ELS
     // Generate the webpage using Vercel's v0 model (optimized for HTML generation)
     const excludeTools = config.contentGenerationExcludeTools;
     const result = await generateText({
-        model: 'vercel/v0-1.5-md',
+        model: 'anthropic/claude-sonnet-4.6',
         messages: messagesForAI,
         tools: Object.fromEntries(
             Object.entries(modules).filter(([key]) => !excludeTools.includes(key))
@@ -106,7 +106,7 @@ ONLY INCLUDE THE HTML CONTENT IN YOUR RESPONSE. DO NOT RESPOND WITH ANYTHING ELS
         temperature: 0.7,
         providerOptions: {
             gateway: {
-                models: ['anthropic/claude-sonnet-4.6', 'openai/gpt-5.3-codex'],
+                models: ['openai/gpt-5.3-codex'],
             } satisfies GatewayProviderOptions
         }
     });
