@@ -1,10 +1,13 @@
 @use '../../variables/globals' as *;
 @use '../../variables/tokens' as *;
 
+body:has(.webpage-page) {
+    max-height: 100dvh;
+}
+
 .webpage-page {
     display: flex;
     flex-direction: column;
-    height: calc(100dvh - var(--header-height, 60px));
 
     .empty-state {
         flex: 1;
