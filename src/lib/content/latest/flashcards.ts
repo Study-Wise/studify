@@ -26,11 +26,6 @@ export async function getLatestFlashcards(threadId: string): Promise<FlashcardRe
                 content: content as FlashcardData
             };
         }
-    
-        // Legacy/fallback: string format (markdown)
-        return {
-            content: content as string
-        };
     }
 
     return {
