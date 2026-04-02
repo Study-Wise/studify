@@ -52,7 +52,7 @@ function markdownToSlideshowHTML(markdown: string): string {
             pages.push({ tokens: [] });
         }
         if (!title) {
-            const t: MarkedToken[] = [token]; 
+            const t: MarkedToken[] = [token];
             (t as object as { links: Record<string, JSONValue> }).links = {};
             const h = marked.parser(t);
             const $ = cheerio.load(h);
@@ -110,7 +110,7 @@ export async function generateSlideshow(threadId: string, userPrompt?: string) {
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
     // Create a slideshow specific prompt - uses standard markdown with headings as slide separators
-    const slideshowPrompt = 
+    const slideshowPrompt =
 `${buildContentSystemPrompt('Slideshow', uploadedFilesContext)}
 
 OUTPUT FORMAT - Markdown Slideshow:

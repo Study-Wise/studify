@@ -130,7 +130,7 @@ $padding: $spacing-medium;
         background: linear-gradient(135deg, $color, color.adjust($color, $hue: 15deg));
         color: white;
         border: none;
-        border-radius: $radius - $padding; 
+        border-radius: $radius - $padding;
         cursor: pointer;
         transition: all $transition-slow $ease-in-out;
         flex-shrink: 0;

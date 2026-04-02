@@ -47,7 +47,7 @@ export async function generateReferenceSheet(threadId: string, userPrompt?: stri
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
     // Create a reference sheet specific prompt
-    const referenceSheetPrompt = 
+    const referenceSheetPrompt =
 `${buildContentSystemPrompt('Reference Sheet', uploadedFilesContext)}
 
 Output the content directly without any wrapping HTML tags or dialog elements.

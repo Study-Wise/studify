@@ -39,7 +39,7 @@ if (container) className += ' container'
         <link rel="manifest" href="/manifest.webmanifest">
         <meta name="theme-color" content="#6366f1" />
         <title>{pTitle}</title>
-        
+
         {/* Google Fonts Material Icons */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -99,7 +99,7 @@ if (container) className += ' container'
         <ThemeSwitcher />
         <Dialog />
         {!isChatArea ? <Header pTitle={pTitle} /> : ''}
-        
+
         <main class={className?.trim()} id="main-content">
             <slot />
         </main>

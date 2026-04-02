@@ -48,7 +48,7 @@ export async function generatePracticeQuestions(threadId: string, userPrompt?: s
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
     // Create a practice questions specific prompt
-    const practiceQuestionsPrompt = 
+    const practiceQuestionsPrompt =
 `${buildContentSystemPrompt('Practice Questions', uploadedFilesContext)}
 
 Output the content directly without any wrapping HTML tags or dialog elements.

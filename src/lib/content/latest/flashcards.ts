@@ -18,7 +18,7 @@ export interface FlashcardResult {
 
 export async function getLatestFlashcards(threadId: string): Promise<FlashcardResult> {
     const content = await getLatestContent(threadId, 'flashcards');
-    
+
     if (content) {
         // New format: structured object
         if (typeof content === 'object' && 'text' in content) {
@@ -26,7 +26,7 @@ export async function getLatestFlashcards(threadId: string): Promise<FlashcardRe
                 content: content as FlashcardData
             };
         }
-        
+    
         // Legacy/fallback: string format (markdown)
         return {
             content: content as string

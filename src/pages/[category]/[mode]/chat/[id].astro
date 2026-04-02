@@ -47,7 +47,7 @@ if (!isNewChat) {
     const accessCheck = await checkThreadAccess(id || '', user, category, mode);
     isAuthorized = accessCheck.isAuthorized;
     isPublic = accessCheck.isPublic;
-    
+
 }
 
 // For new chats, user must be authenticated

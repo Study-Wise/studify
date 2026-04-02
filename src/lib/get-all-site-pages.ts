@@ -14,7 +14,7 @@ export default function getAllSitePages() {
             if (name.startsWith('_')) return null;
 
             const route = `/${name === 'index' ? '' : name}`;
-            
+
             // Astro module type checking
             const module = mod as { inNav?: string; title?: string | string[] };
             const hiddenFromNav = module?.inNav === 'hide';

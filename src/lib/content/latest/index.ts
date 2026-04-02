@@ -54,7 +54,7 @@ export async function getThreadContentStatus(
     isPublic: boolean
 ): Promise<ThreadContentStatus> {
     const isNewChat = (threadId === 'new');
-    
+
     // Default status with all known types set to false
     const status: ThreadContentStatus = {
         hasReferenceSheet: false,
@@ -72,15 +72,15 @@ export async function getThreadContentStatus(
     if (!isNewChat && (isAuthorized || isPublic) && threadId) {
         try {
             const threads = await db.select({ content: threadsTable.content }).from(threadsTable).where(eq(threadsTable.id, threadId));
-            
+
             if (threads.length > 0) {
                 const content = threads[0].content || {};
                 const contentTypes = getContentTypesList();
-                
+
                 contentTypes.forEach(type => {
                     const statusKey = typeToKey(type);
                     const contentKey = toCamelCase(type);
-                    
+
                     // Check if content exists for this type in the JSON column
                     const contentValue = content[contentKey as keyof ThreadContent];
                     if (contentValue) {

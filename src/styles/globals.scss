@@ -143,7 +143,7 @@ input, textarea, select, button {
     --profile-border: #{$profile-border};
     --profile-shadow: #{$profile-shadow};
     --about-link: #{$about-link};
-    
+
     &:not(:has(.chat-page)) {
         @supports (scrollbar-gutter: stable) {
             scrollbar-gutter: stable;
@@ -207,7 +207,7 @@ select.fancy-select,
 
 select.fancy-select {
     padding: 0 0.5rem;
-    
+
     selectedcontent,
     option {
         box-sizing: border-box;
@@ -219,7 +219,7 @@ select.fancy-select {
         gap: 0.5rem;
         background-color: hsl(from var(--body-bg) h s l / 50%);
         border-radius: 0.25rem;
-        
+
         &::checkmark {
             content: unset;
         }

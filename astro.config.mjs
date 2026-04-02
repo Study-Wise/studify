@@ -84,7 +84,7 @@ export default defineConfig({
             devOptions: {
                 enabled: true
             }
-        }), 
+        }),
         sentryAstro(),
         sitemap({
             filter: (page) =>

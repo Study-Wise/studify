@@ -12,7 +12,7 @@ export interface SlideshowResult {
 
 export async function getLatestSlideshow(threadId: string): Promise<SlideshowResult> {
     const content = await getLatestContent(threadId, 'slideshow');
-    
+
     if (content && typeof content === 'object') {
         const slideshow = content as { content?: string; html?: string };
         if (slideshow.content) {

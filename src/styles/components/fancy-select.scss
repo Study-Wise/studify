@@ -47,7 +47,7 @@ select.fancy-select {
         outline: $border-size solid hsl(from var(--body-bg) h s l / 25%);
         background-color: hsl(from var(--body-bg) h s l / 50%);
         border-radius: $border-radius-extra-small;
-        
+
         &::checkmark {
             content: unset;
         }

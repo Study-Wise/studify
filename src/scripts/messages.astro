@@ -493,7 +493,7 @@ const { page, category, mode, id } = Astro.props;
 
             const messageContent = document.createElement('div');
             messageContent.className = `message-content ${role === 'user' ? 'bg-primary' : ''}`;
-            
+
             // Set the content (could be plain text or markdown)
             messageContent.innerHTML = content;
 
@@ -703,7 +703,7 @@ const { page, category, mode, id } = Astro.props;
     function initializeCommon() {
         // Load user settings
         loadUserSettings();
-        
+
         // Check core function
         if (!generateOutput || typeof generateOutput !== 'function') {
             displayError('Error: Core function generateOutput failed to initialize.');
@@ -767,7 +767,7 @@ const { page, category, mode, id } = Astro.props;
                 const isActive = shareButton.classList.contains('active');
                 const shareText = shareButton.querySelector('.share-text');
                 const shareIcon = shareButton.querySelector('.material-symbols-outlined');
-                
+
                 if (shareText) {
                     shareText.textContent = isActive ? 'Shared' : 'Share';
                 }
@@ -785,7 +785,7 @@ const { page, category, mode, id } = Astro.props;
         }
         else if (page === 'chat') {
             onDomLoadChat();
-            
+
             // Chat-specific MathJax and Desmos initialization
             const elementsToTypeset = document.querySelectorAll('.chat-messages .message-content');
             await typesetMathJax(elementsToTypeset);

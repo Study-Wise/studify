@@ -18,7 +18,7 @@ import '@/styles/accessibility/theme-switcher.scss';
 
 <script>
     let userTheme = localStorage.getItem('user-theme') as keyof typeof themes || 'system';
-    
+
     const themeSwitcher = document.querySelector('.theme-switcher') || document.createElement('div');
     const switcherIcon = themeSwitcher.querySelector('.material-symbols-outlined') || document.createElement('span');
 
@@ -26,11 +26,11 @@ import '@/styles/accessibility/theme-switcher.scss';
         'system': {
             icon: 'contrast',
             ariaLabel: 'System theme',
-        }, 
+        },
         'light': {
             icon: 'light_mode',
             ariaLabel: 'Light theme',
-        }, 
+        },
         'dark': {
             icon: 'dark_mode',
             ariaLabel: 'Dark theme',

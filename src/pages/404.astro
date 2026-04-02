@@ -61,7 +61,7 @@ const currentUrl = Astro.request.url;
             const referrer = document.referrer;
             // Check if referrer is from the same origin (more precise than domain matching)
             const isInternalReferrer = referrer && referrer.startsWith(window.location.origin);
-            
+
             // Add breadcrumb for context
             window.Sentry.addBreadcrumb({
                 category: 'navigation',
@@ -73,7 +73,7 @@ const currentUrl = Astro.request.url;
                     isInternalReferrer: isInternalReferrer
                 }
             });
-            
+
             // Only capture as a message (not an error) if it's from an internal link
             // This helps identify broken internal links without noise from external 404s
             if (isInternalReferrer) {

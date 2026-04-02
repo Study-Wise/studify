@@ -64,12 +64,12 @@ export async function checkForOneMessage({
 
                 // Update the database with the new message
                 const currentThreadData = typeof thread.thread === 'string' ? {} : thread.thread;
-                
+
                 await db.update(threadsTable)
                     .set({
-                        thread: { 
+                        thread: {
                             ...currentThreadData,
-                            messages: updatedMessages 
+                            messages: updatedMessages
                         },
                         updatedAt: new Date()
                     })

@@ -47,7 +47,7 @@ export async function generateWebpage(threadId: string, userPrompt?: string) {
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
     // Create a webpage specific prompt
-    const webpagePrompt = 
+    const webpagePrompt =
 `${buildContentSystemPrompt('Webpage', uploadedFilesContext)}
 
 This should be a comprehensive resource that presents the concepts discussed in an engaging, visual format.

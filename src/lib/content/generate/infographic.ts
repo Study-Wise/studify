@@ -53,7 +53,7 @@ export async function generateInfographic(
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
     // Step 1: Generate a description of what the infographic should show
-    const systemPrompt = 
+    const systemPrompt =
 `${buildContentSystemPrompt('Infographic', uploadedFilesContext)}
 
 Your description should be clear, visual, and specific about:
@@ -78,7 +78,7 @@ You may remove or modify elements as you see fit based on relevance to the topic
     );
 
     // Step 2: Generate the actual image using Google GenAI
-    const imagePrompt = 
+    const imagePrompt =
 `Create an educational infographic image with the following specifications:
 
 ${descriptionResult.text}

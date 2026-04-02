@@ -58,11 +58,11 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
                         // New version available
                         const updateIndicator = document.getElementById('update-available');
                         const updateButton = document.getElementById('update-button');
-                        
+
                         if (updateIndicator) {
                             updateIndicator.style.display = 'flex';
                         }
-                        
+
                         if (updateButton) {
                             updateButton.addEventListener('click', () => {
                                 newWorker.postMessage({ action: 'skipWaiting' });
@@ -130,7 +130,7 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
             if (!navigator.onLine) {
                 // Handle offline scenarios
                 console.warn('Network request failed - offline mode');
-                
+
                 // Try to return cached data if available
                 if (args[0] && String(args[0]).includes('/api/message/generate')) {
                     const cachedData = await window.offlineCache?.getCachedStudyMaterials();
@@ -141,7 +141,7 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
                         });
                     }
                 }
-                
+
                 throw new Error('Network request failed - you appear to be offline');
             }
             throw error;

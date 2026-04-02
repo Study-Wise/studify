@@ -56,9 +56,9 @@ export async function generateStudyGuide(threadId: string, userPrompt?: string) 
     const desmosContent = includeDesmos ? `\n${desmosSection}\n` : '';
 
     // Create a study guide specific prompt
-    const studyGuidePrompt = 
+    const studyGuidePrompt =
 `${buildContentSystemPrompt('Study Guide', uploadedFilesContext)}
-You should also not generate any if these things as well: 
+You should also not generate any if these things as well:
     - Interactive Mock Quiz
    - Practice Problems
    - Quiz questions

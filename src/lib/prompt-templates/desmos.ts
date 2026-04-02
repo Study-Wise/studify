@@ -1,4 +1,4 @@
-export default 
+export default
 `#### Interactive Graph (Desmos)
 If your problems involve graphable 2D functions (e.g. \`y=mx+b\`, \`y=x^2+bx+c\`, \`y=\\sin(x)\`, \`x^2+y^2=r^2\`), include one representative raw HTML tag:
 <div class="desmos-graph" latex="['y=…', 'y=…']"></div>

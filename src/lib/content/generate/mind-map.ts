@@ -47,7 +47,7 @@ export async function generateMindMap(threadId: string, userPrompt?: string) {
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
     // Create a mind map specific prompt
-    const mindMapPrompt = 
+    const mindMapPrompt =
 `${buildContentSystemPrompt('Mind Map', uploadedFilesContext)}
 
 Create a comprehensive visual representation of the concepts, relationships, and key ideas discussed.

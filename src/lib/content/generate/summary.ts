@@ -47,7 +47,7 @@ export async function generateSummary(threadId: string, userPrompt?: string) {
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
     // Create a summary specific prompt
-    const summaryPrompt = 
+    const summaryPrompt =
 `${buildContentSystemPrompt('Chat Summary', uploadedFilesContext)}
 
 OUTPUT FORMAT:

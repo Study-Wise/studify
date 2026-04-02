@@ -169,7 +169,7 @@ export async function generateText(
                             const typedToolResult = toolResult as { result?: JSONValue, toolCallId: string };
                             const rawResult = typedToolResult.result;
                             const resultValue = typeof rawResult === 'string' ? JSON.parse(rawResult) : rawResult;
-                            
+
                             if (resultValue && typeof resultValue === 'object' && resultValue !== null && 'action' in resultValue && resultValue.action === 'open-content') {
                                 const openContentResult = resultValue as { type: string, threadId: string, category: string, mode: string, url?: string };
                                 clientToolCalls.push({
@@ -357,7 +357,7 @@ export async function paraphraseQuestion(question: string, category: string, mod
             messages: [
                 {
                     role: 'system',
-                    content: 
+                    content:
 `You are a helpful assistant that paraphrases student questions to make them clearer and more concise while preserving their original meaning. The question is in the context of ${category} - ${mode}.
 
 IMPORTANT: Only output the paraphrased question, nothing else. Do not add any explanations, quotation marks, or additional text.`,

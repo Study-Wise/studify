@@ -72,7 +72,7 @@ import '@/styles/accessibility/touch-gestures.scss';
             this.endY = e.touches[0].clientY;
 
             const deltaY = this.endY - this.startY;
-            
+
             if (deltaY > 0) {
                 e.preventDefault();
                 const progress = Math.min(deltaY / this.pullThreshold, 1);
@@ -84,7 +84,7 @@ import '@/styles/accessibility/touch-gestures.scss';
             if (!this.isPulling) return;
 
             const deltaY = this.endY - this.startY;
-            
+
             if (deltaY >= this.pullThreshold) {
                 this.triggerRefresh();
             }
