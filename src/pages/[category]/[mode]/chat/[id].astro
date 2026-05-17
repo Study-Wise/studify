@@ -56,7 +56,7 @@ if ((isNewChat && !user) || (!user && !isPublic)) {
 }
 
 // Get thread data to access the title and uploaded files (skip for new chats)
-const thread = !isNewChat && id ? await getThreadByToken(id, user_email) : null;
+const thread = !isNewChat && id ? await getThreadByToken(id, (isAuthorized || isPublic)) : null;
 const threadTitle = thread?.title || null;
 const uploadedFiles = thread?.uploadedFiles || [];
 
@@ -66,7 +66,9 @@ if (!isNewChat) {
     const messagesLength = await getMessagesLength(id || '');
     // For public threads, pass null to skip ownership check in getMessages
     const emailForMessages = isPublic && !isAuthorized ? null : user_email;
-    messages = (isAuthorized || isPublic) && messagesLength > 0 ? await getMessages(id ?? '', emailForMessages) : [];
+    messages = (isAuthorized || isPublic) && messagesLength > 0 ? await getMessages(id ?? '', (isAuthorized || isPublic)) : [];
+
+    console.log(id ?? '', emailForMessages);
 
     // Check if there's only one message and generate welcome message if needed
     messages = await checkForOneMessage({

@@ -41,7 +41,7 @@ export interface UploadedFile {
 
 type Thread = InferSelectModel<typeof threadsTable>;
 
-async function getMessages(id: string, user_email?: string | null) {
+async function getMessages(id: string, isAuthorized?: boolean | null) {
     try {
         const dbResponse: Thread[] = await db.select().from(threadsTable).where(eq(threadsTable.id, id));
 
@@ -51,8 +51,8 @@ async function getMessages(id: string, user_email?: string | null) {
 
         const thread = dbResponse[0];
 
-        // Check ownership if user_email is provided
-        if (user_email && thread.email && thread.email !== user_email) {
+        // Check ownership if isAuthorized is provided
+        if (!isAuthorized) {
             return []
         }
 
@@ -106,7 +106,7 @@ async function getMessagesLength(id: string) {
     }
 }
 
-async function getThreadByToken(id: string, user_email?: string | null) {
+async function getThreadByToken(id: string, isAuthorized?: boolean | null) {
     try {
         const dbResponse: Thread[] = await db.select().from(threadsTable).where(eq(threadsTable.id, id));
 
@@ -116,8 +116,8 @@ async function getThreadByToken(id: string, user_email?: string | null) {
 
         const thread = dbResponse[0];
 
-        // Check ownership if user_email is provided
-        if (user_email && thread.email && thread.email !== user_email) {
+        // Check ownership if isAuthorized is provided
+        if (!isAuthorized) {
             return null;
         }
 
