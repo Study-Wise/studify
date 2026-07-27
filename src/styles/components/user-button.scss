@@ -51,7 +51,7 @@
     border: 1px solid #e5e7eb;
     border-radius: 0.5rem;
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -1px rgb(0 0 0 / 6%);
-    z-index: $z-index-dropdown;
+    z-index: $z-index-popover;
 
     &[hidden] {
         display: none;
