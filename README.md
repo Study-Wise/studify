@@ -1,10 +1,10 @@
-# StudyWise
+# Studify
 
-StudyWise is an AI-powered educational platform that helps students turn their homework into comprehensive learning materials. Built with Astro and powered by multiple AI providers, it generates personalized study guides, flashcards, infographics, and more.
+Studify is an AI-powered educational platform that helps students turn their homework into comprehensive learning materials. Built with Astro and powered by multiple AI providers, it generates personalized study guides, flashcards, infographics, and more.
 
 ## Features
 
-StudyWise offers a comprehensive suite of AI-generated study materials:
+Studify offers a comprehensive suite of AI-generated study materials:
 
 - **Study Guides** - Personalized explanations with worked examples, practice problems, and key terms
 - **Reference Sheets** - Concise summaries with key formulas and definitions for quick review
@@ -130,7 +130,7 @@ UPLOADTHING_TOKEN=your_uploadthing_token
 
 ## Categories and Modes
 
-StudyWise supports multiple educational categories, each with specialized modes:
+Studify supports multiple educational categories, each with specialized modes:
 
 - **Science** - Biology, Chemistry, Physics, Earth Science, Astronomy
 - **Math** - Algebra, Geometry, Calculus, Statistics, Trigonometry

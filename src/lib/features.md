@@ -1,8 +1,8 @@
-# StudyWise - Your AI Learning Assistant
+# Studify - Your AI Learning Assistant
 
-## Welcome to StudyWise
+## Welcome to Studify
 
-StudyWise is your comprehensive AI-powered learning companion. Whether you're studying math, science, social studies, or any other subject, we'll create personalized study materials to help you understand concepts and master the skills you need.
+Studify is your comprehensive AI-powered learning companion. Whether you're studying math, science, social studies, or any other subject, we'll create personalized study materials to help you understand concepts and master the skills you need.
 
 ## What You'll Get
 
@@ -89,7 +89,7 @@ StudyWise is your comprehensive AI-powered learning companion. Whether you're st
 - **Students** preparing for tests, exams, and standardized tests
 - **Teachers** looking for additional resources and explanations
 
-## Why Choose StudyWise?
+## Why Choose Studify?
 
 - **No direct answers** - we help you learn, not just copy
 - **Personalized content** based on your specific questions
@@ -109,4 +109,4 @@ StudyWise is your comprehensive AI-powered learning companion. Whether you're st
 - **Visual learning**: Graphs and diagrams for better comprehension
 - **Level-appropriate**: Content adapts to your current knowledge
 
-Start learning the smart way with StudyWise!
+Start learning the smart way with Studify!

@@ -4,9 +4,9 @@ import '@/styles/components/header.scss';
 
 import getAllSitePages from '@/lib/get-all-site-pages';
 
-const pages = getAllSitePages();
+const { sTitle } = Astro.props;
 
-const sTitle = "StudyWise";
+const pages = getAllSitePages();
 
 const imgAriaLabel = `${sTitle} Homepage`;
 const imgAlt= `${sTitle} Logo`;

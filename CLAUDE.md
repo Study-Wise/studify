@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-StudyWise is an AI-powered educational platform built with Astro that provides personalized tutoring across multiple subjects. The application features category-based learning modes, AI-powered chat interactions, and automated study material generation (study guides, reference sheets, infographics, and webpages).
+Studify is an AI-powered educational platform built with Astro that provides personalized tutoring across multiple subjects. The application features category-based learning modes, AI-powered chat interactions, and automated study material generation (study guides, reference sheets, infographics, and webpages).
 
 ## Commands
 

@@ -1,6 +1,6 @@
 {
-    "name": "StudyWise",
-    "short_name": "StudyWise",
+    "name": "Studify",
+    "short_name": "Studify",
     "description": "AI Study Partner",
     "start_url": "/",
     "display": "standalone",
