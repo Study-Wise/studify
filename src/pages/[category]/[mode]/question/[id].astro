@@ -69,7 +69,8 @@ const structuredData = {
 };
 
 // SEO metadata
-const pageTitle = `${displayQuestion} | ${modeName} Questions | StudyWise`;
+const sTitle = 'Studify'
+const pageTitle = `${displayQuestion} | ${modeName} Questions | ${sTitle}`;
 const pageDescription = questionData?.answer
     ? questionData.answer.substring(0, 155) + '...'
     : `Find answers to questions about ${modeName} in ${categoryName}. Get expert help with ${displayQuestion}`;
@@ -102,7 +103,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
         {/* Additional SEO hints */}
         <meta name="robots" content="index, follow" />
-        <meta name="author" content="StudyWise" />
+        <meta name="author" content={sTitle} />
         <meta name="category" content={categoryName} />
         <meta name="topic" content={modeName} />
     </Fragment>

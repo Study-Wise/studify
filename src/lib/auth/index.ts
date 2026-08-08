@@ -114,7 +114,7 @@ export const auth = betterAuth({
                 // Example with Resend:
                 // await sendEmail({
                 //   to: email,
-                //   subject: "Your StudyWise Magic Link",
+                //   subject: "Your Studify Magic Link",
                 //   html: `<a href="${url}">Click here to sign in</a>`,
                 // });
             },
