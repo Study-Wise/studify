@@ -13,7 +13,7 @@ const manifest = fs.readJSONSync(manifestPath);
 
 // https://astro.build/config
 export default defineConfig({
-    site: 'https://studywise.onl',
+    site: 'https://studywise.adarshrkumar.app',
     output: 'server',
     adapter: vercel(),
     integrations: [

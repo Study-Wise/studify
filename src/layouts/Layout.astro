@@ -17,6 +17,8 @@ var { className, container } = Astro.props;
 const noTitle = title === "Home" || title === '' || !title;
 const pTitle = noTitle ? lTitle : `${title} | ${sTitle}`;
 
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
 container ??= true;
 className ??= '';
 
@@ -37,6 +39,7 @@ if (container) className += ' container'
         <link rel="apple-touch-icon" href="/assets/logos/apple-touch-icon.png">
         <link rel="icon" type="image/png" href="/assets/logos/favicon.png">
         <link rel="manifest" href="/manifest.webmanifest">
+        <link rel="canonical" href={canonicalURL} />
         <meta name="theme-color" content="#6366f1" />
         <title>{pTitle}</title>
 
