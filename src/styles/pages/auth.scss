@@ -26,7 +26,7 @@
 .auth-card {
     background: var(--card-bg);
     border-radius: $border-radius-extra-large;
-    box-shadow: 0 8px 16px var(--card-shadow);
+    box-shadow: 0 0 16px var(--card-shadow);
     padding: $spacing-huge;
     border: 1px solid var(--card-border);
     transition: $transition-all;

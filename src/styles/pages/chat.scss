@@ -23,7 +23,7 @@
             border-radius: $brdr;
             padding: $spacing-extra-large;
             text-align: center;
-            box-shadow: 0 10px 30px var(--card-shadow);
+            box-shadow: 0 0 30px var(--card-shadow);
             border: 1px solid var(--card-border);
             isolation: isolate;
             position: relative;
@@ -65,7 +65,7 @@
                     &:hover {
                         background-color: hsl(from var(--card-bg) h s calc(l - 5%));
                         translate: 0 -2px;
-                        box-shadow: 0 5px 15px var(--card-shadow);
+                        box-shadow: 0 0 15px var(--card-shadow);
                     }
                 }
             }
@@ -102,7 +102,7 @@ footer, .chat-toolbar {
 
     -webkit-backdrop-filter: var(--bd);
     backdrop-filter: var(--bd);
-    box-shadow: 0 2px 20px rgb(from var(--card-shadow) r g b / 10%);
+    box-shadow: 0 0 20px rgb(from var(--card-shadow) r g b / 10%);
 
     .chat-title-container {
         display: flex;
