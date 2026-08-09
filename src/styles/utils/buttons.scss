@@ -119,7 +119,7 @@ $border-radius: $button-border-radius;
         &:hover:not(:disabled) {
             background-color: hsl(from var(--card-bg) h s calc(l - 3%));
             translate: 0 -2px;
-            box-shadow: 0 4px 12px var(--card-shadow);
+            box-shadow: 0 0 12px var(--card-shadow);
         }
 
         &:active:not(:disabled) {

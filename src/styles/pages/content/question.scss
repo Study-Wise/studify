@@ -8,7 +8,7 @@
     article {
         background: var(--background-secondary, #fff);
         border-radius: 12px;
-        box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+        box-shadow: 0 0 8px rgb(0 0 0 / 10%);
         overflow: hidden;
     }
 
@@ -335,7 +335,7 @@
     &:hover {
         background: var(--primary-hover, #2563eb);
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgb(59 130 246 / 30%);
+        box-shadow: 0 0 12px rgb(59 130 246 / 30%);
     }
 }
 
