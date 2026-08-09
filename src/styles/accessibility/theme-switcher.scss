@@ -75,7 +75,7 @@
         transition: opacity $transition-base $ease-out,
                     translate $transition-base $ease-out,
                     scale $transition-base $ease-out;
-        box-shadow: 0 4px 8px hsl(from var(--body-text) h s l / 20%);
+        box-shadow: 0 0 8px hsl(from var(--body-text) h s l / 20%);
         z-index: 1;
     }
 

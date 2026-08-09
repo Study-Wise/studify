@@ -20,7 +20,7 @@ $padding: $spacing-medium;
 
     -webkit-backdrop-filter: var(--bd);
     backdrop-filter: var(--bd);
-    box-shadow: 0 -2px 20px rgb(from var(--card-shadow) r g b / 0%);
+    box-shadow: 0 0 20px rgb(from var(--card-shadow) r g b / 0%);
     transition: box-shadow $transition-slow $ease-in-out;
     border-top: 1px solid rgb(from var(--card-border) r g b / 20%);
     border-top-color: rgb(from var(--card-border) r g b / 40%);
