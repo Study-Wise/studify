@@ -185,7 +185,7 @@ Single table `threadsTable` stores conversation threads with:
 
 ## License
 
-This project is proprietary software developed by Rien Gupta and Adarsh R. Kumar.
+This project is proprietary software developed by Adarsh R. Kumar and Rien Gupta.
 
 ## Links
 
