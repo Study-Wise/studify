@@ -17,7 +17,7 @@ var { className, container } = Astro.props;
 const noTitle = title === "Home" || title === '' || !title;
 const pTitle = noTitle ? lTitle : `${title} | ${sTitle}`;
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const canonicalURL = `${new URL(Astro.url.pathname, Astro.site)}${Astro.url.search}`;
 
 container ??= true;
 className ??= '';
