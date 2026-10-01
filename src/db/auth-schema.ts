@@ -2,22 +2,25 @@ import { relations } from 'drizzle-orm';
 import { pgTable, text, timestamp, boolean, index } from 'drizzle-orm/pg-core';
 import { userRoleEnum } from '@/lib/auth/types';
 
-export const user = pgTable("user", {
-    id: text('id').primaryKey(),
-    name: text('name').notNull(),
-    email: text('email').notNull().unique(),
-    emailVerified: boolean('email_verified').default(false).notNull(),
-    image: text('image'),
-    role: userRoleEnum('role').default('user').notNull(),
-    createdAt: timestamp('created_at').defaultNow().notNull(),
-    updatedAt: timestamp('updated_at')
-        .defaultNow()
-        .$onUpdate(() => /* @__PURE__ */ new Date())
-        .notNull(),
-});
+export const user = pgTable(
+    'user',
+    {
+        id: text('id').primaryKey(),
+        name: text('name').notNull(),
+        email: text('email').notNull().unique(),
+        emailVerified: boolean('email_verified').default(false).notNull(),
+        image: text('image'),
+        role: userRoleEnum('role').default('user').notNull(),
+        createdAt: timestamp('created_at').defaultNow().notNull(),
+        updatedAt: timestamp('updated_at')
+            .defaultNow()
+            .$onUpdate(() => /* @__PURE__ */ new Date())
+            .notNull(),
+    }
+);
 
 export const session = pgTable(
-    "session",
+    'session',
     {
         id: text('id').primaryKey(),
         expiresAt: timestamp('expires_at').notNull(),
@@ -30,20 +33,20 @@ export const session = pgTable(
         userAgent: text('user_agent'),
         userId: text('user_id')
             .notNull()
-            .references(() => user.id, { onDelete: "cascade" }),
+            .references(() => user.id, { onDelete: 'cascade' }),
     },
     (table) => [index('session_userId_idx').on(table.userId)],
 );
 
 export const account = pgTable(
-    "account",
+    'account',
     {
         id: text('id').primaryKey(),
         accountId: text('account_id').notNull(),
         providerId: text('provider_id').notNull(),
         userId: text('user_id')
             .notNull()
-            .references(() => user.id, { onDelete: "cascade" }),
+            .references(() => user.id, { onDelete: 'cascade' }),
         accessToken: text('access_token'),
         refreshToken: text('refresh_token'),
         idToken: text('id_token'),
@@ -60,7 +63,7 @@ export const account = pgTable(
 );
 
 export const verification = pgTable(
-    "verification",
+    'verification',
     {
         id: text('id').primaryKey(),
         identifier: text('identifier').notNull(),
