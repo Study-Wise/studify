@@ -33,7 +33,7 @@ header {
         font-size: $font-size-base;
         font-style: normal;
         font-weight: 300;
-        color: var(--header-tagline);
+        color: #{$header-tagline};
         overflow-wrap: normal;
     }
 

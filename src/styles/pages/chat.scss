@@ -302,13 +302,13 @@ footer, .chat-toolbar {
             box-shadow:
                 0 1px 3px rgb(from var(--card-shadow) r g b / 8%),
                 0 4px 12px rgb(from var(--card-shadow) r g b / 6%),
-                inset 0 1px 0 rgb(from var(--header-text) r g b / 2%);
+                inset 0 1px 0 rgb(from #{$header-text} r g b / 2%);
 
             &::before {
                 content: '';
                 position: absolute;
                 inset: 0;
-                background: linear-gradient(135deg, rgb(from var(--header-text) r g b / 2%) 0%, transparent 50%);
+                background: linear-gradient(135deg, rgb(from #{$header-text} r g b / 2%) 0%, transparent 50%);
                 pointer-events: none;
                 opacity: 0;
                 transition: opacity $transition-base $ease;
@@ -374,16 +374,16 @@ footer, .chat-toolbar {
                 background: linear-gradient(135deg,
                     color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: 10%),
                     color.adjust(list.nth(map.get($accent-colors, primary), 2), $lightness: 10%));
-                color: var(--header-text);
-                border-color: rgb(from var(--header-text) r g b / 15%);
+                color: #{$header-text};
+                border-color: rgb(from #{$header-text} r g b / 15%);
                 box-shadow:
                     0 2px 8px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 25%),
                     0 8px 24px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 15%),
-                    inset 0 1px 0 rgb(from var(--header-text) r g b / 15%);
+                    inset 0 1px 0 rgb(from #{$header-text} r g b / 15%);
 
                 &::before {
                     background: linear-gradient(135deg,
-                        rgb(from var(--header-text) r g b / 15%) 0%,
+                        rgb(from #{$header-text} r g b / 15%) 0%,
                         transparent 40%);
                 }
 
@@ -391,7 +391,7 @@ footer, .chat-toolbar {
                     box-shadow:
                         0 4px 12px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 30%),
                         0 12px 32px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 20%),
-                        inset 0 1px 0 rgb(from var(--header-text) r g b / 15%);
+                        inset 0 1px 0 rgb(from #{$header-text} r g b / 15%);
                 }
             }
         }

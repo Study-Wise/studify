@@ -51,7 +51,7 @@ $padding: $spacing-medium;
             box-shadow:
                 0 4px 16px rgba(from $color r g b / 12%),
                 0 0 0 4px rgba(from $color r g b / 8%),
-                inset 0 1px 2px rgb(from var(--header-text) r g b / 2%);
+                inset 0 1px 2px rgb(from #{$header-text} r g b / 2%);
             background-color: rgb(from var(--card-bg) r g b / 100%);
         }
 
@@ -59,7 +59,7 @@ $padding: $spacing-medium;
             border-color: rgb(from var(--card-border) r g b / 60%);
             box-shadow:
                 0 4px 12px rgb(from var(--card-shadow) r g b / 8%),
-                inset 0 1px 2px rgb(from var(--header-text) r g b / 2%);
+                inset 0 1px 2px rgb(from #{$header-text} r g b / 2%);
         }
 
         &:has(textarea:user-valid) {
