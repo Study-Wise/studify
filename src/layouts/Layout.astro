@@ -10,11 +10,11 @@ import ThemeSwitcher from '@/accessibility/ThemeSwitcher.astro';
 import Dialog from '@/components/Dialog.astro';
 import '@/styles/globals.scss';
 
-const sTitle = "Studify";
+const sTitle = 'Studify';
 const lTitle = `${sTitle} - AI Study Partner`;
 const { title, description, hideCopyright, isChatArea } = Astro.props;
 var { className, container } = Astro.props;
-const noTitle = title === "Home" || title === '' || !title;
+const noTitle = title === 'Home' || title === '' || !title;
 const pTitle = noTitle ? lTitle : `${title} | ${sTitle}`;
 
 const canonicalURL = `${new URL(Astro.url.pathname, Astro.site)}${Astro.url.search}`;

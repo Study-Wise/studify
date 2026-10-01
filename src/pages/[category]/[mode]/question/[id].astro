@@ -56,14 +56,14 @@ const displayAnswer = parsedAnswer;
 
 // Generate structured data for SEO (Question Schema)
 const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "QAPage",
-    "mainEntity": {
-        "@type": "Question",
-        "name": displayQuestion,
-        "acceptedAnswer": {
-            "@type": "Answer",
-            "text": questionData?.answer || "Answer not yet generated. Please try again later."
+    '@context': 'https://schema.org',
+    '@type': 'QAPage',
+    'mainEntity': {
+        '@type': 'Question',
+        'name': displayQuestion,
+        'acceptedAnswer': {
+            '@type': 'Answer',
+            'text': questionData?.answer || 'Answer not yet generated. Please try again later.'
         }
     }
 };

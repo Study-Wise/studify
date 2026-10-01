@@ -10,8 +10,7 @@
         padding: $spacing-medium - 0.0625rem;
         border: 1px solid var(--input-border);
         border-radius: $border-radius-small;
-        font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier,
-            monospace;
+        font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;
         font-size: 0.95em;
         resize: vertical;
         margin-block-start: $spacing-small - 0.125rem;
