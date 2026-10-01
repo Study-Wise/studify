@@ -75,15 +75,15 @@ input, textarea, select, button {
     --body-bg-dark: #{$body-bg-dark};
     --body-bg: light-dark(var(--body-bg-light), var(--body-bg-dark));
     --body-bg: if(
-        style(--theme: "light"): var(--body-bg-light);
-        style(--theme: "dark"): var(--body-bg-dark);
+        style(--theme: 'light'): var(--body-bg-light);
+        style(--theme: 'dark'): var(--body-bg-dark);
         else: light-dark(var(--body-bg-light), var(--body-bg-dark))
     );
     --body-text-ld: #{$body-text};
     --body-text: light-dark(var(--body-text-ld), var(--body-bg-light));
     --body-text: if(
-        style(--theme: "light"): var(--body-text-ld);
-        style(--theme: "dark"): var(--body-bg-light);
+        style(--theme: 'light'): var(--body-text-ld);
+        style(--theme: 'dark'): var(--body-bg-light);
         else: light-dark(var(--body-text-ld), var(--body-bg-light))
     );
     --header-text: #{$header-text};
@@ -92,39 +92,39 @@ input, textarea, select, button {
     --card-bg-dark: #{$card-bg-dark};
     --card-bg: light-dark(var(--card-bg-light), var(--card-bg-dark));
     --card-bg: if(
-        style(--theme: "light"): var(--card-bg-light);
-        style(--theme: "dark"): var(--card-bg-dark);
+        style(--theme: 'light'): var(--card-bg-light);
+        style(--theme: 'dark'): var(--card-bg-dark);
         else: light-dark(var(--card-bg-light), var(--card-bg-dark))
     );
     --card-text-ld: #{$card-text};
     --card-text: light-dark(var(--card-text-ld), var(--card-bg-light));
     --card-text: if(
-        style(--theme: "light"): var(--card-text-ld);
-        style(--theme: "dark"): var(--card-bg-light);
+        style(--theme: 'light'): var(--card-text-ld);
+        style(--theme: 'dark'): var(--card-bg-light);
         else: light-dark(var(--card-text-ld), var(--card-bg-light))
     );
     --card-shadow-light: #{$card-shadow-light};
     --card-shadow-dark: #{$card-shadow-dark};
     --card-shadow: light-dark(var(--card-shadow-light), var(--card-shadow-dark));
     --card-shadow: if(
-        style(--theme: "light"): var(--card-shadow-light);
-        style(--theme: "dark"): var(--card-shadow-dark);
+        style(--theme: 'light'): var(--card-shadow-light);
+        style(--theme: 'dark'): var(--card-shadow-dark);
         else: light-dark(var(--card-shadow-light), var(--card-shadow-dark))
     );
     --card-border-light: #{$card-border-light};
     --card-border-dark: #{$card-border-dark};
     --card-border: light-dark(var(--card-border-light), var(--card-border-dark));
     --card-border: if(
-        style(--theme: "light"): var(--card-border-light);
-        style(--theme: "dark"): var(--card-border-dark);
+        style(--theme: 'light'): var(--card-border-light);
+        style(--theme: 'dark'): var(--card-border-dark);
         else: light-dark(var(--card-border-light), var(--card-border-dark))
     );
     --section-title-light: #{$section-title-light};
     --section-title-dark: #{$section-title-dark};
     --section-title: light-dark(var(--section-title-light), var(--section-title-dark));
     --section-title: if(
-        style(--theme: "light"): var(--section-title-light);
-        style(--theme: "dark"): var(--section-title-dark);
+        style(--theme: 'light'): var(--section-title-light);
+        style(--theme: 'dark'): var(--section-title-dark);
         else: light-dark(var(--section-title-light), var(--section-title-dark))
     );
     --section-title-border: #{$section-title-border};
@@ -134,8 +134,8 @@ input, textarea, select, button {
     --message-bg-dark: #{$message-bg-dark};
     --message-bg: light-dark(var(--message-bg-light), var(--message-bg-dark));
     --message-bg: if(
-        style(--theme: "light"): var(--message-bg-light);
-        style(--theme: "dark"): var(--message-bg-dark);
+        style(--theme: 'light'): var(--message-bg-light);
+        style(--theme: 'dark'): var(--message-bg-dark);
         else: light-dark(var(--message-bg-light), var(--message-bg-dark))
     );
     --chat-message-shadow: #{$chat-message-shadow};
