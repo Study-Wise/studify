@@ -10,6 +10,7 @@ $border-size: 0.125rem;
 $border-radius: $button-border-radius;
 
 .btn {
+    --bg-clr-1: light-dark(#{$card-bg-dark}, #{$card-bg-light});
     --border-size: #{$border-size};
     --border-radius: #{$border-radius};
     --outline-color: var(--bg-clr-1);
