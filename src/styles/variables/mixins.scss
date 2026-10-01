@@ -1,6 +1,7 @@
 // Reusable patterns for common CSS needs
 // Import tokens for use in mixins
 @use './tokens' as *;
+@use 'sass:math';
 
 // TEXT UTILITIES
 
@@ -180,7 +181,7 @@
         &::before {
             content: '';
             display: block;
-            padding-bottom: calc(($height / $width) * 100%);
+            padding-bottom: calc(#{math.div($height, $width)} * 100%);
         }
     }
 }

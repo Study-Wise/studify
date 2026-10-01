@@ -8,7 +8,7 @@
         width: 100%;
         min-height: 200px;
         padding: $spacing-medium - 0.0625rem;
-        border: 1px solid #{$input-border};
+        border: 1px solid $input-border;
         border-radius: $border-radius-small;
         font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;
         font-size: 0.95em;
@@ -55,7 +55,7 @@
     margin-block-end: $spacing-large + 0.25rem;
     display: flex;
     gap: clamp(5px, 1.5vw, 10px);
-    border-block-end: 1px solid #{$section-title-border};
+    border-block-end: 1px solid $section-title-border;
     padding-block-end: $spacing-small + 0.25rem;
     flex-wrap: wrap;
 
