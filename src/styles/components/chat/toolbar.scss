@@ -44,7 +44,7 @@ $padding: $spacing-medium;
         transition: all $transition-slow $ease-in-out;
         box-shadow:
             0 2px 8px rgb(from var(--card-shadow) r g b / 6%),
-            inset 0 1px 2px rgb(from var(--header-text) r g b / 2%);
+            inset 0 1px 2px rgb(from #{$header-text} r g b / 2%);
 
         &:has(:focus-visible) {
             border-color: $color;

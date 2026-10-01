@@ -175,7 +175,7 @@ footer, .chat-toolbar {
 
         &.active {
             background: linear-gradient(120deg, color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: 10%), color.adjust(list.nth(map.get($accent-colors, primary), 2), $lightness: 10%));
-            color: var(--header-text);
+            color: #{$header-text};
             border-color: transparent;
             box-shadow:
                 0 6px 16px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 30%),

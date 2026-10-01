@@ -8,8 +8,8 @@
         height: clamp(120px, 20vw, 150px);
         border-radius: 50%;
         object-fit: cover;
-        border: 3px solid var(--profile-border);
-        box-shadow: 0 0 5px var(--profile-shadow);
+        border: 3px solid #{$profile-border};
+        box-shadow: 0 0 5px #{$profile-shadow};
     }
 
     .image-intro {

@@ -45,7 +45,7 @@
         .error-subtitle {
             font-size: $font-size-2x-large;
             font-weight: $font-weight-semibold;
-            color: var(--header-text);
+            color: #{$header-text};
             margin-bottom: $spacing-large;
             animation: slide-in-up 0.6s $ease-out forwards;
         }

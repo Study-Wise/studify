@@ -87,7 +87,7 @@
     line-height: $line-height-normal;
     color: var(--card-text);
     background: hsl(from var(--card-bg) h s calc(l + 2%));
-    border: 1px solid var(--input-border);
+    border: 1px solid #{$input-border};
     border-radius: $border-radius-medium;
     transition: $transition-colors, border-color $transition-base $ease-out,
         box-shadow $transition-base $ease-out;
