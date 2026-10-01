@@ -6,7 +6,7 @@ const handler: APIRoute = async (ctx) => {
     try {
         return await auth.handler(ctx.request);
     } catch (error) {
-        console.error("[Auth API Error]", error);
+        console.error('[Auth API Error]', error);
         // Re-throw to let Better Auth handle its own errors
         throw error;
     }
