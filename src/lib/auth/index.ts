@@ -25,22 +25,16 @@ function determineUserRole(email: string): UserRole {
     const emailLower = email.toLowerCase();
 
     // Check for admin email match
-    if (ADMIN_EMAILS.map(e => e.toLowerCase()).includes(emailLower)) {
-        return "admin";
-    }
+    if (ADMIN_EMAILS.map(e => e.toLowerCase()).includes(emailLower)) return 'admin';
 
     // Check for admin domain match
-    if (ADMIN_DOMAINS.some(domain => emailLower.endsWith(domain))) {
-        return "admin";
-    }
+    if (ADMIN_DOMAINS.some(domain => emailLower.endsWith(domain))) return 'admin';
 
     // Check for moderator domain match
-    if (MODERATOR_DOMAINS.some(domain => emailLower.endsWith(domain))) {
-        return "moderator";
-    }
+    if (MODERATOR_DOMAINS.some(domain => emailLower.endsWith(domain))) return 'moderator';
 
     // Default role
-    return "user";
+    return 'user';
 }
 
 // Helper to get environment variable with fallback between import.meta.env and process.env
@@ -86,11 +80,11 @@ function buildSocialProviders(): SocialProviderConfig {
 }
 
 const socialProviders = buildSocialProviders();
-const baseURL = getEnvVar('BETTER_AUTH_URL') || "http://localhost:4321";
+const baseURL = getEnvVar('BETTER_AUTH_URL') || 'http://localhost:4321';
 
 export const auth = betterAuth({
     database: drizzleAdapter(db, {
-        provider: "pg",
+        provider: 'pg',
         schema: {
             user,
             session,
@@ -114,7 +108,7 @@ export const auth = betterAuth({
                 // Example with Resend:
                 // await sendEmail({
                 //   to: email,
-                //   subject: "Your Studify Magic Link",
+                //   subject: 'Your Studify Magic Link',
                 //   html: `<a href="${url}">Click here to sign in</a>`,
                 // });
             },
