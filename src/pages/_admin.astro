@@ -11,11 +11,8 @@ if (!user) {
     return Astro.redirect("/user/sign-in");
 }
 
-// Check if user is admin
-const isAdmin = await isUserAdmin(user.email);
-
 // Redirect non-admins away from admin page
-if (!isAdmin) {
+if (!(await isUserAdmin(user.email))) {
     return Astro.redirect("/");
 }
 ---
