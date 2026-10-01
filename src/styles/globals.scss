@@ -75,11 +75,11 @@ input, textarea, select, button {
         style(--theme: 'dark'): #{$body-bg-dark};
         else: light-dark(#{$body-bg-light}, #{$body-bg-dark})
     );
-    --body-text: light-dark(#{$body-text-ld}, #{$body-bg-light});
+    --body-text: light-dark(#{$body-text}, #{$body-bg-light});
     --body-text: if(
-        style(--theme: 'light'): #{$body-text-ld};
+        style(--theme: 'light'): #{$body-text};
         style(--theme: 'dark'): #{$body-bg-light};
-        else: light-dark(#{$body-text-ld}, #{$body-bg-light})
+        else: light-dark(#{$body-text}, #{$body-bg-light})
     );
     --card-bg: light-dark(#{$card-bg-light}, #{$card-bg-dark});
     --card-bg: if(
