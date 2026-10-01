@@ -10,7 +10,7 @@ export const user = pgTable("user", {
     image: text('image'),
     role: userRoleEnum('role').default('user').notNull(),
     createdAt: timestamp('created_at').defaultNow().notNull(),
-    updatedAt: timestamp("updated_at")
+    updatedAt: timestamp('updated_at')
         .defaultNow()
         .$onUpdate(() => /* @__PURE__ */ new Date())
         .notNull(),
