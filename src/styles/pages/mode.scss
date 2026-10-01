@@ -44,7 +44,7 @@
     display: inline-block;
     border: 3px solid rgb(255 255 255 / 30%);
     border-radius: 50%;
-    border-top-color: #{$header-text};
+    border-top-color: $header-text;
     width: 1.2em;
     height: 1.2em;
     animation: spin 1s linear infinite;
@@ -74,10 +74,10 @@
     transition: all $transition-base $ease;
     font-size: clamp(0.95rem, 2vw, 1.05rem);
     font-weight: $font-weight-medium;
-    color: #{$footer-text};
+    color: $footer-text;
 
     &:hover {
-        background-color: #{$footer-bg};
+        background-color: $footer-bg;
         color: #343a40;
     }
 

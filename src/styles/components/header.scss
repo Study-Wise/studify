@@ -6,7 +6,7 @@
 header {
     min-height: 80px;
     background: linear-gradient($gradient-angle, list.nth(map.get($accent-colors, primary), 1), list.nth(map.get($accent-colors, primary), 2));
-    color: #{$header-text};
+    color: $header-text;
     padding: $spacing-small $spacing-medium;
     box-shadow: $box-shadow-small;
     display: flex;
@@ -33,7 +33,7 @@ header {
         font-size: $font-size-base;
         font-style: normal;
         font-weight: 300;
-        color: #{$header-tagline};
+        color: $header-tagline;
         overflow-wrap: normal;
     }
 

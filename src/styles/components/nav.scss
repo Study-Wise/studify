@@ -19,7 +19,7 @@
         transition: all $transition-fast $ease;
 
         &:hover, &:focus-visible, &.active {
-            color: #{$header-text};
+            color: $header-text;
         }
 
         &:hover, &:focus-visible {
@@ -38,7 +38,7 @@
 
     &:not(.lite) .nav-btn {
         background-color: $section-title-light;
-        color: #{$header-text};
+        color: $header-text;
     }
 
     &.lite .nav-btn {
