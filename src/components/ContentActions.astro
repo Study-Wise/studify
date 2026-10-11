@@ -165,7 +165,11 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
                     body: JSON.stringify({ threadId }),
                 });
 
-                const data = await response.json();
+                const data = response.headers.get('Content-Type')?.includes('application/json') ? await response.json() : null;
+
+                if (!response.ok || !data) {
+                    throw new Error(data?.error || `Failed to generate ${contentTypeName.toLowerCase()} (server error ${response.status}). Please try again.`);
+                }
 
                 if (data.status === 'success') {
                     // Update the page content directly
