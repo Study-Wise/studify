@@ -14,6 +14,7 @@ const sTitle = 'Studify';
 const lTitle = `${sTitle} - AI Study Partner`;
 const { title, description, hideCopyright, isChatArea } = Astro.props;
 var { className, container } = Astro.props;
+const isSignedIn = !!Astro.locals.user;
 const noTitle = title === 'Home' || title === '' || !title;
 const pTitle = noTitle ? lTitle : `${title} | ${sTitle}`;
 
@@ -84,15 +85,18 @@ if (container) className += ' container'
                 },
             };
         </script>
-        <script is:inline type="speculationrules">
-            {
-                "prerender": [
-                    {
-                        "urls": ["/user/sign-in", "/user/sign-up"]
-                    }
-                ]
-            }
-        </script>
+        {/* Only prerender auth pages for signed-out visitors; signed-in users get redirected away from them */}
+        {!isSignedIn && (
+            <script is:inline type="speculationrules">
+                {
+                    "prerender": [
+                        {
+                            "urls": ["/user/sign-in", "/user/sign-up"]
+                        }
+                    ]
+                }
+            </script>
+        )}
         <script is:inline src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script" async></script>
     </head>
     <body data-hide-copyright={hideCopyright}>
