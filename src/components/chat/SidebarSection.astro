@@ -55,10 +55,13 @@ const regenerateButtonId = `regenerate-${id}-btn`;
             <div class="empty-state">
                 {emptyMessage && <p class="empty-message">{emptyMessage}</p>}
                 {isAuthorized && (
-                    <button type="button" class="generate-btn" id={generateButtonId} data-thread-id={threadId}>
+                    <button type="button" class="generate-btn" id={generateButtonId} data-thread-id={threadId} disabled={threadId === 'new'}>
                         <span class="material-symbols-outlined" aria-hidden="true">{icon}</span>
                         <span>{`${generateVerb} ${title}`}</span>
                     </button>
+                )}
+                {isAuthorized && threadId === 'new' && (
+                    <p class="empty-message">Send a message first.</p>
                 )}
             </div>
         )}
