@@ -1,10 +1,10 @@
 ---
-const { element = 'button', variant = 'primary', icon = '', className = '', mode = 'full', ...props } = Astro.props;
+const { element = 'button', variant = 'primary', icon = '', className = '', mode = 'full', type = element === 'button' ? 'button' : undefined, ...props } = Astro.props;
 ---
 {(() => {
     const Element = element;
     return (
-        <Element tabindex="0" class:list={['btn', `bg-${variant}`, { 'lite': mode === 'lite' }, className]} {...props}>
+        <Element type={type} tabindex="0" class:list={['btn', `bg-${variant}`, { 'lite': mode === 'lite' }, className]} {...props}>
             {icon && <span class="material-symbols-outlined">{icon}</span>}
             {mode === 'tab' ? <span class="text"><slot /></span> : <slot />}
             <span class="spinner" style="display: none"></span>

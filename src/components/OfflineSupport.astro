@@ -13,7 +13,7 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
 <div id="update-available" class="update-indicator" style="display: none;">
     <span class="material-symbols-outlined">system_update</span>
     <span>Update available!</span>
-    <button id="update-button" class="update-button">Update Now</button>
+    <button type="button" id="update-button" class="update-button">Update Now</button>
 </div>
 
 <script is:inline define:vars={{ isProd }}>
