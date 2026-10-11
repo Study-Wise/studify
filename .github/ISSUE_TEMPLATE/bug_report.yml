@@ -3,114 +3,114 @@ description: Report something that is broken in Studify
 title: "[Bug]: "
 labels: ["bug"]
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Thanks for reporting a bug. Please fill in as much as you can so we can reproduce it.
+    - type: markdown
+      attributes:
+          value: |
+              Thanks for reporting a bug. Please fill in as much as you can so we can reproduce it.
 
-  - type: textarea
-    id: description
-    attributes:
-      label: What happened?
-      description: A clear description of the bug.
-    validations:
-      required: true
+    - type: textarea
+      id: description
+      attributes:
+          label: What happened?
+          description: A clear description of the bug.
+      validations:
+          required: true
 
-  - type: textarea
-    id: steps
-    attributes:
-      label: Steps to reproduce
-      placeholder: |
-        1. Go to '...'
-        2. Click on '...'
-        3. See error
-    validations:
-      required: true
+    - type: textarea
+      id: steps
+      attributes:
+          label: Steps to reproduce
+          placeholder: |
+              1. Go to '...'
+              2. Click on '...'
+              3. See error
+      validations:
+          required: true
 
-  - type: textarea
-    id: expected
-    attributes:
-      label: Expected behavior
-      description: What did you expect to happen?
-    validations:
-      required: true
+    - type: textarea
+      id: expected
+      attributes:
+          label: Expected behavior
+          description: What did you expect to happen?
+      validations:
+          required: true
 
-  - type: dropdown
-    id: area
-    attributes:
-      label: Area
-      description: Which part of the app is affected?
-      options:
-        - Chat / AI responses
-        - Study guide
-        - Reference sheet
-        - Infographic
-        - Webpage
-        - Mind map
-        - Flashcards
-        - Practice questions
-        - Additional resources
-        - Authentication / sign-in
-        - Settings / profile
-        - PWA / offline
-        - Other
-    validations:
-      required: true
+    - type: dropdown
+      id: area
+      attributes:
+          label: Area
+          description: Which part of the app is affected?
+          options:
+              - Chat / AI responses
+              - Study guide
+              - Reference sheet
+              - Infographic
+              - Webpage
+              - Mind map
+              - Flashcards
+              - Practice questions
+              - Additional resources
+              - Authentication / sign-in
+              - Settings / profile
+              - PWA / offline
+              - Other
+      validations:
+          required: true
 
-  - type: input
-    id: category-mode
-    attributes:
-      label: Category and mode
-      description: For example Math / Algebra. Leave blank if not applicable.
-      placeholder: Math / Algebra
+    - type: input
+      id: category-mode
+      attributes:
+          label: Category and mode
+          description: For example Math / Algebra. Leave blank if not applicable.
+          placeholder: Math / Algebra
 
-  - type: input
-    id: model
-    attributes:
-      label: AI model and provider
-      description: If the bug involves AI output, which model was selected?
-      placeholder: openai / gpt-4.1
+    - type: input
+      id: model
+      attributes:
+          label: AI model and provider
+          description: If the bug involves AI output, which model was selected?
+          placeholder: openai / gpt-4.1
 
-  - type: input
-    id: url
-    attributes:
-      label: Page URL
-      description: Do not include private thread IDs if the thread is not public.
-      placeholder: https://.../math/algebra/chat/...
+    - type: input
+      id: url
+      attributes:
+          label: Page URL
+          description: Do not include private thread IDs if the thread is not public.
+          placeholder: https://.../math/algebra/chat/...
 
-  - type: textarea
-    id: logs
-    attributes:
-      label: Console or server errors
-      description: Paste any browser console output or error messages.
-      render: shell
+    - type: textarea
+      id: logs
+      attributes:
+          label: Console or server errors
+          description: Paste any browser console output or error messages.
+          render: shell
 
-  - type: textarea
-    id: screenshots
-    attributes:
-      label: Screenshots or recordings
-      description: Drag and drop images or videos here.
+    - type: textarea
+      id: screenshots
+      attributes:
+          label: Screenshots or recordings
+          description: Drag and drop images or videos here.
 
-  - type: input
-    id: browser
-    attributes:
-      label: Browser and version
-      placeholder: Chrome 130
+    - type: input
+      id: browser
+      attributes:
+          label: Browser and version
+          placeholder: Chrome 130
 
-  - type: dropdown
-    id: device
-    attributes:
-      label: Device
-      options:
-        - Desktop
-        - Mobile
-        - Tablet
-        - Installed PWA
-    validations:
-      required: true
+    - type: dropdown
+      id: device
+      attributes:
+          label: Device
+          options:
+              - Desktop
+              - Mobile
+              - Tablet
+              - Installed PWA
+      validations:
+          required: true
 
-  - type: textarea
-    id: context
-    attributes:
-      label: Additional context
-      description: Anything else that might help.
+    - type: textarea
+      id: context
+      attributes:
+          label: Additional context
+          description: Anything else that might help.

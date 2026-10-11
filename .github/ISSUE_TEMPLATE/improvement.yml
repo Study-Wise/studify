@@ -3,83 +3,83 @@ description: Suggest a UI/UX change or a tweak to existing functionality in Stud
 title: "[Improvement]: "
 labels: ["improvement"]
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Use this for UI/UX changes or tweaks to existing functionality that works but could be better. If something is broken, use the bug report. If it is a brand new capability, use the feature request.
+    - type: markdown
+      attributes:
+          value: |
+              Use this for UI/UX changes or tweaks to existing functionality that works but could be better. If something is broken, use the bug report. If it is a brand new capability, use the feature request.
 
-  - type: textarea
-    id: current
-    attributes:
-      label: Current behavior
-      description: How does it work today?
-    validations:
-      required: true
+    - type: textarea
+      id: current
+      attributes:
+          label: Current behavior
+          description: How does it work today?
+      validations:
+          required: true
 
-  - type: textarea
-    id: improvement
-    attributes:
-      label: Suggested improvement
-      description: What should change, and why would it be better?
-    validations:
-      required: true
+    - type: textarea
+      id: improvement
+      attributes:
+          label: Suggested improvement
+          description: What should change, and why would it be better?
+      validations:
+          required: true
 
-  - type: dropdown
-    id: type
-    attributes:
-      label: Type of improvement
-      options:
-        - UI / visual design
-        - UX / usability or flow
-        - Existing functionality
-        - Other
-    validations:
-      required: true
+    - type: dropdown
+      id: type
+      attributes:
+          label: Type of improvement
+          options:
+              - UI / visual design
+              - UX / usability or flow
+              - Existing functionality
+              - Other
+      validations:
+          required: true
 
-  - type: dropdown
-    id: area
-    attributes:
-      label: Area
-      description: Which part of the app does this relate to?
-      options:
-        - Chat / AI responses
-        - Study guide
-        - Reference sheet
-        - Infographic
-        - Webpage
-        - Mind map
-        - Flashcards
-        - Practice questions
-        - Additional resources
-        - Authentication / sign-in
-        - Settings / profile
-        - PWA / offline
-        - Other
-    validations:
-      required: true
+    - type: dropdown
+      id: area
+      attributes:
+          label: Area
+          description: Which part of the app does this relate to?
+          options:
+              - Chat / AI responses
+              - Study guide
+              - Reference sheet
+              - Infographic
+              - Webpage
+              - Mind map
+              - Flashcards
+              - Practice questions
+              - Additional resources
+              - Authentication / sign-in
+              - Settings / profile
+              - PWA / offline
+              - Other
+      validations:
+          required: true
 
-  - type: input
-    id: category-mode
-    attributes:
-      label: Category and mode
-      description: For example Math / Algebra. Leave blank if not applicable.
-      placeholder: Math / Algebra
+    - type: input
+      id: category-mode
+      attributes:
+          label: Category and mode
+          description: For example Math / Algebra. Leave blank if not applicable.
+          placeholder: Math / Algebra
 
-  - type: input
-    id: url
-    attributes:
-      label: Page URL
-      description: Do not include private thread IDs if the thread is not public.
-      placeholder: https://.../math/algebra/chat/...
+    - type: input
+      id: url
+      attributes:
+          label: Page URL
+          description: Do not include private thread IDs if the thread is not public.
+          placeholder: https://.../math/algebra/chat/...
 
-  - type: textarea
-    id: screenshots
-    attributes:
-      label: Screenshots or references
-      description: Drag and drop images, or link to examples of what you have in mind.
+    - type: textarea
+      id: screenshots
+      attributes:
+          label: Screenshots or references
+          description: Drag and drop images, or link to examples of what you have in mind.
 
-  - type: textarea
-    id: context
-    attributes:
-      label: Additional context
-      description: Anything else that might help.
+    - type: textarea
+      id: context
+      attributes:
+          label: Additional context
+          description: Anything else that might help.
