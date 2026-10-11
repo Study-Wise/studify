@@ -24,4 +24,4 @@ declare namespace App {
         user: import('./lib/types').User | null;
         session: import('better-auth').Session | null;
     }
-}
+}
