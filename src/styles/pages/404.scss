@@ -45,7 +45,7 @@
         .error-subtitle {
             font-size: $font-size-2x-large;
             font-weight: $font-weight-semibold;
-            color: $header-text;
+            color: var(--card-text);
             margin-bottom: $spacing-large;
             animation: slide-in-up 0.6s $ease-out forwards;
         }
@@ -55,8 +55,7 @@
             color: var(--body-text);
             margin-bottom: $spacing-extra-large;
             line-height: $line-height-relaxed;
-            animation: fade-in 0.6s 0.2s $ease-out forwards;
-            opacity: 0;
+            animation: fade-in 0.6s 0.2s $ease-out both;
         }
 
         .error-actions {
@@ -65,8 +64,7 @@
             justify-content: center;
             flex-wrap: wrap;
             margin-bottom: $spacing-extra-large;
-            animation: fade-in 0.6s 0.3s $ease-out forwards;
-            opacity: 0;
+            animation: fade-in 0.6s 0.3s $ease-out both;
 
             a {
                 display: inline-flex;
@@ -121,13 +119,12 @@
             margin-top: $spacing-extra-large;
             padding-top: $spacing-extra-large;
             border-top: 2px solid var(--card-border);
-            animation: fade-in 0.6s 0.4s $ease-out forwards;
-            opacity: 0;
+            animation: fade-in 0.6s 0.4s $ease-out both;
 
             h3 {
                 font-size: $font-size-large;
                 font-weight: $font-weight-semibold;
-                color: $header-text;
+                color: var(--card-text);
                 margin-bottom: $spacing-large;
             }
 
