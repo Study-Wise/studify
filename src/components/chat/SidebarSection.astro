@@ -120,7 +120,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
         // Disable button and show loading state
         btn.setAttribute('disabled', 'true');
         const originalContent = btn.innerHTML;
-        const loadingText = isRegenerate ? `${regenerateVerb}...` : `${generateVerb}...`;
+        const loadingText = `${(isRegenerate ? regenerateVerb : generateVerb).replace(/^(\w+?)e?\b/, '$1ing')}…`;
 
         btn.innerHTML = `<span class="material-symbols-outlined spinning">progress_activity</span><span>${loadingText}</span>`;
 
