@@ -41,6 +41,31 @@ import '@/styles/components/dialog.scss';
             return;
         }
 
+        const entry = { message, title, icon, type };
+
+        // An error on screen must never be overwritten, so anything that
+        // arrives while one is showing waits its turn. Every error is kept;
+        // only the latest non-error message is kept, since those are
+        // transient status updates.
+        if (dialog.open && currentDialogType === 'error') {
+            if (type === 'error') {
+                pendingErrors.push(entry);
+            } else {
+                pendingNotice = entry;
+            }
+            updateDialogButton(dialog);
+            return;
+        }
+
+        renderDialog(dialog, entry);
+    }
+
+    // Messages waiting for the error currently on screen to be dismissed
+    const pendingErrors = [];
+    let pendingNotice = null;
+    let currentDialogType = null;
+
+    function renderDialog(dialog, { message, title, icon, type }) {
         const dialogContent = dialog.querySelector('.dialog-content');
         const dialogIcon = dialog.querySelector('.dialog-icon');
         const dialogTitle = dialog.querySelector('.dialog-title');
@@ -56,11 +81,41 @@ import '@/styles/components/dialog.scss';
         dialogContent.className = 'dialog-content';
         dialogContent.classList.add(`dialog-${type}`);
 
+        currentDialogType = type;
+        updateDialogButton(dialog);
+
         // Show dialog
-        dialog.showModal();
+        if (!dialog.open) {
+            dialog.showModal();
+        }
 
         // Focus the OK button
         dialogButton.focus();
+    }
+
+    /**
+     * Label the button "Next" while more messages are waiting
+     * @param {HTMLDialogElement} dialog - The app dialog
+     */
+    function updateDialogButton(dialog) {
+        const dialogButton = dialog.querySelector('.dialog-button-primary');
+        const waiting = pendingErrors.length + (pendingNotice ? 1 : 0);
+        dialogButton.textContent = waiting > 0 ? `Next (${waiting} more)` : 'OK';
+    }
+
+    /**
+     * Show the next waiting message, errors first
+     * @param {HTMLDialogElement} dialog - The app dialog
+     */
+    function showNextDialog(dialog) {
+        currentDialogType = null;
+        const next = pendingErrors.shift() ?? pendingNotice;
+        if (next === pendingNotice) {
+            pendingNotice = null;
+        }
+        if (next) {
+            renderDialog(dialog, next);
+        }
     }
 
     /**
@@ -134,6 +189,11 @@ import '@/styles/components/dialog.scss';
             if (e.key === 'Escape') {
                 dialog.close();
             }
+        });
+
+        // Once a message is dismissed, show the next one that was waiting
+        dialog.addEventListener('close', () => {
+            showNextDialog(dialog);
         });
     });
 
