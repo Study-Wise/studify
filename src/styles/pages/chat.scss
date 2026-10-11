@@ -35,6 +35,10 @@
                 position: absolute;
                 inset: $space;
                 background-color: var(--card-bg);
+
+                // the generic .message-content::before hover sheen starts at
+                // opacity 0; this layer is the card's backdrop, so keep it visible
+                opacity: 1;
                 z-index: -1;
                 border-radius: #{$brdr - $space};
             }
