@@ -741,7 +741,7 @@ const { page, category, mode, id } = Astro.props;
 
         // Initialize DOM elements for home page
         messageInput = document.getElementById('text-paste');
-        sendButton = document.getElementById('generate-button');
+        sendButton = document.querySelector('.generate-button');
         spinner = sendButton?.querySelector('.spinner');
         errorMessageDiv = document.getElementById('error-message');
 

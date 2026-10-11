@@ -100,8 +100,8 @@ Please note that the AI will not provide the answer for your immediate equation`
         {/* Generate Button and Error Message */}
         <div class="toolbar" role="toolbar" aria-label="Generation controls">
             <ModelSelector />
-            <FancyButton id="generate-button" onclick="generateOutput()" variant="primary" icon="manufacturing" aria-describedby="error-message">Generate Study Materials</FancyButton>
-            <Button id="generate-button-alt" onclick="generateOutput()" variant="primary" icon="manufacturing" style="display:none;" aria-describedby="error-message">Generate Study Materials</Button>
+            <FancyButton className="generate-button" onclick="generateOutput()" variant="primary" icon="manufacturing" aria-describedby="error-message">Generate Study Materials</FancyButton>
+            <Button onclick="generateOutput()" variant="primary" icon="manufacturing" style="display:none;" aria-describedby="error-message">Generate Study Materials</Button>
         </div>
         <div id="error-message" class="error-box" style="display: none" role="alert" aria-live="polite"></div>
     </section>
