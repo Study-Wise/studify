@@ -50,6 +50,11 @@ export async function generateSummary(threadId: string, userPrompt?: string) {
     const summaryPrompt =
 `${buildContentSystemPrompt('Chat Summary', uploadedFilesContext)}
 
+FAITHFULNESS RULES:
+- Summarize ONLY what was actually said in the conversation. Every fact, step, formula, number and result in the summary must appear in the conversation itself.
+- Do NOT solve, finish or extend any problem. Do NOT compute or add numeric results, answers or conclusions that were not stated in the conversation.
+- If a problem was left unfinished, or a step was left for the student to do, say so plainly (for example, "the final numeric calculation was left to the student") instead of filling it in.
+
 OUTPUT FORMAT:
 ### Chat Summary
 
@@ -57,7 +62,7 @@ OUTPUT FORMAT:
 (A concise overview of the entire conversation and the main topics discussed.)
 
 #### Key Points
-(Bullet points of the most important takeaways, explanations, or solutions provided.)
+(Bullet points of the most important takeaways, explanations, or solutions actually given in the conversation.)
 
 #### Next Steps / Recommendations
 (Suggest what the student should focus on next or how to further their understanding based on the chat.)
@@ -70,7 +75,7 @@ REMEMBER: Output ONLY the Chat Summary in markdown format. No other content type
     // Generate the summary
     const result = await generateText(
         summaryPrompt,
-        'Now generate a comprehensive summary based on the above conversation. Output ONLY the summary content in markdown format. Do not include any explanations, commentary, or conversation - just the summary.',
+        'Now generate a comprehensive summary based on the above conversation. Include only what was actually said in it; do not solve or add anything that was not. Output ONLY the summary content in markdown format. Do not include any explanations, commentary, or conversation - just the summary.',
         messages,
         userModel,
         provider,
