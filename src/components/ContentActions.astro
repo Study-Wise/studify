@@ -99,6 +99,9 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
             if (contentDiv) {
                 contentDiv.innerHTML = parsedContent;
             }
+
+            // Render any Desmos graphs in the new content
+            window.activateDesmos?.();
         }
         else if (iframeTypes.includes(contentType)) {
             let container = page.querySelector(`.${contentType}-container`);
