@@ -2,8 +2,17 @@ import type { APIRoute } from 'astro';
 
 import { chunkedUploads } from '@/lib/chunked-upload-store';
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
     try {
+        // Use the authenticated session user, never a client-supplied email
+        const email = locals.user?.email;
+        if (!email) {
+            return new Response(
+                JSON.stringify({ status: 'error', error: 'Authentication required' }),
+                { status: 401 }
+            );
+        }
+
         const formData = await request.formData();
         const chunk = formData.get('chunk') as File;
         const uploadId = formData.get('uploadId') as string;
@@ -13,9 +22,8 @@ export const POST: APIRoute = async ({ request }) => {
         const fileType = formData.get('fileType') as string;
         const fileSize = parseInt(formData.get('fileSize') as string, 10);
         const threadId = formData.get('threadId') as string;
-        const email = formData.get('email') as string;
 
-        if (!chunk || !uploadId || isNaN(chunkIndex) || isNaN(totalChunks) || !fileName || !threadId || !email) {
+        if (!chunk || !uploadId || isNaN(chunkIndex) || isNaN(totalChunks) || !fileName || !threadId) {
             return new Response(
                 JSON.stringify({ status: 'error', error: 'Missing required fields' }),
                 { status: 400 }
@@ -47,6 +55,22 @@ export const POST: APIRoute = async ({ request }) => {
         }
 
         const upload = chunkedUploads.get(uploadId)!;
+
+        // An upload ID is bound to the user and thread that started it; never mix in
+        // chunks from another user or thread
+        if (upload.email !== email || upload.threadId !== threadId) {
+            return new Response(
+                JSON.stringify({ status: 'error', error: 'Upload not found or unauthorized' }),
+                { status: 403 }
+            );
+        }
+
+        if (chunkIndex < 0 || chunkIndex >= upload.totalChunks) {
+            return new Response(
+                JSON.stringify({ status: 'error', error: 'Invalid chunk index' }),
+                { status: 400 }
+            );
+        }
 
         // Don't accept duplicate chunks
         if (!upload.chunks[chunkIndex]) {

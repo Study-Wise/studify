@@ -7,11 +7,20 @@ import { threadsTable } from '@/db/schema';
 import { userFilesUpload } from '@/lib/uploadthing';
 import type { UploadedFile } from '@/lib/threads';
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
     try {
-        const { threadId, email, fileKey } = await request.json();
+        // Use the authenticated session user, never a client-supplied email
+        const email = locals.user?.email;
+        if (!email) {
+            return new Response(
+                JSON.stringify({ status: 'error', error: 'Authentication required' }),
+                { status: 401 }
+            );
+        }
 
-        if (!threadId || !email || !fileKey) {
+        const { threadId, fileKey } = await request.json();
+
+        if (!threadId || !fileKey) {
             return new Response(
                 JSON.stringify({
                     status: 'error',

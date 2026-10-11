@@ -29,8 +29,17 @@ const allowedTypes = [
     'text/plain', 'text/csv', 'text/html', 'text/markdown'
 ];
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
     try {
+        // Use the authenticated session user, never a client-supplied email
+        const email = locals.user?.email;
+        if (!email) {
+            return new Response(
+                JSON.stringify({ status: 'error', error: 'Authentication required' }),
+                { status: 401 }
+            );
+        }
+
         // Clean up stale uploads periodically
         cleanupStaleUploads();
 
@@ -44,7 +53,7 @@ export const POST: APIRoute = async ({ request }) => {
         }
 
         const upload = chunkedUploads.get(uploadId);
-        if (!upload) {
+        if (!upload || upload.email !== email) {
             return new Response(
                 JSON.stringify({ status: 'error', error: 'Upload not found or expired' }),
                 { status: 404 }

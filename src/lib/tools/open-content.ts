@@ -1,6 +1,7 @@
 import { tool } from 'ai';
 import { z } from 'zod';
 
+import { getToolContext } from '@/lib/ai-service';
 import { getContentTypesList } from '@/lib/content/get-types';
 import { getLatestContent } from '@/lib/content/latest';
 
@@ -12,11 +13,20 @@ const openContentTool = tool({
     description: 'Open existing study content (study guide, reference sheet, flashcards, etc.) in a new browser tab. Only opens content that has already been generated — does not generate anything. If no content exists, returns an error. Use after \'generate-content\' has successfully generated content, or when the user asks to open/view their existing content.',
     inputSchema: z.object({
         type: z.enum(contentTypes as [string, ...string[]]).describe('The content type to open'),
-        threadId: z.string().describe('The thread ID'),
         category: z.string().describe('The category (e.g., math, science)'),
         mode: z.string().describe('The mode (e.g., algebra, physics)'),
     }),
-    execute: async ({ type, threadId, category, mode }) => {
+    execute: async ({ type, category, mode }, options) => {
+        // Always use the server-verified thread, never a model-supplied ID
+        const toolContext = getToolContext(options);
+        if (!toolContext) {
+            return JSON.stringify({
+                error: true,
+                message: 'Opening content is only available inside a chat thread.'
+            });
+        }
+        const { threadId } = toolContext;
+
         // Check if content exists before trying to open
         const content = await getLatestContent(threadId, type);
 
