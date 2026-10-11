@@ -13,8 +13,6 @@
     body > footer,
     .chat-toolbar,
     .header-content-wrapper,
-    .output-tabs,
-    .download-buttons,
     button,
     #error-message {
         display: none !important;
@@ -23,8 +21,7 @@
 
     body > main > .introduction-section,
     body > main > .input-section,
-    body > main > .about-section,
-    #interactive-steps-container {
+    body > main > .about-section {
         display: none !important;
         visibility: hidden !important;
     }

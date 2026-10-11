@@ -34,6 +34,14 @@
     .model-selector {
         flex: 1;
     }
+
+    // Beats the shared .btn:not(.tab) sizing
+    .btn.generate-button {
+        @media (width <= 600px) {
+            font-size: 1.05rem;
+            padding: 12px 15px;
+        }
+    }
 }
 
 .chat-button {
@@ -49,19 +57,6 @@
     height: 1.2em;
     animation: spin 1s linear infinite;
     margin-inline-start: $spacing-small - 0.125rem;
-}
-
-.output-tabs {
-    margin-block-end: $spacing-large + 0.25rem;
-    display: flex;
-    gap: clamp(5px, 1.5vw, 10px);
-    border-block-end: 1px solid $section-title-border;
-    padding-block-end: $spacing-small + 0.25rem;
-    flex-wrap: wrap;
-
-    & + .output-content, & + .output-content + .output-content {
-        padding-block-start: 0;
-    }
 }
 
 .tab-button {
