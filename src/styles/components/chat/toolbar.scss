@@ -66,6 +66,15 @@ $padding: $spacing-medium;
             border-color: $color;
         }
 
+        // Only flagged when the user tries to send an empty message, not whenever
+        // the cleared input is focused (which :user-invalid would match)
+        &:has(textarea[aria-invalid='true']) {
+            border-color: $color-error;
+            box-shadow:
+                0 2px 8px rgba(from $color-error r g b / 10%),
+                0 0 0 2px rgba(from $color-error r g b / 10%);
+        }
+
         &:has(textarea:disabled) {
             opacity: 0.7;
             pointer-events: none;
