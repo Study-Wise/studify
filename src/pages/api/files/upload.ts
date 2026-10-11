@@ -1,14 +1,18 @@
 import type { APIRoute } from 'astro';
+import { nanoid } from 'nanoid';
 
 import { eq } from 'drizzle-orm';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 
 import { userFilesUpload } from '@/lib/uploadthing';
+import { getUserErrorMessage } from '@/lib/user-errors';
 import { extractTextFromFile } from '@/lib/file-processing';
 import type { UploadedFile } from '@/lib/threads';
 
 export const POST: APIRoute = async ({ request, locals }) => {
+    const requestId = nanoid();
+
     try {
         // Use the authenticated session user, never a client-supplied email
         const email = locals.user?.email;
@@ -148,11 +152,11 @@ export const POST: APIRoute = async ({ request, locals }) => {
             { status: 200 }
         );
     } catch (error) {
-        console.error('File upload error:', error);
+        console.error(`❌ [${requestId}] File upload error:`, error);
         return new Response(
             JSON.stringify({
                 status: 'error',
-                error: error instanceof Error ? error.message : 'Upload failed'
+                error: getUserErrorMessage(error, 'upload your file', requestId)
             }),
             { status: 500 }
         );

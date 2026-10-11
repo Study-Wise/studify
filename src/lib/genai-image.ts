@@ -53,12 +53,7 @@ async function generateImage(prompt: string, filename: string = 'infographic.png
     if (buffer) {
         // Convert buffer to File for upload
         const file = new File([buffer], filename, { type: 'image/png' });
-        let uploadResult: Awaited<ReturnType<typeof uploadFile>>;
-        try {
-            uploadResult = await uploadFile(file);
-        } catch (error) {
-            throw new VendorError('UploadThing', 'Image upload failed', { cause: error });
-        }
+        const uploadResult = await uploadFile(file);
 
         return {
             imageUrl: uploadResult.data?.ufsUrl ?? null,
