@@ -526,6 +526,7 @@ const { page, category, mode, id } = Astro.props;
 
             messageDiv.appendChild(messageContent);
             chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
 
             // Typeset MathJax for the new message
             await typesetMathJax([messageContent]);
@@ -824,6 +825,8 @@ const { page, category, mode, id } = Astro.props;
             const elementsToTypeset = document.querySelectorAll('.chat-messages .message-content');
             await typesetMathJax(elementsToTypeset);
             activateDesmos();
+            const chatMessages = document.querySelector('.chat-messages');
+            chatMessages?.scrollTo({ top: chatMessages.scrollHeight, behavior: 'instant' });
         }
     }
 
