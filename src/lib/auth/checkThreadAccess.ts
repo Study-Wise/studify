@@ -11,7 +11,6 @@ export interface ThreadAccessResult {
     isAuthorized: boolean;
     isPublic: boolean;
     threadOwner: string | null;
-    threadExists: boolean;
 }
 
 export async function checkThreadAccess(
@@ -22,7 +21,6 @@ export async function checkThreadAccess(
 ): Promise<ThreadAccessResult> {
     let threadOwner: string | null = null;
     let isPublicThread = false;
-    let threadExists = false;
 
     // Get user email - fallback to dev user if in dev mode and no user provided
     let effectiveUser = user;
@@ -55,7 +53,6 @@ export async function checkThreadAccess(
             const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
             if (threads.length > 0) {
                 const thread = threads[0];
-                threadExists = true;
                 threadOwner = thread.email;
                 isPublicThread = thread.isPublic;
 
@@ -65,8 +62,7 @@ export async function checkThreadAccess(
                     return {
                         isAuthorized: false,
                         isPublic: false,
-                        threadOwner: null,
-                        threadExists: true
+                        threadOwner: null
                     };
                 }
                 if (urlMode && thread.mode !== urlMode) {
@@ -74,8 +70,7 @@ export async function checkThreadAccess(
                     return {
                         isAuthorized: false,
                         isPublic: false,
-                        threadOwner: null,
-                        threadExists: true
+                        threadOwner: null
                     };
                 }
 
@@ -97,12 +92,12 @@ export async function checkThreadAccess(
     }
 
     // Check if user is authorized
-    // User is authorized if the thread exists and:
+    // User is authorized if:
     // 1. They own the thread (email matches)
     // 2. Thread is unclaimed
     // 3. They are an admin
     const isAuthorized = Boolean(
-        threadExists &&
+        threadId &&
         ((threadOwner && threadOwner === userEmail) || !threadOwner || isUserAdminFlag)
     );
 
@@ -112,7 +107,6 @@ export async function checkThreadAccess(
     return {
         isAuthorized,
         isPublic,
-        threadOwner,
-        threadExists
+        threadOwner
     };
 }
