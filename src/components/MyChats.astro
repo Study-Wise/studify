@@ -23,31 +23,6 @@ const threadsByCategory: Record<string, typeof threads> = threads.reduce((acc, t
     acc[categoryKey].push(thread);
     return acc;
 }, {} as Record<string, typeof threads>);
-
-// Format date helper
-function formatDate(date: Date) {
-    const now = new Date();
-    const diff = now.getTime() - date.getTime();
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-
-    if (days === 0) {
-        const hours = Math.floor(diff / (1000 * 60 * 60));
-        if (hours === 0) {
-            const minutes = Math.floor(diff / (1000 * 60));
-            return minutes <= 1 ? 'Just now' : `${minutes} minutes ago`;
-        }
-        return hours === 1 ? '1 hour ago' : `${hours} hours ago`;
-    }
-    else if (days === 1) {
-        return 'Yesterday';
-    }
-    else if (days < 7) {
-        return `${days} days ago`;
-    }
-    else {
-        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    }
-}
 ---
 
 <div class="my-chats-container">
@@ -71,7 +46,6 @@ function formatDate(date: Date) {
                             {categoryThreads.map((thread) => {
                                 const mode = category.modes[thread.mode];
                                 const chatUrl = `/${categoryKey}/${thread.mode}/chat/${thread.id}`;
-                                const updatedDate = new Date(thread.updatedAt);
 
                                 return (
                                     <div class="thread-row" data-thread-id={thread.id}>
@@ -88,7 +62,7 @@ function formatDate(date: Date) {
                                                 </div>
                                                 <div class="thread-meta">
                                                     <span class="thread-date">
-                                                        {formatDate(updatedDate)}
+                                                        {thread.updatedAt.toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}
                                                     </span>
                                                 </div>
                                             </div>
