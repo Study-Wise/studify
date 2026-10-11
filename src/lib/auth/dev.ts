@@ -115,12 +115,14 @@ export async function checkDevThreadAccess(
             isAuthorized: false,
             isPublic: false,
             threadOwner: null,
+            threadExists: false
         };
     }
 
     const devUser = await getDevUser();
     let threadOwner: string | null = null;
     let isPublicThread = false;
+    let threadExists = false;
 
     // Get dev user email
     const userEmail = devUser?.email || null;
@@ -138,6 +140,7 @@ export async function checkDevThreadAccess(
 
             if (threads.length > 0) {
                 const thread = threads[0];
+                threadExists = true;
                 threadOwner = thread.email;
                 isPublicThread = thread.isPublic;
 
@@ -150,6 +153,7 @@ export async function checkDevThreadAccess(
                         isAuthorized: false,
                         isPublic: false,
                         threadOwner: null,
+                        threadExists: true
                     };
                 }
                 if (urlMode && thread.mode !== urlMode) {
@@ -160,6 +164,7 @@ export async function checkDevThreadAccess(
                         isAuthorized: false,
                         isPublic: false,
                         threadOwner: null,
+                        threadExists: true
                     };
                 }
 
@@ -182,12 +187,12 @@ export async function checkDevThreadAccess(
     }
 
     // Check if user is authorized
-    // User is authorized if:
+    // User is authorized if the thread exists and:
     // 1. They own the thread (email matches)
     // 2. Thread is unclaimed
     // 3. They are an admin
     const isAuthorized = Boolean(
-        threadId &&
+        threadExists &&
             ((threadOwner && threadOwner === userEmail) ||
                 !threadOwner ||
                 isUserAdminFlag)
@@ -200,5 +205,6 @@ export async function checkDevThreadAccess(
         isAuthorized,
         isPublic,
         threadOwner,
+        threadExists,
     };
 }

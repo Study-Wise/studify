@@ -48,6 +48,10 @@ if (!isNewChat) {
     isAuthorized = accessCheck.isAuthorized;
     isPublic = accessCheck.isPublic;
 
+    // Unknown thread IDs start a fresh chat instead of rendering an empty one
+    if (!accessCheck.threadExists) {
+        return Astro.redirect(`/${category}/${mode}/chat/new`);
+    }
 }
 
 // For new chats, user must be authenticated
