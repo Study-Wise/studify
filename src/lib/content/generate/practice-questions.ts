@@ -64,7 +64,7 @@ ${stepByStepHTML}
 ---
 
 #### Multiple Choice Questions
-Generate 5-7 multiple choice questions with 4 options each (A, B, C, D). Mark the correct answer clearly. Questions should test conceptual understanding, not just memorization.
+Generate 5-7 multiple choice questions with 4 options each (A, B, C, D). Mark the correct answer clearly. Exactly one option must be correct; the other three must be genuinely wrong, and no two options may be equivalent (for example the same expression written differently or rewritten with a substitution). Questions should test conceptual understanding, not just memorization.
 
 Format:
 **Question 1:** [Question text here]
