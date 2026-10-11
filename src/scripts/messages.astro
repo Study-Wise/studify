@@ -54,14 +54,9 @@ const { page, category, mode, id } = Astro.props;
     let isGenerating = false;
 
     function handleEnterKey(event) {
-        if (event.key !== 'Enter' || event.shiftKey) return;
-        if (event.target.value.trim() !== '') {
+        if (event.key === 'Enter' && !event.shiftKey && event.target.value.trim() !== '') {
             event.preventDefault();
             if (!isGenerating && !sendButton.disabled) generateOutput();
-        }
-        else if (page === 'chat' && !isGenerating) {
-            event.preventDefault();
-            messageInput.setAttribute('aria-invalid', 'true');
         }
     }
 
@@ -72,11 +67,6 @@ const { page, category, mode, id } = Astro.props;
             return;
         }
         if (!messageInput.value || !messageInput.value.trim()) {
-            if (page === 'chat') {
-                messageInput.setAttribute('aria-invalid', 'true');
-                messageInput.focus();
-                return;
-            }
             displayError('Please paste homework text.');
             messageInput.focus();
             return;
@@ -787,7 +777,6 @@ const { page, category, mode, id } = Astro.props;
             messageInput.addEventListener('keydown', handleEnterKey);
             messageInput.addEventListener('input', () => {
                 sendButton.disabled = !messageInput.value.trim();
-                if (messageInput.value.trim()) messageInput.removeAttribute('aria-invalid');
             });
         }
 
