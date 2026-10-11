@@ -376,6 +376,10 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
             }
         }
 
+        // Add the user message to the history that gets saved. streamText works on a
+        // filtered copy, so a user message it appends never reaches this array
+        convoHistory.push({ role: 'user', content: userPrompt });
+
         // AI Generation
         const tools = modeObj.tools || {};
         let streamResult: Awaited<ReturnType<typeof streamText>>;
