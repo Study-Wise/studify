@@ -69,7 +69,7 @@ Studify is your comprehensive AI-powered learning companion. Whether you're stud
 - **Live calculations** for math and science problems
 - **Web search integration** for additional resources
 - **File uploads** to share your homework and materials
-- **Multiple AI models** to choose from for the best learning experience
+- **Powered by leading AI models** for accurate, helpful explanations
 
 ## How It Works
 
