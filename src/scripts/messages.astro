@@ -95,6 +95,7 @@ const { page, category, mode, id } = Astro.props;
 
         // For chat page, add user message first
         if (page === 'chat') {
+            document.querySelector('.chat-empty-state')?.remove();
             await addMessage('user', userMessage);
         }
 
