@@ -52,7 +52,6 @@ body:
         - Additional resources
         - Authentication / sign-in
         - Settings / profile
-        - Admin
         - PWA / offline
         - Other
     validations:
