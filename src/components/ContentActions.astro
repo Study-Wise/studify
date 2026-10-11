@@ -154,7 +154,7 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
             // Disable button and show loading state
             actionBtn.setAttribute('disabled', 'true');
             const originalContent = actionBtn.innerHTML;
-            const loadingText = isRegenerate ? `${regenerateVerb}...` : `${generateVerb}...`;
+            const loadingText = `${(isRegenerate ? regenerateVerb : generateVerb).replace(/^(\w+?)e?\b/, '$1ing')}…`;
             actionBtn.innerHTML = `<span class="material-symbols-outlined spinning">progress_activity</span><span>${loadingText}</span>`;
 
             try {
