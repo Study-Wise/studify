@@ -287,6 +287,37 @@
                 opacity: 0.6;
                 line-height: 1.5;
             }
+
+            .delete-chat-button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: $spacing-extra-small;
+                width: 100%;
+                padding: $spacing-small $spacing-medium;
+                margin-block-start: $spacing-small;
+                background-color: transparent;
+                color: var(--danger);
+                border: 1px solid var(--danger);
+                border-radius: $border-radius-medium;
+                cursor: pointer;
+                font-size: 0.9rem;
+                font-weight: $font-weight-medium;
+                transition: background-color $transition-fast $ease;
+
+                .material-symbols-outlined {
+                    font-size: $font-size-large;
+                }
+
+                &:hover {
+                    background-color: rgb(from var(--danger) r g b / 10%);
+                }
+
+                &:disabled {
+                    opacity: $opacity-disabled;
+                    cursor: not-allowed;
+                }
+            }
         }
     }
 }
