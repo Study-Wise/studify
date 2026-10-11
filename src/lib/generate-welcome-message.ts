@@ -4,7 +4,7 @@
 import { generateText } from '@/lib/ai-service';
 import config from '@/lib/config';
 import type { Message } from '@/lib/threads';
-import type { ToolRecord } from '@/lib/ai-service';
+import type { ToolRecord, ToolContext } from '@/lib/ai-service';
 
 export interface GenerateWelcomeMessageParams {
     systemPrompt: string;
@@ -13,6 +13,7 @@ export interface GenerateWelcomeMessageParams {
     provider: string;
     tools: ToolRecord;
     requestId: string;
+    toolContext?: ToolContext;
 }
 
 export async function generateWelcomeMessage({
@@ -21,7 +22,8 @@ export async function generateWelcomeMessage({
     userModel,
     provider,
     tools,
-    requestId
+    requestId,
+    toolContext
 }: GenerateWelcomeMessageParams): Promise<string> {
     // Create a copy of convoHistory to avoid polluting the original with the welcome prompt
     const convoHistoryCopy = structuredClone(convoHistory);
@@ -35,7 +37,8 @@ export async function generateWelcomeMessage({
         tools,
         undefined,
         25,
-        requestId
+        requestId,
+        toolContext
     );
 
     // Note: Client tool calls from welcome message are currently ignored

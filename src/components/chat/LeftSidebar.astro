@@ -312,7 +312,6 @@ const {
                     const formData = new FormData();
                     formData.append('file', file);
                     formData.append('threadId', activeThreadId);
-                    formData.append('email', email);
 
                     const response = await fetch('/api/files/upload', {
                         method: 'POST',
@@ -348,7 +347,6 @@ const {
                         chunkForm.append('fileType', file.type);
                         chunkForm.append('fileSize', String(file.size));
                         chunkForm.append('threadId', activeThreadId);
-                        chunkForm.append('email', email);
 
                         const chunkRes = await fetch('/api/files/upload-chunk', {
                             method: 'POST',
@@ -466,7 +464,7 @@ const {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ threadId: currentThreadId, email, fileKey })
+                body: JSON.stringify({ threadId: currentThreadId, fileKey })
             });
 
             const data = await response.json();

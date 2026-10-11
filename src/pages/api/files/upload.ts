@@ -8,12 +8,20 @@ import { userFilesUpload } from '@/lib/uploadthing';
 import { extractTextFromFile } from '@/lib/file-processing';
 import type { UploadedFile } from '@/lib/threads';
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
     try {
+        // Use the authenticated session user, never a client-supplied email
+        const email = locals.user?.email;
+        if (!email) {
+            return new Response(
+                JSON.stringify({ status: 'error', error: 'Authentication required' }),
+                { status: 401 }
+            );
+        }
+
         const formData = await request.formData();
         const file = formData.get('file') as File;
         const threadId = formData.get('threadId') as string;
-        const email = formData.get('email') as string;
 
         if (!file || !threadId || !email) {
             return new Response(
