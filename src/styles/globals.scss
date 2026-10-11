@@ -78,6 +78,17 @@ input, textarea, select, button {
     --section-title: light-dark(#{$section-title-light}, #{$section-title-dark});
     --message-bg: light-dark(#{$message-bg-light}, #{$message-bg-dark});
 
+    // light-dark() resolves from color-scheme, so key it off the app theme
+    color-scheme: light dark;
+
+    &[data-theme='light'] {
+        color-scheme: light;
+    }
+
+    &[data-theme='dark'] {
+        color-scheme: dark;
+    }
+
     &:not(:has(.chat-page)) {
         @supports (scrollbar-gutter: stable) {
             scrollbar-gutter: stable;

@@ -8,8 +8,8 @@
     padding: 0;
     width: 90%;
     max-width: 500px;
-    background-color: var(--card-background, #fff);
-    color: var(--text-color, #333);
+    background-color: var(--card-bg);
+    color: var(--body-text);
     border: none;
     border-radius: $border-radius-large;
     box-shadow: $box-shadow-huge;
@@ -38,19 +38,6 @@
             opacity: 1;
             scale: 1;
             translate: 0 0;
-        }
-    }
-
-    @media (prefers-color-scheme: dark) {
-        background-color: var(--card-background-dark, #1f2937);
-        color: var(--text-color-dark, #f3f4f6);
-
-        .dialog-header {
-            border-block-end-color: var(--border-color-dark, #374151);
-        }
-
-        .dialog-message {
-            color: var(--text-color-secondary-dark, #d1d5db);
         }
     }
 
@@ -133,7 +120,7 @@
     align-items: center;
     gap: $spacing-small;
     padding-block-end: $spacing-extra-small;
-    border-block-end: 1px solid var(--border-color, #e5e7eb);
+    border-block-end: 1px solid var(--card-border);
 }
 
 .dialog-icon {
@@ -160,7 +147,7 @@
     margin: 0;
     font-size: $font-size-base;
     line-height: $line-height-relaxed;
-    color: var(--text-color-secondary, #666);
+    color: var(--body-text);
 
     @media (width <= 640px) {
         font-size: 0.9375rem;
