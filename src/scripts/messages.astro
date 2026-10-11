@@ -171,6 +171,9 @@ const { page, category, mode, id } = Astro.props;
                 spinner && (spinner.style.display = 'inline-block');
                 if (sendButton) sendButton.disabled = true;
                 if (messageInput) {
+                    if (messageInput.dataset.defaultPlaceholder === undefined) {
+                        messageInput.dataset.defaultPlaceholder = messageInput.placeholder;
+                    }
                     messageInput.placeholder = 'Waiting for response...';
                 }
                 const icon = sendButton?.querySelector('i.material-symbols-outlined');
@@ -184,7 +187,7 @@ const { page, category, mode, id } = Astro.props;
                 spinner && (spinner.style.display = 'none');
                 if (sendButton) sendButton.disabled = !messageInput?.value?.trim();
                 if (messageInput) {
-                    messageInput.placeholder = 'Type your message...';
+                    messageInput.placeholder = messageInput.dataset.defaultPlaceholder ?? messageInput.placeholder;
                     messageInput.focus();
                 }
                 const icon = sendButton?.querySelector('i.material-symbols-outlined');
