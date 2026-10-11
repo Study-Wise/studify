@@ -7,7 +7,7 @@ const user = Astro.locals.user;
 {user ? (
     <div class="user-button-container">
         <button type="button" class="user-button nav-btn" id="user-menu-trigger" aria-label="User menu">
-            <span class="material-symbols-outlined">account_circle</span>
+            <span class="material-symbols-outlined" aria-hidden="true">account_circle</span>
             <span class="user-name">{user.name || user.email}</span>
         </button>
         <div class="user-menu" id="user-menu" hidden>
@@ -17,7 +17,7 @@ const user = Astro.locals.user;
     </div>
 ) : (
     <a href="/user/sign-in" class="nav-btn">
-        <span class="material-symbols-outlined">login</span>
+        <span class="material-symbols-outlined" aria-hidden="true">login</span>
         Sign In
     </a>
 )}

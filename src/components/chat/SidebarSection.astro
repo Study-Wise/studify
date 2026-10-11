@@ -34,12 +34,12 @@ const regenerateButtonId = `regenerate-${id}-btn`;
 <div class="sidebar-section">
     <div class="section-header">
         <div class="section-title">
-            <span class="material-symbols-outlined">{icon}</span>
+            <span class="material-symbols-outlined" aria-hidden="true">{icon}</span>
             <h3>{title}</h3>
         </div>
         {hasContent && isAuthorized && (
-            <button type="button" class="regenerate-btn" id={regenerateButtonId} title={`Regenerate ${title}`} data-thread-id={threadId}>
-                <span class="material-symbols-outlined">refresh</span>
+            <button type="button" class="regenerate-btn" id={regenerateButtonId} title={`Regenerate ${title}`} aria-label={`Regenerate ${title}`} data-thread-id={threadId}>
+                <span class="material-symbols-outlined" aria-hidden="true">refresh</span>
             </button>
         )}
     </div>
@@ -48,7 +48,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
             <slot name="content" />
         ) : hasContent ? (
             <a href={viewUrl} class="view-full-btn" target="_blank">
-                <span class="material-symbols-outlined">open_in_new</span>
+                <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
                 <span>{viewButtonText}</span>
             </a>
         ) : (
@@ -56,7 +56,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
                 {emptyMessage && <p class="empty-message">{emptyMessage}</p>}
                 {isAuthorized && (
                     <button type="button" class="generate-btn" id={generateButtonId} data-thread-id={threadId}>
-                        <span class="material-symbols-outlined">{icon}</span>
+                        <span class="material-symbols-outlined" aria-hidden="true">{icon}</span>
                         <span>{`${generateVerb} ${title}`}</span>
                     </button>
                 )}
@@ -85,7 +85,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
             // Replace with view button
             sectionBody.innerHTML = `
                 <a href="${viewUrl}" class="view-full-btn" target="_blank">
-                    <span class="material-symbols-outlined">open_in_new</span>
+                    <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
                     <span>${viewButtonText}</span>
                 </a>
             `;
@@ -98,8 +98,9 @@ const regenerateButtonId = `regenerate-${id}-btn`;
             newRegenerateBtn.className = 'regenerate-btn';
             newRegenerateBtn.id = regenerateButtonId;
             newRegenerateBtn.title = `Regenerate ${title}`;
+            newRegenerateBtn.setAttribute('aria-label', `Regenerate ${title}`);
             newRegenerateBtn.setAttribute('data-thread-id', threadId);
-            newRegenerateBtn.innerHTML = '<span class="material-symbols-outlined">refresh</span>';
+            newRegenerateBtn.innerHTML = '<span class="material-symbols-outlined" aria-hidden="true">refresh</span>';
             sectionHeader.appendChild(newRegenerateBtn);
 
             // Attach event listener to new button
@@ -123,7 +124,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
         const originalContent = btn.innerHTML;
         const loadingText = `${(isRegenerate ? regenerateVerb : generateVerb).replace(/^(\w+?)e?\b/, '$1ing')}…`;
 
-        btn.innerHTML = `<span class="material-symbols-outlined spinning">progress_activity</span><span>${loadingText}</span>`;
+        btn.innerHTML = `<span class="material-symbols-outlined spinning" aria-hidden="true">progress_activity</span><span>${loadingText}</span>`;
 
         try {
             const response = await fetch(apiEndpoint, {
@@ -143,7 +144,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
                 // If regenerating, restore the button state
                 if (isRegenerate && btn) {
                     btn.removeAttribute('disabled');
-                    btn.innerHTML = '<span class="material-symbols-outlined">refresh</span>';
+                    btn.innerHTML = '<span class="material-symbols-outlined" aria-hidden="true">refresh</span>';
                 }
             }
             else {

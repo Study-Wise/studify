@@ -48,7 +48,7 @@ const parsedContent = latestPracticeQuestions ? await marked.parse(latestPractic
 <Layout title={`Practice Questions | ${modeName} | ${categoryName}`} className="practice-questions-page content-page">
     {!isAuthorized && !isPublic ? (
         <div class="empty-state">
-            <span class="material-symbols-outlined">lock</span>
+            <span class="material-symbols-outlined" aria-hidden="true">lock</span>
             <h2>Access Denied</h2>
             <p>You don't have permission to view these practice questions. This thread belongs to another user.</p>
             <a href="/" class="btn-primary">Go Home</a>
@@ -66,7 +66,7 @@ const parsedContent = latestPracticeQuestions ? await marked.parse(latestPractic
                 <div class="content-container practice-questions-container" set:html={parsedContent} />
             ) : (
                 <div class="empty-state">
-                    <span class="material-symbols-outlined">quiz</span>
+                    <span class="material-symbols-outlined" aria-hidden="true">quiz</span>
                     <h2>No Practice Questions Found</h2>
                     <p>There are no practice questions generated for this conversation yet.</p>
                 </div>

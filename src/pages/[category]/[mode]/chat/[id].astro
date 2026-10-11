@@ -97,7 +97,7 @@ export const inNav = 'hide';
 <Layout title={`${threadTitle || (isNewChat ? 'New Chat' : 'Chat')} | ${modeName} | ${categoryName}`} container={false} isChatArea={true} className="chat-page" hideCopyright={true}>
     <header class="chat-header">
         <div class="chat-title-container">
-            <h2><span class="material-symbols-outlined">chat</span>&nbsp;{threadTitle || (isNewChat ? 'New Chat' : 'Chat')}</h2>
+            <h2><span class="material-symbols-outlined" aria-hidden="true">chat</span>&nbsp;{threadTitle || (isNewChat ? 'New Chat' : 'Chat')}</h2>
         </div>
         <Header pTitle={threadTitle || (isNewChat ? 'New Chat' : 'Chat')} />
     </header>
@@ -120,7 +120,7 @@ export const inNav = 'hide';
                                 <div class="tool-call-log">
                                     {message.toolCallLog.map(entry => (
                                         <div class="tool-call-entry">
-                                            <span class="material-symbols-outlined" data-state={entry.status}>
+                                            <span class="material-symbols-outlined" aria-hidden="true" data-state={entry.status}>
                                                 {entry.status === 'success' ? 'check_circle' : 'error'}
                                             </span>
                                             <span class="tool-name">{labels[entry.toolName] ?? entry.toolName}</span>

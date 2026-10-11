@@ -48,7 +48,7 @@ const parsedContent = latestReferenceSheet ? await marked.parse(latestReferenceS
 <Layout title={`Reference Sheet | ${modeName} | ${categoryName}`} className="reference-sheet-page content-page">
     {!isAuthorized && !isPublic ? (
         <div class="empty-state">
-            <span class="material-symbols-outlined">lock</span>
+            <span class="material-symbols-outlined" aria-hidden="true">lock</span>
             <h2>Access Denied</h2>
             <p>You don't have permission to view this reference sheet. This thread belongs to another user.</p>
             <a href="/" class="btn-primary">Go Home</a>
@@ -66,7 +66,7 @@ const parsedContent = latestReferenceSheet ? await marked.parse(latestReferenceS
                 <div class="content-container reference-sheet-content" set:html={parsedContent} />
             ) : (
                 <div class="empty-state">
-                    <span class="material-symbols-outlined">description</span>
+                    <span class="material-symbols-outlined" aria-hidden="true">description</span>
                     <h2>No Reference Sheet Found</h2>
                     <p>There is no reference sheet generated for this conversation yet.</p>
                 </div>

@@ -49,7 +49,7 @@ if (latestMindMap) {
 <Layout title={`Mind Map | ${modeName} | ${categoryName}`} className="mind-map-page content-page" container={false}>
     {!isAuthorized && !isPublic ? (
         <div class="empty-state">
-            <span class="material-symbols-outlined">lock</span>
+            <span class="material-symbols-outlined" aria-hidden="true">lock</span>
             <h2>Access Denied</h2>
             <p>You don't have permission to view this mind map. This thread belongs to another user.</p>
             <a href="/" class="btn-primary">Go Home</a>
@@ -74,7 +74,7 @@ if (latestMindMap) {
                 </div>
             ) : (
                 <div class="empty-state">
-                    <span class="material-symbols-outlined">hub</span>
+                    <span class="material-symbols-outlined" aria-hidden="true">hub</span>
                     <h2>No Mind Map Found</h2>
                     <p>There is no mind map generated for this conversation yet.</p>
                 </div>

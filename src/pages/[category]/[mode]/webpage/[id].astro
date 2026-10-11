@@ -49,7 +49,7 @@ if (latestWebpage) {
 <Layout title={`Webpage | ${modeName} | ${categoryName}`} className="webpage-page content-page" container={false}>
     {!isAuthorized && !isPublic ? (
         <div class="empty-state">
-            <span class="material-symbols-outlined">lock</span>
+            <span class="material-symbols-outlined" aria-hidden="true">lock</span>
             <h2>Access Denied</h2>
             <p>You don't have permission to view this webpage. This thread belongs to another user.</p>
             <a href="/" class="btn-primary">Go Home</a>
@@ -69,7 +69,7 @@ if (latestWebpage) {
                 </div>
             ) : (
                 <div class="empty-state">
-                    <span class="material-symbols-outlined">web</span>
+                    <span class="material-symbols-outlined" aria-hidden="true">web</span>
                     <h2>No Webpage Found</h2>
                     <p>There is no webpage generated for this conversation yet.</p>
                 </div>

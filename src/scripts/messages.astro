@@ -302,7 +302,7 @@ const { page, category, mode, id } = Astro.props;
         // Replace empty state with view button
         sectionBody.innerHTML = `
             <a href="${url}" class="view-full-btn" target="_blank">
-                <span class="material-symbols-outlined">open_in_new</span>
+                <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
                 <span>${buttonText}</span>
             </a>
         `;
@@ -316,8 +316,9 @@ const { page, category, mode, id } = Astro.props;
             regenerateBtn.className = 'regenerate-btn';
             regenerateBtn.id = `regenerate-${contentType}-btn`;
             regenerateBtn.title = `Regenerate`;
+            regenerateBtn.setAttribute('aria-label', `Regenerate`);
             regenerateBtn.setAttribute('data-thread-id', threadIdAttr);
-            regenerateBtn.innerHTML = '<span class="material-symbols-outlined">refresh</span>';
+            regenerateBtn.innerHTML = '<span class="material-symbols-outlined" aria-hidden="true">refresh</span>';
             sectionHeader.appendChild(regenerateBtn);
         }
     }
@@ -393,6 +394,7 @@ const { page, category, mode, id } = Astro.props;
                         entry.className = 'tool-call-entry';
                         const icon = document.createElement('span');
                         icon.className = 'material-symbols-outlined';
+                        icon.setAttribute('aria-hidden', 'true');
                         icon.dataset.state = 'pending';
                         icon.textContent = 'schedule';
                         const label = document.createElement('span');
@@ -570,6 +572,7 @@ const { page, category, mode, id } = Astro.props;
 
             const icon = document.createElement('span');
             icon.className = 'material-symbols-outlined';
+            icon.setAttribute('aria-hidden', 'true');
             icon.dataset.state = entry.status;
             icon.textContent = entry.status === 'success' ? 'check_circle' : 'error';
 
@@ -665,6 +668,7 @@ const { page, category, mode, id } = Astro.props;
 
             const icon = document.createElement('span');
             icon.classList.add('material-symbols-outlined');
+            icon.setAttribute('aria-hidden', 'true');
             icon.textContent = 'chat';
             btn.appendChild(icon);
 
@@ -830,4 +834,4 @@ const { page, category, mode, id } = Astro.props;
     if (document.readyState === 'complete' || document.readyState === 'interactive') {
         initializePage();
     }
-</script> 
+</script> 
