@@ -151,6 +151,22 @@ export async function generateResources(threadId: string): Promise<string> {
         throw new VendorError('Exa', 'Failed to search for educational resources', { cause: error });
     }
 
+    // Use https, and drop links already listed in an earlier section. URLs are
+    // compared ignoring protocol, "www.", case and trailing slashes.
+    const seenUrls = new Set<string>();
+    for (const section of ['videos', 'articles', 'tutorials', 'documentation'] as const) {
+        resourceCollection[section] = resourceCollection[section].filter(resource => {
+            const url = new URL(resource.url);
+            url.protocol = 'https:';
+            resource.url = url.toString();
+
+            const key = `${url.hostname.replace(/^www\./, '')}${url.pathname.replace(/\/+$/, '')}${url.search}`.toLowerCase();
+            if (seenUrls.has(key)) return false;
+            seenUrls.add(key);
+            return true;
+        });
+    }
+
     const content = JSON.stringify(resourceCollection, null, 2);
 
     // Save to database
