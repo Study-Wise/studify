@@ -6,16 +6,10 @@
     padding: 2rem 1rem;
 
     article {
-        background: var(--background-secondary, #fff);
+        background: var(--card-bg);
         border-radius: 12px;
         box-shadow: 0 0 8px rgb(0 0 0 / 10%);
         overflow: hidden;
-    }
-
-    @media (prefers-color-scheme: dark) {
-        article {
-            background: var(--background-secondary, #1f2937);
-        }
     }
 }
 
@@ -31,15 +25,11 @@
     font-size: 2rem;
     font-weight: 700;
     line-height: 1.3;
-    color: var(--text-primary, #1f2937);
+    color: var(--body-text);
     margin: 0 0 1rem;
 
     @media (width <= 768px) {
         font-size: 1.5rem;
-    }
-
-    @media (prefers-color-scheme: dark) {
-        color: var(--text-primary, #f9fafb);
     }
 }
 
@@ -114,13 +104,13 @@
     padding: 2rem;
     font-size: 1.125rem;
     line-height: 1.8;
-    color: var(--text-primary, #1f2937);
+    color: var(--body-text);
 
     h1, h2, h3, h4, h5, h6 {
         margin-top: 1.5rem;
         margin-bottom: 0.75rem;
         font-weight: 600;
-        color: var(--text-primary, #1f2937);
+        color: var(--body-text);
     }
 
     h2 {
@@ -147,7 +137,7 @@
     }
 
     code {
-        background: var(--code-background, #f3f4f6);
+        background: var(--message-bg);
         padding: 0.125rem 0.375rem;
         border-radius: 4px;
         font-family: 'Courier New', monospace;
@@ -155,7 +145,7 @@
     }
 
     pre {
-        background: var(--code-background, #f3f4f6);
+        background: var(--message-bg);
         padding: 1rem;
         border-radius: 8px;
         overflow-x: auto;
@@ -171,7 +161,7 @@
         border-left: 4px solid var(--accent-color, #3b82f6);
         margin: 1rem 0;
         padding: 0.5rem 1rem;
-        background: var(--blockquote-background, #f9fafb);
+        background: var(--body-bg);
         font-style: italic;
     }
 
@@ -187,7 +177,7 @@
         }
 
         th {
-            background: var(--table-header-background, #f3f4f6);
+            background: var(--message-bg);
             font-weight: 600;
         }
     }
@@ -213,40 +203,12 @@
         padding: 1.5rem;
         font-size: 1rem;
     }
-
-    @media (prefers-color-scheme: dark) {
-        color: var(--text-primary, #f9fafb);
-
-        h1, h2, h3, h4, h5, h6 {
-            color: var(--text-primary, #f9fafb);
-        }
-
-        code {
-            background: var(--code-background, #374151);
-        }
-
-        pre {
-            background: var(--code-background, #374151);
-        }
-
-        blockquote {
-            background: var(--blockquote-background, #374151);
-        }
-
-        table th {
-            background: var(--table-header-background, #374151);
-        }
-    }
 }
 
 .question-footer {
     padding: 2rem;
     border-top: 1px solid var(--border-color, #e5e7eb);
-    background: var(--background-tertiary, #f9fafb);
-
-    @media (prefers-color-scheme: dark) {
-        background: var(--background-tertiary, #111827);
-    }
+    background: var(--body-bg);
 }
 
 .question-helpful {
@@ -279,18 +241,12 @@
         font-size: 1.25rem;
         font-weight: 600;
         margin-bottom: 0.5rem;
-        color: var(--text-primary, #1f2937);
+        color: var(--body-text);
     }
 
     p {
         color: var(--text-secondary, #6b7280);
         margin-bottom: 1rem;
-    }
-
-    @media (prefers-color-scheme: dark) {
-        h2 {
-            color: var(--text-primary, #f9fafb);
-        }
     }
 }
 
@@ -340,17 +296,12 @@
 }
 
 .btn-secondary {
-    background: var(--secondary-color, #f3f4f6);
-    color: var(--text-primary, #1f2937);
+    background: var(--message-bg);
+    color: var(--body-text);
     border: 1px solid var(--border-color, #e5e7eb);
 
     &:hover {
         background: var(--secondary-hover, #e5e7eb);
         border-color: var(--border-hover, #d1d5db);
-    }
-
-    @media (prefers-color-scheme: dark) {
-        background: var(--secondary-color, #374151);
-        color: var(--text-primary, #f9fafb);
     }
 }

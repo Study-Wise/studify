@@ -3,6 +3,8 @@
 @use '../variables/colors/accent/colors' as colors;
 @use 'sass:list';
 @use 'sass:map';
+@use '../variables/colors/statuses' as *;
+@use 'sass:color';
 
 .auth-page {
     min-height: 100dvh;
@@ -110,19 +112,13 @@
 
 .error-message {
     padding: $spacing-small $spacing-medium;
-    background: hsl(0deg 100% 96% / 100%);
-    color: hsl(0deg 60% 40% / 100%);
-    border: 1px solid hsl(0deg 100% 90% / 100%);
+    background: color.change($color-error, $alpha: 0.1);
+    color: $color-error;
+    border: 1px solid color.change($color-error, $alpha: 0.3);
     border-radius: $border-radius-medium;
     font-size: $font-size-small;
     line-height: $line-height-normal;
     margin-top: -$spacing-small;
-
-    @media (prefers-color-scheme: dark) {
-        background: hsl(0deg 40% 20% / 100%);
-        color: hsl(0deg 100% 90% / 100%);
-        border-color: hsl(0deg 40% 30% / 100%);
-    }
 }
 
 .auth-button {

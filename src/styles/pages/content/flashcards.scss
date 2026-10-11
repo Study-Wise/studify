@@ -85,10 +85,6 @@
             .flashcard-back {
                 background: linear-gradient(135deg, hsl(from var(--primary) h s calc(l + 35%)) 0%, hsl(from var(--primary) h s calc(l + 30%)) 100%);
                 transform: rotateY(180deg);
-
-                @media (prefers-color-scheme: dark) {
-                    background: linear-gradient(135deg, hsl(from var(--primary) h s calc(l - 20%)) 0%, hsl(from var(--primary) h s calc(l - 25%)) 100%);
-                }
             }
 
             .card-label {

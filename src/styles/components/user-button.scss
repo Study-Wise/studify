@@ -1,4 +1,6 @@
 @use '../variables/tokens' as *;
+@use '../variables/colors/statuses' as *;
+@use 'sass:color';
 
 .user-button-container {
     position: relative;
@@ -19,7 +21,7 @@
     transition: background-color 0.2s;
 
     &:hover {
-        background-color: rgb(0 0 0 / 5%);
+        background-color: var(--card-shadow);
     }
 
     .material-symbols-outlined {
@@ -32,12 +34,6 @@
         text-overflow: ellipsis;
         white-space: nowrap;
     }
-
-    @media (prefers-color-scheme: dark) {
-        &:hover {
-            background-color: rgb(255 255 255 / 10%);
-        }
-    }
 }
 
 .user-menu {
@@ -47,19 +43,14 @@
     margin-top: 0.5rem;
     padding: 0.5rem 0;
     min-width: 200px;
-    background: white;
-    border: 1px solid #e5e7eb;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
     border-radius: 0.5rem;
     box-shadow: 0 0 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -1px rgb(0 0 0 / 6%);
     z-index: $z-index-popover;
 
     &[hidden] {
         display: none;
-    }
-
-    @media (prefers-color-scheme: dark) {
-        background: #1f2937;
-        border-color: #374151;
     }
 }
 
@@ -69,7 +60,7 @@
     padding: 0.75rem 1rem;
     text-align: left;
     text-decoration: none;
-    color: #374151;
+    color: var(--body-text);
     background: none;
     border: none;
     cursor: pointer;
@@ -77,34 +68,17 @@
     transition: background-color 0.2s;
 
     &:hover {
-        background-color: #f3f4f6;
+        background-color: var(--message-bg);
     }
 
     &.signout {
-        color: #dc2626;
-        border-top: 1px solid #e5e7eb;
+        color: $color-error;
+        border-top: 1px solid var(--card-border);
         margin-top: 0.25rem;
         padding-top: 0.75rem;
 
         &:hover {
-            background-color: #fef2f2;
-        }
-    }
-
-    @media (prefers-color-scheme: dark) {
-        color: #e5e7eb;
-
-        &:hover {
-            background-color: #374151;
-        }
-
-        &.signout {
-            color: #f87171;
-            border-top-color: #374151;
-
-            &:hover {
-                background-color: #450a0a;
-            }
+            background-color: color.change($color-error, $alpha: 0.1);
         }
     }
 }
