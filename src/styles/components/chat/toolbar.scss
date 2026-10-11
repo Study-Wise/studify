@@ -91,6 +91,7 @@ $padding: $spacing-medium;
         font-size: 0.9375rem;
         line-height: $line-height-normal * $font-size-base;
         min-height: 2lh;
+        max-height: 6lh;
         overflow-y: auto;
         color: var(--card-text);
         transition: opacity $transition-slow $ease-in-out;
