@@ -33,7 +33,7 @@ const { isAuthorized, isPublic } = await checkThreadAccess(id || '', user, categ
 
 // Redirect to sign-in only if not authenticated AND thread is not public
 if (!user && !isPublic) {
-    return Astro.redirect("/user/sign-in");
+    return Astro.redirect('/user/sign-in');
 }
 
 // Get the latest study guide only if authorized or public

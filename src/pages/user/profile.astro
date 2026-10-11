@@ -7,7 +7,7 @@ const user = Astro.locals.user;
 
 // Redirect to sign-in if not authenticated
 if (!user) {
-    return Astro.redirect("/user/sign-in");
+    return Astro.redirect('/user/sign-in');
 }
 ---
 
