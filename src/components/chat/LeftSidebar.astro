@@ -114,7 +114,7 @@ const {
                                 <div class="file-size">{(file.size / 1024).toFixed(1)} KB</div>
                             </div>
                             {isAuthorized && (
-                                <button class="file-delete" data-file-key={file.key} title="Delete file">
+                                <button type="button" class="file-delete" data-file-key={file.key} title="Delete file">
                                     <span class="material-symbols-outlined">delete</span>
                                 </button>
                             )}
@@ -555,7 +555,7 @@ const {
                 <div class="file-name">${file.name}</div>
                 <div class="file-size">${(file.size / 1024).toFixed(1)} KB</div>
             </div>
-            <button class="file-delete" data-file-key="${file.key}" title="Delete file">
+            <button type="button" class="file-delete" data-file-key="${file.key}" title="Delete file">
                 <span class="material-symbols-outlined">delete</span>
             </button>
         `;

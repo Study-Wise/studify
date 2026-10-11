@@ -312,6 +312,7 @@ const { page, category, mode, id } = Astro.props;
         if (sectionHeader && !section.querySelector('.regenerate-btn')) {
             const threadIdAttr = document.querySelector(`[data-thread-id]`)?.getAttribute('data-thread-id') || '';
             const regenerateBtn = document.createElement('button');
+            regenerateBtn.type = 'button';
             regenerateBtn.className = 'regenerate-btn';
             regenerateBtn.id = `regenerate-${contentType}-btn`;
             regenerateBtn.title = `Regenerate`;

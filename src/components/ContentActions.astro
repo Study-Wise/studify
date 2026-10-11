@@ -32,6 +32,7 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
 
     {isAuthorized && (
         <button
+            type="button"
             id={`${contentType}-action-btn`}
             class="action-btn primary"
             data-thread-id={threadId}

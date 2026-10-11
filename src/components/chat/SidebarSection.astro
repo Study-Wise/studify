@@ -38,7 +38,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
             <h3>{title}</h3>
         </div>
         {hasContent && isAuthorized && (
-            <button class="regenerate-btn" id={regenerateButtonId} title={`Regenerate ${title}`} data-thread-id={threadId}>
+            <button type="button" class="regenerate-btn" id={regenerateButtonId} title={`Regenerate ${title}`} data-thread-id={threadId}>
                 <span class="material-symbols-outlined">refresh</span>
             </button>
         )}
@@ -55,7 +55,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
             <div class="empty-state">
                 {emptyMessage && <p class="empty-message">{emptyMessage}</p>}
                 {isAuthorized && (
-                    <button class="generate-btn" id={generateButtonId} data-thread-id={threadId}>
+                    <button type="button" class="generate-btn" id={generateButtonId} data-thread-id={threadId}>
                         <span class="material-symbols-outlined">{icon}</span>
                         <span>{`${generateVerb} ${title}`}</span>
                     </button>
@@ -94,6 +94,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
         // Add regenerate button if not present
         if (sectionHeader && !section.querySelector('.regenerate-btn')) {
             const newRegenerateBtn = document.createElement('button');
+            newRegenerateBtn.type = 'button';
             newRegenerateBtn.className = 'regenerate-btn';
             newRegenerateBtn.id = regenerateButtonId;
             newRegenerateBtn.title = `Regenerate ${title}`;
