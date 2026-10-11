@@ -25,7 +25,7 @@ const categoryName = categoryObj?.name || category;
 const modeName = modeObj?.name || mode;
 
 ---
-<Layout title={`${modeName} | ${categoryName}`}>
+<Layout title={`${modeName} | ${categoryName}`} mathjax={true} desmos={modeObj.desmos === true}>
     {/* Introduction Section */}
     <section class="introduction-section card" aria-labelledby="how-it-works-heading">
         <h2 id="how-it-works-heading">

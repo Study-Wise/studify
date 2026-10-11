@@ -13,7 +13,7 @@ import '@/styles/globals.scss';
 
 const sTitle = 'Studify';
 const lTitle = `${sTitle} - AI Study Partner`;
-const { title, description, hideCopyright, isChatArea } = Astro.props;
+const { title, description, hideCopyright, isChatArea, mathjax = false, desmos = false } = Astro.props;
 var { className, container } = Astro.props;
 const isSignedIn = !!Astro.locals.user;
 const noTitle = title === 'Home' || title === '' || !title;
@@ -54,41 +54,6 @@ if (container) className += ' container'
         <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
         {/* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" /> */}
-        {/* MathJax Config & Loader */}
-        <script is:inline>
-            window.MathJax = {
-                tex: {
-                    inlineMath: [
-                        ["$", "$"],
-                        ["\\(", "\\)"],
-                    ],
-                    displayMath: [
-                        ["$$", "$$"],
-                        ["\\[", "\\]"],
-                    ],
-                    processEscapes: true,
-                    tags: "ams",
-                },
-                svg: { fontCache: "global" },
-                options: {
-                    skipHtmlTags: [
-                        "script",
-                        "noscript",
-                        "style",
-                        "textarea",
-                        "pre",
-                        "code",
-                    ],
-                    ignoreHtmlClass: "tex2jax_ignore",
-                    processHtmlClass: "tex2jax_process",
-                },
-                startup: {
-                    ready: () => {
-                        MathJax.startup.defaultReady();
-                    },
-                },
-            };
-        </script>
         {/* Only prerender auth pages for signed-out visitors; signed-in users get redirected away from them */}
         {!isSignedIn && (
             <script is:inline type="speculationrules">
@@ -101,7 +66,46 @@ if (container) className += ' container'
                 }
             </script>
         )}
-        <script is:inline src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script" async></script>
+        {/* MathJax Config & Loader */}
+        {mathjax && (
+            <>
+                <script is:inline>
+                    window.MathJax = {
+                        tex: {
+                            inlineMath: [
+                                ["$", "$"],
+                                ["\\(", "\\)"],
+                            ],
+                            displayMath: [
+                                ["$$", "$$"],
+                                ["\\[", "\\]"],
+                            ],
+                            processEscapes: true,
+                            tags: "ams",
+                        },
+                        svg: { fontCache: "global" },
+                        options: {
+                            skipHtmlTags: [
+                                "script",
+                                "noscript",
+                                "style",
+                                "textarea",
+                                "pre",
+                                "code",
+                            ],
+                            ignoreHtmlClass: "tex2jax_ignore",
+                            processHtmlClass: "tex2jax_process",
+                        },
+                        startup: {
+                            ready: () => {
+                                MathJax.startup.defaultReady();
+                            },
+                        },
+                    };
+                </script>
+                <script is:inline src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script" async></script>
+            </>
+        )}
     </head>
     <body data-hide-copyright={hideCopyright}>
         <OfflineSupport />
@@ -197,6 +201,6 @@ if (container) className += ' container'
                 activateDesmos();
             }
         </script>
-        <script is:inline src={`https://www.desmos.com/api/v1.10/calculator.js?apiKey=${desmosApiKey}`}></script>
+        {desmos && <script is:inline src={`https://www.desmos.com/api/v1.10/calculator.js?apiKey=${desmosApiKey}`}></script>}
     </body>
 </html>

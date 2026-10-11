@@ -77,7 +77,7 @@ const pageDescription = questionData?.answer
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
-<Layout title={pageTitle}>
+<Layout title={pageTitle} mathjax={true}>
     {/* SEO Meta Tags */}
     <Fragment slot="head">
         <meta name="description" content={pageDescription} />
