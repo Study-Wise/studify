@@ -57,6 +57,10 @@ const {
                                 ? 'This thread is visible to anyone with the link.'
                                 : 'This thread is private and only visible to you.'}
                         </p>
+                        <button type="button" class="delete-chat-button" id="delete-chat-button">
+                            <span class="material-symbols-outlined">delete</span>
+                            <span>Delete Chat</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -188,6 +192,47 @@ const {
             } finally {
                 // Re-enable toggle
                 publicToggle.disabled = false;
+            }
+        });
+    }
+
+    // Delete chat functionality
+    const deleteChatButton = document.getElementById('delete-chat-button');
+
+    if (deleteChatButton) {
+        deleteChatButton.addEventListener('click', async () => {
+            // Nothing persisted yet for an unsaved chat
+            if (!currentThreadId || currentThreadId === 'new') {
+                window.location.href = `/${category}/${mode}`;
+                return;
+            }
+
+            if (!confirm('Are you sure you want to delete this chat? This cannot be undone.')) return;
+
+            deleteChatButton.disabled = true;
+
+            try {
+                const response = await fetch('/api/thread/delete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ threadId: currentThreadId }),
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    window.showSuccess?.('Chat deleted');
+                    window.location.href = `/${category}/${mode}`;
+                }
+                else {
+                    throw new Error(data.error || 'Failed to delete chat');
+                }
+            } catch (error) {
+                console.error('Error deleting chat:', error);
+                window.showError?.(
+                    error instanceof Error ? error.message : 'Failed to delete chat. Please try again.'
+                );
+                deleteChatButton.disabled = false;
             }
         });
     }

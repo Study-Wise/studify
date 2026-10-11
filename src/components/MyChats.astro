@@ -74,24 +74,35 @@ function formatDate(date: Date) {
                                 const updatedDate = new Date(thread.updatedAt);
 
                                 return (
-                                    <a href={chatUrl} class="thread-card">
-                                        <div class="thread-header">
-                                            <div class="thread-info">
-                                                {mode && <span class="mode-icon">{mode.icon}</span>}
-                                                <div class="thread-text">
-                                                    <h3 class="thread-title">{thread.title}</h3>
-                                                    <p class="thread-mode">
-                                                        {mode ? mode.name : thread.mode}
-                                                    </p>
+                                    <div class="thread-row" data-thread-id={thread.id}>
+                                        <a href={chatUrl} class="thread-card">
+                                            <div class="thread-header">
+                                                <div class="thread-info">
+                                                    {mode && <span class="mode-icon">{mode.icon}</span>}
+                                                    <div class="thread-text">
+                                                        <h3 class="thread-title">{thread.title}</h3>
+                                                        <p class="thread-mode">
+                                                            {mode ? mode.name : thread.mode}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="thread-meta">
+                                                    <span class="thread-date">
+                                                        {formatDate(updatedDate)}
+                                                    </span>
                                                 </div>
                                             </div>
-                                            <div class="thread-meta">
-                                                <span class="thread-date">
-                                                    {formatDate(updatedDate)}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </a>
+                                        </a>
+                                        <button
+                                            type="button"
+                                            class="thread-delete"
+                                            data-thread-id={thread.id}
+                                            title="Delete chat"
+                                            aria-label={`Delete chat: ${thread.title}`}
+                                        >
+                                            <span class="material-symbols-outlined">delete</span>
+                                        </button>
+                                    </div>
                                 );
                             })}
                         </div>
@@ -101,3 +112,54 @@ function formatDate(date: Date) {
         </div>
     )}
 </div>
+
+<script is:inline>
+    document.querySelector('.my-chats-container')?.addEventListener('click', async (e) => {
+        const deleteButton = e.target.closest('.thread-delete');
+        if (!deleteButton) return;
+
+        const threadId = deleteButton.getAttribute('data-thread-id');
+        if (!threadId) return;
+
+        if (!confirm('Are you sure you want to delete this chat? This cannot be undone.')) return;
+
+        deleteButton.disabled = true;
+
+        try {
+            const response = await fetch('/api/thread/delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ threadId }),
+            });
+
+            const data = await response.json();
+
+            if (data.status !== 'success') {
+                throw new Error(data.error || 'Failed to delete chat');
+            }
+
+            const row = deleteButton.closest('.thread-row');
+            const section = row?.closest('.category-section');
+            row?.remove();
+
+            // Remove the category section if it has no chats left
+            if (section && !section.querySelector('.thread-row')) {
+                section.remove();
+            }
+
+            // Reload to show the empty state when no chats remain
+            if (!document.querySelector('.my-chats-container .thread-row')) {
+                window.location.reload();
+                return;
+            }
+
+            window.showSuccess?.('Chat deleted');
+        } catch (error) {
+            console.error('Error deleting chat:', error);
+            window.showError?.(
+                error instanceof Error ? error.message : 'Failed to delete chat. Please try again.'
+            );
+            deleteButton.disabled = false;
+        }
+    });
+</script>
