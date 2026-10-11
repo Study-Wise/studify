@@ -1,7 +1,7 @@
 @use '../variables/tokens' as *;
 @use '../variables/colors/statuses' as *;
 
-.app-dialog {
+.modal {
     position: fixed;
     inset: 50%;
     translate: -50% -50%;
@@ -24,10 +24,10 @@
     }
 
     &[open] {
-        animation: dialog-fade-in $transition-fast $ease-out;
+        animation: modal-fade-in $transition-fast $ease-out;
     }
 
-    @keyframes dialog-fade-in {
+    @keyframes modal-fade-in {
         from {
             opacity: 0;
             scale: 0.95;
@@ -47,18 +47,18 @@
     }
 }
 
-.dialog-content {
+.modal-content {
     display: flex;
     flex-direction: column;
     gap: $spacing-large;
     padding: $spacing-large;
 
-    &.dialog-error {
-        .dialog-icon {
+    &.modal-error {
+        .modal-icon {
             color: $color-error;
         }
 
-        .dialog-button-primary {
+        .modal-button-primary {
             background-color: $color-error;
 
             &:hover {
@@ -67,12 +67,12 @@
         }
     }
 
-    &.dialog-warning {
-        .dialog-icon {
+    &.modal-warning {
+        .modal-icon {
             color: $color-warning;
         }
 
-        .dialog-button-primary {
+        .modal-button-primary {
             background-color: $color-warning;
 
             &:hover {
@@ -81,12 +81,12 @@
         }
     }
 
-    &.dialog-success {
-        .dialog-icon {
+    &.modal-success {
+        .modal-icon {
             color: $color-success;
         }
 
-        .dialog-button-primary {
+        .modal-button-primary {
             background-color: $color-success;
 
             &:hover {
@@ -95,12 +95,12 @@
         }
     }
 
-    &.dialog-info {
-        .dialog-icon {
+    &.modal-info {
+        .modal-icon {
             color: $color-info;
         }
 
-        .dialog-button-primary {
+        .modal-button-primary {
             background-color: $color-info;
 
             &:hover {
@@ -115,7 +115,7 @@
     }
 }
 
-.dialog-header {
+.modal-header {
     display: flex;
     align-items: center;
     gap: $spacing-small;
@@ -123,12 +123,12 @@
     border-block-end: 1px solid var(--card-border);
 }
 
-.dialog-icon {
+.modal-icon {
     font-size: 28px;
     font-weight: 500;
 }
 
-.dialog-title {
+.modal-title {
     margin: 0;
     font-size: $font-size-extra-large;
     font-weight: $font-weight-semibold;
@@ -139,11 +139,11 @@
     }
 }
 
-.dialog-body {
+.modal-body {
     padding: $spacing-extra-small 0;
 }
 
-.dialog-message {
+.modal-message {
     margin: 0;
     font-size: $font-size-base;
     line-height: $line-height-relaxed;
@@ -154,14 +154,14 @@
     }
 }
 
-.dialog-footer {
+.modal-footer {
     display: flex;
     justify-content: end;
     gap: $spacing-small;
     padding-block-start: $spacing-extra-small;
 }
 
-.dialog-button {
+.modal-button {
     padding: 0.625rem $spacing-large;
     border: none;
     border-radius: $border-radius-small;
@@ -181,11 +181,21 @@
     }
 }
 
-.dialog-button-primary {
+.modal-button-primary {
     background-color: $color-info;
     color: white;
 
     &:hover {
         background-color: $color-info-hover;
+    }
+}
+
+.modal-button-secondary {
+    background-color: transparent;
+    color: var(--body-text);
+    border: 1px solid var(--card-border);
+
+    &:hover {
+        background-color: var(--card-border);
     }
 }

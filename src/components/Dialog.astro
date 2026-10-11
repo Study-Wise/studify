@@ -1,206 +1,97 @@
 ---
-import '@/styles/components/dialog.scss';
+import '@/styles/components/modal.scss';
 ---
 
-<dialog id="app-dialog" class="app-dialog">
-    <div class="dialog-content">
-        <div class="dialog-header">
-            <span class="material-symbols-outlined dialog-icon" aria-hidden="true">info</span>
-            <h2 class="dialog-title"></h2>
-        </div>
-        <div class="dialog-body">
-            <p class="dialog-message"></p>
-        </div>
-        <div class="dialog-footer">
-            <button class="dialog-button dialog-button-primary" type="button">
-                OK
-            </button>
-        </div>
-    </div>
-</dialog>
+<script>
+    import { createModal, type Modal, type ModalContent, type ModalType } from '@/lib/modal';
 
-<script is:inline>
-    /**
-     * Show a dialog with a message
-     * @param {string} message - The message to display
-     * @param {object} options - Optional configuration
-     * @param {string} options.title - Dialog title (default: 'Alert')
-     * @param {string} options.icon - Material icon name (default: 'info')
-     * @param {string} options.type - Dialog type: "info", "error", "warning", "success" (default: 'info')
-     */
-    function showDialog(message, options = {}) {
-        const {
-            title = 'Alert',
-            icon = 'info',
-            type = 'info'
-        } = options;
-
-        const dialog = document.getElementById('app-dialog');
-        if (!dialog) {
-            console.error('Dialog element not found');
-            return;
-        }
-
-        const entry = { message, title, icon, type };
-
-        // An error on screen must never be overwritten, so anything that
-        // arrives while one is showing waits its turn. Every error is kept;
-        // only the latest non-error message is kept, since those are
-        // transient status updates.
-        if (dialog.open && currentDialogType === 'error') {
-            if (type === 'error') {
-                pendingErrors.push(entry);
-            } else {
-                pendingNotice = entry;
-            }
-            updateDialogButton(dialog);
-            return;
-        }
-
-        renderDialog(dialog, entry);
+    interface DialogEntry {
+        message: string;
+        title: string;
+        icon?: string;
+        type: ModalType;
     }
 
     // Messages waiting for the error currently on screen to be dismissed
-    const pendingErrors = [];
-    let pendingNotice = null;
-    let currentDialogType = null;
+    const pendingErrors: DialogEntry[] = [];
+    let pendingNotice: DialogEntry | null = null;
+    let current: DialogEntry | null = null;
+    let modal: Modal | null = null;
 
-    function renderDialog(dialog, { message, title, icon, type }) {
-        const dialogContent = dialog.querySelector('.dialog-content');
-        const dialogIcon = dialog.querySelector('.dialog-icon');
-        const dialogTitle = dialog.querySelector('.dialog-title');
-        const dialogMessage = dialog.querySelector('.dialog-message');
-        const dialogButton = dialog.querySelector('.dialog-button-primary');
-
-        // Set content
-        dialogTitle.textContent = title;
-        dialogMessage.textContent = message;
-        dialogIcon.textContent = icon;
-
-        // Reset classes and apply type
-        dialogContent.className = 'dialog-content';
-        dialogContent.classList.add(`dialog-${type}`);
-
-        currentDialogType = type;
-        updateDialogButton(dialog);
-
-        // Show dialog
-        if (!dialog.open) {
-            dialog.showModal();
-        }
-
-        // Focus the OK button
-        dialogButton.focus();
+    function getModal() {
+        modal ??= createModal({
+            title: '',
+            message: '',
+            // Once a message is dismissed, show the next one that was waiting
+            onClose: showNextDialog,
+        });
+        return modal;
     }
 
     /**
      * Label the button "Next" while more messages are waiting
-     * @param {HTMLDialogElement} dialog - The app dialog
+     * @param entry - The message on screen
+     * @returns The modal content for the entry
      */
-    function updateDialogButton(dialog) {
-        const dialogButton = dialog.querySelector('.dialog-button-primary');
+    function toModalContent(entry: DialogEntry): ModalContent {
         const waiting = pendingErrors.length + (pendingNotice ? 1 : 0);
-        dialogButton.textContent = waiting > 0 ? `Next (${waiting} more)` : 'OK';
+        return {
+            ...entry,
+            buttons: [{ label: waiting > 0 ? `Next (${waiting} more)` : 'OK' }],
+        };
+    }
+
+    function renderDialog(entry: DialogEntry) {
+        current = entry;
+        const appModal = getModal();
+        appModal.setContent(toModalContent(entry));
+        appModal.open();
     }
 
     /**
      * Show the next waiting message, errors first
-     * @param {HTMLDialogElement} dialog - The app dialog
      */
-    function showNextDialog(dialog) {
-        currentDialogType = null;
+    function showNextDialog() {
+        current = null;
         const next = pendingErrors.shift() ?? pendingNotice;
         if (next === pendingNotice) {
             pendingNotice = null;
         }
         if (next) {
-            renderDialog(dialog, next);
+            renderDialog(next);
         }
     }
 
     /**
-     * Show an error dialog
-     * @param {string} message - The error message to display
+     * Show a dialog with a message
+     * @param message - The message to display
+     * @param options - Optional title (default 'Alert'), Material icon name and type (default 'info')
      */
-    function showError(message) {
-        showDialog(message, {
-            title: 'Error',
-            icon: 'error',
-            type: 'error'
-        });
-    }
+    function showDialog(message: string, options: { title?: string; icon?: string; type?: ModalType } = {}) {
+        const { title = 'Alert', icon, type = 'info' } = options;
+        const entry: DialogEntry = { message, title, icon, type };
 
-    /**
-     * Show a warning dialog
-     * @param {string} message - The warning message to display
-     */
-    function showWarning(message) {
-        showDialog(message, {
-            title: 'Warning',
-            icon: 'warning',
-            type: 'warning'
-        });
-    }
-
-    /**
-     * Show a success dialog
-     * @param {string} message - The success message to display
-     */
-    function showSuccess(message) {
-        showDialog(message, {
-            title: 'Success',
-            icon: 'check_circle',
-            type: 'success'
-        });
-    }
-
-    /**
-     * Show an info dialog
-     * @param {string} message - The info message to display
-     */
-    function showInfo(message) {
-        showDialog(message, {
-            title: 'Information',
-            icon: 'info',
-            type: 'info'
-        });
-    }
-
-    // Close dialog when clicking OK button or backdrop
-    document.addEventListener('DOMContentLoaded', () => {
-        const dialog = document.getElementById('app-dialog');
-        if (!dialog) return;
-
-        const closeButton = dialog.querySelector('.dialog-button-primary');
-
-        closeButton?.addEventListener('click', () => {
-            dialog.close();
-        });
-
-        // Close on backdrop click
-        dialog.addEventListener('click', (e) => {
-            if (e.target === dialog) {
-                dialog.close();
+        // An error on screen must never be overwritten, so anything that
+        // arrives while one is showing waits its turn. Every error is kept;
+        // only the latest non-error message is kept, since those are
+        // transient status updates.
+        if (current?.type === 'error') {
+            if (type === 'error') {
+                pendingErrors.push(entry);
+            } else {
+                pendingNotice = entry;
             }
-        });
+            getModal().setContent(toModalContent(current));
+            return;
+        }
 
-        // Close on Escape key
-        dialog.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                dialog.close();
-            }
-        });
+        renderDialog(entry);
+    }
 
-        // Once a message is dismissed, show the next one that was waiting
-        dialog.addEventListener('close', () => {
-            showNextDialog(dialog);
-        });
-    });
-
-    // Make functions available globally
+    // Make functions available globally, including to is:inline scripts
     window.showDialog = showDialog;
-    window.showError = showError;
-    window.showWarning = showWarning;
-    window.showSuccess = showSuccess;
-    window.showInfo = showInfo;
+    window.showError = (message) => showDialog(message, { title: 'Error', type: 'error' });
+    window.showWarning = (message) => showDialog(message, { title: 'Warning', type: 'warning' });
+    window.showSuccess = (message) => showDialog(message, { title: 'Success', type: 'success' });
+    window.showInfo = (message) => showDialog(message, { title: 'Information', type: 'info' });
 </script>
