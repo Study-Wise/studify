@@ -102,6 +102,7 @@ footer, .chat-toolbar {
     position: relative;
     z-index: $z-index-sticky;
     box-sizing: border-box;
+    flex-wrap: wrap;
     padding: $spacing-medium + 0.25rem $spacing-large;
     border-block-end: 1px solid rgb(from var(--section-title) r g b / 10%);
     background: linear-gradient($gradient-angle, list.nth(map.get($accent-colors, primary), 1), list.nth(map.get($accent-colors, primary), 2));
@@ -116,6 +117,7 @@ footer, .chat-toolbar {
         display: flex;
         align-items: center;
         gap: $spacing-medium;
+        min-width: 0;
     }
 
     h2 {
@@ -136,6 +138,8 @@ footer, .chat-toolbar {
         font-weight: $font-weight-semibold;
         letter-spacing: -0.01em;
         transition: all $transition-base $ease-in-out;
+        max-width: 100%;
+        min-width: 0;
 
         &:hover {
             box-shadow:
@@ -146,6 +150,7 @@ footer, .chat-toolbar {
 
         .material-symbols-outlined {
             font-size: $font-size-extra-large;
+            flex-shrink: 0;
         }
     }
 
