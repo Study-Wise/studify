@@ -84,12 +84,18 @@ Technical implementation:
 - Include tooltips with additional details on hover
 - Make it printable with a clean layout
 
+Layout rules (these are strict; check every one before you finish):
+- No two nodes may overlap. Size each node from its label first (measure the text, e.g. with getBBox or measureText), then position nodes using those real sizes plus a gap of at least 24px. After the layout, run a collision pass that pushes apart any nodes whose boxes still intersect, and repeat until none do.
+- Every label must fit inside its node. Wrap long labels onto multiple lines (at most about 18 characters per line) and grow the node to fit the wrapped text with padding. Prefer rounded rectangles or pills sized to the text over fixed-size circles. Never let text spill outside its shape.
+- The whole map must fit inside the visible canvas. On load, compute the bounding box of all nodes (including labels) and set the zoom and pan so that box is centered with at least 40px padding on every side. Nothing, including the top row, may be cut off at the canvas edge.
+- The "Reset View" control (and any "Fit" control) must re-run that same fit-to-view calculation, not just reset the zoom to 1 and the pan to 0. Re-fit when the window is resized and after nodes expand or collapse.
+
 Visual design:
 - Use a cohesive color palette (consider using different hues for different concept categories)
 - Apply gradients and shadows for depth
-- Use different node sizes to show importance or hierarchy
+- Show importance or hierarchy with node size, border weight, and font weight, but keep the layout rules above
 - Include icons or symbols where appropriate
-- Ensure good contrast for readability
+- Text must have a contrast ratio of at least 4.5:1 against its node fill. Use dark text (e.g. #1a1a1a) on light or pastel fills (mint, yellow, light blue, and so on) and white text only on dark, saturated fills. Never put white text on a light fill.
 - Add subtle animations for engagement
 
 Math formatting: If mathematical formulas are present, use MathJax or KaTeX (include the CDN) with \\(...\\) for inline math and \\[...\\] for display math.
