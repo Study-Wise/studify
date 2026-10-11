@@ -24,7 +24,7 @@ export interface MarkedToken {
 // Use createRequire for certain ones only - project has marked v15 but slideshow-generator needs v0.3
 const node_require = createRequire(import.meta.url);
 const marked = node_require('slideshow-generator/node_modules/marked');
-const jade = node_require('slideshow-generator/node_modules/jade');
+const jade = node_require('jade');
 
 function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
     const filesWithText = uploadedFiles.filter(f => f.extractedText);
