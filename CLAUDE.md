@@ -16,7 +16,7 @@ Studify is an AI-powered educational platform built with Astro that provides per
 
 ### Checking
 
-- `npm run check` - Run Astro type checking and SCSS linting (stylelint)
+- `npm run check` - Run ESLint, Astro type checking, SCSS linting (stylelint) and a production build
 
 ### Database
 
@@ -85,7 +85,7 @@ Application tables defined in `src/db/schema.ts`:
 
 - Core fields: `id`, `title`, `email`, `category`, `mode`, `model`, `provider`
 - Thread data: `thread` (JSONB storing messages array)
-- Generated content: `generatedStudyGuide`, `generatedReferenceSheet`, `generatedInfographic`, `generatedWebpage`, `generatedMindMap`, `generatedAdditionalResources`, `generatedFlashcards`, `generatedPracticeQuestions`
+- Generated content: `content` (JSONB keyed by camelCase content type, written with `saveContent()` and read with `getLatestContent()` from `src/lib/content/latest/`). New content types need no schema change.
 - Metadata: `uploadedFiles`, `isPublic`, `isDev`, `createdAt`, `updatedAt`
 
 **questionTable**: Stores Q&A pairs for public knowledge base
@@ -117,14 +117,8 @@ API endpoints in `src/pages/api/`:
 
 **Content Generation:**
 
-- **POST /api/study-guide/generate.ts**: Generate study guides from thread
-- **POST /api/reference-sheet/generate.ts**: Generate reference sheets
-- **POST /api/infographic/generate.ts**: Generate infographics (uses OpenAI image generation)
-- **POST /api/webpage/generate.ts**: Generate webpages from thread
-- **POST /api/mind-map/generate.ts**: Generate mind maps from thread
-- **POST /api/additional-resources/generate.ts**: Generate additional learning resources
-- **POST /api/flashcards/generate.ts**: Generate flashcards from thread content
-- **POST /api/practice-questions/generate.ts**: Generate practice questions
+- **POST `/api/<content-type>/generate.ts`**: One route per content type (study guide, flashcards, mind map, and so on). Each route authenticates the user, checks thread ownership, and calls the matching generator in `src/lib/content/generate/`. List `src/pages/api/` for the current set.
+- See "Adding a new content type" in `CONTRIBUTING.md` for how these pieces fit together.
 
 **Thread Management:**
 
@@ -184,8 +178,8 @@ Dynamic routing in `src/pages/`:
 
 Content generation logic in `src/lib/content/`:
 
-- `generate/` - Functions to create new content (study-guide.ts, reference-sheet.ts, infographic.ts, webpage.ts, mind-map.ts, resources.ts, flashcards.ts, practice-questions.ts)
-- `latest/` - Functions to retrieve latest generated content from threads
+- `generate/` - One generator per content type
+- `latest/` - One retriever per content type; the file names double as the registry of content types
 
 ### Environment Variables
 
@@ -317,21 +311,11 @@ This ensures fixes are targeted, maintainable, and don't introduce new issues.
 
 ### Adding New AI Tools
 
-1. Create tool file in `src/lib/tools/[tool-name].ts`
-2. Export default object with:
-   - Spread `tool()` from `ai` package
-   - `description` and `inputSchema` (Zod schema)
-   - `execute` async function
-   - `ready: true` flag
-3. Tool will be automatically imported by `src/lib/tools.ts`
+See "Adding AI tools" in `CONTRIBUTING.md` for the step-by-step instructions.
 
 ### Adding New Categories/Modes
 
-1. Edit `src/lib/modes.ts`
-2. Add category to `categories` object with modes
-3. Each mode requires: `show`, `name`, `description`, `icon`
-4. Prompt is auto-generated; tools default to global tools
-5. Create corresponding page structure in `src/pages/[category]/[mode]/`
+See "Adding categories and modes" in `CONTRIBUTING.md` for the step-by-step instructions.
 
 ### Database Schema Changes
 
