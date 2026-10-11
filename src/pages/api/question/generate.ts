@@ -9,6 +9,7 @@ import { questionTable } from '@/db/schema';
 import { questionToId } from '@/lib/question-utils';
 import { generateText, paraphraseQuestion } from '@/lib/ai-service';
 import config from '@/lib/config';
+import { getUserErrorMessage } from '@/lib/user-errors';
 
 export const POST: APIRoute = async ({ request }) => {
     const requestId = nanoid();
@@ -118,7 +119,7 @@ Your answer should be:
         const totalDuration = Date.now() - startTime;
         console.error(`💥 [${requestId}] Error in question generation after ${totalDuration}ms:`, error);
         return new Response(
-            JSON.stringify({ error: `Failed to generate question: ${error}` }),
+            JSON.stringify({ error: getUserErrorMessage(error, 'answer this question', requestId) }),
             {
                 status: 500,
                 headers: { 'Content-Type': 'application/json' },

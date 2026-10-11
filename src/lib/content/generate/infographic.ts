@@ -8,6 +8,7 @@ import config from '@/lib/config';
 import { generateImage } from '@/lib/genai-image';
 import type { ThreadData, UploadedFile } from '@/lib/threads';
 import { saveContent } from '@/lib/content/latest';
+import { UserFacingError, VendorError, THREAD_NOT_FOUND_MESSAGE, NO_MESSAGES_MESSAGE } from '@/lib/user-errors';
 
 function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
     const filesWithText = uploadedFiles.filter(f => f.extractedText);
@@ -33,7 +34,7 @@ export async function generateInfographic(
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
     if (threads.length === 0) {
-        throw new Error('Thread not found');
+        throw new UserFacingError(THREAD_NOT_FOUND_MESSAGE);
     }
 
     const thread = threads[0];
@@ -46,7 +47,7 @@ export async function generateInfographic(
     const uploadedFiles = (thread.uploadedFiles as UploadedFile[]) ?? [];
 
     if (messages.length === 0) {
-        throw new Error('No messages found in thread');
+        throw new UserFacingError(NO_MESSAGES_MESSAGE);
     }
 
     // Build uploaded files context
@@ -96,11 +97,11 @@ Style: Clean, modern, professional educational infographic. Use a white backgrou
     }
 
     if (!imageResult.uploadResult) {
-        throw new Error('Failed to upload image to UploadThing - No upload result');
+        throw new VendorError('UploadThing', 'Failed to upload image - No upload result');
     }
 
     if (!imageResult.uploadResult.data) {
-        throw new Error('Failed to upload image to UploadThing - No data in upload result');
+        throw new VendorError('UploadThing', 'Failed to upload image - No data in upload result');
     }
 
     const imageUrl = imageResult.imageUrl;

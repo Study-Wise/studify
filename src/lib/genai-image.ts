@@ -2,6 +2,7 @@ import OpenAI from 'openai';
 
 import { uploadFile } from '@/lib/uploadthing';
 import config from '@/lib/config';
+import { VendorError } from '@/lib/user-errors';
 
 const openai = new OpenAI({
     apiKey: import.meta.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY,
@@ -41,7 +42,7 @@ async function generateImageBuffer(prompt: string) {
             }
         }
 
-        throw new Error(errorMessage, { cause: error });
+        throw new VendorError('OpenAI', errorMessage, { cause: error });
     }
 }
 
@@ -52,7 +53,12 @@ async function generateImage(prompt: string, filename: string = 'infographic.png
     if (buffer) {
         // Convert buffer to File for upload
         const file = new File([buffer], filename, { type: 'image/png' });
-        const uploadResult = await uploadFile(file);
+        let uploadResult: Awaited<ReturnType<typeof uploadFile>>;
+        try {
+            uploadResult = await uploadFile(file);
+        } catch (error) {
+            throw new VendorError('UploadThing', 'Image upload failed', { cause: error });
+        }
 
         return {
             imageUrl: uploadResult.data?.ufsUrl ?? null,

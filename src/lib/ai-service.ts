@@ -5,6 +5,7 @@ import type { ZodSchema } from 'zod';
 import { nanoid } from 'nanoid';
 
 import config from '@/lib/config';
+import { VendorError, getProviderName } from '@/lib/user-errors';
 import type { JSONValue, Message, ToolCallLogEntry } from '@/lib/threads';
 
 // Tool related types
@@ -228,7 +229,7 @@ export async function generateText(
             errorMessage: error instanceof Error ? error.message : String(error),
             errorStack: error instanceof Error ? error.stack : 'No stack trace'
         });
-        throw error;
+        throw new VendorError(getProviderName(provider), 'AI generation failed', { cause: error });
     }
 }
 

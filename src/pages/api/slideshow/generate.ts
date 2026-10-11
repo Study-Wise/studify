@@ -6,6 +6,7 @@ import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 
 import { isValidEmail } from '@/lib/validation';
+import { getUserErrorMessage, THREAD_NOT_FOUND_MESSAGE } from '@/lib/user-errors';
 import { generateSlideshow } from '@/lib/content/generate/slideshow';
 
 export const POST: APIRoute = async ({ request, locals }) => {
@@ -58,7 +59,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         if (threads.length === 0) {
             console.error(`❌ [${requestId}] Thread not found:`, threadId);
             return new Response(
-                JSON.stringify({ status: 'error', error: 'Thread not found' }),
+                JSON.stringify({ status: 'error', error: THREAD_NOT_FOUND_MESSAGE }),
                 {
                     status: 404,
                     headers: { 'Content-Type': 'application/json' },
@@ -99,7 +100,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         return new Response(
             JSON.stringify({
                 status: 'error',
-                error: error instanceof Error ? error.message : 'Unknown error occurred'
+                error: getUserErrorMessage(error, 'generate the slideshow', requestId)
             }),
             {
                 status: 500,
