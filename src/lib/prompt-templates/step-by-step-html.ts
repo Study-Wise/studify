@@ -17,6 +17,9 @@ export default `<section class="step-by-step">
             <hr class="divider">
             (repeat for other answer options without the hr after the last option, using "o#" for ids)
             (make sure to not always make the correct answer first)
+            (exactly one option per question gets data-type="correct"; every other option must be genuinely wrong)
+            (no two options may be equivalent, e.g. the same expression written differently or rewritten with a substitution; if an option is equivalent to the correct one, replace it with a different wrong answer)
+            (each explanation must agree with how its option is marked: never explain a wrong option as if it were correct)
     </div>
     <hr class="divider">
     (repeat for questions 2 and 3 with different question numbers)
