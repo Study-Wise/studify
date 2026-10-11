@@ -14,6 +14,7 @@ import {
     extractToolData,
     generateTitle,
 } from '@/lib/ai-service';
+import type { ToolContext } from '@/lib/ai-service';
 import { getValidModelAndProvider } from '@/lib/models';
 import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
 import type { ThreadData, Message, UploadedFile } from '@/lib/threads';
@@ -149,7 +150,7 @@ category: ${category || config.defaultCategory}
 mode: ${mode || config.defaultMode}
 </thread-context>
 
-Use the above thread context when calling tools that require threadId, category, or mode parameters.
+Use the above thread context when calling tools that require category or mode parameters. Content tools always operate on this thread automatically.
 
 IMPORTANT: When the user asks you to search, look up information, or use a tool, you MUST actually call the appropriate tool. Do NOT pretend or hallucinate that you used a tool—instead make the actual tool call and use the real results. If a tool call is available and relevant to the user's request, use it.
 `;
@@ -271,6 +272,10 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
             selectedProvider = resolvedProvider;
         }
 
+        // Server-verified context for tools: thread ownership was checked above, so tools
+        // must use this rather than any thread ID chosen by the model
+        const toolContext: ToolContext = { threadId: current_thread_id!, email: user_email };
+
         // --- Special handling for first message: Generate AI welcome response ---
         if (convoHistory.length === 1) {
             try {
@@ -285,7 +290,8 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                     userModel,
                     provider: selectedProvider,
                     tools,
-                    requestId
+                    requestId,
+                    toolContext
                 });
 
                 // Add AI welcome response to conversation history
@@ -383,7 +389,8 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                 tools,
                 undefined,
                 25,
-                requestId
+                requestId,
+                toolContext
             );
         } catch (error) {
             return new Response(

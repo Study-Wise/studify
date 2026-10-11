@@ -95,6 +95,48 @@
             gap: $spacing-medium;
         }
 
+        .thread-row {
+            display: flex;
+            align-items: center;
+            gap: $spacing-small;
+
+            .thread-card {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .thread-delete {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 40px;
+                height: 40px;
+                flex-shrink: 0;
+                background-color: transparent;
+                border: none;
+                border-radius: $border-radius-small;
+                cursor: pointer;
+                opacity: 0.6;
+                transition: opacity $transition-base $ease-out,
+                            background-color $transition-base $ease-out;
+
+                .material-symbols-outlined {
+                    color: var(--danger);
+                }
+
+                &:hover,
+                &:focus-visible {
+                    opacity: 1;
+                    background-color: rgb(from var(--danger) r g b / 10%);
+                }
+
+                &:disabled {
+                    opacity: 0.3;
+                    cursor: not-allowed;
+                }
+            }
+        }
+
         .thread-card {
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);

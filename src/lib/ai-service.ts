@@ -14,6 +14,26 @@ export interface ToolModule {
     default: Tool & { ready?: boolean; label?: string };
 }
 
+// Server-verified request context passed to tool executions via `experimental_context`.
+// Tools that touch thread data must use this instead of model-supplied IDs.
+export interface ToolContext {
+    threadId: string;
+    email: string;
+}
+
+// Reads the server-verified tool context, or null if the call has none
+export function getToolContext(options: { experimental_context?: unknown }): ToolContext | null {
+    const ctx = options.experimental_context;
+    if (
+        ctx && typeof ctx === 'object' &&
+        'threadId' in ctx && typeof ctx.threadId === 'string' && ctx.threadId &&
+        'email' in ctx && typeof ctx.email === 'string' && ctx.email
+    ) {
+        return { threadId: ctx.threadId, email: ctx.email };
+    }
+    return null;
+}
+
 // Client-side tool call that needs to be executed in the browser
 export interface ClientToolCall {
     toolName: string;
@@ -44,7 +64,8 @@ export async function generateText(
     tools: ToolRecord = {},
     excludeTools?: string[],
     maxSteps: number = 25,
-    requestId: string = nanoid()
+    requestId: string = nanoid(),
+    toolContext?: ToolContext
 ): Promise<AIGenerationResult> {
 
     // Filter out excluded tools from the global tools
@@ -87,6 +108,7 @@ export async function generateText(
             messages: convoHistory,
             tools: resolvedTools,
             stopWhen: stepCountIs(maxSteps),
+            experimental_context: toolContext,
         });
 
         console.log(`[${requestId}] AI response received in ${Date.now() - aiStartTime}ms`);
@@ -220,7 +242,8 @@ export async function streamText(
     tools: ToolRecord = {},
     excludeTools?: string[],
     maxSteps: number = 25,
-    requestId: string = nanoid()
+    requestId: string = nanoid(),
+    toolContext?: ToolContext
 ): Promise<ReturnType<typeof ai.streamText>> {
 
     const resolvedTools = excludeTools
@@ -248,6 +271,7 @@ export async function streamText(
         messages: convoHistory,
         tools: resolvedTools,
         stopWhen: stepCountIs(maxSteps),
+        experimental_context: toolContext,
     });
 }
 

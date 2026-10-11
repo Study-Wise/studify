@@ -72,6 +72,12 @@ const { page, category, mode, id } = Astro.props;
             return;
         }
 
+        // The file sidebar may have created this chat's thread (uploading on /chat/new
+        // rewrites the URL), so pick up that ID to send messages to the same thread
+        if (page === 'chat' && !threadId) {
+            threadId = getThreadIdFromUrl();
+        }
+
         // Common validation
         const { provider, tier } = getProviderAndTier();
         if (!provider || !tier) {
@@ -741,16 +747,21 @@ const { page, category, mode, id } = Astro.props;
         }
     }
 
+    // Extract thread id from the chat page URL; null for "new" so the API creates a thread
+    function getThreadIdFromUrl() {
+        let pathSegments = location.pathname;
+        if (pathSegments.endsWith('/')) pathSegments = pathSegments.slice(0, -1);
+        const idFromUrl = pathSegments.split('/').pop();
+        if (idFromUrl && idFromUrl !== 'chat' && idFromUrl !== 'new') return idFromUrl;
+        return null;
+    }
+
     // DOMContentLoaded handler for chat page
     function onDomLoadChat() {
         initializeCommon();
 
-        // Extract id from URL path for chat page
-        let pathSegments = location.pathname;
-        if (pathSegments.endsWith('/')) pathSegments = pathSegments.slice(0, -1);
-        const idFromUrl = pathSegments.split('/').pop();
-        // If the ID is "new", keep threadId as null so the API creates a new thread
-        if (idFromUrl && idFromUrl !== 'chat' && idFromUrl !== 'new') {
+        const idFromUrl = getThreadIdFromUrl();
+        if (idFromUrl) {
             threadId = idFromUrl;
             localStorage.setItem('threadId', threadId);
         }

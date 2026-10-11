@@ -1,6 +1,8 @@
 import { tool } from 'ai';
 import { z } from 'zod';
 
+import { getToolContext } from '@/lib/ai-service';
+
 // Convert kebab-case to camelCase
 const toCamelCase = (str: string) => str.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
 
@@ -31,15 +33,27 @@ const specialCases: Record<string, { latestFn?: string; generateFn?: string }> =
 
 // Types that require model/provider for generation
 const getContentTool = tool({
-    description: 'Generate or retrieve study materials for a thread. Returns existing content if available; otherwise automatically generates new content based on the conversation history and uploaded files. Use regenerate=true to force regeneration even if content already exists. After successfully generating content, call the \'open-content\' tool to open it in a new tab for the user.',
+    description: 'Generate or retrieve study materials for the current thread. Returns existing content if available; otherwise automatically generates new content based on the conversation history and uploaded files. Use regenerate=true to force regeneration even if content already exists. After successfully generating content, call the \'open-content\' tool to open it in a new tab for the user.',
     inputSchema: z.object({
         type: z.enum(validTypes).describe('The content type to retrieve or generate'),
-        threadId: z.string().describe('The thread ID to get/generate content for'),
         regenerate: z.boolean().optional().describe('Force regeneration even if content already exists (default: false)'),
         userPrompt: z.string().optional().describe('Additional instructions from the user for content generation (only used when regenerate=true)'),
     }),
-    execute: async ({ type, threadId, regenerate = false, userPrompt }) => {
+    execute: async ({ type, regenerate = false, userPrompt }, options) => {
         let stage = 'initializing';
+
+        // Always use the server-verified thread, never a model-supplied ID, so content
+        // (including uploaded files) from other users' threads can never be read
+        const toolContext = getToolContext(options);
+        if (!toolContext) {
+            return {
+                status: 'error',
+                message: 'Content generation is only available inside a chat thread.',
+                content: null
+            };
+        }
+        const { threadId } = toolContext;
+
         try {
             const pascalCase = toPascalCase(type);
 
