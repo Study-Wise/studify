@@ -1,5 +1,7 @@
 import { UTApi } from 'uploadthing/server';
 
+import { VendorError } from '@/lib/user-errors';
+
 export interface UploadOptions {
     metadata?: Record<string, string>;
     contentDisposition?: 'inline' | 'attachment';
@@ -16,7 +18,9 @@ export function createUploadThingUtils(envVar: string, appId: string) {
     return {
         // Upload a single file
         uploadFile: async (file: File, options?: UploadOptions) => {
-            return await utapi.uploadFiles(file, options);
+            const result = await utapi.uploadFiles(file, options);
+            if (result.error) throw new VendorError('UploadThing', result.error.message, { cause: result.error });
+            return result;
         },
 
         // Upload multiple files

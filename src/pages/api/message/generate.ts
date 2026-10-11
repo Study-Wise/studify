@@ -15,11 +15,12 @@ import {
     generateTitle,
 } from '@/lib/ai-service';
 import type { ToolContext } from '@/lib/ai-service';
-import { getValidModelAndProvider } from '@/lib/models';
+import { getValidModelAndProvider, providers } from '@/lib/models';
 import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
 import type { ThreadData, Message, UploadedFile } from '@/lib/threads';
 import { isValidEmail } from '@/lib/validation';
 import { isUserAdmin } from '@/lib/auth/admin';
+import { VendorError, getUserErrorMessage } from '@/lib/user-errors';
 
 type Thread = InferSelectModel<typeof threadsTable>;
 type ThreadInsert = InferInsertModel<typeof threadsTable>;
@@ -27,7 +28,8 @@ type ThreadInsert = InferInsertModel<typeof threadsTable>;
 type StreamPart =
     | { type: 'text-delta'; text?: string; textDelta?: string }
     | { type: 'tool-call'; toolCallId: string; toolName: string }
-    | { type: 'tool-result'; toolCallId: string; toolName: string; result?: string | Record<string, unknown>; output?: string | Record<string, unknown> };
+    | { type: 'tool-result'; toolCallId: string; toolName: string; result?: string | Record<string, unknown>; output?: string | Record<string, unknown> }
+    | { type: 'error'; error: unknown };
 
 export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();
@@ -130,7 +132,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             } catch (error) {
                 console.error(`❌ [${requestId}] Error generating thread:`, error);
                 return new Response(
-                    JSON.stringify({ error: `Failed to generate thread: ${error}` }),
+                    JSON.stringify({ error: getUserErrorMessage(error, 'start a new chat', requestId) }),
                     {
                         status: 500,
                         headers: { 'Content-Type': 'application/json' },
@@ -206,7 +208,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
             } catch (error) {
                 console.error(`❌ [${requestId}] Error fetching conversation history:`, error);
                 return new Response(
-                    JSON.stringify({ error: `Failed to fetch conversation history: ${error}` }),
+                    JSON.stringify({ error: getUserErrorMessage(error, 'load this chat', requestId) }),
                     {
                         status: 500,
                         headers: { 'Content-Type': 'application/json' },
@@ -397,8 +399,10 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                 toolContext
             );
         } catch (error) {
+            console.error(`❌ [${requestId}] Failed to start AI stream:`, error);
+            const vendorError = new VendorError(providers[selectedProvider]?.name ?? selectedProvider, 'Failed to start AI stream', { cause: error });
             return new Response(
-                JSON.stringify({ error: `Failed to start AI stream: ${error}` }),
+                JSON.stringify({ error: getUserErrorMessage(vendorError, 'get a response', requestId) }),
                 { status: 500, headers: { 'Content-Type': 'application/json' } }
             );
         }
@@ -466,6 +470,9 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                             }
                             controller.enqueue(sendEvent({ type: 'tool-result', toolCallId, toolName, status }));
                         }
+                        else if (streamPart.type === 'error') {
+                            throw new VendorError(providers[selectedProvider]?.name ?? selectedProvider, 'AI stream failed', { cause: streamPart.error });
+                        }
                     }
 
                     // Stream finished — collect full text and tool data
@@ -502,7 +509,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                     controller.close();
                 } catch (error) {
                     console.error(`❌ [${requestId}] Stream error:`, error);
-                    controller.enqueue(sendEvent({ type: 'error', error: String(error) }));
+                    controller.enqueue(sendEvent({ type: 'error', error: getUserErrorMessage(error, 'get a response', requestId) }));
                     controller.close();
                 }
             }
@@ -526,7 +533,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
             errorType: typeof error
         });
         return new Response(
-            JSON.stringify({ error: `Invalid request body or server error: ${error}` }),
+            JSON.stringify({ error: getUserErrorMessage(error, 'send your message', requestId) }),
             {
                 status: 400,
                 headers: { 'Content-Type': 'application/json' },

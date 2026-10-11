@@ -8,6 +8,7 @@ import config from '@/lib/config';
 import { generateImage } from '@/lib/genai-image';
 import type { ThreadData, UploadedFile } from '@/lib/threads';
 import { saveContent } from '@/lib/content/latest';
+import { VendorError } from '@/lib/user-errors';
 
 function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
     const filesWithText = uploadedFiles.filter(f => f.extractedText);
@@ -96,11 +97,11 @@ Style: Clean, modern, professional educational infographic. Use a white backgrou
     }
 
     if (!imageResult.uploadResult) {
-        throw new Error('Failed to upload image to UploadThing - No upload result');
+        throw new VendorError('UploadThing', 'Failed to upload image - No upload result');
     }
 
     if (!imageResult.uploadResult.data) {
-        throw new Error('Failed to upload image to UploadThing - No data in upload result');
+        throw new VendorError('UploadThing', 'Failed to upload image - No data in upload result');
     }
 
     const imageUrl = imageResult.imageUrl;

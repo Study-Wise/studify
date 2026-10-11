@@ -2,6 +2,7 @@ import OpenAI from 'openai';
 
 import { uploadFile } from '@/lib/uploadthing';
 import config from '@/lib/config';
+import { VendorError } from '@/lib/user-errors';
 
 const openai = new OpenAI({
     apiKey: import.meta.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY,
@@ -41,7 +42,7 @@ async function generateImageBuffer(prompt: string) {
             }
         }
 
-        throw new Error(errorMessage, { cause: error });
+        throw new VendorError('OpenAI', errorMessage, { cause: error });
     }
 }
 

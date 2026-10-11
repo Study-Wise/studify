@@ -6,6 +6,7 @@ import { threadsTable } from '@/db/schema';
 
 import type { ThreadData, UploadedFile } from '@/lib/threads';
 import { saveContent } from '@/lib/content/latest';
+import { VendorError } from '@/lib/user-errors';
 
 const exa = new Exa(import.meta.env.EXA_SEARCH_API_KEY || process.env.EXA_SEARCH_API_KEY);
 
@@ -147,7 +148,7 @@ export async function generateResources(threadId: string): Promise<string> {
 
     } catch (error) {
         console.error('Error searching for resources:', error);
-        throw new Error('Failed to search for educational resources', { cause: error });
+        throw new VendorError('Exa', 'Failed to search for educational resources', { cause: error });
     }
 
     const content = JSON.stringify(resourceCollection, null, 2);
