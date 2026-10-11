@@ -37,6 +37,14 @@
             }
         }
 
+        .upload-limits {
+            margin-block: 0 $spacing-small;
+            color: var(--card-text);
+            opacity: $opacity-subtle;
+            font-size: $font-size-small;
+            text-align: center;
+        }
+
         .section-body {
             .file-list {
                 display: flex;
