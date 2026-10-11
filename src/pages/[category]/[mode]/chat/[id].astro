@@ -94,7 +94,7 @@ const processedMessages = await Promise.all(
 
 export const inNav = 'hide';
 ---
-<Layout title={`Chat | ${modeName} | ${categoryName}`} container={false} isChatArea={true} className="chat-page" hideCopyright={true}>
+<Layout title={`${threadTitle || (isNewChat ? 'New Chat' : 'Chat')} | ${modeName} | ${categoryName}`} container={false} isChatArea={true} className="chat-page" hideCopyright={true}>
     <header class="chat-header">
         <div class="chat-title-container">
             <h2><span class="material-symbols-outlined">chat</span>&nbsp;{threadTitle || (isNewChat ? 'New Chat' : 'Chat')}</h2>
