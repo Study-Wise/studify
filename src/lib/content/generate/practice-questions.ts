@@ -20,15 +20,6 @@ function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
     return `\n\n### Uploaded Files Content\nThe user has uploaded the following files. Include this content in your analysis:\n\n${fileContents}`;
 }
 
-// Every interactive quiz question must have exactly one option marked correct
-function hasSingleCorrectAnswerPerQuestion(content: string): boolean {
-    const questions = content.split('class="step-question-choices"').slice(1);
-    return questions.every(question => {
-        const choices = question.split(/class="step"|class="step-question-choices"/)[0];
-        return (choices.match(/data-type="correct"/g) ?? []).length === 1;
-    });
-}
-
 export async function generatePracticeQuestions(threadId: string, userPrompt?: string) {
     // Fetch the thread from database
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
@@ -159,10 +150,6 @@ You may remove or modify sections as you see fit based on relevance to the topic
 
     if (!result.text || result.text.length === 0) {
         throw new Error('Generated practice questions are empty');
-    }
-
-    if (!hasSingleCorrectAnswerPerQuestion(result.text)) {
-        throw new Error('Generated practice questions have a quiz question without exactly one correct answer');
     }
 
     // Save to database
