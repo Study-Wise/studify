@@ -120,7 +120,13 @@ export const inNav = 'hide';
         />
         <section class="chat-section">
             <div class="chat-messages">
-                {isAuthorized || isPublic ? (
+                {isAuthorized && processedMessages.length === 0 ? (
+                    <div class="chat-empty-state">
+                        {modeObj.icon && <div class="empty-state-icon" aria-hidden="true">{modeObj.icon}</div>}
+                        <h3>Let's study {modeName}!</h3>
+                        <p>{modeObj.description}. Ask a question below to get started.</p>
+                    </div>
+                ) : isAuthorized || isPublic ? (
                     processedMessages.map(message => (
                         <>
                             {message.toolCallLog.length > 0 && (

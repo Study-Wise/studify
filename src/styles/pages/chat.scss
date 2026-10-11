@@ -77,6 +77,36 @@
     }
 }
 
+.chat-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $spacing-medium;
+    margin: auto;
+    max-width: 640px;
+    width: 100%;
+    text-align: center;
+    padding: $spacing-large;
+    box-sizing: border-box;
+
+    .empty-state-icon {
+        font-size: $font-size-5x-large;
+        line-height: 1;
+    }
+
+    h3 {
+        margin: 0;
+        color: var(--section-title);
+        font-size: $font-size-2x-large;
+    }
+
+    p {
+        margin: 0;
+        color: var(--body-text);
+        line-height: $line-height-relaxed;
+    }
+}
+
 body:has(.chat-page) {
     height: 100dvh;
 }
