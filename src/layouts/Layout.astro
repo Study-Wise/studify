@@ -4,6 +4,7 @@ import 'dotenv/config';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import OfflineSupport from '@/components/OfflineSupport.astro';
+import InstallPrompt from '@/components/InstallPrompt.astro';
 import TouchGestures from '@/accessibility/TouchGestures.astro';
 import KeyboardNavigation from '@/accessibility/KeyboardNavigation.astro';
 import ThemeSwitcher from '@/accessibility/ThemeSwitcher.astro';
@@ -104,6 +105,7 @@ if (container) className += ' container'
     </head>
     <body data-hide-copyright={hideCopyright}>
         <OfflineSupport />
+        <InstallPrompt />
         <TouchGestures />
         <KeyboardNavigation />
         <ThemeSwitcher />

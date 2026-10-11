@@ -28,7 +28,32 @@ export default defineConfig({
             manifest,
             workbox: {
                 globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+                // Pages are server-rendered, so there is no precached shell; the default route would also catch every navigation
+                navigateFallback: null,
                 runtimeCaching: [
+                    {
+                        urlPattern: ({ request, url }) =>
+                            request.mode === 'navigate' &&
+                            /^\/[^/]+\/[^/]+\/(?:flashcards|study-guide|reference-sheet|summary|practice-questions|additional-resources|slideshow|mind-map)\/[^/]+\/?$/.test(url.pathname),
+                        handler: 'NetworkFirst',
+                        options: {
+                            cacheName: 'study-materials-cache',
+                            networkTimeoutSeconds: 5,
+                            expiration: {
+                                maxEntries: 50,
+                                maxAgeSeconds: 60 * 60 * 24 * 30 // 30 days
+                            },
+                            cacheableResponse: {
+                                statuses: [200]
+                            },
+                            plugins: [
+                                {
+                                    // Don't store the sign-in page under a study material URL
+                                    cacheWillUpdate: async ({ response }) => response.redirected ? null : response
+                                }
+                            ]
+                        }
+                    },
                     {
                         urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
                         handler: 'CacheFirst',
@@ -63,18 +88,6 @@ export default defineConfig({
                                 maxEntries: 100,
                                 maxAgeSeconds: 60 * 60 * 24 * 30 // 30 days
                             }
-                        }
-                    },
-                    {
-                        urlPattern: /^\/api\/.*/i,
-                        handler: 'NetworkFirst',
-                        options: {
-                            cacheName: 'api-cache',
-                            expiration: {
-                                maxEntries: 50,
-                                maxAgeSeconds: 60 * 5 // 5 minutes
-                            },
-                            networkTimeoutSeconds: 10
                         }
                     }
                 ],

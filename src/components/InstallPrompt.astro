@@ -1,0 +1,63 @@
+---
+import '@/styles/components/install-prompt.scss';
+---
+<div id="install-prompt" class="install-prompt" role="region" aria-label="Install app" hidden>
+    <span class="material-symbols-outlined install-prompt-icon" aria-hidden="true">install_mobile</span>
+    <p class="install-prompt-text">Install Studify to review your saved flashcards and study guides offline.</p>
+    <div class="install-prompt-actions">
+        <button type="button" id="install-prompt-accept" class="install-prompt-btn primary">Install</button>
+        <button type="button" id="install-prompt-dismiss" class="install-prompt-btn secondary">Not now</button>
+    </div>
+</div>
+
+<script>
+    const dismissedKey = 'install-prompt-dismissed';
+    const prompt = document.getElementById('install-prompt');
+    const acceptBtn = document.getElementById('install-prompt-accept');
+    const dismissBtn = document.getElementById('install-prompt-dismiss');
+    let deferredPrompt: BeforeInstallPromptEvent | null = null;
+
+    function isDismissed() {
+        try {
+            return localStorage.getItem(dismissedKey) === 'true';
+        } catch {
+            return false;
+        }
+    }
+
+    function hide() {
+        if (prompt) {
+            prompt.hidden = true;
+        }
+    }
+
+    window.addEventListener('beforeinstallprompt', (event) => {
+        // Show our own prompt instead of the browser's mini-infobar
+        event.preventDefault();
+        deferredPrompt = event;
+        if (prompt && !isDismissed()) {
+            prompt.hidden = false;
+        }
+    });
+
+    acceptBtn?.addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        hide();
+        deferredPrompt.prompt();
+        await deferredPrompt.userChoice;
+        // A prompt event can only be used once
+        deferredPrompt = null;
+    });
+
+    dismissBtn?.addEventListener('click', () => {
+        hide();
+        try {
+            localStorage.setItem(dismissedKey, 'true');
+        } catch {}
+    });
+
+    window.addEventListener('appinstalled', () => {
+        deferredPrompt = null;
+        hide();
+    });
+</script>
