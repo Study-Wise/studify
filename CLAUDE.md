@@ -315,8 +315,8 @@ When asked to fix a GitHub issue, follow these steps in order:
 
 1. **Read the issue**: Read the whole issue and its comments before touching any code.
 2. **Fix it**: Make the fix, following the Error Investigation Protocol and the other guidelines in this file. The fix is exactly what the issue asks for, plus whatever the user wants or does not want regarding that issue.
-3. **Create the PR only if asked**: If the user has asked for a pull request, create it and link the issue. If they have not, do not create one. Wait for the PR to be created.
-4. **Comment on the original issue**: Post a comment on the issue saying what was changed and linking the PR.
+3. **Create the PR only if asked**: If the user has asked for a pull request, create it and link the issue. If they have not, do not create one, and wait for the user to create it. Do not move on to step 4 until a PR exists.
+4. **Comment on the original issue**: Once the PR exists, post a comment on the issue saying what was changed and linking the PR. Never comment before the PR exists.
 5. **Wait for feedback**: Wait for the user to comment on mistakes, extra changes or anything else that should differ. Then fix exactly what they ask for, and nothing more.
 
 ### Database Schema Changes
