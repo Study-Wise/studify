@@ -149,7 +149,7 @@ const categories: Record<string, Category> = {
                 show: true,
                 name: 'Modern History',
                 description: 'Analyze events from the Renaissance through the 21st century',
-                icon: '🏭',
+                icon: '🗞️',
             },
             'european-history': {
                 show: true,
@@ -210,7 +210,7 @@ const categories: Record<string, Category> = {
                 show: true,
                 name: 'Finance',
                 description: 'Master financial analysis, investment strategies, and money management principles',
-                icon: '📊',
+                icon: '💹',
                 desmos: true,
             },
         },
