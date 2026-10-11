@@ -11,7 +11,7 @@ import MessagesScript from '@/scripts/messages.astro';
 import StepByStepScript from '@/scripts/step-by-step.astro';
 import '@/styles/pages/chat.scss';
 
-import { marked } from 'marked';
+import { marked, Marked } from 'marked';
 
 import { getMessages, getMessagesLength, getThreadByToken, type Message } from '@/lib/threads';
 import { labels } from '@/lib/tools';
@@ -88,12 +88,13 @@ if (!isNewChat) {
 
 // Pre-process messages to convert markdown to HTML (server-side)
 marked.setOptions({ breaks: true, gfm: true });
+const userMarked = new Marked({ breaks: true, gfm: true, renderer: { html: ({ text }) => text.replace(/</g, '&lt;') } });
 const processedMessages = await Promise.all(
     messages
         .filter(message => message.role !== 'system')
         .map(async message => ({
             role: message.role,
-            htmlContent: await marked.parse(message.content),
+            htmlContent: await (message.role === 'user' ? userMarked : marked).parse(message.content),
             toolCallLog: message.toolCallLog ?? []
         }))
 );
@@ -191,6 +192,7 @@ export const inNav = 'hide';
             chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
         });
     </script>
+    <script is:inline src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js"></script>
     <MessagesScript page="chat" category={category} mode={mode} id={id} />
     <StepByStepScript />
 </Layout>

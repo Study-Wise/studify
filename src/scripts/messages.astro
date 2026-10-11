@@ -522,7 +522,7 @@ const { page, category, mode, id } = Astro.props;
             messageContent.className = `message-content ${role === 'user' ? 'bg-primary' : ''}`;
 
             // Set the content (could be plain text or markdown)
-            messageContent.innerHTML = content;
+            messageContent.innerHTML = new marked.Marked({ breaks: true, gfm: true, renderer: { html: ({ text }) => text.replace(/</g, '&lt;') } }).parse(content);
 
             messageDiv.appendChild(messageContent);
             chatMessages.appendChild(messageDiv);
