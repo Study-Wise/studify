@@ -1,0 +1,81 @@
+@use '../variables/globals' as *;
+@use '../variables/tokens' as *;
+@use 'sass:map';
+@use 'sass:list';
+
+$color: list.nth(map.get($accent-colors, primary), 1);
+
+.install-prompt {
+    position: fixed;
+    inset-inline: $spacing-medium;
+    bottom: $spacing-medium;
+    max-width: 40rem;
+    margin-inline: auto;
+    padding: $spacing-small $spacing-medium;
+    background-color: var(--card-bg);
+    color: var(--card-text);
+    border: 1px solid var(--card-border);
+    border-radius: $border-radius-large;
+    box-shadow: 0 0 $spacing-medium rgb(from var(--body-text) r g b / 25%);
+    display: flex;
+    align-items: center;
+    gap: $spacing-small;
+    z-index: 1000;
+
+    &[hidden] {
+        display: none;
+    }
+
+    .install-prompt-icon {
+        color: $color;
+    }
+
+    .install-prompt-text {
+        flex: 1;
+        margin: 0;
+        font-size: $font-size-small;
+    }
+
+    .install-prompt-actions {
+        display: flex;
+        gap: $spacing-extra-small;
+    }
+
+    .install-prompt-btn {
+        padding: $spacing-extra-small $spacing-medium;
+        border-radius: $border-radius-medium;
+        font-size: $font-size-small;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all $transition-base $ease;
+
+        &.primary {
+            background-color: $color;
+            color: white;
+            border: none;
+
+            &:hover {
+                filter: brightness(1.1);
+            }
+        }
+
+        &.secondary {
+            background-color: var(--body-bg);
+            color: var(--card-text);
+            border: 1px solid var(--card-border);
+
+            &:hover {
+                border-color: var(--card-text);
+            }
+        }
+    }
+
+    @media (width <= 600px) {
+        flex-wrap: wrap;
+
+        .install-prompt-actions {
+            width: 100%;
+            justify-content: flex-end;
+        }
+    }
+}
