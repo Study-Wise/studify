@@ -47,6 +47,8 @@ const {
                                 <input
                                     type="checkbox"
                                     id="public-toggle"
+                                    role="switch"
+                                    aria-label="Make thread public"
                                     checked={isPublic}
                                 />
                                 <span class="toggle-slider"></span>
@@ -141,7 +143,20 @@ const {
         publicToggle.addEventListener('change', async () => {
             const isPublic = publicToggle.checked;
 
-            if (!currentThreadId || currentThreadId === 'new') return;
+            // Unsaved thread: only update the label; the first message saves the visibility
+            if (!currentThreadId || currentThreadId === 'new') {
+                if (shareStatusText) {
+                    shareStatusText.textContent = isPublic ? 'Public' : 'Private';
+                }
+
+                const shareDescription = document.querySelector('.share-description');
+                if (shareDescription) {
+                    shareDescription.textContent = isPublic
+                        ? 'This thread is visible to anyone with the link.'
+                        : 'This thread is private and only visible to you.';
+                }
+                return;
+            }
 
             // Disable toggle during request
             publicToggle.disabled = true;

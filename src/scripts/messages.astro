@@ -101,9 +101,9 @@ const { page, category, mode, id } = Astro.props;
         // Set loading state for both pages
         setLoadingState(true);
         try {
-            // Get share button state
-            const shareButton = document.getElementById('share-button');
-            const isPublic = shareButton ? shareButton.classList.contains('active') : false;
+            // Visibility chosen in the sidebar, used when this message creates the thread
+            const publicToggle = document.getElementById('public-toggle');
+            const isPublic = publicToggle ? publicToggle.checked : false;
 
             const { provider, tier } = getProviderAndTier();
             const response = await fetch(API_ENDPOINT, {
