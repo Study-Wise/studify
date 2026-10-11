@@ -679,56 +679,6 @@ const { page, category, mode, id } = Astro.props;
         }
     }
 
-    // Activate Desmos graphs
-    function activateDesmos() {
-        const graphs = document.querySelectorAll('.desmos-graph:not([done])');
-        graphs.forEach(graph => {
-            if (!graph) {
-                console.warn('Desmos graph element not valid.');
-                return;
-            }
-            if (!window.Desmos) {
-                console.warn('Desmos calculator not loaded.');
-                return;
-            }
-
-            let LaTeX = graph.getAttribute('latex');
-            if (LaTeX) {
-                try {
-                    LaTeX = LaTeX.replaceAll("'", '"');
-                    LaTeX = JSON.parse(LaTeX);
-                    const calculator = Desmos.GraphingCalculator(graph, {
-                        expressionsCollapsed: true,
-                        showResetButtonOnGraphpaper: true,
-                    });
-
-                    if (Array.isArray(LaTeX)) {
-                        LaTeX.forEach((l, i) => {
-                            if (typeof l === 'string') {
-                                calculator.setExpression({ id: `exp${i + 1}`, latex: l });
-                            }
-                            else {
-                                console.warn(`Desmos expression at index ${i} is not a string:`, l);
-                            }
-                        });
-                    }
-
-                    const newDefaultState = calculator.getState();
-                    calculator.setDefaultState(newDefaultState);
-                    graph.setAttribute('done', true);
-                } catch (e) {
-                    console.error('Error parsing/setting Desmos graph data:', e);
-                    console.error('Problematic LaTeX string:', graph.getAttribute('latex'));
-                    graph.innerHTML = `<p><i>Error loading graph. Check console for details.</i><pre>${e}</pre></p>`;
-                }
-            }
-            else {
-                console.warn('Desmos graph "latex" attribute missing or empty.');
-                graph.innerHTML = '<p><i>No graph data provided.</i></p>';
-            }
-        });
-    }
-
     // Shared initialization function
     function initializeCommon() {
         // Load user settings
