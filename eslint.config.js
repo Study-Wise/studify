@@ -39,5 +39,16 @@ export default [
                 }
             ]
         }
+    },
+    {
+        // Browser-only modules
+        files: ['src/lib/modal.ts'],
+        languageOptions: {
+            globals: {
+                document: 'readonly',
+                HTMLDialogElement: 'readonly',
+                HTMLButtonElement: 'readonly'
+            }
+        }
     }
 ];
