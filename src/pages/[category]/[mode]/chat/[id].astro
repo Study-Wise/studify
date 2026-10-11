@@ -50,13 +50,19 @@ if (!isNewChat) {
 
 }
 
+// Get thread data to access the title and uploaded files (skip for new chats)
+const thread = !isNewChat && id ? await getThreadByToken(id, (isAuthorized || isPublic)) : null;
+
+// Unknown thread IDs pass the access check as unclaimed, so start a fresh chat instead of rendering an empty one
+if (!isNewChat && isAuthorized && !thread) {
+    return Astro.redirect(`/${category}/${mode}/chat/new`);
+}
+
 // For new chats, user must be authenticated
 if ((isNewChat && !user) || (!user && !isPublic)) {
     return Astro.redirect(`/user/sign-in?returnBackUrl=${encodeURIComponent(`/${category}/${mode}/chat/${id}`)}`);
 }
 
-// Get thread data to access the title and uploaded files (skip for new chats)
-const thread = !isNewChat && id ? await getThreadByToken(id, (isAuthorized || isPublic)) : null;
 const threadTitle = thread?.title || null;
 const uploadedFiles = thread?.uploadedFiles || [];
 
