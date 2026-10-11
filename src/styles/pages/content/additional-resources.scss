@@ -89,6 +89,10 @@
                     color: white;
                 }
 
+                &.simulation {
+                    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+                }
+
                 &.video {
                     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 }

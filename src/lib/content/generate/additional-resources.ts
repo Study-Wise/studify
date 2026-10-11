@@ -6,20 +6,26 @@ import { threadsTable } from '@/db/schema';
 
 import type { ThreadData, UploadedFile } from '@/lib/threads';
 import { saveContent } from '@/lib/content/latest';
+import findSimulations from '@/lib/phet';
 import { VendorError } from '@/lib/user-errors';
 
 const exa = new Exa(import.meta.env.EXA_SEARCH_API_KEY || process.env.EXA_SEARCH_API_KEY);
+
+// Categories that get PhET simulations, and modes within them that PhET doesn't cover
+const SIMULATION_CATEGORIES = ['science'];
+const SIMULATION_EXCLUDED_MODES = ['computer-science'];
 
 export interface Resource {
     title: string;
     url: string;
     snippet: string;
-    type: 'video' | 'article' | 'tutorial' | 'documentation';
+    type: 'simulation' | 'video' | 'article' | 'tutorial' | 'documentation';
     source: string;
 }
 
 interface ResourceCollection {
     topic: string;
+    simulations: Resource[];
     videos: Resource[];
     articles: Resource[];
     tutorials: Resource[];
@@ -66,6 +72,7 @@ export async function generateResources(threadId: string): Promise<string> {
 
     const resourceCollection: ResourceCollection = {
         topic: thread.title || 'Study Resources',
+        simulations: [],
         videos: [],
         articles: [],
         tutorials: [],
@@ -74,6 +81,18 @@ export async function generateResources(threadId: string): Promise<string> {
     };
 
     try {
+        // Science threads also get interactive PhET simulations
+        if (SIMULATION_CATEGORIES.includes(thread.category) && !SIMULATION_EXCLUDED_MODES.includes(thread.mode)) {
+            const simulations = await findSimulations(topicSummary);
+            resourceCollection.simulations = simulations.map(simulation => ({
+                title: simulation.title,
+                url: simulation.pageUrl,
+                snippet: simulation.description.slice(0, 200),
+                type: 'simulation' as const,
+                source: new URL(simulation.pageUrl).hostname
+            }));
+        }
+
         // Search for YouTube educational videos
         const videoResults = await exa.searchAndContents(
             `${topicSummary} educational video tutorial explanation`,
@@ -154,7 +173,7 @@ export async function generateResources(threadId: string): Promise<string> {
     // Use https, and drop links already listed in an earlier section. URLs are
     // compared ignoring protocol, "www.", case and trailing slashes.
     const seenUrls = new Set<string>();
-    for (const section of ['videos', 'articles', 'tutorials', 'documentation'] as const) {
+    for (const section of ['simulations', 'videos', 'articles', 'tutorials', 'documentation'] as const) {
         resourceCollection[section] = resourceCollection[section].filter(resource => {
             const url = new URL(resource.url);
             url.protocol = 'https:';

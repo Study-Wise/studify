@@ -74,6 +74,32 @@ if (latestResourcesJSON) {
                         <p class="resources-subtitle">Curated educational resources to enhance your learning</p>
                     </div>
 
+                    {resourcesData.simulations && resourcesData.simulations.length > 0 && (
+                        <section class="resource-section">
+                            <div class="section-header">
+                                <span class="material-symbols-outlined" aria-hidden="true">science</span>
+                                <h2>Interactive Simulations</h2>
+                            </div>
+                            <div class="resource-grid">
+                                {resourcesData.simulations.map((resource: Resource) => (
+                                    <a href={resource.url} target="_blank" rel="noopener noreferrer" class="resource-card">
+                                        <div class="resource-icon simulation">
+                                            <span class="material-symbols-outlined" aria-hidden="true">science</span>
+                                        </div>
+                                        <div class="resource-content">
+                                            <h3 class="resource-title">{resource.title}</h3>
+                                            <p class="resource-snippet">{resource.snippet}</p>
+                                            <div class="resource-footer">
+                                                <span class="resource-source">{resource.source}</span>
+                                                <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
                     {resourcesData.videos && resourcesData.videos.length > 0 && (
                         <section class="resource-section">
                             <div class="section-header">
