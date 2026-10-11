@@ -2,15 +2,6 @@ import { UTApi } from 'uploadthing/server';
 
 import { VendorError } from '@/lib/user-errors';
 
-// Tags UploadThing failures so users see the vendor name
-async function tagged<T>(call: Promise<T>): Promise<T> {
-    try {
-        return await call;
-    } catch (error) {
-        throw new VendorError('UploadThing', 'UploadThing request failed', { cause: error });
-    }
-}
-
 export interface UploadOptions {
     metadata?: Record<string, string>;
     contentDisposition?: 'inline' | 'attachment';
@@ -27,41 +18,39 @@ export function createUploadThingUtils(envVar: string, appId: string) {
     return {
         // Upload a single file
         uploadFile: async (file: File, options?: UploadOptions) => {
-            const result = await tagged(utapi.uploadFiles(file, options));
-            if (result.error) {
-                throw new VendorError('UploadThing', result.error.message, { cause: result.error });
-            }
+            const result = await utapi.uploadFiles(file, options);
+            if (result.error) throw new VendorError('UploadThing', result.error.message, { cause: result.error });
             return result;
         },
 
         // Upload multiple files
         uploadFiles: async (files: File[], options?: UploadOptions & { concurrency?: number }) => {
-            return await tagged(utapi.uploadFiles(files, options));
+            return await utapi.uploadFiles(files, options);
         },
 
         // Upload file from URL
         uploadFileFromUrl: async (url: string, options?: UploadOptions) => {
-            return await tagged(utapi.uploadFilesFromUrl(url, options));
+            return await utapi.uploadFilesFromUrl(url, options);
         },
 
         // Upload image from URL
         uploadImageByUrl: async (url: string, options?: UploadOptions) => {
-            return await tagged(utapi.uploadFilesFromUrl(url, options));
+            return await utapi.uploadFilesFromUrl(url, options);
         },
 
         // Upload multiple files from URLs
         uploadFilesFromUrls: async (urls: string[], options?: UploadOptions & { concurrency?: number }) => {
-            return await tagged(utapi.uploadFilesFromUrl(urls, options));
+            return await utapi.uploadFilesFromUrl(urls, options);
         },
 
         // Delete files
         deleteFiles: async (fileKeys: string | string[]) => {
-            return await tagged(utapi.deleteFiles(fileKeys));
+            return await utapi.deleteFiles(fileKeys);
         },
 
         // List all files
         listFiles: async (options?: { limit?: number; offset?: number }) => {
-            const result = await tagged(utapi.listFiles(options));
+            const result = await utapi.listFiles(options);
             return result.files.map(file => ({
                 key: file.key,
                 name: file.name,
