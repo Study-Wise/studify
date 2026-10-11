@@ -100,6 +100,7 @@ const { page, category, mode, id } = Astro.props;
 
         // Set loading state for both pages
         setLoadingState(true);
+        if (page === 'chat') showTypingIndicator();
         try {
             // Visibility chosen in the sidebar, used when this message creates the thread
             const publicToggle = document.getElementById('public-toggle');
@@ -149,6 +150,7 @@ const { page, category, mode, id } = Astro.props;
                     console.error('Invalid data format:', data);
                     throw new Error('Invalid/empty response from AI.');
                 }
+                removeTypingIndicator();
                 await displayResults(data);
                 if (page === 'home') {
                     await showOpenInChatBtn(data.id);
@@ -160,8 +162,42 @@ const { page, category, mode, id } = Astro.props;
             console.error('Full error caught in generateOutput:', error);
             displayError(error.message || 'Unexpected error.');
         } finally {
+            removeTypingIndicator();
             setLoadingState(false);
         }
+    }
+
+    // "Studify is thinking…" bubble shown in the message list where the reply will appear
+    function showTypingIndicator() {
+        const chatMessages = document.querySelector('.chat-messages');
+        if (!chatMessages || document.getElementById('typing-indicator')) return;
+
+        const indicator = document.createElement('div');
+        indicator.id = 'typing-indicator';
+        indicator.className = 'message assistant typing';
+        indicator.setAttribute('role', 'status');
+
+        const content = document.createElement('div');
+        content.className = 'message-content';
+
+        const dots = document.createElement('div');
+        dots.className = 'typing-dots';
+        dots.setAttribute('aria-hidden', 'true');
+        for (let i = 0; i < 3; i++) dots.appendChild(document.createElement('span'));
+
+        const label = document.createElement('span');
+        label.className = 'typing-label';
+        label.textContent = 'Studify is thinking…';
+
+        content.appendChild(dots);
+        content.appendChild(label);
+        indicator.appendChild(content);
+        chatMessages.appendChild(indicator);
+        chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
+    }
+
+    function removeTypingIndicator() {
+        document.getElementById('typing-indicator')?.remove();
     }
 
     function setLoadingState(isLoading) {
@@ -372,6 +408,7 @@ const { page, category, mode, id } = Astro.props;
                     if (data.type === 'text') {
                         // Create message div on first text chunk
                         if (!messageDiv) {
+                            removeTypingIndicator();
                             messageDiv = document.createElement('div');
                             messageDiv.className = 'message assistant';
                             messageContent = document.createElement('div');
@@ -388,7 +425,8 @@ const { page, category, mode, id } = Astro.props;
                         if (!toolCallLogDiv) {
                             toolCallLogDiv = document.createElement('div');
                             toolCallLogDiv.className = 'tool-call-log';
-                            chatMessages.insertBefore(toolCallLogDiv, messageDiv || messageContent?.parentElement);
+                            // Keep the typing indicator below the tool calls until the reply text arrives
+                            chatMessages.insertBefore(toolCallLogDiv, messageDiv || document.getElementById('typing-indicator'));
                         }
                         const entry = document.createElement('div');
                         entry.className = 'tool-call-entry';

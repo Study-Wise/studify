@@ -476,7 +476,16 @@ footer, .chat-toolbar {
                 &:nth-child(3) {
                     animation-delay: 0.4s;
                 }
+
+                @media (prefers-reduced-motion: reduce) {
+                    animation: none;
+                }
             }
+        }
+
+        .typing-label {
+            font-size: $font-size-small;
+            color: var(--text-secondary);
         }
     }
 }
