@@ -3,8 +3,10 @@ import type { User as BetterAuthUser } from 'better-auth';
 import { z } from 'zod';
 
 // User role schema and enum
-export const userRoleSchema = z.enum(["user", "premium", "moderator", "admin", "banned"]);
-export const userRoleEnum = pgEnum("user_role", userRoleSchema.options);
+export const userRoleSchema = z.enum(
+    ['user', 'premium', 'moderator', 'admin', 'banned']
+);
+export const userRoleEnum = pgEnum('user_role', userRoleSchema.options);
 export type UserRole = z.infer<typeof userRoleSchema>;
 
 // Better Auth's User type with our custom role field

@@ -1,3 +1,4 @@
+@use '../../variables/globals' as *;
 @use '../../variables/tokens' as *;
 @use '../../variables/mixins' as *;
 
@@ -26,7 +27,7 @@
 
                 margin-bottom: $spacing;
                 padding-bottom: $spacing;
-                border-bottom: solid 1px var(--section-title-border);
+                border-bottom: solid 1px $section-title-border;
                 text-box-trim: trim-both;
             }
         }

@@ -46,7 +46,7 @@
                     list.nth(map.get($accent-colors, primary), 1),
                     list.nth(map.get($accent-colors, primary), 2)
                 );
-                color: var(--header-text);
+                color: $header-text;
                 border-radius: 50%;
                 font-weight: $font-weight-bold;
                 font-size: $font-size-large;
