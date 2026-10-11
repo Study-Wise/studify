@@ -55,7 +55,7 @@ const hasContent = !!(isStructured ? (flashcardData && flashcardData.questions.l
 <Layout title={`Flashcards | ${modeName} | ${categoryName}`} className="flashcard-page content-page">
     {!isAuthorized && !isPublic ? (
         <div class="empty-state">
-            <span class="material-symbols-outlined">lock</span>
+            <span class="material-symbols-outlined" aria-hidden="true">lock</span>
             <h2>Access Denied</h2>
             <p>You don't have permission to view these flashcards. This thread belongs to another user.</p>
             <a href="/" class="btn-primary">Go Home</a>
@@ -95,15 +95,15 @@ const hasContent = !!(isStructured ? (flashcardData && flashcardData.questions.l
                             ))}
                         </div>
                         <div class="flashcard-controls">
-                            <button type="button" class="control-btn prev" disabled>
-                                <span class="material-symbols-outlined">chevron_left</span>
+                            <button type="button" class="control-btn prev" aria-label="Previous card" disabled>
+                                <span class="material-symbols-outlined" aria-hidden="true">chevron_left</span>
                             </button>
                             <button type="button" class="control-btn flip">
-                                <span class="material-symbols-outlined">flip</span>
+                                <span class="material-symbols-outlined" aria-hidden="true">flip</span>
                                 Flip
                             </button>
-                            <button type="button" class="control-btn next">
-                                <span class="material-symbols-outlined">chevron_right</span>
+                            <button type="button" class="control-btn next" aria-label="Next card">
+                                <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
                             </button>
                         </div>
                     </div>
@@ -114,7 +114,7 @@ const hasContent = !!(isStructured ? (flashcardData && flashcardData.questions.l
                 </div>
             ) : (
                 <div class="empty-state">
-                    <span class="material-symbols-outlined">style</span>
+                    <span class="material-symbols-outlined" aria-hidden="true">style</span>
                     <h2>No Flashcards Found</h2>
                     <p>There are no flashcards generated for this conversation yet.</p>
                 </div>

@@ -53,7 +53,7 @@ function formatDate(date: Date) {
 <div class="my-chats-container">
     {threads.length === 0 ? (
         <div class="empty-state card">
-            <span class="material-symbols-outlined empty-icon">chat_bubble_outline</span>
+            <span class="material-symbols-outlined empty-icon" aria-hidden="true">chat_bubble_outline</span>
             <h2>No chats yet</h2>
             <p>Start a conversation in any subject to see it here!</p>
             <a href="/" class="btn-primary">Browse Subjects</a>
@@ -100,7 +100,7 @@ function formatDate(date: Date) {
                                             title="Delete chat"
                                             aria-label={`Delete chat: ${thread.title}`}
                                         >
-                                            <span class="material-symbols-outlined">delete</span>
+                                            <span class="material-symbols-outlined" aria-hidden="true">delete</span>
                                         </button>
                                     </div>
                                 );

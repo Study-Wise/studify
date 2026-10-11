@@ -26,7 +26,7 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
 
 <div class="content-actions">
     <a href={chatUrl} class="action-btn secondary">
-        <span class="material-symbols-outlined">arrow_back</span>
+        <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
         <span>Back to Chat</span>
     </a>
 
@@ -39,7 +39,7 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
             data-content-type={contentType}
             data-has-content={hasContent.toString()}
         >
-            <span class="material-symbols-outlined">{hasContent ? 'refresh' : 'auto_awesome'}</span>
+            <span class="material-symbols-outlined" aria-hidden="true">{hasContent ? 'refresh' : 'auto_awesome'}</span>
             <span>{hasContent ? `${regenerateVerb} ${contentTypeName}` : `${generateVerb} ${contentTypeName}`}</span>
         </button>
     )}
@@ -156,7 +156,7 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
             actionBtn.setAttribute('disabled', 'true');
             const originalContent = actionBtn.innerHTML;
             const loadingText = `${(isRegenerate ? regenerateVerb : generateVerb).replace(/^(\w+?)e?\b/, '$1ing')}…`;
-            actionBtn.innerHTML = `<span class="material-symbols-outlined spinning">progress_activity</span><span>${loadingText}</span>`;
+            actionBtn.innerHTML = `<span class="material-symbols-outlined spinning" aria-hidden="true">progress_activity</span><span>${loadingText}</span>`;
 
             try {
                 const response = await fetch(apiEndpoint, {
@@ -176,7 +176,7 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
 
                     // Update button to regenerate state
                     actionBtn.setAttribute('data-has-content', 'true');
-                    actionBtn.innerHTML = `<span class="material-symbols-outlined">refresh</span><span>${regenerateVerb} ${contentTypeName}</span>`;
+                    actionBtn.innerHTML = `<span class="material-symbols-outlined" aria-hidden="true">refresh</span><span>${regenerateVerb} ${contentTypeName}</span>`;
                     actionBtn.removeAttribute('disabled');
                 }
                 else {

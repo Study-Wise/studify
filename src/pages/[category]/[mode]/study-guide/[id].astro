@@ -48,7 +48,7 @@ const parsedContent = latestStudyGuide ? await marked.parse(latestStudyGuide) : 
 <Layout title={`Study Guide | ${modeName} | ${categoryName}`} className="study-guide-page content-page">
     {!isAuthorized && !isPublic ? (
         <div class="empty-state">
-            <span class="material-symbols-outlined">lock</span>
+            <span class="material-symbols-outlined" aria-hidden="true">lock</span>
             <h2>Access Denied</h2>
             <p>You don't have permission to view this study guide. This thread belongs to another user.</p>
             <a href="/" class="btn-primary">Go Home</a>
@@ -66,7 +66,7 @@ const parsedContent = latestStudyGuide ? await marked.parse(latestStudyGuide) : 
                 <div class="content-container study-guide-content" set:html={parsedContent} />
             ) : (
                 <div class="empty-state">
-                    <span class="material-symbols-outlined">menu_book</span>
+                    <span class="material-symbols-outlined" aria-hidden="true">menu_book</span>
                     <h2>No Study Guide Found</h2>
                     <p>There is no study guide generated for this conversation yet.</p>
                 </div>

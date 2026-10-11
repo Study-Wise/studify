@@ -45,7 +45,7 @@ const infographicUrl = infographic?.imageUrl || null;
 <Layout title={`Infographic | ${modeName} | ${categoryName}`} className="infographic-page content-page">
     {!isAuthorized && !isPublic ? (
         <div class="empty-state">
-            <span class="material-symbols-outlined">lock</span>
+            <span class="material-symbols-outlined" aria-hidden="true">lock</span>
             <h2>Access Denied</h2>
             <p>You don't have permission to view this infographic. This thread belongs to another user.</p>
             <a href="/" class="btn-primary">Go Home</a>
@@ -65,7 +65,7 @@ const infographicUrl = infographic?.imageUrl || null;
                 </div>
             ) : (
                 <div class="empty-state">
-                    <span class="material-symbols-outlined">image</span>
+                    <span class="material-symbols-outlined" aria-hidden="true">image</span>
                     <h2>No Infographic Found</h2>
                     <p>There is no infographic generated for this conversation yet.</p>
                 </div>

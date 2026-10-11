@@ -124,7 +124,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
                 </header>
 
                 <div class="empty-state">
-                    <span class="material-symbols-outlined">help_outline</span>
+                    <span class="material-symbols-outlined" aria-hidden="true">help_outline</span>
                     <h2>Answer Not Found</h2>
                     <p>This question hasn't been answered yet. Our AI is generating a response.</p>
                     <p>Please check back shortly, or ask your question in a new chat session.</p>
@@ -189,7 +189,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
                         <h2>Need More Help?</h2>
                         <p>Get personalized tutoring and detailed explanations in our interactive chat.</p>
                         <a href={`/${category}/${mode}`} class="question-link">
-                            Explore {modeName} <span class="material-symbols-outlined">arrow_forward</span>
+                            Explore {modeName} <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
                         </a>
                     </div>
                 </footer>

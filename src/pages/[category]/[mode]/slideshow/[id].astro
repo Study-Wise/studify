@@ -42,7 +42,7 @@ const { html: slideshowHtml } = (isAuthorized || isPublic)
 <Layout title={`Slideshow | ${modeName} | ${categoryName}`} className="slideshow-page" container={false}>
     {!isAuthorized && !isPublic ? (
         <div class="empty-state">
-            <span class="material-symbols-outlined">lock</span>
+            <span class="material-symbols-outlined" aria-hidden="true">lock</span>
             <h2>Access Denied</h2>
             <p>You don't have permission to view this slideshow. This thread belongs to another user.</p>
             <a href="/" class="btn-primary">Go Home</a>
@@ -62,7 +62,7 @@ const { html: slideshowHtml } = (isAuthorized || isPublic)
                 </div>
             ) : (
                 <div class="empty-state">
-                    <span class="material-symbols-outlined">slideshow</span>
+                    <span class="material-symbols-outlined" aria-hidden="true">slideshow</span>
                     <h2>No Slideshow Found</h2>
                     <p>There is no slideshow generated for this conversation yet.</p>
                 </div>

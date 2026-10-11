@@ -6,12 +6,12 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
 
 ---
 <div id="offline-indicator" class="offline-indicator" style="display: none;">
-    <span class="material-symbols-outlined">wifi_off</span>
+    <span class="material-symbols-outlined" aria-hidden="true">wifi_off</span>
     <span>You're offline. Some features may be limited.</span>
 </div>
 
 <div id="update-available" class="update-indicator" style="display: none;">
-    <span class="material-symbols-outlined">system_update</span>
+    <span class="material-symbols-outlined" aria-hidden="true">system_update</span>
     <span>Update available!</span>
     <button type="button" id="update-button" class="update-button">Update Now</button>
 </div>

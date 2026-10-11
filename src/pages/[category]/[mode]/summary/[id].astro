@@ -48,7 +48,7 @@ const parsedContent = latestSummary ? await marked.parse(latestSummary) : null;
 <Layout title={`Chat Summary | ${modeName} | ${categoryName}`} className="summary-page content-page">
     {!isAuthorized && !isPublic ? (
         <div class="empty-state">
-            <span class="material-symbols-outlined">lock</span>
+            <span class="material-symbols-outlined" aria-hidden="true">lock</span>
             <h2>Access Denied</h2>
             <p>You don't have permission to view this summary. This thread belongs to another user.</p>
             <a href="/" class="btn-primary">Go Home</a>
@@ -66,7 +66,7 @@ const parsedContent = latestSummary ? await marked.parse(latestSummary) : null;
                 <div class="content-container summary-content" set:html={parsedContent} />
             ) : (
                 <div class="empty-state">
-                    <span class="material-symbols-outlined">summarize</span>
+                    <span class="material-symbols-outlined" aria-hidden="true">summarize</span>
                     <h2>No Summary Found</h2>
                     <p>There is no summary generated for this conversation yet.</p>
                 </div>

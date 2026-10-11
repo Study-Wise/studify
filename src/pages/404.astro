@@ -9,7 +9,7 @@ const currentUrl = Astro.request.url;
     <div class="error-404-container">
         <div class="error-content card">
             <div class="error-icon">
-                <span class="material-symbols-outlined">search_off</span>
+                <span class="material-symbols-outlined" aria-hidden="true">search_off</span>
             </div>
 
             <h1 class="error-title">404</h1>
@@ -21,11 +21,11 @@ const currentUrl = Astro.request.url;
 
             <div class="error-actions">
                 <a href="/" class="btn-primary">
-                    <span class="material-symbols-outlined">home</span>
+                    <span class="material-symbols-outlined" aria-hidden="true">home</span>
                     Go Home
                 </a>
                 <a href="javascript:history.back()" class="btn-secondary">
-                    <span class="material-symbols-outlined">arrow_back</span>
+                    <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
                     Go Back
                 </a>
             </div>
