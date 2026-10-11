@@ -196,7 +196,6 @@ const {
         });
     }
 
-<<<<<<< HEAD
     // Adopt a thread created by the chat script (e.g. first message sent before uploading)
     window.addEventListener('thread-created', (event) => {
         const { id: createdId, source } = event.detail || {};
@@ -204,7 +203,7 @@ const {
             currentThreadId = createdId;
         }
     });
-=======
+
     // Delete chat functionality
     const deleteChatButton = document.getElementById('delete-chat-button');
 
@@ -245,7 +244,6 @@ const {
             }
         });
     }
->>>>>>> origin/main
 
     // File upload functionality
     const fileUpload = document.getElementById('file-upload');
