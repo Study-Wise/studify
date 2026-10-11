@@ -93,6 +93,10 @@ footer, .chat-toolbar {
 }
 
 .chat-header {
+    // backdrop-filter creates a stacking context, so the header needs its own
+    // z-index to keep the user menu above the chat container that follows it
+    position: relative;
+    z-index: $z-index-sticky;
     box-sizing: border-box;
     padding: $spacing-medium + 0.25rem $spacing-large;
     border-block-end: 1px solid rgb(from var(--section-title) r g b / 10%);
