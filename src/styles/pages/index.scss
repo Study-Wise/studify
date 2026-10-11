@@ -131,6 +131,10 @@
 
         @include interactive-lift;
 
+        &[hidden] {
+            display: none;
+        }
+
         .category-title {
             line-height: $line-height-tight;
             font-weight: $font-weight-semibold;
@@ -168,6 +172,10 @@
             gap: $spacing-medium;
 
             .mode-card {
+                &[hidden] {
+                    display: none;
+                }
+
                 background-color: var(--card-bg);
                 padding: $spacing-medium;
                 border-radius: $border-radius-large;
@@ -198,6 +206,152 @@
                     transition: scale $transition-slow $ease-spring;
                 }
             }
+        }
+    }
+
+    .subjects-empty {
+        grid-column: 1 / -1;
+        text-align: center;
+        opacity: $opacity-subtle;
+
+        &[hidden] {
+            display: none;
+        }
+    }
+}
+
+// Search and filter controls are taken out of the flow and sit beside the last line of the
+// heading, so neither the toggle nor the floating panel shifts the subject grid
+.categories-header {
+    position: relative;
+
+    .subject-search {
+        position: absolute;
+        inset-inline-end: 0;
+        z-index: $z-index-popover;
+
+        // Clears the heading's 12px bottom padding and 1px divider to line up with its last line
+        inset-block-end: 0.75rem;
+    }
+
+    .subject-search-toggle {
+        @include flex-center;
+
+        position: relative;
+        width: 2rem;
+        height: 2rem;
+        padding: 0;
+        border: 1px solid var(--card-border);
+        border-radius: $border-radius-full;
+        background-color: var(--card-bg);
+        color: var(--body-text);
+        cursor: pointer;
+        box-shadow: $box-shadow-small;
+        transition: $transition-colors, box-shadow $transition-base $ease-out;
+
+        &:hover,
+        &[aria-expanded='true'] {
+            background-color: var(--message-bg);
+            box-shadow: $box-shadow-medium;
+        }
+
+        .subject-search-indicator {
+            display: none;
+            position: absolute;
+            inset-block-start: 0.125rem;
+            inset-inline-end: 0.125rem;
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 50%;
+            background: list.nth(map.get($accent-colors, primary), 1);
+        }
+
+        .material-symbols-outlined {
+            font-size: $font-size-extra-large;
+        }
+
+        &.is-filtering .subject-search-indicator {
+            display: block;
+        }
+    }
+
+    .subject-search-panel {
+        position: absolute;
+        inset-block-start: calc(100% + #{$spacing-extra-small});
+        inset-inline-end: 0;
+        display: flex;
+        flex-direction: column;
+        gap: $spacing-small;
+        width: min(26rem, calc(100vw - #{$spacing-extra-large * 2}));
+        padding: $spacing-medium;
+        background-color: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: $border-radius-large;
+        box-shadow: $box-shadow-large;
+        font-size: $font-size-base;
+        font-weight: $font-weight-normal;
+
+        &[hidden] {
+            display: none;
+        }
+    }
+
+    .subject-search-field {
+        display: flex;
+        align-items: center;
+        gap: $spacing-extra-small;
+        padding: $spacing-extra-small $spacing-small;
+        border: 1px solid var(--card-border);
+        border-radius: $border-radius-medium;
+        background-color: var(--body-bg);
+
+        &:focus-within {
+            border-color: list.nth(map.get($accent-colors, primary), 1);
+        }
+
+        .material-symbols-outlined {
+            opacity: $opacity-subtle;
+        }
+
+        input {
+            flex: 1;
+            min-width: 0;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: var(--body-text);
+            font: inherit;
+        }
+    }
+
+    .subject-filter-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: $spacing-extra-small;
+    }
+
+    .subject-filter-chip {
+        padding: $spacing-tiny $spacing-small;
+        border: 1px solid var(--card-border);
+        border-radius: $border-radius-full;
+        background-color: var(--card-bg);
+        color: var(--body-text);
+        font: inherit;
+        font-size: $font-size-small;
+        cursor: pointer;
+        transition: $transition-colors;
+
+        &:hover {
+            background-color: var(--message-bg);
+        }
+
+        &[aria-pressed='true'] {
+            background: linear-gradient(135deg,
+                list.nth(map.get($accent-colors, primary), 1),
+                list.nth(map.get($accent-colors, primary), 2)
+            );
+            border-color: transparent;
+            color: $header-text;
         }
     }
 }

@@ -11,6 +11,10 @@ const session = await auth.api.getSession({
 });
 const isLoggedIn = !!session?.user;
 
+const visibleCategories = Object.entries(categories).filter(([_, category]) =>
+    Object.values(category.modes).some((mode) => mode.show),
+);
+
 const description = 'Studify is your AI-powered study partner. Paste your homework and instantly generate study guides, reference sheets, flashcards, practice questions, mind maps, and more across subjects like Math, Science, and English.';
 ---
 <Layout title="Home" description={description}>
@@ -62,36 +66,142 @@ const description = 'Studify is your AI-powered study partner. Paste your homewo
         <p>Get ready to understand your homework better and study smarter!</p>
     </section>
     <section class="categories-section card">
-        <h2>
-            <span class="material-symbols-outlined" aria-hidden="true">school</span>&nbsp;Choose Your Subject
-        </h2>
+        <div class="categories-header">
+            <h2>
+                <span class="material-symbols-outlined" aria-hidden="true">school</span>&nbsp;Choose Your Subject
+            </h2>
+            <div class="subject-search">
+                <button
+                    type="button"
+                    class="subject-search-toggle"
+                    id="subject-search-toggle"
+                    aria-label="Search and filter subjects"
+                    aria-expanded="false"
+                    aria-controls="subject-search-panel"
+                >
+                    <span class="material-symbols-outlined" aria-hidden="true">search</span>
+                    <span class="subject-search-indicator" aria-hidden="true"></span>
+                </button>
+                <div class="subject-search-panel" id="subject-search-panel" role="search" hidden>
+                    <label class="subject-search-field">
+                        <span class="material-symbols-outlined" aria-hidden="true">search</span>
+                        <input
+                            type="search"
+                            id="subject-search-input"
+                            placeholder="Search subjects"
+                            aria-label="Search subjects"
+                            autocomplete="off"
+                        />
+                    </label>
+                    <div class="subject-filter-chips" role="group" aria-label="Filter by group">
+                        <button type="button" class="subject-filter-chip" data-filter="" aria-pressed="true">All</button>
+                        {visibleCategories.map(([categoryKey, category]) => (
+                            <button type="button" class="subject-filter-chip" data-filter={categoryKey} aria-pressed="false">
+                                {category.name}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="categories-grid">
-            {Object.entries(categories).map(([categoryKey, category]) => {
-                if (Object.entries(category.modes).find(([_, mode]) => mode.show)) {
-                    return (
-                        <div class="category-card">
-                            <h3 class="category-title">{category.name}</h3>
-                            <p class="category-description">{category.description}</p>
-                            <div class="modes-grid">
-                                {Object.entries(category.modes).map(([modeKey, mode]) => {
-                                    if (mode.show) {
-                                        const chatUrl = `/${categoryKey}/${modeKey}/chat/new`;
-                                        const href = isLoggedIn ? chatUrl : `/user/sign-in?returnBackUrl=${encodeURIComponent(chatUrl)}`;
-                                        return (
-                                            <a href={href} class="mode-card">
-                                                <div class="mode-icon">{mode.icon}</div>
-                                                <h4>{mode.name}</h4>
-                                                <p>{mode.description}</p>
-                                            </a>
-                                        )
-                                    }
-                                })}
-                            </div>
-                        </div>
-                    )
-                }
-            })}
+            {visibleCategories.map(([categoryKey, category]) => (
+                <div class="category-card" data-category={categoryKey}>
+                    <h3 class="category-title">{category.name}</h3>
+                    <p class="category-description">{category.description}</p>
+                    <div class="modes-grid">
+                        {Object.entries(category.modes).map(([modeKey, mode]) => {
+                            if (mode.show) {
+                                const chatUrl = `/${categoryKey}/${modeKey}/chat/new`;
+                                const href = isLoggedIn ? chatUrl : `/user/sign-in?returnBackUrl=${encodeURIComponent(chatUrl)}`;
+                                return (
+                                    <a
+                                        href={href}
+                                        class="mode-card"
+                                        data-search={`${mode.name} ${mode.description} ${category.name}`.toLowerCase()}
+                                    >
+                                        <div class="mode-icon">{mode.icon}</div>
+                                        <h4>{mode.name}</h4>
+                                        <p>{mode.description}</p>
+                                    </a>
+                                )
+                            }
+                        })}
+                    </div>
+                </div>
+            ))}
+            <p class="subjects-empty" id="subjects-empty" hidden>No subjects match your search.</p>
         </div>
     </section>
 </Layout>
+
+<script>
+    const toggle = document.getElementById('subject-search-toggle');
+    const panel = document.getElementById('subject-search-panel');
+    const input = document.getElementById('subject-search-input');
+    const empty = document.getElementById('subjects-empty');
+    const chips = Array.from(document.querySelectorAll<HTMLButtonElement>('.subject-filter-chip'));
+    const categoryCards = Array.from(document.querySelectorAll<HTMLElement>('.category-card'));
+
+    let activeCategory = '';
+
+    function applyFilters() {
+        const query = input instanceof HTMLInputElement ? input.value.trim().toLowerCase() : '';
+        const terms = query.split(/\s+/).filter(Boolean);
+        let anyVisible = false;
+
+        for (const card of categoryCards) {
+            const inCategory = !activeCategory || card.dataset.category === activeCategory;
+            let visibleModes = 0;
+
+            for (const mode of card.querySelectorAll<HTMLElement>('.mode-card')) {
+                const text = mode.dataset.search ?? '';
+                const matches = inCategory && terms.every((term) => text.includes(term));
+                mode.hidden = !matches;
+                if (matches) visibleModes++;
+            }
+
+            card.hidden = visibleModes === 0;
+            if (visibleModes > 0) anyVisible = true;
+        }
+
+        if (empty) empty.hidden = anyVisible;
+        toggle?.classList.toggle('is-filtering', terms.length > 0 || activeCategory !== '');
+    }
+
+    function setOpen(open: boolean) {
+        if (!panel || !toggle) return;
+        panel.hidden = !open;
+        toggle.setAttribute('aria-expanded', String(open));
+        if (open) input?.focus();
+    }
+
+    toggle?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setOpen(panel?.hidden ?? false);
+    });
+
+    panel?.addEventListener('click', (e) => e.stopPropagation());
+
+    document.addEventListener('click', () => setOpen(false));
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && panel && !panel.hidden) {
+            setOpen(false);
+            toggle?.focus();
+        }
+    });
+
+    input?.addEventListener('input', applyFilters);
+
+    for (const chip of chips) {
+        chip.addEventListener('click', () => {
+            activeCategory = chip.dataset.filter ?? '';
+            for (const other of chips) {
+                other.setAttribute('aria-pressed', String(other === chip));
+            }
+            applyFilters();
+        });
+    }
+</script>
