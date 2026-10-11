@@ -45,7 +45,7 @@ const { content: latestStudyGuide } = (isAuthorized || isPublic)
 const parsedContent = latestStudyGuide ? await marked.parse(latestStudyGuide) : null;
 ---
 
-<Layout title={`Study Guide | ${modeName} | ${categoryName}`} className="study-guide-page content-page">
+<Layout title={`Study Guide | ${modeName} | ${categoryName}`} className="study-guide-page content-page" mathjax={true} desmos={modeObj.desmos === true}>
     {!isAuthorized && !isPublic ? (
         <div class="empty-state">
             <span class="material-symbols-outlined" aria-hidden="true">lock</span>

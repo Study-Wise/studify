@@ -45,7 +45,7 @@ const { content: latestReferenceSheet } = (isAuthorized || isPublic)
 const parsedContent = latestReferenceSheet ? await marked.parse(latestReferenceSheet) : null;
 ---
 
-<Layout title={`Reference Sheet | ${modeName} | ${categoryName}`} className="reference-sheet-page content-page">
+<Layout title={`Reference Sheet | ${modeName} | ${categoryName}`} className="reference-sheet-page content-page" mathjax={true}>
     {!isAuthorized && !isPublic ? (
         <div class="empty-state">
             <span class="material-symbols-outlined" aria-hidden="true">lock</span>

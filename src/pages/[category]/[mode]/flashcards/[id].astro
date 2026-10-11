@@ -66,7 +66,7 @@ const parsedContent = (!isStructured && typeof latestFlashcards === 'string')
 const hasContent = !!(isStructured ? (flashcardData && flashcardData.questions.length > 0) : parsedContent);
 ---
 
-<Layout title={`Flashcards | ${modeName} | ${categoryName}`} className="flashcard-page content-page">
+<Layout title={`Flashcards | ${modeName} | ${categoryName}`} className="flashcard-page content-page" mathjax={true}>
     {!isAuthorized && !isPublic ? (
         <div class="empty-state">
             <span class="material-symbols-outlined" aria-hidden="true">lock</span>
