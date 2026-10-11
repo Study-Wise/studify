@@ -61,13 +61,8 @@ const { page, category, mode, id } = Astro.props;
         }
         else if (page === 'chat' && !isGenerating) {
             event.preventDefault();
-            markInputInvalid();
+            messageInput.setAttribute('aria-invalid', 'true');
         }
-    }
-
-    // Flag the chat input as invalid after an attempt to send an empty message
-    function markInputInvalid() {
-        messageInput?.setAttribute('aria-invalid', 'true');
     }
 
     // Main output generation
@@ -78,7 +73,7 @@ const { page, category, mode, id } = Astro.props;
         }
         if (!messageInput.value || !messageInput.value.trim()) {
             if (page === 'chat') {
-                markInputInvalid();
+                messageInput.setAttribute('aria-invalid', 'true');
                 messageInput.focus();
                 return;
             }
