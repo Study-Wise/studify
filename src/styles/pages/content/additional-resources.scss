@@ -1,4 +1,7 @@
 @use '../../variables/tokens' as *;
+@use '../../variables/globals' as *;
+@use 'sass:list';
+@use 'sass:map';
 
 .resources-page {
     min-height: calc(100dvh - 4rem);
@@ -38,7 +41,7 @@
 
             .material-symbols-outlined {
                 font-size: 1.75rem;
-                color: var(--primary);
+                color: list.nth(map.get($accent-colors, primary), 1);
             }
 
             h2 {
@@ -70,7 +73,7 @@
             &:hover {
                 transform: translateY(-2px);
                 box-shadow: 0 0 12px rgb(0 0 0 / 10%);
-                border-color: var(--primary);
+                border-color: list.nth(map.get($accent-colors, primary), 1);
 
                 .resource-icon {
                     transform: scale(1.05);
@@ -163,7 +166,7 @@
 
                     .material-symbols-outlined {
                         font-size: 1rem;
-                        color: var(--primary);
+                        color: list.nth(map.get($accent-colors, primary), 1);
                     }
                 }
             }

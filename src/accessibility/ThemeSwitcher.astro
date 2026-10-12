@@ -6,16 +6,6 @@ import '@/styles/accessibility/theme-switcher.scss';
     <span class="material-symbols-outlined" aria-hidden="true">contrast</span>
 </button>
 
-<style>
-    .theme-switcher {
-        display: none;
-        display: if(
-                style(--nothing: 'here'): block;
-                else: block
-            );
-    }
-</style>
-
 <script>
     let userTheme = localStorage.getItem('user-theme') as keyof typeof themes || 'system';
 

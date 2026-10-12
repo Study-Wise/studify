@@ -1,6 +1,7 @@
-import { pgEnum } from 'drizzle-orm/pg-core';
 import type { User as BetterAuthUser } from 'better-auth';
 import { z } from 'zod';
+
+import { pgEnum } from 'drizzle-orm/pg-core';
 
 // User role schema and enum
 export const userRoleSchema = z.enum(

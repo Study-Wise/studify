@@ -1,5 +1,7 @@
 ---
 // Offline support component for PWA functionality
+import '@/styles/components/offline-support.scss';
+
 import 'dotenv/config';
 
 const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MODE === 'production') || (import.meta.env.VERCEL_ENV === 'production')
@@ -148,61 +150,3 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
         }
     };
 </script>
-
-<style lang="scss">
-    .offline-indicator {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        background: #f59e0b;
-        color: white;
-        padding: 8px 16px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 14px;
-        z-index: 1000;
-        box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .update-indicator {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        background: #10b981;
-        color: white;
-        padding: 8px 16px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 14px;
-        z-index: 1000;
-        box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .update-button {
-        background: rgba(255, 255, 255, 0.2);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        color: white;
-        padding: 4px 12px;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 12px;
-        margin-left: auto;
-    }
-
-    .update-button:hover {
-        background: rgba(255, 255, 255, 0.3);
-    }
-
-    /* Adjust body padding when indicators are shown */
-    body:has(.offline-indicator[style*="flex"]) {
-        padding-top: 40px;
-    }
-
-    body:has(.update-indicator[style*="flex"]) {
-        padding-top: 40px;
-    }
-</style>

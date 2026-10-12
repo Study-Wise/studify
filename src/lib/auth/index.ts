@@ -5,6 +5,7 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 
 import { db } from '@/db/initialize';
 import { user, session, account, verification } from '@/db/auth-schema';
+
 import type { UserRole, SocialProviderConfig } from '@/lib/auth/types';
 
 // Admin email whitelist

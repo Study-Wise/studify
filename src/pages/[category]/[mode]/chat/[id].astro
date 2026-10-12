@@ -1,12 +1,10 @@
 ---
 import Layout from '@/layouts/Layout.astro';
-
 import Header from '@/components/chat/Header.astro';
 import Toolbar from '@/components/chat/Toolbar.astro';
 import LeftSidebar from '@/components/chat/LeftSidebar.astro';
 import RightSidebar from '@/components/chat/RightSidebar.astro';
 import Footer from '@/components/Footer.astro';
-
 import MessagesScript from '@/scripts/messages.astro';
 import StepByStepScript from '@/scripts/step-by-step.astro';
 import '@/styles/pages/chat.scss';
@@ -70,11 +68,7 @@ const uploadedFiles = thread?.uploadedFiles || [];
 let messages: Message[] = [];
 if (!isNewChat) {
     const messagesLength = await getMessagesLength(id || '');
-    // For public threads, pass null to skip ownership check in getMessages
-    const emailForMessages = isPublic && !isAuthorized ? null : user_email;
     messages = (isAuthorized || isPublic) && messagesLength > 0 ? await getMessages(id ?? '', (isAuthorized || isPublic)) : [];
-
-    console.log(id ?? '', emailForMessages);
 
     // Check if there's only one message and generate welcome message if needed
     messages = await checkForOneMessage({

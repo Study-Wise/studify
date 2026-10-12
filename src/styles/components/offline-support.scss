@@ -1,0 +1,54 @@
+.offline-indicator {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #f59e0b;
+    color: white;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    z-index: 1000;
+    box-shadow: 0 0 4px rgb(0 0 0 / 10%);
+}
+
+.update-indicator {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #10b981;
+    color: white;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    z-index: 1000;
+    box-shadow: 0 0 4px rgb(0 0 0 / 10%);
+}
+
+.update-button {
+    background: rgb(255 255 255 / 20%);
+    border: 1px solid rgb(255 255 255 / 30%);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: auto;
+
+    &:hover {
+        background: rgb(255 255 255 / 30%);
+    }
+}
+
+body:has(.offline-indicator[style*='flex']) {
+    padding-top: 40px;
+}
+
+body:has(.update-indicator[style*='flex']) {
+    padding-top: 40px;
+}

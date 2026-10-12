@@ -78,7 +78,8 @@ import '@/styles/components/modal.scss';
         if (current?.type === 'error') {
             if (type === 'error') {
                 pendingErrors.push(entry);
-            } else {
+            }
+            else {
                 pendingNotice = entry;
             }
             getModal().setContent(toModalContent(current));
