@@ -1,5 +1,6 @@
 @use '../../variables/mixins' as *;
 @use '../../variables/globals' as *;
+@use '../../variables/colors/statuses' as *;
 @use 'sass:list';
 @use 'sass:map';
 @use 'sass:color';
@@ -62,12 +63,12 @@
         }
 
         a {
-            color: list.nth(map.get($accent-colors, primary), 1);
+            color: $color-link;
             text-decoration: none;
             transition: color 0.2s;
 
             &:hover {
-                color: color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: -10%);
+                color: color.adjust($color-link, $lightness: -10%);
                 text-decoration: underline;
             }
         }
@@ -162,7 +163,7 @@
     }
 
     blockquote {
-        border-left: 4px solid list.nth(map.get($accent-colors, primary), 1);
+        border-left: 4px solid list.nth(map.get($accent-colors, secondary), 1);
         margin: 1rem 0;
         padding: 0.5rem 1rem;
         background: var(--body-bg);
@@ -194,12 +195,12 @@
     }
 
     a {
-        color: list.nth(map.get($accent-colors, primary), 1);
+        color: $color-link;
         text-decoration: underline;
         transition: color 0.2s;
 
         &:hover {
-            color: color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: -10%);
+            color: color.adjust($color-link, $lightness: -10%);
         }
     }
 
@@ -258,14 +259,14 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    color: list.nth(map.get($accent-colors, primary), 1);
+    color: $color-link;
     text-decoration: none;
     font-weight: 500;
     transition: gap 0.2s;
 
     &:hover {
         gap: 0.75rem;
-        color: color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: -10%);
+        color: color.adjust($color-link, $lightness: -10%);
     }
 
     .material-symbols-outlined {
