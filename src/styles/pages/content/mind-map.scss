@@ -1,4 +1,6 @@
 @use '../../variables/globals' as *;
+@use 'sass:list';
+@use 'sass:map';
 
 .mind-map-page {
     width: 100%;
@@ -28,7 +30,7 @@
         }
 
         .btn-primary {
-            background-color: var(--primary);
+            background-color: list.nth(map.get($accent-colors, primary), 1);
             color: white;
             border: none;
             border-radius: 0.5rem;

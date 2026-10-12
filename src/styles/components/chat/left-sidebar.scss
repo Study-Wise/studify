@@ -1,5 +1,7 @@
 @use '../../variables/globals' as *;
 @use '../../variables/tokens' as *;
+@use 'sass:list';
+@use 'sass:map';
 
 .chat-sidebar.left {
     border-right: 1px solid rgb(from var(--card-border) r g b / 30%);
@@ -71,7 +73,7 @@
 
                     &:hover {
                         background-color: var(--card-bg-hover);
-                        border-color: var(--primary);
+                        border-color: list.nth(map.get($accent-colors, primary), 1);
                     }
 
                     .file-icon {
@@ -80,13 +82,13 @@
                         justify-content: center;
                         width: 40px;
                         height: 40px;
-                        background-color: rgb(from var(--primary) r g b / 10%);
+                        background-color: rgb(from #{list.nth(map.get($accent-colors, primary), 1)} r g b / 10%);
                         border-radius: $border-radius-small;
                         flex-shrink: 0;
 
                         .material-symbols-outlined {
                             font-size: $font-size-extra-large;
-                            color: var(--primary);
+                            color: list.nth(map.get($accent-colors, primary), 1);
                         }
                     }
 

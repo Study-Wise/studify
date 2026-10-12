@@ -1,3 +1,7 @@
+@use '../../variables/globals' as *;
+@use 'sass:list';
+@use 'sass:map';
+
 .summary-page {
     max-width: 800px;
     margin: 0 auto;
@@ -13,13 +17,13 @@
 
     h3 {
         margin-top: 0;
-        border-bottom: 2px solid var(--primary);
+        border-bottom: 2px solid list.nth(map.get($accent-colors, primary), 1);
         padding-bottom: 0.5rem;
         margin-bottom: 1.5rem;
     }
 
     h4 {
-        color: var(--primary);
+        color: list.nth(map.get($accent-colors, primary), 1);
         margin-top: 1.5rem;
         margin-bottom: 0.5rem;
     }
