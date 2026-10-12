@@ -100,7 +100,7 @@ input, textarea, select, button {
     }
 }
 
-@supports (color: if(style(--theme: light): red; else: blue)) {
+@supports (color: if(style(--theme: 'light'): red; else: blue)) {
     :root {
         --body-bg: if(
             style(--theme: 'light'): #{$body-bg-light};
