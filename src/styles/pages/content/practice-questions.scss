@@ -1,5 +1,6 @@
 @use '../../variables/globals' as *;
 @use '../../variables/tokens' as *;
+@use '../../variables/colors/statuses' as *;
 
 .practice-questions-page {
     min-height: 60vh;
@@ -41,7 +42,7 @@
         }
 
         code {
-            background-color: var(--code-bg);
+            background-color: var(--message-bg);
             padding: 0.2rem 0.4rem;
             border-radius: 4px;
             font-family: 'Courier New', monospace;
@@ -49,7 +50,7 @@
         }
 
         pre {
-            background-color: var(--code-bg);
+            background-color: var(--message-bg);
             padding: 1rem;
             border-radius: 8px;
             overflow-x: auto;
@@ -82,7 +83,7 @@
             }
 
             th {
-                background-color: var(--code-bg);
+                background-color: var(--message-bg);
                 color: var(--section-title);
                 font-weight: 600;
             }
@@ -93,7 +94,7 @@
         }
 
         a {
-            color: var(--link-color);
+            color: $color-link;
             text-decoration: none;
             transition: opacity 0.2s $ease;
 

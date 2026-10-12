@@ -1,5 +1,7 @@
 @use '../../variables/globals' as *;
 @use '../../variables/tokens' as *;
+@use 'sass:list';
+@use 'sass:map';
 
 body:has(.webpage-page) {
     max-height: 100dvh;
@@ -16,7 +18,7 @@ body:has(.webpage-page) {
         color: var(--card-text);
 
         .material-symbols-outlined {
-            color: var(--muted-text);
+            color: rgb(from var(--card-text) r g b / 70%);
             opacity: 1;
             margin-block-end: $spacing-medium;
         }
@@ -27,14 +29,14 @@ body:has(.webpage-page) {
         }
 
         p {
-            color: var(--muted-text);
+            color: rgb(from var(--card-text) r g b / 70%);
             opacity: 1;
             margin-block-end: $spacing-large;
         }
 
         .btn-primary {
             padding: $spacing-medium $spacing-large;
-            background-color: var(--primary-color);
+            background-color: list.nth(map.get($accent-colors, primary), 1);
             color: white;
             border: none;
             border-radius: $border-radius-medium;
@@ -42,7 +44,7 @@ body:has(.webpage-page) {
             transition: background-color $transition-base $ease;
 
             &:hover {
-                background-color: var(--primary-color);
+                background-color: list.nth(map.get($accent-colors, primary), 1);
                 filter: brightness(1.1);
                 translate: none;
                 box-shadow: none;

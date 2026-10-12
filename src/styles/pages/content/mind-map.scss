@@ -13,19 +13,19 @@
         opacity: 1;
 
         .material-symbols-outlined {
-            color: var(--text-secondary);
+            color: rgb(from var(--body-text) r g b / 70%);
             opacity: 1;
         }
 
         h2 {
             font-size: 1.5rem;
             font-weight: 600;
-            color: var(--text-primary);
+            color: var(--body-text);
             margin: 0 0 0.5rem;
         }
 
         p {
-            color: var(--text-secondary);
+            color: rgb(from var(--body-text) r g b / 70%);
             opacity: 1;
         }
 
@@ -38,7 +38,7 @@
             transition: background-color 0.2s;
 
             &:hover {
-                background-color: var(--primary-hover);
+                background-color: list.nth(map.get($accent-colors, primary), 2);
                 translate: none;
                 box-shadow: none;
             }

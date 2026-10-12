@@ -3,6 +3,7 @@
 @use '../variables/mixins' as *;
 @use 'sass:list';
 @use 'sass:map';
+@use '../variables/colors/statuses' as *;
 
 .my-chats-container {
     max-width: 1200px;
@@ -121,13 +122,13 @@
                             background-color $transition-base $ease-out;
 
                 .material-symbols-outlined {
-                    color: var(--danger);
+                    color: $color-error;
                 }
 
                 &:hover,
                 &:focus-visible {
                     opacity: 1;
-                    background-color: rgb(from var(--danger) r g b / 10%);
+                    background-color: rgb(from #{$color-error} r g b / 10%);
                 }
 
                 &:disabled {

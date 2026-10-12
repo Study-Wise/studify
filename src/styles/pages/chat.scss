@@ -4,6 +4,7 @@
 @use 'sass:math';
 @use 'sass:list';
 @use 'sass:map';
+@use '../variables/colors/statuses' as *;
 
 .unauthorized-message {
     display: flex;
@@ -453,18 +454,18 @@ footer, .chat-toolbar {
             background-color: rgb(from var(--card-border) r g b / 20%);
             border: 1px solid rgb(from var(--card-border) r g b / 40%);
             font-size: $font-size-extra-small;
-            color: var(--text-secondary);
+            color: rgb(from var(--body-text) r g b / 70%);
             width: fit-content;
 
             .material-symbols-outlined {
                 font-size: 0.9rem;
 
                 &[data-state="success"] {
-                    color: var(--success, #4caf50);
+                    color: $color-success;
                 }
 
                 &[data-state="error"] {
-                    color: var(--error, #f44336);
+                    color: $color-error;
                 }
             }
 
@@ -510,7 +511,7 @@ footer, .chat-toolbar {
 
         .typing-label {
             font-size: $font-size-small;
-            color: var(--text-secondary);
+            color: rgb(from var(--body-text) r g b / 70%);
         }
     }
 }

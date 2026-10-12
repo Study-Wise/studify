@@ -97,7 +97,7 @@ $border-radius: $button-border-radius;
     &.tab {
         padding: 0.5em 0.75em;
         border: solid $tab-border-size var(--card-text);
-        font-size: var(--font-size, 1rem);
+        font-size: 1rem;
         position: relative;
 
         .tabs > &.tab {
