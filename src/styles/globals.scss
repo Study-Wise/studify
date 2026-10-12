@@ -68,17 +68,17 @@ input, textarea, select, button {
     scroll-behavior: smooth;
     scroll-padding-top: 20px;
 
-    --theme: attr(data-theme);
     --body-bg: light-dark(#{$body-bg-light}, #{$body-bg-dark});
     --body-text: light-dark(#{$body-text}, #{$body-bg-light});
+    
     --card-bg: light-dark(#{$card-bg-light}, #{$card-bg-dark});
     --card-text: light-dark(#{$card-text}, #{$card-bg-light});
     --card-shadow: light-dark(#{$card-shadow-light}, #{$card-shadow-dark});
     --card-border: light-dark(#{$card-border-light}, #{$card-border-dark});
+
     --section-title: light-dark(#{$section-title-light}, #{$section-title-dark});
     --message-bg: light-dark(#{$message-bg-light}, #{$message-bg-dark});
 
-    // light-dark() resolves from color-scheme, so key it off the app theme
     color-scheme: light dark;
 
     &[data-theme='light'] {
@@ -98,10 +98,10 @@ input, textarea, select, button {
     @supports (view-transition-name: root) {
         view-transition-name: root;
     }
-}
 
-:root {
     @supports (color: if(style(--theme: 'light'): red; else: blue)) {
+        --theme: attr(data-theme);
+
         --body-bg: if(
             style(--theme: 'light'): #{$body-bg-light};
             style(--theme: 'dark'): #{$body-bg-dark};
@@ -112,6 +112,7 @@ input, textarea, select, button {
             style(--theme: 'dark'): #{$body-bg-light};
             else: light-dark(#{$body-text}, #{$body-bg-light})
         );
+        
         --card-bg: if(
             style(--theme: 'light'): #{$card-bg-light};
             style(--theme: 'dark'): #{$card-bg-dark};
@@ -132,6 +133,7 @@ input, textarea, select, button {
             style(--theme: 'dark'): #{$card-border-dark};
             else: light-dark(#{$card-border-light}, #{$card-border-dark})
         );
+
         --section-title: if(
             style(--theme: 'light'): #{$section-title-light};
             style(--theme: 'dark'): #{$section-title-dark};
