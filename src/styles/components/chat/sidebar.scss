@@ -1,6 +1,5 @@
 @use '../../variables/globals' as *;
 @use '../../variables/tokens' as *;
-@use 'sass:color';
 @use 'sass:list';
 @use 'sass:map';
 @use '../../variables/colors/statuses' as *;
@@ -188,7 +187,7 @@
             justify-content: center;
 
             &:hover:not([disabled]) {
-                background-color: color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: -10%);
+                background-color: list.nth(map.get($accent-colors, primary), 2);
             }
 
             &:disabled {

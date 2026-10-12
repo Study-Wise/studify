@@ -1,7 +1,6 @@
 @use '../../variables/globals' as *;
 @use 'sass:list';
 @use 'sass:map';
-@use 'sass:color';
 
 .mind-map-page {
     width: 100%;
@@ -39,7 +38,7 @@
             transition: background-color 0.2s;
 
             &:hover {
-                background-color: color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: -10%);
+                background-color: list.nth(map.get($accent-colors, primary), 2);
                 translate: none;
                 box-shadow: none;
             }
