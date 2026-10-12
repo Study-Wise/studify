@@ -29,26 +29,12 @@
     align-items: center;
 }
 
-// Absolute centering
-@mixin absolute-center {
-    position: absolute;
-    inset-block-start: 50%;
-    inset-inline-start: 50%;
-    translate: -50% -50%;
-}
-
 // Content wrapper with max width and padding
 @mixin content-wrapper($max-width: $container-max-width, $padding: $container-padding) {
     width: 100%;
     max-width: $max-width;
     margin-inline: auto;
     padding: $padding;
-}
-
-// Full viewport height (accounting for mobile address bars)
-@mixin full-viewport-height {
-    height: 100vh;
-    height: 100dvh; // Dynamic viewport height for mobile
 }
 
 // INTERACTIVE EFFECTS

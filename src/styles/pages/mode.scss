@@ -45,7 +45,6 @@
         flex: 1;
     }
 
-    // Beats the shared .btn:not(.tab) sizing
     .btn.generate-button {
         @media (width <= 600px) {
             font-size: 1.05rem;

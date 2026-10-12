@@ -220,8 +220,6 @@
     }
 }
 
-// Search and filter controls are taken out of the flow and sit beside the last line of the
-// heading, so neither the toggle nor the floating panel shifts the subject grid
 .categories-header {
     position: relative;
 
@@ -230,7 +228,6 @@
         inset-inline-end: 0;
         z-index: $z-index-popover;
 
-        // Clears the heading's 12px bottom padding and 1px divider to line up with its last line
         inset-block-end: 0.75rem;
     }
 
