@@ -27,7 +27,8 @@ const { providers, defaultProvider, defaultTier } = Astro.props;
             const providerKey = btn.dataset.provider;
             if (providerKey === currentProvider) {
                 btn.classList.add('active');
-            } else {
+            }
+            else {
                 btn.classList.remove('active');
             }
         });
@@ -46,7 +47,8 @@ const { providers, defaultProvider, defaultTier } = Astro.props;
             const tierKey = btn.dataset.tier;
             if (tierKey === currentTier) {
                 btn.classList.add('active');
-            } else {
+            }
+            else {
                 btn.classList.remove('active');
             }
         });

@@ -1,6 +1,5 @@
 import { eq, desc } from 'drizzle-orm';
 import type { InferSelectModel } from 'drizzle-orm';
-
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 

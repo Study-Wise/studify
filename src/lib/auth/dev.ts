@@ -11,7 +11,7 @@ import type { ThreadAccessResult } from '@/lib/auth/checkThreadAccess';
 
 // Check if we're in development environment
 export function isDev(): boolean {
-    return (import.meta.env.NODE_ENV || process.env.NODE_ENV) === "development";
+    return (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development';
 }
 
 // Get the USER_ACCESS_TOKEN from environment
@@ -38,7 +38,7 @@ export async function getDevUserId(): Promise<string | null> {
 
         return accounts[0]?.userId || null;
     } catch (error) {
-        console.error("Error fetching dev user ID from account:", error);
+        console.error('Error fetching dev user ID from account:', error);
         return null;
     }
 }
@@ -73,7 +73,7 @@ export async function getDevUser(): Promise<User | null> {
             updatedAt: user.updatedAt,
         };
     } catch (error) {
-        console.error("Error fetching dev user:", error);
+        console.error('Error fetching dev user:', error);
         return null;
     }
 }
@@ -87,19 +87,19 @@ export async function getDevUserRole(): Promise<UserRole | null> {
 // Check if the dev user is an admin
 export async function isDevUserAdmin(): Promise<boolean> {
     const role = await getDevUserRole();
-    return role === "admin";
+    return role === 'admin';
 }
 
 // Check if the dev user is a moderator or admin
 export async function isDevUserModerator(): Promise<boolean> {
     const role = await getDevUserRole();
-    return role === "moderator" || role === "admin";
+    return role === 'moderator' || role === 'admin';
 }
 
 // Check if the dev user has premium access
 export async function isDevUserPremium(): Promise<boolean> {
     const role = await getDevUserRole();
-    return role === "premium" || role === "moderator" || role === "admin";
+    return role === 'premium' || role === 'moderator' || role === 'admin';
 }
 
 // Check thread access for the dev user
@@ -126,7 +126,7 @@ export async function checkDevThreadAccess(
     const userEmail = devUser?.email || null;
 
     // Check if dev user is admin
-    const isUserAdminFlag = devUser?.role === "admin";
+    const isUserAdminFlag = devUser?.role === 'admin';
 
     // Fetch thread from database
     if (threadId) {
@@ -172,12 +172,12 @@ export async function checkDevThreadAccess(
                             .where(eq(threadsTable.id, threadId));
                         threadOwner = userEmail;
                     } catch (e) {
-                        console.error("Error claiming thread ownership:", e);
+                        console.error('Error claiming thread ownership:', e);
                     }
                 }
             }
         } catch (error) {
-            console.error("Error fetching thread:", error);
+            console.error('Error fetching thread:', error);
         }
     }
 

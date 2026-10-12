@@ -1,6 +1,4 @@
 ---
-import 'dotenv/config';
-
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import OfflineSupport from '@/components/OfflineSupport.astro';
@@ -10,6 +8,8 @@ import KeyboardNavigation from '@/accessibility/KeyboardNavigation.astro';
 import ThemeSwitcher from '@/accessibility/ThemeSwitcher.astro';
 import Dialog from '@/components/Dialog.astro';
 import '@/styles/globals.scss';
+
+import 'dotenv/config';
 
 const sTitle = 'Studify';
 const lTitle = `${sTitle} - AI Study Partner`;

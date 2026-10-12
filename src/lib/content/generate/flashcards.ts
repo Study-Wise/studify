@@ -8,7 +8,6 @@ import { buildContentSystemPrompt } from '@/lib/content';
 import type { ThreadData, UploadedFile } from '@/lib/threads';
 import type { FlashcardData } from '@/lib/content/latest/flashcards';
 import { saveContent } from '@/lib/content/latest';
-
 import { generateObject } from '@/lib/ai-service';
 import config from '@/lib/config';
 
