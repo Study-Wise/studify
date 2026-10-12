@@ -1,9 +1,14 @@
 ---
 import '@/styles/pages/support.scss';
 import Layout from '@/layouts/Layout.astro';
+import { getFeaturebaseJwt, getFeaturebaseLoginUrl } from '@/lib/featurebase';
+
+// Signed-in users get logged in to Featurebase in a hidden frame before the portal loads
+const featurebaseJwt = getFeaturebaseJwt(Astro.locals.user);
+const featurebaseLoginUrl = featurebaseJwt ? getFeaturebaseLoginUrl(featurebaseJwt) : undefined;
 ---
 <Layout title="Support" description="Get help, suggest features, report issues and vote on what we build next." container={false} className="support-page">
-    <section class="support-section">
+    <section class="support-section" data-featurebase-login={featurebaseLoginUrl}>
         <div class="support-embed" data-featurebase-embed></div>
     </section>
 </Layout>
@@ -11,6 +16,9 @@ import Layout from '@/layouts/Layout.astro';
 <script>
     import '@/lib/featurebase-client';
     import { initEmbedWidget } from 'featurebase-js';
+
+    // Give up waiting for the Featurebase login after this long and show the portal anyway
+    const LOGIN_TIMEOUT_MS = 5000;
 
     // Match the site theme set by ThemeSwitcher; '' lets the portal follow prefers-color-scheme.
     const userTheme = localStorage.getItem('user-theme');
@@ -20,21 +28,46 @@ import Layout from '@/layouts/Layout.astro';
     const requested = new URLSearchParams(window.location.search).get('path') || '/';
     const [path, filters = ''] = (requested.startsWith('/') ? requested : '/').split('?', 2);
 
-    // Identity comes from the Featurebase() call in featurebase-client.
-    initEmbedWidget(
-        {
-            embedOptions: {
-                path,
-                filters,
+    function mountEmbed() {
+        initEmbedWidget(
+            {
+                embedOptions: {
+                    path,
+                    filters,
+                },
+                stylingOptions: {
+                    theme,
+                    hideMenu: false,
+                    hideLogo: false,
+                },
             },
-            stylingOptions: {
-                theme,
-                hideMenu: false,
-                hideLogo: false,
-            },
-        },
-        err => {
-            if (err) console.error('[featurebase embed]', err);
-        }
-    );
+            err => {
+                if (err) console.error('[featurebase embed]', err);
+            }
+        );
+    }
+
+    // Featurebase only redirects back to its own domain after login, so instead of navigating there
+    // we load its login link in a hidden frame; that starts the session the embedded portal then uses.
+    const loginUrl = document.querySelector<HTMLElement>('[data-featurebase-login]')?.dataset.featurebaseLogin;
+
+    if (loginUrl) {
+        let mounted = false;
+        const mountOnce = () => {
+            if (mounted) return;
+            mounted = true;
+            mountEmbed();
+        };
+
+        const loginFrame = document.createElement('iframe');
+        loginFrame.hidden = true;
+        loginFrame.title = 'Featurebase login';
+        loginFrame.src = loginUrl;
+        loginFrame.addEventListener('load', mountOnce);
+        document.body.append(loginFrame);
+        setTimeout(mountOnce, LOGIN_TIMEOUT_MS);
+    }
+    else {
+        mountEmbed();
+    }
 </script>
