@@ -65,8 +65,7 @@ const getContentTool = tool({
             // Skip checking for existing content if regenerate is true
             if (!regenerate) {
                 stage = `loading retrieval module for "${type}"`;
-                const latestModule = await import(`../content/latest/${type}.ts`);
-                const getLatestFn = latestModule[latestFnName];
+                const getLatestFn = (await import(`../content/latest/${type}.ts`))[latestFnName];
 
                 if (typeof getLatestFn !== 'function') {
                     return {
@@ -80,27 +79,24 @@ const getContentTool = tool({
                 const existingContent = await getLatestFn(threadId);
 
                 // Check if content exists (handle different return types)
-                const hasContent = typeof existingContent === 'object' && existingContent !== null
-                    ? 'content' in existingContent ? existingContent.content !== null : 'imageUrl' in existingContent
-                    : existingContent !== null;
-
-                if (hasContent) {
-                    const content = typeof existingContent === 'object' && 'content' in existingContent
-                        ? existingContent.content
-                        : existingContent;
-
+                if (typeof existingContent === 'object' &&
+                    existingContent !== null
+                        ? 'content' in existingContent ? existingContent.content !== null : 'imageUrl' in existingContent
+                        : existingContent !== null
+                ) {
                     return {
                         status: 'success',
                         message: `Retrieved existing ${type}`,
-                        content,
+                        content: typeof existingContent === 'object' && 'content' in existingContent
+                            ? existingContent.content
+                            : existingContent,
                         generated: false
                     };
                 }
             }
 
             stage = `loading generation module for "${type}"`;
-            const generateModule = await import(`../content/generate/${type}.ts`);
-            const generateFn = generateModule[generateFnName];
+            const generateFn = (await import(`../content/generate/${type}.ts`))[generateFnName];
 
             if (typeof generateFn !== 'function') {
                 return {
@@ -140,13 +136,10 @@ const getContentTool = tool({
         } catch (error) {
             console.error(`❌ Error getting/generating ${type}:`, error);
 
-            const errorMessage = error instanceof Error ? error.message : String(error);
-            const errorCause = error instanceof Error && error.cause ? error.cause : undefined;
-
             return {
                 status: 'error',
-                message: `Failed while ${stage}: ${errorMessage}`,
-                cause: errorCause,
+                message: `Failed while ${stage}: ${error instanceof Error ? error.message : String(error)}`,
+                cause: error instanceof Error && error.cause ? error.cause : undefined,
                 content: null
             };
         }

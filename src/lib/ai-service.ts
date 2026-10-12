@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import * as ai from 'ai';
-import { stepCountIs, type Tool } from 'ai';
+import { stepCountIs } from 'ai';
 import type { ZodSchema } from 'zod';
 import { nanoid } from 'nanoid';
 
@@ -8,30 +8,17 @@ import config from '@/lib/config';
 import { providers } from '@/lib/models';
 import { VendorError } from '@/lib/user-errors';
 import type { JSONValue, Message, ToolCallLogEntry } from '@/lib/threads';
-
-// Tool related types
-export type ToolRecord = Record<string, Tool>;
-
-export interface ToolModule {
-    default: Tool & { ready?: boolean; label?: string };
-}
-
-// Server-verified request context passed to tool executions via `experimental_context`.
-// Tools that touch thread data must use this instead of model-supplied IDs.
-export interface ToolContext {
-    threadId: string;
-    email: string;
-}
+import type { ToolContext, ToolRecord } from '@/lib/tools';
 
 // Reads the server-verified tool context, or null if the call has none
 export function getToolContext(options: { experimental_context?: unknown }): ToolContext | null {
-    const ctx = options.experimental_context;
+    const { experimental_context } = options;
     if (
-        ctx && typeof ctx === 'object' &&
-        'threadId' in ctx && typeof ctx.threadId === 'string' && ctx.threadId &&
-        'email' in ctx && typeof ctx.email === 'string' && ctx.email
+        experimental_context && typeof experimental_context === 'object' &&
+        'threadId' in experimental_context && typeof experimental_context.threadId === 'string' && experimental_context.threadId &&
+        'email' in experimental_context && typeof experimental_context.email === 'string' && experimental_context.email
     ) {
-        return { threadId: ctx.threadId, email: ctx.email };
+        return { threadId: experimental_context.threadId, email: experimental_context.email };
     }
     return null;
 }

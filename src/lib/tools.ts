@@ -1,6 +1,18 @@
 import type { Tool } from 'ai';
 
-import type { ToolModule } from '@/lib/ai-service';
+// Tool related types
+export interface ToolModule {
+    default: Tool & { ready?: boolean; label?: string };
+}
+
+export type ToolRecord = Record<string, Tool>;
+
+// Server-verified request context passed to tool executions via `experimental_context`.
+// Tools that touch thread data must use this instead of model-supplied IDs.
+export interface ToolContext {
+    threadId: string;
+    email: string;
+}
 
 export const modules: Record<string, Tool> = {};
 export const labels: Record<string, string> = {};

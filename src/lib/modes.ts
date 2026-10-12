@@ -1,6 +1,6 @@
 import { modules } from '@/lib/tools';
 import { generateModePrompt } from '@/lib/prompt-generator';
-import type { ToolRecord } from '@/lib/ai-service';
+import type { ToolRecord } from '@/lib/tools';
 
 export interface Mode {
     name: string;

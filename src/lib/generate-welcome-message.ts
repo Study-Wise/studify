@@ -4,7 +4,7 @@
 import { generateText } from '@/lib/ai-service';
 import config from '@/lib/config';
 import type { Message } from '@/lib/threads';
-import type { ToolRecord, ToolContext } from '@/lib/ai-service';
+import type { ToolRecord, ToolContext } from '@/lib/tools';
 
 export interface GenerateWelcomeMessageParams {
     systemPrompt: string;
