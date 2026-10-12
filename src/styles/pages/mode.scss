@@ -24,6 +24,16 @@
     }
 }
 
+.upload-note {
+    display: flex;
+    gap: $spacing-small;
+    align-items: flex-start;
+    margin-block: $spacing-small;
+    color: var(--card-text);
+    opacity: $opacity-subtle;
+    font-size: $font-size-small;
+}
+
 .toolbar {
     margin-block-start: $spacing-extra-small;
     display: flex;
