@@ -45,18 +45,3 @@ export function getFeaturebaseEmbedPath(returnTo: string | null): string {
 
     return '/';
 }
-
-/**
- * Featurebase's login link: it starts a Featurebase session for the user in the JWT.
- * Featurebase only accepts return_to on the portal's own domain, so /support loads this in a hidden frame
- * rather than navigating to it. Served from the custom domain, so the session cookie is same-site with the app
- * and the embedded portal sees it.
- * See https://help.featurebase.app/articles/0874531-web-portal-single-sign-on-sso-setup
- */
-export function getFeaturebaseLoginUrl(featurebaseJwt: string): string {
-    const portalUrl = `https://${FEATUREBASE_PORTAL_HOST}/`;
-    const url = new URL('/api/v1/auth/access/jwt', portalUrl);
-    url.searchParams.set('jwt', featurebaseJwt);
-    url.searchParams.set('return_to', portalUrl);
-    return url.toString();
-}
