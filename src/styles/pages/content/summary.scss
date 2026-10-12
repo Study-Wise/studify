@@ -9,10 +9,10 @@
 }
 
 .summary-content {
-    background: var(--surface-card);
+    background: var(--card-bg);
     padding: 2.5rem;
     border-radius: 1rem;
-    border: 1px solid var(--border-subtle);
+    border: 1px solid var(--card-border);
     line-height: 1.6;
 
     h3 {

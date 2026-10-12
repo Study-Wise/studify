@@ -1,4 +1,8 @@
 @use '../../variables/mixins' as *;
+@use '../../variables/globals' as *;
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:color';
 
 .question-page {
     max-width: 900px;
@@ -17,7 +21,7 @@
 .question-empty {
     header {
         padding: 2rem 2rem 1rem;
-        border-bottom: 1px solid var(--border-color, #e5e7eb);
+        border-bottom: 1px solid var(--card-border);
     }
 }
 
@@ -44,7 +48,7 @@
         flex-wrap: wrap;
         gap: 0.5rem;
         font-size: 0.875rem;
-        color: var(--text-secondary, #6b7280);
+        color: rgb(from var(--body-text) r g b / 70%);
     }
 
     li {
@@ -54,22 +58,22 @@
 
         &:not(:last-child)::after {
             content: '›';
-            color: var(--text-tertiary, #9ca3af);
+            color: rgb(from var(--body-text) r g b / 50%);
         }
 
         a {
-            color: var(--link-color, #3b82f6);
+            color: list.nth(map.get($accent-colors, primary), 1);
             text-decoration: none;
             transition: color 0.2s;
 
             &:hover {
-                color: var(--link-hover, #2563eb);
+                color: color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: -10%);
                 text-decoration: underline;
             }
         }
 
         &[aria-current='page'] {
-            color: var(--text-primary, #1f2937);
+            color: var(--body-text);
             font-weight: 500;
         }
     }
@@ -80,18 +84,18 @@
     align-items: center;
     gap: 0.5rem;
     font-size: 0.875rem;
-    color: var(--text-secondary, #6b7280);
+    color: rgb(from var(--body-text) r g b / 70%);
     margin-top: 0.5rem;
 }
 
 .question-category,
 .question-mode {
     font-weight: 500;
-    color: var(--text-primary, #1f2937);
+    color: var(--body-text);
 }
 
 .question-separator {
-    color: var(--text-tertiary, #9ca3af);
+    color: rgb(from var(--body-text) r g b / 50%);
 }
 
 .question-views {
@@ -115,7 +119,7 @@
 
     h2 {
         font-size: 1.5rem;
-        border-bottom: 2px solid var(--border-color, #e5e7eb);
+        border-bottom: 2px solid var(--card-border);
         padding-bottom: 0.5rem;
     }
 
@@ -158,7 +162,7 @@
     }
 
     blockquote {
-        border-left: 4px solid var(--accent-color, #3b82f6);
+        border-left: 4px solid list.nth(map.get($accent-colors, primary), 1);
         margin: 1rem 0;
         padding: 0.5rem 1rem;
         background: var(--body-bg);
@@ -171,7 +175,7 @@
         margin: 1rem 0;
 
         th, td {
-            border: 1px solid var(--border-color, #e5e7eb);
+            border: 1px solid var(--card-border);
             padding: 0.75rem;
             text-align: left;
         }
@@ -190,12 +194,12 @@
     }
 
     a {
-        color: var(--link-color, #3b82f6);
+        color: list.nth(map.get($accent-colors, primary), 1);
         text-decoration: underline;
         transition: color 0.2s;
 
         &:hover {
-            color: var(--link-hover, #2563eb);
+            color: color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: -10%);
         }
     }
 
@@ -207,7 +211,7 @@
 
 .question-footer {
     padding: 2rem;
-    border-top: 1px solid var(--border-color, #e5e7eb);
+    border-top: 1px solid var(--card-border);
     background: var(--body-bg);
 }
 
@@ -217,7 +221,7 @@
     p {
         font-weight: 500;
         margin-bottom: 1rem;
-        color: var(--text-primary, #1f2937);
+        color: var(--body-text);
     }
 }
 
@@ -245,7 +249,7 @@
     }
 
     p {
-        color: var(--text-secondary, #6b7280);
+        color: rgb(from var(--body-text) r g b / 70%);
         margin-bottom: 1rem;
     }
 }
@@ -254,14 +258,14 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    color: var(--link-color, #3b82f6);
+    color: list.nth(map.get($accent-colors, primary), 1);
     text-decoration: none;
     font-weight: 500;
     transition: gap 0.2s;
 
     &:hover {
         gap: 0.75rem;
-        color: var(--link-hover, #2563eb);
+        color: color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: -10%);
     }
 
     .material-symbols-outlined {
@@ -285,11 +289,11 @@
 }
 
 .btn-primary {
-    background: var(--primary-color, #3b82f6);
+    background: list.nth(map.get($accent-colors, primary), 1);
     color: white;
 
     &:hover {
-        background: var(--primary-hover, #2563eb);
+        background: color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: -10%);
         transform: translateY(-1px);
         box-shadow: 0 0 12px rgb(59 130 246 / 30%);
     }
@@ -298,10 +302,10 @@
 .btn-secondary {
     background: var(--message-bg);
     color: var(--body-text);
-    border: 1px solid var(--border-color, #e5e7eb);
+    border: 1px solid var(--card-border);
 
     &:hover {
-        background: var(--secondary-hover, #e5e7eb);
-        border-color: var(--border-hover, #d1d5db);
+        background: rgb(from var(--card-text) r g b / 8%);
+        border-color: var(--card-text);
     }
 }

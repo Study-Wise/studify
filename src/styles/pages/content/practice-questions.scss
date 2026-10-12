@@ -1,5 +1,7 @@
 @use '../../variables/globals' as *;
 @use '../../variables/tokens' as *;
+@use 'sass:list';
+@use 'sass:map';
 
 .practice-questions-page {
     min-height: 60vh;
@@ -41,7 +43,7 @@
         }
 
         code {
-            background-color: var(--code-bg);
+            background-color: rgb(from var(--card-text) r g b / 8%);
             padding: 0.2rem 0.4rem;
             border-radius: 4px;
             font-family: 'Courier New', monospace;
@@ -49,7 +51,7 @@
         }
 
         pre {
-            background-color: var(--code-bg);
+            background-color: rgb(from var(--card-text) r g b / 8%);
             padding: 1rem;
             border-radius: 8px;
             overflow-x: auto;
@@ -82,7 +84,7 @@
             }
 
             th {
-                background-color: var(--code-bg);
+                background-color: rgb(from var(--card-text) r g b / 8%);
                 color: var(--section-title);
                 font-weight: 600;
             }
@@ -93,7 +95,7 @@
         }
 
         a {
-            color: var(--link-color);
+            color: list.nth(map.get($accent-colors, primary), 1);
             text-decoration: none;
             transition: opacity 0.2s $ease;
 

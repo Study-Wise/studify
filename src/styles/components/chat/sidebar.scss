@@ -3,6 +3,7 @@
 @use 'sass:color';
 @use 'sass:list';
 @use 'sass:map';
+@use '../../variables/colors/statuses' as *;
 
 .chat-sidebar {
     box-sizing: border-box;
@@ -174,7 +175,7 @@
             align-items: center;
             gap: $spacing-extra-small;
             padding: $spacing-small $spacing-medium;
-            background-color: var(--primary-color, #007bff);
+            background-color: list.nth(map.get($accent-colors, primary), 1);
             color: white;
             border: none;
             border-radius: $border-radius-medium;
@@ -187,7 +188,7 @@
             justify-content: center;
 
             &:hover:not([disabled]) {
-                background-color: var(--primary-hover, #0056b3);
+                background-color: color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: -10%);
             }
 
             &:disabled {
@@ -297,8 +298,8 @@
                 padding: $spacing-small $spacing-medium;
                 margin-block-start: $spacing-small;
                 background-color: transparent;
-                color: var(--danger);
-                border: 1px solid var(--danger);
+                color: $color-error;
+                border: 1px solid $color-error;
                 border-radius: $border-radius-medium;
                 cursor: pointer;
                 font-size: 0.9rem;
@@ -310,7 +311,7 @@
                 }
 
                 &:hover {
-                    background-color: rgb(from var(--danger) r g b / 10%);
+                    background-color: rgb(from #{$color-error} r g b / 10%);
                 }
 
                 &:disabled {
