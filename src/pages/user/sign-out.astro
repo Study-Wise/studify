@@ -34,11 +34,13 @@ if (!user) {
 
 <script>
     import { authClient } from '@/lib/auth/client';
+    import { shutdownFeaturebase } from '@/lib/featurebase-client';
 
     const signoutBtn = document.getElementById('signout-confirm-btn');
     signoutBtn?.addEventListener('click', async () => {
         try {
             await authClient.signOut();
+            shutdownFeaturebase();
             if ('caches' in window) {
                 await caches.delete('study-materials-cache');
             }

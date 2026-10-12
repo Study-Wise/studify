@@ -1,4 +1,4 @@
-import Featurebase from 'featurebase-js';
+import Featurebase, { shutdown, clearConfig } from 'featurebase-js';
 
 export const FEATUREBASE_APP_ID = '6acd470c188ccc41b584247c';
 
@@ -11,3 +11,9 @@ Featurebase({
     appId: FEATUREBASE_APP_ID,
     featurebaseJwt,
 });
+
+// Call after signing out so the next visitor in this browser doesn't inherit the previous user's Featurebase identity.
+export function shutdownFeaturebase() {
+    shutdown();
+    clearConfig();
+}
