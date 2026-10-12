@@ -93,9 +93,16 @@ const modeName = modeObj?.name || mode;
 3. Find the integral: integral(x^2 + 3)dx
 Please note that the AI will not provide the answer for your immediate equation`}
                 rows="12"
+                aria-describedby="upload-note"
                 aria-label={`Paste ${modeObj?.name || ''} problems here`}
             ></textarea>
         </div>
+        <p class="upload-note" id="upload-note">
+            <span class="material-symbols-outlined" aria-hidden="true">upload_file</span>
+            <span>
+                Have your homework as a file? Once your chat starts, you can upload it from the <strong>Uploaded Files</strong> section in the chat sidebar (images, PDF, Word, PowerPoint, Excel and text files, up to 10 MB each).
+            </span>
+        </p>
 
         {/* Generate Button and Error Message */}
         <div class="toolbar" role="toolbar" aria-label="Generation controls">
