@@ -14,7 +14,7 @@ import {
     extractToolData,
     generateTitle,
 } from '@/lib/ai-service';
-import type { ToolContext } from '@/lib/ai-service';
+import type { ToolContext } from '@/lib/tools';
 import { getValidModelAndProvider, providers } from '@/lib/models';
 import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
 import type { ThreadData, Message, UploadedFile } from '@/lib/threads';
