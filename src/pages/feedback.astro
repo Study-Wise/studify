@@ -1,0 +1,35 @@
+---
+import '@/styles/pages/feedback.scss';
+import Layout from '@/layouts/Layout.astro';
+---
+<Layout title="Feedback" description="Suggest features, report issues and vote on what we build next.">
+    <section class="feedback-section">
+        <div class="feedback-embed" data-featurebase-embed></div>
+    </section>
+</Layout>
+
+<script>
+    import '@/lib/featurebase-client';
+    import { initEmbedWidget } from 'featurebase-js';
+
+    // Match the site theme set by ThemeSwitcher; '' lets the portal follow prefers-color-scheme.
+    const userTheme = localStorage.getItem('user-theme');
+    const theme = userTheme === 'light' || userTheme === 'dark' ? userTheme : '';
+
+    // Identity comes from the Featurebase() call in featurebase-client.
+    initEmbedWidget(
+        {
+            embedOptions: {
+                path: '/',
+            },
+            stylingOptions: {
+                theme,
+                hideMenu: false,
+                hideLogo: false,
+            },
+        },
+        err => {
+            if (err) console.error('[featurebase embed]', err);
+        }
+    );
+</script>

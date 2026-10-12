@@ -1,9 +1,11 @@
-<script>
-    import Featurebase from 'featurebase-js';
+---
+import { getFeaturebaseJwt } from '@/lib/featurebase';
 
-    // Boots the Featurebase SDK (anonymous). Surfaces enabled under
-    // "General → Manage products" in the dashboard start automatically.
-    Featurebase({
-        appId: '6acd470c188ccc41b584247c',
-    });
+const featurebaseJwt = getFeaturebaseJwt(Astro.locals.user);
+---
+
+{featurebaseJwt && <div data-featurebase-jwt={featurebaseJwt} hidden></div>}
+
+<script>
+    import '@/lib/featurebase-client';
 </script>
