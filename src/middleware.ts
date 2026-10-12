@@ -4,6 +4,7 @@ import { auth } from '@/lib/auth';
 import { getUserRole } from '@/lib/auth/admin';
 import { isDev, getDevUser } from '@/lib/auth/dev';
 import type { User } from '@/lib/auth/types';
+import { getSafeReturnBackUrl } from '@/lib/auth/return-url';
 
 // Define protected routes (same as before)
 const protectedRoutes = [
@@ -80,9 +81,9 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
         locals.session = null;
     }
 
-    // Redirect authenticated users away from auth pages
+    // Redirect authenticated users away from auth pages, to where they were headed
     if (locals.user && isAuthRoute(pathname)) {
-        return redirect('/');
+        return redirect(getSafeReturnBackUrl(new URL(request.url).searchParams.get('returnBackUrl')));
     }
 
     // Protect routes requiring authentication

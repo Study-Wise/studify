@@ -4,6 +4,13 @@ import type { User } from '@/lib/auth/types';
 // Signing secret from Featurebase: Settings → Access & Security → Security. Server-side only.
 const secret = import.meta.env.FEATUREBASE_JWT_SECRET || process.env.FEATUREBASE_JWT_SECRET;
 
+// Hosts the Featurebase portal is served from (custom domain + Featurebase's own subdomains)
+const FEATUREBASE_PORTAL_HOSTS = ['support.studywise.adarshrkumar.app'];
+
+function isFeaturebasePortalHost(hostname: string): boolean {
+    return FEATUREBASE_PORTAL_HOSTS.includes(hostname) || hostname === 'featurebase.app' || hostname.endsWith('.featurebase.app');
+}
+
 /**
  * Signs a Featurebase identity JWT for a signed-in user.
  * Returns undefined when there is no user or no secret, so visitors stay anonymous.
@@ -25,14 +32,14 @@ export function getFeaturebaseJwt(user: User | null): string | undefined {
 }
 
 /**
- * Turns the portal page Featurebase wants to return to (e.g. https://studify1.featurebase.app/p/some-post)
+ * Turns the portal page Featurebase wants to return to (e.g. https://support.studywise.adarshrkumar.app/p/some-post)
  * into a path for the embedded portal on /support (e.g. /p/some-post). Falls back to the portal home.
  */
 export function getFeaturebaseEmbedPath(returnTo: string | null): string {
     if (returnTo) {
         try {
             const url = new URL(returnTo);
-            if (url.hostname === 'featurebase.app' || url.hostname.endsWith('.featurebase.app')) {
+            if (isFeaturebasePortalHost(url.hostname)) {
                 return `${url.pathname}${url.search}`;
             }
         } catch {

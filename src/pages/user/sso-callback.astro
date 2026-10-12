@@ -1,8 +1,9 @@
 ---
 import Layout from '@/layouts/Layout.astro';
 import '@/styles/pages/auth.scss';
+import { getSafeReturnBackUrl } from '@/lib/auth/return-url';
 
-const returnBackUrl = Astro.url.searchParams.get('returnBackUrl') || '/';
+const returnBackUrl = getSafeReturnBackUrl(Astro.url.searchParams.get('returnBackUrl'));
 
 // Check if user is already authenticated
 if (Astro.locals.user) {
@@ -21,8 +22,10 @@ if (Astro.locals.user) {
 </Layout>
 
 <script>
+    import { getSafeReturnBackUrl } from '@/lib/auth/return-url';
+
     async function completeOAuth() {
-        const redirectUrl = new URLSearchParams(window.location.search).get('returnBackUrl') || '/';
+        const redirectUrl = getSafeReturnBackUrl(new URLSearchParams(window.location.search).get('returnBackUrl'));
 
         try {
             // Better Auth automatically handles the OAuth callback

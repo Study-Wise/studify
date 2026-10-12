@@ -2,9 +2,10 @@
 import Layout from '@/layouts/Layout.astro';
 import '@/styles/pages/auth.scss';
 import UserScript from '@/scripts/user.astro';
+import { getSafeReturnBackUrl, withReturnBackUrl } from '@/lib/auth/return-url';
 
 // Get redirect URL from query params
-const redirectUrl = Astro.url.searchParams.get('returnBackUrl') || '/';
+const redirectUrl = getSafeReturnBackUrl(Astro.url.searchParams.get('returnBackUrl'));
 
 // Check if already authenticated
 if (Astro.locals.user) {
@@ -73,7 +74,7 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
             </div>
 
             <div class="footer-links">
-                <p>Don't have an account? <a href="/user/sign-up" class="footer-link">Sign up</a></p>
+                <p>Don't have an account? <a href={withReturnBackUrl('/user/sign-up', redirectUrl)} class="footer-link">Sign up</a></p>
             </div>
         </div>
     </div>
@@ -83,6 +84,7 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
 <script>
     import { signIn } from '@/lib/auth/client';
     import type { AuthUtils } from '@/lib/auth/types';
+    import { getSafeReturnBackUrl } from '@/lib/auth/return-url';
 
     const form = document.getElementById('signin-form') as HTMLFormElement;
     const { showError, hideError } = (window as object as { authUtils: AuthUtils }).authUtils;
@@ -105,7 +107,7 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
                 showError(error.message || 'Sign in failed. Please check your credentials.');
             }
             else {
-                window.location.href = new URLSearchParams(window.location.search).get('returnBackUrl') || '/';
+                window.location.href = getSafeReturnBackUrl(new URLSearchParams(window.location.search).get('returnBackUrl'));
             }
         } catch (error) {
             console.error('Sign in error:', error);
