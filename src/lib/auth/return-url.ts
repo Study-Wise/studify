@@ -6,8 +6,8 @@ const SAME_SITE_ORIGIN = 'https://same-site.invalid';
  * so ?returnBackUrl= can't be used to redirect to another site.
  *
  * The value is resolved with the same URL parser browsers use, so tricks that only show up
- * after parsing (tabs/newlines being stripped, backslashes acting as slashes, `//host`) are caught.
- * The normalized path is returned, never the raw input.
+ * after parsing (tabs/newlines being stripped, backslashes acting as slashes, `//host`, dot segments
+ * collapsing to `//host`) are caught. The normalized path is returned, never the raw input.
  */
 export function getSafeReturnBackUrl(returnBackUrl: string | null | undefined): string {
     if (!returnBackUrl || !returnBackUrl.startsWith('/')) return '/';
@@ -16,7 +16,12 @@ export function getSafeReturnBackUrl(returnBackUrl: string | null | undefined): 
         const url = new URL(returnBackUrl, SAME_SITE_ORIGIN);
         if (url.origin !== SAME_SITE_ORIGIN) return '/';
 
-        return `${url.pathname}${url.search}${url.hash}`;
+        // Check what we actually return too: dot segments can normalize to a protocol-relative
+        // path (/.//evil.com → //evil.com) that would leave the site.
+        const normalized = `${url.pathname}${url.search}${url.hash}`;
+        if (new URL(normalized, SAME_SITE_ORIGIN).origin !== SAME_SITE_ORIGIN) return '/';
+
+        return normalized;
     } catch {
         return '/';
     }
