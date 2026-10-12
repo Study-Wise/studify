@@ -19,7 +19,7 @@
     width: 1lh;
 
     &:is(button) {
-        padding: var(--padding, 0);
+        padding: 0;
         margin: 0;
         border: none;
         background-color: transparent;

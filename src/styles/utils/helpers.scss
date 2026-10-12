@@ -34,10 +34,10 @@
         --text-clr-1: #{list.nth($colors, 3)};
         --text-clr-2: #{list.nth($colors, 4)};
 
-        color: var(--clr, var(--color, var(--text, list.nth($colors, 3))));
+        color: var(--text, list.nth($colors, 3));
 
         &:hover {
-            color: var(--clr, var(--color, var(--text, list.nth($colors, 4))));
+            color: var(--text, list.nth($colors, 4));
         }
     }
 
@@ -56,10 +56,10 @@
         --text-shadow-clr-1: #{list.nth($colors, 3)};
         --text-shadow-clr-2: #{list.nth($colors, 4)};
 
-        text-shadow: var(--text-shadow, 0 1px 0 0) var(--clr, var(--color, var(--text, color.adjust(list.nth($colors, 3), $alpha: -0.5))));
+        text-shadow: var(--text-shadow, 0 1px 0 0) var(--text, color.adjust(list.nth($colors, 3), $alpha: -0.5));
 
         &:hover {
-            text-shadow: var(--text-shadow, 0 1px 0 0) var(--clr, var(--color, var(--text, color.adjust(list.nth($colors, 4), $alpha: -0.5))));
+            text-shadow: var(--text-shadow, 0 1px 0 0) var(--text, color.adjust(list.nth($colors, 4), $alpha: -0.5));
         }
     }
 }
