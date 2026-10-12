@@ -42,10 +42,11 @@ export default [
     },
     {
         // Browser-only modules
-        files: ['src/lib/modal.ts'],
+        files: ['src/lib/modal.ts', 'src/lib/featurebase-client.ts'],
         languageOptions: {
             globals: {
                 document: 'readonly',
+                HTMLElement: 'readonly',
                 HTMLDialogElement: 'readonly',
                 HTMLButtonElement: 'readonly'
             }
