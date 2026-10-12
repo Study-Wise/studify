@@ -1,24 +1,19 @@
 import type { APIRoute } from 'astro';
 
-import { getFeaturebaseJwt, getFeaturebaseSsoUrl, getSafeFeaturebaseReturnTo } from '@/lib/featurebase';
+import { getFeaturebaseEmbedPath } from '@/lib/featurebase';
 
 // Featurebase's "SSO URL" (Settings → Access & Security → Portal Access).
-// Featurebase sends logged-out portal visitors here with ?return_to=<portal page>;
-// we make sure they're signed in to Studify, then send them back signed in to Featurebase.
+// Featurebase sends logged-out portal visitors here with ?return_to=<portal page>.
+// Instead of finishing the login on Featurebase's hosted portal, we keep users in Studify:
+// sign them in here, then open that page in the embedded portal on /support,
+// which identifies them with the JWT from src/components/Featurebase.astro.
 export const GET: APIRoute = async ({ url, locals, redirect }) => {
-    const returnTo = getSafeFeaturebaseReturnTo(url.searchParams.get('return_to'));
+    const path = getFeaturebaseEmbedPath(url.searchParams.get('return_to'));
+    const supportUrl = path === '/' ? '/support' : `/support?path=${encodeURIComponent(path)}`;
 
     if (!locals.user) {
-        // Sign in to Studify first, then come back here to finish the Featurebase login
-        const returnBackUrl = `${url.pathname}?return_to=${encodeURIComponent(returnTo)}`;
-        return redirect(`/user/sign-in?returnBackUrl=${encodeURIComponent(returnBackUrl)}`);
+        return redirect(`/user/sign-in?returnBackUrl=${encodeURIComponent(supportUrl)}`);
     }
 
-    const featurebaseJwt = getFeaturebaseJwt(locals.user);
-    if (!featurebaseJwt) {
-        console.error('❌ Featurebase SSO requested but FEATUREBASE_JWT_SECRET is not set');
-        return new Response('Featurebase sign-in is not configured.', { status: 500 });
-    }
-
-    return redirect(getFeaturebaseSsoUrl(featurebaseJwt, returnTo));
+    return redirect(supportUrl);
 };

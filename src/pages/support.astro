@@ -16,11 +16,16 @@ import Layout from '@/layouts/Layout.astro';
     const userTheme = localStorage.getItem('user-theme');
     const theme = userTheme === 'light' || userTheme === 'dark' ? userTheme : '';
 
+    // Portal page to open, e.g. ?path=/p/some-post?b=123 when coming back from /api/featurebase/sso
+    const requested = new URLSearchParams(window.location.search).get('path') || '/';
+    const [path, filters = ''] = (requested.startsWith('/') ? requested : '/').split('?', 2);
+
     // Identity comes from the Featurebase() call in featurebase-client.
     initEmbedWidget(
         {
             embedOptions: {
-                path: '/',
+                path,
+                filters,
             },
             stylingOptions: {
                 theme,
