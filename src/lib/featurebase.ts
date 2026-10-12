@@ -4,12 +4,8 @@ import type { User } from '@/lib/auth/types';
 // Signing secret from Featurebase: Settings → Access & Security → Security. Server-side only.
 const secret = import.meta.env.FEATUREBASE_JWT_SECRET || process.env.FEATUREBASE_JWT_SECRET;
 
-// Hosts the Featurebase portal is served from (custom domain + Featurebase's own subdomains)
-const FEATUREBASE_PORTAL_HOSTS = ['support.studywise.adarshrkumar.app'];
-
-function isFeaturebasePortalHost(hostname: string): boolean {
-    return FEATUREBASE_PORTAL_HOSTS.includes(hostname) || hostname === 'featurebase.app' || hostname.endsWith('.featurebase.app');
-}
+// Domain the Featurebase portal is served from
+const FEATUREBASE_PORTAL_HOST = 'support.studywise.adarshrkumar.app';
 
 /**
  * Signs a Featurebase identity JWT for a signed-in user.
@@ -39,7 +35,7 @@ export function getFeaturebaseEmbedPath(returnTo: string | null): string {
     if (returnTo) {
         try {
             const url = new URL(returnTo);
-            if (isFeaturebasePortalHost(url.hostname)) {
+            if (url.hostname === FEATUREBASE_PORTAL_HOST) {
                 return `${url.pathname}${url.search}`;
             }
         } catch {
