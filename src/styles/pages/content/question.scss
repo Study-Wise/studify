@@ -22,7 +22,7 @@
 .question-empty {
     header {
         padding: 2rem 2rem 1rem;
-        border-bottom: 1px solid var(--card-border);
+        border-bottom: 1px solid var(--border-color);
     }
 }
 
@@ -120,7 +120,7 @@
 
     h2 {
         font-size: 1.5rem;
-        border-bottom: 2px solid var(--card-border);
+        border-bottom: 2px solid var(--border-color);
         padding-bottom: 0.5rem;
     }
 
@@ -176,7 +176,7 @@
         margin: 1rem 0;
 
         th, td {
-            border: 1px solid var(--card-border);
+            border: 1px solid var(--border-color);
             padding: 0.75rem;
             text-align: left;
         }
@@ -212,7 +212,7 @@
 
 .question-footer {
     padding: 2rem;
-    border-top: 1px solid var(--card-border);
+    border-top: 1px solid var(--border-color);
     background: var(--body-bg);
 }
 
@@ -303,10 +303,10 @@
 .btn-secondary {
     background: var(--message-bg);
     color: var(--body-text);
-    border: 1px solid var(--card-border);
+    border: 1px solid var(--border-color);
 
     &:hover {
-        background: rgb(from var(--card-text) r g b / 8%);
-        border-color: var(--card-text);
+        background: var(--border-color);
+        border-color: var(--border-hover);
     }
 }

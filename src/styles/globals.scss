@@ -76,6 +76,9 @@ input, textarea, select, button {
     --card-border: light-dark(#{$card-border-light}, #{$card-border-dark});
     --section-title: light-dark(#{$section-title-light}, #{$section-title-dark});
     --message-bg: light-dark(#{$message-bg-light}, #{$message-bg-dark});
+    --border-color: light-dark(#{$border-color-light}, #{$border-color-dark});
+    --border-subtle: light-dark(#{$border-subtle-light}, #{$border-subtle-dark});
+    --border-hover: light-dark(#{$border-hover-light}, #{$border-hover-dark});
 
     color-scheme: light dark;
 
@@ -138,6 +141,21 @@ input, textarea, select, button {
             style(--theme: 'light'): #{$message-bg-light};
             style(--theme: 'dark'): #{$message-bg-dark};
             else: light-dark(#{$message-bg-light}, #{$message-bg-dark})
+        );
+        --border-color: if(
+            style(--theme: 'light'): #{$border-color-light};
+            style(--theme: 'dark'): #{$border-color-dark};
+            else: light-dark(#{$border-color-light}, #{$border-color-dark})
+        );
+        --border-subtle: if(
+            style(--theme: 'light'): #{$border-subtle-light};
+            style(--theme: 'dark'): #{$border-subtle-dark};
+            else: light-dark(#{$border-subtle-light}, #{$border-subtle-dark})
+        );
+        --border-hover: if(
+            style(--theme: 'light'): #{$border-hover-light};
+            style(--theme: 'dark'): #{$border-hover-dark};
+            else: light-dark(#{$border-hover-light}, #{$border-hover-dark})
         );
     }
 }

@@ -21,6 +21,14 @@ $card-shadow-dark: rgb(255 255 255 / 15%);
 $card-border-light: #e0e0e0;
 $card-border-dark: #555;
 
+// Border
+$border-color-light: #e5e7eb;
+$border-color-dark: #555;
+$border-subtle-light: #eee;
+$border-subtle-dark: #3a3a3a;
+$border-hover-light: #d1d5db;
+$border-hover-dark: #777;
+
 // Section
 $section-title-light: color.adjust(list.nth(map.get(colors.$accent-colors, 'primary'), 2), $lightness: -15%);
 $section-title-dark: color.adjust($section-title-light, $lightness: 25%);

@@ -42,7 +42,7 @@
         }
 
         code {
-            background-color: rgb(from var(--card-text) r g b / 8%);
+            background-color: var(--message-bg);
             padding: 0.2rem 0.4rem;
             border-radius: 4px;
             font-family: 'Courier New', monospace;
@@ -50,7 +50,7 @@
         }
 
         pre {
-            background-color: rgb(from var(--card-text) r g b / 8%);
+            background-color: var(--message-bg);
             padding: 1rem;
             border-radius: 8px;
             overflow-x: auto;
@@ -83,7 +83,7 @@
             }
 
             th {
-                background-color: rgb(from var(--card-text) r g b / 8%);
+                background-color: var(--message-bg);
                 color: var(--section-title);
                 font-weight: 600;
             }
