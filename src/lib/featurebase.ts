@@ -45,3 +45,15 @@ export function getFeaturebaseEmbedPath(returnTo: string | null): string {
 
     return '/';
 }
+
+/**
+ * Featurebase's login link: it starts a Featurebase session for the user in the JWT, then sends them to returnTo.
+ * Served from the custom domain, so the session cookie is same-site with the app and the embedded portal on /support sees it.
+ * See https://help.featurebase.app/articles/0874531-web-portal-single-sign-on-sso-setup
+ */
+export function getFeaturebaseLoginUrl(featurebaseJwt: string, returnTo: string): string {
+    const url = new URL('/api/v1/auth/access/jwt', `https://${FEATUREBASE_PORTAL_HOST}`);
+    url.searchParams.set('jwt', featurebaseJwt);
+    url.searchParams.set('return_to', returnTo);
+    return url.toString();
+}
