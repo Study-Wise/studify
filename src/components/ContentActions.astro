@@ -99,6 +99,8 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
             if (contentDiv) {
                 // Forget the math MathJax typeset in the old content before replacing it
                 window.MathJax?.typesetClear?.([contentDiv]);
+                // Restart equation numbering and forget old \label names
+                window.MathJax?.texReset?.();
                 contentDiv.innerHTML = parsedContent;
 
                 // Typeset the math in the new content, as is done on page load
