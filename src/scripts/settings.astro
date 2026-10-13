@@ -16,13 +16,11 @@ const { providers, defaultProvider, defaultTier } = Astro.props;
         localStorage.setItem('settings', JSON.stringify(userSettings));
     }
 
-    // Initialize provider button states and tier visibility
     function initializeUI() {
         const userSettings = getSettings();
         const currentProvider = userSettings['provider'] || defaultProvider;
         const currentTier = userSettings['tier'] || defaultTier;
 
-        // Set active provider button
         document.querySelectorAll('.provider-button').forEach(btn => {
             const providerKey = btn.dataset.provider;
             if (providerKey === currentProvider) {
@@ -33,7 +31,6 @@ const { providers, defaultProvider, defaultTier } = Astro.props;
             }
         });
 
-        // Show only tiers for current provider
         document.querySelectorAll('.tier-group').forEach(group => {
             group.style.display = 'none';
         });
@@ -42,7 +39,6 @@ const { providers, defaultProvider, defaultTier } = Astro.props;
             currentTierGroup.style.display = 'flex';
         }
 
-        // Set active tier button
         document.querySelectorAll('.tier-button').forEach(btn => {
             const tierKey = btn.dataset.tier;
             if (tierKey === currentTier) {
@@ -54,25 +50,21 @@ const { providers, defaultProvider, defaultTier } = Astro.props;
         });
     }
 
-    // Handle provider selection
     document.querySelectorAll('.provider-button').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
             const providerKey = btn.dataset.provider;
             setSetting('provider', providerKey);
 
-            // Update UI: deactivate all providers, activate clicked one
             document.querySelectorAll('.provider-button').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
 
-            // Hide all tier groups, show tiers for selected provider
             document.querySelectorAll('.tier-group').forEach(group => {
                 group.style.display = 'none';
             });
             const tierGroup = document.getElementById(`tiers-${providerKey}`);
             if (tierGroup) {
                 tierGroup.style.display = 'flex';
-                // Auto-select first tier
                 const firstTierBtn = tierGroup.querySelector('.tier-button');
                 if (firstTierBtn) {
                     firstTierBtn.click();
@@ -81,20 +73,17 @@ const { providers, defaultProvider, defaultTier } = Astro.props;
         });
     });
 
-    // Handle tier selection
     document.querySelectorAll('.tier-button').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
             const tierKey = btn.dataset.tier;
             setSetting('tier', tierKey);
 
-            // Update UI: deactivate all tiers in current group, activate clicked one
             document.querySelectorAll('.tier-button').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
         });
     });
 
-    // Prevent form submission
     const settingsForm = document.getElementById('settings-form');
     if (settingsForm) {
         settingsForm.addEventListener('submit', (e) => {
@@ -102,7 +91,6 @@ const { providers, defaultProvider, defaultTier } = Astro.props;
         });
     }
 
-    // Initialize on DOMContentLoaded
     window.addEventListener('DOMContentLoaded', initializeUI);
     if (document.readyState === 'complete' || document.readyState === 'interactive') {
         initializeUI();

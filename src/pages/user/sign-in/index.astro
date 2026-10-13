@@ -4,15 +4,12 @@ import '@/styles/pages/auth.scss';
 import UserScript from '@/scripts/user.astro';
 import { getSafeReturnBackUrl, withReturnBackUrl } from '@/lib/auth/return-url';
 
-// Get redirect URL from query params
 const redirectUrl = getSafeReturnBackUrl(Astro.url.searchParams.get('returnBackUrl'));
 
-// Check if already authenticated
 if (Astro.locals.user) {
     return Astro.redirect(redirectUrl);
 }
 
-// Build callback URL for social sign-in
 const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redirectUrl)}`;
 ---
 

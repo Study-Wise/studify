@@ -75,7 +75,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        // Validate file type
         if (!allowedTypes.includes(upload.fileType)) {
             chunkedUploads.delete(uploadId);
             return new Response(
@@ -84,7 +83,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        // Verify thread ownership
         const thread = await db
             .select()
             .from(threadsTable)
@@ -110,15 +108,12 @@ export const POST: APIRoute = async ({ request, locals }) => {
             }
         }
 
-        // Clean up chunks from memory
         chunkedUploads.delete(uploadId);
 
         const file = new File([assembled], upload.fileName, { type: upload.fileType });
 
-        // Extract text content from file
         const extractedText = await extractTextFromFile(file);
 
-        // Upload file to UploadThing
         const uploadResult = await userFilesUpload.uploadFile(file, {
             metadata: {
                 threadId: upload.threadId,
@@ -131,7 +126,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
             throw new Error('Upload failed');
         }
 
-        // Prepare file metadata
         const fileMetadata: UploadedFile = {
             key: uploadResult.data.key,
             name: uploadResult.data.name,
@@ -142,7 +136,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
             extractedText: extractedText || null
         };
 
-        // Update thread with new file
         const currentFiles = (thread[0].uploadedFiles || []) as UploadedFile[];
         const updatedFiles = [...currentFiles, fileMetadata];
 

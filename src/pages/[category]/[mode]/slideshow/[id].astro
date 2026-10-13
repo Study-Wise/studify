@@ -14,7 +14,6 @@ const chatUrl = `/${category}/${mode}/chat/${id}`;
 const categoryObj = category ? categories[category] : null;
 const modeObj = categoryObj?.modes?.[mode || ''];
 
-// Validate category and mode exist
 if (!categoryObj || !modeObj) {
     return Astro.redirect('/404');
 }
@@ -22,10 +21,8 @@ if (!categoryObj || !modeObj) {
 const categoryName = categoryObj?.name || category;
 const modeName = modeObj?.name || mode;
 
-// Get user authentication
 const user = Astro.locals.user;
 
-// Check thread access first
 const { isAuthorized, isPublic, threadExists } = await checkThreadAccess(id || '', user, category, mode);
 
 // A deleted or unknown chat has no materials, so show the 404 page (#344)
@@ -33,12 +30,10 @@ if (!threadExists) {
     return new Response(null, { status: 404 });
 }
 
-// Redirect to sign-in only if not authenticated AND thread is not public
 if (!user && !isPublic) {
     return Astro.redirect('/user/sign-in');
 }
 
-// Get the latest slideshow only if authorized or public
 const { html: slideshowHtml } = (isAuthorized || isPublic)
     ? await getLatestSlideshow(id || '')
     : { html: null };

@@ -29,14 +29,12 @@ export async function checkThreadAccess(
     let isPublicThread = false;
     let threadExists = false;
 
-    // Get user email - fallback to dev user if in dev mode and no user provided
     let effectiveUser = user;
     if (!effectiveUser && isDev()) {
         effectiveUser = await getDevUser();
     }
     const userEmail = effectiveUser?.email || null;
 
-    // Check if user is admin
     let isUserAdminFlag = false;
     if (userEmail) {
         try {
@@ -54,7 +52,6 @@ export async function checkThreadAccess(
         }
     }
 
-    // Fetch thread from database
     if (threadId) {
         try {
             const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
@@ -64,7 +61,6 @@ export async function checkThreadAccess(
                 threadOwner = thread.email;
                 isPublicThread = thread.isPublic;
 
-                // Validate that the thread's category and mode match the URL
                 if (urlCategory && thread.category !== urlCategory) {
                     console.error(`Category mismatch: URL has '${urlCategory}' but thread has '${thread.category}'`);
                     return {
@@ -86,7 +82,6 @@ export async function checkThreadAccess(
                     };
                 }
 
-                // If unclaimed and user is authenticated, claim ownership
                 if (!threadOwner && userEmail) {
                     try {
                         await db.update(threadsTable)
@@ -103,17 +98,11 @@ export async function checkThreadAccess(
         }
     }
 
-    // Check if user is authorized
-    // User is authorized if:
-    // 1. They own the thread (email matches)
-    // 2. Thread is unclaimed
-    // 3. They are an admin
     const isAuthorized = Boolean(
         threadId &&
         ((threadOwner && threadOwner === userEmail) || !threadOwner || isUserAdminFlag)
     );
 
-    // Thread is public if it's marked public AND user is not already authorized
     const isPublic = !isAuthorized && isPublicThread;
 
     return {

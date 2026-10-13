@@ -64,13 +64,11 @@ const selectorSettings: SelectorSettings = {
             localStorage.setItem('settings', JSON.stringify(userSettings));
         }
 
-        // Initialize from localStorage
         const userSettings = getSettings();
         const provider = userSettings['provider'] || 'openai';
         const tier = userSettings['tier'] || 'default';
         selector.value = `${provider}/${tier}`;
 
-        // Handle changes
         selector.addEventListener('change', (e) => {
             const value = e.target.value;
             if (!value) return;

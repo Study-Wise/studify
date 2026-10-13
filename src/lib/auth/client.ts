@@ -1,5 +1,4 @@
 declare const window: typeof globalThis;
-// Client-side Better Auth utilities
 import { createAuthClient } from 'better-auth/client';
 
 const resolveBaseURL = (): string => {
@@ -9,7 +8,6 @@ const resolveBaseURL = (): string => {
 
     if (typeof window !== 'undefined' && window.location && window.location.origin) return window.location.origin;
 
-    // Fallback to localhost for development environments
     return 'http://localhost:4321';
 };
 
@@ -20,5 +18,4 @@ export const authClient = createAuthClient({
 // Export convenience methods for backward compatibility
 export const { signIn, signUp, signOut } = authClient;
 
-// Export getSession for direct session access
 export const getSession = () => authClient.getSession();

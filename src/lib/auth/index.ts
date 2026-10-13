@@ -1,4 +1,3 @@
-// Server-side Better Auth configuration
 import { betterAuth } from 'better-auth';
 import { magicLink } from 'better-auth/plugins';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
@@ -8,45 +7,36 @@ import { user, session, account, verification } from '@/db/auth-schema';
 
 import type { UserRole, SocialProviderConfig } from '@/lib/auth/types';
 
-// Admin email whitelist
 const ADMIN_EMAILS = [
     'adarshravikumar2@gmail.com',
     'riengupta@gmail.com',
     'admin@studywise.onl'
 ];
 
-// Admin domain whitelist
 const ADMIN_DOMAINS: string[] = ['@studywise.onl'];
 
 // Moderator domain whitelist (optional)
 const MODERATOR_DOMAINS: string[] = [];
 
-// Determine user role based on email
 function determineUserRole(email: string): UserRole {
     const emailLower = email.toLowerCase();
 
-    // Check for admin email match
     if (ADMIN_EMAILS.map(e => e.toLowerCase()).includes(emailLower)) return 'admin';
 
-    // Check for admin domain match
     if (ADMIN_DOMAINS.some(domain => emailLower.endsWith(domain))) return 'admin';
 
-    // Check for moderator domain match
     if (MODERATOR_DOMAINS.some(domain => emailLower.endsWith(domain))) return 'moderator';
 
-    // Default role
     return 'user';
 }
 
 // Helper to get environment variable with fallback between import.meta.env and process.env
 // This ensures compatibility with both Vite/Astro and Node.js runtime environments
 function getEnvVar(key: string): string | undefined {
-    // Try import.meta.env first (Vite/Astro way)
     if (typeof import.meta !== 'undefined' && import.meta.env) {
         const value = (import.meta.env as Record<string, string>)[key];
         if (value) return value;
     }
-    // Fallback to process.env (Node.js way)
     if (typeof process !== 'undefined' && process.env) {
         return process.env[key];
     }

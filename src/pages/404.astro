@@ -62,7 +62,6 @@ const currentUrl = Astro.request.url;
             // Check if referrer is from the same origin (more precise than domain matching)
             const isInternalReferrer = referrer && referrer.startsWith(window.location.origin);
 
-            // Add breadcrumb for context
             window.Sentry.addBreadcrumb({
                 category: 'navigation',
                 message: `404 page accessed: ${currentUrl}`,

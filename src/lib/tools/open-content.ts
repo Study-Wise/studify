@@ -27,7 +27,6 @@ const openContentTool = tool({
         }
         const { threadId } = toolContext;
 
-        // Check if content exists before trying to open
         const content = await getLatestContent(threadId, type);
 
         if (!content) {

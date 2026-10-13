@@ -76,7 +76,6 @@ const regenerateButtonId = `regenerate-${id}-btn`;
     const generateBtn = document.getElementById(generateButtonId);
     let regenerateBtn = document.getElementById(regenerateButtonId);
 
-    // Update the section UI to show content exists
     function updateSectionToShowContent() {
         const section = generateBtn?.closest('.sidebar-section') || regenerateBtn?.closest('.sidebar-section');
         if (!section) return;
@@ -85,7 +84,6 @@ const regenerateButtonId = `regenerate-${id}-btn`;
         const sectionHeader = section.querySelector('.section-header');
 
         if (sectionBody) {
-            // Replace with view button
             sectionBody.innerHTML = `
                 <a href="${viewUrl}" class="view-full-btn" target="_blank">
                     <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
@@ -94,7 +92,6 @@ const regenerateButtonId = `regenerate-${id}-btn`;
             `;
         }
 
-        // Add regenerate button if not present
         if (sectionHeader && !section.querySelector('.regenerate-btn')) {
             const newRegenerateBtn = document.createElement('button');
             newRegenerateBtn.type = 'button';
@@ -106,7 +103,6 @@ const regenerateButtonId = `regenerate-${id}-btn`;
             newRegenerateBtn.innerHTML = '<span class="material-symbols-outlined" aria-hidden="true">refresh</span>';
             sectionHeader.appendChild(newRegenerateBtn);
 
-            // Attach event listener to new button
             newRegenerateBtn.addEventListener('click', () => {
                 const confirmMessage = `Are you sure you want to ${regenerateVerb.toLowerCase()} the ${title.toLowerCase()}? This will replace the existing one.`;
                 if (confirm(confirmMessage)) {
@@ -122,7 +118,6 @@ const regenerateButtonId = `regenerate-${id}-btn`;
         const btn = btnOverride || (isRegenerate ? regenerateBtn : generateBtn);
         if (!btn) return;
 
-        // Disable button and show loading state
         btn.setAttribute('disabled', 'true');
         const originalContent = btn.innerHTML;
         const loadingText = `${(isRegenerate ? regenerateVerb : generateVerb).replace(/^(\w+?)e?\b/, '$1ing')}…`;
@@ -147,7 +142,6 @@ const regenerateButtonId = `regenerate-${id}-btn`;
             const data = await response.json();
 
             if (data.status === 'success') {
-                // Update UI
                 updateSectionToShowContent();
 
                 // If regenerating, restore the button state
@@ -163,13 +157,11 @@ const regenerateButtonId = `regenerate-${id}-btn`;
             console.error(`Error generating ${title.toLowerCase()}:`, error);
             (window).showError?.(error instanceof Error ? error.message : `Failed to generate ${title.toLowerCase()}. Please try again.`);
 
-            // Restore button state
             btn.removeAttribute('disabled');
             btn.innerHTML = originalContent;
         }
     }
 
-    // Generate button
     if (generateBtn) {
         generateBtn.addEventListener('click', () => {
             const tid = generateBtn.getAttribute('data-thread-id');
@@ -179,7 +171,6 @@ const regenerateButtonId = `regenerate-${id}-btn`;
         });
     }
 
-    // Regenerate button
     if (regenerateBtn) {
         regenerateBtn.addEventListener('click', () => {
             const tid = regenerateBtn.getAttribute('data-thread-id');

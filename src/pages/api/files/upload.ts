@@ -50,7 +50,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        // Validate file type
         const allowedTypes = [
             // Images
             'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml',
@@ -89,7 +88,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        // Verify thread ownership
         const thread = await db
             .select()
             .from(threadsTable)
@@ -106,10 +104,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        // Extract text content from file
         const extractedText = await extractTextFromFile(file);
 
-        // Upload file to UploadThing
         const uploadResult = await userFilesUpload.uploadFile(file, {
             metadata: {
                 threadId,
@@ -122,7 +118,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
             throw new Error('Upload failed');
         }
 
-        // Prepare file metadata
         const fileMetadata: UploadedFile = {
             key: uploadResult.data.key,
             name: uploadResult.data.name,
@@ -133,7 +128,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
             extractedText: extractedText || null
         };
 
-        // Update thread with new file
         const currentFiles = (thread[0].uploadedFiles || []) as UploadedFile[];
         const updatedFiles = [...currentFiles, fileMetadata];
 

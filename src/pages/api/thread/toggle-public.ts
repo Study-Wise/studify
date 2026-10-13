@@ -37,7 +37,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        // Authentication
         const user = locals.user;
         if (!user) {
             console.error(`❌ [${requestId}] Authentication required but not provided`);
@@ -52,7 +51,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
         const user_email = user.email;
 
-        // Validate email
         if (!isValidEmail(user_email)) {
             console.error(`❌ [${requestId}] Invalid email format:`, user_email);
             return new Response(
@@ -64,7 +62,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        // Fetch the thread
         const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
         if (threads.length === 0) {
@@ -92,7 +89,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        // Update the isPublic field
         await db.update(threadsTable)
             .set({
                 isPublic: isPublic,

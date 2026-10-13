@@ -29,13 +29,10 @@ export const POST: APIRoute = async ({ request }) => {
             );
         }
 
-        // Paraphrase the question to make it clearer and more concise
         const paraphrasedQuestion = await paraphraseQuestion(question, category, mode);
 
-        // Generate ID from paraphrased question
         const questionId = questionToId(paraphrasedQuestion);
 
-        // Check if question already exists
         const existingQuestions = await db.select().from(questionTable).where(eq(questionTable.id, questionId));
 
         if (existingQuestions.length > 0) {
@@ -55,7 +52,6 @@ export const POST: APIRoute = async ({ request }) => {
             );
         }
 
-        // Generate answer using AI with paraphrased question
         const systemPrompt = `You are an educational AI assistant specializing in ${category} - ${mode}.
 Provide a comprehensive, well-structured answer to the following question.
 Your answer should be:
@@ -83,7 +79,6 @@ Your answer should be:
         );
         const answer = aiResult.text;
 
-        // Save to database
         const metadata = {
             generatedAt: new Date().toISOString(),
             modelUsed: config.model,

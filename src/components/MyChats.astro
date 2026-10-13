@@ -15,7 +15,6 @@ const userEmail = user.email;
 
 const threads = await getUserThreads(userEmail);
 
-// Group threads by category
 const threadsByCategory: Record<string, typeof threads> = threads.reduce((acc, thread) => {
     const categoryKey = thread.category;
     if (!acc[categoryKey]) {

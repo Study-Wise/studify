@@ -23,7 +23,6 @@ function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
 }
 
 export async function generateWebpage(threadId: string, userPrompt?: string) {
-    // Fetch the thread from database
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
     if (threads.length === 0) {
@@ -32,21 +31,17 @@ export async function generateWebpage(threadId: string, userPrompt?: string) {
 
     const thread = threads[0];
 
-    // Get conversation history directly from thread data
     const threadData = thread.thread as ThreadData;
     const messages = threadData?.messages ?? [];
 
-    // Get uploaded files
     const uploadedFiles = (thread.uploadedFiles as UploadedFile[]) ?? [];
 
     if (messages.length === 0) {
         throw new Error('No messages found in thread');
     }
 
-    // Build uploaded files context
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
-    // Create a webpage specific prompt
     const webpagePrompt =
 `${buildContentSystemPrompt('Webpage', uploadedFilesContext)}
 
@@ -81,7 +76,6 @@ You may remove or modify sections as you see fit based on relevance to the topic
 ONLY INCLUDE THE HTML CONTENT IN YOUR RESPONSE. DO NOT RESPOND WITH ANYTHING ELSE BEFORE OR AFTER THE HTML.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
 
 
-    // Build messages array with system prompt first, then conversation history
     const conversationMessages = messages.filter(msg => msg.role !== 'system' && msg.content !== '');
     const messagesForAI = [
         {
@@ -125,7 +119,6 @@ ONLY INCLUDE THE HTML CONTENT IN YOUR RESPONSE. DO NOT RESPOND WITH ANYTHING ELS
         ? text.substring(htmlStart, htmlEnd + 7) // +7 for '</html>' length
         : text;
 
-    // Save to database
     await saveContent(threadId, 'webpage', content);
 
     return content;

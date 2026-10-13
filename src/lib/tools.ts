@@ -1,6 +1,5 @@
 import type { Tool } from 'ai';
 
-// Tool related types
 export interface ToolModule {
     default: Tool & { ready?: boolean; label?: string };
 }
@@ -17,7 +16,6 @@ export interface ToolContext {
 export const modules: Record<string, Tool> = {};
 export const labels: Record<string, string> = {};
 
-// Dynamically import all tool files
 const toolModules = import.meta.glob('./tools/*.ts', { eager: true });
 
 for (const [path, module] of Object.entries(toolModules)) {

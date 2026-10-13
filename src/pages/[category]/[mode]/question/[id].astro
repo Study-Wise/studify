@@ -16,7 +16,6 @@ const { category, mode, id } = Astro.params;
 const categoryObj = category ? categories[category] : null;
 const modeObj = categoryObj?.modes?.[mode || ''];
 
-// Validate category and mode exist
 if (!categoryObj || !modeObj) {
     return Astro.redirect('/404');
 }
@@ -24,7 +23,6 @@ if (!categoryObj || !modeObj) {
 const categoryName = categoryObj?.name || category;
 const modeName = modeObj?.name || mode;
 
-// Fetch question from database
 let questionData = null;
 let parsedAnswer = null;
 
@@ -34,7 +32,6 @@ try {
     if (results.length > 0) {
         questionData = results[0];
 
-        // Increment view count
         const currentViewCount = parseInt(questionData.viewCount) || 0;
         await db.update(questionTable)
             .set({
@@ -43,7 +40,6 @@ try {
             })
             .where(eq(questionTable.id, id || ''));
 
-        // Parse markdown answer to HTML
         parsedAnswer = await marked.parse(questionData.answer);
     }
 } catch (error) {

@@ -15,7 +15,6 @@ let { category, mode } = Astro.params || { category: '', mode: '' };
 const categoryObj = category ? categories[category] : null;
 const modeObj = categoryObj?.modes?.[mode || ''];
 
-// Validate category and mode exist
 if (!categoryObj || !modeObj) {
     return Astro.redirect('/404');
 }

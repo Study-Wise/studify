@@ -30,7 +30,6 @@ export async function generateInfographic(
     userModel ??= config.model;
     provider ??= config.provider;
 
-    // Fetch the thread from database to get conversation history
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
     if (threads.length === 0) {
@@ -39,18 +38,15 @@ export async function generateInfographic(
 
     const thread = threads[0];
 
-    // Get conversation history directly from thread data
     const threadData = thread.thread as ThreadData;
     const messages = threadData?.messages ?? [];
 
-    // Get uploaded files
     const uploadedFiles = (thread.uploadedFiles as UploadedFile[]) ?? [];
 
     if (messages.length === 0) {
         throw new Error('No messages found in thread');
     }
 
-    // Build uploaded files context
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
     // Step 1: Generate a description of what the infographic should show
@@ -107,7 +103,6 @@ Style: Clean, modern, professional educational infographic. Use a white backgrou
     const imageUrl = imageResult.imageUrl;
     const fileKey = imageResult.uploadResult.data.key;
 
-    // Store the infographic data
     const infographic = {
         imageUrl: imageUrl,
         description: descriptionResult.text,
@@ -115,7 +110,6 @@ Style: Clean, modern, professional educational infographic. Use a white backgrou
         fileKey: fileKey
     };
 
-    // Save to database
     await saveContent(threadId, 'infographic', infographic);
 
     return infographic;

@@ -34,7 +34,6 @@ interface ResourceCollection {
 }
 
 export async function generateResources(threadId: string): Promise<string> {
-    // Fetch the thread from database
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
     if (threads.length === 0) {
@@ -43,30 +42,25 @@ export async function generateResources(threadId: string): Promise<string> {
 
     const thread = threads[0];
 
-    // Get conversation history directly from thread data
     const threadData = thread.thread as ThreadData;
     const messages = threadData?.messages ?? [];
 
-    // Get uploaded files
     const uploadedFiles = (thread.uploadedFiles as UploadedFile[]) ?? [];
 
     if (messages.length === 0) {
         throw new Error('No messages found in thread');
     }
 
-    // Extract the main topic from the conversation
     const conversationText = messages
         .filter(msg => msg.role === 'user')
         .map(msg => msg.content)
         .join(' ');
 
-    // Include extracted text from uploaded files in topic extraction
     const uploadedFilesText = uploadedFiles
         .filter(f => f.extractedText)
         .map(f => f.extractedText)
         .join(' ');
 
-    // Create a concise topic summary for search (include uploaded files content)
     const combinedText = `${conversationText} ${uploadedFilesText}`.trim();
     const topicSummary = combinedText.slice(0, 500);
 
@@ -188,7 +182,6 @@ export async function generateResources(threadId: string): Promise<string> {
 
     const content = JSON.stringify(resourceCollection, null, 2);
 
-    // Save to database
     await saveContent(threadId, 'additional-resources', content);
 
     return content;

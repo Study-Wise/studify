@@ -23,7 +23,6 @@ function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
 }
 
 export async function generateMindMap(threadId: string, userPrompt?: string) {
-    // Fetch the thread from database
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
     if (threads.length === 0) {
@@ -32,21 +31,17 @@ export async function generateMindMap(threadId: string, userPrompt?: string) {
 
     const thread = threads[0];
 
-    // Get conversation history directly from thread data
     const threadData = thread.thread as ThreadData;
     const messages = threadData?.messages ?? [];
 
-    // Get uploaded files
     const uploadedFiles = (thread.uploadedFiles as UploadedFile[]) ?? [];
 
     if (messages.length === 0) {
         throw new Error('No messages found in thread');
     }
 
-    // Build uploaded files context
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
-    // Create a mind map specific prompt
     const mindMapPrompt =
 `${buildContentSystemPrompt('Mind Map', uploadedFilesContext)}
 
@@ -104,7 +99,6 @@ Output a complete HTML document (including <!DOCTYPE html>, <html>, <head>, and 
 
 You may remove or modify sections as you see fit based on relevance to the topic.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
 
-    // Build messages array with system prompt first, then conversation history
     const conversationMessages = messages.filter(msg => msg.role !== 'system' && msg.content !== '');
     const messagesForAI = [
         {
@@ -139,7 +133,6 @@ You may remove or modify sections as you see fit based on relevance to the topic
         throw new Error('Generated mind map is empty');
     }
 
-    // Save to database
     await saveContent(threadId, 'mind-map', result.text);
 
     return result.text;
