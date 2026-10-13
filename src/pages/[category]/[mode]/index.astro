@@ -1,8 +1,7 @@
 ---
 import Layout from '@/layouts/Layout.astro';
 import FancyButton from '@/components/fancy/Button.astro';
-import Button from '@/components/fancy/Button.astro';
-import ModelSelector from '@/components/ModelSelector.astro';
+// import ModelSelector from '@/components/ModelSelector.astro';
 import MessagesScript from '@/scripts/messages.astro';
 import StepByStepScript from '@/scripts/step-by-step.astro';
 import '@/styles/pages/index.scss';
@@ -32,21 +31,18 @@ const modeName = modeObj?.name || mode;
             <span class="material-symbols-outlined" aria-hidden="true">info</span>&nbsp;How It Works
         </h2>
         <p>
-            Welcome to <b>{modeObj?.name || 'Stud'}</b>ify! Turn your {modeObj?.name || ''} homework into powerful learning tools.
+            Welcome to <b>Studify</b>! Turn your {modeName} homework into powerful learning tools.
         </p>
         <ol class="steps-list">
             <li>
-                <strong>Paste Your Homework:</strong> Copy your {modeObj?.name || ''} problems (plain text or simple equations like $f(x)=x^2$ into the text box below.
+                <strong>Paste Your Homework:</strong> Paste your {modeName} homework into the text box below, then click "Generate Study Materials" to start a chat.
             </li>
             <li>
-                <strong>Start Chat:</strong> Click the "Generate Study Materials" button to start a conversation with AI.
+                <strong>Generate Materials:</strong> In the chat page sidebar, choose the study materials you want to generate from your conversation.
             </li>
             <li>
-                <strong>Generate Materials:</strong> In the chat page sidebar, you can generate:
+                <strong>Receive AI Insights:</strong> Our AI will analyze your homework and instantly create:
                 <ul>
-                    <li>
-                        A <strong>Chat Summary</strong> that provides a concise overview of your entire conversation and key takeaways.
-                    </li>
                     <li>
                         A personalized <strong>Study Guide</strong> explaining concepts, showing worked examples, providing practice problems, and defining key terms.
                     </li>
@@ -87,14 +83,11 @@ const modeName = modeObj?.name || mode;
         <div id="text-input" class="input-area active-input">
             <textarea
                 id="text-paste"
-                placeholder={`Paste your ${modeObj?.name || ''} problems here... For example:
-1. Solve for x: 2x + 5 = 11
-2. Evaluate the limit: limit(from x to 0) for [(sin(x))/(x)]
-3. Find the integral: integral(x^2 + 3)dx
-Please note that the AI will not provide the answer for your immediate equation`}
+                placeholder={`Paste your ${modeName} problems here...
+Please note that the AI will not provide the answer for your immediate question`}
                 rows="12"
                 aria-describedby="upload-note"
-                aria-label={`Paste ${modeObj?.name || ''} problems here`}
+                aria-label={`Paste ${modeName} problems here`}
             ></textarea>
         </div>
         <p class="upload-note" id="upload-note">
@@ -106,11 +99,10 @@ Please note that the AI will not provide the answer for your immediate equation`
 
         {/* Generate Button and Error Message */}
         <div class="toolbar" role="toolbar" aria-label="Generation controls">
-            <ModelSelector />
+            {/* <ModelSelector /> */}
             <FancyButton className="generate-button" onclick="generateOutput()" variant="primary" icon="manufacturing" aria-describedby="error-message">Generate Study Materials</FancyButton>
-            <Button onclick="generateOutput()" variant="primary" icon="manufacturing" style="display:none;" aria-describedby="error-message">Generate Study Materials</Button>
         </div>
-        <div id="error-message" class="error-box" style="display: none" role="alert" aria-live="polite"></div>
+        <div id="error-message" class="error-box" style="display: none" role="alert"></div>
     </section>
     <MessagesScript page="home" category={category} mode={mode} />
     <StepByStepScript />
