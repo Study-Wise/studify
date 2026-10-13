@@ -1,5 +1,6 @@
 ---
 import Layout from '@/layouts/Layout.astro';
+import LocalTime from '@/components/LocalTime.astro';
 import '@/styles/pages/admin.scss';
 
 import { isUserAdmin } from '@/lib/auth/admin';
@@ -26,7 +27,7 @@ if (!(await isUserAdmin(user.email))) {
             <p><strong>User ID:</strong> {user.id}</p>
             <p><strong>Email:</strong> {user.email}</p>
             <p><strong>Role:</strong> Admin</p>
-            <p><strong>Member Since:</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
+            <p><strong>Member Since:</strong> <LocalTime date={user.createdAt} options={{ year: 'numeric', month: 'numeric', day: 'numeric' }} /></p>
         </div>
 
         <div class="admin-features">
