@@ -12,7 +12,7 @@ import { isUserAdmin } from '@/lib/auth/admin';
 
 export const POST: APIRoute = async ({ request, locals }) => {
     try {
-        const { category, mode, provider, tier } = await request.json();
+        const { category, mode, provider, tier, isPublic } = await request.json();
 
         // Check authentication
         const user = locals.user;
@@ -61,7 +61,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             mode: mode || config.defaultMode,
             model: initialModel,
             provider: initialProvider,
-            isPublic: false,
+            isPublic: isPublic === true,
             isDev: (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development'
         };
 

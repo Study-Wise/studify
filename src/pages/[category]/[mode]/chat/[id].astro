@@ -40,11 +40,13 @@ const isNewChat = (id === 'new');
 // Check thread access (skip for new chats)
 let isAuthorized = isNewChat ? true : false;
 let isPublic = false;
+let isPublicThread = false;
 
 if (!isNewChat) {
     const accessCheck = await checkThreadAccess(id || '', user, category, mode);
     isAuthorized = accessCheck.isAuthorized;
     isPublic = accessCheck.isPublic;
+    isPublicThread = accessCheck.isPublicThread;
 
 }
 
@@ -110,7 +112,7 @@ export const inNav = 'hide';
     </header>
     <section class="chat-container">
         <LeftSidebar
-            isPublic={isPublic}
+            isPublic={isPublicThread}
             isAuthorized={isAuthorized}
             threadId={id || ''}
             uploadedFiles={uploadedFiles}

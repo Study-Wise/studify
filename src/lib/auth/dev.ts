@@ -114,6 +114,7 @@ export async function checkDevThreadAccess(
         return {
             isAuthorized: false,
             isPublic: false,
+            isPublicThread: false,
             threadOwner: null,
         };
     }
@@ -149,6 +150,7 @@ export async function checkDevThreadAccess(
                     return {
                         isAuthorized: false,
                         isPublic: false,
+                        isPublicThread: false,
                         threadOwner: null,
                     };
                 }
@@ -159,6 +161,7 @@ export async function checkDevThreadAccess(
                     return {
                         isAuthorized: false,
                         isPublic: false,
+                        isPublicThread: false,
                         threadOwner: null,
                     };
                 }
@@ -199,6 +202,7 @@ export async function checkDevThreadAccess(
     return {
         isAuthorized,
         isPublic,
+        isPublicThread,
         threadOwner,
     };
 }
