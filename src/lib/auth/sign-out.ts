@@ -1,0 +1,33 @@
+// Client-side sign-out that also removes the user's data from this browser, so the next person on a shared computer can't see it
+import { authClient } from '@/lib/auth/client';
+import { shutdownFeaturebase } from '@/lib/featurebase-client';
+
+// Caches holding user content: generated material pages and images (astro.config.mjs) and the offline copy (OfflineSupport.astro)
+const USER_CACHES = ['study-materials-cache', 'images-cache', 'studywise-offline-v1'];
+
+// localStorage keys holding the user's chats and settings. Device preferences (theme, install prompt) are kept.
+const USER_STORAGE_KEYS = ['threadId', 'settings', 'model'];
+
+async function clearUserCaches() {
+    if (!('caches' in window)) return;
+    await Promise.all(USER_CACHES.map((name) => caches.delete(name)));
+}
+
+function clearUserStorage() {
+    try {
+        for (const key of USER_STORAGE_KEYS) {
+            localStorage.removeItem(key);
+        }
+    } catch {
+        // localStorage is unavailable, so there is nothing stored to remove
+    }
+}
+
+export async function signOutAndClearData() {
+    const { error } = await authClient.signOut();
+    if (error) throw new Error(error.message || 'Sign out failed');
+
+    clearUserStorage();
+    shutdownFeaturebase();
+    await clearUserCaches();
+}

@@ -42,10 +42,13 @@ export default [
     },
     {
         // Browser-only modules
-        files: ['src/lib/modal.ts', 'src/lib/featurebase-client.ts'],
+        files: ['src/lib/modal.ts', 'src/lib/featurebase-client.ts', 'src/lib/auth/sign-out.ts'],
         languageOptions: {
             globals: {
+                window: 'readonly',
                 document: 'readonly',
+                localStorage: 'readonly',
+                caches: 'readonly',
                 HTMLElement: 'readonly',
                 HTMLDialogElement: 'readonly',
                 HTMLButtonElement: 'readonly',
