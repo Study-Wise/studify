@@ -83,6 +83,10 @@ function buildSocialProviders(): SocialProviderConfig {
 const socialProviders = buildSocialProviders();
 const baseURL = getEnvVar('BETTER_AUTH_URL') || 'http://localhost:4321';
 
+const vercelOrigins = [getEnvVar('VERCEL_URL'), getEnvVar('VERCEL_BRANCH_URL'), getEnvVar('VERCEL_PROJECT_PRODUCTION_URL')]
+    .filter(Boolean)
+    .map((host) => `https://${host}`);
+
 export const auth = betterAuth({
     database: drizzleAdapter(db, {
         provider: 'pg',
@@ -134,5 +138,5 @@ export const auth = betterAuth({
     },
 
     baseURL,
-    trustedOrigins: [baseURL],
+    trustedOrigins: [baseURL, import.meta.env.SITE, ...vercelOrigins],
 });
