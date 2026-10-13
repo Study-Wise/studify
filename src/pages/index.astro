@@ -188,6 +188,8 @@ const description = 'Studify is your AI-powered study partner. Paste your homewo
 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && panel && !panel.hidden) {
+            // Stop the search input from clearing itself natively, so the box keeps matching the active filter
+            e.preventDefault();
             setOpen(false);
             toggle?.focus();
         }
