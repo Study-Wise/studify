@@ -48,7 +48,10 @@ export default [
                 document: 'readonly',
                 HTMLElement: 'readonly',
                 HTMLDialogElement: 'readonly',
-                HTMLButtonElement: 'readonly'
+                HTMLButtonElement: 'readonly',
+                Node: 'readonly',
+                setTimeout: 'readonly',
+                clearTimeout: 'readonly'
             }
         }
     }
