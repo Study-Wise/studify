@@ -3,7 +3,6 @@ import { z } from 'zod';
 
 import { pgEnum } from 'drizzle-orm/pg-core';
 
-// User role schema and enum
 export const userRoleSchema = z.enum(
     ['user', 'premium', 'moderator', 'admin', 'banned']
 );
@@ -22,7 +21,6 @@ export interface AuthUtils {
     callbackURL: string;
 }
 
-// Build social providers configuration
 // Each provider is only added if both clientId and clientSecret are available
 export type SocialProviderConfig = {
     google?: { clientId: string; clientSecret: string };

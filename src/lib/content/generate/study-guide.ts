@@ -22,7 +22,6 @@ function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
 }
 
 export async function generateStudyGuide(threadId: string, userPrompt?: string) {
-    // Fetch the thread from database
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
     if (threads.length === 0) {
@@ -36,18 +35,15 @@ export async function generateStudyGuide(threadId: string, userPrompt?: string) 
     const userModel = config.model;
     const provider = config.provider;
 
-    // Get conversation history directly from thread data
     const threadData = thread.thread as ThreadData;
     const messages = threadData?.messages ?? [];
 
-    // Get uploaded files
     const uploadedFiles = (thread.uploadedFiles as UploadedFile[]) ?? [];
 
     if (messages.length === 0) {
         throw new Error('No messages found in thread');
     }
 
-    // Build uploaded files context
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
     // Only include Desmos section for modes with desmos: true
@@ -55,7 +51,6 @@ export async function generateStudyGuide(threadId: string, userPrompt?: string) 
     const includeDesmos = modeConfig?.desmos === true;
     const desmosContent = includeDesmos ? `\n${desmosSection}\n` : '';
 
-    // Create a study guide specific prompt
     const studyGuidePrompt =
 `${buildContentSystemPrompt('Study Guide', uploadedFilesContext)}
 You should also not generate any if these things as well:
@@ -102,7 +97,6 @@ Math formatting: use \`$…$\` for inline math and \`$$…$$\` for block math.
 REMEMBER: Output ONLY the Study Guide. No quizzes, no practice questions, no flashcards, no other content types. Be DETAILED and THOROUGH — a student should be able to study for an exam using only this guide.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
 
 
-    // Generate the study guide
     const result = await generateText(
         studyGuidePrompt,
         'Now generate the study guide based on the above conversation. Output ONLY the study guide content in markdown format. Do not include any explanations, commentary, or conversation - just the study guide.',
@@ -117,7 +111,6 @@ REMEMBER: Output ONLY the Study Guide. No quizzes, no practice questions, no fla
         throw new Error('Generated study guide is empty');
     }
 
-    // Save to database
     await saveContent(threadId, 'study-guide', result.text);
 
     return result.text;

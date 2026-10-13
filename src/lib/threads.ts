@@ -50,7 +50,6 @@ async function getMessages(id: string, isAuthorized?: boolean | null) {
 
         const thread = dbResponse[0];
 
-        // Check ownership if isAuthorized is provided
         if (!isAuthorized) {
             return []
         }
@@ -62,7 +61,6 @@ async function getMessages(id: string, isAuthorized?: boolean | null) {
             // Remove trailing commas before ] or } (invalid JSON but sometimes stored)
             const cleanedJson = rawThread.replace(/,\s*([\]}])/g, '$1');
             threadData = JSON.parse(cleanedJson) as ThreadData;
-            // Fix the data in DB
             await db.update(threadsTable).set({ thread: threadData }).where(eq(threadsTable.id, id));
         }
         else {
@@ -92,7 +90,6 @@ async function getMessagesLength(id: string) {
             // Remove trailing commas before ] or } (invalid JSON but sometimes stored)
             const cleanedJson = rawThread.replace(/,\s*([\]}])/g, '$1');
             threadData = JSON.parse(cleanedJson) as ThreadData;
-            // Fix the data in DB
             await db.update(threadsTable).set({ thread: threadData }).where(eq(threadsTable.id, id));
         }
         else {
@@ -115,7 +112,6 @@ async function getThreadByToken(id: string, isAuthorized?: boolean | null) {
 
         const thread = dbResponse[0];
 
-        // Check ownership if isAuthorized is provided
         if (!isAuthorized) {
             return null;
         }

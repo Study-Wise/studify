@@ -57,17 +57,14 @@ export async function generateText(
     toolContext?: ToolContext
 ): Promise<AIGenerationResult> {
 
-    // Filter out excluded tools from the global tools
     const resolvedTools = excludeTools
         ? Object.fromEntries(
             Object.entries(tools).filter(([key]) => !excludeTools.includes(key))
         )
         : tools;
 
-    // Filter out system and empty content messages
     convoHistory = convoHistory.filter(msg => msg.role !== 'system' && msg.content !== '');
 
-    // Add system prompt to beginning of conversation history if not already present
     if (convoHistory[0]?.role !== 'system') {
         convoHistory.unshift({
             role: 'system',
@@ -75,7 +72,6 @@ export async function generateText(
         });
     }
 
-    // Add user prompt to conversation history if not already present
     const lastMessage = convoHistory[convoHistory.length - 1];
     if (lastMessage?.role !== 'user' || lastMessage?.content !== userPrompt) {
         convoHistory.push({
@@ -84,10 +80,8 @@ export async function generateText(
         });
     }
 
-    // Initialize AI Model
     const aiModel = `${provider}/${userModel}`;
 
-    // AI Generation
     const aiStartTime = Date.now();
     console.log(`[${requestId}] AI request: model=${aiModel}, messages=${convoHistory.length}, tools=${Object.keys(resolvedTools).length}`);
 
@@ -102,11 +96,9 @@ export async function generateText(
 
         console.log(`[${requestId}] AI response received in ${Date.now() - aiStartTime}ms`);
 
-        // Extract client-side actions from tool results
         const clientToolCalls: ClientToolCall[] = [];
         const toolCallLog: ToolCallLogEntry[] = [];
 
-        // Collect all tool calls from steps
         if (result.steps && result.steps.length > 0) {
             for (const step of result.steps) {
                 const stepToolCalls = step.toolCalls ?? [];
@@ -140,7 +132,6 @@ export async function generateText(
             }
         }
 
-        // Check tool results for actions that need client-side handling
         if (result.toolResults && result.toolResults.length > 0) {
             for (const toolResult of result.toolResults) {
                 try {
@@ -393,7 +384,6 @@ IMPORTANT: Only output the paraphrased question, nothing else. Do not add any ex
             category,
             mode
         });
-        // Return original question as fallback
         console.warn(`⚠️ [${requestId}] Falling back to original question`);
         return question;
     }
@@ -409,10 +399,8 @@ export async function generateObject<T>(
     schema: ZodSchema<T>,
     requestId: string = nanoid()
 ): Promise<T> {
-    // Filter out system and empty content messages
     convoHistory = convoHistory.filter(msg => msg.role !== 'system' && msg.content !== '');
 
-    // Add system prompt to beginning of conversation history if not already present
     if (convoHistory[0]?.role !== 'system') {
         convoHistory.unshift({
             role: 'system',
@@ -420,7 +408,6 @@ export async function generateObject<T>(
         });
     }
 
-    // Add user prompt to end
     const lastMessage = convoHistory[convoHistory.length - 1];
     if (lastMessage?.role !== 'user' || lastMessage?.content !== userPrompt) {
         convoHistory.push({

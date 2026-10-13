@@ -58,7 +58,6 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
     // Content types that use images
     const imageTypes = ['infographic'];
 
-    // Load marked.js dynamically if needed
     async function loadMarked() {
         if (window.marked) return window.marked;
         return new Promise((resolve, reject) => {
@@ -70,24 +69,20 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
         });
     }
 
-    // Update page content based on content type
     async function updatePageContent(content) {
         const page = document.querySelector(`.${contentType}-page, .${contentType.replace(/-/g, '')}-page`);
         if (!page) return;
 
-        // Remove empty state if exists
         const emptyState = page.querySelector('.empty-state');
 
         if (markdownTypes.includes(contentType)) {
             const marked = await loadMarked();
             const parsedContent = marked.parse(content);
 
-            // Find or create content container
             let contentContainer = page.querySelector('.content-container');
             let contentDiv = page.querySelector(`.${contentClassName}`);
 
             if (emptyState && !contentContainer) {
-                // Replace empty state with content
                 contentContainer = document.createElement('div');
                 contentContainer.className = 'content-container';
                 contentDiv = document.createElement('div');
@@ -162,13 +157,11 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
             const currentHasContent = actionBtn.getAttribute('data-has-content') === 'true';
             const isRegenerate = currentHasContent;
 
-            // Confirm if regenerating
             if (isRegenerate) {
                 const confirmMessage = `Are you sure you want to ${regenerateVerb.toLowerCase()} the ${contentTypeName.toLowerCase()}? This will replace the existing one.`;
                 if (!confirm(confirmMessage)) return;
             }
 
-            // Disable button and show loading state
             actionBtn.setAttribute('disabled', 'true');
             const originalContent = actionBtn.innerHTML;
             const loadingText = `${(isRegenerate ? regenerateVerb : generateVerb).replace(/^(\w+?)e?\b/, '$1ing')}…`;
@@ -188,13 +181,11 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
                 }
 
                 if (data.status === 'success') {
-                    // Update the page content directly
                     const content = data.content || data.infographic;
                     if (content) {
                         await updatePageContent(content);
                     }
 
-                    // Update button to regenerate state
                     actionBtn.setAttribute('data-has-content', 'true');
                     actionBtn.innerHTML = `<span class="material-symbols-outlined" aria-hidden="true">refresh</span><span>${regenerateVerb} ${contentTypeName}</span>`;
                     actionBtn.removeAttribute('disabled');
@@ -206,7 +197,6 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
                 console.error(`Error generating ${contentTypeName.toLowerCase()}:`, error);
                 window.showError?.(error instanceof Error ? error.message : `Failed to generate ${contentTypeName.toLowerCase()}. Please try again.`);
 
-                // Restore button state
                 actionBtn.removeAttribute('disabled');
                 actionBtn.innerHTML = originalContent;
             }

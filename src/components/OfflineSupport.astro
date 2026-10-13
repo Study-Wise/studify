@@ -1,5 +1,4 @@
 ---
-// Offline support component for PWA functionality
 import '@/styles/components/offline-support.scss';
 
 import 'dotenv/config';
@@ -19,7 +18,6 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
 </div>
 
 <script is:inline define:vars={{ isProd }}>
-    // Offline/Online detection
     function updateOnlineStatus() {
         const indicator = document.getElementById('offline-indicator');
         if (indicator) {
@@ -27,11 +25,9 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
         }
     }
 
-    // Listen for online/offline events
     window.addEventListener('online', updateOnlineStatus);
     window.addEventListener('offline', updateOnlineStatus);
 
-    // Check initial status
     updateOnlineStatus();
 
     // Service Worker registration and update handling
@@ -51,7 +47,6 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
     async function swRegistration() {
         const registration = await navigator.serviceWorker.register('/sw.js');
 
-        // Handle updates
         registration.addEventListener('updatefound', () => {
             const newWorker = registration.installing;
             if (newWorker) {
@@ -76,7 +71,6 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
             }
         });
 
-        // Handle service worker messages
         navigator.serviceWorker.addEventListener('message', (event) => {
             if (event.data && event.data.action === 'reload') {
                 window.location.reload();
@@ -120,7 +114,6 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
         }
     }
 
-    // Initialize offline cache
     window.offlineCache = new OfflineCache();
 
     // Enhanced error handling for offline scenarios

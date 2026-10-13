@@ -1,4 +1,3 @@
-// Dev environment authentication helper
 // Uses USER_ACCESS_TOKEN env variable to authenticate in development
 
 import { eq } from 'drizzle-orm';
@@ -9,12 +8,10 @@ import { threadsTable } from '@/db/schema';
 import type { UserRole, User } from '@/lib/auth/types';
 import type { ThreadAccessResult } from '@/lib/auth/checkThreadAccess';
 
-// Check if we're in development environment
 export function isDev(): boolean {
     return (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development';
 }
 
-// Get the USER_ACCESS_TOKEN from environment
 function getDevAccessToken(): string | null {
     if (!isDev()) {
         return null;
@@ -22,7 +19,6 @@ function getDevAccessToken(): string | null {
     return import.meta.env.USER_ACCESS_TOKEN || process.env.USER_ACCESS_TOKEN || null;
 }
 
-// Get the user ID from the account table using the access token
 export async function getDevUserId(): Promise<string | null> {
     const accessToken = getDevAccessToken();
     if (!accessToken) {
@@ -43,7 +39,6 @@ export async function getDevUserId(): Promise<string | null> {
     }
 }
 
-// Get the full user record from the user table using the dev access token
 export async function getDevUser(): Promise<User | null> {
     const userId = await getDevUserId();
     if (!userId) {
@@ -78,38 +73,32 @@ export async function getDevUser(): Promise<User | null> {
     }
 }
 
-// Get the dev user's role
 export async function getDevUserRole(): Promise<UserRole | null> {
     const user = await getDevUser();
     return user?.role || null;
 }
 
-// Check if the dev user is an admin
 export async function isDevUserAdmin(): Promise<boolean> {
     const role = await getDevUserRole();
     return role === 'admin';
 }
 
-// Check if the dev user is a moderator or admin
 export async function isDevUserModerator(): Promise<boolean> {
     const role = await getDevUserRole();
     return role === 'moderator' || role === 'admin';
 }
 
-// Check if the dev user has premium access
 export async function isDevUserPremium(): Promise<boolean> {
     const role = await getDevUserRole();
     return role === 'premium' || role === 'moderator' || role === 'admin';
 }
 
-// Check thread access for the dev user
 // Similar to checkThreadAccess but uses the dev access token
 export async function checkDevThreadAccess(
     threadId: string,
     urlCategory?: string,
     urlMode?: string
 ): Promise<ThreadAccessResult> {
-    // Only works in dev environment
     if (!isDev()) {
         return {
             isAuthorized: false,
@@ -125,13 +114,10 @@ export async function checkDevThreadAccess(
     let isPublicThread = false;
     let threadExists = false;
 
-    // Get dev user email
     const userEmail = devUser?.email || null;
 
-    // Check if dev user is admin
     const isUserAdminFlag = devUser?.role === 'admin';
 
-    // Fetch thread from database
     if (threadId) {
         try {
             const threads = await db
@@ -145,7 +131,6 @@ export async function checkDevThreadAccess(
                 threadOwner = thread.email;
                 isPublicThread = thread.isPublic;
 
-                // Validate that the thread's category and mode match the URL
                 if (urlCategory && thread.category !== urlCategory) {
                     console.error(
                         `Category mismatch: URL has '${urlCategory}' but thread has '${thread.category}'`
@@ -171,7 +156,6 @@ export async function checkDevThreadAccess(
                     };
                 }
 
-                // If unclaimed and dev user is authenticated, claim ownership
                 if (!threadOwner && userEmail) {
                     try {
                         await db
@@ -189,11 +173,6 @@ export async function checkDevThreadAccess(
         }
     }
 
-    // Check if user is authorized
-    // User is authorized if:
-    // 1. They own the thread (email matches)
-    // 2. Thread is unclaimed
-    // 3. They are an admin
     const isAuthorized = Boolean(
         threadId &&
             ((threadOwner && threadOwner === userEmail) ||
@@ -201,7 +180,6 @@ export async function checkDevThreadAccess(
                 isUserAdminFlag)
     );
 
-    // Thread is public if it's marked public AND user is not already authorized
     const isPublic = !isAuthorized && isPublicThread;
 
     return {

@@ -31,7 +31,6 @@ function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
 }
 
 export async function generateFlashcards(threadId: string, userPrompt?: string): Promise<FlashcardData> {
-    // Fetch the thread from database
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
     if (threads.length === 0) {
@@ -43,21 +42,17 @@ export async function generateFlashcards(threadId: string, userPrompt?: string):
     const userModel = config.model;
     const provider = config.provider;
 
-    // Get conversation history directly from thread data
     const threadData = thread.thread as ThreadData;
     const messages = threadData?.messages ?? [];
 
-    // Get uploaded files
     const uploadedFiles = (thread.uploadedFiles as UploadedFile[]) ?? [];
 
     if (messages.length === 0) {
         throw new Error('No messages found in thread');
     }
 
-    // Build uploaded files context
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
-    // Create a flashcard specific prompt
     const flashcardPrompt = `${buildContentSystemPrompt('Flashcards', uploadedFilesContext)}
 
 The flashcards should help the student review and memorize key concepts, formulas, definitions, and problem-solving techniques.
@@ -81,7 +76,6 @@ Guidelines for questions:
 
 Math formatting: use $…$ for displaying math formulas/equations inline and $$…$$ for displaying them on their own.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
 
-    // Generate the flashcards using structured output
     const generated = await generateObject(
         flashcardPrompt,
         'Now generate the flashcards based on the above conversation. Return ONLY the structured flashcard data with the text summary and questions array. Do not include any explanations or commentary.',
@@ -100,7 +94,6 @@ Math formatting: use $…$ for displaying math formulas/equations inline and $$�
         questions: generated.questions
     };
 
-    // Save to database
     await saveContent(threadId, 'flashcards', flashcardData);
 
     return flashcardData;

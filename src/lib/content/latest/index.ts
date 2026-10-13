@@ -35,7 +35,6 @@ export interface ThreadContent {
     summary?: string;
 }
 
-// Converts kebab-case to camelCase
 function toCamelCase(str: string): string {
     return str.replace(/-([a-z])/g, (_, p1) => p1.toUpperCase());
 }

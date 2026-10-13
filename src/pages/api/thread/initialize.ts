@@ -14,7 +14,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
     try {
         const { category, mode, provider, tier, isPublic } = await request.json();
 
-        // Check authentication
         const user = locals.user;
         if (!user) {
             return new Response(
@@ -29,7 +28,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
         const user_email = user.email;
         const isAdmin = await isUserAdmin(user_email);
 
-        // Check thread limit for user (skip for admins)
         if (!isAdmin) {
             const userThreads = await db.select().from(threadsTable).where(eq(threadsTable.email, user_email));
 
@@ -47,7 +45,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
             }
         }
 
-        // Generate new thread ID
         const newThreadId = nanoid();
 
         const { model: initialModel, provider: initialProvider } = await getValidModelAndProvider(provider, tier);

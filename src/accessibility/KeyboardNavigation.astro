@@ -95,7 +95,6 @@ import '@/styles/accessibility/keyboard-navigation.scss';
         }
     }
 
-    // Initialize keyboard navigation when DOM is loaded
     document.addEventListener('DOMContentLoaded', () => {
         (window as object as { keyboardNavigation: KeyboardNavigation }).keyboardNavigation = new KeyboardNavigation();
 
@@ -114,7 +113,6 @@ import '@/styles/accessibility/keyboard-navigation.scss';
                 }
             }
 
-            // Add error handling
             element.addEventListener('invalid', () => {
                 element.setAttribute('aria-invalid', 'true');
             });

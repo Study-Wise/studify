@@ -83,7 +83,6 @@ function markdownToSlideshowHTML(markdown: string): string {
 }
 
 export async function generateSlideshow(threadId: string, userPrompt?: string) {
-    // Fetch the thread from database
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
     if (threads.length === 0) {
@@ -95,18 +94,15 @@ export async function generateSlideshow(threadId: string, userPrompt?: string) {
     const userModel = config.model;
     const provider = config.provider;
 
-    // Get conversation history directly from thread data
     const threadData = thread.thread as ThreadData;
     const messages = threadData?.messages ?? [];
 
-    // Get uploaded files
     const uploadedFiles = (thread.uploadedFiles as UploadedFile[]) ?? [];
 
     if (messages.length === 0) {
         throw new Error('No messages found in thread');
     }
 
-    // Build uploaded files context
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
     // Create a slideshow specific prompt - uses standard markdown with headings as slide separators
@@ -140,7 +136,6 @@ Your output MUST be standard markdown where each heading (# or ##) starts a new 
 REMEMBER: Output ONLY the markdown content. No quizzes, no practice questions, no flashcards, no other content types.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
 
 
-    // Generate the slideshow markdown
     const result = await generateText(
         slideshowPrompt,
         'Now generate the markdown slideshow based on the above conversation. Output ONLY the raw markdown. Do not include any explanations, commentary, or conversation - just the slideshow markdown content.',
@@ -155,12 +150,10 @@ REMEMBER: Output ONLY the markdown content. No quizzes, no practice questions, n
         throw new Error('Generated slideshow is empty');
     }
 
-    // Convert markdown to self-contained HTML slideshow
     const html = markdownToSlideshowHTML(result.text);
 
     const slideshowData = { content: result.text, html };
 
-    // Save to database with both markdown content and generated HTML
     await saveContent(threadId, 'slideshow', slideshowData);
 
     return slideshowData;

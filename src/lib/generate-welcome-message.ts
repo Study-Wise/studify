@@ -1,4 +1,3 @@
-// Welcome Message Generation
 // This module handles generating the welcome message for the first message in a conversation.
 
 import { generateText } from '@/lib/ai-service';

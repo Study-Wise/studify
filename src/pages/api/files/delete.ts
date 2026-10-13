@@ -30,7 +30,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        // Verify thread ownership
         const thread = await db
             .select()
             .from(threadsTable)
@@ -47,7 +46,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        // Remove file from UploadThing
         try {
             await userFilesUpload.deleteFiles(fileKey);
         } catch (error) {
@@ -55,7 +53,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
             // Continue even if UploadThing deletion fails
         }
 
-        // Remove file from thread metadata
         const currentFiles = (thread[0].uploadedFiles || []) as UploadedFile[];
         const updatedFiles = currentFiles.filter((file) => file.key !== fileKey);
 

@@ -388,11 +388,9 @@ for (const topicKey of Object.keys(categories)) {
     for (const modeKey of Object.keys(modes)) {
         const mode = modes[modeKey];
 
-        // Generate the prompt using the mode's name and category
         const prompt = generateModePrompt(mode.name, topicKey);
         mode.prompt = Promise.resolve(prompt);
 
-        // Set default tools if not specified
         if (!mode.tools) {
             mode.tools = modules;
         }

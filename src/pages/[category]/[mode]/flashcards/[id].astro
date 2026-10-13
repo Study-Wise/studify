@@ -30,7 +30,6 @@ const chatUrl = `/${category}/${mode}/chat/${id}`;
 const categoryObj = category ? categories[category] : null;
 const modeObj = categoryObj?.modes?.[mode || ''];
 
-// Validate category and mode exist
 if (!categoryObj || !modeObj) {
     return Astro.redirect('/404');
 }
@@ -38,10 +37,8 @@ if (!categoryObj || !modeObj) {
 const categoryName = categoryObj?.name || category;
 const modeName = modeObj?.name || mode;
 
-// Get user authentication
 const user = Astro.locals.user;
 
-// Check thread access first
 const { isAuthorized, isPublic, threadExists } = await checkThreadAccess(id || '', user, category, mode);
 
 // A deleted or unknown chat has no materials, so show the 404 page (#344)
@@ -49,12 +46,10 @@ if (!threadExists) {
     return new Response(null, { status: 404 });
 }
 
-// Redirect to sign-in only if not authenticated AND thread is not public
 if (!user && !isPublic) {
     return Astro.redirect('/user/sign-in');
 }
 
-// Get the latest flashcards only if authorized or public
 const { content: latestFlashcards } = (isAuthorized || isPublic)
     ? await getLatestFlashcards(id || '')
     : { content: null };
@@ -188,7 +183,6 @@ const hasContent = !!(isStructured ? (flashcardData && flashcardData.questions.l
 
         flipBtn?.addEventListener('click', flipCurrent);
 
-        // Click on card to flip
         flashcards.forEach(card => {
             card.addEventListener('click', () => {
                 card.dataset.flipped = card.dataset.flipped === 'true' ? 'false' : 'true';
@@ -214,7 +208,6 @@ const hasContent = !!(isStructured ? (flashcardData && flashcardData.questions.l
         updateDisplay();
     }
 
-    // Initialize on page load
     initFlashcards();
 
     // Re-initialize on Astro page transitions

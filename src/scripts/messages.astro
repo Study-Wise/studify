@@ -18,8 +18,6 @@ const { page, category, mode, id } = Astro.props;
     }
 
     async function destroyIdIfEmptyConvo(id = threadId) {
-        // Thread cleanup is now handled server-side automatically
-        // No need for client-side cleanup calls
         if (id) threadId = null;
     }
 
@@ -74,7 +72,6 @@ const { page, category, mode, id } = Astro.props;
         }
     }
 
-    // Main output generation
     window.generateOutput = async function generateOutput() {
         if (isRedirecting) return;
         clearError();
@@ -94,14 +91,12 @@ const { page, category, mode, id } = Astro.props;
             threadId = getThreadIdFromUrl();
         }
 
-        // Common validation
         const { provider, tier } = getProviderAndTier();
         if (!provider || !tier) {
             displayError('Provider or tier not selected!');
             return;
         }
 
-        // Get text based on page
         const userMessage = messageInput.value;
 
         // On the chat page the message moves into the conversation, so clear the input.
@@ -112,13 +107,11 @@ const { page, category, mode, id } = Astro.props;
         }
         if (sendButton) sendButton.disabled = true;
 
-        // For chat page, add user message first
         if (page === 'chat') {
             document.querySelector('.chat-empty-state')?.remove();
             await addMessage('user', userMessage);
         }
 
-        // Set loading state for both pages
         setLoadingState(true);
         if (page === 'chat') showTypingIndicator();
         try {
@@ -160,11 +153,9 @@ const { page, category, mode, id } = Astro.props;
 
             const contentType = response.headers.get('Content-Type') || '';
             if (contentType.includes('text/event-stream')) {
-                // Handle streaming response
                 await readStream(response);
             }
             else {
-                // Handle JSON response (welcome message)
                 const data = await response.json();
                 if (!data?.generatedText && !data?.id) {
                     console.error('Invalid data format:', data);
@@ -330,16 +321,13 @@ const { page, category, mode, id } = Astro.props;
         }
     }
 
-    // Update sidebar section to show content exists
     function updateSidebarSection(contentType, url) {
-        // Find the sidebar section by its ID
         const section = document.querySelector(`#generate-${contentType}-btn`)?.closest('.sidebar-section');
         if (!section) return;
 
         const sectionBody = section.querySelector('.section-body');
         if (!sectionBody) return;
 
-        // Get the view button text based on content type
         const viewButtonTexts = {
             'study-guide': 'View Full Study Guide',
             'reference-sheet': 'View Full Reference Sheet',
@@ -354,7 +342,6 @@ const { page, category, mode, id } = Astro.props;
 
         const buttonText = viewButtonTexts[contentType] || `View ${contentType}`;
 
-        // Replace empty state with view button
         sectionBody.innerHTML = `
             <a href="${url}" class="view-full-btn" target="_blank">
                 <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
@@ -362,7 +349,6 @@ const { page, category, mode, id } = Astro.props;
             </a>
         `;
 
-        // Add regenerate button to header if not already present
         const sectionHeader = section.querySelector('.section-header');
         if (sectionHeader && !section.querySelector('.regenerate-btn')) {
             const threadIdAttr = document.querySelector(`[data-thread-id]`)?.getAttribute('data-thread-id') || '';
@@ -378,7 +364,6 @@ const { page, category, mode, id } = Astro.props;
         }
     }
 
-    // Handle client-side tool calls from the AI
     async function executeClientToolCalls(toolCalls) {
         if (!toolCalls || !Array.isArray(toolCalls)) return;
 
@@ -393,7 +378,6 @@ const { page, category, mode, id } = Astro.props;
                     window.open(url, '_blank');
                 }
             }
-            // Add more client-side tool handlers here as needed
         }
     }
 
@@ -466,7 +450,6 @@ const { page, category, mode, id } = Astro.props;
                     const data = JSON.parse(event.slice(6));
 
                     if (data.type === 'text') {
-                        // Create message div on first text chunk
                         if (!messageDiv) {
                             removeTypingIndicator();
                             messageDiv = document.createElement('div');
@@ -515,7 +498,6 @@ const { page, category, mode, id } = Astro.props;
                     }
                     else if (data.type === 'done') {
                         doneData = data;
-                        // Replace raw text with rendered HTML
                         if (messageContent && data.generatedText) {
                             messageContent.innerHTML = data.generatedText;
                         }
@@ -530,7 +512,6 @@ const { page, category, mode, id } = Astro.props;
             }
         }
 
-        // Post-process message
         if (messageContent) {
             await typesetMathJax([messageContent]);
             if (typeof activateDesmos === 'function') {
@@ -541,7 +522,6 @@ const { page, category, mode, id } = Astro.props;
             }
         }
 
-        // Handle done data
         if (doneData) {
             if (doneData.clientToolCalls) await executeClientToolCalls(doneData.clientToolCalls);
 
@@ -568,21 +548,17 @@ const { page, category, mode, id } = Astro.props;
             return;
         }
 
-        // Execute any client-side tool calls
         if (data.clientToolCalls) {
             await executeClientToolCalls(data.clientToolCalls);
         }
 
         if (page === 'home' && data.id && category && mode) {
-            // Redirect to chat page for first message
             redirectToChat(data.id);
         }
         else if (page === 'chat') {
-            // Check if this is a new chat (URL ends with /chat/new)
             const isNewChat = (id === 'new');
 
             if (isNewChat && data.id && category && mode) {
-                // Redirect to the actual thread ID after first message
                 window.location.href = `/${category}/${mode}/chat/${data.id}`;
             }
             else {
@@ -603,7 +579,6 @@ const { page, category, mode, id } = Astro.props;
         }
     }
 
-    // Create a plain text/markdown chat message
     async function createPlainMessage(role, content) {
         const chatMessages = document.querySelector('.chat-messages');
         if (!chatMessages) {
@@ -612,24 +587,20 @@ const { page, category, mode, id } = Astro.props;
         }
 
         try {
-            // Create message container
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${role}`;
 
             const messageContent = document.createElement('div');
             messageContent.className = `message-content ${role === 'user' ? 'bg-primary' : ''}`;
 
-            // Set the content (could be plain text or markdown)
             messageContent.innerHTML = new marked.Marked({ breaks: true, gfm: true, renderer: { html: ({ text }) => text.replace(/</g, '&lt;') } }).parse(content);
 
             messageDiv.appendChild(messageContent);
             chatMessages.appendChild(messageDiv);
             chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
 
-            // Typeset MathJax for the new message
             await typesetMathJax([messageContent]);
 
-            // Activate Desmos if available
             if (typeof activateDesmos === 'function') {
                 try {
                     activateDesmos();
@@ -638,7 +609,6 @@ const { page, category, mode, id } = Astro.props;
                 }
             }
 
-            // Initialize step-by-step quizzes if available
             if (typeof window.initializeStepByStep === 'function') {
                 try {
                     window.initializeStepByStep();
@@ -647,7 +617,6 @@ const { page, category, mode, id } = Astro.props;
                 }
             }
 
-            // Scroll to bottom smoothly
             chatMessages.scrollTo({
                 top: chatMessages.scrollHeight,
                 behavior: 'smooth'
@@ -687,7 +656,6 @@ const { page, category, mode, id } = Astro.props;
         container.appendChild(logDiv);
     }
 
-    // Chat message display (for chat page)
     async function addAssistantMessage(data) {
         if (!data || typeof data !== 'object') {
             displayError('Invalid AI response received.');
@@ -701,7 +669,6 @@ const { page, category, mode, id } = Astro.props;
         }
 
         try {
-            // Render tool call log above the message
             if (data.toolCallLog && data.toolCallLog.length > 0) {
                 renderToolCallLog(data.toolCallLog, chatMessages);
             }
@@ -712,23 +679,19 @@ const { page, category, mode, id } = Astro.props;
                 return;
             }
 
-            // Create message container
             const messageDiv = document.createElement('div');
             messageDiv.className = 'message assistant';
 
             const messageContent = document.createElement('div');
             messageContent.className = 'message-content';
 
-            // Set the generated text as HTML content
             messageContent.innerHTML = data.generatedText;
 
             messageDiv.appendChild(messageContent);
             chatMessages.appendChild(messageDiv);
 
-            // Typeset MathJax for the new message
             await typesetMathJax([messageContent]);
 
-            // Activate Desmos if available
             if (typeof activateDesmos === 'function') {
                 try {
                     activateDesmos();
@@ -737,7 +700,6 @@ const { page, category, mode, id } = Astro.props;
                 }
             }
 
-            // Initialize step-by-step quizzes if available
             if (typeof window.initializeStepByStep === 'function') {
                 try {
                     window.initializeStepByStep();
@@ -746,7 +708,6 @@ const { page, category, mode, id } = Astro.props;
                 }
             }
 
-            // Scroll to bottom smoothly
             chatMessages.scrollTo({
                 top: chatMessages.scrollHeight,
                 behavior: 'smooth'
@@ -758,7 +719,6 @@ const { page, category, mode, id } = Astro.props;
         }
     }
 
-    // Show "Open in Chat" button
     async function showOpenInChatBtn(id) {
         const chatButtonContainer = document.querySelector('.chat-button-container');
         if (chatButtonContainer) {
@@ -777,28 +737,22 @@ const { page, category, mode, id } = Astro.props;
         }
     }
 
-    // Shared initialization function
     function initializeCommon() {
-        // Load user settings
         loadUserSettings();
 
-        // Check core function
         if (!generateOutput || typeof generateOutput !== 'function') {
             displayError('Error: Core function generateOutput failed to initialize.');
         }
     }
 
-    // DOMContentLoaded handler for home page
     function onDomLoadHome() {
         initializeCommon();
 
-        // Initialize DOM elements for home page
         messageInput = document.getElementById('text-paste');
         sendButton = document.querySelector('.generate-button');
         spinner = sendButton?.querySelector('.spinner');
         errorMessageDiv = document.getElementById('error-message');
 
-        // Set up input event listeners
         if (messageInput && sendButton) {
             messageInput.addEventListener('keydown', handleEnterKey);
         }
@@ -813,7 +767,6 @@ const { page, category, mode, id } = Astro.props;
         return null;
     }
 
-    // DOMContentLoaded handler for chat page
     function onDomLoadChat() {
         initializeCommon();
 
@@ -841,7 +794,6 @@ const { page, category, mode, id } = Astro.props;
             });
         }
 
-        // Set up share button functionality
         const shareButton = document.getElementById('share-button');
         if (shareButton) {
             shareButton.addEventListener('click', () => {
@@ -860,7 +812,6 @@ const { page, category, mode, id } = Astro.props;
         }
     }
 
-    // Main initialization function with page-specific logic
     async function initializePage() {
         if (page === 'home') {
             onDomLoadHome();
@@ -868,7 +819,6 @@ const { page, category, mode, id } = Astro.props;
         else if (page === 'chat') {
             onDomLoadChat();
 
-            // Chat-specific MathJax and Desmos initialization
             const elementsToTypeset = document.querySelectorAll('.chat-messages .message-content');
             await typesetMathJax(elementsToTypeset);
             activateDesmos();
@@ -877,7 +827,6 @@ const { page, category, mode, id } = Astro.props;
         }
     }
 
-    // DOMContentLoaded handler
     document.addEventListener('DOMContentLoaded', initializePage);
 
     // Also call appropriate handler immediately in case DOM is already loaded

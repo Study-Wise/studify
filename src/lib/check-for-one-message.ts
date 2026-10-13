@@ -1,4 +1,3 @@
-// Check For One Message
 // This module checks if a thread has only one message and generates a welcome message if needed.
 
 import { eq } from 'drizzle-orm';
@@ -30,17 +29,14 @@ export async function checkForOneMessage({
 
     if (nonSystemMessages.length === 1 && threadId && isAuthorized) {
         try {
-            // Get the thread data
             const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
             if (threads.length > 0) {
                 const thread = threads[0];
                 const modeObj = categories[category || '']?.modes?.[mode || ''];
 
-                // Get system prompt
                 const systemPrompt = await (modeObj?.prompt || Promise.resolve('')) as string;
 
-                // Prepare conversation history with system message
                 const convoHistory: Message[] = [
                     { role: 'system', content: systemPrompt },
                     ...nonSystemMessages
@@ -56,13 +52,11 @@ export async function checkForOneMessage({
                     requestId: `page-load-${threadId}`
                 });
 
-                // Add welcome message to the conversation
                 const updatedMessages: Message[] = [
                     ...nonSystemMessages,
                     { role: 'assistant', content: welcomeMessage }
                 ];
 
-                // Update the database with the new message
                 const currentThreadData = typeof thread.thread === 'string' ? {} : thread.thread;
 
                 await db.update(threadsTable)
@@ -75,7 +69,6 @@ export async function checkForOneMessage({
                     })
                     .where(eq(threadsTable.id, threadId));
 
-                // Return updated messages
                 return updatedMessages;
             }
         } catch (error) {
@@ -83,6 +76,5 @@ export async function checkForOneMessage({
         }
     }
 
-    // Return original messages if no welcome message was generated
     return messages;
 }

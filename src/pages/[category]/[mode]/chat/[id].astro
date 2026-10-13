@@ -23,7 +23,6 @@ let { category, mode, id } = Astro.params || { category: '', mode: '', id: '' };
 const categoryObj = category ? categories[category] : null;
 const modeObj = categoryObj?.modes?.[mode || ''];
 
-// Validate category and mode exist
 if (!categoryObj || !modeObj) {
     return Astro.redirect('/404');
 }
@@ -31,14 +30,11 @@ if (!categoryObj || !modeObj) {
 const categoryName = categoryObj?.name || category;
 const modeName = modeObj?.name || mode;
 
-// Get user authentication
 const user = Astro.locals.user;
 const user_email = user?.email || null;
 
-// Check if this is a new chat
 const isNewChat = (id === 'new');
 
-// Check thread access (skip for new chats)
 let isAuthorized = isNewChat ? true : false;
 let isPublic = false;
 // Admins are authorized to view other users' threads but only the owner can rename them
@@ -76,7 +72,6 @@ if (!isNewChat) {
     const messagesLength = await getMessagesLength(id || '');
     messages = (isAuthorized || isPublic) && messagesLength > 0 ? await getMessages(id ?? '', (isAuthorized || isPublic)) : [];
 
-    // Check if there's only one message and generate welcome message if needed
     messages = await checkForOneMessage({
         messages,
         threadId: id || '',

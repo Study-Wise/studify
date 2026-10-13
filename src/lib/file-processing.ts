@@ -1,4 +1,3 @@
-// File Processing Utilities
 // Extracts text content from various file types for AI context
 
 // Extract text from PDF (basic implementation)
@@ -13,7 +12,6 @@ export async function extractTextFromPDF(file: File): Promise<string | null> {
     }
 }
 
-// Extract text from plain text files
 export async function extractTextFromPlainText(file: File): Promise<string | null> {
     try {
         const text = await file.text();
@@ -37,22 +35,18 @@ export async function extractTextFromImage(file: File): Promise<string | null> {
     }
 }
 
-// Main extraction function
 export async function extractTextFromFile(file: File): Promise<string | null> {
     const fileType = file.type;
 
-    // Plain text files
     if (fileType === 'text/plain' || fileType === 'text/csv' ||
         fileType === 'text/html' || fileType === 'text/markdown') {
         return await extractTextFromPlainText(file);
     }
 
-    // PDF files
     if (fileType === 'application/pdf') {
         return await extractTextFromPDF(file);
     }
 
-    // Image files
     if (fileType.startsWith('image/')) {
         return await extractTextFromImage(file);
     }

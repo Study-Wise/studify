@@ -38,7 +38,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
     try {
         const { text: userPrompt, id: thread_id, provider, tier, isPublic = false, category, mode } = await request.json();
 
-        // Get mode object for context-specific prompts
         let modeObj: Mode = {name: '', description: ''};
         if (category && mode) {
             modeObj = categories[category]?.modes?.[mode];
@@ -49,7 +48,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
         let current_thread_id: string | undefined = thread_id;
 
-        // Check authentication
         const user = locals.user;
         if (!user) {
             console.error(`❌ [${requestId}] Authentication required but not provided`);
@@ -65,7 +63,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
         const user_email = user.email;
         const isAdmin = await isUserAdmin(user_email);
 
-        // Validate email
         if (!isValidEmail(user_email)) {
             console.error(`❌ [${requestId}] Invalid email format:`, user_email);
             return new Response(
@@ -77,15 +74,12 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        // Create a new thread if none provided
         let isNewThread = false;
 
         if (!current_thread_id) {
             try {
 
-                // Check thread limit for user (skip for admins)
                 if (user_email) {
-                    // Explicitly skip thread limit check for admin users
                     if (!isAdmin) {
                         const userThreads = await db.select().from(threadsTable).where(eq(threadsTable.email, user_email));
 
@@ -141,10 +135,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
             }
         }
 
-        // --- Load System Prompt and Initialize Conversation History ---
         const baseSystemPrompt = await (modeObj.prompt || Promise.resolve(config.systemPrompt));
 
-        // Add thread context and tool calling instructions to the system prompt
         const threadContext = `
 <thread-context>
 threadId: ${current_thread_id}
@@ -166,7 +158,6 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
 
         let convoHistory: Message[] = [systemObj];
 
-        // --- Conversation History Fetch from DB ---
         let userData: Thread | undefined = undefined;
         if (current_thread_id) {
             try {
@@ -175,7 +166,6 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                 if (threads.length > 0) {
                     userData = threads[0];
 
-                    // Check thread ownership
                     if (userData.email && userData.email !== user_email) {
                         console.error(`❌ [${requestId}] Unauthorized access attempt:`, {
                             threadOwner: userData.email,
@@ -217,7 +207,6 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
             }
         }
 
-        // --- Build uploaded files context from thread data ---
         if (userData) {
             const uploadedFiles = (userData.uploadedFiles as UploadedFile[]) || [];
             if (uploadedFiles.length > 0) {
@@ -229,16 +218,12 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                     .join('\n\n');
                 systemPrompt += `\n\n### Uploaded Files\nThe user has uploaded the following files to this conversation. Use this content to inform your responses:\n\n${fileList}`;
 
-                // Update the system message in convoHistory
                 convoHistory[0] = { role: 'system', content: systemPrompt };
             }
         }
 
-        // --- Check message limit per thread (skip for admins) ---
         if (!isAdmin) {
-            // Count current user messages only
             const currentUserMessageCount = convoHistory.filter(msg => msg.role === 'user').length;
-            // Adding one more user message
             const newUserMessageCount = currentUserMessageCount + 1;
 
             if (newUserMessageCount > config.maxMessagesPerThread) {
@@ -256,18 +241,15 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
             }
         }
 
-        // --- Model/Provider selection ---
         let userModel: string;
         let selectedProvider: string;
 
-        // Use existing model/provider from database if thread exists, otherwise use client selection
         if (userData && userData.model && userData.provider) {
             // Use stored model and provider directly (already resolved at thread creation)
             userModel = userData.model;
             selectedProvider = userData.provider;
         }
         else {
-            // New thread: resolve from client-provided provider + tier
             const { model: resolvedModel, provider: resolvedProvider } = await getValidModelAndProvider(provider, tier);
 
             userModel = resolvedModel;
@@ -281,10 +263,8 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
         // --- Special handling for first message: Generate AI welcome response ---
         if (convoHistory.length === 1) {
             try {
-                // Add user message to conversation history first
                 convoHistory.push({ role: 'user', content: userPrompt } as Message);
 
-                // Generate AI welcome message
                 const tools = modeObj.tools || {};
                 const welcomeMessage = await generateWelcomeMessage({
                     systemPrompt,
@@ -296,14 +276,11 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                     toolContext
                 });
 
-                // Add AI welcome response to conversation history
                 convoHistory.push({ role: 'assistant', content: welcomeMessage } as Message);
 
-                // Save the conversation to database
                 const convoHistoryWithoutSystem = convoHistory.filter(msg => msg.role !== 'system');
 
                 if (isNewThread || userData) {
-                    // Thread already exists, update it
                     await db.update(threadsTable)
                         .set({
                             thread: { messages: convoHistoryWithoutSystem },
@@ -316,7 +293,6 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                         .where(eq(threadsTable.id, current_thread_id!));
                 }
                 else {
-                    // Thread doesn't exist yet, insert it with ON CONFLICT handling
                     await db.insert(threadsTable).values({
                         id: current_thread_id,
                         title: '',
@@ -341,14 +317,12 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                     });
                 }
 
-                // Generate title
                 const convoTitle = await generateTitle({
                     convoHistory,
                     userModel: config.model,
                     provider: config.provider as string
                 });
 
-                // Update thread with title
                 await db.update(threadsTable)
                     .set({
                         title: convoTitle,
@@ -356,7 +330,6 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                     })
                     .where(eq(threadsTable.id, current_thread_id!));
 
-                // Convert welcome message to HTML
                 const { marked } = await import('marked');
                 marked.setOptions({ breaks: true, gfm: true });
                 const htmlText = await marked.parse(welcomeMessage);
@@ -382,7 +355,6 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
         // filtered copy, so a user message it appends never reaches this array
         convoHistory.push({ role: 'user', content: userPrompt });
 
-        // AI Generation
         const tools = modeObj.tools || {};
         let streamResult: Awaited<ReturnType<typeof streamText>>;
         try {
@@ -475,23 +447,19 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                         }
                     }
 
-                    // Stream finished — collect full text and tool data
                     const [fullText, steps] = await Promise.all([streamResult.text, streamResult.steps]);
                     const { clientToolCalls, toolCallLog } = extractToolData(steps);
 
-                    // Render markdown to HTML
                     const { marked } = await import('marked');
                     marked.setOptions({ breaks: true, gfm: true });
                     const htmlText = await marked.parse(fullText);
 
-                    // Save to DB
                     const assistantMessage: Message = { role: 'assistant', content: fullText };
                     if (toolCallLog.length > 0) assistantMessage.toolCallLog = toolCallLog;
                     convoHistory.push(assistantMessage);
                     const convoHistoryWithoutSystem = convoHistory.filter(msg => msg.role !== 'system');
                     await saveConvo(convoHistoryWithoutSystem);
 
-                    // Generate title in background if not already set
                     if (!userData?.title) {
                         generateTitle({ convoHistory, userModel, provider: selectedProvider })
                             .then(title => db.update(threadsTable)
@@ -501,7 +469,6 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                             .catch(err => console.error(`❌ [${requestId}] Title generation failed:`, err));
                     }
 
-                    // Send done event with rendered HTML
                     controller.enqueue(sendEvent({
                         type: 'done',
                         id: current_thread_id,

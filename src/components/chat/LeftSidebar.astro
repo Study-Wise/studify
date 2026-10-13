@@ -150,14 +150,11 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
 </section>
 
 <script is:inline define:vars={{ threadId, email, category, mode }}>
-    // State that can be updated
     let currentThreadId = threadId;
 
-    // Upload queue state
     let uploadQueue = [];
     let isUploading = false;
 
-    // Public toggle functionality
     const publicToggle = document.getElementById('public-toggle');
     const shareStatusText = document.getElementById('share-status-text');
     const shareLink = document.getElementById('share-link');
@@ -220,7 +217,6 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                 return;
             }
 
-            // Disable toggle during request
             publicToggle.disabled = true;
 
             try {
@@ -235,12 +231,10 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                 const data = await response.json();
 
                 if (data.status === 'success') {
-                    // Update the status text
                     if (shareStatusText) {
                         shareStatusText.textContent = isPublic ? 'Public' : 'Private';
                     }
 
-                    // Update the description
                     const shareDescription = document.querySelector('.share-description');
                     if (shareDescription) {
                         shareDescription.textContent = isPublic
@@ -250,7 +244,6 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
 
                     updateShareLink();
 
-                    // Show success message
                     window.showSuccess?.(
                         isPublic
                             ? 'Thread is now public. Anyone with the link can view it.'
@@ -266,11 +259,9 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                     error instanceof Error ? error.message : 'Failed to update sharing settings. Please try again.'
                 );
 
-                // Revert toggle state on error
                 publicToggle.checked = !isPublic;
                 updateShareLink();
             } finally {
-                // Re-enable toggle
                 publicToggle.disabled = false;
             }
         });
@@ -285,7 +276,6 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
         }
     });
 
-    // Delete chat functionality
     const deleteChatButton = document.getElementById('delete-chat-button');
 
     if (deleteChatButton) {
@@ -326,12 +316,10 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
         });
     }
 
-    // File upload functionality
     const fileUpload = document.getElementById('file-upload');
     const fileList = document.getElementById('file-list');
 
     async function ensureThreadExists() {
-        // If threadId is "new", create a new thread first
         if (currentThreadId === 'new') {
             // Use the provider and tier saved on /settings, like the chat script does
             let settings = {};
@@ -363,7 +351,6 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                         detail: { id: data.id, source: 'sidebar' }
                     }));
 
-                    // Update the URL
                     const newUrl = `/${category}/${mode}/chat/${data.id}`;
                     window.history.replaceState({}, '', newUrl);
                 }
@@ -387,7 +374,6 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
 
         isUploading = true;
 
-        // Ensure thread exists before uploading
         const activeThreadId = await ensureThreadExists();
 
         if (!activeThreadId || !email || !fileList) {
@@ -401,7 +387,6 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
             const remainingCount = uploadQueue.length;
 
             try {
-                // Show progress
                 const progressMsg = remainingCount > 0
                     ? `Uploading ${file.name}... (${remainingCount} remaining)`
                     : `Uploading ${file.name}...`;
@@ -411,7 +396,6 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                 let data;
 
                 if (file.size <= CHUNK_THRESHOLD) {
-                    // Direct upload for small files
                     const formData = new FormData();
                     formData.append('file', file);
                     formData.append('threadId', activeThreadId);
@@ -429,7 +413,6 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                     }
                 }
                 else {
-                    // Chunked upload for large files
                     const CHUNK_SIZE = 3 * 1024 * 1024; // 3MB chunks
                     const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
                     const uploadId = crypto.randomUUID();
@@ -469,7 +452,6 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                         }
                     }
 
-                    // Complete the upload
                     window.showInfo?.(`Processing ${file.name}...`);
                     const completeRes = await fetch('/api/files/upload-complete', {
                         method: 'POST',
@@ -486,17 +468,14 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                 }
 
                 if (data.status === 'success') {
-                    // Remove empty message if it exists
                     const emptyMessage = fileList.querySelector('.empty-message');
                     if (emptyMessage) {
                         emptyMessage.remove();
                     }
 
-                    // Add new file to the list
                     const fileItem = createFileElement(data.file);
                     fileList.appendChild(fileItem);
 
-                    // Show success for this file
                     if (remainingCount === 0) {
                         window.showSuccess?.(`${file.name} uploaded successfully`);
                     }
@@ -514,7 +493,6 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
 
         isUploading = false;
 
-        // Reset input
         if (fileUpload) {
             fileUpload.value = '';
         }
@@ -528,23 +506,19 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
             if (!files || files.length === 0) return;
             if (!email) return;
 
-            // Add all files to the queue
             for (let i = 0; i < files.length; i++) {
                 uploadQueue.push(files[i]);
             }
 
-            // Show initial message
             const totalFiles = uploadQueue.length;
             if (totalFiles > 1) {
                 window.showInfo?.(`Queued ${totalFiles} files for upload...`);
             }
 
-            // Start processing the queue
             processUploadQueue();
         });
     }
 
-    // File delete functionality
     fileList?.addEventListener('click', async (e) => {
         const target = e.target;
         const deleteButton = target.closest('.file-delete');
@@ -555,10 +529,8 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
 
         if (!fileKey || !currentThreadId || currentThreadId === 'new' || !email) return;
 
-        // Confirm deletion
         if (!confirm('Are you sure you want to delete this file?')) return;
 
-        // Disable button during request
         deleteButton.disabled = true;
 
         try {
@@ -573,11 +545,9 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
             const data = await response.json();
 
             if (data.status === 'success') {
-                // Remove file from UI
                 const fileItem = deleteButton.closest('.file-item');
                 fileItem?.remove();
 
-                // Show empty message if no files left
                 if (fileList && fileList.children.length === 0) {
                     const emptyMessage = document.createElement('p');
                     emptyMessage.className = 'empty-message';
@@ -599,7 +569,6 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
         }
     });
 
-    // Helper function to create file element
     function createFileElement(file) {
         const fileItem = document.createElement('div');
         fileItem.className = 'file-item';

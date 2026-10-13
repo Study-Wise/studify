@@ -51,7 +51,6 @@ async function generateImage(prompt: string, filename: string = 'infographic.png
     const buffer = await generateImageBuffer(prompt);
 
     if (buffer) {
-        // Convert buffer to File for upload
         const file = new File([buffer], filename, { type: 'image/png' });
         const uploadResult = await uploadFile(file);
 

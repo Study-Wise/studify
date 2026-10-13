@@ -28,7 +28,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        // Authentication
         const user = locals.user;
         if (!user) {
             console.error(`❌ [${requestId}] Authentication required but not provided`);
@@ -43,7 +42,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
         const user_email = user.email;
 
-        // Validate email
         if (!isValidEmail(user_email)) {
             console.error(`❌ [${requestId}] Invalid email format:`, user_email);
             return new Response(
@@ -55,7 +53,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        // Fetch the thread
         const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
         if (threads.length === 0) {
@@ -71,7 +68,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
         const thread = threads[0];
 
-        // Check if user owns the thread or if it's public
         if (thread.email !== user_email && !thread.isPublic) {
             console.error(`❌ [${requestId}] Unauthorized access to thread:`, threadId);
             return new Response(
@@ -83,7 +79,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        // Generate the summary (saves to DB automatically)
         const content = await generateSummary(threadId);
 
         return new Response(

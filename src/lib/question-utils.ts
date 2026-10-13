@@ -1,17 +1,12 @@
-// Utility functions for question ID generation and management
 
 // Converts a question string to a URL-friendly ID
 export function questionToId(question: string): string {
     return question
         .toLowerCase()
         .trim()
-        // Replace spaces with hyphens
         .replace(/\s+/g, '-')
-        // Remove all special characters except hyphens
         .replace(/[^a-z0-9-]/g, '')
-        // Remove duplicate hyphens
         .replace(/-+/g, '-')
-        // Remove leading/trailing hyphens
         .replace(/^-+|-+$/g, '');
 }
 

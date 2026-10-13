@@ -21,7 +21,6 @@ function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
 }
 
 export async function generatePracticeQuestions(threadId: string, userPrompt?: string) {
-    // Fetch the thread from database
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
     if (threads.length === 0) {
@@ -33,21 +32,17 @@ export async function generatePracticeQuestions(threadId: string, userPrompt?: s
     const userModel = config.model;
     const provider = config.provider;
 
-    // Get conversation history directly from thread data
     const threadData = thread.thread as ThreadData;
     const messages = threadData?.messages ?? [];
 
-    // Get uploaded files
     const uploadedFiles = (thread.uploadedFiles as UploadedFile[]) ?? [];
 
     if (messages.length === 0) {
         throw new Error('No messages found in thread');
     }
 
-    // Build uploaded files context
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
-    // Create a practice questions specific prompt
     const practiceQuestionsPrompt =
 `${buildContentSystemPrompt('Practice Questions', uploadedFilesContext)}
 
@@ -137,7 +132,6 @@ Ensure all questions are directly related to topics discussed in the conversatio
 You may remove or modify sections as you see fit based on relevance to the topic.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
 
 
-    // Generate the practice questions
     const result = await generateText(
         practiceQuestionsPrompt,
         'Now generate the practice questions based on the above conversation. Output ONLY the practice questions content in markdown format. Do not include any explanations, commentary, or conversation - just the practice questions.',
@@ -152,7 +146,6 @@ You may remove or modify sections as you see fit based on relevance to the topic
         throw new Error('Generated practice questions are empty');
     }
 
-    // Save to database
     await saveContent(threadId, 'practice-questions', result.text);
 
     return result.text;

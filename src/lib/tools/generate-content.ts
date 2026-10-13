@@ -3,10 +3,8 @@ import { z } from 'zod';
 
 import { getToolContext } from '@/lib/ai-service';
 
-// Convert kebab-case to camelCase
 const toCamelCase = (str: string) => str.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
 
-// Convert kebab-case to PascalCase
 const toPascalCase = (str: string) => {
     const camel = toCamelCase(str);
     return camel.charAt(0).toUpperCase() + camel.slice(1);
@@ -108,7 +106,6 @@ const getContentTool = tool({
 
             let generatedContent;
 
-            // Only pass userPrompt when regenerating
             const promptToPass = regenerate ? userPrompt : undefined;
 
             stage = `generating "${type}" for thread "${threadId}"`;

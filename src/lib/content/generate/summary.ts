@@ -20,7 +20,6 @@ function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
 }
 
 export async function generateSummary(threadId: string, userPrompt?: string) {
-    // Fetch the thread from database
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
     if (threads.length === 0) {
@@ -32,21 +31,17 @@ export async function generateSummary(threadId: string, userPrompt?: string) {
     const userModel = config.model;
     const provider = config.provider;
 
-    // Get conversation history directly from thread data
     const threadData = thread.thread as ThreadData;
     const messages = threadData?.messages ?? [];
 
-    // Get uploaded files
     const uploadedFiles = (thread.uploadedFiles as UploadedFile[]) ?? [];
 
     if (messages.length === 0) {
         throw new Error('No messages found in thread');
     }
 
-    // Build uploaded files context
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
-    // Create a summary specific prompt
     const summaryPrompt =
 `${buildContentSystemPrompt('Chat Summary', uploadedFilesContext)}
 
@@ -72,7 +67,6 @@ Math formatting: use \`$…$\` for inline math and \`$$…$$\` for block math.
 REMEMBER: Output ONLY the Chat Summary in markdown format. No other content types.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
 
 
-    // Generate the summary
     const result = await generateText(
         summaryPrompt,
         'Now generate a comprehensive summary based on the above conversation. Include only what was actually said in it; do not solve or add anything that was not. Output ONLY the summary content in markdown format. Do not include any explanations, commentary, or conversation - just the summary.',
@@ -87,7 +81,6 @@ REMEMBER: Output ONLY the Chat Summary in markdown format. No other content type
         throw new Error('Generated summary is empty');
     }
 
-    // Save to database
     await saveContent(threadId, 'summary', result.text);
 
     return result.text;

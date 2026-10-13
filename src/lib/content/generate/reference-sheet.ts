@@ -20,7 +20,6 @@ function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
 }
 
 export async function generateReferenceSheet(threadId: string, userPrompt?: string) {
-    // Fetch the thread from database
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
     if (threads.length === 0) {
@@ -32,21 +31,17 @@ export async function generateReferenceSheet(threadId: string, userPrompt?: stri
     const userModel = config.model;
     const provider = config.provider;
 
-    // Get conversation history directly from thread data
     const threadData = thread.thread as ThreadData;
     const messages = threadData?.messages ?? [];
 
-    // Get uploaded files
     const uploadedFiles = (thread.uploadedFiles as UploadedFile[]) ?? [];
 
     if (messages.length === 0) {
         throw new Error('No messages found in thread');
     }
 
-    // Build uploaded files context
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
-    // Create a reference sheet specific prompt
     const referenceSheetPrompt =
 `${buildContentSystemPrompt('Reference Sheet', uploadedFilesContext)}
 
@@ -67,7 +62,6 @@ You may remove or modify sections below as you see fit based on relevance to the
 Math formatting: use \`$…$\` for displaying math formulas/equations inline and \`$$…$$\` for displaying them on their own; never use backticks for complex math.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
 
 
-    // Generate the reference sheet
     const result = await generateText(
         referenceSheetPrompt,
         'Now generate the reference sheet based on the above conversation. Output ONLY the reference sheet content in markdown format. Do not include any explanations, commentary, or conversation - just the reference sheet.',
@@ -82,7 +76,6 @@ Math formatting: use \`$…$\` for displaying math formulas/equations inline and
         throw new Error('Generated reference sheet is empty');
     }
 
-    // Save to database
     await saveContent(threadId, 'reference-sheet', result.text);
 
     return result.text;
