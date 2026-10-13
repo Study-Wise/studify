@@ -349,6 +349,12 @@ PWA settings in `astro.config.mjs`:
 6. Thread access validated in API routes before operations
 7. Admin users identified via email whitelist in `src/lib/auth/admin.ts`
 
+### CRITICAL: Tool Usage Rules
+
+- **NEVER edit source files with scripts** (Python, sed, awk, etc.). Make every code change with the Edit tool, file by file. If a bulk change seems to need a script, ask first.
+- **NEVER use `cd`** in shell commands. The working directory is already the repository root.
+- **NEVER pipe shell commands** (`|`). Run each command on its own and read its full output.
+
 ### Code Style Guidelines
 
 **CRITICAL: Always use 4 spaces for indentation, never tabs.**
