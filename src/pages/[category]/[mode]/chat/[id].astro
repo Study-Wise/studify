@@ -99,6 +99,12 @@ export const inNav = 'hide';
     <header class="chat-header">
         <div class="chat-title-container">
             <h2><span class="material-symbols-outlined" aria-hidden="true">chat</span>&nbsp;{threadTitle || (isNewChat ? 'New Chat' : 'Chat')}</h2>
+            <nav class="subject-breadcrumb" aria-label="Subject">
+                <ol>
+                    <li>{categoryName}</li>
+                    <li><a href={`/${category}/${mode}`}>{modeName}</a></li>
+                </ol>
+            </nav>
         </div>
         <Header pTitle={threadTitle || (isNewChat ? 'New Chat' : 'Chat')} />
     </header>
