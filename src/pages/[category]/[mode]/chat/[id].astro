@@ -41,11 +41,14 @@ const isNewChat = (id === 'new');
 // Check thread access (skip for new chats)
 let isAuthorized = isNewChat ? true : false;
 let isPublic = false;
+// Admins are authorized to view other users' threads but only the owner can rename them
+let isOwner = false;
 
 if (!isNewChat) {
     const accessCheck = await checkThreadAccess(id || '', user, category, mode);
     isAuthorized = accessCheck.isAuthorized;
     isPublic = accessCheck.isPublic;
+    isOwner = !!user_email && accessCheck.threadOwner === user_email;
 
 }
 
@@ -99,7 +102,7 @@ export const inNav = 'hide';
 <Layout title={`${threadTitle || (isNewChat ? 'New Chat' : 'Chat')} | ${modeName} | ${categoryName}`} container={false} isChatArea={true} className="chat-page" hideCopyright={true} mathjax={true} desmos={modeObj.desmos === true}>
     <header class="chat-header">
         <div class="chat-title-container">
-            <ChatTitle title={threadTitle || (isNewChat ? 'New Chat' : 'Chat')} threadId={id || ''} canRename={isAuthorized && !isNewChat} />
+            <ChatTitle title={threadTitle || (isNewChat ? 'New Chat' : 'Chat')} threadId={id || ''} canRename={isOwner} />
         </div>
         <Header pTitle={threadTitle || (isNewChat ? 'New Chat' : 'Chat')} />
     </header>
