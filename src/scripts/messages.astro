@@ -306,6 +306,8 @@ const { page, category, mode, id } = Astro.props;
 
         const script = document.getElementById('MathJax-script');
         if (!script) return Promise.reject(new Error('MathJax script not found.'));
+        // The error event may have fired before these listeners were attached
+        if (script.dataset.failed === 'true') return Promise.reject(new Error('MathJax failed to load.'));
 
         return new Promise((resolve, reject) => {
             const timer = setTimeout(() => reject(new Error('MathJax took too long to load.')), mathJaxLoadTimeout);

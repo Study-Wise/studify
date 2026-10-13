@@ -113,7 +113,7 @@ if (container) className += ' container'
                         },
                     };
                 </script>
-                <script is:inline src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script" async></script>
+                <script is:inline src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script" onerror="this.dataset.failed = 'true'" async></script>
             </>
         )}
     </head>
