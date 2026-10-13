@@ -40,7 +40,7 @@ Studify is your comprehensive AI-powered learning companion. Whether you're stud
 - **Test your understanding** with targeted questions
 - **Difficulty-appropriate problems** for your level
 - **Reinforce learning** through active practice
-- **Track your progress** and identify weak areas
+- **Track your progress** and identify weak areas *(planned)*
 
 ### 🌐 Generated Webpages
 
@@ -79,7 +79,7 @@ Studify is your comprehensive AI-powered learning companion. Whether you're stud
 4. **Generate study materials** - create study guides, reference sheets, infographics, flashcards, practice questions, webpages, mind maps, or find curated learning resources
 5. **Study and practice** with all the generated materials
 6. **Share your work** - make your study materials public to help other students
-7. **Save or print** any content for offline use
+7. **Save or print** any content for offline use *(planned)*
 
 ## Perfect For
 
@@ -97,7 +97,7 @@ Studify is your comprehensive AI-powered learning companion. Whether you're stud
 - **Multiple learning styles** - visual, interactive, and text-based materials
 - **Curated external resources** - videos, articles, tutorials automatically found for you
 - **Professional quality** notation and explanations
-- **Mobile-friendly** - study anywhere, anytime
+- **Mobile-friendly** - study anywhere, anytime *(planned)*
 - **Comprehensive coverage** across multiple subjects
 - **Share and collaborate** - make your study materials public to help others
 
