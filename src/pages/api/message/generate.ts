@@ -262,6 +262,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
 
         // --- Special handling for first message: Generate AI welcome response ---
         if (convoHistory.length === 1) {
+            let messagesSaved = false;
             try {
                 convoHistory.push({ role: 'user', content: userPrompt } as Message);
 
@@ -316,6 +317,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                         }
                     });
                 }
+                messagesSaved = true;
 
                 const convoTitle = await generateTitle({
                     convoHistory,
@@ -347,6 +349,17 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                 );
             } catch (error) {
                 console.error(`❌ [${requestId}] Error handling first message:`, error);
+
+                // The thread was created for this message, so remove it rather than
+                // leave an empty, untitled chat behind when the first reply fails
+                if (isNewThread && !messagesSaved) {
+                    try {
+                        await db.delete(threadsTable)
+                            .where(and(eq(threadsTable.id, current_thread_id!), eq(threadsTable.email, user_email)));
+                    } catch (cleanupError) {
+                        console.error(`❌ [${requestId}] Failed to remove empty thread:`, cleanupError);
+                    }
+                }
                 throw error;
             }
         }
