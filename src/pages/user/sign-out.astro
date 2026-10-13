@@ -33,17 +33,12 @@ if (!user) {
 </Layout>
 
 <script>
-    import { authClient } from '@/lib/auth/client';
-    import { shutdownFeaturebase } from '@/lib/featurebase-client';
+    import { signOutAndClearData } from '@/lib/auth/sign-out';
 
     const signoutBtn = document.getElementById('signout-confirm-btn');
     signoutBtn?.addEventListener('click', async () => {
         try {
-            await authClient.signOut();
-            shutdownFeaturebase();
-            if ('caches' in window) {
-                await caches.delete('study-materials-cache');
-            }
+            await signOutAndClearData();
             window.location.href = '/';
         } catch (error) {
             console.error('Sign out error:', error);
