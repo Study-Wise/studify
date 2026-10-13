@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 
 import { nanoid } from 'nanoid';
 
-import { eq, type InferSelectModel, type InferInsertModel } from 'drizzle-orm';
+import { and, eq, type InferSelectModel, type InferInsertModel } from 'drizzle-orm';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 
@@ -411,20 +411,20 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
         const sendEvent = (data: object) => encoder.encode(`data: ${JSON.stringify(data)}\n\n`);
         const isDev = (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development';
 
-        const saveConvo = async (messages: Message[], title?: string) => {
-            const set = {
-                title: title ?? userData?.title ?? 'Untitled Conversation',
-                thread: { messages },
-                updatedAt: new Date(),
-                isDev,
-            };
+        // The title as stored when this request started; generated titles only replace this value
+        const storedTitle = userData?.title ?? 'Untitled Conversation';
+
+        const saveConvo = async (messages: Message[]) => {
             if (current_thread_id && userData) {
-                await db.update(threadsTable).set(set).where(eq(threadsTable.id, current_thread_id!));
+                // Leave the title out: the user may have renamed the chat while this response streamed
+                await db.update(threadsTable)
+                    .set({ thread: { messages }, updatedAt: new Date(), isDev })
+                    .where(eq(threadsTable.id, current_thread_id!));
             }
             else if (current_thread_id) {
                 await db.insert(threadsTable).values({
                     id: current_thread_id,
-                    title: set.title,
+                    title: storedTitle,
                     thread: { messages },
                     email: user_email,
                     category: category || config.defaultCategory,
@@ -494,7 +494,10 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                     // Generate title in background if not already set
                     if (!userData?.title) {
                         generateTitle({ convoHistory, userModel, provider: selectedProvider })
-                            .then(title => saveConvo(convoHistoryWithoutSystem, title))
+                            .then(title => db.update(threadsTable)
+                                .set({ title, updatedAt: new Date() })
+                                // Skip if the chat was renamed while the title was generated
+                                .where(and(eq(threadsTable.id, current_thread_id!), eq(threadsTable.title, storedTitle))))
                             .catch(err => console.error(`❌ [${requestId}] Title generation failed:`, err));
                     }
 

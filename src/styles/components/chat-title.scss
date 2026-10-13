@@ -1,0 +1,50 @@
+@use '../variables/globals' as *;
+@use '../variables/tokens' as *;
+
+.chat-title {
+    .chat-title-text {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .chat-title-button {
+        padding: 0;
+        border: none;
+        border-radius: $border-radius-small;
+        background: none;
+        color: inherit;
+        font: inherit;
+        letter-spacing: inherit;
+        text-align: start;
+        cursor: text;
+
+        &:hover {
+            text-decoration: underline dotted;
+            text-underline-offset: 0.2em;
+        }
+
+        &:focus-visible {
+            outline: 2px solid currentcolor;
+            outline-offset: 2px;
+        }
+    }
+
+    .chat-title-input {
+        min-width: 0;
+        width: min(40ch, 60vw);
+        padding: 0;
+        border: none;
+        border-block-end: 2px solid currentcolor;
+        background: none;
+        color: inherit;
+        font: inherit;
+        letter-spacing: inherit;
+        outline: none;
+
+        &:disabled {
+            opacity: 0.6;
+        }
+    }
+}
