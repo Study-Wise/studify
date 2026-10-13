@@ -4,7 +4,6 @@
     "description": "AI Study Partner",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#ffffff",
     "theme_color": "#6366f1",
     "orientation": "portrait-primary",
     "icons": [

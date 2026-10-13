@@ -35,6 +35,12 @@ if (container) className += ' container'
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script is:inline>
+            const userTheme = localStorage.getItem('user-theme');
+            if (userTheme === 'light' || userTheme === 'dark' || userTheme === 'system') {
+                document.documentElement.setAttribute('data-theme', userTheme);
+            }
+        </script>
         <link rel="stylesheet" href="/view-transitions.css" />
 
         {/* PWA meta */}
