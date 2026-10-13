@@ -342,13 +342,14 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                 const response = await fetch('/api/thread/initialize', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ category, mode, model })
+                    body: JSON.stringify({ category, mode, model, isPublic: publicToggle?.checked === true })
                 });
 
                 const data = await response.json();
 
                 if (data.status === 'success' && data.id) {
                     currentThreadId = data.id;
+                    updateShareLink();
 
                     // Let the chat script use this thread instead of creating another one
                     window.dispatchEvent(new CustomEvent('thread-created', {
