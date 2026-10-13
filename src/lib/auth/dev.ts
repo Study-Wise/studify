@@ -116,12 +116,14 @@ export async function checkDevThreadAccess(
             isPublic: false,
             isPublicThread: false,
             threadOwner: null,
+            threadExists: false,
         };
     }
 
     const devUser = await getDevUser();
     let threadOwner: string | null = null;
     let isPublicThread = false;
+    let threadExists = false;
 
     // Get dev user email
     const userEmail = devUser?.email || null;
@@ -139,6 +141,7 @@ export async function checkDevThreadAccess(
 
             if (threads.length > 0) {
                 const thread = threads[0];
+                threadExists = true;
                 threadOwner = thread.email;
                 isPublicThread = thread.isPublic;
 
@@ -152,6 +155,7 @@ export async function checkDevThreadAccess(
                         isPublic: false,
                         isPublicThread: false,
                         threadOwner: null,
+                        threadExists,
                     };
                 }
                 if (urlMode && thread.mode !== urlMode) {
@@ -163,6 +167,7 @@ export async function checkDevThreadAccess(
                         isPublic: false,
                         isPublicThread: false,
                         threadOwner: null,
+                        threadExists,
                     };
                 }
 
@@ -204,5 +209,6 @@ export async function checkDevThreadAccess(
         isPublic,
         isPublicThread,
         threadOwner,
+        threadExists,
     };
 }

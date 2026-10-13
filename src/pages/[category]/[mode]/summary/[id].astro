@@ -29,7 +29,12 @@ const modeName = modeObj?.name || mode;
 const user = Astro.locals.user;
 
 // Check thread access first
-const { isAuthorized, isPublic } = await checkThreadAccess(id || '', user, category, mode);
+const { isAuthorized, isPublic, threadExists } = await checkThreadAccess(id || '', user, category, mode);
+
+// A deleted or unknown chat has no materials, so show the 404 page (#344)
+if (!threadExists) {
+    return new Response(null, { status: 404 });
+}
 
 // Redirect to sign-in only if not authenticated AND thread is not public
 if (!user && !isPublic) {
