@@ -334,7 +334,12 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
         // If threadId is "new", create a new thread first
         if (currentThreadId === 'new') {
             // Use the provider and tier saved on /settings, like the chat script does
-            const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+            let settings = {};
+            try {
+                settings = JSON.parse(localStorage.getItem('settings') || '{}') || {};
+            } catch (_error) {
+                settings = {};
+            }
             const provider = settings.provider || 'openai';
             const tier = settings.tier || 'default';
 
