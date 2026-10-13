@@ -66,6 +66,7 @@ $pad: $spacing-medium;
 
                 &[data-type="correct"][data-variant="selected"] .step-question-choice-content {
                     background-color: hsl(120deg 73% 75%);
+                    color: $body-text;
                 }
 
                 &:not([data-type="correct"])[data-variant="selected"] .step-question-choice-content {
@@ -109,7 +110,8 @@ $pad: $spacing-medium;
             }
 
             &[data-answered] .step-question-choice[data-type="correct"]:not([data-variant]) .step-question-choice-content {
-                background-color: hsl(120deg 73% 75% / 50%);
+                background-color: hsl(120deg 73% 87%);
+                color: $body-text;
             }
 
             &[data-answered] .step-question-choice:not([data-type="correct"], [data-variant]) .step-question-choice-content {
