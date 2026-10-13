@@ -5,10 +5,17 @@ import { getUserRole } from '@/lib/auth/admin';
 import { isDev, getDevUser } from '@/lib/auth/dev';
 import type { User } from '@/lib/auth/types';
 import { getSafeReturnBackUrl } from '@/lib/auth/return-url';
+import { getContentTypesList } from '@/lib/content/get-types';
 
-// Define protected routes (same as before)
+// Material pages (study guide, flashcards, ...) live at /[category]/[mode]/[content-type]/[id]
+const materialRouteSegments = getContentTypesList().filter(type => type !== 'index');
+
+// Define protected routes
 const protectedRoutes = [
     /^\/[^/]+\/[^/]+\/chat\/.*/,
+    // Material pages require sign-in even for public threads, like the chat page (#342).
+    // Signed-in non-owners still get the read-only public view via checkThreadAccess.
+    new RegExp(`^/[^/]+/[^/]+/(${materialRouteSegments.join('|')})/.*`),
     /^\/settings.*/,
     /^\/admin.*/,
     /^\/user\/profile.*/,
