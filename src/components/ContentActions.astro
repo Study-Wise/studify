@@ -116,6 +116,9 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
 
             // Render any Desmos graphs in the new content
             window.activateDesmos?.();
+
+            // Attach click handlers to any step-by-step questions in the new content
+            window.initializeStepByStep?.();
         }
         else if (iframeTypes.includes(contentType)) {
             let container = page.querySelector(`.${contentType}-container`);
