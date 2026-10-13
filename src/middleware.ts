@@ -6,6 +6,7 @@ import { isDev, getDevUser } from '@/lib/auth/dev';
 import type { User } from '@/lib/auth/types';
 import { getSafeReturnBackUrl } from '@/lib/auth/return-url';
 import { getContentTypesList } from '@/lib/content/get-types';
+import { SENTRY_TUNNEL_PATH } from '@/lib/sentry';
 
 // Material pages (study guide, flashcards, ...) live at /[category]/[mode]/[content-type]/[id]
 const materialRouteSegments = getContentTypesList().filter(type => type !== 'index');
@@ -48,6 +49,13 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
                 'Content-Type': 'text/html',
             },
         });
+    }
+
+    // Error reports don't need a session, and must still go through when the database is down
+    if (pathname === SENTRY_TUNNEL_PATH) {
+        locals.user = null;
+        locals.session = null;
+        return next();
     }
 
     // Get session using Better Auth
