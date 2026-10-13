@@ -64,7 +64,7 @@ import '@/styles/components/modal.scss';
             renderDialog(next);
         }
         else {
-            pendingToasts.splice(0).forEach(openToast);
+            pendingToasts.splice(0).forEach((message) => showToast(message, { title: 'Success', type: 'success' }));
         }
     }
 
@@ -96,15 +96,19 @@ import '@/styles/components/modal.scss';
     }
 
     /**
-     * Open a success toast, which takes itself off the page once closed
+     * Show a non-blocking toast that closes itself and keeps focus where the user is
      * @param message - The message to display
+     * @param options - Optional title (default 'Notice'), Material icon name and type (default 'info')
      */
-    function openToast(message: string) {
+    function showToast(message: string, options: { title?: string; icon?: string; type?: ModalType } = {}) {
+        const { title = 'Notice', icon, type = 'info' } = options;
         const toast = createModal({
-            title: 'Success',
-            message,
-            type: 'success',
             display: 'toast',
+            title,
+            message,
+            icon,
+            type,
+            // Each toast is single-use, so drop it from the page once it closes
             onClose: () => toast.element.remove(),
         });
         toast.open();
@@ -130,11 +134,11 @@ import '@/styles/components/modal.scss';
             return;
         }
 
-        openToast(message);
+        showToast(message, { title: 'Success', type: 'success' });
     }
-
     // Make functions available globally, including to is:inline scripts
     window.showDialog = showDialog;
+    window.showToast = showToast;
     window.showError = (message) => showDialog(message, { title: 'Error', type: 'error' });
     window.showWarning = (message) => showDialog(message, { title: 'Warning', type: 'warning' });
     window.showSuccess = showSuccessToast;
