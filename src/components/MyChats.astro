@@ -3,6 +3,7 @@ import '@/styles/components/my-chats.scss';
 
 import { getUserThreads } from '@/lib/threads';
 import categories from '@/lib/modes';
+import LocalTime from '@/components/LocalTime.astro';
 
 const user = Astro.locals.user;
 
@@ -62,7 +63,7 @@ const threadsByCategory: Record<string, typeof threads> = threads.reduce((acc, t
                                                 </div>
                                                 <div class="thread-meta">
                                                     <span class="thread-date">
-                                                        {thread.updatedAt.toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}
+                                                        <LocalTime date={thread.updatedAt} locale="en-US" options={{ dateStyle: 'medium', timeStyle: 'short' }} />
                                                     </span>
                                                 </div>
                                             </div>
