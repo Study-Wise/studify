@@ -280,9 +280,12 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
 
     if (deleteChatButton) {
         deleteChatButton.addEventListener('click', async () => {
-            // Nothing persisted yet for an unsaved chat
+            const newChatUrl = `/${category}/${mode}/chat/new`;
+
+            // Nothing persisted yet for an unsaved chat, so just start over
             if (!currentThreadId || currentThreadId === 'new') {
-                window.location.href = `/${category}/${mode}`;
+                window.showSuccessAfterNavigation?.('Chat deleted');
+                window.location.href = newChatUrl;
                 return;
             }
 
@@ -300,8 +303,8 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                 const data = await response.json();
 
                 if (data.status === 'success') {
-                    window.showSuccess?.('Chat deleted');
-                    window.location.href = `/${category}/${mode}`;
+                    window.showSuccessAfterNavigation?.('Chat deleted');
+                    window.location.href = newChatUrl;
                 }
                 else {
                     throw new Error(data.error || 'Failed to delete chat');

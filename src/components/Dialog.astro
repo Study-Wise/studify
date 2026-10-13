@@ -136,11 +136,40 @@ import '@/styles/components/modal.scss';
 
         showToast(message, { title: 'Success', type: 'success' });
     }
+
+    // Success message carried across a navigation, shown once the next page loads
+    const pendingSuccessKey = 'pending-success-toast';
+
+    /**
+     * Show a success toast on the next page the user lands on, for actions
+     * that navigate away right after succeeding (e.g. deleting a chat)
+     * @param message - The message to display
+     */
+    function showSuccessAfterNavigation(message: string) {
+        try {
+            sessionStorage.setItem(pendingSuccessKey, message);
+        } catch (_error) {
+            // Storage unavailable (e.g. blocked site data), so show it now instead
+            showSuccessToast(message);
+        }
+    }
+
+    try {
+        const pendingSuccess = sessionStorage.getItem(pendingSuccessKey);
+        if (pendingSuccess) {
+            sessionStorage.removeItem(pendingSuccessKey);
+            showSuccessToast(pendingSuccess);
+        }
+    } catch (_error) {
+        // Storage unavailable, so nothing can be waiting
+    }
+
     // Make functions available globally, including to is:inline scripts
     window.showDialog = showDialog;
     window.showToast = showToast;
     window.showError = (message) => showDialog(message, { title: 'Error', type: 'error' });
     window.showWarning = (message) => showDialog(message, { title: 'Warning', type: 'warning' });
     window.showSuccess = showSuccessToast;
+    window.showSuccessAfterNavigation = showSuccessAfterNavigation;
     window.showInfo = (message) => showDialog(message, { title: 'Information', type: 'info' });
 </script>
