@@ -2,6 +2,7 @@
 import '@/styles/pages/profile.scss';
 import Layout from '@/layouts/Layout.astro';
 import MyChats from '@/components/MyChats.astro';
+import LocalTime from '@/components/LocalTime.astro';
 
 const user = Astro.locals.user;
 
@@ -36,7 +37,7 @@ if (!user) {
                     </div>
                     <div class="info-item">
                         <span class="info-label">Member Since:</span>
-                        <span class="info-value">{new Date(user.createdAt).toLocaleDateString()}</span>
+                        <span class="info-value"><LocalTime date={user.createdAt} options={{ year: 'numeric', month: 'numeric', day: 'numeric' }} /></span>
                     </div>
                 </div>
             </section>

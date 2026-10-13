@@ -1,0 +1,35 @@
+---
+interface Props {
+    date: Date | string;
+    locale?: string;
+    options?: Intl.DateTimeFormatOptions;
+}
+
+const { date, locale, options = {} } = Astro.props;
+
+const iso = new Date(date).toISOString();
+
+// Server fallback for visitors without JavaScript; the script below reformats it in the viewer's time zone
+const fallback = new Date(iso).toLocaleString(locale, { ...options, timeZone: 'UTC' });
+---
+
+<time
+    datetime={iso}
+    data-local-time
+    data-locale={locale}
+    data-options={JSON.stringify(options)}
+>{fallback}</time>
+
+<script>
+    function formatLocalTimes() {
+        document.querySelectorAll<HTMLTimeElement>('time[data-local-time]').forEach((element) => {
+            const date = new Date(element.dateTime);
+            if (Number.isNaN(date.getTime())) return;
+
+            const options: Intl.DateTimeFormatOptions = JSON.parse(element.dataset.options || '{}');
+            element.textContent = date.toLocaleString(element.dataset.locale || undefined, options);
+        });
+    }
+
+    formatLocalTimes();
+</script>
