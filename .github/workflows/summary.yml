@@ -16,18 +16,27 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v4
 
+            - name: Setup Node
+              uses: actions/setup-node@v4
+
+            - name: Install Copilot CLI
+              run: npm install -g @github/copilot
+
             - name: Run AI inference
               id: inference
-              uses: actions/ai-inference@v1
+              uses: actions/ai-inference@v3
               with:
+                  model: gpt-4.1
                   prompt: |
                       Summarize the following GitHub issue in one paragraph:
                       Title: ${{ github.event.issue.title }}
                       Body: ${{ github.event.issue.body }}
+              env:
+                  COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_PAT }}
 
             - name: Comment with AI summary
               run: |
-                  gh issue comment $ISSUE_NUMBER --body '${{ steps.inference.outputs.response }}'
+                  gh issue comment "$ISSUE_NUMBER" --body "$RESPONSE"
               env:
                   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   ISSUE_NUMBER: ${{ github.event.issue.number }}
