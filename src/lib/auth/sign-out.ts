@@ -24,10 +24,11 @@ function clearUserStorage() {
 }
 
 export async function signOutAndClearData() {
-    const { error } = await authClient.signOut();
-    if (error) throw new Error(error.message || 'Sign out failed');
-
+    // Clear local data even if the server sign-out fails, so a user who walks away from a shared device doesn't leave it behind
     clearUserStorage();
     shutdownFeaturebase();
     await clearUserCaches();
+
+    const { error } = await authClient.signOut();
+    if (error) throw new Error(error.message || 'Sign out failed');
 }
