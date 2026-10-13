@@ -97,7 +97,19 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
             }
 
             if (contentDiv) {
+                // Forget the math MathJax typeset in the old content before replacing it
+                window.MathJax?.typesetClear?.([contentDiv]);
                 contentDiv.innerHTML = parsedContent;
+
+                // Typeset the math in the new content, as is done on page load
+                if (window.MathJax?.typesetPromise) {
+                    try {
+                        await window.MathJax.startup?.promise;
+                        await window.MathJax.typesetPromise([contentDiv]);
+                    } catch (err) {
+                        console.error('MathJax typesetting error:', err);
+                    }
+                }
             }
 
             // Render any Desmos graphs in the new content
