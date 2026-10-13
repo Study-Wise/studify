@@ -97,13 +97,11 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
             }
 
             if (contentDiv) {
-                // Forget the math MathJax typeset in the old content before replacing it
                 window.MathJax?.typesetClear?.([contentDiv]);
-                // Restart equation numbering and forget old \label names
+                // Reset equation numbers and labels
                 window.MathJax?.texReset?.();
                 contentDiv.innerHTML = parsedContent;
 
-                // Typeset the math in the new content, as is done on page load
                 if (window.MathJax?.typesetPromise) {
                     try {
                         await window.MathJax.startup?.promise;
@@ -116,8 +114,6 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
 
             // Render any Desmos graphs in the new content
             window.activateDesmos?.();
-
-            // Attach click handlers to any step-by-step questions in the new content
             window.initializeStepByStep?.();
         }
         else if (iframeTypes.includes(contentType)) {
