@@ -1,6 +1,7 @@
 ---
 import Layout from '@/layouts/Layout.astro';
 import Header from '@/components/chat/Header.astro';
+import ChatTitle from '@/components/chat/ChatTitle.astro';
 import Toolbar from '@/components/chat/Toolbar.astro';
 import LeftSidebar from '@/components/chat/LeftSidebar.astro';
 import RightSidebar from '@/components/chat/RightSidebar.astro';
@@ -98,7 +99,7 @@ export const inNav = 'hide';
 <Layout title={`${threadTitle || (isNewChat ? 'New Chat' : 'Chat')} | ${modeName} | ${categoryName}`} container={false} isChatArea={true} className="chat-page" hideCopyright={true} mathjax={true} desmos={modeObj.desmos === true}>
     <header class="chat-header">
         <div class="chat-title-container">
-            <h2><span class="material-symbols-outlined" aria-hidden="true">chat</span>&nbsp;{threadTitle || (isNewChat ? 'New Chat' : 'Chat')}</h2>
+            <ChatTitle title={threadTitle || (isNewChat ? 'New Chat' : 'Chat')} threadId={id || ''} canRename={isAuthorized && !isNewChat} />
         </div>
         <Header pTitle={threadTitle || (isNewChat ? 'New Chat' : 'Chat')} />
     </header>

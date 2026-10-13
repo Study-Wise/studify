@@ -1,0 +1,112 @@
+---
+import '@/styles/components/chat-title.scss';
+
+const { title, threadId, canRename } = Astro.props;
+---
+<h2 class="chat-title">
+    <span class="material-symbols-outlined" aria-hidden="true">chat</span>&nbsp;{canRename ? (
+        <Fragment>
+            <button type="button" id="chat-title-button" class="chat-title-text chat-title-button" title="Click to rename" aria-label={`Rename chat: ${title}`}>{title}</button>
+            <input type="text" id="chat-title-input" class="chat-title-input" maxlength="255" value={title} aria-label="Chat title" hidden />
+        </Fragment>
+    ) : (
+        <span class="chat-title-text">{title}</span>
+    )}
+</h2>
+
+{canRename && (
+    <script is:inline define:vars={{ threadId }}>
+        const titleButton = document.getElementById('chat-title-button');
+        const titleInput = document.getElementById('chat-title-input');
+
+        if (titleButton && titleInput) {
+            let currentTitle = titleButton.textContent.trim();
+            let isSaving = false;
+
+            const showButton = () => {
+                titleInput.hidden = true;
+                titleButton.hidden = false;
+            };
+
+            const setTitle = (newTitle) => {
+                // Keep the " | mode | category" suffix of the tab title
+                if (document.title.startsWith(currentTitle)) {
+                    document.title = newTitle + document.title.slice(currentTitle.length);
+                }
+                currentTitle = newTitle;
+                titleButton.textContent = newTitle;
+                titleButton.setAttribute('aria-label', `Rename chat: ${newTitle}`);
+            };
+
+            const cancel = () => {
+                titleInput.value = currentTitle;
+                showButton();
+                titleButton.focus();
+            };
+
+            const save = async () => {
+                if (isSaving || titleInput.hidden) return;
+
+                const newTitle = titleInput.value.replace(/\s+/g, ' ').trim();
+
+                // Nothing to save for an empty or unchanged title
+                if (!newTitle || newTitle === currentTitle) {
+                    cancel();
+                    return;
+                }
+
+                isSaving = true;
+                titleInput.disabled = true;
+
+                try {
+                    const response = await fetch('/api/thread/rename', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ threadId, title: newTitle }),
+                    });
+
+                    const data = await response.json();
+
+                    if (data.status === 'success') {
+                        setTitle(data.title);
+                        window.showSuccess?.('Chat renamed');
+                    }
+                    else {
+                        throw new Error(data.error || 'Failed to rename chat');
+                    }
+                } catch (error) {
+                    console.error('Error renaming chat:', error);
+                    window.showError?.(
+                        error instanceof Error ? error.message : 'Failed to rename chat. Please try again.'
+                    );
+                } finally {
+                    isSaving = false;
+                    titleInput.disabled = false;
+                    titleInput.value = currentTitle;
+                    showButton();
+                }
+            };
+
+            titleButton.addEventListener('click', () => {
+                titleInput.value = currentTitle;
+                titleButton.hidden = true;
+                titleInput.hidden = false;
+                titleInput.focus();
+                titleInput.select();
+            });
+
+            titleInput.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    save();
+                }
+                else if (event.key === 'Escape') {
+                    event.preventDefault();
+                    cancel();
+                }
+            });
+
+            titleInput.addEventListener('blur', save);
+        }
+    </script>
+)}
