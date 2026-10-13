@@ -94,6 +94,9 @@ const processedMessages = await Promise.all(
         }))
 );
 
+// Matches the MathJax delimiters configured in Layout.astro ($…$, $$…$$, \(…\), \[…\])
+const mathDelimiterPattern = /\$|\\\(|\\\[/;
+
 export const inNav = 'hide';
 ---
 <Layout title={`${threadTitle || (isNewChat ? 'New Chat' : 'Chat')} | ${modeName} | ${categoryName}`} container={false} isChatArea={true} className="chat-page" hideCopyright={true} mathjax={true} desmos={modeObj.desmos === true}>
@@ -143,7 +146,7 @@ export const inNav = 'hide';
                                 </div>
                             )}
                             <div class:list={['message', message.role]}>
-                                <div class:list={['message-content', { 'bg-primary': message.role === 'user' }]} set:html={message.htmlContent} />
+                                <div class:list={['message-content', { 'bg-primary': message.role === 'user', 'mathjax-pending': mathDelimiterPattern.test(message.htmlContent) }]} set:html={message.htmlContent} />
                             </div>
                         </>
                     ))

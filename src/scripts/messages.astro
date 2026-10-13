@@ -296,28 +296,52 @@ const { page, category, mode, id } = Astro.props;
         }
     }
 
+    // Matches the MathJax delimiters configured in Layout.astro ($…$, $$…$$, \(…\), \[…\])
+    const mathDelimiterPattern = /\$|\\\(|\\\[/;
+    const mathJaxTimeout = 10000;
+
+    // Reject if the promise hasn't settled within ms
+    function withTimeout(promise, ms, message) {
+        let timer;
+        const timeout = new Promise((_, reject) => {
+            timer = setTimeout(() => reject(new Error(message)), ms);
+        });
+        return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
+    }
+
     async function typesetMathJax(elements) {
+        const validElements = (Array.isArray(elements) || elements instanceof NodeList ? [...elements] : elements ? [elements] : []).filter(el => el != null);
+        if (validElements.length === 0) return;
+
+        // Hide messages that contain math until they are typeset so raw LaTeX never shows
+        validElements
+            .filter(el => mathDelimiterPattern.test(el.textContent || ''))
+            .forEach(el => el.classList.add('mathjax-pending'));
+
         try {
-            if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
-                const validElements = (Array.isArray(elements) ? elements : elements ? [elements] : []).filter(el => el != null);
-                if (validElements.length === 0) return Promise.resolve();
-                validElements.forEach(el => el?.classList?.add('mathjax-pending'));
-                return MathJax.typesetPromise(validElements)
-                    .then(() => {
-                        validElements.forEach(el => el?.classList?.remove('mathjax-pending'));
-                    })
-                    .catch(err => {
-                        console.error('MathJax typesetting error:', err);
-                        validElements.forEach(el => el?.classList?.remove('mathjax-pending'));
+            // Loading, startup and typesetting can each stall on a hung request, so limit the whole wait
+            await withTimeout((async () => {
+                // MathJax loads async, so wait for its script if it hasn't run yet
+                if (!window.MathJax?.startup?.promise) {
+                    const script = document.getElementById('MathJax-script');
+                    if (!script) throw new Error('MathJax script not found.');
+                    // The error event may have fired before these listeners were attached
+                    if (script.dataset.failed === 'true') throw new Error('MathJax failed to load.');
+                    await new Promise((resolve, reject) => {
+                        script.addEventListener('load', resolve, { once: true });
+                        script.addEventListener('error', () => reject(new Error('MathJax failed to load.')), { once: true });
                     });
-            }
-            else {
-                console.warn('MathJax not ready.');
-                return Promise.resolve();
-            }
+                }
+
+                // Wait for startup (including the initial page typeset). It rejects for good if that typeset fails,
+                // but later typesets can still succeed, so only wait for it to finish
+                await window.MathJax.startup.promise.catch(err => console.error('MathJax startup error:', err));
+                await window.MathJax.typesetPromise(validElements);
+            })(), mathJaxTimeout, 'MathJax took too long to typeset.');
         } catch (err) {
-            console.error('Error in typesetMathJax:', err);
-            return Promise.resolve();
+            console.error('MathJax typesetting error:', err);
+        } finally {
+            validElements.forEach(el => el.classList.remove('mathjax-pending'));
         }
     }
 
