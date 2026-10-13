@@ -9,8 +9,17 @@ const USER_CACHES = ['study-materials-cache', 'images-cache', 'studywise-offline
 const USER_STORAGE_KEYS = ['threadId', 'settings', 'model'];
 
 async function clearUserCaches() {
-    if (!('caches' in window)) return;
-    await Promise.all(USER_CACHES.map((name) => caches.delete(name)));
+    // Best effort: browsers can refuse Cache Storage access (e.g. some private modes), which mustn't block signing out.
+    // In that case the service worker couldn't have stored anything there either.
+    try {
+        if (!('caches' in window)) return;
+        const results = await Promise.allSettled(USER_CACHES.map((name) => caches.delete(name)));
+        for (const result of results) {
+            if (result.status === 'rejected') console.error('Failed to delete cache:', result.reason);
+        }
+    } catch (error) {
+        console.error('Cache Storage is unavailable:', error);
+    }
 }
 
 function clearUserStorage() {
