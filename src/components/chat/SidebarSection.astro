@@ -129,6 +129,12 @@ const regenerateButtonId = `regenerate-${id}-btn`;
 
         btn.innerHTML = `<span class="material-symbols-outlined spinning" aria-hidden="true">progress_activity</span><span>${loadingText}</span>`;
 
+        // Generation can take a while, so let the user know the chat stays usable
+        (window).showToast?.(`You can keep chatting while it runs. It will appear here in the sidebar when it's ready.`, {
+            title: `${loadingText.slice(0, -1)} ${title}`,
+            icon: 'chat',
+        });
+
         try {
             const response = await fetch(apiEndpoint, {
                 method: 'POST',
