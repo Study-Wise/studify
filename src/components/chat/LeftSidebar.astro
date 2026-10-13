@@ -58,7 +58,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                         </div>
                         <p class="share-description">
                             {isPublic
-                                ? 'This thread is visible to anyone with the link.'
+                                ? 'This thread is visible to anyone signed in with the link.'
                                 : 'This thread is private and only visible to you.'}
                         </p>
                         <div class="share-link" id="share-link" hidden={!(isPublic && hasSavedThread)}>
@@ -211,7 +211,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                 const shareDescription = document.querySelector('.share-description');
                 if (shareDescription) {
                     shareDescription.textContent = isPublic
-                        ? 'This thread is visible to anyone with the link.'
+                        ? 'This thread is visible to anyone signed in with the link.'
                         : 'This thread is private and only visible to you.';
                 }
                 return;
@@ -238,7 +238,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                     const shareDescription = document.querySelector('.share-description');
                     if (shareDescription) {
                         shareDescription.textContent = isPublic
-                            ? 'This thread is visible to anyone with the link.'
+                            ? 'This thread is visible to anyone signed in with the link.'
                             : 'This thread is private and only visible to you.';
                     }
 
@@ -246,7 +246,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
 
                     window.showSuccess?.(
                         isPublic
-                            ? 'Thread is now public. Anyone with the link can view it.'
+                            ? 'Thread is now public. Anyone signed in with the link can view it.'
                             : 'Thread is now private. Only you can view it.'
                     );
                 }
