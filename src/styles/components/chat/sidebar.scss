@@ -288,6 +288,51 @@
                 line-height: 1.5;
             }
 
+            .share-link {
+                display: flex;
+                gap: $spacing-extra-small;
+
+                &[hidden] {
+                    display: none;
+                }
+
+                .share-link-input {
+                    flex: 1;
+                    min-width: 0;
+                    padding: $spacing-extra-small $spacing-small;
+                    font-size: $font-size-small;
+                    color: var(--card-text);
+                    background-color: var(--card-bg);
+                    border: 1px solid var(--card-border);
+                    border-radius: $border-radius-small;
+                    text-overflow: ellipsis;
+                }
+
+                .share-link-copy {
+                    display: flex;
+                    align-items: center;
+                    gap: $spacing-extra-small;
+                    flex-shrink: 0;
+                    padding: $spacing-extra-small $spacing-small;
+                    background-color: list.nth(map.get($accent-colors, primary), 1);
+                    color: white;
+                    border: none;
+                    border-radius: $border-radius-small;
+                    cursor: pointer;
+                    font-size: $font-size-small;
+                    font-weight: $font-weight-medium;
+                    transition: background-color $transition-fast $ease;
+
+                    .material-symbols-outlined {
+                        font-size: $font-size-large;
+                    }
+
+                    &:hover {
+                        background-color: list.nth(map.get($accent-colors, primary), 2);
+                    }
+                }
+            }
+
             .delete-chat-button {
                 display: flex;
                 align-items: center;

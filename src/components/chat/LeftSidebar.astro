@@ -25,6 +25,9 @@ const {
     category = '',
     mode = ''
 } = Astro.props as ChatLeftSidebarProps;
+
+const hasSavedThread = Boolean(threadId) && threadId !== 'new';
+const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}`, Astro.url.origin).href : '';
 ---
 <section class="chat-sidebar left">
     <div class="chat-sidebar-content left">
@@ -59,6 +62,20 @@ const {
                                 ? 'This thread is visible to anyone with the link.'
                                 : 'This thread is private and only visible to you.'}
                         </p>
+                        <div class="share-link" id="share-link" hidden={!(isPublic && hasSavedThread)}>
+                            <input
+                                type="text"
+                                id="share-link-input"
+                                class="share-link-input"
+                                aria-label="Share link"
+                                value={shareUrl}
+                                readonly
+                            />
+                            <button type="button" class="share-link-copy" id="share-link-copy">
+                                <span class="material-symbols-outlined" aria-hidden="true">content_copy</span>
+                                <span class="share-link-copy-text">Copy</span>
+                            </button>
+                        </div>
                         <button type="button" class="delete-chat-button" id="delete-chat-button">
                             <span class="material-symbols-outlined" aria-hidden="true">delete</span>
                             <span>Delete Chat</span>
@@ -144,6 +161,46 @@ const {
     // Public toggle functionality
     const publicToggle = document.getElementById('public-toggle');
     const shareStatusText = document.getElementById('share-status-text');
+    const shareLink = document.getElementById('share-link');
+    const shareLinkInput = document.getElementById('share-link-input');
+    const shareLinkCopy = document.getElementById('share-link-copy');
+
+    // Show the share URL only for a saved, public thread
+    function updateShareLink() {
+        if (!shareLink || !shareLinkInput) return;
+
+        const hasSavedThread = Boolean(currentThreadId) && currentThreadId !== 'new';
+        if (hasSavedThread) {
+            shareLinkInput.value = `${window.location.origin}/${category}/${mode}/chat/${currentThreadId}`;
+        }
+        shareLink.hidden = !(hasSavedThread && publicToggle?.checked);
+    }
+
+    shareLinkInput?.addEventListener('focus', () => shareLinkInput.select());
+
+    shareLinkCopy?.addEventListener('click', async () => {
+        if (!shareLinkInput?.value) return;
+
+        try {
+            await navigator.clipboard.writeText(shareLinkInput.value);
+
+            const copyIcon = shareLinkCopy.querySelector('.material-symbols-outlined');
+            const copyText = shareLinkCopy.querySelector('.share-link-copy-text');
+            if (copyIcon) copyIcon.textContent = 'check';
+            if (copyText) copyText.textContent = 'Copied';
+
+            setTimeout(() => {
+                if (copyIcon) copyIcon.textContent = 'content_copy';
+                if (copyText) copyText.textContent = 'Copy';
+            }, 2000);
+
+            window.showSuccess?.('Share link copied to clipboard');
+        } catch (error) {
+            console.error('Error copying share link:', error);
+            shareLinkInput.select();
+            window.showError?.('Could not copy the link. Please copy it manually.');
+        }
+    });
 
     if (publicToggle) {
         publicToggle.addEventListener('change', async () => {
@@ -192,6 +249,8 @@ const {
                             : 'This thread is private and only visible to you.';
                     }
 
+                    updateShareLink();
+
                     // Show success message
                     window.showSuccess?.(
                         isPublic
@@ -210,6 +269,7 @@ const {
 
                 // Revert toggle state on error
                 publicToggle.checked = !isPublic;
+                updateShareLink();
             } finally {
                 // Re-enable toggle
                 publicToggle.disabled = false;
@@ -222,6 +282,7 @@ const {
         const { id: createdId, source } = event.detail || {};
         if (source !== 'sidebar' && createdId && currentThreadId === 'new') {
             currentThreadId = createdId;
+            updateShareLink();
         }
     });
 
