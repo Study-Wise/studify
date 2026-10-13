@@ -43,12 +43,14 @@ let isAuthorized = isNewChat ? true : false;
 let isPublic = false;
 // Admins are authorized to view other users' threads but only the owner can rename them
 let isOwner = false;
+let isPublicThread = false;
 
 if (!isNewChat) {
     const accessCheck = await checkThreadAccess(id || '', user, category, mode);
     isAuthorized = accessCheck.isAuthorized;
     isPublic = accessCheck.isPublic;
     isOwner = !!user_email && accessCheck.threadOwner === user_email;
+    isPublicThread = accessCheck.isPublicThread;
 
 }
 
@@ -103,12 +105,18 @@ export const inNav = 'hide';
     <header class="chat-header">
         <div class="chat-title-container">
             <ChatTitle title={threadTitle || (isNewChat ? 'New Chat' : 'Chat')} threadId={id || ''} canRename={isOwner} />
+            <nav class="subject-breadcrumb" aria-label="Subject">
+                <ol>
+                    <li>{categoryName}</li>
+                    <li><a href={`/${category}/${mode}`}>{modeName}</a></li>
+                </ol>
+            </nav>
         </div>
         <Header pTitle={threadTitle || (isNewChat ? 'New Chat' : 'Chat')} />
     </header>
     <section class="chat-container">
         <LeftSidebar
-            isPublic={isPublic}
+            isPublic={isPublicThread}
             isAuthorized={isAuthorized}
             threadId={id || ''}
             uploadedFiles={uploadedFiles}

@@ -9,7 +9,10 @@ import { isDev, getDevUser, isDevUserAdmin } from '@/lib/auth/dev';
 
 export interface ThreadAccessResult {
     isAuthorized: boolean;
+    // Viewer has access only because the thread is public
     isPublic: boolean;
+    // Thread is marked public, regardless of who is viewing
+    isPublicThread: boolean;
     threadOwner: string | null;
 }
 
@@ -62,6 +65,7 @@ export async function checkThreadAccess(
                     return {
                         isAuthorized: false,
                         isPublic: false,
+                        isPublicThread: false,
                         threadOwner: null
                     };
                 }
@@ -70,6 +74,7 @@ export async function checkThreadAccess(
                     return {
                         isAuthorized: false,
                         isPublic: false,
+                        isPublicThread: false,
                         threadOwner: null
                     };
                 }
@@ -107,6 +112,7 @@ export async function checkThreadAccess(
     return {
         isAuthorized,
         isPublic,
+        isPublicThread,
         threadOwner
     };
 }
