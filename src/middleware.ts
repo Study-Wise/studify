@@ -5,10 +5,15 @@ import { getUserRole } from '@/lib/auth/admin';
 import { isDev, getDevUser } from '@/lib/auth/dev';
 import type { User } from '@/lib/auth/types';
 import { getSafeReturnBackUrl } from '@/lib/auth/return-url';
+import { getContentTypesList } from '@/lib/content/get-types';
 
-// Define protected routes (same as before)
+// Material pages (study guide, flashcards, ...) live at /[category]/[mode]/[content-type]/[id]
+const materialRouteSegments = getContentTypesList().filter(type => type !== 'index');
+
+// Define protected routes
 const protectedRoutes = [
     /^\/[^/]+\/[^/]+\/chat\/.*/,
+    new RegExp(`^/[^/]+/[^/]+/(${materialRouteSegments.join('|')})/.*`),
     /^\/settings.*/,
     /^\/admin.*/,
     /^\/user\/profile.*/,
