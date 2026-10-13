@@ -13,8 +13,10 @@ const featurebaseJwt = getFeaturebaseJwt(Astro.locals.user);
 </Layout>
 
 <script>
-    import '@/lib/featurebase-client';
+    import { bootFeaturebase } from '@/lib/featurebase-client';
     import { initEmbedWidget } from 'featurebase-js';
+
+    bootFeaturebase();
 
     // Match the site theme set by ThemeSwitcher; '' lets the portal follow prefers-color-scheme.
     const userTheme = localStorage.getItem('user-theme');
