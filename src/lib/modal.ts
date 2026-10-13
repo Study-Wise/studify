@@ -4,6 +4,10 @@
 
 export type ModalType = 'info' | 'error' | 'warning' | 'success';
 
+// 'modal' blocks the page until dismissed; 'toast' is a non-blocking
+// notification in the corner of the screen that closes itself
+export type ModalDisplay = 'modal' | 'toast';
+
 export interface ModalButton {
     label: string;
     variant?: 'primary' | 'secondary';
@@ -22,6 +26,11 @@ export interface ModalContent {
 }
 
 export interface ModalOptions extends ModalContent {
+    // Defaults to 'modal'
+    display?: ModalDisplay;
+    // Toasts only: milliseconds before the toast closes itself while not
+    // hovered or focused. Defaults to 5000; 0 keeps it open until dismissed.
+    duration?: number;
     onClose?: () => void;
 }
 
@@ -41,7 +50,23 @@ const defaultIcons: Record<ModalType, string> = {
 
 const defaultButtons: ModalButton[] = [{ label: 'OK', variant: 'primary' }];
 
+const defaultToastDuration = 5000;
+
 let modalCount = 0;
+
+/**
+ * Get the container toasts stack in, creating it on first use
+ * @returns The toast container
+ */
+function getToastRegion(): HTMLElement {
+    let region = document.querySelector<HTMLElement>('.toast-region');
+    if (!region) {
+        region = document.createElement('div');
+        region.className = 'toast-region';
+        document.body.append(region);
+    }
+    return region;
+}
 
 /**
  * Create a modal and add it to the page. It stays closed until open() is called.
@@ -49,11 +74,18 @@ let modalCount = 0;
  * @returns The modal
  */
 export function createModal(options: ModalOptions): Modal {
+    const { display = 'modal', duration = defaultToastDuration } = options;
+    const isToast = display === 'toast';
     const titleId = `modal-title-${++modalCount}`;
 
     const element = document.createElement('dialog');
-    element.className = 'modal';
+    element.className = isToast ? 'modal modal-toast' : 'modal';
     element.setAttribute('aria-labelledby', titleId);
+    if (isToast) {
+        // Announce the toast without moving focus to it
+        element.setAttribute('role', 'status');
+        element.setAttribute('aria-live', 'polite');
+    }
 
     const content = document.createElement('div');
 
@@ -67,6 +99,20 @@ export function createModal(options: ModalOptions): Modal {
     title.id = titleId;
     header.append(icon, title);
 
+    if (isToast) {
+        const closeButton = document.createElement('button');
+        closeButton.type = 'button';
+        closeButton.className = 'modal-close';
+        closeButton.setAttribute('aria-label', 'Dismiss');
+        const closeIcon = document.createElement('span');
+        closeIcon.className = 'material-symbols-outlined';
+        closeIcon.setAttribute('aria-hidden', 'true');
+        closeIcon.textContent = 'close';
+        closeButton.append(closeIcon);
+        closeButton.addEventListener('click', () => element.close());
+        header.append(closeButton);
+    }
+
     const body = document.createElement('div');
     body.className = 'modal-body';
     const message = document.createElement('p');
@@ -78,13 +124,14 @@ export function createModal(options: ModalOptions): Modal {
 
     content.append(header, body, footer);
     element.append(content);
-    document.body.append(element);
+    (isToast ? getToastRegion() : document.body).append(element);
 
     function focusPrimaryButton() {
         footer.querySelector<HTMLButtonElement>('.modal-button-primary')?.focus();
     }
 
-    function setContent({ title: titleText, message: messageText, type = 'info', icon: iconName, buttons = defaultButtons }: ModalContent) {
+    // Toasts have their own close button, so they need no footer buttons
+    function setContent({ title: titleText, message: messageText, type = 'info', icon: iconName, buttons = isToast ? [] : defaultButtons }: ModalContent) {
         content.className = `modal-content modal-${type}`;
         icon.textContent = iconName ?? defaultIcons[type];
         title.textContent = titleText;
@@ -102,18 +149,52 @@ export function createModal(options: ModalOptions): Modal {
             });
             return button;
         }));
+        footer.hidden = buttons.length === 0;
 
-        if (element.open) {
+        // Toasts never take focus away from what the user is doing
+        if (element.open && !isToast) {
             focusPrimaryButton();
         }
     }
 
-    // Close on backdrop click; Escape is handled natively by <dialog>
-    element.addEventListener('click', (event) => {
-        if (event.target === element) {
-            element.close();
+    // Toasts close themselves after `duration`, paused while the user is
+    // hovering over or focused inside them so they can finish reading
+    let dismissTimer: ReturnType<typeof setTimeout> | undefined;
+
+    function stopDismissTimer() {
+        clearTimeout(dismissTimer);
+        dismissTimer = undefined;
+    }
+
+    function startDismissTimer() {
+        stopDismissTimer();
+        if (isToast && duration > 0 && element.open && !element.matches(':hover, :focus-within')) {
+            dismissTimer = setTimeout(() => element.close(), duration);
         }
-    });
+    }
+
+    if (isToast) {
+        element.addEventListener('mouseenter', stopDismissTimer);
+        element.addEventListener('focusin', stopDismissTimer);
+        element.addEventListener('mouseleave', startDismissTimer);
+        element.addEventListener('focusout', (event) => {
+            // Focus moving between elements inside the toast doesn't count
+            const target = event.relatedTarget;
+            if (!(target instanceof Node && element.contains(target))) {
+                startDismissTimer();
+            }
+        });
+    }
+    else {
+        // Close on backdrop click; Escape is handled natively by <dialog>
+        element.addEventListener('click', (event) => {
+            if (event.target === element) {
+                element.close();
+            }
+        });
+    }
+
+    element.addEventListener('close', stopDismissTimer);
 
     if (options.onClose) {
         element.addEventListener('close', options.onClose);
@@ -124,6 +205,24 @@ export function createModal(options: ModalOptions): Modal {
     return {
         element,
         open() {
+            if (isToast) {
+                // show() keeps the rest of the page usable, unlike showModal()
+                if (!element.open) {
+                    // show() focuses the close button, so hand focus back
+                    // to wherever the user was
+                    const previous = document.activeElement;
+                    element.show();
+                    if (previous instanceof HTMLElement && previous !== document.body) {
+                        previous.focus({ preventScroll: true });
+                    }
+                    else if (document.activeElement instanceof HTMLElement) {
+                        document.activeElement.blur();
+                    }
+                }
+                // Reopening an open toast restarts its countdown
+                startDismissTimer();
+                return;
+            }
             if (!element.open) {
                 element.showModal();
             }
