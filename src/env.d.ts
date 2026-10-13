@@ -17,6 +17,7 @@ interface Window {
     showError: (message: string) => void;
     showWarning: (message: string) => void;
     showSuccess: (message: string) => void;
+    showSuccessAfterNavigation: (message: string) => void;
     showInfo: (message: string) => void;
 }
 
