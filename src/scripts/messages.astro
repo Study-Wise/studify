@@ -51,6 +51,21 @@ const { page, category, mode, id } = Astro.props;
     const API_ENDPOINT = '/api/message/generate';
 
     let isGenerating = false;
+    let isRedirecting = false;
+
+    // Leave the page locked while the browser navigates to the new chat
+    function redirectToChat(chatId) {
+        isRedirecting = true;
+        window.location.href = `/${category}/${mode}/chat/${chatId}`;
+    }
+
+    // Unlock the page if Back restores it from the back/forward cache mid-redirect
+    window.addEventListener('pageshow', (event) => {
+        if (event.persisted && isRedirecting) {
+            isRedirecting = false;
+            setLoadingState(false);
+        }
+    });
 
     function handleEnterKey(event) {
         if (event.key === 'Enter' && !event.shiftKey && event.target.value.trim() !== '') {
@@ -61,6 +76,8 @@ const { page, category, mode, id } = Astro.props;
 
     // Main output generation
     window.generateOutput = async function generateOutput() {
+        if (isRedirecting) return;
+        clearError();
         if (!messageInput) {
             displayError('Input field missing!');
             return;
@@ -87,9 +104,12 @@ const { page, category, mode, id } = Astro.props;
         // Get text based on page
         const userMessage = messageInput.value;
 
-        // Clear the input immediately after capturing the value
-        messageInput.value = '';
-        messageInput.style.height = 'auto';
+        // On the chat page the message moves into the conversation, so clear the input.
+        // The landing page keeps it until the redirect, so a failed attempt can be retried
+        if (page === 'chat') {
+            messageInput.value = '';
+            messageInput.style.height = 'auto';
+        }
         if (sendButton) sendButton.disabled = true;
 
         // For chat page, add user message first
@@ -162,7 +182,7 @@ const { page, category, mode, id } = Astro.props;
             displayError(error.message || 'Unexpected error.');
         } finally {
             removeTypingIndicator();
-            setLoadingState(false);
+            if (!isRedirecting) setLoadingState(false);
         }
     }
 
@@ -213,10 +233,7 @@ const { page, category, mode, id } = Astro.props;
                 }
                 const icon = sendButton?.querySelector('i.material-symbols-outlined');
                 icon && (icon.style.display = 'none');
-                if (errorMessageDiv) {
-                    errorMessageDiv.style.display = 'none';
-                    errorMessageDiv.textContent = '';
-                }
+                clearError();
             }
             else {
                 spinner && (spinner.style.display = 'none');
@@ -233,9 +250,16 @@ const { page, category, mode, id } = Astro.props;
         }
     }
 
+    function clearError() {
+        const errorDiv = errorMessageDiv || document.getElementById('error-message');
+        if (errorDiv) {
+            errorDiv.style.display = 'none';
+            errorDiv.textContent = '';
+        }
+    }
+
     function displayError(message) {
         try {
-            console.error('displayError called with message:', message, '(type:', typeof message, ')');
             let messageToShow = 'An unknown error occurred.';
             if (typeof message === 'string' && message.trim() !== '') {
                 messageToShow = message;
@@ -258,15 +282,12 @@ const { page, category, mode, id } = Astro.props;
                 }
                 errorDiv.textContent = `${showErrorText}${messageToShow}`;
                 errorDiv.style.display = 'block';
-                console.warn('displayError: Error text set.');
             }
             else {
-                console.error('CRITICAL FAILURE in displayError: #error-message element not found:', messageToShow);
                 window.showError('Critical error occurred; error display area missing.\nHint: ' + messageToShow);
             }
             const outputSec = document.getElementById('output-section');
             if (outputSec) outputSec.style.display = 'none';
-            console.error('Displayed Error (final):', messageToShow);
             const guideBtn = document.getElementById('download-guide-pdf');
             if (guideBtn) guideBtn.disabled = true;
             const sheetBtn = document.getElementById('download-sheet-pdf');
@@ -281,7 +302,6 @@ const { page, category, mode, id } = Astro.props;
             else {
                 window.showError('Error: Critical UI failure during error reporting.');
             }
-            console.error('Original message causing displayError failure:', message);
         }
     }
 
@@ -377,7 +397,48 @@ const { page, category, mode, id } = Astro.props;
         }
     }
 
+    // Landing page: wait for the reply to be saved, then open the new chat
+    async function readHomeStream(response) {
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            buffer += decoder.decode(value, { stream: true });
+            const events = buffer.split('\n\n');
+            buffer = events.pop() || '';
+
+            for (const event of events) {
+                if (!event.startsWith('data: ')) continue;
+                let data;
+                try {
+                    data = JSON.parse(event.slice(6));
+                } catch (e) {
+                    console.error('Error parsing stream event:', e, event);
+                    continue;
+                }
+
+                if (data.type === 'error') throw new Error(data.error);
+                if (data.type === 'done') {
+                    if (!data.id || !category || !mode) throw new Error('Failed to redirect to chat page.');
+                    redirectToChat(data.id);
+                    return;
+                }
+            }
+        }
+
+        throw new Error('The response ended before the chat was created. Please try again.');
+    }
+
     async function readStream(response) {
+        if (page === 'home') {
+            await readHomeStream(response);
+            return;
+        }
+
         const chatMessages = document.querySelector('.chat-messages');
         if (!chatMessages) return;
 
@@ -514,7 +575,7 @@ const { page, category, mode, id } = Astro.props;
 
         if (page === 'home' && data.id && category && mode) {
             // Redirect to chat page for first message
-            window.location.href = `/${category}/${mode}/chat/${data.id}`;
+            redirectToChat(data.id);
         }
         else if (page === 'chat') {
             // Check if this is a new chat (URL ends with /chat/new)
