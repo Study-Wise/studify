@@ -3,7 +3,6 @@ import SidebarSection from '@/components/chat/SidebarSection.astro';
 import '@/styles/components/chat/sidebar.scss';
 import '@/styles/components/chat/left-sidebar.scss';
 
-import config from '@/lib/config';
 import type { UploadedFile } from '@/lib/threads';
 
 export interface ChatLeftSidebarProps {
@@ -150,7 +149,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
     </div>
 </section>
 
-<script is:inline define:vars={{ threadId, email, category, mode, defaultModel: config.model }}>
+<script is:inline define:vars={{ threadId, email, category, mode }}>
     // State that can be updated
     let currentThreadId = threadId;
 
@@ -334,7 +333,15 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
     async function ensureThreadExists() {
         // If threadId is "new", create a new thread first
         if (currentThreadId === 'new') {
-            const model = localStorage.getItem('model') || defaultModel;
+            // Use the provider and tier saved on /settings, like the chat script does
+            let settings = {};
+            try {
+                settings = JSON.parse(localStorage.getItem('settings') || '{}') || {};
+            } catch (_error) {
+                settings = {};
+            }
+            const provider = settings.provider || 'openai';
+            const tier = settings.tier || 'default';
 
             window.showInfo?.('Creating new chat...');
 
@@ -342,7 +349,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                 const response = await fetch('/api/thread/initialize', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ category, mode, model, isPublic: publicToggle?.checked === true })
+                    body: JSON.stringify({ category, mode, provider, tier, isPublic: publicToggle?.checked === true })
                 });
 
                 const data = await response.json();
