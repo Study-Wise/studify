@@ -38,20 +38,21 @@ const { title, threadId, canRename } = Astro.props;
                 titleButton.setAttribute('aria-label', `Rename chat: ${newTitle}`);
             };
 
-            const cancel = () => {
+            // Only take focus back when editing ended from the keyboard; on blur the user is moving elsewhere
+            const cancel = (restoreFocus) => {
                 titleInput.value = currentTitle;
                 showButton();
-                titleButton.focus();
+                if (restoreFocus) titleButton.focus();
             };
 
-            const save = async () => {
+            const save = async (restoreFocus) => {
                 if (isSaving || titleInput.hidden) return;
 
                 const newTitle = titleInput.value.replace(/\s+/g, ' ').trim();
 
                 // Nothing to save for an empty or unchanged title
                 if (!newTitle || newTitle === currentTitle) {
-                    cancel();
+                    cancel(restoreFocus);
                     return;
                 }
 
@@ -84,6 +85,7 @@ const { title, threadId, canRename } = Astro.props;
                     titleInput.disabled = false;
                     titleInput.value = currentTitle;
                     showButton();
+                    if (restoreFocus) titleButton.focus();
                 }
             };
 
@@ -96,17 +98,20 @@ const { title, threadId, canRename } = Astro.props;
             });
 
             titleInput.addEventListener('keydown', (event) => {
+                // Enter and Escape confirm or cancel IME composition; Safari reports that Enter as keyCode 229
+                if (event.isComposing || event.keyCode === 229) return;
+
                 if (event.key === 'Enter') {
                     event.preventDefault();
-                    save();
+                    save(true);
                 }
                 else if (event.key === 'Escape') {
                     event.preventDefault();
-                    cancel();
+                    cancel(true);
                 }
             });
 
-            titleInput.addEventListener('blur', save);
+            titleInput.addEventListener('blur', () => save(false));
         }
     </script>
 )}
