@@ -14,6 +14,9 @@ export interface ThreadAccessResult {
     // Thread is marked public, regardless of who is viewing
     isPublicThread: boolean;
     threadOwner: string | null;
+    // A thread with this ID is in the database. Unknown IDs still count as authorized (unclaimed),
+    // so pages that only show an existing thread must check this too.
+    threadExists: boolean;
 }
 
 export async function checkThreadAccess(
@@ -24,6 +27,7 @@ export async function checkThreadAccess(
 ): Promise<ThreadAccessResult> {
     let threadOwner: string | null = null;
     let isPublicThread = false;
+    let threadExists = false;
 
     // Get user email - fallback to dev user if in dev mode and no user provided
     let effectiveUser = user;
@@ -56,6 +60,7 @@ export async function checkThreadAccess(
             const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
             if (threads.length > 0) {
                 const thread = threads[0];
+                threadExists = true;
                 threadOwner = thread.email;
                 isPublicThread = thread.isPublic;
 
@@ -66,7 +71,8 @@ export async function checkThreadAccess(
                         isAuthorized: false,
                         isPublic: false,
                         isPublicThread: false,
-                        threadOwner: null
+                        threadOwner: null,
+                        threadExists
                     };
                 }
                 if (urlMode && thread.mode !== urlMode) {
@@ -75,7 +81,8 @@ export async function checkThreadAccess(
                         isAuthorized: false,
                         isPublic: false,
                         isPublicThread: false,
-                        threadOwner: null
+                        threadOwner: null,
+                        threadExists
                     };
                 }
 
@@ -113,6 +120,7 @@ export async function checkThreadAccess(
         isAuthorized,
         isPublic,
         isPublicThread,
-        threadOwner
+        threadOwner,
+        threadExists
     };
 }
