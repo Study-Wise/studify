@@ -97,11 +97,24 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
             }
 
             if (contentDiv) {
+                window.MathJax?.typesetClear?.([contentDiv]);
+                // Reset equation numbers and labels
+                window.MathJax?.texReset?.();
                 contentDiv.innerHTML = parsedContent;
+
+                if (window.MathJax?.typesetPromise) {
+                    try {
+                        await window.MathJax.startup?.promise;
+                        await window.MathJax.typesetPromise([contentDiv]);
+                    } catch (err) {
+                        console.error('MathJax typesetting error:', err);
+                    }
+                }
             }
 
             // Render any Desmos graphs in the new content
             window.activateDesmos?.();
+            window.initializeStepByStep?.();
         }
         else if (iframeTypes.includes(contentType)) {
             let container = page.querySelector(`.${contentType}-container`);
