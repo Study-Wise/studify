@@ -215,7 +215,10 @@ export function createModal(options: ModalOptions): Modal {
                     if (previous instanceof HTMLElement && previous !== document.body) {
                         previous.focus({ preventScroll: true });
                     }
-                    else if (document.activeElement instanceof HTMLElement) {
+                    // If focus couldn't go back (e.g. that element was
+                    // disabled or removed), take it off the toast anyway so
+                    // the toast still closes itself
+                    if (element.contains(document.activeElement) && document.activeElement instanceof HTMLElement) {
                         document.activeElement.blur();
                     }
                 }
