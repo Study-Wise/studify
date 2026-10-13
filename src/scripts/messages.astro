@@ -45,7 +45,6 @@ const { page, category, mode, id } = Astro.props;
         const { id: createdId, source } = event.detail || {};
         if (source !== 'messages' && createdId && !threadId) {
             threadId = createdId;
-            localStorage.setItem('threadId', createdId);
         }
     });
 
@@ -156,7 +155,6 @@ const { page, category, mode, id } = Astro.props;
                 if (page === 'home') {
                     await showOpenInChatBtn(data.id);
                     threadId = data.id;
-                    localStorage.setItem('threadId', data.id);
                 }
             }
         } catch (error) {
@@ -761,7 +759,6 @@ const { page, category, mode, id } = Astro.props;
         const idFromUrl = getThreadIdFromUrl();
         if (idFromUrl) {
             threadId = idFromUrl;
-            localStorage.setItem('threadId', threadId);
         }
 
         sendButton = document.querySelector('.send-button');
