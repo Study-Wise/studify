@@ -300,9 +300,15 @@ const { page, category, mode, id } = Astro.props;
     const mathDelimiterPattern = /\$|\\\(|\\\[/;
     const mathJaxLoadTimeout = 10000;
 
+    // Startup rejects for good if the initial typeset fails, but later typesets can still succeed,
+    // so only wait for it to finish
+    function whenStartupSettled() {
+        return window.MathJax.startup.promise.catch(err => console.error('MathJax startup error:', err));
+    }
+
     // MathJax loads async, so wait for its startup (including the initial page typeset) before typesetting
     function whenMathJaxReady() {
-        if (window.MathJax?.startup?.promise) return window.MathJax.startup.promise;
+        if (window.MathJax?.startup?.promise) return whenStartupSettled();
 
         const script = document.getElementById('MathJax-script');
         if (!script) return Promise.reject(new Error('MathJax script not found.'));
@@ -313,7 +319,7 @@ const { page, category, mode, id } = Astro.props;
             const timer = setTimeout(() => reject(new Error('MathJax took too long to load.')), mathJaxLoadTimeout);
             script.addEventListener('load', () => {
                 clearTimeout(timer);
-                resolve(window.MathJax.startup.promise);
+                resolve(whenStartupSettled());
             }, { once: true });
             script.addEventListener('error', () => {
                 clearTimeout(timer);
