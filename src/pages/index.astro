@@ -82,26 +82,27 @@ const description = 'Studify is your AI-powered study partner. Paste your homewo
                     <span class="material-symbols-outlined" aria-hidden="true">search</span>
                     <span class="subject-search-indicator" aria-hidden="true"></span>
                 </button>
-                <div class="subject-search-panel" id="subject-search-panel" role="search" hidden>
-                    <label class="subject-search-field">
-                        <span class="material-symbols-outlined" aria-hidden="true">search</span>
-                        <input
-                            type="search"
-                            id="subject-search-input"
-                            placeholder="Search subjects"
-                            aria-label="Search subjects"
-                            autocomplete="off"
-                        />
-                    </label>
-                    <div class="subject-filter-chips" role="group" aria-label="Filter by group">
-                        <button type="button" class="subject-filter-chip" data-filter="" aria-pressed="true">All</button>
-                        {visibleCategories.map(([categoryKey, category]) => (
-                            <button type="button" class="subject-filter-chip" data-filter={categoryKey} aria-pressed="false">
-                                {category.name}
-                            </button>
-                        ))}
-                    </div>
-                </div>
+            </div>
+        </div>
+
+        <div class="subject-search-panel" id="subject-search-panel" role="search" hidden>
+            <label class="subject-search-field">
+                <span class="material-symbols-outlined" aria-hidden="true">search</span>
+                <input
+                    type="search"
+                    id="subject-search-input"
+                    placeholder="Search subjects"
+                    aria-label="Search subjects"
+                    autocomplete="off"
+                />
+            </label>
+            <div class="subject-filter-chips" role="group" aria-label="Filter by group">
+                <button type="button" class="subject-filter-chip" data-filter="" aria-pressed="true">All</button>
+                {visibleCategories.map(([categoryKey, category]) => (
+                    <button type="button" class="subject-filter-chip" data-filter={categoryKey} aria-pressed="false">
+                        {category.name}
+                    </button>
+                ))}
             </div>
         </div>
 
