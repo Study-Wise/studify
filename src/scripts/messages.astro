@@ -298,7 +298,16 @@ const { page, category, mode, id } = Astro.props;
 
     // Matches the MathJax delimiters configured in Layout.astro ($…$, $$…$$, \(…\), \[…\])
     const mathDelimiterPattern = /\$|\\\(|\\\[/;
-    const mathJaxLoadTimeout = 10000;
+    const mathJaxTimeout = 10000;
+
+    // Reject if the promise hasn't settled within ms
+    function withTimeout(promise, ms, message) {
+        let timer;
+        const timeout = new Promise((_, reject) => {
+            timer = setTimeout(() => reject(new Error(message)), ms);
+        });
+        return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
+    }
 
     // Startup rejects for good if the initial typeset fails, but later typesets can still succeed,
     // so only wait for it to finish
@@ -316,15 +325,8 @@ const { page, category, mode, id } = Astro.props;
         if (script.dataset.failed === 'true') return Promise.reject(new Error('MathJax failed to load.'));
 
         return new Promise((resolve, reject) => {
-            const timer = setTimeout(() => reject(new Error('MathJax took too long to load.')), mathJaxLoadTimeout);
-            script.addEventListener('load', () => {
-                clearTimeout(timer);
-                resolve(whenStartupSettled());
-            }, { once: true });
-            script.addEventListener('error', () => {
-                clearTimeout(timer);
-                reject(new Error('MathJax failed to load.'));
-            }, { once: true });
+            script.addEventListener('load', () => resolve(whenStartupSettled()), { once: true });
+            script.addEventListener('error', () => reject(new Error('MathJax failed to load.')), { once: true });
         });
     }
 
@@ -338,8 +340,12 @@ const { page, category, mode, id } = Astro.props;
             .forEach(el => el.classList.add('mathjax-pending'));
 
         try {
-            await whenMathJaxReady();
-            await window.MathJax.typesetPromise(validElements);
+            // Loading, startup and typesetting can each stall on a hung request, so limit the whole wait
+            await withTimeout(
+                whenMathJaxReady().then(() => window.MathJax.typesetPromise(validElements)),
+                mathJaxTimeout,
+                'MathJax took too long to typeset.'
+            );
         } catch (err) {
             console.error('MathJax typesetting error:', err);
         } finally {
