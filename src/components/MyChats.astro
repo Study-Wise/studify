@@ -45,6 +45,7 @@ const threadsByCategory: Record<string, typeof threads> = threads.reduce((acc, t
                         <div class="threads-list">
                             {categoryThreads.map((thread) => {
                                 const mode = category.modes[thread.mode];
+                                const displayTitle = thread.title.trim() || (mode ? mode.name : thread.mode);
                                 const chatUrl = `/${categoryKey}/${thread.mode}/chat/${thread.id}`;
 
                                 return (
@@ -54,7 +55,7 @@ const threadsByCategory: Record<string, typeof threads> = threads.reduce((acc, t
                                                 <div class="thread-info">
                                                     {mode && <span class="mode-icon">{mode.icon}</span>}
                                                     <div class="thread-text">
-                                                        <h3 class="thread-title">{thread.title}</h3>
+                                                        <h3 class="thread-title">{displayTitle}</h3>
                                                         <p class="thread-mode">
                                                             {mode ? mode.name : thread.mode}
                                                         </p>
@@ -72,7 +73,7 @@ const threadsByCategory: Record<string, typeof threads> = threads.reduce((acc, t
                                             class="thread-delete"
                                             data-thread-id={thread.id}
                                             title="Delete chat"
-                                            aria-label={`Delete chat: ${thread.title}`}
+                                            aria-label={`Delete chat: ${displayTitle}`}
                                         >
                                             <span class="material-symbols-outlined" aria-hidden="true">delete</span>
                                         </button>
