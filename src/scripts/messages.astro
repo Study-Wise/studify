@@ -52,6 +52,21 @@ const { page, category, mode, id } = Astro.props;
     const API_ENDPOINT = '/api/message/generate';
 
     let isGenerating = false;
+    let isRedirecting = false;
+
+    // Leave the page locked while the browser navigates to the new chat
+    function redirectToChat(chatId) {
+        isRedirecting = true;
+        window.location.href = `/${category}/${mode}/chat/${chatId}`;
+    }
+
+    // Unlock the page if Back restores it from the back/forward cache mid-redirect
+    window.addEventListener('pageshow', (event) => {
+        if (event.persisted && isRedirecting) {
+            isRedirecting = false;
+            setLoadingState(false);
+        }
+    });
 
     function handleEnterKey(event) {
         if (event.key === 'Enter' && !event.shiftKey && event.target.value.trim() !== '') {
@@ -62,6 +77,7 @@ const { page, category, mode, id } = Astro.props;
 
     // Main output generation
     window.generateOutput = async function generateOutput() {
+        if (isRedirecting) return;
         clearError();
         if (!messageInput) {
             displayError('Input field missing!');
@@ -168,7 +184,7 @@ const { page, category, mode, id } = Astro.props;
             displayError(error.message || 'Unexpected error.');
         } finally {
             removeTypingIndicator();
-            setLoadingState(false);
+            if (!isRedirecting) setLoadingState(false);
         }
     }
 
@@ -410,7 +426,7 @@ const { page, category, mode, id } = Astro.props;
                 if (data.type === 'error') throw new Error(data.error);
                 if (data.type === 'done') {
                     if (!data.id || !category || !mode) throw new Error('Failed to redirect to chat page.');
-                    window.location.href = `/${category}/${mode}/chat/${data.id}`;
+                    redirectToChat(data.id);
                     return;
                 }
             }
@@ -561,7 +577,7 @@ const { page, category, mode, id } = Astro.props;
 
         if (page === 'home' && data.id && category && mode) {
             // Redirect to chat page for first message
-            window.location.href = `/${category}/${mode}/chat/${data.id}`;
+            redirectToChat(data.id);
         }
         else if (page === 'chat') {
             // Check if this is a new chat (URL ends with /chat/new)
