@@ -7,5 +7,7 @@ const featurebaseJwt = getFeaturebaseJwt(Astro.locals.user);
 {featurebaseJwt && <div data-featurebase-jwt={featurebaseJwt} hidden></div>}
 
 <script>
-    import '@/lib/featurebase-client';
+    import { bootFeaturebase } from '@/lib/featurebase-client';
+
+    bootFeaturebase();
 </script>
