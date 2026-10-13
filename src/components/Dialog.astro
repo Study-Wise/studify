@@ -15,6 +15,9 @@ import '@/styles/components/modal.scss';
     // Messages waiting for the error currently on screen to be dismissed
     const pendingErrors: DialogEntry[] = [];
     let pendingNotice: DialogEntry | null = null;
+    // Success messages waiting for the error on screen to be dismissed, since
+    // a toast would be hidden under the error dialog's backdrop
+    const pendingToasts: string[] = [];
     let current: DialogEntry | null = null;
     let modal: Modal | null = null;
 
@@ -59,6 +62,9 @@ import '@/styles/components/modal.scss';
         }
         if (next) {
             renderDialog(next);
+        }
+        else {
+            pendingToasts.splice(0).forEach((message) => showToast(message, { title: 'Success', type: 'success' }));
         }
     }
 
@@ -108,11 +114,33 @@ import '@/styles/components/modal.scss';
         toast.open();
     }
 
+    /**
+     * Show a success message as a non-blocking toast. It never replaces an
+     * error dialog; while one is showing, the toast waits for it to close.
+     * @param message - The message to display
+     */
+    function showSuccessToast(message: string) {
+        // A success message ends whatever was in progress, so a status update
+        // on screen or waiting (e.g. "Uploading...") is no longer needed.
+        // Errors are kept.
+        pendingNotice = null;
+        if (current && current.type !== 'error') {
+            getModal().close();
+        }
+        else if (current) {
+            // Drop the waiting status update from the "Next" count
+            getModal().setContent(toModalContent(current));
+            pendingToasts.push(message);
+            return;
+        }
+
+        showToast(message, { title: 'Success', type: 'success' });
+    }
     // Make functions available globally, including to is:inline scripts
     window.showDialog = showDialog;
     window.showToast = showToast;
     window.showError = (message) => showDialog(message, { title: 'Error', type: 'error' });
     window.showWarning = (message) => showDialog(message, { title: 'Warning', type: 'warning' });
-    window.showSuccess = (message) => showDialog(message, { title: 'Success', type: 'success' });
+    window.showSuccess = showSuccessToast;
     window.showInfo = (message) => showDialog(message, { title: 'Information', type: 'info' });
 </script>
