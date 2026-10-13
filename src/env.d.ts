@@ -13,6 +13,7 @@ interface WindowEventMap {
 // Set by src/components/Dialog.astro
 interface Window {
     showDialog: (message: string, options?: { title?: string; icon?: string; type?: import('./lib/modal').ModalType }) => void;
+    showToast: (message: string, options?: { title?: string; icon?: string; type?: import('./lib/modal').ModalType }) => void;
     showError: (message: string) => void;
     showWarning: (message: string) => void;
     showSuccess: (message: string) => void;

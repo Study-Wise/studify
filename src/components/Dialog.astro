@@ -89,8 +89,28 @@ import '@/styles/components/modal.scss';
         renderDialog(entry);
     }
 
+    /**
+     * Show a non-blocking toast that closes itself and keeps focus where the user is
+     * @param message - The message to display
+     * @param options - Optional title (default 'Notice'), Material icon name and type (default 'info')
+     */
+    function showToast(message: string, options: { title?: string; icon?: string; type?: ModalType } = {}) {
+        const { title = 'Notice', icon, type = 'info' } = options;
+        const toast = createModal({
+            display: 'toast',
+            title,
+            message,
+            icon,
+            type,
+            // Each toast is single-use, so drop it from the page once it closes
+            onClose: () => toast.element.remove(),
+        });
+        toast.open();
+    }
+
     // Make functions available globally, including to is:inline scripts
     window.showDialog = showDialog;
+    window.showToast = showToast;
     window.showError = (message) => showDialog(message, { title: 'Error', type: 'error' });
     window.showWarning = (message) => showDialog(message, { title: 'Warning', type: 'warning' });
     window.showSuccess = (message) => showDialog(message, { title: 'Success', type: 'success' });
