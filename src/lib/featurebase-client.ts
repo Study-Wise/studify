@@ -1,4 +1,4 @@
-import Featurebase, { clearConfig } from 'featurebase-js';
+import Featurebase, { clearConfig, whenReady } from 'featurebase-js';
 
 export const FEATUREBASE_APP_ID = '6acd470c188ccc41b584247c';
 
@@ -29,10 +29,17 @@ export function bootFeaturebase() {
 
     // The page that signed out may have navigated away before its shutdown reached the runtime,
     // or never loaded the messenger at all (chat pages), so finish the reset before booting.
+    // The marker is only removed once the messenger has booted, which means the queued shutdown has run.
     try {
         if (localStorage.getItem(RESET_PENDING_KEY)) {
-            localStorage.removeItem(RESET_PENDING_KEY);
             dispatch('shutdown');
+            whenReady(() => {
+                try {
+                    localStorage.removeItem(RESET_PENDING_KEY);
+                } catch {
+                    // Storage became unavailable; the next boot just repeats the harmless shutdown
+                }
+            });
         }
     } catch {
         // localStorage can be unavailable (e.g. blocked storage); the sign-out page's own shutdown still ran
