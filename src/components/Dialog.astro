@@ -15,6 +15,9 @@ import '@/styles/components/modal.scss';
     // Messages waiting for the error currently on screen to be dismissed
     const pendingErrors: DialogEntry[] = [];
     let pendingNotice: DialogEntry | null = null;
+    // Success messages waiting for the error on screen to be dismissed, since
+    // a toast would be hidden under the error dialog's backdrop
+    const pendingToasts: string[] = [];
     let current: DialogEntry | null = null;
     let modal: Modal | null = null;
 
@@ -60,6 +63,9 @@ import '@/styles/components/modal.scss';
         if (next) {
             renderDialog(next);
         }
+        else {
+            pendingToasts.splice(0).forEach(openToast);
+        }
     }
 
     /**
@@ -90,8 +96,23 @@ import '@/styles/components/modal.scss';
     }
 
     /**
-     * Show a success message as a non-blocking toast. Toasts stack on their
-     * own, so they never wait behind an error dialog or replace it.
+     * Open a success toast, which takes itself off the page once closed
+     * @param message - The message to display
+     */
+    function openToast(message: string) {
+        const toast = createModal({
+            title: 'Success',
+            message,
+            type: 'success',
+            display: 'toast',
+            onClose: () => toast.element.remove(),
+        });
+        toast.open();
+    }
+
+    /**
+     * Show a success message as a non-blocking toast. It never replaces an
+     * error dialog; while one is showing, the toast waits for it to close.
      * @param message - The message to display
      */
     function showSuccessToast(message: string) {
@@ -105,17 +126,11 @@ import '@/styles/components/modal.scss';
         else if (current) {
             // Drop the waiting status update from the "Next" count
             getModal().setContent(toModalContent(current));
+            pendingToasts.push(message);
+            return;
         }
 
-        const toast = createModal({
-            title: 'Success',
-            message,
-            type: 'success',
-            display: 'toast',
-            // Each toast is single-use, so take it off the page once closed
-            onClose: () => toast.element.remove(),
-        });
-        toast.open();
+        openToast(message);
     }
 
     // Make functions available globally, including to is:inline scripts
