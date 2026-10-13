@@ -89,10 +89,27 @@ import '@/styles/components/modal.scss';
         renderDialog(entry);
     }
 
+    /**
+     * Show a success message as a non-blocking toast. Toasts stack on their
+     * own, so they never wait behind or replace a dialog on screen.
+     * @param message - The message to display
+     */
+    function showSuccessToast(message: string) {
+        const toast = createModal({
+            title: 'Success',
+            message,
+            type: 'success',
+            display: 'toast',
+            // Each toast is single-use, so take it off the page once closed
+            onClose: () => toast.element.remove(),
+        });
+        toast.open();
+    }
+
     // Make functions available globally, including to is:inline scripts
     window.showDialog = showDialog;
     window.showError = (message) => showDialog(message, { title: 'Error', type: 'error' });
     window.showWarning = (message) => showDialog(message, { title: 'Warning', type: 'warning' });
-    window.showSuccess = (message) => showDialog(message, { title: 'Success', type: 'success' });
+    window.showSuccess = showSuccessToast;
     window.showInfo = (message) => showDialog(message, { title: 'Information', type: 'info' });
 </script>
