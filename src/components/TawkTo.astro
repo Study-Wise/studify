@@ -9,6 +9,7 @@ const user = Astro.locals.user;
 // Keep the secret on the server, and do not send visitor details without a hash.
 if (user && secretKey) {
     user.hash = createHmac('sha256', secretKey).update(user.id).digest('hex');
+    user.emailHash = createHmac('sha256', secretKey).update(user.email).digest('hex');
 }
 ---
 <!--Start of Tawk.to Script-->
