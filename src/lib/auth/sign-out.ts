@@ -1,6 +1,5 @@
 // Client-side sign-out that also removes the user's data from this browser, so the next person on a shared computer can't see it
 import { authClient } from '@/lib/auth/client';
-import { shutdownFeaturebase } from '@/lib/featurebase-client';
 
 // Caches holding user content: generated material pages and images (astro.config.mjs) and the offline copy (OfflineSupport.astro)
 const USER_CACHES = ['study-materials-cache', 'images-cache', 'studywise-offline-v1'];
@@ -35,7 +34,6 @@ function clearUserStorage() {
 export async function signOutAndClearData() {
     // Clear local data even if the server sign-out fails, so a user who walks away from a shared device doesn't leave it behind
     clearUserStorage();
-    shutdownFeaturebase();
     await clearUserCaches();
 
     const { error } = await authClient.signOut();

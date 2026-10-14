@@ -5,23 +5,18 @@ main.support-page {
 }
 
 .support-section {
+    position: relative;
     flex: 1;
     display: flex;
     flex-direction: column;
     width: 100%;
 
+    // Pinned rather than height: 100%, which can't resolve against a flex-grown parent
     .support-embed {
-        position: relative;
-        flex: 1;
+        position: absolute;
+        inset: 0;
         width: 100%;
-
-        // Pinned rather than height: 100%, which can't resolve against a flex-grown parent
-        iframe {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            border: 0;
-        }
+        height: 100%;
+        border: 0;
     }
 }
