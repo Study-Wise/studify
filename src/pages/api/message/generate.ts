@@ -256,8 +256,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
             selectedProvider = resolvedProvider;
         }
 
-        // Server-verified context for tools: thread ownership was checked above, so tools
-        // must use this rather than any thread ID chosen by the model
+        // Server-verified context for tools: thread ownership was checked above, so tools must use this rather than any thread ID chosen by the model
         const toolContext: ToolContext = { threadId: current_thread_id!, email: user_email };
 
         // --- Special handling for first message: Generate AI welcome response ---
@@ -350,8 +349,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
             } catch (error) {
                 console.error(`❌ [${requestId}] Error handling first message:`, error);
 
-                // The thread was created for this message, so remove it rather than
-                // leave an empty, untitled chat behind when the first reply fails
+                // The thread was created for this message, so remove it rather than leave an empty, untitled chat behind when the first reply fails
                 if (isNewThread && !messagesSaved) {
                     try {
                         await db.delete(threadsTable)
@@ -364,8 +362,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
             }
         }
 
-        // Add the user message to the history that gets saved. streamText works on a
-        // filtered copy, so a user message it appends never reaches this array
+        // Add the user message to the history that gets saved. streamText works on a filtered copy, so a user message it appends never reaches this array
         convoHistory.push({ role: 'user', content: userPrompt });
 
         const tools = modeObj.tools || {};

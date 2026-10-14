@@ -40,7 +40,6 @@ export async function generateWelcomeMessage({
         toolContext
     );
 
-    // Note: Client tool calls from welcome message are currently ignored
-    // since the welcome message flow handles things differently
+    // Note: Client tool calls from welcome message are currently ignored since the welcome message flow handles things differently
     return result.text;
 }

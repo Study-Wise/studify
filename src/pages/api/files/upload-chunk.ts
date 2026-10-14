@@ -56,8 +56,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
         const upload = chunkedUploads.get(uploadId)!;
 
-        // An upload ID is bound to the user and thread that started it; never mix in
-        // chunks from another user or thread
+        // An upload ID is bound to the user and thread that started it; never mix in chunks from another user or thread
         if (upload.email !== email || upload.threadId !== threadId) {
             return new Response(
                 JSON.stringify({ status: 'error', error: 'Upload not found or unauthorized' }),

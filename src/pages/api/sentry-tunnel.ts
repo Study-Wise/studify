@@ -5,9 +5,7 @@ import { SENTRY_DSN } from '@/lib/sentry';
 const allowedDsn = new URL(SENTRY_DSN);
 const allowedProjectId = allowedDsn.pathname.replace(/^\//, '');
 
-// Forwards envelopes from the browser SDK to Sentry. Only our own DSN is accepted,
-// so the route can't be used to post to other Sentry projects or hosts.
-// https://docs.sentry.io/platforms/javascript/troubleshooting/#using-the-tunnel-option
+// Forwards envelopes from the browser SDK to Sentry. Only our own DSN is accepted, so the route can't be used to post to other Sentry projects or hosts. https://docs.sentry.io/platforms/javascript/troubleshooting/#using-the-tunnel-option
 export const POST: APIRoute = async ({ request }) => {
     const envelope = await request.arrayBuffer();
 

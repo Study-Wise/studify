@@ -15,8 +15,7 @@ import '@/styles/components/modal.scss';
     // Messages waiting for the error currently on screen to be dismissed
     const pendingErrors: DialogEntry[] = [];
     let pendingNotice: DialogEntry | null = null;
-    // Success messages waiting for the error on screen to be dismissed, since
-    // a toast would be hidden under the error dialog's backdrop
+    // Success messages waiting for the error on screen to be dismissed, since a toast would be hidden under the error dialog's backdrop
     const pendingToasts: string[] = [];
     let current: DialogEntry | null = null;
     let modal: Modal | null = null;
@@ -77,10 +76,7 @@ import '@/styles/components/modal.scss';
         const { title = 'Alert', icon, type = 'info' } = options;
         const entry: DialogEntry = { message, title, icon, type };
 
-        // An error on screen must never be overwritten, so anything that
-        // arrives while one is showing waits its turn. Every error is kept;
-        // only the latest non-error message is kept, since those are
-        // transient status updates.
+        // An error on screen must never be overwritten, so anything thatarrives while one is showing waits its turn. Every error is kept; only the latest non-error message is kept, since those are transient status updates.
         if (current?.type === 'error') {
             if (type === 'error') {
                 pendingErrors.push(entry);
@@ -120,9 +116,7 @@ import '@/styles/components/modal.scss';
      * @param message - The message to display
      */
     function showSuccessToast(message: string) {
-        // A success message ends whatever was in progress, so a status update
-        // on screen or waiting (e.g. "Uploading...") is no longer needed.
-        // Errors are kept.
+        // A success message ends whatever was in progress, so a status update on screen or waiting (e.g. "Uploading...") is no longer needed. Errors are kept.
         pendingNotice = null;
         if (current && current.type !== 'error') {
             getModal().close();

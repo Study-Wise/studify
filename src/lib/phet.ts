@@ -1,7 +1,6 @@
 import Exa from 'exa-js';
 
-// PhET only offers its metadata API to paying partners, so simulations are found
-// by searching the PhET site with Exa instead.
+// PhET only offers its metadata API to paying partners, so simulations are found by searching the PhET site with Exa instead.
 const exa = new Exa(import.meta.env.EXA_SEARCH_API_KEY || process.env.EXA_SEARCH_API_KEY);
 
 const PHET_DOMAIN = 'phet.colorado.edu';

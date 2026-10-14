@@ -37,8 +37,7 @@ const { page, category, mode, id } = Astro.props;
         }
     });
 
-    // Adopt a thread created elsewhere on the page (e.g. by a file upload in the sidebar)
-    // so the first message is added to it instead of creating a separate thread
+    // Adopt a thread created elsewhere on the page (e.g. by a file upload in the sidebar) so the first message is added to it instead of creating a separate thread
     window.addEventListener('thread-created', (event) => {
         const { id: createdId, source } = event.detail || {};
         if (source !== 'messages' && createdId && !threadId) {
@@ -85,8 +84,7 @@ const { page, category, mode, id } = Astro.props;
             return;
         }
 
-        // The file sidebar may have created this chat's thread (uploading on /chat/new
-        // rewrites the URL), so pick up that ID to send messages to the same thread
+        // The file sidebar may have created this chat's thread (uploading on /chat/new rewrites the URL), so pick up that ID to send messages to the same thread
         if (page === 'chat' && !threadId) {
             threadId = getThreadIdFromUrl();
         }
@@ -333,8 +331,7 @@ const { page, category, mode, id } = Astro.props;
                     });
                 }
 
-                // Wait for startup (including the initial page typeset). It rejects for good if that typeset fails,
-                // but later typesets can still succeed, so only wait for it to finish
+                // Wait for startup (including the initial page typeset). It rejects for good if that typeset fails, but later typesets can still succeed, so only wait for it to finish
                 await window.MathJax.startup.promise.catch(err => console.error('MathJax startup error:', err));
                 await window.MathJax.typesetPromise(validElements);
             })(), mathJaxTimeout, 'MathJax took too long to typeset.');
@@ -857,4 +854,4 @@ const { page, category, mode, id } = Astro.props;
     if (document.readyState === 'complete' || document.readyState === 'interactive') {
         initializePage();
     }
-</script> 
+</script> 

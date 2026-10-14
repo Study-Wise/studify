@@ -1,11 +1,8 @@
-// Centralized modal factory. Every modal in the app is built here so they
-// share markup, styles (src/styles/components/modal.scss) and behavior.
-// Client-side only: it touches the DOM.
+// Centralized modal factory. Every modal in the app is built here so they share markup, styles (src/styles/components/modal.scss) and behavior. Client-side only: it touches the DOM.
 
 export type ModalType = 'info' | 'error' | 'warning' | 'success';
 
-// 'modal' blocks the page until dismissed; 'toast' is a non-blocking
-// notification in the corner of the screen that closes itself
+// 'modal' blocks the page until dismissed; 'toast' is a non-blocking notification in the corner of the screen that closes itself
 export type ModalDisplay = 'modal' | 'toast';
 
 export interface ModalButton {
@@ -28,8 +25,7 @@ export interface ModalContent {
 export interface ModalOptions extends ModalContent {
     // Defaults to 'modal'
     display?: ModalDisplay;
-    // Toasts only: milliseconds before the toast closes itself while not
-    // hovered or focused. Defaults to 5000; 0 keeps it open until dismissed.
+    // Toasts only: milliseconds before the toast closes itself while not hovered or focused. Defaults to 5000; 0 keeps it open until dismissed.
     duration?: number;
     onClose?: () => void;
 }
@@ -157,8 +153,7 @@ export function createModal(options: ModalOptions): Modal {
         }
     }
 
-    // Toasts close themselves after `duration`, paused while the user is
-    // hovering over or focused inside them so they can finish reading
+    // Toasts close themselves after `duration`, paused while the user is hovering over or focused inside them so they can finish reading
     let dismissTimer: ReturnType<typeof setTimeout> | undefined;
 
     function stopDismissTimer() {
@@ -208,16 +203,13 @@ export function createModal(options: ModalOptions): Modal {
             if (isToast) {
                 // show() keeps the rest of the page usable, unlike showModal()
                 if (!element.open) {
-                    // show() focuses the close button, so hand focus back
-                    // to wherever the user was
+                    // show() focuses the close button, so hand focus back to wherever the user was
                     const previous = document.activeElement;
                     element.show();
                     if (previous instanceof HTMLElement && previous !== document.body) {
                         previous.focus({ preventScroll: true });
                     }
-                    // If focus couldn't go back (e.g. that element was
-                    // disabled or removed), take it off the toast anyway so
-                    // the toast still closes itself
+                    // If focus couldn't go back (e.g. that element was disabled or removed), take it off the toast anyway so the toast still closes itself
                     if (element.contains(document.activeElement) && document.activeElement instanceof HTMLElement) {
                         document.activeElement.blur();
                     }
