@@ -1,14 +1,14 @@
-import { eq } from 'drizzle-orm';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
-
 import { generateText } from '@/lib/ai-service';
-import { buildContentSystemPrompt } from '@/lib/content';
 import config from '@/lib/config';
-import { generateImage } from '@/lib/genai-image';
-import type { ThreadData, UploadedFile } from '@/lib/threads';
+import { buildContentSystemPrompt } from '@/lib/content';
 import { saveContent } from '@/lib/content/latest';
+import { generateImage } from '@/lib/genai-image';
+import { parseThreadData, type UploadedFile } from '@/lib/threads';
 import { VendorError } from '@/lib/user-errors';
+
+import { eq } from 'drizzle-orm';
 
 function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
     const filesWithText = uploadedFiles.filter(f => f.extractedText);
@@ -38,10 +38,10 @@ export async function generateInfographic(
 
     const thread = threads[0];
 
-    const threadData = thread.thread as ThreadData;
+    const threadData = parseThreadData(thread.thread);
     const messages = threadData?.messages ?? [];
 
-    const uploadedFiles = (thread.uploadedFiles as UploadedFile[]) ?? [];
+    const uploadedFiles = thread.uploadedFiles ?? [];
 
     if (messages.length === 0) {
         throw new Error('No messages found in thread');
@@ -62,7 +62,6 @@ Your description should be clear, visual, and specific about:
 Keep it under 1000 characters. Be specific about visual elements, diagrams, icons, and text placement.
 
 You may remove or modify elements as you see fit based on relevance to the topic.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
-
 
     const descriptionResult = await generateText(
         systemPrompt,

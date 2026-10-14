@@ -1,4 +1,3 @@
-
 // Converts a question string to a URL-friendly ID
 export function questionToId(question: string): string {
     return question

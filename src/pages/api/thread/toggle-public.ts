@@ -1,13 +1,12 @@
-import type { APIRoute } from 'astro';
-
+import { db } from '@/db/initialize';
+import { threadsTable } from '@/db/schema';
+import { isValidEmail } from '@/lib/validation';
 import 'dotenv/config';
 import { nanoid } from 'nanoid';
 
 import { eq } from 'drizzle-orm';
-import { db } from '@/db/initialize';
-import { threadsTable } from '@/db/schema';
 
-import { isValidEmail } from '@/lib/validation';
+import type { APIRoute } from 'astro';
 
 export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();

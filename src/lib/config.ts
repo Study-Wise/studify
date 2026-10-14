@@ -39,5 +39,4 @@ const config: Config = {
     contentGenerationExcludeTools: ['generate-content', 'get-content-types', 'open-content'],
 };
 
-
 export default config;

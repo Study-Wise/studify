@@ -1,15 +1,14 @@
-import type { APIRoute } from 'astro';
-
+import { db } from '@/db/initialize';
+import { threadsTable } from '@/db/schema';
+import { generateWebpage } from '@/lib/content/generate/webpage';
+import { getUserErrorMessage, THREAD_NOT_FOUND_MESSAGE } from '@/lib/user-errors';
+import { isValidEmail } from '@/lib/validation';
 import 'dotenv/config';
 import { nanoid } from 'nanoid';
 
 import { eq } from 'drizzle-orm';
-import { db } from '@/db/initialize';
-import { threadsTable } from '@/db/schema';
 
-import { isValidEmail } from '@/lib/validation';
-import { getUserErrorMessage, THREAD_NOT_FOUND_MESSAGE } from '@/lib/user-errors';
-import { generateWebpage } from '@/lib/content/generate/webpage';
+import type { APIRoute } from 'astro';
 
 export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();

@@ -1,14 +1,13 @@
-import 'dotenv/config';
-import * as ai from 'ai';
-import { stepCountIs } from 'ai';
-import type { ZodSchema } from 'zod';
-import { nanoid } from 'nanoid';
-
 import config from '@/lib/config';
 import { providers } from '@/lib/models';
-import { VendorError } from '@/lib/user-errors';
 import type { JSONValue, Message, ToolCallLogEntry } from '@/lib/threads';
 import type { ToolContext, ToolRecord } from '@/lib/tools';
+import { VendorError } from '@/lib/user-errors';
+import * as ai from 'ai';
+import { stepCountIs } from 'ai';
+import 'dotenv/config';
+import { nanoid } from 'nanoid';
+import type { ZodSchema } from 'zod';
 
 // Reads the server-verified tool context, or null if the call has none
 export function getToolContext(options: { experimental_context?: unknown }): ToolContext | null {

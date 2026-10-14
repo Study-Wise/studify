@@ -148,9 +148,7 @@ export function createModal(options: ModalOptions): Modal {
         footer.hidden = buttons.length === 0;
 
         // Toasts never take focus away from what the user is doing
-        if (element.open && !isToast) {
-            focusPrimaryButton();
-        }
+        if (element.open && !isToast) focusPrimaryButton();
     }
 
     // Toasts close themselves after `duration`, paused while the user is hovering over or focused inside them so they can finish reading
@@ -183,9 +181,7 @@ export function createModal(options: ModalOptions): Modal {
     else {
         // Close on backdrop click; Escape is handled natively by <dialog>
         element.addEventListener('click', (event) => {
-            if (event.target === element) {
-                element.close();
-            }
+            if (event.target === element) element.close();
         });
     }
 
@@ -218,9 +214,7 @@ export function createModal(options: ModalOptions): Modal {
                 startDismissTimer();
                 return;
             }
-            if (!element.open) {
-                element.showModal();
-            }
+            if (!element.open) element.showModal();
             focusPrimaryButton();
         },
         close() {

@@ -1,11 +1,10 @@
+import { db } from '@/db/initialize';
+import { threadsTable } from '@/db/schema';
+import { isUserAdmin as checkIsUserAdmin } from '@/lib/auth/admin';
+import { isDev, getDevUser, isDevUserAdmin } from '@/lib/auth/dev';
 import type { User } from 'better-auth';
 
 import { eq } from 'drizzle-orm';
-import { db } from '@/db/initialize';
-import { threadsTable } from '@/db/schema';
-
-import { isUserAdmin as checkIsUserAdmin } from '@/lib/auth/admin';
-import { isDev, getDevUser, isDevUserAdmin } from '@/lib/auth/dev';
 
 export interface ThreadAccessResult {
     isAuthorized: boolean;

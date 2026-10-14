@@ -1,6 +1,6 @@
-import type { APIRoute } from 'astro';
-
 import { SENTRY_DSN } from '@/lib/sentry';
+
+import type { APIRoute } from 'astro';
 
 const allowedDsn = new URL(SENTRY_DSN);
 const allowedProjectId = allowedDsn.pathname.replace(/^\//, '');

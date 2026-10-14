@@ -1,6 +1,6 @@
-import type { APIRoute } from 'astro';
-
 import { chunkedUploads } from '@/lib/chunked-upload-store';
+
+import type { APIRoute } from 'astro';
 
 export const POST: APIRoute = async ({ request, locals }) => {
     try {

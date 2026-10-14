@@ -1,7 +1,8 @@
-import { eq, desc } from 'drizzle-orm';
-import type { InferSelectModel } from 'drizzle-orm';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
+
+import { eq, desc } from 'drizzle-orm';
+import type { InferSelectModel } from 'drizzle-orm';
 
 // JSON-serializable value type
 export type JSONValue = string | number | boolean | null | { [key: string]: JSONValue } | JSONValue[];
@@ -28,6 +29,14 @@ export interface ThreadData {
     messages: Message[];
 }
 
+export function parseThreadData(value: ThreadData | string): ThreadData {
+    const parsed = typeof value === 'string' ? JSON.parse(value) : value;
+    if (typeof parsed !== 'object' || parsed === null || !('messages' in parsed) || !Array.isArray(parsed.messages)) {
+        throw new Error('Invalid thread data');
+    }
+    return parsed;
+}
+
 export interface UploadedFile {
     key: string;
     name: string;
@@ -44,15 +53,11 @@ async function getMessages(id: string, isAuthorized?: boolean | null) {
     try {
         const dbResponse: Thread[] = await db.select().from(threadsTable).where(eq(threadsTable.id, id));
 
-        if (dbResponse.length === 0) {
-            return [];
-        }
+        if (dbResponse.length === 0) return [];
 
         const thread = dbResponse[0];
 
-        if (!isAuthorized) {
-            return []
-        }
+        if (!isAuthorized) return []
 
         // Handle case where thread data is stored as string instead of object
         let threadData: ThreadData;
@@ -77,9 +82,7 @@ async function getMessagesLength(id: string) {
     try {
         const dbResponse: Thread[] = await db.select().from(threadsTable).where(eq(threadsTable.id, id));
 
-        if (dbResponse.length === 0) {
-            return 0;
-        }
+        if (dbResponse.length === 0) return 0;
 
         const thread = dbResponse[0];
 
@@ -106,15 +109,11 @@ async function getThreadByToken(id: string, isAuthorized?: boolean | null) {
     try {
         const dbResponse: Thread[] = await db.select().from(threadsTable).where(eq(threadsTable.id, id));
 
-        if (dbResponse.length === 0) {
-            return null;
-        }
+        if (dbResponse.length === 0) return null;
 
         const thread = dbResponse[0];
 
-        if (!isAuthorized) {
-            return null;
-        }
+        if (!isAuthorized) return null;
 
         return thread;
     } catch (e) {
