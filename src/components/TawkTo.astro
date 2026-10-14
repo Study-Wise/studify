@@ -9,7 +9,8 @@ const user = Astro.locals.user;
         name: user.name || undefined,
         email: user.email || undefined,
         id: user.id || undefined,
-        role: user.role || undefined
+        role: user.role || undefined,
+        hash: btoa(`${user.id}:${user.email}`) || undefined
     };
 
     (function() {
