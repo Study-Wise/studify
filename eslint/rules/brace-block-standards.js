@@ -45,6 +45,34 @@ export default {
     },
     create(context) {
         return {
+            Program(node) {
+                if (
+                    !context.filename.endsWith('.astro') ||
+                    node.body.length > 0
+                ) return;
+
+                const frontmatter = context.sourceCode.text.match(/^---\r?\n[\s\S]*?\r?\n---/);
+                if (!frontmatter) return;
+
+                for (const match of frontmatter[0].matchAll(
+                    /\bif\s*\(([^()\r\n]*(?:\([^()\r\n]*\)[^()\r\n]*)*)\)\s*\{\s*([^;{}\r\n]*;)\s*\}/g
+                )) {
+                    context.report({
+                        node,
+                        loc: {
+                            start: context.sourceCode.getLocFromIndex(match.index),
+                            end: context.sourceCode.getLocFromIndex(match.index + match[0].length)
+                        },
+                        message: 'Single-statement if block should not use curly braces',
+                        fix(fixer) {
+                            return fixer.replaceTextRange(
+                                [match.index, match.index + match[0].length],
+                                `if (${match[1]}) ${match[2]}`
+                            );
+                        }
+                    });
+                }
+            },
             IfStatement(node) {
                 // Check 1: If/else brace placement
                 if (node.alternate) {

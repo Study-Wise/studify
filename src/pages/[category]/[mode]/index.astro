@@ -15,7 +15,7 @@ let { category, mode } = Astro.params || { category: '', mode: '' };
 const categoryObj = category ? categories[category] : null;
 const modeObj = categoryObj?.modes?.[mode || ''];
 
-if (!categoryObj || !modeObj) { return Astro.redirect('/404'); }
+if (!categoryObj || !modeObj) return Astro.redirect('/404');
 
 const categoryName = categoryObj?.name || category;
 const modeName = modeObj?.name || mode;

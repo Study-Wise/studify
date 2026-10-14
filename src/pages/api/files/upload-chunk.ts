@@ -54,6 +54,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
         const chunkBuffer = new Uint8Array(await chunk.arrayBuffer());
 
+        // The first chunk creates the upload record; later chunks reuse it.
         if (!chunkedUploads.has(uploadId)) {
             chunkedUploads.set(uploadId, {
                 chunks: new Array(totalChunks),
@@ -68,9 +69,15 @@ export const POST: APIRoute = async ({ request, locals }) => {
             });
         }
 
-        const upload = chunkedUploads.get(uploadId)!;
+        const upload = chunkedUploads.get(uploadId);
+        if (!upload) {
+            return new Response(
+                JSON.stringify({ status: 'error', error: 'Upload not found or unauthorized' }),
+                { status: 403 }
+            );
+        }
 
-        // An upload ID is bound to the user and thread that started it; never mix in chunks from another user or thread
+        // Keep each upload bound to its original user and thread.
         if (upload.email !== email || upload.threadId !== threadId) {
             return new Response(
                 JSON.stringify({ status: 'error', error: 'Upload not found or unauthorized' }),
