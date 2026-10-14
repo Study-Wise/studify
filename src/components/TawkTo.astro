@@ -15,10 +15,9 @@ if (user && secretKey) {
 <script is:inline define:vars={{ user: user || null }}>
     var Tawk_API = Tawk_API || {};
 
-    console.log('Tawk user:', user);
-    console.log('Tawk hash:', user?.hash);
-
     if (user && user.hash) {
+        console.log('Setting Tawk_API.visitor with user details');
+
         Tawk_API.visitor = {
             name: user.name || undefined,
             email: user.email || undefined,
