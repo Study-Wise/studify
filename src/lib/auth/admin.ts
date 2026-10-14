@@ -1,10 +1,10 @@
 // Roles are stored in the database and auto-promoted based on email/domain
 
-import { eq } from 'drizzle-orm';
-import { db } from '@/db/initialize';
 import { user as userTable } from '@/db/auth-schema';
-
+import { db } from '@/db/initialize';
 import type { UserRole } from '@/lib/auth/types';
+
+import { eq } from 'drizzle-orm';
 
 export async function getUserRole(email: string): Promise<UserRole> {
     const users = await db

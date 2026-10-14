@@ -30,11 +30,21 @@ export interface ThreadData {
 }
 
 export function parseThreadData(value: ThreadData | string): ThreadData {
-    const parsed = typeof value === 'string' ? JSON.parse(value) : value;
+    const raw = typeof value === 'string' ? value.replace(/,\s*([\]}])/g, '$1') : value;
+    const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
     if (typeof parsed !== 'object' || parsed === null || !('messages' in parsed) || !Array.isArray(parsed.messages)) {
         throw new Error('Invalid thread data');
     }
-    return parsed;
+    const messages: Message[] = parsed.messages.map((message: JSONValue) => {
+        if (typeof message !== 'object' || message === null || Array.isArray(message) || !('role' in message) || !('content' in message)) {
+            throw new Error('Invalid thread message');
+        }
+        if ((message.role !== 'system' && message.role !== 'user' && message.role !== 'assistant') || typeof message.content !== 'string') {
+            throw new Error('Invalid thread message');
+        }
+        return { role: message.role, content: message.content };
+    });
+    return { messages };
 }
 
 export interface UploadedFile {
@@ -65,11 +75,11 @@ async function getMessages(id: string, isAuthorized?: boolean | null) {
         if (typeof rawThread === 'string') {
             // Remove trailing commas before ] or } (invalid JSON but sometimes stored)
             const cleanedJson = rawThread.replace(/,\s*([\]}])/g, '$1');
-            threadData = JSON.parse(cleanedJson) as ThreadData;
+            threadData = parseThreadData(cleanedJson);
             await db.update(threadsTable).set({ thread: threadData }).where(eq(threadsTable.id, id));
         }
         else {
-            threadData = rawThread as ThreadData;
+            threadData = parseThreadData(rawThread);
         }
         return threadData?.messages ?? [];
     } catch (e) {
@@ -92,11 +102,11 @@ async function getMessagesLength(id: string) {
         if (typeof rawThread === 'string') {
             // Remove trailing commas before ] or } (invalid JSON but sometimes stored)
             const cleanedJson = rawThread.replace(/,\s*([\]}])/g, '$1');
-            threadData = JSON.parse(cleanedJson) as ThreadData;
+            threadData = parseThreadData(cleanedJson);
             await db.update(threadsTable).set({ thread: threadData }).where(eq(threadsTable.id, id));
         }
         else {
-            threadData = rawThread as ThreadData;
+            threadData = parseThreadData(rawThread);
         }
         return threadData?.messages?.length ?? 0;
     } catch (e) {

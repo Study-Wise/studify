@@ -1,18 +1,19 @@
-import { tool } from 'ai';
-import { z } from 'zod';
-
 import { getToolContext } from '@/lib/ai-service';
 import { getContentTypesList } from '@/lib/content/get-types';
 import { getLatestContent } from '@/lib/content/latest';
+import { tool } from 'ai';
+import { z } from 'zod';
 
-const contentTypes = getContentTypesList();
+const [firstContentType, ...remainingContentTypes] = getContentTypesList();
+if (!firstContentType) throw new Error('No content types are available');
+const contentTypes: [string, ...string[]] = [firstContentType, ...remainingContentTypes];
 
 // Tool for opening content in a new browser tab.
 // Checks if content exists before signaling the client to open the URL.
 const openContentTool = tool({
     description: 'Open existing study content (study guide, reference sheet, flashcards, etc.) in a new browser tab. Only opens content that has already been generated — does not generate anything. If no content exists, returns an error. Use after \'generate-content\' has successfully generated content, or when the user asks to open/view their existing content.',
     inputSchema: z.object({
-        type: z.enum(contentTypes as [string, ...string[]]).describe('The content type to open'),
+        type: z.enum(contentTypes).describe('The content type to open'),
         category: z.string().describe('The category (e.g., math, science)'),
         mode: z.string().describe('The mode (e.g., algebra, physics)'),
     }),

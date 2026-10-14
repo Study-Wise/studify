@@ -6,5 +6,5 @@ export interface StudyGuideResult {
 
 export async function getLatestStudyGuide(threadId: string): Promise<StudyGuideResult> {
     const content = await getLatestContent(threadId, 'study-guide');
-    return { content };
+    return { content: typeof content === 'string' ? content : content === null ? null : JSON.stringify(content) ?? null };
 }

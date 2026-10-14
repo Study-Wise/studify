@@ -16,15 +16,14 @@ export interface ToolContext {
 export const modules: Record<string, Tool> = {};
 export const labels: Record<string, string> = {};
 
-const toolModules = import.meta.glob('./tools/*.ts', { eager: true });
+const toolModules = import.meta.glob<ToolModule>('./tools/*.ts', { eager: true });
 
 for (const [path, module] of Object.entries(toolModules)) {
-    const tool = (module as ToolModule).default;
-    if (tool.ready) {
+    if (module.default.ready) {
         const toolName = path.replace('./tools/', '').replace('.ts', '');
-        modules[toolName] = tool;
-        if (tool.label) {
-            labels[toolName] = tool.label;
+        modules[toolName] = module.default;
+        if (module.default.label) {
+            labels[toolName] = module.default.label;
         }
     }
 }

@@ -1,13 +1,13 @@
-import { eq } from 'drizzle-orm';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
-
-import config from '@/lib/config';
 import { generateText } from '@/lib/ai-service';
+import config from '@/lib/config';
 import { buildContentSystemPrompt } from '@/lib/content';
-import stepByStepHTML from '@/lib/prompt-templates/step-by-step-html';
-import type { ThreadData, UploadedFile } from '@/lib/threads';
 import { saveContent } from '@/lib/content/latest';
+import stepByStepHTML from '@/lib/prompt-templates/step-by-step-html';
+import { parseThreadData, type UploadedFile } from '@/lib/threads';
+
+import { eq } from 'drizzle-orm';
 
 function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
     const filesWithText = uploadedFiles.filter(f => f.extractedText);
@@ -32,10 +32,10 @@ export async function generatePracticeQuestions(threadId: string, userPrompt?: s
     const userModel = config.model;
     const provider = config.provider;
 
-    const threadData = thread.thread as ThreadData;
+    const threadData = parseThreadData(thread.thread);
     const messages = threadData?.messages ?? [];
 
-    const uploadedFiles = (thread.uploadedFiles as UploadedFile[]) ?? [];
+    const uploadedFiles = thread.uploadedFiles ?? [];
 
     if (messages.length === 0) {
         throw new Error('No messages found in thread');
@@ -130,7 +130,6 @@ Math formatting: use \`$…$\` for displaying math formulas/equations inline and
 Ensure all questions are directly related to topics discussed in the conversation. Vary difficulty levels to support different learning stages. Make questions engaging and practical.
 
 You may remove or modify sections as you see fit based on relevance to the topic.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
-
 
     const result = await generateText(
         practiceQuestionsPrompt,

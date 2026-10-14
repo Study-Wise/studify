@@ -1,14 +1,13 @@
 ---
-import Layout from '@/layouts/Layout.astro';
-import ContentActions from '@/components/ContentActions.astro';
-import '@/styles/pages/content/flashcards.scss';
-import '@/styles/pages/content/globals.scss';
-
+import { checkThreadAccess } from '@/lib/auth/checkThreadAccess';
+import { getLatestFlashcards, type FlashcardData } from '@/lib/content/latest/flashcards';
+import categories from '@/lib/modes';
 import { Marked, type TokenizerAndRendererExtension } from 'marked';
 
-import { getLatestFlashcards, type FlashcardData } from '@/lib/content/latest/flashcards';
-import { checkThreadAccess } from '@/lib/auth/checkThreadAccess';
-import categories from '@/lib/modes';
+import ContentActions from '@/components/ContentActions.astro';
+import Layout from '@/layouts/Layout.astro';
+import '@/styles/pages/content/flashcards.scss';
+import '@/styles/pages/content/globals.scss';
 
 // Pass $…$ and $$…$$ through untouched so MathJax gets the LaTeX as written.
 // Otherwise marked reads backslash escapes like \, as Markdown and drops the backslash.
@@ -30,9 +29,7 @@ const chatUrl = `/${category}/${mode}/chat/${id}`;
 const categoryObj = category ? categories[category] : null;
 const modeObj = categoryObj?.modes?.[mode || ''];
 
-if (!categoryObj || !modeObj) {
-    return Astro.redirect('/404');
-}
+if (!categoryObj || !modeObj) return Astro.redirect('/404');
 
 const categoryName = categoryObj?.name || category;
 const modeName = modeObj?.name || mode;
@@ -42,21 +39,19 @@ const user = Astro.locals.user;
 const { isAuthorized, isPublic, threadExists } = await checkThreadAccess(id || '', user, category, mode);
 
 // A deleted or unknown chat has no materials, so show the 404 page (#344)
-if (!threadExists) {
-    return new Response(null, { status: 404 });
-}
+if (!threadExists) { return new Response(null, { status: 404 }); }
 
-if (!user && !isPublic) {
-    return Astro.redirect('/user/sign-in');
-}
+if (!user && !isPublic) { return Astro.redirect('/user/sign-in'); }
 
 const { content: latestFlashcards } = (isAuthorized || isPublic)
     ? await getLatestFlashcards(id || '')
     : { content: null };
 
 // Determine if content is structured (object with text/questions) or legacy (string)
-const isStructured = latestFlashcards && typeof latestFlashcards === 'object' && 'text' in latestFlashcards;
-const flashcardData = isStructured ? latestFlashcards as FlashcardData : null;
+const flashcardData: FlashcardData | null = latestFlashcards && typeof latestFlashcards === 'object'
+    ? latestFlashcards
+    : null;
+const isStructured = flashcardData !== null;
 
 // Parse markdown to HTML for legacy string format
 const parsedContent = (!isStructured && typeof latestFlashcards === 'string')

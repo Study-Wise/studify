@@ -1,11 +1,11 @@
 ---
-import SidebarSection from '@/components/chat/SidebarSection.astro';
-import '@/styles/components/chat/sidebar.scss';
-import '@/styles/components/chat/left-sidebar.scss';
-
 import type { UploadedFile } from '@/lib/threads';
 
-export interface ChatLeftSidebarProps {
+import SidebarSection from '@/components/chat/SidebarSection.astro';
+import '@/styles/components/chat/left-sidebar.scss';
+import '@/styles/components/chat/sidebar.scss';
+
+interface Props {
     isPublic: boolean;
     isAuthorized: boolean;
     threadId: string;
@@ -23,7 +23,7 @@ const {
     email = '',
     category = '',
     mode = ''
-} = Astro.props as ChatLeftSidebarProps;
+} = Astro.props;
 
 const hasSavedThread = Boolean(threadId) && threadId !== 'new';
 const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}`, Astro.url.origin).href : '';

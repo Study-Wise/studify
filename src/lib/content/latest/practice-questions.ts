@@ -6,5 +6,5 @@ export interface PracticeQuestionsResult {
 
 export async function getLatestPracticeQuestions(threadId: string): Promise<PracticeQuestionsResult> {
     const content = await getLatestContent(threadId, 'practice-questions');
-    return { content };
+    return { content: typeof content === 'string' ? content : content === null ? null : JSON.stringify(content) ?? null };
 }

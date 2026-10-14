@@ -1,11 +1,10 @@
-import type { APIRoute } from 'astro';
-
-import { eq } from 'drizzle-orm';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
-
 import { userFilesUpload } from '@/lib/uploadthing';
-import type { UploadedFile } from '@/lib/threads';
+
+import { eq } from 'drizzle-orm';
+
+import type { APIRoute } from 'astro';
 
 export const POST: APIRoute = async ({ request, locals }) => {
     try {
@@ -53,7 +52,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             // Continue even if UploadThing deletion fails
         }
 
-        const currentFiles = (thread[0].uploadedFiles || []) as UploadedFile[];
+        const currentFiles = thread[0].uploadedFiles || [];
         const updatedFiles = currentFiles.filter((file) => file.key !== fileKey);
 
         await db

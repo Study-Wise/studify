@@ -1,12 +1,12 @@
-import type { MiddlewareHandler } from 'astro';
-
 import { auth } from '@/lib/auth';
 import { getUserRole } from '@/lib/auth/admin';
 import { isDev, getDevUser } from '@/lib/auth/dev';
-import type { User } from '@/lib/auth/types';
 import { getSafeReturnBackUrl } from '@/lib/auth/return-url';
+import type { User } from '@/lib/auth/types';
 import { getContentTypesList } from '@/lib/content/get-types';
 import { SENTRY_TUNNEL_PATH } from '@/lib/sentry';
+
+import type { MiddlewareHandler } from 'astro';
 
 // Material pages (study guide, flashcards, ...) live at /[category]/[mode]/[content-type]/[id]
 const materialRouteSegments = getContentTypesList().filter(type => type !== 'index');
@@ -36,7 +36,7 @@ function isAuthRoute(pathname: string): boolean {
     return authRoutes.some(route => route.test(pathname));
 }
 
-export const onRequest: MiddlewareHandler = async (context, next) => {
+export const onRequest: MiddlewareHandler = async function onRequest(context, next) {
     const { request, locals, redirect } = context;
     const pathname = new URL(request.url).pathname;
 

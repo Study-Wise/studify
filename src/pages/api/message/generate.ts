@@ -1,35 +1,27 @@
-import type { APIRoute } from 'astro';
-
-import { nanoid } from 'nanoid';
-
-import { and, eq, type InferSelectModel, type InferInsertModel } from 'drizzle-orm';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
-
-import config from '@/lib/config';
-import categories from '@/lib/modes';
-import type { Mode } from '@/lib/modes';
 import {
     streamText,
     extractToolData,
     generateTitle,
 } from '@/lib/ai-service';
-import type { ToolContext } from '@/lib/tools';
-import { getValidModelAndProvider, providers } from '@/lib/models';
-import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
-import type { ThreadData, Message, UploadedFile } from '@/lib/threads';
-import { isValidEmail } from '@/lib/validation';
 import { isUserAdmin } from '@/lib/auth/admin';
+import config from '@/lib/config';
+import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
+import { getValidModelAndProvider, providers } from '@/lib/models';
+import categories from '@/lib/modes';
+import type { Mode } from '@/lib/modes';
+import { parseThreadData, type Message } from '@/lib/threads';
+import type { ToolContext } from '@/lib/tools';
 import { VendorError, getUserErrorMessage } from '@/lib/user-errors';
+import { isValidEmail } from '@/lib/validation';
+import { nanoid } from 'nanoid';
+
+import { and, eq, type InferSelectModel } from 'drizzle-orm';
+
+import type { APIRoute } from 'astro';
 
 type Thread = InferSelectModel<typeof threadsTable>;
-type ThreadInsert = InferInsertModel<typeof threadsTable>;
-
-type StreamPart =
-    | { type: 'text-delta'; text?: string; textDelta?: string }
-    | { type: 'tool-call'; toolCallId: string; toolName: string }
-    | { type: 'tool-result'; toolCallId: string; toolName: string; result?: string | Record<string, unknown>; output?: string | Record<string, unknown> }
-    | { type: 'error'; error: unknown };
 
 export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();
@@ -184,9 +176,9 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                         userData.thread &&
                         typeof userData.thread === 'object' &&
                         'messages' in userData.thread &&
-                        Array.isArray((userData.thread as ThreadData).messages)
+                        Array.isArray(userData.thread.messages)
                     ) {
-                        convoHistory = [systemObj, ...(userData.thread as ThreadData).messages];
+                        convoHistory = [systemObj, ...parseThreadData(userData.thread).messages];
                     }
                     else {
                         console.warn(`⚠️ [${requestId}] No valid conversation history found in thread data, keeping system message only`);
@@ -208,7 +200,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
         }
 
         if (userData) {
-            const uploadedFiles = (userData.uploadedFiles as UploadedFile[]) || [];
+            const uploadedFiles = userData.uploadedFiles || [];
             if (uploadedFiles.length > 0) {
                 const fileList = uploadedFiles
                     .map(f => {
@@ -263,7 +255,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
         if (convoHistory.length === 1) {
             let messagesSaved = false;
             try {
-                convoHistory.push({ role: 'user', content: userPrompt } as Message);
+                convoHistory.push({ role: 'user', content: userPrompt });
 
                 const tools = modeObj.tools || {};
                 const welcomeMessage = await generateWelcomeMessage({
@@ -276,7 +268,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                     toolContext
                 });
 
-                convoHistory.push({ role: 'assistant', content: welcomeMessage } as Message);
+                convoHistory.push({ role: 'assistant', content: welcomeMessage });
 
                 const convoHistoryWithoutSystem = convoHistory.filter(msg => msg.role !== 'system');
 
@@ -304,7 +296,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                         provider: provider,
                         isPublic: isPublic,
                         isDev: (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development'
-                    } as ThreadInsert).onConflictDoUpdate({
+                    }).onConflictDoUpdate({
                         target: threadsTable.id,
                         set: {
                             thread: { messages: convoHistoryWithoutSystem },
@@ -390,13 +382,15 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
         }
 
         const encoder = new TextEncoder();
-        const sendEvent = (data: object) => encoder.encode(`data: ${JSON.stringify(data)}\n\n`);
+        function sendEvent(data: object) {
+            return encoder.encode(`data: ${JSON.stringify(data)}\n\n`);
+        }
         const isDev = (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development';
 
         // The title as stored when this request started; generated titles only replace this value
         const storedTitle = userData?.title ?? 'Untitled Conversation';
 
-        const saveConvo = async (messages: Message[]) => {
+        async function saveConvo(messages: Message[]) {
             if (current_thread_id && userData) {
                 // Leave the title out: the user may have renamed the chat while this response streamed
                 await db.update(threadsTable)
@@ -415,12 +409,24 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                     provider: selectedProvider,
                     isPublic: isPublic,
                     isDev,
-                } as ThreadInsert).onConflictDoUpdate({
+                }).onConflictDoUpdate({
                     target: threadsTable.id,
                     set: { thread: { messages }, updatedAt: new Date(), isDev },
                 });
             }
-        };
+        }
+
+        async function generateAndSaveTitle() {
+            try {
+                const title = await generateTitle({ convoHistory, userModel, provider: selectedProvider });
+                await db.update(threadsTable)
+                    .set({ title, updatedAt: new Date() })
+                    // Skip if the chat was renamed while the title was generated
+                    .where(and(eq(threadsTable.id, current_thread_id!), eq(threadsTable.title, storedTitle)));
+            } catch (error) {
+                console.error(`❌ [${requestId}] Title generation failed:`, error);
+            }
+        }
 
         const responseStream = new ReadableStream({
             async start(controller) {
@@ -428,9 +434,9 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                     const pendingCalls = new Map<string, string>(); // toolCallId -> toolName
 
                     for await (const part of streamResult.fullStream) {
-                        const streamPart = part as StreamPart;
+                        const streamPart = part;
                         if (streamPart.type === 'text-delta') {
-                            const textDelta = streamPart.text || streamPart.textDelta || '';
+                            const textDelta = streamPart.text || '';
                             controller.enqueue(sendEvent({ type: 'text', text: textDelta }));
                         }
                         else if (streamPart.type === 'tool-call') {
@@ -444,9 +450,9 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                             const toolName = streamPart.toolName || '';
                             let status: 'success' | 'error' = 'success';
                             try {
-                                const raw = streamPart.result || streamPart.output;
+                                const raw = streamPart.output;
                                 const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
-                                if ((parsed as { status?: string })?.status === 'error') status = 'error';
+                                if (typeof parsed === 'object' && parsed !== null && 'status' in parsed && parsed.status === 'error') status = 'error';
                             } catch {
                                 // JSON parse error ignored, status remains as initial value
                             }
@@ -470,14 +476,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                     const convoHistoryWithoutSystem = convoHistory.filter(msg => msg.role !== 'system');
                     await saveConvo(convoHistoryWithoutSystem);
 
-                    if (!userData?.title) {
-                        generateTitle({ convoHistory, userModel, provider: selectedProvider })
-                            .then(title => db.update(threadsTable)
-                                .set({ title, updatedAt: new Date() })
-                                // Skip if the chat was renamed while the title was generated
-                                .where(and(eq(threadsTable.id, current_thread_id!), eq(threadsTable.title, storedTitle))))
-                            .catch(err => console.error(`❌ [${requestId}] Title generation failed:`, err));
-                    }
+                    if (!userData?.title) void generateAndSaveTitle();
 
                     controller.enqueue(sendEvent({
                         type: 'done',

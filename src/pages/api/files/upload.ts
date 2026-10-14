@@ -1,15 +1,14 @@
-import type { APIRoute } from 'astro';
-
+import { db } from '@/db/initialize';
+import { threadsTable } from '@/db/schema';
+import { extractTextFromFile } from '@/lib/file-processing';
+import type { UploadedFile } from '@/lib/threads';
+import { userFilesUpload } from '@/lib/uploadthing';
+import { getUserErrorMessage } from '@/lib/user-errors';
 import { nanoid } from 'nanoid';
 
 import { eq } from 'drizzle-orm';
-import { db } from '@/db/initialize';
-import { threadsTable } from '@/db/schema';
 
-import { userFilesUpload } from '@/lib/uploadthing';
-import { getUserErrorMessage } from '@/lib/user-errors';
-import { extractTextFromFile } from '@/lib/file-processing';
-import type { UploadedFile } from '@/lib/threads';
+import type { APIRoute } from 'astro';
 
 export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();
@@ -25,10 +24,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
 
         const formData = await request.formData();
-        const file = formData.get('file') as File;
-        const threadId = formData.get('threadId') as string;
+        const file = formData.get('file');
+        const threadId = formData.get('threadId');
 
-        if (!file || !threadId || !email) {
+        if (!(file instanceof File) || typeof threadId !== 'string' || !threadId || !email) {
             return new Response(
                 JSON.stringify({
                     status: 'error',
@@ -128,7 +127,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             extractedText: extractedText || null
         };
 
-        const currentFiles = (thread[0].uploadedFiles || []) as UploadedFile[];
+        const currentFiles = thread[0].uploadedFiles || [];
         const updatedFiles = [...currentFiles, fileMetadata];
 
         await db

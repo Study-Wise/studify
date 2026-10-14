@@ -6,5 +6,5 @@ export interface WebpageResult {
 
 export async function getLatestWebpage(threadId: string): Promise<WebpageResult> {
     const content = await getLatestContent(threadId, 'webpage');
-    return { content };
+    return { content: typeof content === 'string' ? content : content === null ? null : JSON.stringify(content) ?? null };
 }

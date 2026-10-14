@@ -1,29 +1,25 @@
 // Uses USER_ACCESS_TOKEN env variable to authenticate in development
 
-import { eq } from 'drizzle-orm';
 import { db } from '@/db/initialize';
-import { account, user as userTable } from '@/db/auth-schema';
 import { threadsTable } from '@/db/schema';
-
+import { account, user as userTable } from '@/db/auth-schema';
 import type { UserRole, User } from '@/lib/auth/types';
 import type { ThreadAccessResult } from '@/lib/auth/checkThreadAccess';
+
+import { eq } from 'drizzle-orm';
 
 export function isDev(): boolean {
     return (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development';
 }
 
 function getDevAccessToken(): string | null {
-    if (!isDev()) {
-        return null;
-    }
+    if (!isDev()) return null;
     return import.meta.env.USER_ACCESS_TOKEN || process.env.USER_ACCESS_TOKEN || null;
 }
 
 export async function getDevUserId(): Promise<string | null> {
     const accessToken = getDevAccessToken();
-    if (!accessToken) {
-        return null;
-    }
+    if (!accessToken) return null;
 
     try {
         const accounts = await db
@@ -41,9 +37,7 @@ export async function getDevUserId(): Promise<string | null> {
 
 export async function getDevUser(): Promise<User | null> {
     const userId = await getDevUserId();
-    if (!userId) {
-        return null;
-    }
+    if (!userId) return null;
 
     try {
         const users = await db
@@ -52,9 +46,7 @@ export async function getDevUser(): Promise<User | null> {
             .where(eq(userTable.id, userId))
             .limit(1);
 
-        if (users.length === 0) {
-            return null;
-        }
+        if (users.length === 0) return null;
 
         const user = users[0];
         return {
@@ -63,7 +55,7 @@ export async function getDevUser(): Promise<User | null> {
             email: user.email,
             emailVerified: user.emailVerified,
             image: user.image,
-            role: user.role as UserRole,
+            role: user.role === 'admin' || user.role === 'moderator' ? user.role : 'user',
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
         };

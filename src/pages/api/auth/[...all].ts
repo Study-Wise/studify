@@ -1,8 +1,8 @@
-import type { APIRoute } from 'astro';
-
 import { auth } from '@/lib/auth';
 
-const handler: APIRoute = async (ctx) => {
+import type { APIRoute } from 'astro';
+
+const handler: APIRoute = async function handler(ctx) {
     try {
         return await auth.handler(ctx.request);
     } catch (error) {

@@ -473,11 +473,11 @@ const google_icons = {
 };
 
 // Use import.meta.glob to get all SVGs in public/assets/icons
-const iconModules = import.meta.glob('/public/assets/icons/*.svg', { query: '?url', eager: true });
+const iconModules = import.meta.glob<string>('/public/assets/icons/*.svg', { query: '?url', eager: true });
 
 const custom_icons: { name: string; path: string }[] = Object.entries(iconModules).map(([file, url]) => {
     const name = file.split('/').pop()!.replace('.svg', '');
-    return { name, path: url as string };
+    return { name, path: url };
 });
 
 export { google_icons, custom_icons };

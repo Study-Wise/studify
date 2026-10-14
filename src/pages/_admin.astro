@@ -1,21 +1,17 @@
 ---
-import Layout from '@/layouts/Layout.astro';
-import LocalTime from '@/components/LocalTime.astro';
-import '@/styles/pages/admin.scss';
-
 import { isUserAdmin } from '@/lib/auth/admin';
+
+import LocalTime from '@/components/LocalTime.astro';
+import Layout from '@/layouts/Layout.astro';
+import '@/styles/pages/admin.scss';
 
 const user = Astro.locals.user;
 
 // Redirect to sign-in if not authenticated
-if (!user) {
-    return Astro.redirect('/user/sign-in');
-}
+if (!user) return Astro.redirect('/user/sign-in');
 
 // Redirect non-admins away from admin page
-if (!(await isUserAdmin(user.email))) {
-    return Astro.redirect('/');
-}
+if (!(await isUserAdmin(user.email))) return Astro.redirect('/');
 ---
 
 <Layout title="Admin Dashboard" className="admin-page">

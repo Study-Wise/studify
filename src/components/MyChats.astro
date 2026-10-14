@@ -1,28 +1,24 @@
 ---
-import '@/styles/components/my-chats.scss';
-
-import { getUserThreads } from '@/lib/threads';
 import categories from '@/lib/modes';
+import { getUserThreads } from '@/lib/threads';
+
 import LocalTime from '@/components/LocalTime.astro';
+import '@/styles/components/my-chats.scss';
 
 const user = Astro.locals.user;
 
-if (!user) {
-    return Astro.redirect('/user/sign-in?redirect=/user/my-chats');
-}
+if (!user) { return Astro.redirect('/user/sign-in?redirect=/user/my-chats'); }
 
 const userEmail = user.email;
 
 const threads = await getUserThreads(userEmail);
 
-const threadsByCategory: Record<string, typeof threads> = threads.reduce((acc, thread) => {
+const threadsByCategory = threads.reduce<Record<string, typeof threads>>((acc, thread) => {
     const categoryKey = thread.category;
-    if (!acc[categoryKey]) {
-        acc[categoryKey] = [];
-    }
+    if (!acc[categoryKey]) acc[categoryKey] = [];
     acc[categoryKey].push(thread);
     return acc;
-}, {} as Record<string, typeof threads>);
+}, {});
 ---
 
 <div class="my-chats-container">

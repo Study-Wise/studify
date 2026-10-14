@@ -1,12 +1,13 @@
-import { eq, sql } from 'drizzle-orm';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
+import type { FlashcardData } from '@/lib/content/latest/flashcards';
+import type { InfographicData } from '@/lib/content/latest/infographic';
+import type { SlideshowData } from '@/lib/content/latest/slideshow';
+import type { JSONValue } from '@/lib/threads';
+
+import { eq, sql } from 'drizzle-orm';
 
 import { getContentTypesList } from '../get-types';
-import type { JSONValue } from '@/lib/threads';
-import type { InfographicData } from '@/lib/content/latest/infographic';
-import type { FlashcardData } from '@/lib/content/latest/flashcards';
-import type { SlideshowData } from '@/lib/content/latest/slideshow';
 
 export interface ThreadContentStatus {
     hasReferenceSheet: boolean;
@@ -41,9 +42,19 @@ function toCamelCase(str: string): string {
 
 // Mapping between content type IDs (kebab-case) and their status keys (camelCase)
 function typeToKey(type: string): keyof ThreadContentStatus {
-    const camel = toCamelCase(type);
-    const pascalCase = camel.charAt(0).toUpperCase() + camel.slice(1);
-    return `has${pascalCase}` as keyof ThreadContentStatus;
+    const keys: Record<string, keyof ThreadContentStatus> = {
+        'reference-sheet': 'hasReferenceSheet',
+        'study-guide': 'hasStudyGuide',
+        infographic: 'hasInfographic',
+        webpage: 'hasWebpage',
+        'mind-map': 'hasMindMap',
+        'additional-resources': 'hasAdditionalResources',
+        flashcards: 'hasFlashcards',
+        'practice-questions': 'hasPracticeQuestions',
+        slideshow: 'hasSlideshow',
+        summary: 'hasSummary',
+    };
+    return keys[type] ?? 'hasSummary';
 }
 
 export async function getThreadContentStatus(
@@ -80,21 +91,21 @@ export async function getThreadContentStatus(
                     const contentKey = toCamelCase(type);
 
                     // Check if content exists for this type in the JSON column
-                    const contentValue = content[contentKey as keyof ThreadContent];
+                    const contentValue = content[contentKey];
                     if (contentValue) {
                         // For special types like infographic or flashcards that might be objects
                         if (typeof contentValue === 'object' && contentValue !== null) {
                             if (type === 'infographic') {
-                                status[statusKey] = !!(contentValue as InfographicData).imageUrl;
+                                status[statusKey] = 'imageUrl' in contentValue && typeof contentValue.imageUrl === 'string' && !!contentValue.imageUrl;
                             }
                             else if (type === 'flashcards') {
-                                status[statusKey] = !!(contentValue as FlashcardData).questions;
+                                status[statusKey] = 'questions' in contentValue && Array.isArray(contentValue.questions) && contentValue.questions.length > 0;
                             }
                             else if (type === 'slideshow') {
-                                status[statusKey] = !!(contentValue as SlideshowData).content;
+                                status[statusKey] = 'content' in contentValue && typeof contentValue.content === 'string' && !!contentValue.content;
                             }
                             else {
-                                status[statusKey] = Object.keys(contentValue as object).length > 0;
+                                status[statusKey] = Object.keys(contentValue).length > 0;
                             }
                         }
                         else {
@@ -112,13 +123,13 @@ export async function getThreadContentStatus(
 }
 
 // Gets the latest content for a specific type from the thread's content JSON column.
-export async function getLatestContent<T = string>(threadId: string, type: string): Promise<T | null> {
+export async function getLatestContent(threadId: string, type: string): Promise<ThreadContent[keyof ThreadContent] | null> {
     try {
         const threads = await db.select({ content: threadsTable.content }).from(threadsTable).where(eq(threadsTable.id, threadId));
         if (threads.length > 0) {
             const content = threads[0].content || {};
             const contentKey = toCamelCase(type);
-            return (content[contentKey as keyof ThreadContent] as T) || null;
+            return content[contentKey] || null;
         }
     } catch (error) {
         console.error(`Error fetching ${type} from database:`, error);

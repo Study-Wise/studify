@@ -7,9 +7,7 @@ import LocalTime from '@/components/LocalTime.astro';
 const user = Astro.locals.user;
 
 // Redirect to sign-in if not authenticated
-if (!user) {
-    return Astro.redirect('/user/sign-in');
-}
+if (!user) return Astro.redirect('/user/sign-in');
 ---
 
 <Layout title="User Profile">

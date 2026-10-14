@@ -14,16 +14,19 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
 
         const formData = await request.formData();
-        const chunk = formData.get('chunk') as File;
-        const uploadId = formData.get('uploadId') as string;
-        const chunkIndex = parseInt(formData.get('chunkIndex') as string, 10);
-        const totalChunks = parseInt(formData.get('totalChunks') as string, 10);
-        const fileName = formData.get('fileName') as string;
-        const fileType = formData.get('fileType') as string;
-        const fileSize = parseInt(formData.get('fileSize') as string, 10);
-        const threadId = formData.get('threadId') as string;
+        const chunk = formData.get('chunk');
+        const uploadId = formData.get('uploadId');
+        const chunkIndexValue = formData.get('chunkIndex');
+        const totalChunksValue = formData.get('totalChunks');
+        const fileName = formData.get('fileName');
+        const fileType = formData.get('fileType');
+        const fileSizeValue = formData.get('fileSize');
+        const threadId = formData.get('threadId');
+        const chunkIndex = typeof chunkIndexValue === 'string' ? Number.parseInt(chunkIndexValue, 10) : Number.NaN;
+        const totalChunks = typeof totalChunksValue === 'string' ? Number.parseInt(totalChunksValue, 10) : Number.NaN;
+        const fileSize = typeof fileSizeValue === 'string' ? Number.parseInt(fileSizeValue, 10) : Number.NaN;
 
-        if (!chunk || !uploadId || isNaN(chunkIndex) || isNaN(totalChunks) || !fileName || !threadId) {
+        if (!(chunk instanceof File) || typeof uploadId !== 'string' || isNaN(chunkIndex) || isNaN(totalChunks) || typeof fileName !== 'string' || typeof fileType !== 'string' || isNaN(fileSize) || typeof threadId !== 'string') {
             return new Response(
                 JSON.stringify({ status: 'error', error: 'Missing required fields' }),
                 { status: 400 }

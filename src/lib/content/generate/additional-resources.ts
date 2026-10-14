@@ -1,13 +1,12 @@
+import { db } from '@/db/initialize';
+import { threadsTable } from '@/db/schema';
+import { saveContent } from '@/lib/content/latest';
+import findSimulations from '@/lib/phet';
+import { parseThreadData } from '@/lib/threads';
+import { VendorError } from '@/lib/user-errors';
 import Exa from 'exa-js';
 
 import { eq } from 'drizzle-orm';
-import { db } from '@/db/initialize';
-import { threadsTable } from '@/db/schema';
-
-import type { ThreadData, UploadedFile } from '@/lib/threads';
-import { saveContent } from '@/lib/content/latest';
-import findSimulations from '@/lib/phet';
-import { VendorError } from '@/lib/user-errors';
 
 const exa = new Exa(import.meta.env.EXA_SEARCH_API_KEY || process.env.EXA_SEARCH_API_KEY);
 
@@ -42,10 +41,10 @@ export async function generateResources(threadId: string): Promise<string> {
 
     const thread = threads[0];
 
-    const threadData = thread.thread as ThreadData;
+    const threadData = parseThreadData(thread.thread);
     const messages = threadData?.messages ?? [];
 
-    const uploadedFiles = (thread.uploadedFiles as UploadedFile[]) ?? [];
+    const uploadedFiles = thread.uploadedFiles ?? [];
 
     if (messages.length === 0) {
         throw new Error('No messages found in thread');
@@ -78,11 +77,11 @@ export async function generateResources(threadId: string): Promise<string> {
         // Science threads also get interactive PhET simulations
         if (SIMULATION_CATEGORIES.includes(thread.category) && !SIMULATION_EXCLUDED_MODES.includes(thread.mode)) {
             const simulations = await findSimulations(topicSummary);
-            resourceCollection.simulations = simulations.map(simulation => ({
+            resourceCollection.simulations = simulations.map<Resource>(simulation => ({
                 title: simulation.title,
                 url: simulation.pageUrl,
                 snippet: simulation.description.slice(0, 200),
-                type: 'simulation' as const,
+                type: 'simulation',
                 source: new URL(simulation.pageUrl).hostname
             }));
         }
@@ -97,11 +96,11 @@ export async function generateResources(threadId: string): Promise<string> {
             }
         );
 
-        resourceCollection.videos = videoResults.results.map(result => ({
+        resourceCollection.videos = videoResults.results.map<Resource>(result => ({
             title: result.title || 'Untitled Video',
             url: result.url,
             snippet: result.text?.slice(0, 200) || '',
-            type: 'video' as const,
+            type: 'video',
             source: new URL(result.url).hostname
         }));
 
@@ -115,11 +114,11 @@ export async function generateResources(threadId: string): Promise<string> {
             }
         );
 
-        resourceCollection.articles = articleResults.results.map(result => ({
+        resourceCollection.articles = articleResults.results.map<Resource>(result => ({
             title: result.title || 'Untitled Article',
             url: result.url,
             snippet: result.text?.slice(0, 200) || '',
-            type: 'article' as const,
+            type: 'article',
             source: new URL(result.url).hostname
         }));
 
@@ -133,11 +132,11 @@ export async function generateResources(threadId: string): Promise<string> {
             }
         );
 
-        resourceCollection.tutorials = tutorialResults.results.map(result => ({
+        resourceCollection.tutorials = tutorialResults.results.map<Resource>(result => ({
             title: result.title || 'Untitled Tutorial',
             url: result.url,
             snippet: result.text?.slice(0, 200) || '',
-            type: 'tutorial' as const,
+            type: 'tutorial',
             source: new URL(result.url).hostname
         }));
 
@@ -151,11 +150,11 @@ export async function generateResources(threadId: string): Promise<string> {
             }
         );
 
-        resourceCollection.documentation = docResults.results.map(result => ({
+        resourceCollection.documentation = docResults.results.map<Resource>(result => ({
             title: result.title || 'Untitled Documentation',
             url: result.url,
             snippet: result.text?.slice(0, 200) || '',
-            type: 'documentation' as const,
+            type: 'documentation',
             source: new URL(result.url).hostname
         }));
 
@@ -166,7 +165,8 @@ export async function generateResources(threadId: string): Promise<string> {
 
     // Use https, and drop links already listed in an earlier section. URLs are compared ignoring protocol, "www.", case and trailing slashes.
     const seenUrls = new Set<string>();
-    for (const section of ['simulations', 'videos', 'articles', 'tutorials', 'documentation'] as const) {
+    const sections: (keyof Pick<ResourceCollection, 'simulations' | 'videos' | 'articles' | 'tutorials' | 'documentation'>)[] = ['simulations', 'videos', 'articles', 'tutorials', 'documentation'];
+    for (const section of sections) {
         resourceCollection[section] = resourceCollection[section].filter(resource => {
             const url = new URL(resource.url);
             url.protocol = 'https:';

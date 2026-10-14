@@ -1,31 +1,28 @@
 ---
-import Layout from '@/layouts/Layout.astro';
-import Header from '@/components/chat/Header.astro';
-import ChatTitle from '@/components/chat/ChatTitle.astro';
-import Toolbar from '@/components/chat/Toolbar.astro';
-import LeftSidebar from '@/components/chat/LeftSidebar.astro';
-import RightSidebar from '@/components/chat/RightSidebar.astro';
-import Footer from '@/components/Footer.astro';
-import MessagesScript from '@/scripts/messages.astro';
-import StepByStepScript from '@/scripts/step-by-step.astro';
-import '@/styles/pages/chat.scss';
-
-import { marked, Marked } from 'marked';
-
-import { getMessages, getMessagesLength, getThreadByToken, type Message } from '@/lib/threads';
-import { labels } from '@/lib/tools';
 import { checkThreadAccess } from '@/lib/auth/checkThreadAccess';
 import { checkForOneMessage } from '@/lib/check-for-one-message';
 import categories from '@/lib/modes';
+import { getMessages, getMessagesLength, getThreadByToken, type Message } from '@/lib/threads';
+import { labels } from '@/lib/tools';
+import { marked, Marked } from 'marked';
+
+import ChatTitle from '@/components/chat/ChatTitle.astro';
+import Header from '@/components/chat/Header.astro';
+import LeftSidebar from '@/components/chat/LeftSidebar.astro';
+import RightSidebar from '@/components/chat/RightSidebar.astro';
+import Toolbar from '@/components/chat/Toolbar.astro';
+import Footer from '@/components/Footer.astro';
+import Layout from '@/layouts/Layout.astro';
+import MessagesScript from '@/scripts/messages.astro';
+import StepByStepScript from '@/scripts/step-by-step.astro';
+import '@/styles/pages/chat.scss';
 
 let { category, mode, id } = Astro.params || { category: '', mode: '', id: '' };
 
 const categoryObj = category ? categories[category] : null;
 const modeObj = categoryObj?.modes?.[mode || ''];
 
-if (!categoryObj || !modeObj) {
-    return Astro.redirect('/404');
-}
+if (!categoryObj || !modeObj) return Astro.redirect('/404');
 
 const categoryName = categoryObj?.name || category;
 const modeName = modeObj?.name || mode;
@@ -54,14 +51,10 @@ if (!isNewChat) {
 const thread = !isNewChat && id ? await getThreadByToken(id, (isAuthorized || isPublic)) : null;
 
 // Unknown thread IDs pass the access check as unclaimed, so start a fresh chat instead of rendering an empty one
-if (!isNewChat && isAuthorized && !thread) {
-    return Astro.redirect(`/${category}/${mode}/chat/new`);
-}
+if (!isNewChat && isAuthorized && !thread) { return Astro.redirect(`/${category}/${mode}/chat/new`); }
 
 // For new chats, user must be authenticated
-if ((isNewChat && !user) || (!user && !isPublic)) {
-    return Astro.redirect(`/user/sign-in?returnBackUrl=${encodeURIComponent(`/${category}/${mode}/chat/${id}`)}`);
-}
+if ((isNewChat && !user) || (!user && !isPublic)) { return Astro.redirect(`/user/sign-in?returnBackUrl=${encodeURIComponent(`/${category}/${mode}/chat/${id}`)}`); }
 
 const threadTitle = thread?.title || null;
 const uploadedFiles = thread?.uploadedFiles || [];

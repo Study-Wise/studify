@@ -6,7 +6,7 @@ const exa = new Exa(import.meta.env.EXA_SEARCH_API_KEY || process.env.EXA_SEARCH
 const PHET_DOMAIN = 'phet.colorado.edu';
 const SIMULATION_PATH = /^\/[a-z]{2}(?:_[A-Z]{2})?\/simulations\/([a-z0-9-]+)\/?$/;
 
-const getSimulationSlug = (url: string) => {
+function getSimulationSlug(url: string) {
     try {
         const { hostname, pathname } = new URL(url);
         if (hostname !== PHET_DOMAIN) return null;
@@ -14,7 +14,7 @@ const getSimulationSlug = (url: string) => {
     } catch {
         return null;
     }
-};
+}
 
 interface Simulation {
     title: string;

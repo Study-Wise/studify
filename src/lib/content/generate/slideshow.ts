@@ -1,20 +1,20 @@
-import { createRequire } from 'module';
-import { dirname, join } from 'path';
-import fm from 'front-matter';
-import cheerio from 'cheerio';
-import highlight from 'highlight.js';
-import CryptoJS from 'crypto-js';
-import lodash from 'lodash';
-
-import { eq } from 'drizzle-orm';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
-
-import config from '@/lib/config';
 import { generateText } from '@/lib/ai-service';
+import config from '@/lib/config';
 import { buildContentSystemPrompt } from '@/lib/content';
-import type { ThreadData, UploadedFile, JSONValue } from '@/lib/threads';
 import { saveContent } from '@/lib/content/latest';
+import { parseThreadData, type UploadedFile, type JSONValue } from '@/lib/threads';
+import cheerio from 'cheerio';
+import CryptoJS from 'crypto-js';
+import fm from 'front-matter';
+import lodash from 'lodash';
+import { createRequire } from 'module';
+import { dirname, join } from 'path';
+
+import { eq } from 'drizzle-orm';
+
+import highlight from 'highlight.js';
 
 export interface MarkedToken {
     type: string;
@@ -39,10 +39,10 @@ function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
 
 function markdownToSlideshowHTML(markdown: string): string {
     const content = fm(markdown);
-    const tokens = (marked.lexer(content.body, {
+    const tokens: MarkedToken[] = marked.lexer(content.body, {
         gfm: true, tables: true, breaks: true,
         pedantic: true, sanitize: true, smartLists: true, smartypants: true
-    }) as MarkedToken[]);
+    });
 
     let title: string | undefined;
     const pages: { tokens?: MarkedToken[]; html?: string }[] = [];
@@ -52,8 +52,7 @@ function markdownToSlideshowHTML(markdown: string): string {
             pages.push({ tokens: [] });
         }
         if (!title) {
-            const t: MarkedToken[] = [token];
-            (t as object as { links: Record<string, JSONValue> }).links = {};
+            const t: MarkedToken[] & { links: Record<string, JSONValue> } = Object.assign([token], { links: {} });
             const h = marked.parser(t);
             const $ = cheerio.load(h);
             title = $('*').text();
@@ -63,9 +62,10 @@ function markdownToSlideshowHTML(markdown: string): string {
 
     pages.forEach((page) => {
         const renderer = new marked.Renderer();
-        renderer.heading = (text: string, level: number) => `<h${level}>${text}</h${level}>`;
-        const pt = lodash.cloneDeep(page.tokens) as (MarkedToken[] & { links?: Record<string, JSONValue> });
-        pt.links = {};
+        renderer.heading = function heading(text: string, level: number) {
+            return `<h${level}>${text}</h${level}>`;
+        };
+        const pt = Object.assign(lodash.cloneDeep(page.tokens ?? []), { links: {} });
         page.html = marked.parser(pt, {
             renderer,
             highlight: (code: string) => highlight.highlightAuto(code).value
@@ -94,10 +94,10 @@ export async function generateSlideshow(threadId: string, userPrompt?: string) {
     const userModel = config.model;
     const provider = config.provider;
 
-    const threadData = thread.thread as ThreadData;
+    const threadData = parseThreadData(thread.thread);
     const messages = threadData?.messages ?? [];
 
-    const uploadedFiles = (thread.uploadedFiles as UploadedFile[]) ?? [];
+    const uploadedFiles = thread.uploadedFiles ?? [];
 
     if (messages.length === 0) {
         throw new Error('No messages found in thread');
@@ -134,7 +134,6 @@ Your output MUST be standard markdown where each heading (# or ##) starts a new 
    - Framework-specific syntax (Vue, React, Svelte, etc.)
 
 REMEMBER: Output ONLY the markdown content. No quizzes, no practice questions, no flashcards, no other content types.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
-
 
     const result = await generateText(
         slideshowPrompt,

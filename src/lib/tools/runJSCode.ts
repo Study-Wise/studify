@@ -28,7 +28,7 @@ const runJSCodeTool = tool({
                 .map((line: string) => (
                     lineReplacements
                         .map(replacement => (
-                            (line[replacement.func as keyof string] as (arg: string) => boolean)(replacement.key)
+                            replacement.func === 'startsWith' ? line.startsWith(replacement.key) : line.includes(replacement.key)
                         ))
                         .filter(Boolean).length < 1 ? line : null
                 ))

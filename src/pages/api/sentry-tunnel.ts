@@ -14,7 +14,7 @@ export const POST: APIRoute = async ({ request }) => {
         const bytes = Buffer.from(envelope);
         const headerEnd = bytes.indexOf('\n');
         const headerLine = bytes.toString('utf8', 0, headerEnd === -1 ? bytes.length : headerEnd);
-        const header: { dsn?: unknown } = JSON.parse(headerLine);
+        const header: { dsn?: string } = JSON.parse(headerLine);
 
         if (typeof header.dsn !== 'string') {
             return new Response('Missing DSN', { status: 400 });

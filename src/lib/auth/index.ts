@@ -1,11 +1,9 @@
-import { betterAuth } from 'better-auth';
-import { magicLink } from 'better-auth/plugins';
-import { drizzleAdapter } from 'better-auth/adapters/drizzle';
-
-import { db } from '@/db/initialize';
 import { user, session, account, verification } from '@/db/auth-schema';
-
+import { db } from '@/db/initialize';
 import type { UserRole, SocialProviderConfig } from '@/lib/auth/types';
+import { betterAuth } from 'better-auth';
+import { drizzleAdapter } from 'better-auth/adapters/drizzle';
+import { magicLink } from 'better-auth/plugins';
 
 const ADMIN_EMAILS = [
     'adarshravikumar2@gmail.com',
@@ -34,7 +32,7 @@ function determineUserRole(email: string): UserRole {
 // This ensures compatibility with both Vite/Astro and Node.js runtime environments
 function getEnvVar(key: string): string | undefined {
     if (typeof import.meta !== 'undefined' && import.meta.env) {
-        const value = (import.meta.env as Record<string, string>)[key];
+        const value = import.meta.env[key];
         if (value) return value;
     }
     if (typeof process !== 'undefined' && process.env) {
@@ -42,7 +40,6 @@ function getEnvVar(key: string): string | undefined {
     }
     return undefined;
 }
-
 
 function buildSocialProviders(): SocialProviderConfig {
     const providers: SocialProviderConfig = {};

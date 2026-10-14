@@ -1,15 +1,14 @@
+import { db } from '@/db/initialize';
+import { threadsTable } from '@/db/schema';
+import { generateObject } from '@/lib/ai-service';
+import config from '@/lib/config';
+import { buildContentSystemPrompt } from '@/lib/content';
+import { saveContent } from '@/lib/content/latest';
+import type { FlashcardData } from '@/lib/content/latest/flashcards';
+import { parseThreadData, type UploadedFile } from '@/lib/threads';
 import { z } from 'zod';
 
 import { eq } from 'drizzle-orm';
-import { db } from '@/db/initialize';
-import { threadsTable } from '@/db/schema';
-
-import { buildContentSystemPrompt } from '@/lib/content';
-import type { ThreadData, UploadedFile } from '@/lib/threads';
-import type { FlashcardData } from '@/lib/content/latest/flashcards';
-import { saveContent } from '@/lib/content/latest';
-import { generateObject } from '@/lib/ai-service';
-import config from '@/lib/config';
 
 const flashcardSchema = z.object({
     text: z.string().describe('A brief markdown summary/introduction about the flashcards topic'),
@@ -42,10 +41,10 @@ export async function generateFlashcards(threadId: string, userPrompt?: string):
     const userModel = config.model;
     const provider = config.provider;
 
-    const threadData = thread.thread as ThreadData;
+    const threadData = parseThreadData(thread.thread);
     const messages = threadData?.messages ?? [];
 
-    const uploadedFiles = (thread.uploadedFiles as UploadedFile[]) ?? [];
+    const uploadedFiles = thread.uploadedFiles ?? [];
 
     if (messages.length === 0) {
         throw new Error('No messages found in thread');
@@ -65,11 +64,11 @@ Guidelines for questions:
 - Questions should be clear and specific
 - Answers should be concise but complete
 - Include a mix of:
-  - Definition cards (What is...?)
-  - Concept cards (Explain...)
-  - Formula cards (What is the formula for...?)
-  - Application cards (When do you use...?)
-  - Problem-solving cards (How do you solve...?)
+    - Definition cards (What is...?)
+    - Concept cards (Explain...)
+    - Formula cards (What is the formula for...?)
+    - Application cards (When do you use...?)
+    - Problem-solving cards (How do you solve...?)
 - Use active recall techniques (questions that make students retrieve information)
 - For math/science: include relevant formulas and their applications
 - For other subjects: focus on key terms, concepts, and relationships

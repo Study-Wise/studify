@@ -1,15 +1,14 @@
+import { db } from '@/db/initialize';
+import { threadsTable } from '@/db/schema';
+import config from '@/lib/config';
+import { buildContentSystemPrompt } from '@/lib/content';
+import { saveContent } from '@/lib/content/latest';
+import { parseThreadData, type Message, type UploadedFile } from '@/lib/threads';
+import { modules } from '@/lib/tools';
 import type { GatewayProviderOptions } from '@ai-sdk/gateway';
 import { generateText, stepCountIs } from 'ai';
 
 import { eq } from 'drizzle-orm';
-import { db } from '@/db/initialize';
-import { threadsTable } from '@/db/schema';
-
-import { modules } from '@/lib/tools';
-import { buildContentSystemPrompt } from '@/lib/content';
-import config from '@/lib/config';
-import type { ThreadData, UploadedFile } from '@/lib/threads';
-import { saveContent } from '@/lib/content/latest';
 
 function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
     const filesWithText = uploadedFiles.filter(f => f.extractedText);
@@ -31,10 +30,10 @@ export async function generateMindMap(threadId: string, userPrompt?: string) {
 
     const thread = threads[0];
 
-    const threadData = thread.thread as ThreadData;
+    const threadData = parseThreadData(thread.thread);
     const messages = threadData?.messages ?? [];
 
-    const uploadedFiles = (thread.uploadedFiles as UploadedFile[]) ?? [];
+    const uploadedFiles = thread.uploadedFiles ?? [];
 
     if (messages.length === 0) {
         throw new Error('No messages found in thread');
@@ -100,14 +99,14 @@ Output a complete HTML document (including <!DOCTYPE html>, <html>, <head>, and 
 You may remove or modify sections as you see fit based on relevance to the topic.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
 
     const conversationMessages = messages.filter(msg => msg.role !== 'system' && msg.content !== '');
-    const messagesForAI = [
+    const messagesForAI: Message[] = [
         {
-            role: 'system' as const,
+            role: 'system',
             content: mindMapPrompt
         },
         ...conversationMessages,
         {
-            role: 'user' as const,
+            role: 'user',
             content: 'Now generate the interactive HTML mind map based on the above conversation. Output ONLY the complete HTML document starting with <!DOCTYPE html>. Do not include any explanations, commentary, or conversation - just the HTML content.'
         }
     ];

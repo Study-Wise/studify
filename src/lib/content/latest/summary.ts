@@ -6,5 +6,5 @@ export interface SummaryResult {
 
 export async function getLatestSummary(threadId: string): Promise<SummaryResult> {
     const content = await getLatestContent(threadId, 'summary');
-    return { content };
+    return { content: typeof content === 'string' ? content : content === null ? null : JSON.stringify(content) ?? null };
 }

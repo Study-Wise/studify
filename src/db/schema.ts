@@ -1,13 +1,13 @@
-import { pgTable, varchar, timestamp, jsonb, boolean, text } from 'drizzle-orm/pg-core';
-
 import config from '@/lib/config';
-import type { ThreadData, UploadedFile } from '@/lib/threads';
 import type { ThreadContent } from '@/lib/content/latest/index';
+import type { ThreadData, UploadedFile } from '@/lib/threads';
+
+import { pgTable, varchar, timestamp, jsonb, boolean, text } from 'drizzle-orm/pg-core';
 
 const threadsTable = pgTable('threads', {
     id: text('id').primaryKey(),
     title: varchar({ length: 255 }).notNull(),
-    thread: jsonb('thread').$type<ThreadData | string>().notNull().default({} as ThreadData),
+    thread: jsonb('thread').$type<ThreadData | string>().notNull().default({ messages: [] }),
     uploadedFiles: jsonb('uploadedFiles').$type<UploadedFile[]>().notNull().default([]),
     content: jsonb('content').$type<ThreadContent>().notNull().default({}),
     email: text('email'),
@@ -33,8 +33,5 @@ const questionTable = pgTable('questions', {
     createdAt: timestamp('createdAt').notNull().defaultNow(),
     updatedAt: timestamp('updatedAt').notNull().defaultNow(),
 });
-
-// Export Better Auth tables
-export * from '@/db/auth-schema';
 
 export { threadsTable, questionTable };

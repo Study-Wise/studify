@@ -1,6 +1,6 @@
 import config from '@/lib/config';
 import { providers } from '@/lib/models';
-import type { JSONValue, Message, ToolCallLogEntry } from '@/lib/threads';
+import type { Message, ToolCallLogEntry } from '@/lib/threads';
 import type { ToolContext, ToolRecord } from '@/lib/tools';
 import { VendorError } from '@/lib/user-errors';
 import * as ai from 'ai';
@@ -10,7 +10,7 @@ import { nanoid } from 'nanoid';
 import type { ZodSchema } from 'zod';
 
 // Reads the server-verified tool context, or null if the call has none
-export function getToolContext(options: { experimental_context?: unknown }): ToolContext | null {
+export function getToolContext<T>(options: { experimental_context?: T }): ToolContext | null {
     const { experimental_context } = options;
     if (
         experimental_context && typeof experimental_context === 'object' &&
@@ -104,14 +104,13 @@ export async function generateText(
                 const stepToolResults = step.toolResults ?? [];
 
                 for (const tc of stepToolCalls) {
-                    const matchingResult = (stepToolResults as Array<{ toolCallId: string; result?: JSONValue }>)
-                        .find(tr => tr.toolCallId === tc.toolCallId);
+                    const matchingResult = stepToolResults.find(tr => tr.toolCallId === tc.toolCallId);
 
                     let resultStr = '';
                     let status: 'success' | 'error' = 'success';
 
-                    if (matchingResult?.result) {
-                        const raw = matchingResult.result;
+                    if (matchingResult?.output) {
+                        const raw = matchingResult.output;
                         resultStr = typeof raw === 'string' ? raw : JSON.stringify(raw);
                         try {
                             const parsed = JSON.parse(resultStr);
@@ -136,20 +135,18 @@ export async function generateText(
                 try {
                     // Tool results are JSON strings, so we need to parse them
                     // Cast to access the result property which varies by type
-                    const typedToolResult = toolResult as { result?: JSONValue, toolCallId: string };
-                    const resultValue = typeof typedToolResult.result === 'string' ? JSON.parse(typedToolResult.result) : typedToolResult.result;
+                    const resultValue = typeof toolResult.output === 'string' ? JSON.parse(toolResult.output) : toolResult.output;
 
-                    if (resultValue && typeof resultValue === 'object' && resultValue !== null && 'action' in resultValue && resultValue.action === 'open-content') {
-                        const openContentResult = resultValue as { type: string, threadId: string, category: string, mode: string, url?: string };
+                    if (resultValue && typeof resultValue === 'object' && resultValue !== null && 'action' in resultValue && resultValue.action === 'open-content' && 'type' in resultValue && typeof resultValue.type === 'string' && 'threadId' in resultValue && typeof resultValue.threadId === 'string' && 'category' in resultValue && typeof resultValue.category === 'string' && 'mode' in resultValue && typeof resultValue.mode === 'string') {
                         clientToolCalls.push({
                             toolName: 'open-content',
-                            toolCallId: typedToolResult.toolCallId,
+                            toolCallId: toolResult.toolCallId,
                             args: {
-                                type: openContentResult.type,
-                                threadId: openContentResult.threadId,
-                                category: openContentResult.category,
-                                mode: openContentResult.mode,
-                                url: openContentResult.url,
+                                type: resultValue.type,
+                                threadId: resultValue.threadId,
+                                category: resultValue.category,
+                                mode: resultValue.mode,
+                                url: 'url' in resultValue && typeof resultValue.url === 'string' ? resultValue.url : undefined,
                             },
                         });
                     }
@@ -165,20 +162,18 @@ export async function generateText(
                 if (step.toolResults && step.toolResults.length > 0) {
                     for (const toolResult of step.toolResults) {
                         try {
-                            const typedToolResult = toolResult as { result?: JSONValue, toolCallId: string };
-                            const resultValue = typeof typedToolResult.result === 'string' ? JSON.parse(typedToolResult.result) : typedToolResult.result;
+                            const resultValue = typeof toolResult.output === 'string' ? JSON.parse(toolResult.output) : toolResult.output;
 
-                            if (resultValue && typeof resultValue === 'object' && resultValue !== null && 'action' in resultValue && resultValue.action === 'open-content') {
-                                const openContentResult = resultValue as { type: string, threadId: string, category: string, mode: string, url?: string };
+                            if (resultValue && typeof resultValue === 'object' && resultValue !== null && 'action' in resultValue && resultValue.action === 'open-content' && 'type' in resultValue && typeof resultValue.type === 'string' && 'threadId' in resultValue && typeof resultValue.threadId === 'string' && 'category' in resultValue && typeof resultValue.category === 'string' && 'mode' in resultValue && typeof resultValue.mode === 'string') {
                                 clientToolCalls.push({
                                     toolName: 'open-content',
-                                    toolCallId: typedToolResult.toolCallId,
+                                    toolCallId: toolResult.toolCallId,
                                     args: {
-                                        type: openContentResult.type,
-                                        threadId: openContentResult.threadId,
-                                        category: openContentResult.category,
-                                        mode: openContentResult.mode,
-                                        url: openContentResult.url,
+                                        type: resultValue.type,
+                                        threadId: resultValue.threadId,
+                                        category: resultValue.category,
+                                        mode: resultValue.mode,
+                                        url: 'url' in resultValue && typeof resultValue.url === 'string' ? resultValue.url : undefined,
                                     },
                                 });
                             }
@@ -266,14 +261,13 @@ export function extractToolData(steps: Awaited<Awaited<ReturnType<typeof ai.stre
         const stepToolResults = step.toolResults ?? [];
 
         for (const tc of stepToolCalls) {
-            const matchingResult = (stepToolResults as Array<{ toolCallId: string; result?: JSONValue; output?: JSONValue }>)
-                .find(tr => tr.toolCallId === tc.toolCallId);
+            const matchingResult = stepToolResults.find(tr => tr.toolCallId === tc.toolCallId);
 
             let resultStr = '';
             let status: 'success' | 'error' = 'success';
 
-            if (matchingResult?.result || matchingResult?.output) {
-                const raw = matchingResult.result ?? matchingResult.output;
+            if (matchingResult?.output) {
+                const raw = matchingResult.output;
                 resultStr = typeof raw === 'string' ? raw : JSON.stringify(raw);
                 try {
                     const parsed = JSON.parse(resultStr);

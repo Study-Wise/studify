@@ -1,16 +1,8 @@
+import { getToolContext } from '@/lib/ai-service';
 import { tool } from 'ai';
 import { z } from 'zod';
 
-import { getToolContext } from '@/lib/ai-service';
-
-const toCamelCase = (str: string) => str.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
-
-const toPascalCase = (str: string) => {
-    const camel = toCamelCase(str);
-    return camel.charAt(0).toUpperCase() + camel.slice(1);
-};
-
-const validTypes = [
+const validTypes: [string, ...string[]] = [
     'study-guide',
     'reference-sheet',
     'infographic',
@@ -19,7 +11,7 @@ const validTypes = [
     'additional-resources',
     'flashcards',
     'practice-questions'
-] as const;
+];
 
 // Special cases that don't follow the standard naming convention
 const specialCases: Record<string, { latestFn?: string; generateFn?: string }> = {
@@ -53,7 +45,8 @@ const getContentTool = tool({
         const { threadId } = toolContext;
 
         try {
-            const pascalCase = toPascalCase(type);
+            const camel = type.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+            const pascalCase = camel.charAt(0).toUpperCase() + camel.slice(1);
 
             // Derive function names (with special case handling)
             const special = specialCases[type] || {};

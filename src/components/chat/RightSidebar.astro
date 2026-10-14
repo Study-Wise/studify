@@ -1,11 +1,11 @@
 ---
-import SidebarSection from '@/components/chat/SidebarSection.astro';
-import '@/styles/components/chat/sidebar.scss';
-import '@/styles/components/chat/right-sidebar.scss';
-
 import { getThreadContentStatus } from '@/lib/content/latest';
 
-export interface ChatRightSidebarProps {
+import SidebarSection from '@/components/chat/SidebarSection.astro';
+import '@/styles/components/chat/right-sidebar.scss';
+import '@/styles/components/chat/sidebar.scss';
+
+interface Props {
     threadId: string;
     category: string;
     mode: string;
@@ -19,7 +19,7 @@ const {
     mode,
     isAuthorized,
     isPublic
-} = Astro.props as ChatRightSidebarProps;
+} = Astro.props;
 
 const {
     hasReferenceSheet,

@@ -1,5 +1,5 @@
 // Content types that can be generated - used for exclusion lists in prompts
-export const contentTypes = [
+export const contentTypes: [string, ...string[]] = [
     'Study Guide',
     'Reference Sheet',
     'Flashcards',
@@ -10,7 +10,7 @@ export const contentTypes = [
     'Additional Resources',
     'Slideshow',
     'Chat Summary',
-] as const;
+];
 
 // Helper to get exclusion list for a specific content type
 export function getExclusionList(currentType: string): string {

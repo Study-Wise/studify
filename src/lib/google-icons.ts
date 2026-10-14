@@ -8,13 +8,9 @@ const icon_map = {
 };
 
 function hasGoogleIcon(name: string) {
-    const hasIcon = !!Object.keys(google_icons).find((category: string) => (
-        google_icons[category as keyof typeof google_icons]?.includes(name)
-    ));
+    const hasIcon = Object.values(google_icons).some(category => category.includes(name));
 
-    const hasMap = !!Object.keys(icon_map).find((icon: string) => (
-        !!icon_map[icon as keyof typeof icon_map]
-    ));
+    const hasMap = Object.hasOwn(icon_map, name);
 
     return hasIcon || hasMap;
 }
@@ -23,10 +19,13 @@ function hasCustomIcon(name: string) {
     return custom_icons.some(icon => icon.name === name);
 }
 
-const hasIcon = (name: string) => hasGoogleIcon(name) ? 'google' : hasCustomIcon(name) ? 'custom' : false;
+function hasIcon(name: string) {
+    return hasGoogleIcon(name) ? 'google' : hasCustomIcon(name) ? 'custom' : false;
+}
 
 function getIcon(name: string) {
-    return icon_map[name as keyof typeof icon_map] || name;
+    const mappedIcon = Object.entries(icon_map).find(([key]) => key === name)?.[1];
+    return mappedIcon || name;
 }
 
 export { hasGoogleIcon, hasCustomIcon, hasIcon, getIcon };

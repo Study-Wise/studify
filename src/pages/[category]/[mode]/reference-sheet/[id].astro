@@ -1,15 +1,14 @@
 ---
-import Layout from '@/layouts/Layout.astro';
-import ContentActions from '@/components/ContentActions.astro';
-import StepByStepScript from '@/scripts/step-by-step.astro';
-import '@/styles/pages/content/reference-sheet.scss';
-import '@/styles/pages/content/globals.scss';
-
+import { checkThreadAccess } from '@/lib/auth/checkThreadAccess';
+import { getLatestReferenceSheet } from '@/lib/content/latest/reference-sheet';
+import categories from '@/lib/modes';
 import { marked } from 'marked';
 
-import { getLatestReferenceSheet } from '@/lib/content/latest/reference-sheet';
-import { checkThreadAccess } from '@/lib/auth/checkThreadAccess';
-import categories from '@/lib/modes';
+import ContentActions from '@/components/ContentActions.astro';
+import Layout from '@/layouts/Layout.astro';
+import StepByStepScript from '@/scripts/step-by-step.astro';
+import '@/styles/pages/content/globals.scss';
+import '@/styles/pages/content/reference-sheet.scss';
 
 const { category, mode, id } = Astro.params;
 const chatUrl = `/${category}/${mode}/chat/${id}`;
@@ -17,9 +16,7 @@ const chatUrl = `/${category}/${mode}/chat/${id}`;
 const categoryObj = category ? categories[category] : null;
 const modeObj = categoryObj?.modes?.[mode || ''];
 
-if (!categoryObj || !modeObj) {
-    return Astro.redirect('/404');
-}
+if (!categoryObj || !modeObj) return Astro.redirect('/404');
 
 const categoryName = categoryObj?.name || category;
 const modeName = modeObj?.name || mode;
@@ -29,13 +26,9 @@ const user = Astro.locals.user;
 const { isAuthorized, isPublic, threadExists } = await checkThreadAccess(id || '', user, category, mode);
 
 // A deleted or unknown chat has no materials, so show the 404 page (#344)
-if (!threadExists) {
-    return new Response(null, { status: 404 });
-}
+if (!threadExists) { return new Response(null, { status: 404 }); }
 
-if (!user && !isPublic) {
-    return Astro.redirect('/user/sign-in');
-}
+if (!user && !isPublic) { return Astro.redirect('/user/sign-in'); }
 
 const { content: latestReferenceSheet } = (isAuthorized || isPublic)
     ? await getLatestReferenceSheet(id || '')

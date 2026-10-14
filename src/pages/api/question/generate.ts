@@ -1,15 +1,15 @@
-import type { APIRoute } from 'astro';
-
+import { db } from '@/db/initialize';
+import { questionTable } from '@/db/schema';
+import { generateText, paraphraseQuestion } from '@/lib/ai-service';
+import config from '@/lib/config';
+import { questionToId } from '@/lib/question-utils';
+import { getUserErrorMessage } from '@/lib/user-errors';
+import type { Message } from '@/lib/threads';
 import { nanoid } from 'nanoid';
 
 import { eq } from 'drizzle-orm';
-import { db } from '@/db/initialize';
-import { questionTable } from '@/db/schema';
 
-import { questionToId } from '@/lib/question-utils';
-import { generateText, paraphraseQuestion } from '@/lib/ai-service';
-import config from '@/lib/config';
-import { getUserErrorMessage } from '@/lib/user-errors';
+import type { APIRoute } from 'astro';
 
 export const POST: APIRoute = async ({ request }) => {
     const requestId = nanoid();
@@ -61,9 +61,9 @@ Your answer should be:
 - Include examples where appropriate
 - Suitable for students seeking help`;
 
-        const convoHistory = [
-            { role: 'system' as const, content: systemPrompt },
-            { role: 'user' as const, content: paraphrasedQuestion }
+        const convoHistory: Message[] = [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: paraphrasedQuestion }
         ];
 
         const aiResult = await generateText(

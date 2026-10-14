@@ -5,9 +5,7 @@ import '@/styles/pages/sign-out.scss';
 const user = Astro.locals.user;
 
 // If not signed in, redirect to home
-if (!user) {
-    return Astro.redirect('/');
-}
+if (!user) return Astro.redirect('/');
 ---
 
 <Layout title="Sign Out">

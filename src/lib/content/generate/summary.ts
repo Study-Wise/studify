@@ -1,12 +1,12 @@
-import { eq } from 'drizzle-orm';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
-
-import config from '@/lib/config';
 import { generateText } from '@/lib/ai-service';
+import config from '@/lib/config';
 import { buildContentSystemPrompt } from '@/lib/content';
-import type { ThreadData, UploadedFile } from '@/lib/threads';
 import { saveContent } from '@/lib/content/latest';
+import { parseThreadData, type UploadedFile } from '@/lib/threads';
+
+import { eq } from 'drizzle-orm';
 
 function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
     const filesWithText = uploadedFiles.filter(f => f.extractedText);
@@ -31,10 +31,10 @@ export async function generateSummary(threadId: string, userPrompt?: string) {
     const userModel = config.model;
     const provider = config.provider;
 
-    const threadData = thread.thread as ThreadData;
+    const threadData = parseThreadData(thread.thread);
     const messages = threadData?.messages ?? [];
 
-    const uploadedFiles = (thread.uploadedFiles as UploadedFile[]) ?? [];
+    const uploadedFiles = thread.uploadedFiles ?? [];
 
     if (messages.length === 0) {
         throw new Error('No messages found in thread');
@@ -65,7 +65,6 @@ OUTPUT FORMAT:
 Math formatting: use \`$…$\` for inline math and \`$$…$$\` for block math.
 
 REMEMBER: Output ONLY the Chat Summary in markdown format. No other content types.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
-
 
     const result = await generateText(
         summaryPrompt,

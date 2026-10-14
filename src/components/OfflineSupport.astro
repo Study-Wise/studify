@@ -103,9 +103,7 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
                 try {
                     const cache = await caches.open(this.cacheName);
                     const response = await cache.match('/offline-study-materials');
-                    if (response) {
-                        return await response.json();
-                    }
+                    if (response) { return await response.json(); }
                 } catch (error) {
                     console.error('Failed to retrieve cached study materials:', error);
                 }

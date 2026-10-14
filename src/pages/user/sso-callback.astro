@@ -5,9 +5,7 @@ import { getSafeReturnBackUrl } from '@/lib/auth/return-url';
 
 const returnBackUrl = getSafeReturnBackUrl(Astro.url.searchParams.get('returnBackUrl'));
 
-if (Astro.locals.user) {
-    return Astro.redirect(returnBackUrl);
-}
+if (Astro.locals.user) { return Astro.redirect(returnBackUrl); }
 ---
 
 <Layout title="Completing Sign In" className="auth-page">

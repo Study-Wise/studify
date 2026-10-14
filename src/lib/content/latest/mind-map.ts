@@ -6,5 +6,5 @@ export interface MindMapResult {
 
 export async function getLatestMindMap(threadId: string): Promise<MindMapResult> {
     const content = await getLatestContent(threadId, 'mind-map');
-    return { content };
+    return { content: typeof content === 'string' ? content : content === null ? null : JSON.stringify(content) ?? null };
 }

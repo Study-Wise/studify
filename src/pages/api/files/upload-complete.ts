@@ -1,16 +1,15 @@
-import type { APIRoute } from 'astro';
-
+import { db } from '@/db/initialize';
+import { threadsTable } from '@/db/schema';
+import { chunkedUploads, cleanupStaleUploads } from '@/lib/chunked-upload-store';
+import { extractTextFromFile } from '@/lib/file-processing';
+import type { UploadedFile } from '@/lib/threads';
+import { userFilesUpload } from '@/lib/uploadthing';
+import { getUserErrorMessage } from '@/lib/user-errors';
 import { nanoid } from 'nanoid';
 
 import { eq } from 'drizzle-orm';
-import { db } from '@/db/initialize';
-import { threadsTable } from '@/db/schema';
 
-import { userFilesUpload } from '@/lib/uploadthing';
-import { getUserErrorMessage } from '@/lib/user-errors';
-import { extractTextFromFile } from '@/lib/file-processing';
-import type { UploadedFile } from '@/lib/threads';
-import { chunkedUploads, cleanupStaleUploads } from '@/lib/chunked-upload-store';
+import type { APIRoute } from 'astro';
 
 const allowedTypes = [
     'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml',
@@ -136,7 +135,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             extractedText: extractedText || null
         };
 
-        const currentFiles = (thread[0].uploadedFiles || []) as UploadedFile[];
+        const currentFiles = thread[0].uploadedFiles || [];
         const updatedFiles = [...currentFiles, fileMetadata];
 
         await db

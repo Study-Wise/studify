@@ -1,14 +1,14 @@
-import { eq } from 'drizzle-orm';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
-
-import config from '@/lib/config';
 import { generateText } from '@/lib/ai-service';
+import config from '@/lib/config';
 import { buildContentSystemPrompt } from '@/lib/content';
+import { saveContent } from '@/lib/content/latest';
 import categories from '@/lib/modes';
 import desmosSection from '@/lib/prompt-templates/desmos';
-import type { ThreadData, UploadedFile } from '@/lib/threads';
-import { saveContent } from '@/lib/content/latest';
+import { parseThreadData, type UploadedFile } from '@/lib/threads';
+
+import { eq } from 'drizzle-orm';
 
 function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
     const filesWithText = uploadedFiles.filter(f => f.extractedText);
@@ -35,10 +35,10 @@ export async function generateStudyGuide(threadId: string, userPrompt?: string) 
     const userModel = config.model;
     const provider = config.provider;
 
-    const threadData = thread.thread as ThreadData;
+    const threadData = parseThreadData(thread.thread);
     const messages = threadData?.messages ?? [];
 
-    const uploadedFiles = (thread.uploadedFiles as UploadedFile[]) ?? [];
+    const uploadedFiles = thread.uploadedFiles ?? [];
 
     if (messages.length === 0) {
         throw new Error('No messages found in thread');
@@ -95,7 +95,6 @@ ${desmosContent}
 Math formatting: use \`$…$\` for inline math and \`$$…$$\` for block math.
 
 REMEMBER: Output ONLY the Study Guide. No quizzes, no practice questions, no flashcards, no other content types. Be DETAILED and THOROUGH — a student should be able to study for an exam using only this guide.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
-
 
     const result = await generateText(
         studyGuidePrompt,

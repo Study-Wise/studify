@@ -21,14 +21,21 @@ export async function getLatestFlashcards(threadId: string): Promise<FlashcardRe
 
     if (content) {
         // New format: structured object
-        if (typeof content === 'object' && 'text' in content) {
+        if (typeof content === 'object' && content !== null && 'text' in content && typeof content.text === 'string' && 'questions' in content && Array.isArray(content.questions)) {
             return {
-                content: content as FlashcardData
+                content: {
+                    text: content.text,
+                    questions: content.questions.flatMap(question => {
+                        if (typeof question === 'object' && question !== null && !Array.isArray(question) && 'front' in question && typeof question.front === 'string' && 'back' in question && typeof question.back === 'string') {
+                            return [{ front: question.front, back: question.back }];
+                        }
+                        return [];
+                    })
+                }
             };
         }
+        if (typeof content === 'string') return { content };
     }
 
-    return {
-        content: null
-    };
+    return { content: null };
 }

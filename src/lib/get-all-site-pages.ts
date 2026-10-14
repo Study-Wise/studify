@@ -1,9 +1,7 @@
-import type { JSONValue } from '@/lib/threads';
-
 const pagesToHide = ['chat', 'settings', 'admin', '404'];
 
 export default function getAllSitePages() {
-    const pages = (Object.entries(import.meta.glob('/src/pages/*.astro', { eager: true })) as [string, Record<string, JSONValue>][])
+    const pages = Object.entries(import.meta.glob<{ inNav?: string; title?: string | string[] }>('/src/pages/*.astro', { eager: true }))
         .map(([path, mod]) => {
             const fileName = path.split('/').pop();
             if (!fileName) return null;
@@ -16,11 +14,10 @@ export default function getAllSitePages() {
             const route = `/${name === 'index' ? '' : name}`;
 
             // Astro module type checking
-            const module = mod as { inNav?: string; title?: string | string[] };
-            const hiddenFromNav = module?.inNav === 'hide';
+            const hiddenFromNav = mod?.inNav === 'hide';
             const isHidden = pagesToHide.includes(name);
 
-            let pageTitle = module?.title ? module.title : `${name.charAt(0).toUpperCase()}${name.slice(1)}`
+            let pageTitle = mod?.title ? mod.title : `${name.charAt(0).toUpperCase()}${name.slice(1)}`
 
             if (name === 'index') pageTitle = 'Home';
 
