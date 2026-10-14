@@ -7,7 +7,7 @@ import TouchGestures from '@/accessibility/TouchGestures.astro';
 import KeyboardNavigation from '@/accessibility/KeyboardNavigation.astro';
 import ThemeSwitcher from '@/accessibility/ThemeSwitcher.astro';
 import Dialog from '@/components/Dialog.astro';
-import Featurebase from '@/components/Featurebase.astro';
+import TawkTo from '@/components/TawkTo.astro';
 import '@/styles/globals.scss';
 
 import 'dotenv/config';
@@ -23,8 +23,8 @@ const pTitle = noTitle ? lTitle : `${title} | ${sTitle}`;
 // Desmos API key (https://www.desmos.com/api). Falls back to the public trial key, which is not for production use.
 const desmosApiKey = import.meta.env.DESMOS_API_KEY || process.env.DESMOS_API_KEY || 'dcb31709b452b1cf9dc26972add0fda6';
 
-// The Featurebase support widget looks like part of the AI on chat and generated-content pages, so it's left off everything under /[category]/[mode]
-const showFeaturebase = !Astro.routePattern.startsWith('/[category]/[mode]');
+// The TawkTo support widget looks like part of the AI on chat and generated-content pages, so it's left off everything under /[category]/[mode]
+const showTawkTo = !Astro.routePattern.startsWith('/[category]/[mode]');
 
 const canonicalURL = `${new URL(Astro.url.pathname, Astro.site)}${Astro.url.search}`;
 
@@ -124,7 +124,7 @@ if (container) className += ' container'
         <KeyboardNavigation />
         <ThemeSwitcher />
         <Dialog />
-        {showFeaturebase && <Featurebase />}
+        {showTawkTo && <TawkTo />}
         {!isChatArea ? <Header {sTitle} /> : ''}
 
         <main class={className?.trim()} id="main-content">

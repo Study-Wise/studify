@@ -4,38 +4,8 @@ import Layout from '@/layouts/Layout.astro';
 ---
 <Layout title="Support" description="Get help, suggest features, report issues and vote on what we build next." container={false} className="support-page">
     <section class="support-section">
-        <div class="support-embed" data-featurebase-embed></div>
+        <div class="support-embed">
+            <iframe referrerpolicy="origin" width="100%" frameborder="0" sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-top-navigation allow-top-navigation-by-user-activation allow-modals" allow="fullscreen; clipboard-write" src="https://https://studify.tawk.help/?embed=true"></iframe>
+        </div>
     </section>
 </Layout>
-
-<script>
-    import { bootFeaturebase } from '@/lib/featurebase-client';
-    import { initEmbedWidget } from 'featurebase-js';
-
-    bootFeaturebase();
-
-    // Match the site theme set by ThemeSwitcher; '' lets the portal follow prefers-color-scheme.
-    const userTheme = localStorage.getItem('user-theme');
-    const theme = userTheme === 'light' || userTheme === 'dark' ? userTheme : '';
-
-    // Portal page to open, e.g. ?path=/p/some-post?b=123 when coming back from /api/featurebase/sso
-    const requested = new URLSearchParams(window.location.search).get('path') || '/';
-    const [path, filters = ''] = (requested.startsWith('/') ? requested : '/').split('?', 2);
-
-    initEmbedWidget(
-        {
-            embedOptions: {
-                path,
-                filters,
-            },
-            stylingOptions: {
-                theme,
-                hideMenu: false,
-                hideLogo: false,
-            },
-        },
-        (err: Error) => {
-            if (err) console.error('[featurebase embed]', err);
-        }
-    );
-</script>
