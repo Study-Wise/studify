@@ -1,0 +1,45 @@
+<script>
+    import { authClient } from '@/lib/auth/client';
+
+    const USER_CACHES = ['study-materials-cache', 'images-cache', 'studywise-offline-v1'];
+    const USER_STORAGE_KEYS = ['threadId', 'settings', 'model'];
+
+    async function clearUserCaches() {
+        try {
+            if (!('caches' in window)) return;
+            const results = await Promise.allSettled(USER_CACHES.map((name) => caches.delete(name)));
+            for (const result of results) {
+                if (result.status === 'rejected') console.error('Failed to delete cache:', result.reason);
+            }
+        } catch (error) {
+            console.error('Cache Storage is unavailable:', error);
+        }
+    }
+
+    function clearUserStorage() {
+        try {
+            for (const key of USER_STORAGE_KEYS) localStorage.removeItem(key);
+        } catch {
+            // localStorage is unavailable, so there is nothing stored to remove
+        }
+    }
+
+    async function signOutAndClearData() {
+        clearUserStorage();
+        await clearUserCaches();
+        const { error } = await authClient.signOut();
+        if (error) throw new Error(error.message || 'Sign out failed');
+    }
+
+    for (const signoutBtn of document.querySelectorAll<HTMLButtonElement>('#signout-btn, #signout-confirm-btn')) {
+        signoutBtn.addEventListener('click', async () => {
+            try {
+                await signOutAndClearData();
+                window.location.href = '/';
+            } catch (error) {
+                console.error('Sign out error:', error);
+                if (signoutBtn.id === 'signout-confirm-btn') alert('Sign out failed. Please try again.');
+            }
+        });
+    }
+</script>

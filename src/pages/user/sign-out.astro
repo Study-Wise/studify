@@ -1,5 +1,6 @@
 ---
 import Layout from '@/layouts/Layout.astro';
+import SignOutScript from '@/scripts/auth/sign-out.astro';
 import '@/styles/pages/sign-out.scss';
 
 const user = Astro.locals.user;
@@ -29,18 +30,4 @@ if (!user) return Astro.redirect('/');
         </div>
     </div>
 </Layout>
-
-<script>
-    import { signOutAndClearData } from '@/lib/auth/sign-out';
-
-    const signoutBtn = document.getElementById('signout-confirm-btn');
-    signoutBtn?.addEventListener('click', async () => {
-        try {
-            await signOutAndClearData();
-            window.location.href = '/';
-        } catch (error) {
-            console.error('Sign out error:', error);
-            alert('Sign out failed. Please try again.');
-        }
-    });
-</script>
+<SignOutScript />

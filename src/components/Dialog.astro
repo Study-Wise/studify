@@ -3,7 +3,165 @@ import '@/styles/components/modal.scss';
 ---
 
 <script>
-    import { createModal, type Modal, type ModalContent, type ModalType } from '@/lib/modal';
+    type ModalType = 'info' | 'error' | 'warning' | 'success';
+
+    type ModalContent = {
+        title: string;
+        message: string;
+        type?: ModalType;
+        icon?: string;
+        buttons?: { label: string; variant?: 'primary' | 'secondary'; onClick?: () => void | boolean }[];
+    };
+
+    type Modal = {
+        element: HTMLDialogElement;
+        open(): void;
+        close(): void;
+        setContent(content: ModalContent): void;
+    };
+
+    const defaultIcons: Record<ModalType, string> = {
+        info: 'info',
+        error: 'error',
+        warning: 'warning',
+        success: 'check_circle',
+    };
+
+    const defaultButtons = [{ label: 'OK', variant: 'primary' as const }];
+    let modalCount = 0;
+
+    function getToastRegion() {
+        let region = document.querySelector<HTMLElement>('.toast-region');
+        if (!region) {
+            region = document.createElement('div');
+            region.className = 'toast-region';
+            document.body.append(region);
+        }
+        return region;
+    }
+
+    function createModal(options: ModalContent & { display?: 'modal' | 'toast'; duration?: number; onClose?: () => void }): Modal {
+        const { display = 'modal', duration = 5000 } = options;
+        const isToast = display === 'toast';
+        const titleId = `modal-title-${++modalCount}`;
+        const element = document.createElement('dialog');
+        element.className = isToast ? 'modal modal-toast' : 'modal';
+        element.setAttribute('aria-labelledby', titleId);
+        if (isToast) {
+            element.setAttribute('role', 'status');
+            element.setAttribute('aria-live', 'polite');
+        }
+
+        const content = document.createElement('div');
+        const header = document.createElement('div');
+        header.className = 'modal-header';
+        const icon = document.createElement('span');
+        icon.className = 'material-symbols-outlined modal-icon';
+        icon.setAttribute('aria-hidden', 'true');
+        const title = document.createElement('h2');
+        title.className = 'modal-title';
+        title.id = titleId;
+        header.append(icon, title);
+
+        if (isToast) {
+            const closeButton = document.createElement('button');
+            closeButton.type = 'button';
+            closeButton.className = 'modal-close';
+            closeButton.setAttribute('aria-label', 'Dismiss');
+            const closeIcon = document.createElement('span');
+            closeIcon.className = 'material-symbols-outlined';
+            closeIcon.setAttribute('aria-hidden', 'true');
+            closeIcon.textContent = 'close';
+            closeButton.append(closeIcon);
+            closeButton.addEventListener('click', () => element.close());
+            header.append(closeButton);
+        }
+
+        const body = document.createElement('div');
+        body.className = 'modal-body';
+        const message = document.createElement('p');
+        message.className = 'modal-message';
+        body.append(message);
+        const footer = document.createElement('div');
+        footer.className = 'modal-footer';
+        content.append(header, body, footer);
+        element.append(content);
+        (isToast ? getToastRegion() : document.body).append(element);
+
+        function focusPrimaryButton() {
+            footer.querySelector<HTMLButtonElement>('.modal-button-primary')?.focus();
+        }
+
+        function setContent({ title: titleText, message: messageText, type = 'info', icon: iconName, buttons = isToast ? [] : defaultButtons }: ModalContent) {
+            content.className = `modal-content modal-${type}`;
+            icon.textContent = iconName ?? defaultIcons[type];
+            title.textContent = titleText;
+            message.textContent = messageText;
+            footer.replaceChildren(...buttons.map(({ label, variant = 'primary', onClick }) => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = `modal-button modal-button-${variant}`;
+                button.textContent = label;
+                button.addEventListener('click', () => {
+                    if (onClick?.() !== false) element.close();
+                });
+                return button;
+            }));
+            footer.hidden = buttons.length === 0;
+            if (element.open && !isToast) focusPrimaryButton();
+        }
+
+        let dismissTimer: ReturnType<typeof setTimeout> | undefined;
+        function stopDismissTimer() {
+            clearTimeout(dismissTimer);
+            dismissTimer = undefined;
+        }
+        function startDismissTimer() {
+            stopDismissTimer();
+            if (isToast && duration > 0 && element.open && !element.matches(':hover, :focus-within')) {
+                dismissTimer = setTimeout(() => element.close(), duration);
+            }
+        }
+
+        if (isToast) {
+            element.addEventListener('mouseenter', stopDismissTimer);
+            element.addEventListener('focusin', stopDismissTimer);
+            element.addEventListener('mouseleave', startDismissTimer);
+            element.addEventListener('focusout', (event) => {
+                if (!(event.relatedTarget instanceof Node && element.contains(event.relatedTarget))) startDismissTimer();
+            });
+        }
+        else {
+            element.addEventListener('click', (event) => {
+                if (event.target === element) element.close();
+            });
+        }
+        element.addEventListener('close', stopDismissTimer);
+        if (options.onClose) element.addEventListener('close', options.onClose);
+        setContent(options);
+
+        return {
+            element,
+            open() {
+                if (isToast) {
+                    if (!element.open) {
+                        const previous = document.activeElement;
+                        element.show();
+                        if (previous instanceof HTMLElement && previous !== document.body) previous.focus({ preventScroll: true });
+                        if (element.contains(document.activeElement) && document.activeElement instanceof HTMLElement) document.activeElement.blur();
+                    }
+                    startDismissTimer();
+                    return;
+                }
+                if (!element.open) element.showModal();
+                focusPrimaryButton();
+            },
+            close() {
+                element.close();
+            },
+            setContent,
+        };
+    }
 
     interface DialogEntry {
         message: string;

@@ -1,5 +1,6 @@
 ---
 import '@/styles/components/user-button.scss';
+import SignOutScript from '@/scripts/auth/sign-out.astro';
 
 const user = Astro.locals.user;
 ---
@@ -23,18 +24,6 @@ const user = Astro.locals.user;
 )}
 
 <script>
-    import { signOutAndClearData } from '@/lib/auth/sign-out';
-
-    const signoutBtn = document.getElementById('signout-btn');
-    signoutBtn?.addEventListener('click', async () => {
-        try {
-            await signOutAndClearData();
-            window.location.href = '/';
-        } catch (error) {
-            console.error('Sign out error:', error);
-        }
-    });
-
     // Toggle user menu
     const menuTrigger = document.getElementById('user-menu-trigger');
     const menu = document.getElementById('user-menu');
@@ -56,3 +45,5 @@ const user = Astro.locals.user;
         e.stopPropagation();
     });
 </script>
+
+<SignOutScript />
