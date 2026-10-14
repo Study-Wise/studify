@@ -40,6 +40,12 @@ if (user && secretKey) {
         s1.async = true;
         s1.src = 'https://embed.tawk.to/6acfb523ac672c34c482efdc/1k4tln55a';
         s1.setAttribute('crossorigin','*');
+        s1.onload = function() {
+            console.info('Tawk.to: embed script loaded');
+        };
+        s1.onerror = function(error) {
+            console.error('Tawk.to: embed script failed to load', error);
+        };
         s0.parentNode.insertBefore(s1, s0);
     })();
 </script>
