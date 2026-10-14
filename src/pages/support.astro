@@ -1,13 +1,9 @@
 ---
 import '@/styles/pages/support.scss';
 import Layout from '@/layouts/Layout.astro';
-import { getFeaturebaseJwt } from '@/lib/featurebase';
-
-// Signed-in users are logged in to the embedded portal with this JWT
-const featurebaseJwt = getFeaturebaseJwt(Astro.locals.user);
 ---
 <Layout title="Support" description="Get help, suggest features, report issues and vote on what we build next." container={false} className="support-page">
-    <section class="support-section" data-featurebase-user-jwt={featurebaseJwt}>
+    <section class="support-section">
         <div class="support-embed" data-featurebase-embed></div>
     </section>
 </Layout>
@@ -26,10 +22,6 @@ const featurebaseJwt = getFeaturebaseJwt(Astro.locals.user);
     const requested = new URLSearchParams(window.location.search).get('path') || '/';
     const [path, filters = ''] = (requested.startsWith('/') ? requested : '/').split('?', 2);
 
-    // The portal runs on Featurebase's own domain, so it can't share a login session with this site.
-    // Hand it the JWT directly instead: user.jwt goes straight into the portal frame.
-    const jwt = document.querySelector<HTMLElement>('[data-featurebase-user-jwt]')?.dataset.featurebaseUserJwt || undefined;
-
     initEmbedWidget(
         {
             embedOptions: {
@@ -41,9 +33,8 @@ const featurebaseJwt = getFeaturebaseJwt(Astro.locals.user);
                 hideMenu: false,
                 hideLogo: false,
             },
-            ...(jwt ? { user: { jwt } } : {}),
         },
-        err => {
+        (err: Error) => {
             if (err) console.error('[featurebase embed]', err);
         }
     );
