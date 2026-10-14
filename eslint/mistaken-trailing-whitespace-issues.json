@@ -1,0 +1,22 @@
+[
+    {
+        "filepath": "src/layouts/Layout.astro",
+        "line": 96,
+        "column": 10
+    },
+    {
+        "filepath": "src/pages/404.astro",
+        "line": 42,
+        "column": 6
+    },
+    {
+        "filepath": "src/pages/_soon.astro",
+        "line": 32,
+        "column": 6
+    },
+    {
+        "filepath": "src/pages/post/[id].astro",
+        "line": 48,
+        "column": 10
+    }
+]
