@@ -13,12 +13,12 @@ if (user && secretKey) {
 ---
 <!--Start of Tawk.to Script-->
 <script is:inline define:vars={{ user: user || null }}>
-    var Tawk_API = Tawk_API || {};
+    var Tawk_API = window.Tawk_API = window.Tawk_API || {};
 
     if (user && user.hash) {
         console.info('Tawk.to: authenticated login configured');
-        Tawk_API.onLoad = function() {
-            console.info('Tawk.to: widget loaded; authenticating visitor');
+        Tawk_API.onBeforeLoad = function() {
+            console.info('Tawk.to: API ready; authenticating visitor');
             Tawk_API.login({
                 hash: user.hash,
                 userId: user.id,
