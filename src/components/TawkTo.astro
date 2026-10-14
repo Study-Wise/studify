@@ -7,9 +7,9 @@ const user = Astro.locals.user;
 
 // Tawk.to Secure Mode expects a hex encoded HMAC-SHA256 of the visitor ID.
 // Keep the secret on the server, and do not send visitor details without a hash.
-user.hash = user && secretKey
-    ? createHmac('sha256', secretKey).update(user.id).digest('hex')
-    : undefined;
+if (user && secretKey) {
+    user.hash = createHmac('sha256', secretKey).update(user.id).digest('hex');
+}
 ---
 <!--Start of Tawk.to Script-->
 <script is:inline define:vars={{ user: user || null }}>
