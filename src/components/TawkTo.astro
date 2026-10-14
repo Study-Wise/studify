@@ -5,10 +5,10 @@ const secretKey = import.meta.env.TAWK_SECRET_KEY || process.env.TAWK_SECRET_KEY
 
 const user = Astro.locals.user;
 
-// Tawk.to Secure Mode expects a hex encoded HMAC-SHA256 of the visitor ID.
+// Tawk.to's JavaScript API Secure Mode expects a hex encoded HMAC-SHA256 of the visitor email.
 // Keep the secret on the server, and do not send visitor details without a hash.
 if (user && secretKey) {
-    user.hash = createHmac('sha256', secretKey).update(user.id).digest('hex');
+    user.hash = createHmac('sha256', secretKey).update(user.email).digest('hex');
 }
 ---
 <!--Start of Tawk.to Script-->
@@ -19,7 +19,6 @@ if (user && secretKey) {
         Tawk_API.visitor = {
             name: user.name || undefined,
             email: user.email || undefined,
-            id: user.id,
             role: user.role || undefined,
             hash: user.hash
         };
