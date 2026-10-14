@@ -130,13 +130,8 @@
     $track-color: transparent,
     $thumb-color: hsl(from var(--section-title) h s l / 0.3)
 ) {
-    @supports (scrollbar-width: thin) {
-        scrollbar-width: thin;
-    }
-
-    @supports (scrollbar-color: $thumb-color $track-color) {
-        scrollbar-color: $thumb-color $track-color;
-    }
+    scrollbar-width: thin;
+    scrollbar-color: $thumb-color $track-color;
 
     &::-webkit-scrollbar {
         width: $width;
