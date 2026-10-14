@@ -25,7 +25,7 @@ export default function getAllSitePages() {
             if (name === 'index') pageTitle = 'Home';
 
             // Ensure pageTitle is a string before replacing
-            const pageTitleStr = Array.isArray(pageTitle) ? pageTitle.join(' ') : (pageTitle as string);
+            const pageTitleStr = Array.isArray(pageTitle) ? pageTitle.join(' ') : (pageTitle);
             const finalPageTitle = pageTitleStr.replaceAll('-', ' ');
 
             return {

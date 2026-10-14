@@ -138,9 +138,7 @@ export async function generateText(
                     // Tool results are JSON strings, so we need to parse them
                     // Cast to access the result property which varies by type
                     const typedToolResult = toolResult as { result?: JSONValue, toolCallId: string };
-                    const rawResult = typedToolResult.result;
-                    const resultString = rawResult as string;
-                    const resultValue = typeof resultString === 'string' ? JSON.parse(resultString) : resultString;
+                    const resultValue = typeof typedToolResult.result === 'string' ? JSON.parse(typedToolResult.result) : typedToolResult.result;
 
                     if (resultValue && typeof resultValue === 'object' && resultValue !== null && 'action' in resultValue && resultValue.action === 'open-content') {
                         const openContentResult = resultValue as { type: string, threadId: string, category: string, mode: string, url?: string };
@@ -169,8 +167,7 @@ export async function generateText(
                     for (const toolResult of step.toolResults) {
                         try {
                             const typedToolResult = toolResult as { result?: JSONValue, toolCallId: string };
-                            const rawResult = typedToolResult.result;
-                            const resultValue = typeof rawResult === 'string' ? JSON.parse(rawResult) : rawResult;
+                            const resultValue = typeof typedToolResult.result === 'string' ? JSON.parse(typedToolResult.result) : typedToolResult.result;
 
                             if (resultValue && typeof resultValue === 'object' && resultValue !== null && 'action' in resultValue && resultValue.action === 'open-content') {
                                 const openContentResult = resultValue as { type: string, threadId: string, category: string, mode: string, url?: string };

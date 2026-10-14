@@ -6,7 +6,5 @@ export interface SummaryResult {
 
 export async function getLatestSummary(threadId: string): Promise<SummaryResult> {
     const content = await getLatestContent(threadId, 'summary');
-    return {
-        content: content as string | null
-    };
+    return { content };
 }

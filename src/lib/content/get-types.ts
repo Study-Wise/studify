@@ -3,7 +3,7 @@ export const getContentTypesList = () => {
     return Object.keys(files).map((filePath) => {
         const match = filePath.match(/\/latest\/(.*)\.ts$/);
         return match ? match[1] : null;
-    }).filter((type) => type !== null) as string[];
+    }).filter((type) => type !== null);
 };
 
 export default function getContentTypes() {

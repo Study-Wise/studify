@@ -6,7 +6,5 @@ export interface WebpageResult {
 
 export async function getLatestWebpage(threadId: string): Promise<WebpageResult> {
     const content = await getLatestContent(threadId, 'webpage');
-    return {
-        content: content as string | null
-    };
+    return { content };
 }

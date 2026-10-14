@@ -35,7 +35,7 @@ export async function checkForOneMessage({
                 const thread = threads[0];
                 const modeObj = categories[category || '']?.modes?.[mode || ''];
 
-                const systemPrompt = await (modeObj?.prompt || Promise.resolve('')) as string;
+                const systemPrompt = await (modeObj?.prompt || Promise.resolve(''));
 
                 const convoHistory: Message[] = [
                     { role: 'system', content: systemPrompt },

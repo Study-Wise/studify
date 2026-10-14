@@ -321,7 +321,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                 const convoTitle = await generateTitle({
                     convoHistory,
                     userModel: config.model,
-                    provider: config.provider as string
+                    provider: config.provider
                 });
 
                 await db.update(threadsTable)

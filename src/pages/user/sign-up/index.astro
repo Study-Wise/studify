@@ -102,7 +102,7 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
         hideError();
 
         const formData = new FormData(form);
-        const nameValue = (formData.get('name') as string | null) || '';
+        const name = (formData.get('name') as string | null) || '';
         const email = formData.get('email') as string;
         const password = formData.get('password') as string;
 
@@ -110,7 +110,7 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
             const { error } = await signUp.email({
                 email,
                 password,
-                name: nameValue,
+                name,
             });
 
             if (error) {
