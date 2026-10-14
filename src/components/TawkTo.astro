@@ -1,8 +1,25 @@
 ---
+import hmacSHA256 from 'crypto-js/hmac-sha256';
+import Hex from 'crypto-js/enc-hex';
+
+const secretKey = import.meta.env.TAWK_SECRET_KEY;
+
 const user = Astro.locals.user;
+
+/**
+ * Using Crypto JS for the encryption
+ * @param {string} userId
+ */
+function hashInBase64(userId: string) {
+    var hash = hmacSHA256(userId, secretKey);
+
+    return Hex.stringify(hash);
+}
+
+const hashedUserId = hashInBase64(user.id);
 ---
 <!--Start of Tawk.to Script-->
-<script is:inline define:vars={{ user }}>
+<script is:inline define:vars={{ user, hashedUserId }}>
     var Tawk_API = Tawk_API||{}, Tawk_LoadStart = new Date();
 
     Tawk_API.visitor = {
@@ -10,7 +27,7 @@ const user = Astro.locals.user;
         email: user.email || undefined,
         id: user.id || undefined,
         role: user.role || undefined,
-        hash: btoa(`${user.id}:${user.email}`) || undefined
+        hash: hashedUserId || undefined
     };
 
     (function() {
