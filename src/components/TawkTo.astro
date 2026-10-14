@@ -1,34 +1,29 @@
 ---
-import hmacSHA256 from 'crypto-js/hmac-sha256';
-import Hex from 'crypto-js/enc-hex';
+import { createHmac } from 'node:crypto';
 
-const secretKey = import.meta.env.TAWK_SECRET_KEY;
+const secretKey = import.meta.env.TAWK_SECRET_KEY || process.env.TAWK_SECRET_KEY;
 
 const user = Astro.locals.user;
 
-/**
- * Using Crypto JS for the encryption
- * @param {string} userId
- */
-function hashInBase64(userId: string) {
-    var hash = hmacSHA256(userId, secretKey);
-
-    return Hex.stringify(hash);
-}
-
-const hashedUserId = hashInBase64(user.id);
+// Tawk.to Secure Mode expects a hex encoded HMAC-SHA256 of the visitor ID.
+// Keep the secret on the server, and do not send visitor details without a hash.
+const hashedUserId = user && secretKey
+    ? createHmac('sha256', secretKey).update(user.id).digest('hex')
+    : undefined;
 ---
 <!--Start of Tawk.to Script-->
-<script is:inline define:vars={{ user, hashedUserId }}>
-    var Tawk_API = Tawk_API||{}, Tawk_LoadStart = new Date();
-
-    Tawk_API.visitor = {
-        name: user.name || undefined,
-        email: user.email || undefined,
-        id: user.id || undefined,
-        role: user.role || undefined,
-        hash: hashedUserId || undefined
-    };
+<script is:inline define:vars={{ user: user || null, hashedUserId }}>
+    var Tawk_API = Tawk_API || {};
+    if (user && hashedUserId) {
+        Tawk_API.visitor = {
+            name: user.name || undefined,
+            email: user.email || undefined,
+            id: user.id,
+            role: user.role || undefined,
+            hash: hashedUserId
+        };
+    }
+    var Tawk_LoadStart = new Date();
 
     (function() {
         var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
