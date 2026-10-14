@@ -24,7 +24,8 @@ if (user && secretKey) {
                 userId: user.id,
                 name: user.name || undefined,
                 email: user.email || undefined,
-                role: user.role || undefined
+                role: user.role || undefined,
+                profileImage: user.image || undefined
             }, function(error) {
                 if (error) console.error('Tawk.to login failed:', error);
                 else console.info('Tawk.to login succeeded');
