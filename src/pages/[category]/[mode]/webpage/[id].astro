@@ -14,7 +14,7 @@ const chatUrl = `/${category}/${mode}/chat/${id}`;
 const categoryObj = category ? categories[category] : null;
 const modeObj = categoryObj?.modes?.[mode || ''];
 
-if (!categoryObj || !modeObj) { return Astro.redirect('/404'); }
+if (!categoryObj || !modeObj) return Astro.redirect('/404');
 
 const categoryName = categoryObj?.name || category;
 const modeName = modeObj?.name || mode;
@@ -26,7 +26,7 @@ const { isAuthorized, isPublic, threadExists } = await checkThreadAccess(id || '
 // A deleted or unknown chat has no materials, so show the 404 page (#344)
 if (!threadExists) { return new Response(null, { status: 404 }); }
 
-if (!user && !isPublic) { return Astro.redirect('/user/sign-in'); }
+if (!user && !isPublic) return Astro.redirect('/user/sign-in');
 
 const { content: latestWebpage } = (isAuthorized || isPublic)
     ? await getLatestWebpage(id || '')

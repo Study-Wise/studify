@@ -6,7 +6,7 @@ import { getSafeReturnBackUrl, withReturnBackUrl } from '@/lib/auth/return-url';
 
 const redirectUrl = getSafeReturnBackUrl(Astro.url.searchParams.get('returnBackUrl'));
 
-if (Astro.locals.user) { return Astro.redirect(redirectUrl); }
+if (Astro.locals.user) return Astro.redirect(redirectUrl);
 
 const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redirectUrl)}`;
 ---
