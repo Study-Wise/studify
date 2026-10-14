@@ -28,7 +28,20 @@ if (user && secretKey) {
                 profileImage: user.image || undefined
             }, function(error) {
                 if (error) console.error('Tawk.to login failed:', error);
-                else console.info('Tawk.to login succeeded');
+                else {
+                    console.info('Tawk.to login succeeded');
+                    Tawk_API.setAttributes({
+                        name: user.name || undefined,
+                        email: user.email || undefined,
+                        userId: user.id,
+                        hash: user.emailHash,
+                        role: user.role || undefined,
+                        profileImage: user.image || undefined
+                    }, function(attributeError) {
+                        if (attributeError) console.error('Tawk.to setAttributes failed:', attributeError);
+                        else console.info('Tawk.to attributes set');
+                    });
+                }
             });
         };
     }
