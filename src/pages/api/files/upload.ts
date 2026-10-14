@@ -14,7 +14,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();
 
     try {
-        // Use the authenticated session user, never a client-supplied email
         const email = locals.user?.email;
         if (!email) {
             return new Response(
