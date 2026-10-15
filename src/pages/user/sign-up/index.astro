@@ -1,5 +1,4 @@
 ---
-import { signUp } from '@/lib/auth/client';
 import { getSafeReturnBackUrl, withReturnBackUrl } from '@/lib/auth/return-url';
 
 import Layout from '@/layouts/Layout.astro';
@@ -89,7 +88,10 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
     <UserScript />
 </Layout>
 
-<script is:inline define:vars={{ signUp, getSafeReturnBackUrl }}>
+<script>
+    import { signUp } from '@/lib/auth/client';
+    import { getSafeReturnBackUrl as getClientSafeReturnBackUrl } from '@/lib/auth/return-url';
+
     const form = document.querySelector('#signup-form');
     if (!(form instanceof window.HTMLFormElement)) throw new Error('Sign-up form was not found.');
     const { showError, hideError } = window.authUtils;
@@ -116,7 +118,7 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
                 showError(error.message || 'Sign up failed. Please try again.');
             }
             else {
-                globalThis.location.href = getSafeReturnBackUrl(new globalThis.URLSearchParams(globalThis.location.search).get('returnBackUrl'));
+                globalThis.location.href = getClientSafeReturnBackUrl(new globalThis.URLSearchParams(globalThis.location.search).get('returnBackUrl'));
             }
         } catch (error) {
             console.error('Sign up error:', error);
