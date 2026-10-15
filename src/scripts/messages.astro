@@ -814,16 +814,6 @@ const { page, category, mode, id } = Astro.props;
                 }
             });
         }
-
-        const shareButton = document.getElementById('share-button');
-        if (shareButton) {
-            shareButton.addEventListener('click', () => {
-                shareButton.classList.toggle('active');
-
-                shareButton.querySelector('.share-text')?.textContent = shareButton.classList.contains('active') ? 'Shared' : 'Share';
-                shareButton.querySelector('.material-symbols-outlined')?.textContent = shareButton.classList.contains('active') ? 'public' : 'share';
-            });
-        }
     }
 
     async function initializePage() {
