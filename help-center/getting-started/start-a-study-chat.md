@@ -13,6 +13,6 @@ If you have notes or an assignment to use as context, attach it through **Upload
 
 ## Make study materials
 
-After you send a message, use the sections in the chat sidebar to generate study materials from the conversation. You can return to the chat from a material page with **Back to Chat**. Each chat keeps its own conversation and generated materials, so start a new chat when you want to keep a different topic separate.
+After you send a message, use the sections in the chat sidebar to generate study materials from the conversation. You can return to the chat from a material page using **Back to Chat**. Each chat keeps its own conversation and generated materials, so start a new chat when you want to keep topics separate.
 
 If something about our app isn't working, I'm here to help with app questions, and you can also reach [our support team](https://studywise.adarshrkumar.app/support). I can't help with the class material itself, but you can ask about it in one of the study modes on the home page.

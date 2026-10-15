@@ -4,7 +4,7 @@ If a chat or study material page won't open, start with the checks below.
 
 ## Check your account and the chat's visibility
 
-Make sure you're signed in to the account that owns the chat. Private chats are only available to their owner. Public chats can be opened by people who are signed in and have the link. If someone shared a chat with you, ask them to check that **Thread Visibility** is set to **Public**.
+Make sure you're signed in to the account that owns the chat. Only the owner can access private chats. Public chats can be opened by people who are signed in and have the link. If someone shared a chat with you, ask them to check that **Thread Visibility** is set to **Public**.
 
 If you're the owner but the chat isn't in **My Chats**, check whether you're signed in with the same account you used to create it. If you have multiple accounts, sign out and sign back in with the account that owns the chat.
 

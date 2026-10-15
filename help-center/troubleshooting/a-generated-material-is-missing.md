@@ -6,7 +6,7 @@ Each study material belongs to the chat it was generated from. If you can't find
 
 Open the conversation where you asked about the topic. In its right-hand sidebar, find the section for the material you want. If you have more than one chat about the same topic, check that you're in the conversation where you generated it. Materials don't automatically carry over between chats.
 
-If the section says nothing has been generated yet, choose **Generate**. For additional resources, choose **Find**. A message needs to be sent in the chat before you can generate a material.
+If the section says nothing has been generated yet, choose **Generate**. For additional resources, choose **Find**. You must send a message in the chat before you can generate material.
 
 ## If generation is still running or failed
 

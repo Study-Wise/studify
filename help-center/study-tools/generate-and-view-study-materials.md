@@ -8,7 +8,7 @@ Our app can turn a chat into several kinds of study materials. Open the chat whe
 2. Choose **Generate** to create it from your conversation. For additional resources, choose **Find**. You can keep chatting while it runs, and the finished material will appear in that sidebar section.
 3. Choose the section's view button to open the material.
 
-The different formats are useful in different ways. A study guide gives you a fuller explanation, a reference sheet gathers key facts, flashcards support recall practice, and practice questions let you check your understanding. Mind maps and infographics give you a visual overview, while additional resources help you find material to explore further.
+Different formats serve different purposes. A study guide gives you a fuller explanation, a reference sheet gathers key facts, flashcards support recall practice, and practice questions let you check your understanding. Mind maps and infographics give you a visual overview, while additional resources help you find material to explore further.
 
 ## Regenerate or return to your chat
 

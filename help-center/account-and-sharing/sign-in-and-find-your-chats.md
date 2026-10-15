@@ -14,6 +14,6 @@ If you're redirected to sign in while opening a chat, sign in and try again. The
 2. Open your profile from the site navigation.
 3. Find **My Chats** and choose the chat you want to reopen.
 
-Chats belong to the account that created them. If a chat is missing, check that you're signed in with the right account. Your profile also shows the name and email address associated with the account.
+Chats belong to the account that created them. If a chat is missing, check that you're signed in with the right account. Your profile also shows the account name and email address.
 
 If you still can't sign in or find a chat, [get in touch with our support team](https://studywise.adarshrkumar.app/support). Tell us what happened and which account email you used. Never send your password.
