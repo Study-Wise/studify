@@ -9,7 +9,7 @@ Our app can turn your questions and class materials into a focused conversation 
 3. Type or paste your question into the message box, then send it. A clear prompt with the topic and what you're stuck on gives the conversation a useful starting point.
 4. Ask follow-up questions in the same chat to keep the context together. You can ask for an explanation in different words, or focus on one step that feels confusing.
 
-If you have notes or an assignment to use as context, attach it through **Upload Files** in the chat sidebar. See <<[Upload class materials](../study-tools/upload-class-materials)>> for file types and limits.
+If you have notes or an assignment to use as context, attach them through **Upload Files** in the chat sidebar. See <<[Upload class materials](../study-tools/upload-class-materials)>> for file types and limits.
 
 ## Make study materials
 
