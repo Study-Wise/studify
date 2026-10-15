@@ -61,8 +61,8 @@ const randomMargo = margoImageArray[1 + Math.floor(Math.random() * (margoImageAr
         </h2>
 
         <div class="about-content">
-            <div class="image-intro">
-                <img src="/assets/margo/margo-1.jpeg" data-hover-src={randomMargo} style={{ '--data-hover-src': `url('${randomMargo}')` }} alt="Margo Page profile picture" class="profile-picture" />
+            <div class="image-intro" style={{ '--data-hover': 1, '--data-hover-src': `url('${randomMargo}')` }}>
+                <img src="/assets/margo/margo-1.jpeg" alt="Margo Page profile picture" class="profile-picture" />
                 <p>Hi, I'm Margo Page, the Studify team's AI assistant and the friendly face of Studify support.</p>
             </div>
 

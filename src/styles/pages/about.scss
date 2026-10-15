@@ -1,23 +1,27 @@
 @use '../variables/globals' as *;
 @use '../variables/tokens' as *;
 
-.about-section  {
-    .profile-picture {
-        flex-shrink: 0;
-        width: clamp(120px, 20vw, 150px);
-        height: clamp(120px, 20vw, 150px);
-        object-fit: cover;
-        border-radius: 50%;
-        border: 3px solid #{$profile-border};
-        box-shadow: 0 0 5px #{$profile-shadow};
+@for $i from 1 through 99 {
+    .about-section:nth-of-type(#{$i}) {
+        .image-intro {
+            .profile-picture {
+                anchor-name: --profile-picture-#{$i};
+            }
+            &::before {
+                position-anchor: --profile-picture-#{$i};
+            }
+        }
     }
+}
 
+.about-section {
     .image-intro {
         width: 100%;
         display: flex;
         justify-content: center;
         align-items: end;
         gap: $spacing-medium;
+        isolation: isolate;
 
         @media (width < 500px) {
             flex-wrap: wrap;
@@ -29,10 +33,33 @@
 
         $lh: 1.5;
 
-        img {
+        .profile-picture, &::before {
             height: #{2.5lh * $lh};
             width: #{2.5lh * $lh};
             aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid #{$profile-border};
+            box-shadow: 0 0 5px #{$profile-shadow};
+        }
+
+        .profile-picture {
+            transition: opacity calc($transition-base * var(--data-hover, 0)) $ease-out;
+
+            &:hover {
+                opacity: clamp(0, calc(1 - var(--data-hover, 0)), 1);
+            }
+        }
+
+        &::before {
+            content: '';
+            position: absolute;
+            position-area: center;
+            box-sizing: border-box;
+            background-image: var(--data-hover-src);
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
         }
 
         p {
