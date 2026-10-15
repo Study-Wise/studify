@@ -22,7 +22,9 @@ const fallback = new Date(iso).toLocaleString(locale, { ...options, timeZone: 'U
 
 <script>
     function formatLocalTimes() {
-        document.querySelectorAll<HTMLTimeElement>('time[data-local-time]').forEach((element) => {
+        document.querySelectorAll('time[data-local-time]').forEach((element) => {
+            if (!(element instanceof window.HTMLTimeElement)) return;
+
             const date = new Date(element.dateTime);
             if (Number.isNaN(date.getTime())) return;
 

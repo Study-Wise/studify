@@ -1,10 +1,10 @@
 ---
+import categories from '@/lib/modes';
+import { auth } from '@/lib/auth';
+
 import Layout from '@/layouts/Layout.astro';
 import '@/styles/pages/index.scss';
 import '@/styles/components/step-by-step.scss';
-
-import categories from '@/lib/modes';
-import { auth } from '@/lib/auth';
 
 const session = await auth.api.getSession({
     headers: Astro.request.headers,
@@ -142,13 +142,13 @@ const description = 'Studify is your AI-powered study partner. Paste your homewo
     const panel = document.getElementById('subject-search-panel');
     const input = document.getElementById('subject-search-input');
     const empty = document.getElementById('subjects-empty');
-    const chips = Array.from(document.querySelectorAll<HTMLButtonElement>('.subject-filter-chip'));
-    const categoryCards = Array.from(document.querySelectorAll<HTMLElement>('.category-card'));
+    const chips = Array.from(document.querySelectorAll<globalThis.HTMLButtonElement>('.subject-filter-chip'));
+    const categoryCards = Array.from(document.querySelectorAll<globalThis.HTMLElement>('.category-card'));
 
     let activeCategory = '';
 
     function applyFilters() {
-        const query = input instanceof HTMLInputElement ? input.value.trim().toLowerCase() : '';
+        const query = input instanceof globalThis.HTMLInputElement ? input.value.trim().toLowerCase() : '';
         const terms = query.split(/\s+/).filter(Boolean);
         let anyVisible = false;
 
@@ -156,7 +156,7 @@ const description = 'Studify is your AI-powered study partner. Paste your homewo
             const inCategory = !activeCategory || card.dataset.category === activeCategory;
             let visibleModes = 0;
 
-            for (const mode of card.querySelectorAll<HTMLElement>('.mode-card')) {
+            for (const mode of card.querySelectorAll<globalThis.HTMLElement>('.mode-card')) {
                 const text = mode.dataset.search ?? '';
                 const matches = inCategory && terms.every((term) => text.includes(term));
                 mode.hidden = !matches;

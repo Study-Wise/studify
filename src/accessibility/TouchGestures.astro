@@ -10,7 +10,7 @@ import '@/styles/accessibility/touch-gestures.scss';
         endY: number;
         isPulling: boolean;
         pullThreshold: number;
-        refreshIndicator: HTMLElement | null;
+        refreshIndicator: globalThis.HTMLElement | null;
 
         constructor() {
             this.startX = 0;
@@ -33,8 +33,8 @@ import '@/styles/accessibility/touch-gestures.scss';
 
         isTouchDevice() {
             return (
-                'ontouchstart' in window ||
-                navigator.maxTouchPoints > 0 ||
+                'ontouchstart' in globalThis ||
+                globalThis.navigator.maxTouchPoints > 0 ||
                 (window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches)
             );
         }
@@ -57,7 +57,7 @@ import '@/styles/accessibility/touch-gestures.scss';
             document.addEventListener('touchend', () => this.handleTouchEnd(), { passive: false });
         }
 
-        handleTouchStart(e: TouchEvent) {
+        handleTouchStart(e: globalThis.TouchEvent) {
             if (window.scrollY === 0) {
                 this.startX = e.touches[0].clientX;
                 this.startY = e.touches[0].clientY;
@@ -65,7 +65,7 @@ import '@/styles/accessibility/touch-gestures.scss';
             }
         }
 
-        handleTouchMove(e: TouchEvent) {
+        handleTouchMove(e: globalThis.TouchEvent) {
             if (!this.isPulling || window.scrollY > 0) return;
 
             this.endX = e.touches[0].clientX;
@@ -88,9 +88,7 @@ import '@/styles/accessibility/touch-gestures.scss';
             if (deltaY >= this.pullThreshold) {
                 this.triggerRefresh();
             }
-            else {
-                this.hideRefreshIndicator();
-            }
+            else this.hideRefreshIndicator();
 
             this.isPulling = false;
         }
@@ -103,10 +101,10 @@ import '@/styles/accessibility/touch-gestures.scss';
             this.refreshIndicator.style.opacity = progress.toString();
 
             if (progress >= 1) {
-                (this.refreshIndicator.querySelector('.material-symbols-outlined') as HTMLElement)!.style.animation = 'spin 1s linear infinite';
+                this.refreshIndicator.querySelector<globalThis.HTMLElement>('.material-symbols-outlined')?.style.setProperty('animation', 'spin 1s linear infinite');
             }
             else {
-                (this.refreshIndicator.querySelector('.material-symbols-outlined') as HTMLElement)!.style.animation = 'none';
+                this.refreshIndicator.querySelector<globalThis.HTMLElement>('.material-symbols-outlined')?.style.setProperty('animation', 'none');
             }
         }
 
@@ -115,7 +113,7 @@ import '@/styles/accessibility/touch-gestures.scss';
 
             this.refreshIndicator.style.translate = '0 -100%';
             this.refreshIndicator.style.opacity = '0';
-            (this.refreshIndicator.querySelector('.material-symbols-outlined') as HTMLElement)!.style.animation = 'none';
+            this.refreshIndicator.querySelector<globalThis.HTMLElement>('.material-symbols-outlined')?.style.setProperty('animation', 'none');
         }
 
         triggerRefresh() {
@@ -129,8 +127,8 @@ import '@/styles/accessibility/touch-gestures.scss';
             `;
 
             // Simulate refresh
-            setTimeout(() => {
-                window.location.reload();
+            globalThis.setTimeout(() => {
+                globalThis.location.reload();
             }, 1000);
         }
     }

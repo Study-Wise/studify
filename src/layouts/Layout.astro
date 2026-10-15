@@ -192,10 +192,10 @@ if (container) className += ' container'
                             const newDefaultState = calculator.getState();
                             calculator.setDefaultState(newDefaultState);
                             graph.setAttribute('done', true);
-                        } catch (e) {
-                            console.error('Error parsing/setting Desmos graph data:', e);
+                        } catch (error) {
+                            console.error('Error parsing/setting Desmos graph data:', error);
                             console.error('Problematic LaTeX string:', graph.getAttribute('latex'));
-                            graph.innerHTML = `<p><i>Error loading graph. Check console for details.</i><pre>${e}</pre></p>`;
+                            graph.innerHTML = `<p><i>Error loading graph. Check console for details.</i><pre>${error}</pre></p>`;
                         }
                     }
                     else {

@@ -3,7 +3,7 @@ import { labels } from '@/lib/tools';
 
 const { page, category, mode, id } = Astro.props;
 ---
-<script is:inline define:vars={{ page, category, mode, id, toolLabels: labels }}>
+<script is:inline define:vars={{ page, category, mode, id, labels }}>
     let threadId = 0;
     let userSettings = {};
 
@@ -11,8 +11,8 @@ const { page, category, mode, id } = Astro.props;
 
     function loadUserSettings() {
         try {
-            userSettings = JSON.parse(localStorage?.getItem('settings') || '{}') || {};
-        } catch (_e) {
+            userSettings = JSON.parse(globalThis.localStorage?.getItem('settings') || '{}') || {};
+        } catch {
             userSettings = {};
         }
     }
@@ -22,7 +22,7 @@ const { page, category, mode, id } = Astro.props;
     }
 
     function getProviderAndTier() {
-        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        const settings = JSON.parse(globalThis.localStorage.getItem('settings') || '{}');
         return {
             provider: settings.provider || 'openai',
             tier: settings.tier || 'default',
@@ -53,7 +53,7 @@ const { page, category, mode, id } = Astro.props;
     // Leave the page locked while the browser navigates to the new chat
     function redirectToChat(chatId) {
         isRedirecting = true;
-        window.location.href = `/${category}/${mode}/chat/${chatId}`;
+        globalThis.location.href = `/${category}/${mode}/chat/${chatId}`;
     }
 
     // Unlock the page if Back restores it from the back/forward cache mid-redirect
@@ -67,7 +67,7 @@ const { page, category, mode, id } = Astro.props;
     function handleEnterKey(event) {
         if (event.key === 'Enter' && !event.shiftKey && event.target.value.trim() !== '') {
             event.preventDefault();
-            if (!isGenerating && !sendButton.disabled) generateOutput();
+            if (!isGenerating && !sendButton.disabled) window.generateOutput();
         }
     }
 
@@ -141,10 +141,10 @@ const { page, category, mode, id } = Astro.props;
                 try {
                     const errorObj = await response.json();
                     if (errorObj?.error) errorMsg = errorObj.error;
-                } catch (e) {
+                } catch (error) {
                     const rawTxt = await response.text()
                         .catch(() => 'Unreadable error body.');
-                    console.error('Error parsing API error:', e, rawTxt);
+                    console.error('Error parsing API error:', error, rawTxt);
                 }
                 throw new Error(errorMsg);
             }
@@ -212,7 +212,7 @@ const { page, category, mode, id } = Astro.props;
         try {
             isGenerating = isLoading;
             if (isLoading) {
-                spinner && (spinner.style.display = 'inline-block');
+                if (spinner) spinner.style.display = 'inline-block';
                 if (sendButton) sendButton.disabled = true;
                 if (messageInput) {
                     if (messageInput.dataset.defaultPlaceholder === undefined) {
@@ -221,21 +221,21 @@ const { page, category, mode, id } = Astro.props;
                     messageInput.placeholder = 'Waiting for response...';
                 }
                 const icon = sendButton?.querySelector('i.material-symbols-outlined');
-                icon && (icon.style.display = 'none');
+                if (icon) icon.style.display = 'none';
                 clearError();
             }
             else {
-                spinner && (spinner.style.display = 'none');
+                if (spinner) spinner.style.display = 'none';
                 if (sendButton) sendButton.disabled = !messageInput?.value?.trim();
                 if (messageInput) {
                     messageInput.placeholder = messageInput.dataset.defaultPlaceholder ?? messageInput.placeholder;
                     messageInput.focus();
                 }
                 const icon = sendButton?.querySelector('i.material-symbols-outlined');
-                icon && (icon.style.display = 'inline-block');
+                if (icon) icon.style.display = 'inline-block';
             }
-        } catch (err) {
-            console.error('Error in setLoadingState:', err);
+        } catch (error) {
+            console.error('Error in setLoadingState:', error);
         }
     }
 
@@ -259,7 +259,7 @@ const { page, category, mode, id } = Astro.props;
             else if (typeof message === 'object' && message !== null) {
                 try {
                     messageToShow = JSON.stringify(message);
-                } catch (_e) {
+                } catch {
                     messageToShow = '[Complex Error Object]';
                 }
             }
@@ -281,8 +281,8 @@ const { page, category, mode, id } = Astro.props;
             if (guideBtn) guideBtn.disabled = true;
             const sheetBtn = document.getElementById('download-sheet-pdf');
             if (sheetBtn) sheetBtn.disabled = true;
-        } catch (e) {
-            console.error('FATAL ERROR inside displayError function:', e);
+        } catch (error) {
+            console.error('FATAL ERROR inside displayError function:', error);
             const errorDiv = document.getElementById('error-message');
             if (errorDiv) {
                 errorDiv.textContent = 'Error: Critical UI failure during error reporting.';
@@ -299,16 +299,20 @@ const { page, category, mode, id } = Astro.props;
     const mathJaxTimeout = 10000;
 
     // Reject if the promise hasn't settled within ms
-    function withTimeout(promise, ms, message) {
+    async function withTimeout(promise, ms, message) {
         let timer;
         const timeout = new Promise((_, reject) => {
-            timer = setTimeout(() => reject(new Error(message)), ms);
+            timer = globalThis.setTimeout(() => reject(new Error(message)), ms);
         });
-        return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
+        try {
+            return await Promise.race([promise, timeout]);
+        } finally {
+            globalThis.clearTimeout(timer);
+        }
     }
 
     async function typesetMathJax(elements) {
-        const validElements = (Array.isArray(elements) || elements instanceof NodeList ? [...elements] : elements ? [elements] : []).filter(el => el != null);
+        const validElements = (Array.isArray(elements) || elements instanceof globalThis.NodeList ? [...elements] : elements ? [elements] : []).filter(el => el != null);
         if (validElements.length === 0) return;
 
         // Hide messages that contain math until they are typeset so raw LaTeX never shows
@@ -332,11 +336,11 @@ const { page, category, mode, id } = Astro.props;
                 }
 
                 // Wait for startup (including the initial page typeset). It rejects for good if that typeset fails, but later typesets can still succeed, so only wait for it to finish
-                await window.MathJax.startup.promise.catch(err => console.error('MathJax startup error:', err));
+                await window.MathJax.startup.promise.catch(error => console.error('MathJax startup error:', error));
                 await window.MathJax.typesetPromise(validElements);
             })(), mathJaxTimeout, 'MathJax took too long to typeset.');
-        } catch (err) {
-            console.error('MathJax typesetting error:', err);
+        } catch (error) {
+            console.error('MathJax typesetting error:', error);
         } finally {
             validElements.forEach(el => el.classList.remove('mathjax-pending'));
         }
@@ -405,7 +409,7 @@ const { page, category, mode, id } = Astro.props;
     // Landing page: wait for the reply to be saved, then open the new chat
     async function readHomeStream(response) {
         const reader = response.body.getReader();
-        const decoder = new TextDecoder();
+        const decoder = new globalThis.TextDecoder();
         let buffer = '';
 
         while (true) {
@@ -421,8 +425,8 @@ const { page, category, mode, id } = Astro.props;
                 let data;
                 try {
                     data = JSON.parse(event.slice(6));
-                } catch (e) {
-                    console.error('Error parsing stream event:', e, event);
+                } catch (error) {
+                    console.error('Error parsing stream event:', error, event);
                     continue;
                 }
 
@@ -448,7 +452,7 @@ const { page, category, mode, id } = Astro.props;
         if (!chatMessages) return;
 
         const reader = response.body.getReader();
-        const decoder = new TextDecoder();
+        const decoder = new globalThis.TextDecoder();
         let buffer = '';
         let messageDiv = null;
         let messageContent = null;
@@ -501,7 +505,7 @@ const { page, category, mode, id } = Astro.props;
                         icon.textContent = 'schedule';
                         const label = document.createElement('span');
                         label.className = 'tool-name';
-                        label.textContent = toolLabels[data.toolName] || data.toolName;
+                        label.textContent = labels[data.toolName] || data.toolName;
                         entry.appendChild(icon);
                         entry.appendChild(label);
                         toolCallLogDiv.appendChild(entry);
@@ -527,19 +531,19 @@ const { page, category, mode, id } = Astro.props;
                     else if (data.type === 'error') {
                         throw new Error(data.error);
                     }
-                } catch (e) {
-                    console.error('Error parsing stream event:', e, event);
+                } catch (error) {
+                    console.error('Error parsing stream event:', error, event);
                 }
             }
         }
 
         if (messageContent) {
             await typesetMathJax([messageContent]);
-            if (typeof activateDesmos === 'function') {
-                try { activateDesmos(); } catch (e) { console.warn('Desmos error:', e); }
+            if (typeof window.activateDesmos === 'function') {
+                try { window.activateDesmos(); } catch (error) { console.warn('Desmos error:', error); }
             }
             if (typeof window.initializeStepByStep === 'function') {
-                try { window.initializeStepByStep(); } catch (e) { console.warn('Step-by-step error:', e); }
+                try { window.initializeStepByStep(); } catch (error) { console.warn('Step-by-step error:', error); }
             }
         }
 
@@ -548,16 +552,14 @@ const { page, category, mode, id } = Astro.props;
 
             const isNewChat = id === 'new';
             if (doneData.id && !threadId) {
-                window.dispatchEvent(new CustomEvent('thread-created', {
+                window.dispatchEvent(new globalThis.CustomEvent('thread-created', {
                     detail: { id: doneData.id, source: 'messages' }
                 }));
             }
             if (isNewChat && doneData.id && category && mode) {
-                window.location.href = `/${category}/${mode}/chat/${doneData.id}`;
+                globalThis.location.href = `/${category}/${mode}/chat/${doneData.id}`;
             }
-            else if (doneData.id) {
-                threadId = doneData.id;
-            }
+            else if (doneData.id) threadId = doneData.id;
         }
 
         chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
@@ -580,7 +582,7 @@ const { page, category, mode, id } = Astro.props;
             const isNewChat = (id === 'new');
 
             if (isNewChat && data.id && category && mode) {
-                window.location.href = `/${category}/${mode}/chat/${data.id}`;
+                globalThis.location.href = `/${category}/${mode}/chat/${data.id}`;
             }
             else {
                 await addMessage('assistant', data);
@@ -614,7 +616,7 @@ const { page, category, mode, id } = Astro.props;
             const messageContent = document.createElement('div');
             messageContent.className = `message-content ${role === 'user' ? 'bg-primary' : ''}`;
 
-            messageContent.innerHTML = new marked.Marked({ breaks: true, gfm: true, renderer: { html: ({ text }) => text.replace(/</g, '&lt;') } }).parse(content);
+            messageContent.innerHTML = new window.marked.Marked({ breaks: true, gfm: true, renderer: { html: ({ text }) => text.replace(/</g, '&lt;') } }).parse(content);
 
             messageDiv.appendChild(messageContent);
             chatMessages.appendChild(messageDiv);
@@ -622,19 +624,19 @@ const { page, category, mode, id } = Astro.props;
 
             await typesetMathJax([messageContent]);
 
-            if (typeof activateDesmos === 'function') {
+            if (typeof window.activateDesmos === 'function') {
                 try {
-                    activateDesmos();
-                } catch (e) {
-                    console.warn('Error activating Desmos:', e);
+                    window.activateDesmos();
+                } catch (error) {
+                    console.warn('Error activating Desmos:', error);
                 }
             }
 
             if (typeof window.initializeStepByStep === 'function') {
                 try {
                     window.initializeStepByStep();
-                } catch (e) {
-                    console.warn('Error initializing step-by-step:', e);
+                } catch (error) {
+                    console.warn('Error initializing step-by-step:', error);
                 }
             }
 
@@ -643,9 +645,9 @@ const { page, category, mode, id } = Astro.props;
                 behavior: 'smooth'
             });
 
-        } catch (err) {
-            console.error('ERROR in createPlainMessage:', err);
-            displayError(`Failed to render message. ${err.message}`);
+        } catch (error) {
+            console.error('ERROR in createPlainMessage:', error);
+            displayError(`Failed to render message. ${error.message}`);
         }
     }
 
@@ -667,7 +669,7 @@ const { page, category, mode, id } = Astro.props;
 
             const label = document.createElement('span');
             label.className = 'tool-name';
-            label.textContent = toolLabels[entry.toolName] || entry.toolName;
+            label.textContent = labels[entry.toolName] || entry.toolName;
 
             entryDiv.appendChild(icon);
             entryDiv.appendChild(label);
@@ -713,19 +715,19 @@ const { page, category, mode, id } = Astro.props;
 
             await typesetMathJax([messageContent]);
 
-            if (typeof activateDesmos === 'function') {
+            if (typeof window.activateDesmos === 'function') {
                 try {
-                    activateDesmos();
-                } catch (e) {
-                    console.warn('Error activating Desmos:', e);
+                    window.activateDesmos();
+                } catch (error) {
+                    console.warn('Error activating Desmos:', error);
                 }
             }
 
             if (typeof window.initializeStepByStep === 'function') {
                 try {
                     window.initializeStepByStep();
-                } catch (e) {
-                    console.warn('Error initializing step-by-step:', e);
+                } catch (error) {
+                    console.warn('Error initializing step-by-step:', error);
                 }
             }
 
@@ -734,9 +736,9 @@ const { page, category, mode, id } = Astro.props;
                 behavior: 'smooth'
             });
 
-        } catch (err) {
-            console.error('ERROR in addAssistantMessage:', err);
-            displayError(`Failed to render message. ${err.message}`);
+        } catch (error) {
+            console.error('ERROR in addAssistantMessage:', error);
+            displayError(`Failed to render message. ${error.message}`);
         }
     }
 
@@ -761,7 +763,7 @@ const { page, category, mode, id } = Astro.props;
     function initializeCommon() {
         loadUserSettings();
 
-        if (!generateOutput || typeof generateOutput !== 'function') {
+        if (typeof window.generateOutput !== 'function') {
             displayError('Error: Core function generateOutput failed to initialize.');
         }
     }
@@ -781,7 +783,7 @@ const { page, category, mode, id } = Astro.props;
 
     // Extract thread id from the chat page URL; null for "new" so the API creates a thread
     function getThreadIdFromUrl() {
-        let pathSegments = location.pathname;
+        let pathSegments = globalThis.location.pathname;
         if (pathSegments.endsWith('/')) pathSegments = pathSegments.slice(0, -1);
         const idFromUrl = pathSegments.split('/').pop();
         if (idFromUrl && idFromUrl !== 'chat' && idFromUrl !== 'new') return idFromUrl;
@@ -792,9 +794,7 @@ const { page, category, mode, id } = Astro.props;
         initializeCommon();
 
         const idFromUrl = getThreadIdFromUrl();
-        if (idFromUrl) {
-            threadId = idFromUrl;
-        }
+        if (idFromUrl) threadId = idFromUrl;
 
         sendButton = document.querySelector('.send-button');
         messageInput = document.querySelector('#message-input');
@@ -809,7 +809,7 @@ const { page, category, mode, id } = Astro.props;
         if (sendButton && messageInput) {
             sendButton.addEventListener('click', () => {
                 if (!isGenerating) {
-                    generateOutput();
+                    window.generateOutput();
                     messageInput.focus();
                 }
             });
@@ -819,16 +819,9 @@ const { page, category, mode, id } = Astro.props;
         if (shareButton) {
             shareButton.addEventListener('click', () => {
                 shareButton.classList.toggle('active');
-                const isActive = shareButton.classList.contains('active');
-                const shareText = shareButton.querySelector('.share-text');
-                const shareIcon = shareButton.querySelector('.material-symbols-outlined');
 
-                if (shareText) {
-                    shareText.textContent = isActive ? 'Shared' : 'Share';
-                }
-                if (shareIcon) {
-                    shareIcon.textContent = isActive ? 'public' : 'share';
-                }
+                shareButton.querySelector('.share-text')?.textContent = shareButton.classList.contains('active') ? 'Shared' : 'Share';
+                shareButton.querySelector('.material-symbols-outlined')?.textContent = shareButton.classList.contains('active') ? 'public' : 'share';
             });
         }
     }
@@ -842,7 +835,7 @@ const { page, category, mode, id } = Astro.props;
 
             const elementsToTypeset = document.querySelectorAll('.chat-messages .message-content');
             await typesetMathJax(elementsToTypeset);
-            activateDesmos();
+            window.activateDesmos();
             const chatMessages = document.querySelector('.chat-messages');
             chatMessages?.scrollTo({ top: chatMessages.scrollHeight, behavior: 'instant' });
         }

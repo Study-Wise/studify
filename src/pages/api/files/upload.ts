@@ -1,8 +1,8 @@
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
+import { userFilesUpload } from '@/lib/uploadthing';
 import { extractTextFromFile } from '@/lib/file-processing';
 import type { UploadedFile } from '@/lib/threads';
-import { userFilesUpload } from '@/lib/uploadthing';
 import { getUserErrorMessage } from '@/lib/user-errors';
 import { nanoid } from 'nanoid';
 
@@ -14,6 +14,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();
 
     try {
+        // Use the authenticated session user, never a client-supplied email
         const email = locals.user?.email;
         if (!email) {
             return new Response(
@@ -26,7 +27,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         const file = formData.get('file');
         const threadId = formData.get('threadId');
 
-        if (!(file instanceof File) || typeof threadId !== 'string' || !threadId || !email) {
+        if (!(file instanceof File) || typeof threadId !== 'string' || !threadId) {
             return new Response(
                 JSON.stringify({
                     status: 'error',

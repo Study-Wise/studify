@@ -1,11 +1,11 @@
+import { nanoid } from 'nanoid';
 import { db } from '@/db/initialize';
 import { questionTable } from '@/db/schema';
+import { questionToId } from '@/lib/question-utils';
 import { generateText, paraphraseQuestion } from '@/lib/ai-service';
 import config from '@/lib/config';
-import { questionToId } from '@/lib/question-utils';
-import { getUserErrorMessage } from '@/lib/user-errors';
 import type { Message } from '@/lib/threads';
-import { nanoid } from 'nanoid';
+import { getUserErrorMessage } from '@/lib/user-errors';
 
 import { eq } from 'drizzle-orm';
 

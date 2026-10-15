@@ -4,6 +4,7 @@ import type { APIRoute } from 'astro';
 
 export const POST: APIRoute = async ({ request, locals }) => {
     try {
+        // Use the authenticated session user, never a client-supplied email
         const email = locals.user?.email;
         if (!email) {
             return new Response(
@@ -13,30 +14,32 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
 
         const formData = await request.formData();
+
         const chunk = formData.get('chunk');
         const uploadId = formData.get('uploadId');
-        const chunkIndexValue = formData.get('chunkIndex');
-        const totalChunksValue = formData.get('totalChunks');
         const fileName = formData.get('fileName');
         const fileType = formData.get('fileType');
-        const fileSizeValue = formData.get('fileSize');
         const threadId = formData.get('threadId');
 
+        const chunkIndexValue = formData.get('chunkIndex');
         const chunkIndex = typeof chunkIndexValue === 'string' ? Number.parseInt(chunkIndexValue, 10) : Number.NaN;
+
+        const totalChunksValue = formData.get('totalChunks');
         const totalChunks = typeof totalChunksValue === 'string' ? Number.parseInt(totalChunksValue, 10) : Number.NaN;
+
+        const fileSizeValue = formData.get('fileSize');
         const fileSize = typeof fileSizeValue === 'string' ? Number.parseInt(fileSizeValue, 10) : Number.NaN;
 
-        const hasValidFields =
-            chunk instanceof File &&
-            typeof uploadId === 'string' &&
-            !Number.isNaN(chunkIndex) &&
-            !Number.isNaN(totalChunks) &&
-            typeof fileName === 'string' &&
-            typeof fileType === 'string' &&
-            !Number.isNaN(fileSize) &&
-            typeof threadId === 'string';
-
-        if (!hasValidFields) {
+        if (
+            !(chunk instanceof File)
+            || typeof uploadId !== 'string'
+            || Number.isNaN(chunkIndex)
+            || Number.isNaN(totalChunks)
+            || typeof fileName !== 'string'
+            || typeof fileType !== 'string'
+            || Number.isNaN(fileSize)
+            || typeof threadId !== 'string'
+        ) {
             return new Response(
                 JSON.stringify({ status: 'error', error: 'Missing required fields' }),
                 { status: 400 }
@@ -97,11 +100,14 @@ export const POST: APIRoute = async ({ request, locals }) => {
             upload.receivedChunks++;
         }
 
-        return new Response(JSON.stringify({
-            status: 'success',
-            receivedChunks: upload.receivedChunks,
-            totalChunks: upload.totalChunks
-        }), { status: 200 });
+        return new Response(
+            JSON.stringify({
+                status: 'success',
+                receivedChunks: upload.receivedChunks,
+                totalChunks: upload.totalChunks
+            }),
+            { status: 200 }
+        );
     } catch (error) {
         console.error('Chunk upload error:', error);
         return new Response(

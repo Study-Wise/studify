@@ -9,7 +9,7 @@ import '@/styles/accessibility/keyboard-navigation.scss';
 <script>
     class KeyboardNavigation {
         focusableElements: string;
-        skipLinks: HTMLElement[];
+        skipLinks: globalThis.HTMLElement[];
 
         constructor() {
             this.focusableElements = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
@@ -31,7 +31,7 @@ import '@/styles/accessibility/keyboard-navigation.scss';
 
             // Arrow key navigation for tab lists
             document.addEventListener('keydown', (e) => {
-                const tabList = e.target && (e.target as HTMLElement).closest('[role="tablist"]');
+                const tabList = e.target instanceof window.HTMLElement ? e.target.closest('[role="tablist"]') : null;
                 if (tabList && ['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) {
                     e.preventDefault();
                     this.handleTabListNavigation(e, tabList);
@@ -39,56 +39,57 @@ import '@/styles/accessibility/keyboard-navigation.scss';
             });
         }
 
-        handleTabNavigation(e: KeyboardEvent) {
+        handleTabNavigation(e: globalThis.KeyboardEvent) {
             const focusableElements = this.getFocusableElements();
-            const currentIndex = focusableElements.indexOf(document.activeElement as Element);
+            const currentIndex = focusableElements.findIndex(element => element === document.activeElement);
 
             if (e.shiftKey) {
                 // Shift + Tab: Move backwards
                 if (currentIndex <= 0) {
                     e.preventDefault();
-                    (focusableElements[focusableElements.length - 1] as HTMLElement).focus();
+                    focusableElements.at(-1)?.focus();
                 }
             }
             else {
                 // Tab: Move forwards
                 if (currentIndex >= focusableElements.length - 1) {
                     e.preventDefault();
-                    (focusableElements[0] as HTMLElement).focus();
+                    focusableElements[0]?.focus();
                 }
             }
         }
 
-        handleTabListNavigation(e: KeyboardEvent, tabList: Element) {
-            const tabs = Array.from(tabList.querySelectorAll('[role="tab"]'));
-            const currentIndex = tabs.indexOf(document.activeElement as Element);
+        handleTabListNavigation(e: globalThis.KeyboardEvent, tabList: globalThis.Element) {
+            const tabs = Array.from(tabList.querySelectorAll<globalThis.HTMLElement>('[role="tab"]'));
+            const currentIndex = tabs.findIndex(element => element === document.activeElement);
 
             switch (e.key) {
-                case 'ArrowLeft':
+                case 'ArrowLeft': {
                     const prevIndex = currentIndex > 0 ? currentIndex - 1 : tabs.length - 1;
-                    (tabs[prevIndex] as HTMLElement).focus();
+                    tabs[prevIndex]?.focus();
                     break;
-                case 'ArrowRight':
+                }
+                case 'ArrowRight': {
                     const nextIndex = currentIndex < tabs.length - 1 ? currentIndex + 1 : 0;
-                    (tabs[nextIndex] as HTMLElement).focus();
+                    tabs[nextIndex]?.focus();
                     break;
+                }
                 case 'Home':
-                    (tabs[0] as HTMLElement).focus();
+                    tabs[0]?.focus();
                     break;
                 case 'End':
-                    (tabs[tabs.length - 1] as HTMLElement).focus();
+                    tabs.at(-1)?.focus();
                     break;
             }
         }
 
         getFocusableElements() {
-            return Array.from(document.querySelectorAll(this.focusableElements))
+            return Array.from(document.querySelectorAll<globalThis.HTMLElement>(this.focusableElements))
                 .filter((el) => {
-                    const htmlEl = el as HTMLElement;
                     return (
                         !el.hasAttribute('disabled') &&
                         !el.hasAttribute('hidden') &&
-                        htmlEl.offsetParent !== null &&
+                        el.offsetParent !== null &&
                         !el.hasAttribute('aria-hidden')
                     );
                 });
@@ -96,12 +97,11 @@ import '@/styles/accessibility/keyboard-navigation.scss';
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        (window as object as { keyboardNavigation: KeyboardNavigation }).keyboardNavigation = new KeyboardNavigation();
+        window.keyboardNavigation = new KeyboardNavigation();
 
         // Enhance form elements
         const formElements = document.querySelectorAll('input, select, textarea');
         formElements.forEach(element => {
-            const formEl = element as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
             // Add proper labels if missing
             if (!element.getAttribute('aria-label') && !element.getAttribute('aria-labelledby')) {
                 const label = document.querySelector(`label[for="${element.id}"]`);
@@ -117,8 +117,11 @@ import '@/styles/accessibility/keyboard-navigation.scss';
                 element.setAttribute('aria-invalid', 'true');
             });
 
-            formEl.addEventListener('input', () => {
-                if (formEl.checkValidity()) {
+            element.addEventListener('input', () => {
+                if (
+                    (element instanceof window.HTMLInputElement || element instanceof window.HTMLSelectElement || element instanceof window.HTMLTextAreaElement) &&
+                    element.checkValidity()
+                ) {
                     element.removeAttribute('aria-invalid');
                 }
             });

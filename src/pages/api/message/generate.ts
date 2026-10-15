@@ -14,7 +14,7 @@ import type { Mode } from '@/lib/modes';
 import { parseThreadData, type Message } from '@/lib/threads';
 import type { ToolContext } from '@/lib/tools';
 import { VendorError, getUserErrorMessage } from '@/lib/user-errors';
-import { isValidEmail } from '@/lib/validation';
+import isValidEmail from '@/lib/validation';
 import { nanoid } from 'nanoid';
 
 import { and, eq, type InferSelectModel } from 'drizzle-orm';
@@ -346,8 +346,8 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                     try {
                         await db.delete(threadsTable)
                             .where(and(eq(threadsTable.id, current_thread_id!), eq(threadsTable.email, user_email)));
-                    } catch (cleanupError) {
-                        console.error(`❌ [${requestId}] Failed to remove empty thread:`, cleanupError);
+                    } catch (error) {
+                        console.error(`❌ [${requestId}] Failed to remove empty thread:`, error);
                     }
                 }
                 throw error;

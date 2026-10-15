@@ -1,15 +1,14 @@
 ---
-import Layout from '@/layouts/Layout.astro';
-import '@/styles/pages/content/question.scss';
-
 import { marked } from 'marked';
-
-import { eq } from 'drizzle-orm';
 import { db } from '@/db/initialize';
 import { questionTable } from '@/db/schema';
-
 import categories from '@/lib/modes';
 import { idToQuestion } from '@/lib/question-utils';
+
+import { eq } from 'drizzle-orm';
+
+import Layout from '@/layouts/Layout.astro';
+import '@/styles/pages/content/question.scss';
 
 const { category, mode, id } = Astro.params;
 

@@ -19,7 +19,7 @@ import '@/styles/pages/chat.scss';
 
 let { category, mode, id } = Astro.params || { category: '', mode: '', id: '' };
 
-const categoryObj = category ? categories[category] : null;
+const categoryObj = categories[category || ''];
 const modeObj = categoryObj?.modes?.[mode || ''];
 
 if (!categoryObj || !modeObj) return Astro.redirect('/404');
@@ -30,15 +30,14 @@ const modeName = modeObj?.name || mode;
 const user = Astro.locals.user;
 const user_email = user?.email || null;
 
-const isNewChat = (id === 'new');
-
-let isAuthorized = isNewChat ? true : false;
+let isAuthorized = id === 'new';
 let isPublic = false;
+
 // Admins are authorized to view other users' threads but only the owner can rename them
 let isOwner = false;
 let isPublicThread = false;
 
-if (!isNewChat) {
+if (id !== 'new') {
     const accessCheck = await checkThreadAccess(id || '', user, category, mode);
     isAuthorized = accessCheck.isAuthorized;
     isPublic = accessCheck.isPublic;
@@ -48,20 +47,20 @@ if (!isNewChat) {
 }
 
 // Get thread data to access the title and uploaded files (skip for new chats)
-const thread = !isNewChat && id ? await getThreadByToken(id, (isAuthorized || isPublic)) : null;
+const thread = await getThreadByToken(id ?? '', (isAuthorized || isPublic));
 
 // Unknown thread IDs pass the access check as unclaimed, so start a fresh chat instead of rendering an empty one
-if (!isNewChat && isAuthorized && !thread) { return Astro.redirect(`/${category}/${mode}/chat/new`); }
+if (!thread || (id !== 'new' && isAuthorized && !thread)) return Astro.redirect(`/${category}/${mode}/chat/new`);
 
 // For new chats, user must be authenticated
-if ((isNewChat && !user) || (!user && !isPublic)) { return Astro.redirect(`/user/sign-in?returnBackUrl=${encodeURIComponent(`/${category}/${mode}/chat/${id}`)}`); }
+if ((id === 'new' && !user) || (!user && !isPublic)) return Astro.redirect(`/user/sign-in?returnBackUrl=${encodeURIComponent(`/${category}/${mode}/chat/${id}`)}`);
 
 const threadTitle = thread?.title || null;
 const uploadedFiles = thread?.uploadedFiles || [];
 
 // Get messages only if authorized or public (skip for new chats)
 let messages: Message[] = [];
-if (!isNewChat) {
+if (id !== 'new') {
     const messagesLength = await getMessagesLength(id || '');
     messages = (isAuthorized || isPublic) && messagesLength > 0 ? await getMessages(id ?? '', (isAuthorized || isPublic)) : [];
 
@@ -92,10 +91,10 @@ const mathDelimiterPattern = /\$|\\\(|\\\[/;
 
 export const inNav = 'hide';
 ---
-<Layout title={`${threadTitle || (isNewChat ? 'New Chat' : 'Chat')} | ${modeName} | ${categoryName}`} container={false} isChatArea={true} className="chat-page" hideCopyright={true} mathjax={true} desmos={modeObj.desmos === true}>
+<Layout title={`${threadTitle || (id === 'new' ? 'New Chat' : 'Chat')} | ${modeName} | ${categoryName}`} container={false} isChatArea={true} className="chat-page" hideCopyright={true} mathjax={true} desmos={modeObj.desmos === true}>
     <header class="chat-header">
         <div class="chat-title-container">
-            <ChatTitle title={threadTitle || (isNewChat ? 'New Chat' : 'Chat')} threadId={id || ''} canRename={isOwner} />
+            <ChatTitle title={threadTitle || (id === 'new' ? 'New Chat' : 'Chat')} threadId={id || ''} canRename={isOwner} />
             <nav class="subject-breadcrumb" aria-label="Subject">
                 <ol>
                     <li>{categoryName}</li>
@@ -103,7 +102,7 @@ export const inNav = 'hide';
                 </ol>
             </nav>
         </div>
-        <Header pTitle={threadTitle || (isNewChat ? 'New Chat' : 'Chat')} />
+        <Header pTitle={threadTitle || (id === 'new' ? 'New Chat' : 'Chat')} />
     </header>
     <section class="chat-container">
         <LeftSidebar
@@ -169,19 +168,19 @@ export const inNav = 'hide';
         />
     </section>
     <script is:inline>
-        const messages = []
+        const clientMessages = []
         const classesToIgnore = ['message'];
         const messageEles = document.querySelectorAll('.chat-messages > .message');
         const outputTabs = ['study-guide', 'reference-sheet'];
 
-        setTimeout(() => {
+        globalThis.setTimeout(() => {
             messageEles.forEach(message => {
                 const classes = [...message.classList].filter(cls => !classesToIgnore.includes(cls));
                 const type = classes.join(',')
                 const content = message.querySelector('.message-content').innerHTML.trim();
                 const tabShown = outputTabs[0]
 
-                messages.push({
+                clientMessages.push({
                     type,
                     content,
                     tabShown,

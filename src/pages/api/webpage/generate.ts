@@ -1,10 +1,10 @@
-import { db } from '@/db/initialize';
-import { threadsTable } from '@/db/schema';
-import { generateWebpage } from '@/lib/content/generate/webpage';
-import { getUserErrorMessage, THREAD_NOT_FOUND_MESSAGE } from '@/lib/user-errors';
-import { isValidEmail } from '@/lib/validation';
 import 'dotenv/config';
 import { nanoid } from 'nanoid';
+import { db } from '@/db/initialize';
+import { threadsTable } from '@/db/schema';
+import isValidEmail from '@/lib/validation';
+import { generateWebpage } from '@/lib/content/generate/webpage';
+import { getUserErrorMessage, THREAD_NOT_FOUND_MESSAGE } from '@/lib/user-errors';
 
 import { eq } from 'drizzle-orm';
 

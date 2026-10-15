@@ -4,7 +4,7 @@ import { getSelectableProviders } from '@/lib/models';
 const selectableProviders = getSelectableProviders();
 
 // Build a flat list of tier options from all providers
-const tierOptions = [] as Array<{ key: string; provider: string; tierKey: string; name: string }>;
+const tierOptions: Array<{ key: string; provider: string; tierKey: string; name: string }> = [];
 for (const [providerKey, provider] of Object.entries(selectableProviders)) {
     for (const [tierKey, tierOption] of Object.entries(provider.tiers)) {
         if (tierOption.selectableInUI !== false) {
@@ -52,8 +52,8 @@ const selectorSettings: SelectorSettings = {
 
         function getSettings() {
             try {
-                return JSON.parse(localStorage.getItem('settings') || '{}');
-            } catch (e) {
+                return JSON.parse(globalThis.localStorage.getItem('settings') || '{}');
+            } catch {
                 return {};
             }
         }
@@ -61,7 +61,7 @@ const selectorSettings: SelectorSettings = {
         function setSetting(key, value) {
             const userSettings = getSettings();
             userSettings[key] = value;
-            localStorage.setItem('settings', JSON.stringify(userSettings));
+            globalThis.localStorage.setItem('settings', JSON.stringify(userSettings));
         }
 
         const userSettings = getSettings();

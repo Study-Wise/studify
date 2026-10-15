@@ -1,9 +1,9 @@
+import { nanoid } from 'nanoid';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
+import isValidEmail from '@/lib/validation';
 import { generateFlashcards } from '@/lib/content/generate/flashcards';
 import { getUserErrorMessage, THREAD_NOT_FOUND_MESSAGE } from '@/lib/user-errors';
-import { isValidEmail } from '@/lib/validation';
-import { nanoid } from 'nanoid';
 
 import { eq } from 'drizzle-orm';
 

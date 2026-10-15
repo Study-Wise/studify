@@ -69,7 +69,6 @@ const regenerateButtonId = `regenerate-${id}-btn`;
 </div>
 
 <script is:inline define:vars={{ generateButtonId, regenerateButtonId, title, id, generateVerb, regenerateVerb, viewUrl, viewButtonText, threadId }}>
-    // @ts-nocheck - Variables are injected by Astro's define:vars
     // Extract the feature type from the button ID (e.g., "generate-study-guide-btn" -> "study-guide")
     const apiEndpoint = `/api/${id}/generate`;
 
@@ -105,7 +104,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
 
             newRegenerateBtn.addEventListener('click', () => {
                 const confirmMessage = `Are you sure you want to ${regenerateVerb.toLowerCase()} the ${title.toLowerCase()}? This will replace the existing one.`;
-                if (confirm(confirmMessage)) {
+                if (globalThis.confirm(confirmMessage)) {
                     generateContent(threadId, true, newRegenerateBtn);
                 }
             });
@@ -125,7 +124,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
         btn.innerHTML = `<span class="material-symbols-outlined spinning" aria-hidden="true">progress_activity</span><span>${loadingText}</span>`;
 
         // Generation can take a while, so let the user know the chat stays usable
-        (window).showToast?.(`You can keep chatting while it runs. It will appear here in the sidebar when it's ready.`, {
+        (globalThis).showToast?.(`You can keep chatting while it runs. It will appear here in the sidebar when it's ready.`, {
             title: `${loadingText.slice(0, -1)} ${title}`,
             icon: 'chat',
         });
@@ -155,7 +154,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
             }
         } catch (error) {
             console.error(`Error generating ${title.toLowerCase()}:`, error);
-            (window).showError?.(error instanceof Error ? error.message : `Failed to generate ${title.toLowerCase()}. Please try again.`);
+            (globalThis).showError?.(error instanceof Error ? error.message : `Failed to generate ${title.toLowerCase()}. Please try again.`);
 
             btn.removeAttribute('disabled');
             btn.innerHTML = originalContent;
@@ -165,9 +164,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
     if (generateBtn) {
         generateBtn.addEventListener('click', () => {
             const tid = generateBtn.getAttribute('data-thread-id');
-            if (tid) {
-                generateContent(tid, false);
-            }
+            if (tid) generateContent(tid, false);
         });
     }
 
@@ -177,7 +174,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
             if (tid) {
                 const confirmMessage = `Are you sure you want to ${regenerateVerb.toLowerCase()} the ${title.toLowerCase()}? This will replace the existing one.`;
 
-                if (confirm(confirmMessage)) {
+                if (globalThis.confirm(confirmMessage)) {
                     generateContent(tid, true);
                 }
             }

@@ -15,29 +15,28 @@ import '@/styles/components/install-prompt.scss';
     const prompt = document.getElementById('install-prompt');
     const acceptBtn = document.getElementById('install-prompt-accept');
     const dismissBtn = document.getElementById('install-prompt-dismiss');
-    let deferredPrompt: BeforeInstallPromptEvent | null = null;
-
-    function isDismissed() {
-        try {
-            return localStorage.getItem(dismissedKey) === 'true';
-        } catch {
-            return false;
-        }
-    }
+    let deferredPrompt: {
+        prompt(): Promise<void>;
+        userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
+    } | null = null;
 
     function hide() {
-        if (prompt) {
-            prompt.hidden = true;
-        }
+        if (prompt) prompt.hidden = true;
     }
 
     window.addEventListener('beforeinstallprompt', (event) => {
         // Show our own prompt instead of the browser's mini-infobar
         event.preventDefault();
         deferredPrompt = event;
-        if (prompt && !isDismissed()) {
-            prompt.hidden = false;
+
+        let isDismissed;
+        try {
+            isDismissed = globalThis.localStorage.getItem(dismissedKey) === 'true';
+        } catch {
+            isDismissed = false;
         }
+
+        if (prompt && !isDismissed) prompt.hidden = false;
     });
 
     acceptBtn?.addEventListener('click', async () => {
@@ -52,8 +51,10 @@ import '@/styles/components/install-prompt.scss';
     dismissBtn?.addEventListener('click', () => {
         hide();
         try {
-            localStorage.setItem(dismissedKey, 'true');
-        } catch {}
+            globalThis.localStorage.setItem(dismissedKey, 'true');
+        } catch {
+            return;
+        }
     });
 
     window.addEventListener('appinstalled', () => {

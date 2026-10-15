@@ -37,8 +37,8 @@ let resourcesData = null;
 if (latestResourcesJSON) {
     try {
         resourcesData = JSON.parse(latestResourcesJSON);
-    } catch (e) {
-        console.error('Error parsing resources JSON:', e);
+    } catch (error) {
+        console.error('Error parsing resources JSON:', error);
     }
 }
 ---

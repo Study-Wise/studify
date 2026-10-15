@@ -178,14 +178,14 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
         if (!shareLinkInput?.value) return;
 
         try {
-            await navigator.clipboard.writeText(shareLinkInput.value);
+            await globalThis.navigator.clipboard.writeText(shareLinkInput.value);
 
             const copyIcon = shareLinkCopy.querySelector('.material-symbols-outlined');
             const copyText = shareLinkCopy.querySelector('.share-link-copy-text');
             if (copyIcon) copyIcon.textContent = 'check';
             if (copyText) copyText.textContent = 'Copied';
 
-            setTimeout(() => {
+            globalThis.setTimeout(() => {
                 if (copyIcon) copyIcon.textContent = 'content_copy';
                 if (copyText) copyText.textContent = 'Copy';
             }, 2000);
@@ -285,11 +285,11 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
             // Nothing persisted yet for an unsaved chat, so just start over
             if (!currentThreadId || currentThreadId === 'new') {
                 window.showSuccessAfterNavigation?.('Chat deleted');
-                window.location.href = newChatUrl;
+                globalThis.location.href = newChatUrl;
                 return;
             }
 
-            if (!confirm('Are you sure you want to delete this chat? This cannot be undone.')) return;
+            if (!globalThis.confirm('Are you sure you want to delete this chat? This cannot be undone.')) return;
 
             deleteChatButton.disabled = true;
 
@@ -304,7 +304,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
 
                 if (data.status === 'success') {
                     window.showSuccessAfterNavigation?.('Chat deleted');
-                    window.location.href = newChatUrl;
+                    globalThis.location.href = newChatUrl;
                 }
                 else {
                     throw new Error(data.error || 'Failed to delete chat');
@@ -325,10 +325,10 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
     async function ensureThreadExists() {
         if (currentThreadId === 'new') {
             // Use the provider and tier saved on /settings, like the chat script does
-            let settings = {};
+            let settings;
             try {
-                settings = JSON.parse(localStorage.getItem('settings') || '{}') || {};
-            } catch (_error) {
+                settings = JSON.parse(globalThis.localStorage.getItem('settings') || '{}') || {};
+            } catch {
                 settings = {};
             }
             const provider = settings.provider || 'openai';
@@ -350,7 +350,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                     updateShareLink();
 
                     // Let the chat script use this thread instead of creating another one
-                    window.dispatchEvent(new CustomEvent('thread-created', {
+                    window.dispatchEvent(new globalThis.CustomEvent('thread-created', {
                         detail: { id: data.id, source: 'sidebar' }
                     }));
 
@@ -399,7 +399,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                 let data;
 
                 if (file.size <= CHUNK_THRESHOLD) {
-                    const formData = new FormData();
+                    const formData = new globalThis.FormData();
                     formData.append('file', file);
                     formData.append('threadId', activeThreadId);
 
@@ -411,14 +411,14 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                     const responseText = await response.text();
                     try {
                         data = JSON.parse(responseText);
-                    } catch (_e) {
-                        throw new Error(`Server error (${response.status}): ${responseText.substring(0, 200)}`);
+                    } catch (error) {
+                        throw new Error(`Server error (${response.status}): ${responseText.substring(0, 200)}`, { cause: error });
                     }
                 }
                 else {
                     const CHUNK_SIZE = 3 * 1024 * 1024; // 3MB chunks
                     const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
-                    const uploadId = crypto.randomUUID();
+                    const uploadId = globalThis.crypto.randomUUID();
 
                     for (let i = 0; i < totalChunks; i++) {
                         const start = i * CHUNK_SIZE;
@@ -427,7 +427,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
 
                         window.showInfo?.(`Uploading ${file.name}... chunk ${i + 1}/${totalChunks}`);
 
-                        const chunkForm = new FormData();
+                        const chunkForm = new globalThis.FormData();
                         chunkForm.append('chunk', chunk);
                         chunkForm.append('uploadId', uploadId);
                         chunkForm.append('chunkIndex', String(i));
@@ -446,8 +446,8 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                         let chunkData;
                         try {
                             chunkData = JSON.parse(chunkText);
-                        } catch (_e) {
-                            throw new Error(`Server error (${chunkRes.status}): ${chunkText.substring(0, 200)}`);
+                        } catch (error) {
+                            throw new Error(`Server error (${chunkRes.status}): ${chunkText.substring(0, 200)}`, { cause: error });
                         }
 
                         if (chunkData.status !== 'success') {
@@ -465,8 +465,8 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                     const completeText = await completeRes.text();
                     try {
                         data = JSON.parse(completeText);
-                    } catch (_e) {
-                        throw new Error(`Server error (${completeRes.status}): ${completeText.substring(0, 200)}`);
+                    } catch (error) {
+                        throw new Error(`Server error (${completeRes.status}): ${completeText.substring(0, 200)}`, { cause: error });
                     }
                 }
 
@@ -496,9 +496,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
 
         isUploading = false;
 
-        if (fileUpload) {
-            fileUpload.value = '';
-        }
+        if (fileUpload) fileUpload.value = '';
     }
 
     if (fileUpload && fileList) {
@@ -532,7 +530,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
 
         if (!fileKey || !currentThreadId || currentThreadId === 'new' || !email) return;
 
-        if (!confirm('Are you sure you want to delete this file?')) return;
+        if (!globalThis.confirm('Are you sure you want to delete this file?')) return;
 
         deleteButton.disabled = true;
 

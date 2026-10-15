@@ -1,14 +1,13 @@
 ---
+import categories from '@/lib/modes';
+
 import Layout from '@/layouts/Layout.astro';
 import FancyButton from '@/components/fancy/Button.astro';
-// import ModelSelector from '@/components/ModelSelector.astro';
 import MessagesScript from '@/scripts/messages.astro';
 import StepByStepScript from '@/scripts/step-by-step.astro';
 import '@/styles/pages/index.scss';
 import '@/styles/pages/mode.scss';
 import '@/styles/components/step-by-step.scss';
-
-import categories from '@/lib/modes';
 
 let { category, mode } = Astro.params || { category: '', mode: '' };
 

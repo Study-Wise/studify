@@ -70,6 +70,12 @@ function getImportModulePath(source, currentDir) {
     return path.resolve(currentDir, source);
 }
 
+function isAstroScriptImport(importNode, sourceCode, filename) {
+    if (!filename.endsWith('.astro') || !importNode.range) return false;
+
+    return sourceCode.text.slice(0, importNode.range[0]).lastIndexOf('<script') > sourceCode.text.slice(0, importNode.range[0]).lastIndexOf('</script>');
+}
+
 export default {
     meta: {
         type: 'problem',
@@ -85,13 +91,21 @@ export default {
             Program(node) {
                 if (!node.body) return;
 
-                if ((node.body || []).filter(statement => statement && statement.type === 'ImportDeclaration').length === 0) return;
+                if (node.body.filter(statement =>
+                    statement &&
+                    statement.type === 'ImportDeclaration' &&
+                    !isAstroScriptImport(statement, context.sourceCode, context.filename)
+                ).length === 0) return;
 
                 let maxSeenGroup = 0;
                 let previousNode = null;
                 let previousGroup = null;
 
-                for (const importNode of (node.body || []).filter(statement => statement && statement.type === 'ImportDeclaration')) {
+                for (const importNode of node.body.filter(statement =>
+                    statement &&
+                    statement.type === 'ImportDeclaration' &&
+                    !isAstroScriptImport(statement, context.sourceCode, context.filename)
+                )) {
                     if (typeof importNode.source.value !== 'string') continue;
 
                     const group = getImportGroup(importNode.source.value);
@@ -121,7 +135,11 @@ export default {
                 let currentGroupImports = [];
                 let currentGroupNumber = null;
 
-                for (const importNode of (node.body || []).filter(statement => statement && statement.type === 'ImportDeclaration')) {
+                for (const importNode of node.body.filter(statement =>
+                    statement &&
+                    statement.type === 'ImportDeclaration' &&
+                    !isAstroScriptImport(statement, context.sourceCode, context.filename)
+                )) {
                     if (typeof importNode.source.value !== 'string') continue;
 
                     const group = getImportGroup(importNode.source.value);

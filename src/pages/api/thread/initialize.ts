@@ -1,9 +1,9 @@
+import { nanoid } from 'nanoid';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
-import { isUserAdmin } from '@/lib/auth/admin';
 import config from '@/lib/config';
 import { getValidModelAndProvider } from '@/lib/models';
-import { nanoid } from 'nanoid';
+import { isUserAdmin } from '@/lib/auth/admin';
 
 import { eq } from 'drizzle-orm';
 

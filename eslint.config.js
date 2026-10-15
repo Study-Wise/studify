@@ -70,6 +70,8 @@ export default [
                 File: 'readonly',
                 FormDataEntryValue: 'readonly',
                 Astro: 'readonly',
+                document: 'readonly',
+                window: 'readonly',
                 atob: 'readonly',
                 btoa: 'readonly'
             }

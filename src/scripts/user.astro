@@ -1,10 +1,8 @@
 <script>
     import { signIn } from '@/lib/auth/client';
-    import type { AuthUtils } from '@/lib/auth/types';
-
     const errorMessage = document.getElementById('error-message');
-    const socialButtonsContainer = document.querySelector('.social-buttons') as HTMLElement;
-    const callbackURL = socialButtonsContainer?.dataset.callbackUrl || '/user/sso-callback';
+    const socialButtonsContainer = document.querySelector('.social-buttons');
+    const callbackURL = socialButtonsContainer instanceof window.HTMLElement ? socialButtonsContainer.dataset.callbackUrl || '/user/sso-callback' : '/user/sso-callback';
 
     function showError(message: string) {
         if (errorMessage) {
@@ -27,7 +25,9 @@
     document.querySelectorAll('.social-button[data-provider]').forEach((button) => {
         button.addEventListener('click', async (e) => {
             e.preventDefault();
-            const provider = (button as HTMLElement).dataset.provider as 'google' | 'github';
+            if (!(button instanceof window.HTMLElement)) return;
+            const provider = button.dataset.provider;
+            if (provider !== 'google' && provider !== 'github') return;
             try {
                 await signIn.social({
                     provider,
@@ -41,7 +41,7 @@
     });
 
     // Expose utilities for page-specific scripts
-    (window as object as { authUtils: AuthUtils }).authUtils = {
+    window.authUtils = {
         showError,
         hideError,
         getRedirectUrl,
