@@ -92,7 +92,7 @@ const threadsByCategory = threads.reduce<Record<string, typeof threads>>((acc, t
         const threadId = deleteButton.getAttribute('data-thread-id');
         if (!threadId) return;
 
-        if (!confirm('Are you sure you want to delete this chat? This cannot be undone.')) return;
+        if (!globalThis.confirm('Are you sure you want to delete this chat? This cannot be undone.')) return;
 
         deleteButton.disabled = true;
 
@@ -120,7 +120,7 @@ const threadsByCategory = threads.reduce<Record<string, typeof threads>>((acc, t
 
             // Reload to show the empty state when no chats remain
             if (!document.querySelector('.my-chats-container .thread-row')) {
-                window.location.reload();
+                globalThis.location.reload();
                 return;
             }
 

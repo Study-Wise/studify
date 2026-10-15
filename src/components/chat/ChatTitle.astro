@@ -23,29 +23,19 @@ const { title, threadId, canRename } = Astro.props;
             let currentTitle = titleButton.textContent.trim();
             let isSaving = false;
 
-            const showButton = () => {
+            function showButton() {
                 titleInput.hidden = true;
                 titleButton.hidden = false;
-            };
-
-            const setTitle = (newTitle) => {
-                // Keep the " | mode | category" suffix of the tab title
-                if (document.title.startsWith(currentTitle)) {
-                    document.title = newTitle + document.title.slice(currentTitle.length);
-                }
-                currentTitle = newTitle;
-                titleButton.textContent = newTitle;
-                titleButton.setAttribute('aria-label', `Rename chat: ${newTitle}`);
-            };
+            }
 
             // Only take focus back when editing ended from the keyboard; on blur the user is moving elsewhere
-            const cancel = (restoreFocus) => {
+            function cancel(restoreFocus) {
                 titleInput.value = currentTitle;
                 showButton();
                 if (restoreFocus) titleButton.focus();
-            };
+            }
 
-            const save = async (restoreFocus) => {
+            async function save(restoreFocus) {
                 if (isSaving || titleInput.hidden) return;
 
                 const newTitle = titleInput.value.replace(/\s+/g, ' ').trim();
@@ -69,7 +59,13 @@ const { title, threadId, canRename } = Astro.props;
                     const data = await response.json();
 
                     if (data.status === 'success') {
-                        setTitle(data.title);
+                        // Keep the " | mode | category" suffix of the tab title
+                        if (document.title.startsWith(currentTitle)) {
+                            document.title = data.title + document.title.slice(currentTitle.length);
+                        }
+                        currentTitle = data.title;
+                        titleButton.textContent = data.title;
+                        titleButton.setAttribute('aria-label', `Rename chat: ${data.title}`);
                         window.showSuccess?.('Chat renamed');
                     }
                     else {
@@ -87,7 +83,7 @@ const { title, threadId, canRename } = Astro.props;
                     showButton();
                     if (restoreFocus) titleButton.focus();
                 }
-            };
+            }
 
             titleButton.addEventListener('click', () => {
                 titleInput.value = currentTitle;
@@ -98,8 +94,8 @@ const { title, threadId, canRename } = Astro.props;
             });
 
             titleInput.addEventListener('keydown', (event) => {
-                // Enter and Escape confirm or cancel IME composition; Safari reports that Enter as keyCode 229
-                if (event.isComposing || event.keyCode === 229) return;
+                // Enter and Escape confirm or cancel IME composition
+                if (event.isComposing || event.key === 'Process') return;
 
                 if (event.key === 'Enter') {
                     event.preventDefault();

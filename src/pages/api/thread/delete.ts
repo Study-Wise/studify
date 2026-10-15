@@ -1,7 +1,7 @@
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 import { userFilesUpload } from '@/lib/uploadthing';
-import { isValidEmail } from '@/lib/validation';
+import isValidEmail from '@/lib/validation';
 import 'dotenv/config';
 import { nanoid } from 'nanoid';
 

@@ -47,7 +47,7 @@ if (user && secretKey) {
         };
     }
     else if (user) console.error('Tawk.to: authenticated login skipped because no hash was generated');
-    var Tawk_LoadStart = new Date();
+    window.Tawk_LoadStart = new Date();
 
     (function() {
         var s1 = document.createElement('script'), s0 = document.querySelector('script');

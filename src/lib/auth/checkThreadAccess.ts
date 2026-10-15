@@ -87,8 +87,8 @@ export async function checkThreadAccess(
                             .set({ email: userEmail, updatedAt: new Date() })
                             .where(eq(threadsTable.id, threadId));
                         threadOwner = userEmail;
-                    } catch (e) {
-                        console.error('Error claiming thread ownership:', e);
+                    } catch (error) {
+                        console.error('Error claiming thread ownership:', error);
                     }
                 }
             }

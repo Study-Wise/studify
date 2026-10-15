@@ -22,6 +22,12 @@ export default {
 
         return {
             TSAsExpression(node) {
+                if (
+                    context.filename.endsWith('.astro') &&
+                    node.typeAnnotation?.type === 'TSTypeReference' &&
+                    node.typeAnnotation.typeName?.type === 'Identifier' &&
+                    ['HTMLElement', 'HTMLFormElement'].includes(node.typeAnnotation.typeName.name)
+                ) return;
                 if (node.typeAnnotation?.type === 'TSTypeOperator' && node.typeAnnotation.operator === 'keyof') return;
                 if (node.typeAnnotation?.type === 'TSUnionType' && node.typeAnnotation.types?.some(t => t.type === 'TSTypeQuery') && node.typeAnnotation.types?.some(t => t.type === 'TSLiteralType' && (t.literal === 'honeypot' || t.literal?.value === 'honeypot'))) return;
 

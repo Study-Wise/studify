@@ -1,11 +1,10 @@
 ---
-import Layout from '@/layouts/Layout.astro';
-import '@/styles/pages/auth.scss';
 import { getSafeReturnBackUrl } from '@/lib/auth/return-url';
 
-const returnBackUrl = getSafeReturnBackUrl(Astro.url.searchParams.get('returnBackUrl'));
+import Layout from '@/layouts/Layout.astro';
+import '@/styles/pages/auth.scss';
 
-if (Astro.locals.user) return Astro.redirect(returnBackUrl);
+if (Astro.locals.user) return Astro.redirect(getSafeReturnBackUrl(Astro.url.searchParams.get('returnBackUrl')));
 ---
 
 <Layout title="Completing Sign In" className="auth-page">
@@ -18,20 +17,18 @@ if (Astro.locals.user) return Astro.redirect(returnBackUrl);
     </div>
 </Layout>
 
-<script>
-    import { getSafeReturnBackUrl } from '@/lib/auth/return-url';
-
+<script is:inline define:vars={{ getSafeReturnBackUrl }}>
     async function completeOAuth() {
-        const redirectUrl = getSafeReturnBackUrl(new URLSearchParams(window.location.search).get('returnBackUrl'));
+        const redirectUrl = getSafeReturnBackUrl(new globalThis.URLSearchParams(globalThis.location.search).get('returnBackUrl'));
 
         try {
             // Better Auth automatically handles the OAuth callback
             // Just redirect to the intended destination
             // The session is already established via cookies
-            window.location.replace(redirectUrl);
+            globalThis.location.replace(redirectUrl);
         } catch (error) {
             console.error('OAuth callback error:', error);
-            setTimeout(() => window.location.replace(redirectUrl), 500);
+            globalThis.setTimeout(() => globalThis.location.replace(redirectUrl), 500);
         }
     }
 

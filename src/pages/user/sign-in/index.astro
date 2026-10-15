@@ -1,8 +1,9 @@
 ---
+import { getSafeReturnBackUrl, withReturnBackUrl } from '@/lib/auth/return-url';
+
 import Layout from '@/layouts/Layout.astro';
 import '@/styles/pages/auth.scss';
 import UserScript from '@/scripts/user.astro';
-import { getSafeReturnBackUrl, withReturnBackUrl } from '@/lib/auth/return-url';
 
 const redirectUrl = getSafeReturnBackUrl(Astro.url.searchParams.get('returnBackUrl'));
 
@@ -78,19 +79,20 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
 
 <script>
     import { signIn } from '@/lib/auth/client';
-    import type { AuthUtils } from '@/lib/auth/types';
-    import { getSafeReturnBackUrl } from '@/lib/auth/return-url';
+    import { getSafeReturnBackUrl as getClientSafeReturnBackUrl } from '@/lib/auth/return-url';
 
-    const form = document.getElementById('signin-form') as HTMLFormElement;
-    const { showError, hideError } = (window as object as { authUtils: AuthUtils }).authUtils;
+    const form = document.querySelector('#signin-form');
+    if (!(form instanceof window.HTMLFormElement)) throw new Error('Sign-in form was not found.');
+    const { showError, hideError } = window.authUtils;
 
     form?.addEventListener('submit', async (e) => {
         e.preventDefault();
         hideError();
 
-        const formData = new FormData(form);
-        const email = formData.get('email') as string;
-        const password = formData.get('password') as string;
+        const formData = new globalThis.FormData(form);
+        const email = formData.get('email');
+        const password = formData.get('password');
+        if (typeof email !== 'string' || typeof password !== 'string') return;
 
         try {
             const { error } = await signIn.email({
@@ -102,7 +104,7 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
                 showError(error.message || 'Sign in failed. Please check your credentials.');
             }
             else {
-                window.location.href = getSafeReturnBackUrl(new URLSearchParams(window.location.search).get('returnBackUrl'));
+                globalThis.location.href = getClientSafeReturnBackUrl(new globalThis.URLSearchParams(globalThis.location.search).get('returnBackUrl'));
             }
         } catch (error) {
             console.error('Sign in error:', error);

@@ -1,7 +1,7 @@
 ---
-import '@/styles/components/offline-support.scss';
-
 import 'dotenv/config';
+
+import '@/styles/components/offline-support.scss';
 
 const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MODE === 'production') || (import.meta.env.VERCEL_ENV === 'production')
 
@@ -21,7 +21,7 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
     function updateOnlineStatus() {
         const indicator = document.getElementById('offline-indicator');
         if (indicator) {
-            indicator.style.display = navigator.onLine ? 'none' : 'flex';
+            indicator.style.display = globalThis.navigator.onLine ? 'none' : 'flex';
         }
     }
 
@@ -31,7 +31,7 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
     updateOnlineStatus();
 
     // Service Worker registration and update handling
-    if ('serviceWorker' in navigator) {
+    if ('serviceWorker' in globalThis.navigator) {
         window.addEventListener('load', async () => {
             if (isProd) {
                 try {
@@ -45,13 +45,13 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
     }
 
     async function swRegistration() {
-        const registration = await navigator.serviceWorker.register('/sw.js');
+        const registration = await globalThis.navigator.serviceWorker.register('/sw.js');
 
         registration.addEventListener('updatefound', () => {
             const newWorker = registration.installing;
             if (newWorker) {
                 newWorker.addEventListener('statechange', () => {
-                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    if (newWorker.state === 'installed' && globalThis.navigator.serviceWorker.controller) {
                         // New version available
                         const updateIndicator = document.getElementById('update-available');
                         const updateButton = document.getElementById('update-button');
@@ -63,7 +63,7 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
                         if (updateButton) {
                             updateButton.addEventListener('click', () => {
                                 newWorker.postMessage({ action: 'skipWaiting' });
-                                window.location.reload();
+                                globalThis.location.reload();
                             });
                         }
                     }
@@ -71,9 +71,9 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
             }
         });
 
-        navigator.serviceWorker.addEventListener('message', (event) => {
+        globalThis.navigator.serviceWorker.addEventListener('message', (event) => {
             if (event.data && event.data.action === 'reload') {
-                window.location.reload();
+                globalThis.location.reload();
             }
         });
     }
@@ -85,9 +85,9 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
         }
 
         async cacheStudyMaterials(data) {
-            if ('caches' in window) {
+            if ('caches' in globalThis) {
                 try {
-                    const cache = await caches.open(this.cacheName);
+                    const cache = await globalThis.caches.open(this.cacheName);
                     const response = new Response(JSON.stringify(data), {
                         headers: { 'Content-Type': 'application/json' }
                     });
@@ -99,11 +99,11 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
         }
 
         async getCachedStudyMaterials() {
-            if ('caches' in window) {
+            if ('caches' in globalThis) {
                 try {
-                    const cache = await caches.open(this.cacheName);
+                    const cache = await globalThis.caches.open(this.cacheName);
                     const response = await cache.match('/offline-study-materials');
-                    if (response) { return await response.json(); }
+                    if (response) return await response.json();
                 } catch (error) {
                     console.error('Failed to retrieve cached study materials:', error);
                 }
@@ -120,7 +120,7 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
         try {
             return await originalFetch.apply(this, args);
         } catch (error) {
-            if (!navigator.onLine) {
+            if (!globalThis.navigator.onLine) {
                 // Handle offline scenarios
                 console.warn('Network request failed - offline mode');
 
@@ -135,7 +135,7 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
                     }
                 }
 
-                throw new Error('Network request failed - you appear to be offline');
+                throw new Error('Network request failed - you appear to be offline', { cause: error });
             }
             throw error;
         }

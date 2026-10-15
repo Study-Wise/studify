@@ -14,7 +14,7 @@ import '@/styles/components/modal.scss';
     };
 
     type Modal = {
-        element: HTMLDialogElement;
+        element: globalThis.HTMLDialogElement;
         open(): void;
         close(): void;
         setContent(content: ModalContent): void;
@@ -27,18 +27,8 @@ import '@/styles/components/modal.scss';
         success: 'check_circle',
     };
 
-    const defaultButtons = [{ label: 'OK', variant: 'primary' as const }];
+    const defaultButtons: ModalContent['buttons'] = [{ label: 'OK', variant: 'primary' }];
     let modalCount = 0;
-
-    function getToastRegion() {
-        let region = document.querySelector<HTMLElement>('.toast-region');
-        if (!region) {
-            region = document.createElement('div');
-            region.className = 'toast-region';
-            document.body.append(region);
-        }
-        return region;
-    }
 
     function createModal(options: ModalContent & { display?: 'modal' | 'toast'; duration?: number; onClose?: () => void }): Modal {
         const { display = 'modal', duration = 5000 } = options;
@@ -86,13 +76,20 @@ import '@/styles/components/modal.scss';
         footer.className = 'modal-footer';
         content.append(header, body, footer);
         element.append(content);
-        (isToast ? getToastRegion() : document.body).append(element);
+
+        let toastRegion = document.querySelector<globalThis.HTMLElement>('.toast-region');
+        if (isToast && !toastRegion) {
+            toastRegion = document.createElement('div');
+            toastRegion.className = 'toast-region';
+            document.body.append(toastRegion);
+        }
+        (isToast ? toastRegion! : document.body).append(element);
 
         function focusPrimaryButton() {
-            footer.querySelector<HTMLButtonElement>('.modal-button-primary')?.focus();
+            footer.querySelector<globalThis.HTMLButtonElement>('.modal-button-primary')?.focus();
         }
 
-        function setContent({ title: titleText, message: messageText, type = 'info', icon: iconName, buttons = isToast ? [] : defaultButtons }: ModalContent) {
+        function setContent({ title: titleText, message: messageText, type = 'info', icon: iconName, buttons = (isToast ? [] : defaultButtons ?? []) }: ModalContent) {
             content.className = `modal-content modal-${type}`;
             icon.textContent = iconName ?? defaultIcons[type];
             title.textContent = titleText;
@@ -111,15 +108,15 @@ import '@/styles/components/modal.scss';
             if (element.open && !isToast) focusPrimaryButton();
         }
 
-        let dismissTimer: ReturnType<typeof setTimeout> | undefined;
+        let dismissTimer: ReturnType<typeof globalThis.setTimeout> | undefined;
         function stopDismissTimer() {
-            clearTimeout(dismissTimer);
+            globalThis.clearTimeout(dismissTimer);
             dismissTimer = undefined;
         }
         function startDismissTimer() {
             stopDismissTimer();
             if (isToast && duration > 0 && element.open && !element.matches(':hover, :focus-within')) {
-                dismissTimer = setTimeout(() => element.close(), duration);
+                dismissTimer = globalThis.setTimeout(() => element.close(), duration);
             }
         }
 
@@ -128,7 +125,7 @@ import '@/styles/components/modal.scss';
             element.addEventListener('focusin', stopDismissTimer);
             element.addEventListener('mouseleave', startDismissTimer);
             element.addEventListener('focusout', (event) => {
-                if (!(event.relatedTarget instanceof Node && element.contains(event.relatedTarget))) startDismissTimer();
+                if (!(event.relatedTarget instanceof globalThis.Node && element.contains(event.relatedTarget))) startDismissTimer();
             });
         }
         else {
@@ -147,8 +144,8 @@ import '@/styles/components/modal.scss';
                     if (!element.open) {
                         const previous = document.activeElement;
                         element.show();
-                        if (previous instanceof HTMLElement && previous !== document.body) previous.focus({ preventScroll: true });
-                        if (element.contains(document.activeElement) && document.activeElement instanceof HTMLElement) document.activeElement.blur();
+                        if (previous instanceof globalThis.HTMLElement && previous !== document.body) previous.focus({ preventScroll: true });
+                        if (element.contains(document.activeElement) && document.activeElement instanceof globalThis.HTMLElement) document.activeElement.blur();
                     }
                     startDismissTimer();
                     return;
@@ -208,15 +205,11 @@ import '@/styles/components/modal.scss';
         appModal.open();
     }
 
-    /**
-     * Show the next waiting message, errors first
-     */
+    // Show the next waiting message, errors first
     function showNextDialog() {
         current = null;
         const next = pendingErrors.shift() ?? pendingNotice;
-        if (next === pendingNotice) {
-            pendingNotice = null;
-        }
+        if (next === pendingNotice) pendingNotice = null;
         if (next) {
             renderDialog(next);
         }
@@ -236,12 +229,8 @@ import '@/styles/components/modal.scss';
 
         // An error on screen must never be overwritten, so anything thatarrives while one is showing waits its turn. Every error is kept; only the latest non-error message is kept, since those are transient status updates.
         if (current?.type === 'error') {
-            if (type === 'error') {
-                pendingErrors.push(entry);
-            }
-            else {
-                pendingNotice = entry;
-            }
+            if (type === 'error') pendingErrors.push(entry);
+            else pendingNotice = entry;
             getModal().setContent(toModalContent(current));
             return;
         }
@@ -299,29 +288,41 @@ import '@/styles/components/modal.scss';
      */
     function showSuccessAfterNavigation(message: string) {
         try {
-            sessionStorage.setItem(pendingSuccessKey, message);
-        } catch (_error) {
+            globalThis.sessionStorage.setItem(pendingSuccessKey, message);
+        } catch {
             // Storage unavailable (e.g. blocked site data), so show it now instead
             showSuccessToast(message);
         }
     }
 
     try {
-        const pendingSuccess = sessionStorage.getItem(pendingSuccessKey);
+        const pendingSuccess = globalThis.sessionStorage.getItem(pendingSuccessKey);
         if (pendingSuccess) {
-            sessionStorage.removeItem(pendingSuccessKey);
+            globalThis.sessionStorage.removeItem(pendingSuccessKey);
             showSuccessToast(pendingSuccess);
         }
-    } catch (_error) {
+    } catch {
         // Storage unavailable, so nothing can be waiting
+    }
+
+    function showError(message: string) {
+        showDialog(message, { title: 'Error', type: 'error' });
+    }
+
+    function showWarning(message: string) {
+        showDialog(message, { title: 'Warning', type: 'warning' });
+    }
+
+    function showInfo(message: string) {
+        showDialog(message, { title: 'Information', type: 'info' });
     }
 
     // Make functions available globally, including to is:inline scripts
     window.showDialog = showDialog;
     window.showToast = showToast;
-    window.showError = (message) => showDialog(message, { title: 'Error', type: 'error' });
-    window.showWarning = (message) => showDialog(message, { title: 'Warning', type: 'warning' });
+    window.showError = showError;
+    window.showWarning = showWarning;
     window.showSuccess = showSuccessToast;
     window.showSuccessAfterNavigation = showSuccessAfterNavigation;
-    window.showInfo = (message) => showDialog(message, { title: 'Information', type: 'info' });
+    window.showInfo = showInfo;
 </script>

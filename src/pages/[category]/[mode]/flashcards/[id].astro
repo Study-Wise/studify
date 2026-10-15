@@ -134,14 +134,17 @@ const hasContent = !!(isStructured ? (flashcardData && flashcardData.questions.l
 
 <script>
     function initFlashcards() {
-        const deck = document.querySelector('.flashcard-deck') as HTMLElement;
-        if (!deck) return;
+        const deck = document.querySelector('.flashcard-deck');
+        if (!(deck instanceof window.HTMLElement)) return;
 
-        const flashcards = deck.querySelectorAll('.flashcard') as NodeListOf<HTMLElement>;
-        const prevBtn = deck.querySelector('.prev') as HTMLButtonElement;
-        const nextBtn = deck.querySelector('.next') as HTMLButtonElement;
-        const flipBtn = deck.querySelector('.flip') as HTMLButtonElement;
-        const currentSpan = deck.querySelector('.current') as HTMLElement;
+        const flashcards = Array.from(deck.querySelectorAll('.flashcard')).filter((card): card is globalThis.HTMLElement => card instanceof window.HTMLElement);
+
+        const prevBtn = deck.querySelector<globalThis.HTMLButtonElement>('.prev');
+        const nextBtn = deck.querySelector<globalThis.HTMLButtonElement>('.next');
+        const flipBtn = deck.querySelector<globalThis.HTMLButtonElement>('.flip');
+        const currentSpan = deck.querySelector<globalThis.HTMLElement>('.current');
+
+        if (!(prevBtn instanceof window.HTMLButtonElement) || !(nextBtn instanceof window.HTMLButtonElement) || !(flipBtn instanceof window.HTMLButtonElement) || !(currentSpan instanceof window.HTMLElement)) return;
 
         let currentIndex = 0;
 
@@ -152,14 +155,14 @@ const hasContent = !!(isStructured ? (flashcardData && flashcardData.questions.l
                     card.dataset.flipped = 'false';
                 }
             });
-            currentSpan.textContent = String(currentIndex + 1);
-            prevBtn.disabled = currentIndex === 0;
-            nextBtn.disabled = currentIndex === flashcards.length - 1;
+            if (currentSpan) currentSpan.textContent = String(currentIndex + 1);
+            if (prevBtn) prevBtn.disabled = currentIndex === 0;
+            if (nextBtn) nextBtn.disabled = currentIndex === flashcards.length - 1;
         }
 
         function flipCurrent() {
             const current = flashcards[currentIndex];
-            current.dataset.flipped = current.dataset.flipped === 'true' ? 'false' : 'true';
+            if (current) current.dataset.flipped = current.dataset.flipped === 'true' ? 'false' : 'true';
         }
 
         prevBtn?.addEventListener('click', () => {

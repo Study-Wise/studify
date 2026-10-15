@@ -1,5 +1,7 @@
 /// <reference types="astro/client" />
 
+declare var document: typeof document;
+
 // Not yet in TypeScript's DOM types
 interface BeforeInstallPromptEvent extends globalThis.Event {
     prompt(): Promise<void>;
@@ -12,6 +14,8 @@ interface WindowEventMap {
 
 // Set by src/components/Dialog.astro
 interface Window {
+    keyboardNavigation: object;
+    authUtils: import('./lib/auth/types').AuthUtils;
     showDialog: (message: string, options?: { title?: string; icon?: string; type?: import('./lib/modal').ModalType }) => void;
     showToast: (message: string, options?: { title?: string; icon?: string; type?: import('./lib/modal').ModalType }) => void;
     showError: (message: string) => void;
@@ -26,4 +30,4 @@ declare namespace App {
         user: import('./lib/types').User | null;
         session: import('better-auth').Session | null;
     }
-}
+}

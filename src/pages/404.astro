@@ -57,10 +57,10 @@ const currentUrl = Astro.request.url;
     <script is:inline define:vars={{ currentUrl }}>
         // Track 404s in Sentry using breadcrumbs instead of throwing errors
         // This avoids unnecessary noise from legitimate 404s (bots, mistyped URLs)
-        if (typeof window !== 'undefined' && window.Sentry) {
+        if (typeof globalThis !== 'undefined' && window.Sentry) {
             const referrer = document.referrer;
             // Check if referrer is from the same origin (more precise than domain matching)
-            const isInternalReferrer = referrer && referrer.startsWith(window.location.origin);
+            const isInternalReferrer = referrer && referrer.startsWith(globalThis.location.origin);
 
             window.Sentry.addBreadcrumb({
                 category: 'navigation',

@@ -1,8 +1,8 @@
-import { db } from '@/db/initialize';
-import { threadsTable } from '@/db/schema';
-import { isValidEmail } from '@/lib/validation';
 import 'dotenv/config';
 import { nanoid } from 'nanoid';
+import { db } from '@/db/initialize';
+import { threadsTable } from '@/db/schema';
+import isValidEmail from '@/lib/validation';
 
 import { eq } from 'drizzle-orm';
 

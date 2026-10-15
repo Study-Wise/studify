@@ -8,6 +8,7 @@ import type { APIRoute } from 'astro';
 
 export const POST: APIRoute = async ({ request, locals }) => {
     try {
+        // Use the authenticated session user, never a client-supplied email
         const email = locals.user?.email;
         if (!email) {
             return new Response(

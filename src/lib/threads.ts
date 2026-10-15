@@ -82,8 +82,8 @@ async function getMessages(id: string, isAuthorized?: boolean | null) {
             threadData = parseThreadData(rawThread);
         }
         return threadData?.messages ?? [];
-    } catch (e) {
-        console.error(e);
+    } catch (error) {
+        console.error(error);
         return [];
     }
 }
@@ -109,8 +109,8 @@ async function getMessagesLength(id: string) {
             threadData = parseThreadData(rawThread);
         }
         return threadData?.messages?.length ?? 0;
-    } catch (e) {
-        console.error(e);
+    } catch (error) {
+        console.error(error);
         return 0;
     }
 }
@@ -126,8 +126,8 @@ async function getThreadByToken(id: string, isAuthorized?: boolean | null) {
         if (!isAuthorized) return null;
 
         return thread;
-    } catch (e) {
-        console.error(e);
+    } catch (error) {
+        console.error(error);
         return null;
     }
 }
@@ -141,8 +141,8 @@ async function getUserThreads(user_email: string) {
             .orderBy(desc(threadsTable.updatedAt));
 
         return threads;
-    } catch (e) {
-        console.error(e);
+    } catch (error) {
+        console.error(error);
         return [];
     }
 }

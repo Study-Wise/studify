@@ -45,10 +45,9 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
     )}
 </div>
 
-<script is:inline define:vars={{ contentType, threadId, hasContent, generateVerb, regenerateVerb }}>
+<script is:inline define:vars={{ contentType, contentTypeName, threadId, hasContent, generateVerb, regenerateVerb }}>
     const actionBtn = document.getElementById(`${contentType}-action-btn`);
     const apiEndpoint = `/api/${contentType}/generate`;
-    const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
     const contentClassName = contentType.replace(/-/g, '-') + '-content';
 
     // Content types that use markdown
@@ -63,8 +62,8 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
         return new Promise((resolve, reject) => {
             const script = document.createElement('script');
             script.src = 'https://cdn.jsdelivr.net/npm/marked/marked.min.js';
-            script.onload = () => resolve(window.marked);
-            script.onerror = reject;
+            script.addEventListener('load', () => resolve(window.marked));
+            script.addEventListener('error', reject);
             document.head.appendChild(script);
         });
     }
@@ -101,8 +100,8 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
                     try {
                         await window.MathJax.startup?.promise;
                         await window.MathJax.typesetPromise([contentDiv]);
-                    } catch (err) {
-                        console.error('MathJax typesetting error:', err);
+                    } catch (error) {
+                        console.error('MathJax typesetting error:', error);
                     }
                 }
             }
@@ -126,9 +125,7 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
                 emptyState.replaceWith(container);
             }
 
-            if (iframe) {
-                iframe.srcdoc = content;
-            }
+            if (iframe) iframe.srcdoc = content;
         }
         else if (imageTypes.includes(contentType)) {
             // For infographic, content is an object with imageUrl
@@ -146,9 +143,7 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
                 emptyState.replaceWith(contentContainer);
             }
 
-            if (img) {
-                img.src = imageUrl;
-            }
+            if (img) img.src = imageUrl;
         }
     }
 
@@ -159,7 +154,7 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
 
             if (isRegenerate) {
                 const confirmMessage = `Are you sure you want to ${regenerateVerb.toLowerCase()} the ${contentTypeName.toLowerCase()}? This will replace the existing one.`;
-                if (!confirm(confirmMessage)) return;
+                if (!globalThis.confirm(confirmMessage)) return;
             }
 
             actionBtn.setAttribute('disabled', 'true');

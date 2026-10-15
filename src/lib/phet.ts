@@ -6,16 +6,6 @@ const exa = new Exa(import.meta.env.EXA_SEARCH_API_KEY || process.env.EXA_SEARCH
 const PHET_DOMAIN = 'phet.colorado.edu';
 const SIMULATION_PATH = /^\/[a-z]{2}(?:_[A-Z]{2})?\/simulations\/([a-z0-9-]+)\/?$/;
 
-function getSimulationSlug(url: string) {
-    try {
-        const { hostname, pathname } = new URL(url);
-        if (hostname !== PHET_DOMAIN) return null;
-        return pathname.match(SIMULATION_PATH)?.[1] ?? null;
-    } catch {
-        return null;
-    }
-}
-
 interface Simulation {
     title: string;
     pageUrl: string;
@@ -35,7 +25,14 @@ export default async function findSimulations(topic: string): Promise<Simulation
 
     const seen = new Set<string>();
     return searchResult.results.flatMap((result) => {
-        const slug = getSimulationSlug(result.url);
+        let slug: string | undefined;
+        try {
+            const { hostname, pathname } = new URL(result.url);
+            if (hostname === PHET_DOMAIN) slug = pathname.match(SIMULATION_PATH)?.[1];
+        } catch {
+            return [];
+        }
+
         if (!slug || seen.has(slug)) return [];
         seen.add(slug);
 
