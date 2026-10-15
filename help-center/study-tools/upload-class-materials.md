@@ -13,4 +13,4 @@ Uploading a file adds it to that chat. You can remove an uploaded file using the
 
 ## If an upload doesn't work
 
-Check that the file is a supported type and no larger than 10 MB, then try again. If the upload still doesn't finish, check your connection and refresh the page, then try again. If it keeps failing, [contact our support team](https://studywise.adarshrkumar.app/support) with the file type, approximate size, and any error you saw. Please don't send private class records or passwords.
+Check that the file is a supported type and under 10 MB, then try again. If the upload still doesn't finish, check your connection, refresh the page, and try again. If it keeps failing, [contact our support team](https://studywise.adarshrkumar.app/support) with the file type, approximate size, and any error you saw. Please don't send private class records or passwords.
