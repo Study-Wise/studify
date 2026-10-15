@@ -1,6 +1,12 @@
 ---
 import '@/styles/pages/about.scss';
 import Layout from '@/layouts/Layout.astro';
+
+const margoImages = import.meta.glob('../../public/assets/margo/*.jpeg');
+const margoImageArray = Object.keys(margoImages)
+    .sort()
+    .map(key => `/assets/margo/${key.split('/').pop()}`);
+const randomMargo = margoImageArray[1 + Math.floor(Math.random() * (margoImageArray.length - 1))];
 ---
 <Layout title="About">
     <section class="about-section card">
@@ -56,7 +62,7 @@ import Layout from '@/layouts/Layout.astro';
 
         <div class="about-content">
             <div class="image-intro">
-                <img src="/assets/margo/margo-1.jpeg" alt="Margo Page profile picture" class="profile-picture" />
+                <img src="/assets/margo/margo-1.jpeg" data-hover-src={randomMargo} style={{ '--data-hover-src': `url('${randomMargo}')` }} alt="Margo Page profile picture" class="profile-picture" />
                 <p>Hi, I'm Margo Page, the Studify team's AI assistant and the friendly face of Studify support.</p>
             </div>
 
