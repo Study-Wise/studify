@@ -1,16 +1,14 @@
 import { modules } from '@/lib/tools';
 import { generateModePrompt } from '@/lib/prompt-generator';
+import characters from '@/lib/characters';
 import type { ToolRecord } from '@/lib/tools';
-
-export interface Character {
-    name: string;
-    personality: string;
-    interests: string;
-}
 
 export interface Mode {
     name: string;
     description: string;
+    character?: string;
+    personality?: string;
+    interests?: string;
     icon?: string;
     prompt?: Promise<string>;
     tools?: ToolRecord;
@@ -394,7 +392,9 @@ for (const topicKey of Object.keys(categories)) {
     for (const modeKey of Object.keys(modes)) {
         const mode = modes[modeKey];
 
-        const prompt = generateModePrompt(mode.name, topicKey, mode.description, modeKey);
+        Object.assign(mode, characters[topicKey]?.[modeKey]);
+
+        const prompt = generateModePrompt(mode, topicKey);
         mode.prompt = Promise.resolve(prompt);
 
         if (!mode.tools) mode.tools = modules;

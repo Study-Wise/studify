@@ -1,6 +1,7 @@
 // Application Configuration
 
 import { generateModePrompt } from '@/lib/prompt-generator';
+import categories from '@/lib/modes';
 import type { CategoryName, ModeName } from '@/lib/modes';
 import type { ImageSize } from '@/lib/models';
 
@@ -22,7 +23,7 @@ export interface Config {
 const defaultCategory = 'general';
 const defaultMode = 'general';
 
-const prompt = generateModePrompt(defaultCategory, defaultMode);
+const prompt = generateModePrompt(categories[defaultCategory].modes[defaultMode], defaultCategory);
 
 const config: Config = {
     provider: 'openai',
