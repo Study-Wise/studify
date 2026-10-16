@@ -23,6 +23,10 @@ interface Window {
     showSuccess: (message: string) => void;
     showSuccessAfterNavigation: (message: string) => void;
     showInfo: (message: string) => void;
+    showConfirm: (
+        message: string,
+        options?: { title?: string; confirmLabel?: string; cancelLabel?: string; icon?: string; type?: 'info' | 'error' | 'warning' | 'success' },
+    ) => Promise<boolean>;
 }
 
 declare namespace App {

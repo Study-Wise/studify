@@ -317,6 +317,44 @@ import '@/styles/components/modal.scss';
         showDialog(message, { title: 'Information', type: 'info' });
     }
 
+    /**
+     * Ask the user to confirm an action in an in-app modal
+     * @param message - The question to display
+     * @param options - Optional title (default 'Are you sure?'), button labels (default 'Confirm' and 'Cancel'), Material icon name and type (default 'warning')
+     * @returns Whether the user confirmed; dismissing the modal counts as cancelling
+     */
+    function showConfirm(
+        message: string,
+        options: { title?: string; confirmLabel?: string; cancelLabel?: string; icon?: string; type?: ModalType } = {},
+    ): Promise<boolean> {
+        const { title = 'Are you sure?', confirmLabel = 'Confirm', cancelLabel = 'Cancel', icon, type = 'warning' } = options;
+
+        return new Promise((resolve) => {
+            let confirmed = false;
+            const confirmModal = createModal({
+                title,
+                message,
+                icon,
+                type,
+                buttons: [
+                    { label: cancelLabel, variant: 'secondary' },
+                    {
+                        label: confirmLabel,
+                        onClick: () => {
+                            confirmed = true;
+                        },
+                    },
+                ],
+                // Each confirmation is single-use, so drop it from the page once it closes
+                onClose: () => {
+                    confirmModal.element.remove();
+                    resolve(confirmed);
+                },
+            });
+            confirmModal.open();
+        });
+    }
+
     // Make functions available globally, including to is:inline scripts
     window.showDialog = showDialog;
     window.showToast = showToast;
@@ -325,4 +363,5 @@ import '@/styles/components/modal.scss';
     window.showSuccess = showSuccessToast;
     window.showSuccessAfterNavigation = showSuccessAfterNavigation;
     window.showInfo = showInfo;
+    window.showConfirm = showConfirm;
 </script>

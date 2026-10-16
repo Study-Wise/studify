@@ -102,9 +102,9 @@ const regenerateButtonId = `regenerate-${id}-btn`;
             newRegenerateBtn.innerHTML = '<span class="material-symbols-outlined" aria-hidden="true">refresh</span>';
             sectionHeader.appendChild(newRegenerateBtn);
 
-            newRegenerateBtn.addEventListener('click', () => {
+            newRegenerateBtn.addEventListener('click', async () => {
                 const confirmMessage = `Are you sure you want to ${regenerateVerb.toLowerCase()} the ${title.toLowerCase()}? This will replace the existing one.`;
-                if (globalThis.confirm(confirmMessage)) {
+                if (await window.showConfirm(confirmMessage, { title: `${regenerateVerb} ${title}?`, confirmLabel: regenerateVerb, icon: 'refresh' })) {
                     generateContent(threadId, true, newRegenerateBtn);
                 }
             });
@@ -169,12 +169,12 @@ const regenerateButtonId = `regenerate-${id}-btn`;
     }
 
     if (regenerateBtn) {
-        regenerateBtn.addEventListener('click', () => {
+        regenerateBtn.addEventListener('click', async () => {
             const tid = regenerateBtn.getAttribute('data-thread-id');
             if (tid) {
                 const confirmMessage = `Are you sure you want to ${regenerateVerb.toLowerCase()} the ${title.toLowerCase()}? This will replace the existing one.`;
 
-                if (globalThis.confirm(confirmMessage)) {
+                if (await window.showConfirm(confirmMessage, { title: `${regenerateVerb} ${title}?`, confirmLabel: regenerateVerb, icon: 'refresh' })) {
                     generateContent(tid, true);
                 }
             }

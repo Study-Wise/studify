@@ -289,9 +289,17 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                 return;
             }
 
-            if (!globalThis.confirm('Are you sure you want to delete this chat? This cannot be undone.')) return;
+            // Use the current title, since the chat may have been renamed since the page loaded
+            const chatTitle = document.querySelector('.chat-title-text')?.textContent?.trim() || 'this chat';
+            const confirmed = await window.showConfirm(
+                'This cannot be undone.',
+                { title: `Delete "${chatTitle}"?`, confirmLabel: 'Delete', icon: 'delete' },
+            );
+            if (!confirmed) return;
 
             deleteChatButton.disabled = true;
+            const originalContent = deleteChatButton.innerHTML;
+            deleteChatButton.innerHTML = '<span class="material-symbols-outlined spinning" aria-hidden="true">progress_activity</span><span>Deleting…</span>';
 
             try {
                 const response = await fetch('/api/thread/delete', {
@@ -314,6 +322,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                 window.showError?.(
                     error instanceof Error ? error.message : 'Failed to delete chat. Please try again.'
                 );
+                deleteChatButton.innerHTML = originalContent;
                 deleteChatButton.disabled = false;
             }
         });

@@ -135,6 +135,10 @@
                     opacity: 0.3;
                     cursor: not-allowed;
                 }
+
+                .spinning {
+                    animation: spin 1s linear infinite;
+                }
             }
         }
 
@@ -258,5 +262,11 @@
                 }
             }
         }
+    }
+}
+
+@keyframes spin {
+    to {
+        rotate: 360deg;
     }
 }

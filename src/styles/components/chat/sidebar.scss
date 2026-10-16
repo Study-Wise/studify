@@ -362,6 +362,10 @@
                     opacity: $opacity-disabled;
                     cursor: not-allowed;
                 }
+
+                .spinning {
+                    animation: spin 1s linear infinite;
+                }
             }
         }
     }
