@@ -120,7 +120,7 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
                 iframe = document.createElement('iframe');
                 iframe.title = contentTypeName;
                 iframe.className = `${contentType}-iframe`;
-                iframe.sandbox = 'allow-scripts allow-same-origin';
+                iframe.sandbox = 'allow-scripts';
                 container.appendChild(iframe);
                 emptyState.replaceWith(container);
             }
