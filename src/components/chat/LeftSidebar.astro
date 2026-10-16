@@ -89,6 +89,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
             hasContent={uploadedFiles.length > 0}
             threadId={threadId}
             id="files"
+            canRegenerate={false}
         >
             <Fragment slot="content">
                 {isAuthorized && (

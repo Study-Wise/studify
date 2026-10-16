@@ -11,6 +11,7 @@ interface Props {
     generateVerb?: string; // e.g., "Generate", "Find", "Create" (default: 'Generate')
     regenerateVerb?: string; // e.g., "Regenerate", "Find New", "Recreate" (default: 'Regenerate')
     isAuthorized?: boolean;
+    canRegenerate?: boolean; // false for sections whose content isn't generated (default: true)
 }
 
 const {
@@ -25,6 +26,7 @@ const {
     generateVerb = 'Generate',
     regenerateVerb = 'Regenerate',
     isAuthorized = true,
+    canRegenerate = true,
 } = Astro.props;
 
 const generateButtonId = `generate-${id}-btn`;
@@ -37,7 +39,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
             <span class="material-symbols-outlined" aria-hidden="true">{icon}</span>
             <h3>{title}</h3>
         </div>
-        {hasContent && isAuthorized && (
+        {hasContent && isAuthorized && canRegenerate && (
             <button type="button" class="regenerate-btn" id={regenerateButtonId} title={`Regenerate ${title}`} aria-label={`Regenerate ${title}`} data-thread-id={threadId}>
                 <span class="material-symbols-outlined" aria-hidden="true">refresh</span>
             </button>
@@ -68,7 +70,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
     </div>
 </div>
 
-<script is:inline define:vars={{ generateButtonId, regenerateButtonId, title, id, generateVerb, regenerateVerb, viewUrl, viewButtonText, threadId }}>
+<script is:inline define:vars={{ generateButtonId, regenerateButtonId, title, id, generateVerb, regenerateVerb, viewUrl, viewButtonText, threadId, canRegenerate }}>
     // Extract the feature type from the button ID (e.g., "generate-study-guide-btn" -> "study-guide")
     const apiEndpoint = `/api/${id}/generate`;
 
@@ -91,7 +93,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
             `;
         }
 
-        if (sectionHeader && !section.querySelector('.regenerate-btn')) {
+        if (canRegenerate && sectionHeader && !section.querySelector('.regenerate-btn')) {
             const newRegenerateBtn = document.createElement('button');
             newRegenerateBtn.type = 'button';
             newRegenerateBtn.className = 'regenerate-btn';
