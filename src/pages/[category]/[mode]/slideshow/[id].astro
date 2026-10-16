@@ -52,7 +52,7 @@ const { html: slideshowHtml } = (isAuthorized || isPublic)
             />
             {slideshowHtml ? (
                 <div class="slideshow-container">
-                    <iframe srcdoc={slideshowHtml} title="Generated Slideshow" sandbox="allow-scripts allow-same-origin" />
+                    <iframe srcdoc={slideshowHtml} title="Generated Slideshow" sandbox="allow-scripts" />
                 </div>
             ) : (
                 <div class="empty-state">
