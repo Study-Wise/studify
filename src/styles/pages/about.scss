@@ -7,6 +7,7 @@
             .profile-picture {
                 anchor-name: --profile-picture-#{$i};
             }
+
             &::before {
                 position-anchor: --profile-picture-#{$i};
             }
