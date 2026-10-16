@@ -295,8 +295,7 @@ Example workflow:
 
 ```text
 ❌ WRONG: "Getting a type error, let me add 'as any' to bypass it"
-✅ CORRECT: "Getting a type error. Let me search for the type definition,
-understand what's expected, and check how similar code handles this case."
+✅ CORRECT: "Getting a type error. Let me search for the type definition, understand what's expected, and check how similar code handles this case."
 ```
 
 This ensures fixes are targeted, maintainable, and don't introduce new issues.
