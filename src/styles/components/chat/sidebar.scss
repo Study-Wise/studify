@@ -167,6 +167,11 @@
             display: flex;
             flex-direction: column;
             gap: $spacing-extra-small;
+
+            // Hints here explain why a button is disabled, so keep them readable
+            .empty-message {
+                opacity: $opacity-overlay;
+            }
         }
 
         .generate-btn {
@@ -176,7 +181,7 @@
             padding: $spacing-small $spacing-medium;
             background-color: list.nth(map.get($accent-colors, primary), 1);
             color: white;
-            border: none;
+            border: 1px solid transparent;
             border-radius: $border-radius-medium;
             cursor: pointer;
             font-size: 0.9rem;
@@ -190,9 +195,23 @@
                 background-color: list.nth(map.get($accent-colors, primary), 2);
             }
 
+            // Muted and dashed so it reads as unavailable, not just a dimmer version of the active button
             &:disabled {
-                opacity: $opacity-subtle;
+                background-color: hsl(from var(--card-bg) h s calc(l - 8%));
+                color: var(--card-text);
+                border-color: var(--card-border);
+                border-style: dashed;
+                opacity: $opacity-disabled;
                 cursor: not-allowed;
+            }
+
+            // While generating, keep the active look with the spinner
+            &:disabled:has(.spinning) {
+                background-color: list.nth(map.get($accent-colors, primary), 1);
+                color: white;
+                border-color: transparent;
+                border-style: solid;
+                opacity: $opacity-subtle;
             }
 
             .spinning {
