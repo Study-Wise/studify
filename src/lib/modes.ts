@@ -2,6 +2,12 @@ import { modules } from '@/lib/tools';
 import { generateModePrompt } from '@/lib/prompt-generator';
 import type { ToolRecord } from '@/lib/tools';
 
+export interface Character {
+    name: string;
+    personality: string;
+    interests: string;
+}
+
 export interface Mode {
     name: string;
     description: string;
@@ -388,7 +394,7 @@ for (const topicKey of Object.keys(categories)) {
     for (const modeKey of Object.keys(modes)) {
         const mode = modes[modeKey];
 
-        const prompt = generateModePrompt(mode.name, topicKey, mode.description);
+        const prompt = generateModePrompt(mode.name, topicKey, mode.description, modeKey);
         mode.prompt = Promise.resolve(prompt);
 
         if (!mode.tools) mode.tools = modules;
