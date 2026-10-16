@@ -388,7 +388,7 @@ for (const topicKey of Object.keys(categories)) {
     for (const modeKey of Object.keys(modes)) {
         const mode = modes[modeKey];
 
-        const prompt = generateModePrompt(mode.name, topicKey);
+        const prompt = generateModePrompt(mode.name, topicKey, mode.description);
         mode.prompt = Promise.resolve(prompt);
 
         if (!mode.tools) mode.tools = modules;
