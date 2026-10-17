@@ -120,33 +120,35 @@
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                        width: 32px;
-                        height: 32px;
-                        background-color: transparent;
+                        width: 40px;
+                        height: 40px;
+                        background-color: rgb(from #{$color-error} r g b / 8%);
                         border: none;
                         border-radius: $border-radius-small;
                         cursor: pointer;
                         flex-shrink: 0;
                         transition: all $transition-base $ease-out;
-                        opacity: 0;
+                        opacity: $opacity-overlay;
 
                         .material-symbols-outlined {
-                            font-size: $font-size-large;
+                            font-size: $font-size-extra-large;
                             color: $color-error;
                         }
 
-                        &:hover {
-                            background-color: rgb(from #{$color-error} r g b / 10%);
+                        &:hover,
+                        &:focus-visible {
+                            opacity: 1;
+                            background-color: rgb(from #{$color-error} r g b / 15%);
                         }
 
                         &:disabled {
-                            opacity: 0.5;
+                            opacity: $opacity-disabled;
                             cursor: not-allowed;
                         }
-                    }
 
-                    &:hover .file-delete {
-                        opacity: 1;
+                        .spinning {
+                            animation: spin 1s linear infinite;
+                        }
                     }
                 }
             }
