@@ -328,12 +328,6 @@ import '@/styles/components/modal.scss';
         });
     }
 
-    /**
-     * Ask the user to confirm an action and optionally type some text with it
-     * @param message - The question to display
-     * @param options - Optional title, button labels, Material icon name and type like showConfirm, plus a label, placeholder and maximum length for the text box
-     * @returns The text the user typed (empty if none) when they confirmed, or null when they cancelled or dismissed the modal
-     */
     function showPrompt(
         message: string,
         options: {

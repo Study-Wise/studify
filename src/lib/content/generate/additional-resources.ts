@@ -62,7 +62,6 @@ export async function generateResources(threadId: string, userPrompt?: string): 
 
     const combinedText = `${conversationText} ${uploadedFilesText}`.trim();
     const topicSummary = combinedText.slice(0, 500);
-    // The user's instructions steer the web searches; simulations still match the topic alone
     const searchTopic = userPrompt ? `${topicSummary} ${userPrompt}` : topicSummary;
 
     const resourceCollection: ResourceCollection = {
@@ -78,7 +77,7 @@ export async function generateResources(threadId: string, userPrompt?: string): 
     try {
         // Science threads also get interactive PhET simulations
         if (SIMULATION_CATEGORIES.includes(thread.category) && !SIMULATION_EXCLUDED_MODES.includes(thread.mode)) {
-            const simulations = await findSimulations(topicSummary);
+            const simulations = await findSimulations(searchTopic);
             resourceCollection.simulations = simulations.map<Resource>(simulation => ({
                 title: simulation.title,
                 url: simulation.pageUrl,
