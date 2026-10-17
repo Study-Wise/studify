@@ -32,7 +32,7 @@ interface ResourceCollection {
     generatedAt: string;
 }
 
-export async function generateResources(threadId: string): Promise<string> {
+export async function generateResources(threadId: string, userPrompt?: string): Promise<string> {
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
     if (threads.length === 0) {
@@ -62,6 +62,8 @@ export async function generateResources(threadId: string): Promise<string> {
 
     const combinedText = `${conversationText} ${uploadedFilesText}`.trim();
     const topicSummary = combinedText.slice(0, 500);
+    // The user's instructions steer the web searches; simulations still match the topic alone
+    const searchTopic = userPrompt ? `${topicSummary} ${userPrompt}` : topicSummary;
 
     const resourceCollection: ResourceCollection = {
         topic: thread.title || 'Study Resources',
@@ -88,7 +90,7 @@ export async function generateResources(threadId: string): Promise<string> {
 
         // Search for YouTube educational videos
         const videoResults = await exa.searchAndContents(
-            `${topicSummary} educational video tutorial explanation`,
+            `${searchTopic} educational video tutorial explanation`,
             {
                 text: true,
                 numResults: 8,
@@ -106,7 +108,7 @@ export async function generateResources(threadId: string): Promise<string> {
 
         // Search for articles and explanations
         const articleResults = await exa.searchAndContents(
-            `${topicSummary} explanation guide article`,
+            `${searchTopic} explanation guide article`,
             {
                 text: true,
                 numResults: 8,
@@ -124,7 +126,7 @@ export async function generateResources(threadId: string): Promise<string> {
 
         // Search for tutorials and step-by-step guides
         const tutorialResults = await exa.searchAndContents(
-            `${topicSummary} tutorial step by step how to`,
+            `${searchTopic} tutorial step by step how to`,
             {
                 text: true,
                 numResults: 8,
@@ -142,7 +144,7 @@ export async function generateResources(threadId: string): Promise<string> {
 
         // Search for official documentation and reference materials
         const docResults = await exa.searchAndContents(
-            `${topicSummary} documentation reference official`,
+            `${searchTopic} documentation reference official`,
             {
                 text: true,
                 numResults: 6,

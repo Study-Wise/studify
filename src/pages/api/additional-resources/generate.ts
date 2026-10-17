@@ -14,7 +14,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();
 
     try {
-        const { threadId } = await request.json();
+        const { threadId, userPrompt } = await request.json();
 
         if (!threadId) {
             console.error(`❌ [${requestId}] No thread ID provided`);
@@ -78,7 +78,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        const content = await generateResources(threadId);
+        const content = await generateResources(threadId, userPrompt);
 
         return new Response(
             JSON.stringify({

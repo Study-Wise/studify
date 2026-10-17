@@ -206,6 +206,26 @@
     }
 }
 
+.modal-input-label {
+    display: block;
+    margin-block: $spacing-small $spacing-extra-small;
+    font-size: $font-size-small;
+    font-weight: $font-weight-medium;
+    color: var(--body-text);
+}
+
+.modal-input {
+    width: 100%;
+    padding: $spacing-extra-small $spacing-small;
+    font: inherit;
+    font-size: $font-size-small;
+    color: var(--body-text);
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: $border-radius-small;
+    resize: vertical;
+}
+
 .modal-footer {
     display: flex;
     justify-content: end;

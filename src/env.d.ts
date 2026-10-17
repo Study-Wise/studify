@@ -19,6 +19,7 @@ interface Window {
     showDialog: (message: string, options?: { title?: string; icon?: string; type?: import('./lib/modal').ModalType }) => void;
     showToast: (message: string, options?: { title?: string; icon?: string; type?: import('./lib/modal').ModalType }) => void;
     showConfirm: (message: string, options?: { title?: string; confirmLabel?: string; cancelLabel?: string; icon?: string; type?: import('./lib/modal').ModalType }) => Promise<boolean>;
+    showPrompt: (message: string, options?: { title?: string; confirmLabel?: string; cancelLabel?: string; icon?: string; type?: import('./lib/modal').ModalType; inputLabel?: string; placeholder?: string; maxLength?: number }) => Promise<string | null>;
     showError: (message: string) => void;
     showWarning: (message: string) => void;
     showSuccess: (message: string) => void;

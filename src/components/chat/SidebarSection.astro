@@ -103,9 +103,9 @@ const regenerateButtonId = `regenerate-${id}-btn`;
             sectionHeader.appendChild(newRegenerateBtn);
 
             newRegenerateBtn.addEventListener('click', async () => {
-                const confirmMessage = `Are you sure you want to ${regenerateVerb.toLowerCase()} the ${title.toLowerCase()}? This will replace the existing one.`;
-                if (await window.showConfirm(confirmMessage, { title: `${regenerateVerb} ${title}?`, confirmLabel: regenerateVerb, icon: 'refresh' })) {
-                    generateContent(threadId, true, newRegenerateBtn);
+                const feedback = await askRegenerateFeedback();
+                if (feedback !== null) {
+                    generateContent(threadId, true, newRegenerateBtn, feedback);
                 }
             });
 
@@ -113,7 +113,22 @@ const regenerateButtonId = `regenerate-${id}-btn`;
         }
     }
 
-    async function generateContent(tid, isRegenerate = false, btnOverride = null) {
+    // Ask whether to regenerate, with optional feedback on what should change. Resolves to the feedback ('' for none), or null when cancelled.
+    function askRegenerateFeedback() {
+        return window.showPrompt(
+            `Are you sure you want to ${regenerateVerb.toLowerCase()} the ${title.toLowerCase()}? This will replace the existing one.`,
+            {
+                title: `${regenerateVerb} ${title}?`,
+                confirmLabel: regenerateVerb,
+                icon: 'refresh',
+                inputLabel: 'What should change? (optional)',
+                placeholder: 'For example: make it shorter, or add more examples',
+                maxLength: 500,
+            },
+        );
+    }
+
+    async function generateContent(tid, isRegenerate = false, btnOverride = null, feedback = '') {
         const btn = btnOverride || (isRegenerate ? regenerateBtn : generateBtn);
         if (!btn) return;
 
@@ -135,7 +150,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ threadId: tid }),
+                body: JSON.stringify({ threadId: tid, userPrompt: feedback }),
             });
 
             const data = await response.json();
@@ -172,10 +187,9 @@ const regenerateButtonId = `regenerate-${id}-btn`;
         regenerateBtn.addEventListener('click', async () => {
             const tid = regenerateBtn.getAttribute('data-thread-id');
             if (tid) {
-                const confirmMessage = `Are you sure you want to ${regenerateVerb.toLowerCase()} the ${title.toLowerCase()}? This will replace the existing one.`;
-
-                if (await window.showConfirm(confirmMessage, { title: `${regenerateVerb} ${title}?`, confirmLabel: regenerateVerb, icon: 'refresh' })) {
-                    generateContent(tid, true);
+                const feedback = await askRegenerateFeedback();
+                if (feedback !== null) {
+                    generateContent(tid, true, null, feedback);
                 }
             }
         });

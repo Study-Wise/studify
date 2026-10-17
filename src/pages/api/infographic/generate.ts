@@ -13,7 +13,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();
 
     try {
-        const { threadId } = await request.json();
+        const { threadId, userPrompt } = await request.json();
 
         if (!threadId) {
             console.error(`❌ [${requestId}] No thread ID provided`);
@@ -78,7 +78,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
 
         // Generate the infographic (always use default model for reliability)
-        const infographic = await generateInfographic(threadId);
+        const infographic = await generateInfographic(threadId, userPrompt);
 
         return new Response(
             JSON.stringify({
