@@ -345,7 +345,6 @@ import '@/styles/components/modal.scss';
                         },
                     },
                 ],
-                // Each confirmation is single-use, so drop it from the page once it closes
                 onClose: () => {
                     confirmModal.element.remove();
                     resolve(confirmed);
