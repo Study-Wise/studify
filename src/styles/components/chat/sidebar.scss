@@ -167,6 +167,10 @@
             display: flex;
             flex-direction: column;
             gap: $spacing-extra-small;
+
+            .empty-message {
+                opacity: $opacity-overlay;
+            }
         }
 
         .generate-btn {
@@ -176,7 +180,7 @@
             padding: $spacing-small $spacing-medium;
             background-color: list.nth(map.get($accent-colors, primary), 1);
             color: white;
-            border: none;
+            border: 1px solid transparent;
             border-radius: $border-radius-medium;
             cursor: pointer;
             font-size: 0.9rem;
@@ -191,8 +195,20 @@
             }
 
             &:disabled {
-                opacity: $opacity-subtle;
+                background-color: hsl(from var(--card-bg) h s calc(l - 8%));
+                color: var(--card-text);
+                border-color: var(--card-border);
+                border-style: dashed;
+                opacity: $opacity-disabled;
                 cursor: not-allowed;
+            }
+
+            &:disabled:has(.spinning) {
+                background-color: list.nth(map.get($accent-colors, primary), 1);
+                color: white;
+                border-color: transparent;
+                border-style: solid;
+                opacity: $opacity-subtle;
             }
 
             .spinning {
