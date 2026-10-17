@@ -204,36 +204,27 @@ if (container) className += ' container'
                 });
             }
 
-            // The Desmos script loads the first time a graph needs it
-            let desmosLoading;
-            function loadDesmos() {
-                desmosLoading ??= new Promise((resolve, reject) => {
-                    const script = document.createElement('script');
-                    script.src = `https://www.desmos.com/api/v1.10/calculator.js?apiKey=${window.desmosApiKey}`;
-                    script.onload = resolve;
-                    script.onerror = () => {
-                        desmosLoading = null;
-                        reject(new Error('Desmos calculator failed to load.'));
-                    };
-                    document.head.append(script);
-                });
-                return desmosLoading;
+            function showDesmosGraphs(graphs) {
+                window.loadDesmos().then(() => renderDesmosGraphs(graphs)).catch(error => console.warn(error.message));
             }
 
             // Set up each graph only when it is about to scroll into view
             const desmosObserver = new IntersectionObserver(entries => {
                 const visible = entries.filter(entry => entry.isIntersecting).map(entry => entry.target);
                 visible.forEach(graph => desmosObserver.unobserve(graph));
-                if (visible.length > 0) {
-                    loadDesmos().then(() => renderDesmosGraphs(visible)).catch(error => console.warn(error.message));
-                }
+                if (visible.length > 0) showDesmosGraphs(visible);
             }, { rootMargin: '200px' });
 
             // Also called when graphs are added later (new chat messages, regenerated content)
             function activateDesmos() {
-                if (!window.desmosApiKey) return;
+                if (!window.loadDesmos) return;
                 document.querySelectorAll('.desmos-graph:not([done])').forEach(graph => desmosObserver.observe(graph));
             }
+
+            // Graphs that never scrolled into view would print blank
+            window.addEventListener('beforeprint', () => {
+                if (window.loadDesmos) showDesmosGraphs(document.querySelectorAll('.desmos-graph:not([done])'));
+            });
 
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', activateDesmos);
@@ -242,6 +233,22 @@ if (container) className += ' container'
                 activateDesmos();
             }
         </script>
-        {desmos && <script is:inline define:vars={{ desmosApiKey }}>window.desmosApiKey = desmosApiKey;</script>}
+        {desmos && <script is:inline define:vars={{ desmosApiKey }}>
+            // Loads the Desmos script the first time a graph needs it
+            let desmosLoading;
+            window.loadDesmos = () => {
+                desmosLoading ??= new Promise((resolve, reject) => {
+                    const script = document.createElement('script');
+                    script.src = `https://www.desmos.com/api/v1.10/calculator.js?apiKey=${desmosApiKey}`;
+                    script.onload = resolve;
+                    script.onerror = () => {
+                        desmosLoading = null;
+                        reject(new Error('Desmos calculator failed to load.'));
+                    };
+                    document.head.append(script);
+                });
+                return desmosLoading;
+            };
+        </script>}
     </body>
 </html>
