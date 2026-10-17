@@ -22,7 +22,6 @@ const pTitle = noTitle ? lTitle : `${title} | ${sTitle}`;
 
 // Desmos API key (https://www.desmos.com/api). Falls back to the public trial key, which is not for production use.
 const desmosApiKey = import.meta.env.DESMOS_API_KEY || process.env.DESMOS_API_KEY || 'dcb31709b452b1cf9dc26972add0fda6';
-const desmosScriptUrl = `https://www.desmos.com/api/v1.10/calculator.js?apiKey=${desmosApiKey}`;
 
 // The TawkTo support widget looks like part of the AI on chat and generated-content pages, so it's left off everything under /[category]/[mode]
 const showTawkTo = !Astro.routePattern.startsWith('/[category]/[mode]');
@@ -157,18 +156,62 @@ if (container) className += ' container'
                 }
             }
 
-            // Load the Desmos script the first time a graph needs it
-            let desmosLoading = null;
-            function loadDesmos() {
-                if (window.Desmos) return Promise.resolve();
-                if (!window.desmosScriptUrl) return Promise.reject(new Error('Desmos calculator not loaded.'));
+            // Render the given Desmos graphs
+            function renderDesmosGraphs(graphs) {
+                graphs.forEach(graph => {
+                    if (!graph) {
+                        console.warn('Desmos graph element not valid.');
+                        return;
+                    }
+                    if (!window.Desmos) {
+                        console.warn('Desmos calculator not loaded.');
+                        return;
+                    }
 
+                    let LaTeX = graph.getAttribute('latex');
+                    if (LaTeX) {
+                        try {
+                            LaTeX = JSON.parse(LaTeX);
+                            const calculator = Desmos.GraphingCalculator(graph, {
+                                expressionsCollapsed: true,
+                                showResetButtonOnGraphpaper: true,
+                            });
+
+                            if (Array.isArray(LaTeX)) {
+                                LaTeX.forEach((l, i) => {
+                                    if (typeof l === 'string') {
+                                        calculator.setExpression({ id: `exp${i + 1}`, latex: l });
+                                    }
+                                    else {
+                                        console.warn(`Desmos expression at index ${i} is not a string:`, l);
+                                    }
+                                });
+                            }
+
+                            const newDefaultState = calculator.getState();
+                            calculator.setDefaultState(newDefaultState);
+                            graph.setAttribute('done', true);
+                        } catch (error) {
+                            console.error('Error parsing/setting Desmos graph data:', error);
+                            console.error('Problematic LaTeX string:', graph.getAttribute('latex'));
+                            graph.innerHTML = `<p><i>Error loading graph. Check console for details.</i><pre>${error}</pre></p>`;
+                        }
+                    }
+                    else {
+                        console.warn('Desmos graph "latex" attribute missing or empty.');
+                        graph.innerHTML = '<p><i>No graph data provided.</i></p>';
+                    }
+                });
+            }
+
+            // The Desmos script loads the first time a graph needs it
+            let desmosLoading;
+            function loadDesmos() {
                 desmosLoading ??= new Promise((resolve, reject) => {
                     const script = document.createElement('script');
-                    script.src = window.desmosScriptUrl;
-                    script.onload = () => resolve();
+                    script.src = `https://www.desmos.com/api/v1.10/calculator.js?apiKey=${window.desmosApiKey}`;
+                    script.onload = resolve;
                     script.onerror = () => {
-                        script.remove();
                         desmosLoading = null;
                         reject(new Error('Desmos calculator failed to load.'));
                     };
@@ -177,78 +220,20 @@ if (container) className += ' container'
                 return desmosLoading;
             }
 
-            function renderDesmosGraph(graph) {
-                if (graph.hasAttribute('done')) return;
-
-                let LaTeX = graph.getAttribute('latex');
-                if (LaTeX) {
-                    try {
-                        LaTeX = JSON.parse(LaTeX);
-                        const calculator = Desmos.GraphingCalculator(graph, {
-                            expressionsCollapsed: true,
-                            showResetButtonOnGraphpaper: true,
-                        });
-
-                        if (Array.isArray(LaTeX)) {
-                            LaTeX.forEach((l, i) => {
-                                if (typeof l === 'string') {
-                                    calculator.setExpression({ id: `exp${i + 1}`, latex: l });
-                                }
-                                else {
-                                    console.warn(`Desmos expression at index ${i} is not a string:`, l);
-                                }
-                            });
-                        }
-
-                        const newDefaultState = calculator.getState();
-                        calculator.setDefaultState(newDefaultState);
-                        graph.setAttribute('done', true);
-                    } catch (error) {
-                        console.error('Error parsing/setting Desmos graph data:', error);
-                        console.error('Problematic LaTeX string:', graph.getAttribute('latex'));
-                        graph.innerHTML = `<p><i>Error loading graph. Check console for details.</i><pre>${error}</pre></p>`;
-                    }
+            // Set up each graph only when it is about to scroll into view
+            const desmosObserver = new IntersectionObserver(entries => {
+                const visible = entries.filter(entry => entry.isIntersecting).map(entry => entry.target);
+                visible.forEach(graph => desmosObserver.unobserve(graph));
+                if (visible.length > 0) {
+                    loadDesmos().then(() => renderDesmosGraphs(visible)).catch(error => console.warn(error.message));
                 }
-                else {
-                    console.warn('Desmos graph "latex" attribute missing or empty.');
-                    graph.innerHTML = '<p><i>No graph data provided.</i></p>';
-                }
-            }
+            }, { rootMargin: '200px' });
 
-            function loadAndRenderDesmosGraph(graph) {
-                loadDesmos()
-                    .then(() => renderDesmosGraph(graph))
-                    .catch(error => console.warn(error.message));
-            }
-
-            // Set up each graph only when it scrolls into view (a little early, so it is ready on arrival)
-            const desmosObserver = 'IntersectionObserver' in window
-                ? new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (!entry.isIntersecting) return;
-                        desmosObserver.unobserve(entry.target);
-                        loadAndRenderDesmosGraph(entry.target);
-                    });
-                }, { rootMargin: '200px' })
-                : null;
-
-            // Pick up graphs on the page, including ones added later (new chat messages, regenerated content)
+            // Also called when graphs are added later (new chat messages, regenerated content)
             function activateDesmos() {
-                document.querySelectorAll('.desmos-graph:not([done]):not([data-desmos-observed])').forEach(graph => {
-                    graph.setAttribute('data-desmos-observed', '');
-                    if (desmosObserver) {
-                        desmosObserver.observe(graph);
-                    }
-                    else {
-                        loadAndRenderDesmosGraph(graph);
-                    }
-                });
+                if (!window.desmosApiKey) return;
+                document.querySelectorAll('.desmos-graph:not([done])').forEach(graph => desmosObserver.observe(graph));
             }
-
-            // Graphs that never scrolled into view would print blank, so set them all up before printing
-            window.addEventListener('beforeprint', () => {
-                document.querySelectorAll('.desmos-graph:not([done])').forEach(loadAndRenderDesmosGraph);
-            });
 
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', activateDesmos);
@@ -257,6 +242,6 @@ if (container) className += ' container'
                 activateDesmos();
             }
         </script>
-        {desmos && <script is:inline define:vars={{ desmosScriptUrl }}>window.desmosScriptUrl = desmosScriptUrl;</script>}
+        {desmos && <script is:inline define:vars={{ desmosApiKey }}>window.desmosApiKey = desmosApiKey;</script>}
     </body>
 </html>
