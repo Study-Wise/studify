@@ -289,7 +289,6 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                 return;
             }
 
-            // Use the current title, since the chat may have been renamed since the page loaded
             const chatTitle = document.querySelector('.chat-title-text')?.textContent?.trim() || 'this chat';
             const confirmed = await window.showConfirm(
                 'This cannot be undone.',

@@ -18,15 +18,12 @@ interface Window {
     authUtils: import('./lib/auth/types').AuthUtils;
     showDialog: (message: string, options?: { title?: string; icon?: string; type?: import('./lib/modal').ModalType }) => void;
     showToast: (message: string, options?: { title?: string; icon?: string; type?: import('./lib/modal').ModalType }) => void;
+    showConfirm: (message: string, options?: { title?: string; confirmLabel?: string; cancelLabel?: string; icon?: string; type?: import('./lib/modal').ModalType }) => Promise<boolean>;
     showError: (message: string) => void;
     showWarning: (message: string) => void;
     showSuccess: (message: string) => void;
     showSuccessAfterNavigation: (message: string) => void;
     showInfo: (message: string) => void;
-    showConfirm: (
-        message: string,
-        options?: { title?: string; confirmLabel?: string; cancelLabel?: string; icon?: string; type?: 'info' | 'error' | 'warning' | 'success' },
-    ) => Promise<boolean>;
 }
 
 declare namespace App {
