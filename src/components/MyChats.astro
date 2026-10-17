@@ -129,7 +129,7 @@ const threadsByCategory = threads.reduce<Record<string, typeof threads>>((acc, t
             // Reload to show the empty state when no chats remain
             if (!document.querySelector('.my-chats-container .thread-row')) {
                 window.showSuccessAfterNavigation?.('Chat deleted');
-                globalThis.location.reload();
+                window.location.reload();
                 return;
             }
 

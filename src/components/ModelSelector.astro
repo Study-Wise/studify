@@ -52,7 +52,7 @@ const selectorSettings: SelectorSettings = {
 
         function getSettings() {
             try {
-                return JSON.parse(globalThis.localStorage.getItem('settings') || '{}');
+                return JSON.parse(localStorage.getItem('settings') || '{}');
             } catch {
                 return {};
             }
@@ -61,7 +61,7 @@ const selectorSettings: SelectorSettings = {
         function setSetting(key, value) {
             const userSettings = getSettings();
             userSettings[key] = value;
-            globalThis.localStorage.setItem('settings', JSON.stringify(userSettings));
+            localStorage.setItem('settings', JSON.stringify(userSettings));
         }
 
         const userSettings = getSettings();

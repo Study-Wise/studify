@@ -4,7 +4,7 @@ const { providers, defaultProvider, defaultTier } = Astro.props;
 <script is:inline define:vars={{ providers, defaultProvider, defaultTier }}>
     function getSettings() {
         try {
-            return JSON.parse(globalThis.localStorage.getItem('settings')) || {};
+            return JSON.parse(localStorage.getItem('settings')) || {};
         } catch {
             return {};
         }
@@ -13,7 +13,7 @@ const { providers, defaultProvider, defaultTier } = Astro.props;
     function setSetting(key, value) {
         const userSettings = getSettings();
         userSettings[key] = value;
-        globalThis.localStorage.setItem('settings', JSON.stringify(userSettings));
+        localStorage.setItem('settings', JSON.stringify(userSettings));
     }
 
     function initializeUI() {

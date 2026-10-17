@@ -34,7 +34,7 @@ import '@/styles/accessibility/touch-gestures.scss';
         isTouchDevice() {
             return (
                 'ontouchstart' in globalThis ||
-                globalThis.navigator.maxTouchPoints > 0 ||
+                window.navigator.maxTouchPoints > 0 ||
                 (window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches)
             );
         }
@@ -127,8 +127,8 @@ import '@/styles/accessibility/touch-gestures.scss';
             `;
 
             // Simulate refresh
-            globalThis.setTimeout(() => {
-                globalThis.location.reload();
+            setTimeout(() => {
+                window.location.reload();
             }, 1000);
         }
     }

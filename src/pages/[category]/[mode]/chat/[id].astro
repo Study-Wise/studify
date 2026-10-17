@@ -173,7 +173,7 @@ export const inNav = 'hide';
         const messageEles = document.querySelectorAll('.chat-messages > .message');
         const outputTabs = ['study-guide', 'reference-sheet'];
 
-        globalThis.setTimeout(() => {
+        setTimeout(() => {
             messageEles.forEach(message => {
                 const classes = [...message.classList].filter(cls => !classesToIgnore.includes(cls));
                 const type = classes.join(',')

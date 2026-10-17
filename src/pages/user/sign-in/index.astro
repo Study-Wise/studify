@@ -89,7 +89,7 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
         e.preventDefault();
         hideError();
 
-        const formData = new globalThis.FormData(form);
+        const formData = new window.FormData(form);
         const email = formData.get('email');
         const password = formData.get('password');
         if (typeof email !== 'string' || typeof password !== 'string') return;
@@ -104,7 +104,7 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
                 showError(error.message || 'Sign in failed. Please check your credentials.');
             }
             else {
-                globalThis.location.href = getClientSafeReturnBackUrl(new globalThis.URLSearchParams(globalThis.location.search).get('returnBackUrl'));
+                window.location.href = getClientSafeReturnBackUrl(new globalThis.URLSearchParams(window.location.search).get('returnBackUrl'));
             }
         } catch (error) {
             console.error('Sign in error:', error);

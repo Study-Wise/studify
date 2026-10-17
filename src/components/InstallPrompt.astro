@@ -31,7 +31,7 @@ import '@/styles/components/install-prompt.scss';
 
         let isDismissed;
         try {
-            isDismissed = globalThis.localStorage.getItem(dismissedKey) === 'true';
+            isDismissed = localStorage.getItem(dismissedKey) === 'true';
         } catch {
             isDismissed = false;
         }
@@ -51,7 +51,7 @@ import '@/styles/components/install-prompt.scss';
     dismissBtn?.addEventListener('click', () => {
         hide();
         try {
-            globalThis.localStorage.setItem(dismissedKey, 'true');
+            localStorage.setItem(dismissedKey, 'true');
         } catch {
             return;
         }

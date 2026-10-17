@@ -11,7 +11,7 @@ const { page, category, mode, id } = Astro.props;
 
     function loadUserSettings() {
         try {
-            userSettings = JSON.parse(globalThis.localStorage?.getItem('settings') || '{}') || {};
+            userSettings = JSON.parse(localStorage?.getItem('settings') || '{}') || {};
         } catch {
             userSettings = {};
         }
@@ -22,7 +22,7 @@ const { page, category, mode, id } = Astro.props;
     }
 
     function getProviderAndTier() {
-        const settings = JSON.parse(globalThis.localStorage.getItem('settings') || '{}');
+        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
         return {
             provider: settings.provider || 'openai',
             tier: settings.tier || 'default',
@@ -53,7 +53,7 @@ const { page, category, mode, id } = Astro.props;
     // Leave the page locked while the browser navigates to the new chat
     function redirectToChat(chatId) {
         isRedirecting = true;
-        globalThis.location.href = `/${category}/${mode}/chat/${chatId}`;
+        window.location.href = `/${category}/${mode}/chat/${chatId}`;
     }
 
     // Unlock the page if Back restores it from the back/forward cache mid-redirect
@@ -302,12 +302,12 @@ const { page, category, mode, id } = Astro.props;
     async function withTimeout(promise, ms, message) {
         let timer;
         const timeout = new Promise((_, reject) => {
-            timer = globalThis.setTimeout(() => reject(new Error(message)), ms);
+            timer = setTimeout(() => reject(new Error(message)), ms);
         });
         try {
             return await Promise.race([promise, timeout]);
         } finally {
-            globalThis.clearTimeout(timer);
+            clearTimeout(timer);
         }
     }
 
@@ -409,7 +409,7 @@ const { page, category, mode, id } = Astro.props;
     // Landing page: wait for the reply to be saved, then open the new chat
     async function readHomeStream(response) {
         const reader = response.body.getReader();
-        const decoder = new globalThis.TextDecoder();
+        const decoder = new window.TextDecoder();
         let buffer = '';
 
         while (true) {
@@ -452,7 +452,7 @@ const { page, category, mode, id } = Astro.props;
         if (!chatMessages) return;
 
         const reader = response.body.getReader();
-        const decoder = new globalThis.TextDecoder();
+        const decoder = new window.TextDecoder();
         let buffer = '';
         let messageDiv = null;
         let messageContent = null;
@@ -557,7 +557,7 @@ const { page, category, mode, id } = Astro.props;
                 }));
             }
             if (isNewChat && doneData.id && category && mode) {
-                globalThis.location.href = `/${category}/${mode}/chat/${doneData.id}`;
+                window.location.href = `/${category}/${mode}/chat/${doneData.id}`;
             }
             else if (doneData.id) threadId = doneData.id;
         }
@@ -582,7 +582,7 @@ const { page, category, mode, id } = Astro.props;
             const isNewChat = (id === 'new');
 
             if (isNewChat && data.id && category && mode) {
-                globalThis.location.href = `/${category}/${mode}/chat/${data.id}`;
+                window.location.href = `/${category}/${mode}/chat/${data.id}`;
             }
             else {
                 await addMessage('assistant', data);
@@ -783,7 +783,7 @@ const { page, category, mode, id } = Astro.props;
 
     // Extract thread id from the chat page URL; null for "new" so the API creates a thread
     function getThreadIdFromUrl() {
-        let pathSegments = globalThis.location.pathname;
+        let pathSegments = window.location.pathname;
         if (pathSegments.endsWith('/')) pathSegments = pathSegments.slice(0, -1);
         const idFromUrl = pathSegments.split('/').pop();
         if (idFromUrl && idFromUrl !== 'chat' && idFromUrl !== 'new') return idFromUrl;

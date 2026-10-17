@@ -21,7 +21,7 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
     function updateOnlineStatus() {
         const indicator = document.getElementById('offline-indicator');
         if (indicator) {
-            indicator.style.display = globalThis.navigator.onLine ? 'none' : 'flex';
+            indicator.style.display = window.navigator.onLine ? 'none' : 'flex';
         }
     }
 
@@ -31,7 +31,7 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
     updateOnlineStatus();
 
     // Service Worker registration and update handling
-    if ('serviceWorker' in globalThis.navigator) {
+    if ('serviceWorker' in window.navigator) {
         window.addEventListener('load', async () => {
             if (isProd) {
                 try {
@@ -45,13 +45,13 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
     }
 
     async function swRegistration() {
-        const registration = await globalThis.navigator.serviceWorker.register('/sw.js');
+        const registration = await window.navigator.serviceWorker.register('/sw.js');
 
         registration.addEventListener('updatefound', () => {
             const newWorker = registration.installing;
             if (newWorker) {
                 newWorker.addEventListener('statechange', () => {
-                    if (newWorker.state === 'installed' && globalThis.navigator.serviceWorker.controller) {
+                    if (newWorker.state === 'installed' && window.navigator.serviceWorker.controller) {
                         // New version available
                         const updateIndicator = document.getElementById('update-available');
                         const updateButton = document.getElementById('update-button');
@@ -63,7 +63,7 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
                         if (updateButton) {
                             updateButton.addEventListener('click', () => {
                                 newWorker.postMessage({ action: 'skipWaiting' });
-                                globalThis.location.reload();
+                                window.location.reload();
                             });
                         }
                     }
@@ -71,9 +71,9 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
             }
         });
 
-        globalThis.navigator.serviceWorker.addEventListener('message', (event) => {
+        window.navigator.serviceWorker.addEventListener('message', (event) => {
             if (event.data && event.data.action === 'reload') {
-                globalThis.location.reload();
+                window.location.reload();
             }
         });
     }
@@ -87,7 +87,7 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
         async cacheStudyMaterials(data) {
             if ('caches' in globalThis) {
                 try {
-                    const cache = await globalThis.caches.open(this.cacheName);
+                    const cache = await window.caches.open(this.cacheName);
                     const response = new Response(JSON.stringify(data), {
                         headers: { 'Content-Type': 'application/json' }
                     });
@@ -101,7 +101,7 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
         async getCachedStudyMaterials() {
             if ('caches' in globalThis) {
                 try {
-                    const cache = await globalThis.caches.open(this.cacheName);
+                    const cache = await window.caches.open(this.cacheName);
                     const response = await cache.match('/offline-study-materials');
                     if (response) return await response.json();
                 } catch (error) {
@@ -120,7 +120,7 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
         try {
             return await originalFetch.apply(this, args);
         } catch (error) {
-            if (!globalThis.navigator.onLine) {
+            if (!window.navigator.onLine) {
                 // Handle offline scenarios
                 console.warn('Network request failed - offline mode');
 
