@@ -317,12 +317,6 @@ import '@/styles/components/modal.scss';
         showDialog(message, { title: 'Information', type: 'info' });
     }
 
-    /**
-     * Ask the user to confirm an action in an in-app modal
-     * @param message - The question to display
-     * @param options - Optional title (default 'Are you sure?'), button labels (default 'Confirm' and 'Cancel'), Material icon name and type (default 'warning')
-     * @returns Whether the user confirmed; dismissing the modal counts as cancelling
-     */
     function showConfirm(
         message: string,
         options: { title?: string; confirmLabel?: string; cancelLabel?: string; icon?: string; type?: ModalType } = {},
