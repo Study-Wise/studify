@@ -108,15 +108,15 @@ import '@/styles/components/modal.scss';
             if (element.open && !isToast) focusPrimaryButton();
         }
 
-        let dismissTimer: ReturnType<typeof globalThis.setTimeout> | undefined;
+        let dismissTimer: ReturnType<typeof setTimeout> | undefined;
         function stopDismissTimer() {
-            globalThis.clearTimeout(dismissTimer);
+            clearTimeout(dismissTimer);
             dismissTimer = undefined;
         }
         function startDismissTimer() {
             stopDismissTimer();
             if (isToast && duration > 0 && element.open && !element.matches(':hover, :focus-within')) {
-                dismissTimer = globalThis.setTimeout(() => element.close(), duration);
+                dismissTimer = setTimeout(() => element.close(), duration);
             }
         }
 
@@ -268,7 +268,7 @@ import '@/styles/components/modal.scss';
     // Show a success toast on the next page the user lands on, for actions that navigate away right after succeeding (e.g. deleting a chat)
     function showSuccessAfterNavigation(message: string) {
         try {
-            globalThis.sessionStorage.setItem(pendingSuccessKey, message);
+            sessionStorage.setItem(pendingSuccessKey, message);
         } catch {
             // Storage unavailable (e.g. blocked site data), so show it now instead
             showSuccessToast(message);
@@ -276,9 +276,9 @@ import '@/styles/components/modal.scss';
     }
 
     try {
-        const pendingSuccess = globalThis.sessionStorage.getItem(pendingSuccessKey);
+        const pendingSuccess = sessionStorage.getItem(pendingSuccessKey);
         if (pendingSuccess) {
-            globalThis.sessionStorage.removeItem(pendingSuccessKey);
+            sessionStorage.removeItem(pendingSuccessKey);
             showSuccessToast(pendingSuccess);
         }
     } catch {

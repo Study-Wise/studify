@@ -179,14 +179,14 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
         if (!shareLinkInput?.value) return;
 
         try {
-            await globalThis.navigator.clipboard.writeText(shareLinkInput.value);
+            await window.navigator.clipboard.writeText(shareLinkInput.value);
 
             const copyIcon = shareLinkCopy.querySelector('.material-symbols-outlined');
             const copyText = shareLinkCopy.querySelector('.share-link-copy-text');
             if (copyIcon) copyIcon.textContent = 'check';
             if (copyText) copyText.textContent = 'Copied';
 
-            globalThis.setTimeout(() => {
+            setTimeout(() => {
                 if (copyIcon) copyIcon.textContent = 'content_copy';
                 if (copyText) copyText.textContent = 'Copy';
             }, 2000);
@@ -286,7 +286,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
             // Nothing persisted yet for an unsaved chat, so just start over
             if (!currentThreadId || currentThreadId === 'new') {
                 window.showSuccessAfterNavigation?.('Chat deleted');
-                globalThis.location.href = newChatUrl;
+                window.location.href = newChatUrl;
                 return;
             }
 
@@ -312,7 +312,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
 
                 if (data.status === 'success') {
                     window.showSuccessAfterNavigation?.('Chat deleted');
-                    globalThis.location.href = newChatUrl;
+                    window.location.href = newChatUrl;
                 }
                 else {
                     throw new Error(data.error || 'Failed to delete chat');
@@ -336,7 +336,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
             // Use the provider and tier saved on /settings, like the chat script does
             let settings;
             try {
-                settings = JSON.parse(globalThis.localStorage.getItem('settings') || '{}') || {};
+                settings = JSON.parse(localStorage.getItem('settings') || '{}') || {};
             } catch {
                 settings = {};
             }
@@ -408,7 +408,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                 let data;
 
                 if (file.size <= CHUNK_THRESHOLD) {
-                    const formData = new globalThis.FormData();
+                    const formData = new window.FormData();
                     formData.append('file', file);
                     formData.append('threadId', activeThreadId);
 
@@ -436,7 +436,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
 
                         window.showInfo?.(`Uploading ${file.name}... chunk ${i + 1}/${totalChunks}`);
 
-                        const chunkForm = new globalThis.FormData();
+                        const chunkForm = new window.FormData();
                         chunkForm.append('chunk', chunk);
                         chunkForm.append('uploadId', uploadId);
                         chunkForm.append('chunkIndex', String(i));

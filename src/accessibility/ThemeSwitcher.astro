@@ -7,7 +7,7 @@ import '@/styles/accessibility/theme-switcher.scss';
 </button>
 
 <script>
-    let userTheme = globalThis.localStorage.getItem('user-theme') as keyof typeof themes || 'system';
+    let userTheme = localStorage.getItem('user-theme') as keyof typeof themes || 'system';
 
     const themeSwitcher = document.querySelector('.theme-switcher') || document.createElement('div');
     const switcherIcon = themeSwitcher.querySelector('.material-symbols-outlined') || document.createElement('span');
@@ -38,7 +38,7 @@ import '@/styles/accessibility/theme-switcher.scss';
         switcherIcon.textContent = theme.icon;
         document.documentElement.setAttribute('data-theme', t);
         themeSwitcher.setAttribute('aria-label', theme.ariaLabel);
-        globalThis.localStorage.setItem('user-theme', t);
+        localStorage.setItem('user-theme', t);
     }
 
     function addListener() {
