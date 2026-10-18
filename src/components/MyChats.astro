@@ -13,10 +13,9 @@ const userEmail = user.email;
 
 const threads = await getUserThreads(userEmail);
 
-const threadsByCategory = threads.reduce<Record<string, typeof threads>>((acc, thread) => {
-    const categoryKey = thread.category;
-    if (!acc[categoryKey]) acc[categoryKey] = [];
-    acc[categoryKey].push(thread);
+const threadsByCategory = threads.reduce<Record<string, Record<string, typeof threads>>>((acc, thread) => {
+    const categoryThreads = (acc[thread.category] ??= {});
+    (categoryThreads[thread.mode] ??= []).push(thread);
     return acc;
 }, {});
 ---
@@ -31,53 +30,61 @@ const threadsByCategory = threads.reduce<Record<string, typeof threads>>((acc, t
         </div>
     ) : (
         <div class="threads-container">
-            {Object.entries(threadsByCategory).map(([categoryKey, categoryThreads]) => {
+            {Object.entries(threadsByCategory).map(([categoryKey, threadsByMode]) => {
                 const category = categories[categoryKey];
                 if (!category) return null;
 
                 return (
                     <section class="category-section card">
                         <h2 class="category-title">{category.name}</h2>
-                        <div class="threads-list">
-                            {categoryThreads.map((thread) => {
-                                const mode = category.modes[thread.mode];
-                                const displayTitle = thread.title.trim() || (mode ? mode.name : thread.mode);
-                                const chatUrl = `/${categoryKey}/${thread.mode}/chat/${thread.id}`;
+                        {Object.entries(threadsByMode).map(([modeKey, modeThreads]) => {
+                            const mode = category.modes[modeKey];
 
-                                return (
-                                    <div class="thread-row" data-thread-id={thread.id}>
-                                        <a href={chatUrl} class="thread-card">
-                                            <div class="thread-header">
-                                                <div class="thread-info">
-                                                    {mode && <span class="mode-icon">{mode.icon}</span>}
-                                                    <div class="thread-text">
-                                                        <h3 class="thread-title">{displayTitle}</h3>
-                                                        <p class="thread-mode">
-                                                            {mode ? mode.name : thread.mode}
-                                                        </p>
-                                                    </div>
+                            return (
+                                <div class="mode-section">
+                                    <h3 class="mode-title">{mode ? mode.name : modeKey}</h3>
+                                    <div class="threads-list">
+                                        {modeThreads.map((thread) => {
+                                            const displayTitle = thread.title.trim() || (mode ? mode.name : thread.mode);
+                                            const chatUrl = `/${categoryKey}/${thread.mode}/chat/${thread.id}`;
+
+                                            return (
+                                                <div class="thread-row" data-thread-id={thread.id}>
+                                                    <a href={chatUrl} class="thread-card">
+                                                        <div class="thread-header">
+                                                            <div class="thread-info">
+                                                                {mode && <span class="mode-icon">{mode.icon}</span>}
+                                                                <div class="thread-text">
+                                                                    <h3 class="thread-title">{displayTitle}</h3>
+                                                                    <p class="thread-mode">
+                                                                        {mode ? mode.name : thread.mode}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="thread-meta">
+                                                                <span class="thread-date">
+                                                                    <LocalTime date={thread.updatedAt} locale="en-US" options={{ dateStyle: 'medium', timeStyle: 'short' }} />
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                    <button
+                                                        type="button"
+                                                        class="thread-delete"
+                                                        data-thread-id={thread.id}
+                                                        data-thread-title={displayTitle}
+                                                        title="Delete chat"
+                                                        aria-label={`Delete chat: ${displayTitle}`}
+                                                    >
+                                                        <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+                                                    </button>
                                                 </div>
-                                                <div class="thread-meta">
-                                                    <span class="thread-date">
-                                                        <LocalTime date={thread.updatedAt} locale="en-US" options={{ dateStyle: 'medium', timeStyle: 'short' }} />
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <button
-                                            type="button"
-                                            class="thread-delete"
-                                            data-thread-id={thread.id}
-                                            data-thread-title={displayTitle}
-                                            title="Delete chat"
-                                            aria-label={`Delete chat: ${displayTitle}`}
-                                        >
-                                            <span class="material-symbols-outlined" aria-hidden="true">delete</span>
-                                        </button>
+                                            );
+                                        })}
                                     </div>
-                                );
-                            })}
-                        </div>
+                                </div>
+                            );
+                        })}
                     </section>
                 );
             })}
@@ -118,10 +125,14 @@ const threadsByCategory = threads.reduce<Record<string, typeof threads>>((acc, t
             }
 
             const row = deleteButton.closest('.thread-row');
+            const modeSection = row?.closest('.mode-section');
             const section = row?.closest('.category-section');
             row?.remove();
 
-            // Remove the category section if it has no chats left
+            // Remove the mode and category sections if they have no chats left
+            if (modeSection && !modeSection.querySelector('.thread-row')) {
+                modeSection.remove();
+            }
             if (section && !section.querySelector('.thread-row')) {
                 section.remove();
             }

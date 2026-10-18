@@ -90,6 +90,16 @@
             }
         }
 
+        .mode-section + .mode-section {
+            margin-top: $spacing-large;
+        }
+
+        .mode-title {
+            font-size: $font-size-large;
+            font-weight: $font-weight-medium;
+            margin-bottom: $spacing-medium;
+        }
+
         .threads-list {
             display: flex;
             flex-direction: column;
