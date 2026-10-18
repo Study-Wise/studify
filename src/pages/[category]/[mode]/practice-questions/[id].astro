@@ -66,4 +66,36 @@ const parsedContent = latestPracticeQuestions ? await marked.parse(latestPractic
         </>
     )}
     <StepByStepScript />
+    <script is:inline>
+        // Adds a "Retry wrong ones" button to each quiz, shown once a question has been answered wrongly
+        document.querySelectorAll('.practice-questions-content .step-by-step').forEach(section => {
+            const retryButton = document.createElement('button');
+            retryButton.type = 'button';
+            retryButton.className = 'retry-wrong';
+            retryButton.textContent = 'Retry wrong ones';
+            retryButton.hidden = true;
+            section.append(retryButton);
+
+            const getWrongSteps = () => [...section.querySelectorAll('.step')].filter(step => {
+                const selected = step.querySelector('.step-question-choice[data-variant="selected"]');
+                return selected && selected.dataset.type !== 'correct';
+            });
+
+            section.addEventListener('click', () => {
+                retryButton.hidden = getWrongSteps().length === 0;
+            });
+
+            retryButton.addEventListener('click', () => {
+                getWrongSteps().forEach(step => {
+                    step.querySelectorAll('.step-question-choice').forEach(choice => {
+                        delete choice.dataset.variant;
+                        choice.querySelector('.step-question-radio').checked = false;
+                    });
+                    delete step.querySelector('.step-question-choices').dataset.answered;
+                    step.querySelectorAll('.answer-explanation').forEach(explanation => delete explanation.dataset.visible);
+                });
+                retryButton.hidden = true;
+            });
+        });
+    </script>
 </Layout>

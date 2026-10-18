@@ -6,6 +6,22 @@
     min-height: 60vh;
 
     .practice-questions-content {
+        .retry-wrong {
+            margin-block-start: $spacing-medium;
+            padding: $spacing-small $spacing-medium;
+            font: inherit;
+            color: var(--body-text);
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: $border-radius-medium;
+            cursor: pointer;
+
+            &:hover,
+            &:focus-visible {
+                background-color: var(--message-bg);
+            }
+        }
+
         h1, h2, h3, h4, h5, h6 {
             color: var(--section-title);
             margin-block: 1.5rem 1rem;
