@@ -245,8 +245,7 @@ import '@/styles/components/modal.scss';
         toast.open();
     }
 
-    // Show a success message as a non-blocking toast. It never replaces an
-    // error dialog; while one is showing, the toast waits for it to close.
+    // Show a success message as a non-blocking toast. It never replaces an error dialog; while one is showing, the toast waits for it to close.
     function showSuccessToast(message: string) {
         // A success message ends whatever was in progress, so a status update on screen or waiting (e.g. "Uploading...") is no longer needed. Errors are kept.
         pendingNotice = null;
@@ -266,8 +265,7 @@ import '@/styles/components/modal.scss';
     // Success message carried across a navigation, shown once the next page loads
     const pendingSuccessKey = 'pending-success-toast';
 
-    // Show a success toast on the next page the user lands on, for actions
-    // that navigate away right after succeeding (e.g. deleting a chat)
+    // Show a success toast on the next page the user lands on, for actions that navigate away right after succeeding (e.g. deleting a chat)
     function showSuccessAfterNavigation(message: string) {
         try {
             globalThis.sessionStorage.setItem(pendingSuccessKey, message);
