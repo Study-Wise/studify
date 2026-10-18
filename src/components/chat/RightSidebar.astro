@@ -45,11 +45,12 @@ const practiceQuestionsUrl = `/${category}/${mode}/practice-questions/${threadId
 const slideshowUrl = `/${category}/${mode}/slideshow/${threadId}`;
 const summaryUrl = `/${category}/${mode}/summary/${threadId}`;
 ---
-<aside class="chat-sidebar right" id="chat-sidebar-right" aria-label="Study materials">
+<aside class="chat-sidebar right" aria-label="Study materials">
     <div class="chat-sidebar-content right">
-        <button type="button" class="sidebar-drawer-close" aria-label="Close study materials">
+        <label class="sidebar-drawer-close" for="sidebar-drawer-closed">
             <span class="material-symbols-outlined" aria-hidden="true">close</span>
-        </button>
+            <span class="sr-only">Close study materials</span>
+        </label>
         <SidebarSection
             title="Chat Summary"
             icon="summarize"

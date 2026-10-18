@@ -428,22 +428,24 @@
         color: list.nth(map.get($accent-colors, primary), 1);
     }
 
-    &:hover,
-    &[aria-expanded="true"] {
+    &:hover {
         background-color: rgb(from var(--card-text) r g b / 5%);
         border-color: list.nth(map.get($accent-colors, primary), 1);
     }
 }
 
+body:has(.sidebar-drawer-input.left:focus-visible) .sidebar-drawer-toggle.left,
+body:has(.sidebar-drawer-input.right:focus-visible) .sidebar-drawer-toggle.right {
+    outline: 2px solid list.nth(map.get($accent-colors, primary), 1);
+    outline-offset: 2px;
+}
+
 .sidebar-drawer-backdrop {
+    display: none;
     position: fixed;
     inset: 0;
     z-index: $z-index-popover - 1;
     background-color: rgb(0 0 0 / 40%);
-
-    &[hidden] {
-        display: none;
-    }
 }
 
 .sidebar-drawer-close {
@@ -463,20 +465,8 @@
             translate $transition-slow $ease-in-out,
             visibility 0s linear $transition-slow;
 
-        &.is-open {
-            visibility: visible;
-            translate: 0;
-            transition:
-                translate $transition-slow $ease-in-out,
-                visibility 0s;
-        }
-
         @media (prefers-reduced-motion: reduce) {
             transition: none;
-
-            &.is-open {
-                transition: none;
-            }
         }
     }
 
@@ -488,6 +478,29 @@
     .chat-sidebar.right {
         inset-inline-end: 0;
         translate: 100% 0;
+    }
+
+    body:has(.sidebar-drawer-input.left:checked) .chat-sidebar.left,
+    body:has(.sidebar-drawer-input.right:checked) .chat-sidebar.right {
+        visibility: visible;
+        translate: 0;
+        transition:
+            translate $transition-slow $ease-in-out,
+            visibility 0s;
+
+        @media (prefers-reduced-motion: reduce) {
+            transition: none;
+        }
+    }
+
+    body:has(.sidebar-drawer-input.left:checked, .sidebar-drawer-input.right:checked) .sidebar-drawer-backdrop {
+        display: block;
+    }
+
+    body:has(.sidebar-drawer-input.left:checked) .sidebar-drawer-toggle.left,
+    body:has(.sidebar-drawer-input.right:checked) .sidebar-drawer-toggle.right {
+        background-color: rgb(from var(--card-text) r g b / 5%);
+        border-color: list.nth(map.get($accent-colors, primary), 1);
     }
 
     .sidebar-drawer-close {
