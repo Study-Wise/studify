@@ -121,6 +121,11 @@ export const inNav = 'hide';
                         {modeObj.icon && <div class="empty-state-icon" aria-hidden="true">{modeObj.icon}</div>}
                         <h3>Let's study {modeName}!</h3>
                         <p>{modeObj.description}. Ask a question below to get started.</p>
+                        <div class="example-prompts">
+                            {[`Explain the basics of ${modeName}`, `Quiz me on ${modeName}`, `What are common mistakes students make in ${modeName}?`].map(prompt => (
+                                <button type="button" class="example-prompt">{prompt}</button>
+                            ))}
+                        </div>
                     </div>
                 ) : isAuthorized || isPublic ? (
                     processedMessages.map(message => (
@@ -187,6 +192,15 @@ export const inNav = 'hide';
                 });
             });
         }, 1000);
+
+        document.querySelectorAll('.example-prompt').forEach(button => {
+            button.addEventListener('click', () => {
+                const messageInput = document.getElementById('message-input');
+                messageInput.value = button.textContent;
+                messageInput.dispatchEvent(new Event('input'));
+                document.querySelector('.send-button').click();
+            });
+        });
 
         window.addEventListener('load', () => {
             const chatMessages = document.querySelector('.chat-messages');

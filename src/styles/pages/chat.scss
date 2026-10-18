@@ -103,6 +103,31 @@
         color: var(--body-text);
         line-height: $line-height-relaxed;
     }
+
+    .example-prompts {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: $spacing-small;
+
+        .example-prompt {
+            padding: $spacing-small $spacing-medium;
+            background-color: var(--card-bg);
+            color: var(--body-text);
+            border: 1px solid var(--card-border);
+            border-radius: $border-radius-medium;
+            cursor: pointer;
+            font-size: $font-size-small;
+            transition: border-color $transition-base $ease-out,
+                        color $transition-base $ease-out;
+
+            &:hover,
+            &:focus-visible {
+                border-color: list.nth(map.get($accent-colors, primary), 1);
+                color: list.nth(map.get($accent-colors, primary), 1);
+            }
+        }
+    }
 }
 
 body:has(.chat-page) {
