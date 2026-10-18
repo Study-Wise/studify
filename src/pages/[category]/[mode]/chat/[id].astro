@@ -27,6 +27,12 @@ if (!categoryObj || !modeObj) return Astro.redirect('/404');
 const categoryName = categoryObj?.name || category;
 const modeName = modeObj?.name || mode;
 
+const examplePrompts = [
+    `Explain the basics of ${modeName}`,
+    `Quiz me on ${modeName}`,
+    `What are common mistakes students make in ${modeName}?`,
+];
+
 const user = Astro.locals.user;
 const user_email = user?.email || null;
 
@@ -122,7 +128,7 @@ export const inNav = 'hide';
                         <h3>Let's study {modeName}!</h3>
                         <p>{modeObj.description}. Ask a question below to get started.</p>
                         <div class="example-prompts">
-                            {[`Explain the basics of ${modeName}`, `Quiz me on ${modeName}`, `What are common mistakes students make in ${modeName}?`].map(prompt => (
+                            {examplePrompts.map(prompt => (
                                 <button type="button" class="example-prompt">{prompt}</button>
                             ))}
                         </div>
