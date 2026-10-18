@@ -61,8 +61,8 @@ export async function generateResources(threadId: string, userPrompt?: string): 
         .join(' ');
 
     const combinedText = `${conversationText} ${uploadedFilesText}`.trim();
-    const topicSummary = combinedText.slice(0, 500);
-    const searchTopic = userPrompt ? `${topicSummary} ${userPrompt}` : topicSummary;
+    let topicSummary = combinedText.slice(0, 500);
+    if (userPrompt) topicSummary += ` ${userPrompt}`;
 
     const resourceCollection: ResourceCollection = {
         topic: thread.title || 'Study Resources',
@@ -77,7 +77,7 @@ export async function generateResources(threadId: string, userPrompt?: string): 
     try {
         // Science threads also get interactive PhET simulations
         if (SIMULATION_CATEGORIES.includes(thread.category) && !SIMULATION_EXCLUDED_MODES.includes(thread.mode)) {
-            const simulations = await findSimulations(searchTopic);
+            const simulations = await findSimulations(topicSummary);
             resourceCollection.simulations = simulations.map<Resource>(simulation => ({
                 title: simulation.title,
                 url: simulation.pageUrl,
@@ -89,7 +89,7 @@ export async function generateResources(threadId: string, userPrompt?: string): 
 
         // Search for YouTube educational videos
         const videoResults = await exa.searchAndContents(
-            `${searchTopic} educational video tutorial explanation`,
+            `${topicSummary} educational video tutorial explanation`,
             {
                 text: true,
                 numResults: 8,
@@ -107,7 +107,7 @@ export async function generateResources(threadId: string, userPrompt?: string): 
 
         // Search for articles and explanations
         const articleResults = await exa.searchAndContents(
-            `${searchTopic} explanation guide article`,
+            `${topicSummary} explanation guide article`,
             {
                 text: true,
                 numResults: 8,
@@ -125,7 +125,7 @@ export async function generateResources(threadId: string, userPrompt?: string): 
 
         // Search for tutorials and step-by-step guides
         const tutorialResults = await exa.searchAndContents(
-            `${searchTopic} tutorial step by step how to`,
+            `${topicSummary} tutorial step by step how to`,
             {
                 text: true,
                 numResults: 8,
@@ -143,7 +143,7 @@ export async function generateResources(threadId: string, userPrompt?: string): 
 
         // Search for official documentation and reference materials
         const docResults = await exa.searchAndContents(
-            `${searchTopic} documentation reference official`,
+            `${topicSummary} documentation reference official`,
             {
                 text: true,
                 numResults: 6,
