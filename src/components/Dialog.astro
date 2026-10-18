@@ -185,11 +185,7 @@ import '@/styles/components/modal.scss';
         return modal;
     }
 
-    /**
-     * Label the button "Next" while more messages are waiting
-     * @param entry - The message on screen
-     * @returns The modal content for the entry
-     */
+    // Label the button "Next" while more messages are waiting
     function toModalContent(entry: DialogEntry): ModalContent {
         const waiting = pendingErrors.length + (pendingNotice ? 1 : 0);
         return {
@@ -218,11 +214,7 @@ import '@/styles/components/modal.scss';
         }
     }
 
-    /**
-     * Show a dialog with a message
-     * @param message - The message to display
-     * @param options - Optional title (default 'Alert'), Material icon name and type (default 'info')
-     */
+    // Show a dialog with a message
     function showDialog(message: string, options: { title?: string; icon?: string; type?: ModalType } = {}) {
         const { title = 'Alert', icon, type = 'info' } = options;
         const entry: DialogEntry = { message, title, icon, type };
@@ -238,11 +230,7 @@ import '@/styles/components/modal.scss';
         renderDialog(entry);
     }
 
-    /**
-     * Show a non-blocking toast that closes itself and keeps focus where the user is
-     * @param message - The message to display
-     * @param options - Optional title (default 'Notice'), Material icon name and type (default 'info')
-     */
+    // Show a non-blocking toast that closes itself and keeps focus where the user is
     function showToast(message: string, options: { title?: string; icon?: string; type?: ModalType } = {}) {
         const { title = 'Notice', icon, type = 'info' } = options;
         const toast = createModal({
@@ -257,11 +245,7 @@ import '@/styles/components/modal.scss';
         toast.open();
     }
 
-    /**
-     * Show a success message as a non-blocking toast. It never replaces an
-     * error dialog; while one is showing, the toast waits for it to close.
-     * @param message - The message to display
-     */
+    // Show a success message as a non-blocking toast. It never replaces an error dialog; while one is showing, the toast waits for it to close.
     function showSuccessToast(message: string) {
         // A success message ends whatever was in progress, so a status update on screen or waiting (e.g. "Uploading...") is no longer needed. Errors are kept.
         pendingNotice = null;
@@ -281,11 +265,7 @@ import '@/styles/components/modal.scss';
     // Success message carried across a navigation, shown once the next page loads
     const pendingSuccessKey = 'pending-success-toast';
 
-    /**
-     * Show a success toast on the next page the user lands on, for actions
-     * that navigate away right after succeeding (e.g. deleting a chat)
-     * @param message - The message to display
-     */
+    // Show a success toast on the next page the user lands on, for actions that navigate away right after succeeding (e.g. deleting a chat)
     function showSuccessAfterNavigation(message: string) {
         try {
             globalThis.sessionStorage.setItem(pendingSuccessKey, message);
@@ -317,6 +297,37 @@ import '@/styles/components/modal.scss';
         showDialog(message, { title: 'Information', type: 'info' });
     }
 
+    function showConfirm(
+        message: string,
+        options: { title?: string; confirmLabel?: string; cancelLabel?: string; icon?: string; type?: ModalType } = {},
+    ): Promise<boolean> {
+        const { title = 'Are you sure?', confirmLabel = 'Confirm', cancelLabel = 'Cancel', icon, type = 'warning' } = options;
+
+        return new Promise((resolve) => {
+            let confirmed = false;
+            const confirmModal = createModal({
+                title,
+                message,
+                icon,
+                type,
+                buttons: [
+                    { label: cancelLabel, variant: 'secondary' },
+                    {
+                        label: confirmLabel,
+                        onClick: () => {
+                            confirmed = true;
+                        },
+                    },
+                ],
+                onClose: () => {
+                    confirmModal.element.remove();
+                    resolve(confirmed);
+                },
+            });
+            confirmModal.open();
+        });
+    }
+
     // Make functions available globally, including to is:inline scripts
     window.showDialog = showDialog;
     window.showToast = showToast;
@@ -325,4 +336,5 @@ import '@/styles/components/modal.scss';
     window.showSuccess = showSuccessToast;
     window.showSuccessAfterNavigation = showSuccessAfterNavigation;
     window.showInfo = showInfo;
+    window.showConfirm = showConfirm;
 </script>

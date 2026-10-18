@@ -154,7 +154,8 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
 
             if (isRegenerate) {
                 const confirmMessage = `Are you sure you want to ${regenerateVerb.toLowerCase()} the ${contentTypeName.toLowerCase()}? This will replace the existing one.`;
-                if (!globalThis.confirm(confirmMessage)) return;
+                const confirmed = await window.showConfirm(confirmMessage, { title: `${regenerateVerb} ${contentTypeName}?`, confirmLabel: regenerateVerb, icon: 'refresh' });
+                if (!confirmed) return;
             }
 
             actionBtn.setAttribute('disabled', 'true');
