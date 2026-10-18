@@ -539,9 +539,16 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
 
         if (!fileKey || !currentThreadId || currentThreadId === 'new' || !email) return;
 
-        if (!globalThis.confirm('Are you sure you want to delete this file?')) return;
+        const fileName = deleteButton.closest('.file-item')?.querySelector('.file-name')?.textContent?.trim() || 'this file';
+        const confirmed = await window.showConfirm(
+            'This cannot be undone.',
+            { title: `Delete "${fileName}"?`, confirmLabel: 'Delete', icon: 'delete' },
+        );
+        if (!confirmed) return;
 
         deleteButton.disabled = true;
+        const originalContent = deleteButton.innerHTML;
+        deleteButton.innerHTML = '<span class="material-symbols-outlined spinning" aria-hidden="true">progress_activity</span>';
 
         try {
             const response = await fetch('/api/files/delete', {
@@ -565,7 +572,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                     fileList.appendChild(emptyMessage);
                 }
 
-                window.showSuccess?.('File deleted successfully');
+                window.showSuccess?.('File deleted');
             }
             else {
                 throw new Error(data.error || 'Deletion failed');
@@ -575,6 +582,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
             window.showError?.(
                 error instanceof Error ? error.message : 'Failed to delete file. Please try again.'
             );
+            deleteButton.innerHTML = originalContent;
             deleteButton.disabled = false;
         }
     });
