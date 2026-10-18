@@ -16,7 +16,6 @@ export function generateModePrompt(mode: Mode, category: string): string {
     if (STEP_CHECKER_CATEGORIES.includes(category)) {
         prompt += `\n\nStep checker: when a student types their own working line by line, check it line by line. Mark the first line with an error and explain what went wrong on that line. Do NOT solve or check the remaining steps. If every line is correct, say so.`;
     }
-    prompt += `\n\nExplain it back: when a student explains a concept in their own words, grade their explanation. Say what they got right, then point out any gaps and misconceptions. Do NOT simply re-explain the whole concept.`;
     prompt += `\n\nFormat your responses clearly with proper markdown.`;
 
     prompt += `\n\nRespond in a conversational, helpful tone. Break down concepts step-by-step and provide examples when helpful.`;
