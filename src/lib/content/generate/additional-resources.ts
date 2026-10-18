@@ -32,7 +32,7 @@ interface ResourceCollection {
     generatedAt: string;
 }
 
-export async function generateResources(threadId: string): Promise<string> {
+export async function generateResources(threadId: string, userPrompt?: string): Promise<string> {
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
     if (threads.length === 0) {
@@ -61,7 +61,8 @@ export async function generateResources(threadId: string): Promise<string> {
         .join(' ');
 
     const combinedText = `${conversationText} ${uploadedFilesText}`.trim();
-    const topicSummary = combinedText.slice(0, 500);
+    let topicSummary = combinedText.slice(0, 500);
+    if (userPrompt) topicSummary += ` ${userPrompt}`;
 
     const resourceCollection: ResourceCollection = {
         topic: thread.title || 'Study Resources',

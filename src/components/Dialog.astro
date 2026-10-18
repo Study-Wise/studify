@@ -328,6 +328,61 @@ import '@/styles/components/modal.scss';
         });
     }
 
+    function showPrompt(
+        message: string,
+        options: {
+            title?: string;
+            confirmLabel?: string;
+            cancelLabel?: string;
+            icon?: string;
+            type?: ModalType;
+            inputLabel?: string;
+            placeholder?: string;
+            maxLength?: number;
+        } = {},
+    ): Promise<string | null> {
+        const { title = 'Are you sure?', confirmLabel = 'Confirm', cancelLabel = 'Cancel', icon, type = 'warning', inputLabel = 'Details (optional)', placeholder, maxLength } = options;
+
+        return new Promise((resolve) => {
+            let answer: string | null = null;
+            const input = document.createElement('textarea');
+            const promptModal = createModal({
+                title,
+                message,
+                icon,
+                type,
+                buttons: [
+                    { label: cancelLabel, variant: 'secondary' },
+                    {
+                        label: confirmLabel,
+                        onClick: () => {
+                            answer = input.value.trim();
+                        },
+                    },
+                ],
+                onClose: () => {
+                    promptModal.element.remove();
+                    resolve(answer);
+                },
+            });
+
+            const inputId = `${promptModal.element.getAttribute('aria-labelledby')}-input`;
+            const label = document.createElement('label');
+            label.className = 'modal-input-label';
+            label.htmlFor = inputId;
+            label.textContent = inputLabel;
+            input.id = inputId;
+            input.className = 'modal-input';
+            input.rows = 3;
+            if (placeholder) input.placeholder = placeholder;
+            if (maxLength) input.maxLength = maxLength;
+            promptModal.element.querySelector('.modal-body')?.append(label, input);
+
+            promptModal.open();
+            input.focus();
+        });
+    }
+
     // Make functions available globally, including to is:inline scripts
     window.showDialog = showDialog;
     window.showToast = showToast;
@@ -337,4 +392,5 @@ import '@/styles/components/modal.scss';
     window.showSuccessAfterNavigation = showSuccessAfterNavigation;
     window.showInfo = showInfo;
     window.showConfirm = showConfirm;
+    window.showPrompt = showPrompt;
 </script>

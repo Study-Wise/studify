@@ -152,10 +152,12 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
             const currentHasContent = actionBtn.getAttribute('data-has-content') === 'true';
             const isRegenerate = currentHasContent;
 
+            let userPrompt = '';
             if (isRegenerate) {
                 const confirmMessage = `Are you sure you want to ${regenerateVerb.toLowerCase()} the ${contentTypeName.toLowerCase()}? This will replace the existing one.`;
-                const confirmed = await window.showConfirm(confirmMessage, { title: `${regenerateVerb} ${contentTypeName}?`, confirmLabel: regenerateVerb, icon: 'refresh' });
-                if (!confirmed) return;
+                const answer = await window.showPrompt(confirmMessage, { title: `${regenerateVerb} ${contentTypeName}?`, confirmLabel: regenerateVerb, icon: 'refresh', inputLabel: 'What should change? (optional)', placeholder: 'For example: make it shorter, or add more examples', maxLength: 500 });
+                if (answer === null) return;
+                userPrompt = answer;
             }
 
             actionBtn.setAttribute('disabled', 'true');
@@ -167,7 +169,7 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
                 const response = await fetch(apiEndpoint, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ threadId }),
+                    body: JSON.stringify({ threadId, userPrompt }),
                 });
 
                 const data = response.headers.get('Content-Type')?.includes('application/json') ? await response.json() : null;

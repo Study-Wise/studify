@@ -106,8 +106,9 @@ const regenerateButtonId = `regenerate-${id}-btn`;
 
             newRegenerateBtn.addEventListener('click', async () => {
                 const confirmMessage = `Are you sure you want to ${regenerateVerb.toLowerCase()} the ${title.toLowerCase()}? This will replace the existing one.`;
-                if (await window.showConfirm(confirmMessage, { title: `${regenerateVerb} ${title}?`, confirmLabel: regenerateVerb, icon: 'refresh' })) {
-                    generateContent(threadId, true, newRegenerateBtn);
+                const userPrompt = await window.showPrompt(confirmMessage, { title: `${regenerateVerb} ${title}?`, confirmLabel: regenerateVerb, icon: 'refresh', inputLabel: 'What should change? (optional)', placeholder: 'For example: make it shorter, or add more examples', maxLength: 500 });
+                if (userPrompt !== null) {
+                    generateContent(threadId, true, newRegenerateBtn, userPrompt);
                 }
             });
 
@@ -115,7 +116,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
         }
     }
 
-    async function generateContent(tid, isRegenerate = false, btnOverride = null) {
+    async function generateContent(tid, isRegenerate = false, btnOverride = null, userPrompt = '') {
         const btn = btnOverride || (isRegenerate ? regenerateBtn : generateBtn);
         if (!btn) return;
 
@@ -137,7 +138,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ threadId: tid }),
+                body: JSON.stringify({ threadId: tid, userPrompt }),
             });
 
             const data = await response.json();
@@ -175,9 +176,9 @@ const regenerateButtonId = `regenerate-${id}-btn`;
             const tid = regenerateBtn.getAttribute('data-thread-id');
             if (tid) {
                 const confirmMessage = `Are you sure you want to ${regenerateVerb.toLowerCase()} the ${title.toLowerCase()}? This will replace the existing one.`;
-
-                if (await window.showConfirm(confirmMessage, { title: `${regenerateVerb} ${title}?`, confirmLabel: regenerateVerb, icon: 'refresh' })) {
-                    generateContent(tid, true);
+                const userPrompt = await window.showPrompt(confirmMessage, { title: `${regenerateVerb} ${title}?`, confirmLabel: regenerateVerb, icon: 'refresh', inputLabel: 'What should change? (optional)', placeholder: 'For example: make it shorter, or add more examples', maxLength: 500 });
+                if (userPrompt !== null) {
+                    generateContent(tid, true, null, userPrompt);
                 }
             }
         });
