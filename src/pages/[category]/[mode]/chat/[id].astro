@@ -10,7 +10,6 @@ import ChatTitle from '@/components/chat/ChatTitle.astro';
 import Header from '@/components/chat/Header.astro';
 import LeftSidebar from '@/components/chat/LeftSidebar.astro';
 import RightSidebar from '@/components/chat/RightSidebar.astro';
-import SidebarDrawerToggles from '@/components/chat/SidebarDrawerToggles.astro';
 import Toolbar from '@/components/chat/Toolbar.astro';
 import Footer from '@/components/Footer.astro';
 import Layout from '@/layouts/Layout.astro';
@@ -105,7 +104,30 @@ export const inNav = 'hide';
         </div>
         <Header pTitle={threadTitle || (id === 'new' ? 'New Chat' : 'Chat')} />
     </header>
-    <SidebarDrawerToggles />
+    {/* Shown at widths ≤1024px, where the sidebars become drawers */}
+    <div class="sidebar-drawer-toggles">
+        <button
+            type="button"
+            class="sidebar-drawer-toggle"
+            data-drawer-target="chat-sidebar-left"
+            aria-controls="chat-sidebar-left"
+            aria-expanded="false"
+        >
+            <span class="material-symbols-outlined" aria-hidden="true">folder_shared</span>
+            <span>Files &amp; Sharing</span>
+        </button>
+        <button
+            type="button"
+            class="sidebar-drawer-toggle"
+            data-drawer-target="chat-sidebar-right"
+            aria-controls="chat-sidebar-right"
+            aria-expanded="false"
+        >
+            <span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span>
+            <span>Study Materials</span>
+        </button>
+    </div>
+    <div class="sidebar-drawer-backdrop" hidden></div>
     <section class="chat-container">
         <LeftSidebar
             isPublic={isPublicThread}
@@ -195,6 +217,63 @@ export const inNav = 'hide';
 
             chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'instant' });
         });
+
+        (() => {
+            const drawerQuery = window.matchMedia('(width <= 1024px)');
+            const backdrop = document.querySelector('.sidebar-drawer-backdrop');
+            const toggles = document.querySelectorAll('.sidebar-drawer-toggle');
+
+            let openDrawer = null;
+            let lastToggle = null;
+
+            function closeDrawer({ restoreFocus = true } = {}) {
+                if (!openDrawer) return;
+
+                openDrawer.classList.remove('is-open');
+                openDrawer = null;
+                if (backdrop) backdrop.hidden = true;
+                toggles.forEach(toggle => toggle.setAttribute('aria-expanded', 'false'));
+
+                if (restoreFocus) lastToggle?.focus();
+            }
+
+            function openDrawerFor(toggle) {
+                const drawer = document.getElementById(toggle.dataset.drawerTarget);
+                if (!drawer) return;
+
+                closeDrawer({ restoreFocus: false });
+
+                drawer.classList.add('is-open');
+                openDrawer = drawer;
+                lastToggle = toggle;
+                if (backdrop) backdrop.hidden = false;
+                toggle.setAttribute('aria-expanded', 'true');
+
+                drawer.querySelector('.sidebar-drawer-close')?.focus();
+            }
+
+            toggles.forEach(toggle => {
+                toggle.addEventListener('click', () => {
+                    if (openDrawer?.id === toggle.dataset.drawerTarget) closeDrawer();
+                    else openDrawerFor(toggle);
+                });
+            });
+
+            document.querySelectorAll('.sidebar-drawer-close').forEach(button => {
+                button.addEventListener('click', () => closeDrawer());
+            });
+
+            backdrop?.addEventListener('click', () => closeDrawer());
+
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && openDrawer) closeDrawer();
+            });
+
+            // The sidebars are always visible above 1024px, so drop the drawer state when widening
+            drawerQuery.addEventListener('change', (event) => {
+                if (!event.matches) closeDrawer({ restoreFocus: false });
+            });
+        })();
     </script>
     <script is:inline src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js"></script>
     <MessagesScript page="chat" category={category} mode={mode} id={id} />

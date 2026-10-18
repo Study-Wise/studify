@@ -387,6 +387,129 @@
     }
 }
 
+// At widths ≤1024px the sidebars become off-canvas drawers opened from these toggles
+.sidebar-drawer-toggles {
+    display: none;
+
+    @media (width <= 1024px) {
+        display: flex;
+        gap: $spacing-extra-small;
+        padding: $spacing-extra-small $spacing-medium;
+        background-color: var(--card-bg);
+        border-block-end: 1px solid rgb(from var(--card-border) r g b / 30%);
+    }
+}
+
+.sidebar-drawer-toggle {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-extra-small;
+    padding: $spacing-extra-small $spacing-small;
+    background-color: transparent;
+    color: var(--card-text);
+    border: 1px solid rgb(from var(--card-border) r g b / 60%);
+    border-radius: $border-radius-medium;
+    cursor: pointer;
+    font-size: $font-size-small;
+    font-weight: $font-weight-medium;
+    transition: all $transition-base $ease-in-out;
+
+    span:not(.material-symbols-outlined) {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .material-symbols-outlined {
+        font-size: $font-size-large;
+        color: list.nth(map.get($accent-colors, primary), 1);
+    }
+
+    &:hover,
+    &[aria-expanded="true"] {
+        background-color: rgb(from var(--card-text) r g b / 5%);
+        border-color: list.nth(map.get($accent-colors, primary), 1);
+    }
+}
+
+.sidebar-drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: $z-index-popover - 1;
+    background-color: rgb(0 0 0 / 40%);
+
+    &[hidden] {
+        display: none;
+    }
+}
+
+.sidebar-drawer-close {
+    display: none;
+}
+
+@media (width <= 1024px) {
+    .chat-sidebar.left,
+    .chat-sidebar.right {
+        position: fixed;
+        inset-block: 0;
+        z-index: $z-index-popover;
+        width: min(350px, 85vw);
+        visibility: hidden;
+        box-shadow: $box-shadow-large;
+        transition:
+            translate $transition-slow $ease-in-out,
+            visibility 0s linear $transition-slow;
+
+        &.is-open {
+            visibility: visible;
+            translate: 0;
+            transition:
+                translate $transition-slow $ease-in-out,
+                visibility 0s;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            transition: none;
+
+            &.is-open {
+                transition: none;
+            }
+        }
+    }
+
+    .chat-sidebar.left {
+        inset-inline-start: 0;
+        translate: -100% 0;
+    }
+
+    .chat-sidebar.right {
+        inset-inline-end: 0;
+        translate: 100% 0;
+    }
+
+    .sidebar-drawer-close {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        align-self: end;
+        width: 40px;
+        height: 40px;
+        flex-shrink: 0;
+        background-color: transparent;
+        color: var(--card-text);
+        border: 1px solid rgb(from var(--card-border) r g b / 60%);
+        border-radius: $border-radius-medium;
+        cursor: pointer;
+
+        &:hover {
+            background-color: rgb(from var(--card-text) r g b / 5%);
+        }
+    }
+}
+
 @keyframes spin {
     from {
         rotate: 0deg;
