@@ -59,6 +59,29 @@
         }
     }
 
+    .chat-search {
+        margin-bottom: $spacing-large;
+
+        .chat-search-input {
+            width: 100%;
+            padding: $spacing-small $spacing-medium;
+            font: inherit;
+            color: var(--body-text);
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: $border-radius-medium;
+        }
+    }
+
+    .no-results {
+        text-align: center;
+        opacity: 0.8;
+    }
+
+    .is-hidden {
+        display: none !important;
+    }
+
     .threads-container {
         display: flex;
         flex-direction: column;
