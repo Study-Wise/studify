@@ -21,6 +21,14 @@ const threadsByCategory = threads.reduce<Record<string, Record<string, typeof th
 ---
 
 <div class="my-chats-container">
+    {threads.length > 0 && (
+        <>
+            <div class="chat-search">
+                <input type="search" id="chat-search-input" class="chat-search-input" placeholder="Search your chats" aria-label="Search your chats" autocomplete="off" />
+            </div>
+            <p class="no-results is-hidden" id="no-results">No chats match your search.</p>
+        </>
+    )}
     {threads.length === 0 ? (
         <div class="empty-state card">
             <span class="material-symbols-outlined empty-icon" aria-hidden="true">chat_bubble_outline</span>
@@ -93,6 +101,24 @@ const threadsByCategory = threads.reduce<Record<string, Record<string, typeof th
 </div>
 
 <script is:inline>
+    const searchInput = document.getElementById('chat-search-input');
+
+    searchInput?.addEventListener('input', () => {
+        const query = searchInput.value.trim().toLowerCase();
+
+        document.querySelectorAll('.thread-row').forEach((row) => {
+            const title = row.querySelector('.thread-title').textContent.toLowerCase();
+            row.classList.toggle('is-hidden', !title.includes(query));
+        });
+
+        // Hide the mode and category sections that have no matching chats left
+        document.querySelectorAll('.mode-section, .category-section').forEach((section) => {
+            section.classList.toggle('is-hidden', !section.querySelector('.thread-row:not(.is-hidden)'));
+        });
+
+        document.getElementById('no-results').classList.toggle('is-hidden', Boolean(document.querySelector('.thread-row:not(.is-hidden)')));
+    });
+
     document.querySelector('.my-chats-container')?.addEventListener('click', async (e) => {
         const deleteButton = e.target.closest('.thread-delete');
         if (!deleteButton) return;
