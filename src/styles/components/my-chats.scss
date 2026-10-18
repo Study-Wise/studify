@@ -60,16 +60,24 @@
     }
 
     .chat-search {
+        display: flex;
+        flex-wrap: wrap;
+        gap: $spacing-small;
         margin-bottom: $spacing-large;
 
-        .chat-search-input {
-            width: 100%;
+        .chat-search-input,
+        .chat-filter {
             padding: $spacing-small $spacing-medium;
             font: inherit;
             color: var(--body-text);
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);
             border-radius: $border-radius-medium;
+        }
+
+        .chat-search-input {
+            flex: 1;
+            min-width: 200px;
         }
     }
 

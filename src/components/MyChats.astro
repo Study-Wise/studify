@@ -25,6 +25,17 @@ const threadsByCategory = threads.reduce<Record<string, Record<string, typeof th
         <>
             <div class="chat-search">
                 <input type="search" id="chat-search-input" class="chat-search-input" placeholder="Search your chats" aria-label="Search your chats" autocomplete="off" />
+                <select id="chat-filter" class="chat-filter" aria-label="Filter chats by subject">
+                    <option value="">All subjects</option>
+                    {Object.entries(threadsByCategory).map(([categoryKey, threadsByMode]) => categories[categoryKey] && (
+                        <optgroup label={categories[categoryKey].name}>
+                            <option value={categoryKey}>All {categories[categoryKey].name}</option>
+                            {Object.keys(threadsByMode).map((modeKey) => (
+                                <option value={`${categoryKey}/${modeKey}`}>{categories[categoryKey].modes[modeKey]?.name ?? modeKey}</option>
+                            ))}
+                        </optgroup>
+                    ))}
+                </select>
             </div>
             <p class="no-results is-hidden" id="no-results">No chats match your search.</p>
         </>
@@ -57,7 +68,7 @@ const threadsByCategory = threads.reduce<Record<string, Record<string, typeof th
                                             const chatUrl = `/${categoryKey}/${thread.mode}/chat/${thread.id}`;
 
                                             return (
-                                                <div class="thread-row" data-thread-id={thread.id}>
+                                                <div class="thread-row" data-thread-id={thread.id} data-category={categoryKey} data-mode={thread.mode}>
                                                     <a href={chatUrl} class="thread-card">
                                                         <div class="thread-header">
                                                             <div class="thread-info">
@@ -102,13 +113,16 @@ const threadsByCategory = threads.reduce<Record<string, Record<string, typeof th
 
 <script is:inline>
     const searchInput = document.getElementById('chat-search-input');
+    const filterSelect = document.getElementById('chat-filter');
 
-    searchInput?.addEventListener('input', () => {
+    function applyFilters() {
         const query = searchInput.value.trim().toLowerCase();
+        const subject = filterSelect.value;
 
         document.querySelectorAll('.thread-row').forEach((row) => {
             const title = row.querySelector('.thread-title').textContent.toLowerCase();
-            row.classList.toggle('is-hidden', !title.includes(query));
+            const matchesSubject = !subject || subject === row.dataset.category || subject === `${row.dataset.category}/${row.dataset.mode}`;
+            row.classList.toggle('is-hidden', !(title.includes(query) && matchesSubject));
         });
 
         // Hide the mode and category sections that have no matching chats left
@@ -117,7 +131,10 @@ const threadsByCategory = threads.reduce<Record<string, Record<string, typeof th
         });
 
         document.getElementById('no-results').classList.toggle('is-hidden', Boolean(document.querySelector('.thread-row:not(.is-hidden)')));
-    });
+    }
+
+    searchInput?.addEventListener('input', applyFilters);
+    filterSelect?.addEventListener('change', applyFilters);
 
     document.querySelector('.my-chats-container')?.addEventListener('click', async (e) => {
         const deleteButton = e.target.closest('.thread-delete');
