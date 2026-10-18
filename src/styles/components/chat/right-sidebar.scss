@@ -3,11 +3,4 @@
 
 .chat-sidebar.right {
     border-left: 1px solid rgb(from var(--card-border) r g b / 30%);
-
-    @media (width <= 1024px) {
-        width: 0;
-        min-width: 0;
-        overflow: hidden;
-        border-left: none;
-    }
 }

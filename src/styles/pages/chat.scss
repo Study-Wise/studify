@@ -298,19 +298,12 @@ footer, .chat-toolbar {
         }
     }
 
-    @media (width <= 768px) {
+    // The sidebars are drawers at this width (see components/chat/sidebar-drawer.scss)
+    @media (width <= 1024px) {
         grid-template-columns: 1fr;
-
-        .chat-sidebar.left {
-            display: none;
-        }
 
         .chat-section {
             grid-row: span 1;
-        }
-
-        .chat-sidebar.right {
-            display: none;
         }
     }
 }
