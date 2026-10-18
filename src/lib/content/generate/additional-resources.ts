@@ -14,6 +14,9 @@ const exa = new Exa(import.meta.env.EXA_SEARCH_API_KEY || process.env.EXA_SEARCH
 const SIMULATION_CATEGORIES = ['science'];
 const SIMULATION_EXCLUDED_MODES = ['computer-science'];
 
+// Sites that hand over the exact homework answer, which conflicts with the "no direct answers" policy
+const ANSWER_DUMP_DOMAINS = ['bartleby.com', 'brainly.com', 'studyx.com', 'askfilo.com', 'chegg.com', 'coursehero.com', 'numerade.com'];
+
 export interface Resource {
     title: string;
     url: string;
@@ -111,7 +114,7 @@ export async function generateResources(threadId: string, userPrompt?: string): 
             {
                 text: true,
                 numResults: 8,
-                excludeDomains: ['youtube.com', 'youtu.be']
+                excludeDomains: ['youtube.com', 'youtu.be', ...ANSWER_DUMP_DOMAINS]
             }
         );
 
@@ -129,7 +132,7 @@ export async function generateResources(threadId: string, userPrompt?: string): 
             {
                 text: true,
                 numResults: 8,
-                excludeDomains: ['youtube.com', 'youtu.be']
+                excludeDomains: ['youtube.com', 'youtu.be', ...ANSWER_DUMP_DOMAINS]
             }
         );
 
@@ -147,7 +150,7 @@ export async function generateResources(threadId: string, userPrompt?: string): 
             {
                 text: true,
                 numResults: 6,
-                includeDomains: ['wikipedia.org', 'docs.python.org', 'developer.mozilla.org', 'mathworld.wolfram.com', 'britannica.com', 'scholar.google.com']
+                includeDomains: ['wikipedia.org', 'docs.python.org', 'developer.mozilla.org', 'mathworld.wolfram.com', 'britannica.com', 'scholar.google.com', 'openstax.org', 'ocw.mit.edu']
             }
         );
 
