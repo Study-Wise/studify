@@ -28,8 +28,12 @@ const {
 const hasSavedThread = Boolean(threadId) && threadId !== 'new';
 const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}`, Astro.url.origin).href : '';
 ---
-<section class="chat-sidebar left">
+<section class="chat-sidebar left" aria-label="Files and sharing">
     <div class="chat-sidebar-content left">
+        <label class="sidebar-drawer-close" for="sidebar-drawer-closed">
+            <span class="material-symbols-outlined" aria-hidden="true">close</span>
+            <span class="sr-only">Close files and sharing</span>
+        </label>
         {isAuthorized && (
             <div class="sidebar-section">
                 <div class="section-header">

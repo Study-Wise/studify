@@ -104,7 +104,20 @@ export const inNav = 'hide';
         </div>
         <Header pTitle={threadTitle || (id === 'new' ? 'New Chat' : 'Chat')} />
     </header>
+    <input type="radio" name="sidebar-drawer" id="sidebar-drawer-closed" class="sidebar-drawer-input sr-only" checked />
+    <div class="sidebar-drawer-toggles">
+        <label class="sidebar-drawer-toggle left" for="sidebar-drawer-left">
+            <span class="material-symbols-outlined" aria-hidden="true">folder_shared</span>
+            <span>Files &amp; Sharing</span>
+        </label>
+        <label class="sidebar-drawer-toggle right" for="sidebar-drawer-right">
+            <span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span>
+            <span>Study Materials</span>
+        </label>
+    </div>
+    <label class="sidebar-drawer-backdrop" for="sidebar-drawer-closed"></label>
     <section class="chat-container">
+        <input type="radio" name="sidebar-drawer" id="sidebar-drawer-left" class="sidebar-drawer-input left sr-only" />
         <LeftSidebar
             isPublic={isPublicThread}
             isAuthorized={isAuthorized}
@@ -159,6 +172,7 @@ export const inNav = 'hide';
             {isAuthorized && <Toolbar />}
             <Footer hideCopyright={true} />
         </section>
+        <input type="radio" name="sidebar-drawer" id="sidebar-drawer-right" class="sidebar-drawer-input right sr-only" />
         <RightSidebar
             threadId={id || ''}
             category={category || ''}
