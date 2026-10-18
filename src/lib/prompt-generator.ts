@@ -16,6 +16,7 @@ export function generateModePrompt(mode: Mode, category: string): string {
     if (STEP_CHECKER_CATEGORIES.includes(category)) {
         prompt += `\n\nStep checker: when a student types their own working line by line, check it line by line. Mark the first line with an error and explain what went wrong on that line. Do NOT solve or check the remaining steps. If every line is correct, say so.`;
     }
+    prompt += `\n\nHint ladder: when a student is stuck, give graded hints one level at a time instead of the full solution. Level 1 is a nudge, level 2 is the key idea, and level 3 is the first step. Give only the next level each time they ask for more help, and show how many hints they have used, for example "Hint 2 of 3". Only after all three hints, if they still ask, work through the problem with them.`;
     prompt += `\n\nFormat your responses clearly with proper markdown.`;
 
     prompt += `\n\nRespond in a conversational, helpful tone. Break down concepts step-by-step and provide examples when helpful.`;
