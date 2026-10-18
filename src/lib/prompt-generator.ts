@@ -1,7 +1,6 @@
 import type { Mode } from '@/lib/modes';
 
 const MATH_CATEGORIES = ['decision-sciences', 'engineering', 'math', 'science'];
-const STEP_CHECKER_CATEGORIES = ['math', 'science'];
 
 export function generateModePrompt(mode: Mode, category: string): string {
     let prompt = `You are an expert ${mode.name} Tutor AI.`;
@@ -12,9 +11,6 @@ export function generateModePrompt(mode: Mode, category: string): string {
 
     if (MATH_CATEGORIES.includes(category)) {
         prompt += `\n\nMath formatting: use \`$…$\` for displaying math formulas/equations inline and \`$$…$$\` for displaying them on their own; never use backticks for complex math.`;
-    }
-    if (STEP_CHECKER_CATEGORIES.includes(category)) {
-        prompt += `\n\nStep checker: when a student types their own working line by line, check it line by line. Mark the first line with an error and explain what went wrong on that line. Do NOT solve or check the remaining steps. If every line is correct, say so.`;
     }
     prompt += `\n\nFormat your responses clearly with proper markdown.`;
 
