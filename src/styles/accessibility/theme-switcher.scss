@@ -10,12 +10,21 @@
     inherits: false;
 }
 
-.theme-switcher {
-    --g-angle: 240deg;
-
+.theme-switcher-container {
     position: fixed;
     bottom: $spacing-medium;
     left: $spacing-medium;
+    z-index: $z-index-theme-switcher;
+
+    @media print {
+        display: none !important;
+    }
+}
+
+.theme-switcher {
+    --g-angle: 240deg;
+
+    position: relative;
     box-sizing: content-box;
     padding: $spacing-extra-small;
     aspect-ratio: 1;
@@ -29,7 +38,6 @@
     font-size: $font-size-small;
     box-shadow: 0 0 10px hsl(from var(--body-text) h s l / 50%);
     cursor: pointer;
-    z-index: $z-index-theme-switcher;
     transition: scale $transition-base $ease-out,
                 rotate $transition-base $ease-out,
                 box-shadow $transition-base $ease-out;
@@ -79,10 +87,15 @@
         z-index: 1;
     }
 
-    &:hover::before {
+    &:hover::before,
+    &:focus-visible::before {
         opacity: 1;
         translate: -50% 0;
         scale: 1;
+    }
+
+    &[aria-expanded='true']::before {
+        opacity: 0;
     }
 
     .material-symbols-outlined {
@@ -99,8 +112,66 @@
             font-size: $font-size-large;
         }
     }
+}
 
-    @media print {
-        display: none !important;
+.theme-menu {
+    position: absolute;
+    bottom: calc(100% + $spacing-small);
+    left: 0;
+    padding: $spacing-extra-small 0;
+    min-width: 160px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: $border-radius-medium;
+    box-shadow: 0 0 8px hsl(from var(--body-text) h s l / 20%);
+
+    &[hidden] {
+        display: none;
+    }
+}
+
+.theme-menu-item {
+    display: flex;
+    align-items: center;
+    gap: $spacing-small;
+    width: 100%;
+    padding: $spacing-small $spacing-medium;
+    text-align: left;
+    color: var(--card-text);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font: inherit;
+    font-size: $font-size-small;
+    transition: background-color $transition-base $ease-out;
+
+    &:hover,
+    &:focus-visible {
+        background-color: var(--message-bg);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--section-title, #4F46E5);
+        outline-offset: -2px;
+    }
+
+    .material-symbols-outlined {
+        font-size: $font-size-large;
+    }
+
+    .theme-menu-label {
+        flex: 1;
+    }
+
+    .theme-menu-check {
+        visibility: hidden;
+    }
+
+    &[aria-checked='true'] {
+        font-weight: 600;
+
+        .theme-menu-check {
+            visibility: visible;
+        }
     }
 }
