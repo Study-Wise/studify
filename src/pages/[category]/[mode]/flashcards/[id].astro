@@ -189,6 +189,9 @@ const hasContent = !!(isStructured ? (flashcardData && flashcardData.questions.l
 
         // Keyboard navigation
         document.addEventListener('keydown', (e) => {
+            // Let focused controls handle their own keys (Enter/Space activate buttons and links)
+            if (e.target instanceof globalThis.Element && e.target.closest('button, a, input, textarea, select')) return;
+
             if (e.key === 'ArrowLeft' && currentIndex > 0) {
                 currentIndex--;
                 updateDisplay();
