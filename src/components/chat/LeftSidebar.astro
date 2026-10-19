@@ -46,7 +46,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                     <div class="share-settings">
                         <div class="share-status">
                             <div class="status-info">
-                                <span class="status-label">Thread Visibility</span>
+                                <span class="status-label" id="public-toggle-label">Thread Visibility</span>
                                 <span class="status-value" id="share-status-text">{isPublic ? 'Public' : 'Private'}</span>
                             </div>
                             <label class="toggle-switch">
@@ -54,13 +54,14 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                                     type="checkbox"
                                     id="public-toggle"
                                     role="switch"
-                                    aria-label="Make thread public"
+                                    aria-labelledby="public-toggle-label"
+                                    aria-describedby="public-toggle-description"
                                     checked={isPublic}
                                 />
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
-                        <p class="share-description">
+                        <p class="share-description" id="public-toggle-description">
                             {isPublic
                                 ? 'This thread is visible to anyone signed in with the link.'
                                 : 'This thread is private and only visible to you.'}
