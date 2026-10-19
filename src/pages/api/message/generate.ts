@@ -15,7 +15,6 @@ import { parseThreadData, type Message } from '@/lib/threads';
 import type { ToolContext } from '@/lib/tools';
 import { VendorError, getUserErrorMessage } from '@/lib/user-errors';
 import isValidEmail from '@/lib/validation';
-import { marked } from 'marked';
 import { nanoid } from 'nanoid';
 
 import { and, eq, type InferSelectModel } from 'drizzle-orm';
@@ -27,16 +26,6 @@ type Thread = InferSelectModel<typeof threadsTable>;
 const STREAM_HTML_INTERVAL = 100;
 
 const MATH_CLOSERS: Record<string, string> = { '$$': '$$', '$': '$', '\\(': '\\)', '\\[': '\\]' };
-
-// Render the reply so far as HTML, leaving out a formula that is still being written so half a formula never shows
-async function renderStreamedText(text: string): Promise<string> {
-    let open: RegExpMatchArray | undefined;
-    for (const match of text.matchAll(/\$\$|\$|\\[()[\]]/g)) {
-        if (!open && MATH_CLOSERS[match[0]]) open = match;
-        else if (open && match[0] === MATH_CLOSERS[open[0]]) open = undefined;
-    }
-    return marked.parse(open ? text.slice(0, open.index) : text, { breaks: true, gfm: true });
-}
 
 export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();
@@ -449,6 +438,8 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                     const pendingCalls = new Map<string, string>(); // toolCallId -> toolName
                     let streamedText = '';
                     let lastHtmlAt = 0;
+                    const { marked } = await import('marked');
+                    marked.setOptions({ breaks: true, gfm: true });
 
                     for await (const part of streamResult.fullStream) {
                         const streamPart = part;
@@ -458,7 +449,13 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                             let html: string | undefined;
                             if (Date.now() - lastHtmlAt >= STREAM_HTML_INTERVAL) {
                                 lastHtmlAt = Date.now();
-                                html = await renderStreamedText(streamedText);
+                                // Leave out a formula that is still being written, so half a formula never shows
+                                let open: RegExpMatchArray | undefined;
+                                for (const match of streamedText.matchAll(/\$\$|\$|\\[()[\]]/g)) {
+                                    if (!open && MATH_CLOSERS[match[0]]) open = match;
+                                    else if (open && match[0] === MATH_CLOSERS[open[0]]) open = undefined;
+                                }
+                                html = await marked.parse(open ? streamedText.slice(0, open.index) : streamedText);
                             }
                             controller.enqueue(sendEvent({ type: 'text', text: textDelta, html }));
                         }
@@ -489,8 +486,6 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                     const [fullText, steps] = await Promise.all([streamResult.text, streamResult.steps]);
                     const { clientToolCalls, toolCallLog } = extractToolData(steps);
 
-                    const { marked } = await import('marked');
-                    marked.setOptions({ breaks: true, gfm: true });
                     const htmlText = await marked.parse(fullText);
 
                     const assistantMessage: Message = { id: nanoid(), role: 'assistant', content: fullText };
