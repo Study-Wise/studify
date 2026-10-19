@@ -126,6 +126,13 @@ const regenerateButtonId = `regenerate-${id}-btn`;
 
         btn.innerHTML = `<span class="material-symbols-outlined spinning" aria-hidden="true">progress_activity</span><span>${loadingText}</span>`;
 
+        const startedAt = Date.now();
+        const timerLabel = btn.lastElementChild;
+        const timer = window.setInterval(() => {
+            const seconds = Math.floor((Date.now() - startedAt) / 1000);
+            timerLabel.textContent = `${loadingText} ${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+        }, 1000);
+
         // Generation can take a while, so let the user know the chat stays usable
         window.showToast?.(`You can keep chatting while it runs. It will appear here in the sidebar when it's ready.`, {
             title: `${loadingText.slice(0, -1)} ${title}`,
@@ -161,6 +168,8 @@ const regenerateButtonId = `regenerate-${id}-btn`;
 
             btn.removeAttribute('disabled');
             btn.innerHTML = originalContent;
+        } finally {
+            window.clearInterval(timer);
         }
     }
 
