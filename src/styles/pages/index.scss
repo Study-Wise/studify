@@ -1,6 +1,7 @@
 @use '../variables/globals' as *;
 @use '../variables/tokens' as *;
 @use '../variables/mixins' as *;
+@use '../variables/colors/statuses' as *;
 @use 'sass:list';
 @use 'sass:map';
 @use 'sass:math';
@@ -200,6 +201,11 @@
                 &:active {
                     scale: 1.02;
                     translate: 0 -2px;
+                }
+
+                &:focus-visible {
+                    outline: 2px solid $color-focus;
+                    outline-offset: -2px;
                 }
 
                 .material-symbols-outlined {
