@@ -39,6 +39,7 @@
 
             &:hover {
                 background-color: $section-title-light;
+                filter: brightness(1.1);
                 translate: none;
                 box-shadow: none;
             }
