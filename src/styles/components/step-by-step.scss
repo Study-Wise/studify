@@ -29,6 +29,22 @@ $pad: $spacing-medium;
         background-color: var(--bor);
     }
 
+    .retry-wrong {
+        align-self: flex-start;
+        padding: $spacing-small $spacing-medium;
+        font: inherit;
+        color: var(--body-text);
+        background-color: var(--card-bg);
+        border: 1px solid var(--bor);
+        border-radius: $border-radius-medium;
+        cursor: pointer;
+
+        &:hover,
+        &:focus-visible {
+            background-color: var(--message-bg);
+        }
+    }
+
     .step {
         box-sizing: border-box;
         background-color: var(--card-bg);
