@@ -12,8 +12,9 @@ interface WindowEventMap {
     beforeinstallprompt: BeforeInstallPromptEvent;
 }
 
-// Set by src/components/Dialog.astro
+// Set by client scripts such as src/components/Dialog.astro and src/scripts/messages.astro
 interface Window {
+    marked: typeof import('marked').marked;
     keyboardNavigation: object;
     authUtils: import('./lib/auth/types').AuthUtils;
     showDialog: (message: string, options?: { title?: string; icon?: string; type?: import('./lib/modal').ModalType }) => void;
