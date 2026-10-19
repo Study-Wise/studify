@@ -73,13 +73,27 @@
             retryButton.hidden = true;
             section.append(retryButton);
 
+            const scoreText = document.createElement('p');
+            scoreText.className = 'quiz-score';
+            scoreText.hidden = true;
+            section.append(scoreText);
+
             const getWrongSteps = () => [...steps].filter(step => {
                 const selected = step.querySelector('.step-question-choice[data-variant="selected"]');
                 return selected && selected.dataset.type !== 'correct';
             });
 
+            // Running score: correct answers so far out of all the questions
+            const updateScore = () => {
+                const checked = [...steps].filter(step => step.dataset.checked !== undefined);
+                const correct = checked.length - getWrongSteps().length;
+                scoreText.textContent = `Score: ${correct} / ${steps.length}`;
+                scoreText.hidden = checked.length === 0;
+            };
+
             section.addEventListener('click', () => {
                 retryButton.hidden = getWrongSteps().length === 0;
+                updateScore();
             });
 
             retryButton.addEventListener('click', () => {
@@ -97,6 +111,7 @@
                     checkButton.disabled = true;
                 });
                 retryButton.hidden = true;
+                updateScore();
             });
         });
     }
