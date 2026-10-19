@@ -442,28 +442,16 @@ const { page, category, mode, id } = Astro.props;
         throw new Error('The response ended before the chat was created. Please try again.');
     }
 
-    const streamRenderInterval = 100;
     let streamRendering = false;
 
-    // Drop a formula that is still being written, so half a formula never shows
-    function hideIncompleteMath(text) {
-        const closers = { '$$': '$$', '$': '$', '\\(': '\\)', '\\[': '\\]' };
-        let open;
-        for (const match of text.matchAll(/\$\$|\$|\\[()[\]]/g)) {
-            if (!open && closers[match[0]]) open = match;
-            else if (open && match[0] === closers[open[0]]) open = undefined;
-        }
-        return open ? text.slice(0, open.index) : text;
-    }
-
     // Typeset the reply so far off screen, then swap it in, so raw LaTeX never shows
-    async function renderStreamedText(target, text) {
+    async function renderStreamedHtml(target, html) {
         streamRendering = true;
         const staging = document.createElement('div');
         staging.className = 'message-content stream-staging';
+        staging.innerHTML = html;
+        target.after(staging);
         try {
-            staging.innerHTML = window.marked.parse(hideIncompleteMath(text), { breaks: true });
-            target.after(staging);
             await typesetMathJax([staging]);
             if (target.dataset.final === undefined) target.innerHTML = staging.innerHTML;
         } finally {
@@ -487,8 +475,6 @@ const { page, category, mode, id } = Astro.props;
         let messageDiv = null;
         let messageContent = null;
         let toolCallLogDiv = null;
-        let accumulatedText = '';
-        let lastRender = 0;
         let doneData = null;
         const toolCallMap = new Map();
 
@@ -515,11 +501,7 @@ const { page, category, mode, id } = Astro.props;
                             messageDiv.appendChild(messageContent);
                             chatMessages.appendChild(messageDiv);
                         }
-                        accumulatedText += data.text;
-                        if (!streamRendering && Date.now() - lastRender >= streamRenderInterval) {
-                            lastRender = Date.now();
-                            renderStreamedText(messageContent, accumulatedText);
-                        }
+                        if (data.html && !streamRendering) renderStreamedHtml(messageContent, data.html);
                         chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
 
                     }
@@ -886,10 +868,4 @@ const { page, category, mode, id } = Astro.props;
     if (document.readyState === 'complete' || document.readyState === 'interactive') {
         initializePage();
     }
-</script>
-
-<script>
-    import { marked } from 'marked';
-
-    window.marked = marked;
 </script>

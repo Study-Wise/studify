@@ -11,6 +11,7 @@ import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
 import { getValidModelAndProvider, providers } from '@/lib/models';
 import categories from '@/lib/modes';
 import type { Mode } from '@/lib/modes';
+import { renderStreamedText } from '@/lib/render-streamed-text';
 import { parseThreadData, type Message } from '@/lib/threads';
 import type { ToolContext } from '@/lib/tools';
 import { VendorError, getUserErrorMessage } from '@/lib/user-errors';
@@ -22,6 +23,8 @@ import { and, eq, type InferSelectModel } from 'drizzle-orm';
 import type { APIRoute } from 'astro';
 
 type Thread = InferSelectModel<typeof threadsTable>;
+
+const STREAM_HTML_INTERVAL = 100;
 
 export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();
@@ -432,12 +435,20 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
             async start(controller) {
                 try {
                     const pendingCalls = new Map<string, string>(); // toolCallId -> toolName
+                    let streamedText = '';
+                    let lastHtmlAt = 0;
 
                     for await (const part of streamResult.fullStream) {
                         const streamPart = part;
                         if (streamPart.type === 'text-delta') {
                             const textDelta = streamPart.text || '';
-                            controller.enqueue(sendEvent({ type: 'text', text: textDelta }));
+                            streamedText += textDelta;
+                            let html: string | undefined;
+                            if (Date.now() - lastHtmlAt >= STREAM_HTML_INTERVAL) {
+                                lastHtmlAt = Date.now();
+                                html = await renderStreamedText(streamedText);
+                            }
+                            controller.enqueue(sendEvent({ type: 'text', text: textDelta, html }));
                         }
                         else if (streamPart.type === 'tool-call') {
                             const toolCallId = streamPart.toolCallId || '';
