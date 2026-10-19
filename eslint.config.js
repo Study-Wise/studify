@@ -24,7 +24,10 @@ export default [
                 Response: 'readonly',
                 URL: 'readonly',
                 File: 'readonly',
-                FormDataEntryValue: 'readonly'
+                FormDataEntryValue: 'readonly',
+                TextEncoder: 'readonly',
+                ReadableStream: 'readonly',
+                Event: 'readonly'
             }
         },
         plugins: {
@@ -72,6 +75,24 @@ export default [
                 Astro: 'readonly',
                 document: 'readonly',
                 window: 'readonly',
+                alert: 'readonly',
+                localStorage: 'readonly',
+                sessionStorage: 'readonly',
+                setTimeout: 'readonly',
+                clearTimeout: 'readonly',
+                crypto: 'readonly',
+                CustomEvent: 'readonly',
+                Event: 'readonly',
+                Element: 'readonly',
+                Node: 'readonly',
+                NodeList: 'readonly',
+                URLSearchParams: 'readonly',
+                HTMLElement: 'readonly',
+                HTMLButtonElement: 'readonly',
+                HTMLDialogElement: 'readonly',
+                HTMLInputElement: 'readonly',
+                KeyboardEvent: 'readonly',
+                TouchEvent: 'readonly',
                 atob: 'readonly',
                 btoa: 'readonly'
             }

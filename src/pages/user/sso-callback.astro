@@ -19,7 +19,7 @@ if (Astro.locals.user) return Astro.redirect(getSafeReturnBackUrl(Astro.url.sear
 
 <script is:inline define:vars={{ getSafeReturnBackUrl }}>
     async function completeOAuth() {
-        const redirectUrl = getSafeReturnBackUrl(new globalThis.URLSearchParams(window.location.search).get('returnBackUrl'));
+        const redirectUrl = getSafeReturnBackUrl(new URLSearchParams(window.location.search).get('returnBackUrl'));
 
         try {
             // Better Auth automatically handles the OAuth callback

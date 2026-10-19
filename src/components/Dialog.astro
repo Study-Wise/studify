@@ -14,7 +14,7 @@ import '@/styles/components/modal.scss';
     };
 
     type Modal = {
-        element: globalThis.HTMLDialogElement;
+        element: HTMLDialogElement;
         open(): void;
         close(): void;
         setContent(content: ModalContent): void;
@@ -77,7 +77,7 @@ import '@/styles/components/modal.scss';
         content.append(header, body, footer);
         element.append(content);
 
-        let toastRegion = document.querySelector<globalThis.HTMLElement>('.toast-region');
+        let toastRegion = document.querySelector<HTMLElement>('.toast-region');
         if (isToast && !toastRegion) {
             toastRegion = document.createElement('div');
             toastRegion.className = 'toast-region';
@@ -86,7 +86,7 @@ import '@/styles/components/modal.scss';
         (isToast ? toastRegion! : document.body).append(element);
 
         function focusPrimaryButton() {
-            footer.querySelector<globalThis.HTMLButtonElement>('.modal-button-primary')?.focus();
+            footer.querySelector<HTMLButtonElement>('.modal-button-primary')?.focus();
         }
 
         function setContent({ title: titleText, message: messageText, type = 'info', icon: iconName, buttons = (isToast ? [] : defaultButtons ?? []) }: ModalContent) {
@@ -125,7 +125,7 @@ import '@/styles/components/modal.scss';
             element.addEventListener('focusin', stopDismissTimer);
             element.addEventListener('mouseleave', startDismissTimer);
             element.addEventListener('focusout', (event) => {
-                if (!(event.relatedTarget instanceof globalThis.Node && element.contains(event.relatedTarget))) startDismissTimer();
+                if (!(event.relatedTarget instanceof Node && element.contains(event.relatedTarget))) startDismissTimer();
             });
         }
         else {
@@ -144,8 +144,8 @@ import '@/styles/components/modal.scss';
                     if (!element.open) {
                         const previous = document.activeElement;
                         element.show();
-                        if (previous instanceof globalThis.HTMLElement && previous !== document.body) previous.focus({ preventScroll: true });
-                        if (element.contains(document.activeElement) && document.activeElement instanceof globalThis.HTMLElement) document.activeElement.blur();
+                        if (previous instanceof HTMLElement &&previous !== document.body) previous.focus({ preventScroll: true });
+                        if (element.contains(document.activeElement) && document.activeElement instanceof HTMLElement) document.activeElement.blur();
                     }
                     startDismissTimer();
                     return;

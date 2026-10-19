@@ -6,7 +6,7 @@
 
     async function clearUserCaches() {
         try {
-            if (!('caches' in globalThis)) return;
+            if (!('caches' in window)) return;
             const results = await Promise.allSettled(USER_CACHES.map((name) => window.caches.delete(name)));
             for (const result of results) {
                 if (result.status === 'rejected') console.error('Failed to delete cache:', result.reason);
@@ -31,14 +31,14 @@
         if (error) throw new Error(error.message || 'Sign out failed');
     }
 
-    for (const signoutBtn of document.querySelectorAll<globalThis.HTMLButtonElement>('#signout-btn, #signout-confirm-btn')) {
+    for (const signoutBtn of document.querySelectorAll<HTMLButtonElement>('#signout-btn, #signout-confirm-btn')) {
         signoutBtn.addEventListener('click', async () => {
             try {
                 await signOutAndClearData();
                 window.location.href = '/';
             } catch (error) {
                 console.error('Sign out error:', error);
-                if (signoutBtn.id === 'signout-confirm-btn') globalThis.alert('Sign out failed. Please try again.');
+                if (signoutBtn.id === 'signout-confirm-btn') alert('Sign out failed. Please try again.');
             }
         });
     }

@@ -10,7 +10,7 @@ import '@/styles/accessibility/touch-gestures.scss';
         endY: number;
         isPulling: boolean;
         pullThreshold: number;
-        refreshIndicator: globalThis.HTMLElement | null;
+        refreshIndicator: HTMLElement | null;
 
         constructor() {
             this.startX = 0;
@@ -33,7 +33,7 @@ import '@/styles/accessibility/touch-gestures.scss';
 
         isTouchDevice() {
             return (
-                'ontouchstart' in globalThis ||
+                'ontouchstart' in window ||
                 window.navigator.maxTouchPoints > 0 ||
                 (window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches)
             );
@@ -57,7 +57,7 @@ import '@/styles/accessibility/touch-gestures.scss';
             document.addEventListener('touchend', () => this.handleTouchEnd(), { passive: false });
         }
 
-        handleTouchStart(e: globalThis.TouchEvent) {
+        handleTouchStart(e: TouchEvent) {
             if (window.scrollY === 0) {
                 this.startX = e.touches[0].clientX;
                 this.startY = e.touches[0].clientY;
@@ -65,7 +65,7 @@ import '@/styles/accessibility/touch-gestures.scss';
             }
         }
 
-        handleTouchMove(e: globalThis.TouchEvent) {
+        handleTouchMove(e: TouchEvent) {
             if (!this.isPulling || window.scrollY > 0) return;
 
             this.endX = e.touches[0].clientX;
@@ -101,10 +101,10 @@ import '@/styles/accessibility/touch-gestures.scss';
             this.refreshIndicator.style.opacity = progress.toString();
 
             if (progress >= 1) {
-                this.refreshIndicator.querySelector<globalThis.HTMLElement>('.material-symbols-outlined')?.style.setProperty('animation', 'spin 1s linear infinite');
+                this.refreshIndicator.querySelector<HTMLElement>('.material-symbols-outlined')?.style.setProperty('animation', 'spin 1s linear infinite');
             }
             else {
-                this.refreshIndicator.querySelector<globalThis.HTMLElement>('.material-symbols-outlined')?.style.setProperty('animation', 'none');
+                this.refreshIndicator.querySelector<HTMLElement>('.material-symbols-outlined')?.style.setProperty('animation', 'none');
             }
         }
 
@@ -113,7 +113,7 @@ import '@/styles/accessibility/touch-gestures.scss';
 
             this.refreshIndicator.style.translate = '0 -100%';
             this.refreshIndicator.style.opacity = '0';
-            this.refreshIndicator.querySelector<globalThis.HTMLElement>('.material-symbols-outlined')?.style.setProperty('animation', 'none');
+            this.refreshIndicator.querySelector<HTMLElement>('.material-symbols-outlined')?.style.setProperty('animation', 'none');
         }
 
         triggerRefresh() {

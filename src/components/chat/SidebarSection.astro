@@ -127,7 +127,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
         btn.innerHTML = `<span class="material-symbols-outlined spinning" aria-hidden="true">progress_activity</span><span>${loadingText}</span>`;
 
         // Generation can take a while, so let the user know the chat stays usable
-        (globalThis).showToast?.(`You can keep chatting while it runs. It will appear here in the sidebar when it's ready.`, {
+        window.showToast?.(`You can keep chatting while it runs. It will appear here in the sidebar when it's ready.`, {
             title: `${loadingText.slice(0, -1)} ${title}`,
             icon: 'chat',
         });
@@ -157,7 +157,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
             }
         } catch (error) {
             console.error(`Error generating ${title.toLowerCase()}:`, error);
-            (globalThis).showError?.(error instanceof Error ? error.message : `Failed to generate ${title.toLowerCase()}. Please try again.`);
+            window.showError?.(error instanceof Error ? error.message : `Failed to generate ${title.toLowerCase()}. Please try again.`);
 
             btn.removeAttribute('disabled');
             btn.innerHTML = originalContent;

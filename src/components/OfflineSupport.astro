@@ -85,7 +85,7 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
         }
 
         async cacheStudyMaterials(data) {
-            if ('caches' in globalThis) {
+            if ('caches' in window) {
                 try {
                     const cache = await window.caches.open(this.cacheName);
                     const response = new Response(JSON.stringify(data), {
@@ -99,7 +99,7 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
         }
 
         async getCachedStudyMaterials() {
-            if ('caches' in globalThis) {
+            if ('caches' in window) {
                 try {
                     const cache = await window.caches.open(this.cacheName);
                     const response = await cache.match('/offline-study-materials');

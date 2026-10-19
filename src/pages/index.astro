@@ -142,21 +142,20 @@ const description = 'Studify is your AI-powered study partner. Paste your homewo
     const panel = document.getElementById('subject-search-panel');
     const input = document.getElementById('subject-search-input');
     const empty = document.getElementById('subjects-empty');
-    const chips = Array.from(document.querySelectorAll<globalThis.HTMLButtonElement>('.subject-filter-chip'));
-    const categoryCards = Array.from(document.querySelectorAll<globalThis.HTMLElement>('.category-card'));
+    const chips = Array.from(document.querySelectorAll<HTMLButtonElement>('.subject-filter-chip'));
+    const categoryCards = Array.from(document.querySelectorAll<HTMLElement>('.category-card'));
 
     let activeCategory = '';
 
     function applyFilters() {
-        const query = input instanceof globalThis.HTMLInputElement ? input.value.trim().toLowerCase() : '';
-        const terms = query.split(/\s+/).filter(Boolean);
+        const terms = (input instanceof HTMLInputElement ? input.value.trim().toLowerCase() : '').split(/\s+/).filter(Boolean);
         let anyVisible = false;
 
         for (const card of categoryCards) {
             const inCategory = !activeCategory || card.dataset.category === activeCategory;
             let visibleModes = 0;
 
-            for (const mode of card.querySelectorAll<globalThis.HTMLElement>('.mode-card')) {
+            for (const mode of card.querySelectorAll<HTMLElement>('.mode-card')) {
                 const text = mode.dataset.search ?? '';
                 const matches = inCategory && terms.every((term) => text.includes(term));
                 mode.hidden = !matches;

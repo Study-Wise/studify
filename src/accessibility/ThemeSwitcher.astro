@@ -43,9 +43,9 @@ const themes = [
     const themeSwitcher = document.getElementById('theme-switcher');
     const themeMenu = document.getElementById('theme-menu');
     const switcherIcon = themeSwitcher?.querySelector('.material-symbols-outlined');
-    const menuItems = Array.from(themeMenu?.querySelectorAll<globalThis.HTMLButtonElement>('.theme-menu-item') ?? []);
+    const menuItems = Array.from(themeMenu?.querySelectorAll<HTMLButtonElement>('.theme-menu-item') ?? []);
 
-    const storedTheme = globalThis.localStorage.getItem('user-theme') ?? 'system';
+    const storedTheme = localStorage.getItem('user-theme') ?? 'system';
 
     setTheme(menuItems.some((item) => item.dataset.themeValue === storedTheme) ? storedTheme : 'system');
 
@@ -61,7 +61,7 @@ const themes = [
         if (switcherIcon) switcherIcon.textContent = selectedItem.dataset.themeIcon ?? '';
         themeSwitcher?.setAttribute('aria-label', `Theme: ${label}`);
         document.documentElement.setAttribute('data-theme', value);
-        globalThis.localStorage.setItem('user-theme', value);
+        localStorage.setItem('user-theme', value);
     }
 
     function openMenu() {
