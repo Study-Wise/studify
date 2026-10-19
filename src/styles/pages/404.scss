@@ -97,11 +97,8 @@
             }
 
             .btn-primary {
-                background: linear-gradient(135deg,
-                    list.nth(map.get($accent-colors, primary), 1),
-                    list.nth(map.get($accent-colors, primary), 2)
-                );
-                color: $header-text;
+                background: linear-gradient(135deg, $accent-button-bg, $accent-button-bg-end);
+                color: $accent-button-text;
             }
 
             .btn-secondary {

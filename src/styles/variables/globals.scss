@@ -34,6 +34,11 @@ $section-title-light: color.adjust(list.nth(map.get(colors.$accent-colors, 'prim
 $section-title-dark: color.adjust($section-title-light, $lightness: 25%);
 $section-title-border: #dee2e6;
 
+// Accent Button (darkened so white text meets WCAG AA contrast)
+$accent-button-bg: color.adjust(list.nth(map.get(colors.$accent-colors, 'primary'), 1), $lightness: -15%);
+$accent-button-bg-end: color.adjust(list.nth(map.get(colors.$accent-colors, 'primary'), 2), $lightness: -15%);
+$accent-button-text: #fff;
+
 // Footer
 $footer-bg: #f1f3f5;
 $footer-text: #6c757d;
