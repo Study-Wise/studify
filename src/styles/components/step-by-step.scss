@@ -29,7 +29,21 @@ $pad: $spacing-medium;
         background-color: var(--bor);
     }
 
+    counter-reset: quiz-total 0 quiz-correct 0;
+
+    &::after {
+        content: 'Score: ' counter(quiz-correct) ' / ' counter(quiz-total);
+        display: none;
+        font-weight: $font-weight-semibold;
+        color: var(--body-text);
+    }
+
+    &:has(.step-question-radio:checked)::after {
+        display: block;
+    }
+
     .retry-wrong {
+        display: none;
         align-self: flex-start;
         padding: $spacing-small $spacing-medium;
         font: inherit;
@@ -45,7 +59,17 @@ $pad: $spacing-medium;
         }
     }
 
+    &:has(.step-question-choice:not([data-type="correct"]) .step-question-radio:checked) .retry-wrong {
+        display: block;
+    }
+
     .step {
+        counter-increment: quiz-total;
+
+        &:has(.step-question-choice[data-type="correct"] .step-question-radio:checked) {
+            counter-increment: quiz-total quiz-correct;
+        }
+
         box-sizing: border-box;
         background-color: var(--card-bg);
         display: flex;
@@ -66,7 +90,7 @@ $pad: $spacing-medium;
                 border-radius: math.div($bdr, 8);
                 transition: background-color $transition-fast $ease, scale 0.1s $ease;
 
-                &:hover:not([data-variant]) .step-question-choice-content {
+                &:hover .step-question-choice-content {
                     background-color: rgb(from lightblue r g b / 30%);
                 }
 
@@ -80,12 +104,12 @@ $pad: $spacing-medium;
                     transition: background-color $transition-fast $ease;
                 }
 
-                &[data-type="correct"][data-variant="selected"] .step-question-choice-content {
+                &[data-type="correct"]:has(.step-question-radio:checked) .step-question-choice-content {
                     background-color: hsl(120deg 73% 75%);
                     color: $body-text;
                 }
 
-                &:not([data-type="correct"])[data-variant="selected"] .step-question-choice-content {
+                &:not([data-type="correct"]):has(.step-question-radio:checked) .step-question-choice-content {
                     background-color: hsl(0deg 100% 80%);
                 }
 
@@ -125,16 +149,13 @@ $pad: $spacing-medium;
                 }
             }
 
-            &[data-answered] .step-question-choice[data-type="correct"]:not([data-variant]) .step-question-choice-content {
+            &:has(.step-question-radio:checked) .step-question-choice[data-type="correct"]:not(:has(.step-question-radio:checked)) .step-question-choice-content {
                 background-color: hsl(120deg 73% 87%);
                 color: $body-text;
             }
 
-            &[data-answered] .step-question-choice:not([data-type="correct"], [data-variant]) .step-question-choice-content {
-                background-color: hsl(0deg 100% 80% / 50%);
-            }
-
-            .answer-explanation[data-visible] {
+            .step-question-choice:has(.step-question-radio:checked) .answer-explanation,
+            &:has(.step-question-radio:checked) .step-question-choice[data-type="correct"] .answer-explanation {
                 display: block;
             }
         }

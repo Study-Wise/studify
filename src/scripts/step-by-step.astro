@@ -6,74 +6,18 @@
         const stepByStepSections = document.querySelectorAll('.step-by-step');
 
         stepByStepSections.forEach(section => {
-            const steps = section.querySelectorAll('.step');
-
-            steps.forEach(step => {
-                const choices = step.querySelectorAll('.step-question-choice');
-
-                choices.forEach(choice => {
-                    const radio = choice.querySelector('.step-question-radio');
-
-                    choice.addEventListener('click', () => {
-                        if (radio) {
-                            radio.checked = true;
-                        }
-
-                        choices.forEach(c => {
-                            delete c.dataset.variant;
-                        });
-
-                        choice.dataset.variant = 'selected';
-
-                        const choicesContainer = step.querySelector('.step-question-choices');
-                        if (choicesContainer) {
-                            choicesContainer.dataset.answered = '';
-                        }
-
-                        const allExplanations = step.querySelectorAll('.answer-explanation');
-                        allExplanations.forEach(exp => delete exp.dataset.visible);
-
-                        const isCorrect = choice.dataset.type === 'correct';
-                        if (isCorrect) {
-                            allExplanations.forEach(exp => exp.dataset.visible = '');
-                        }
-                        else {
-                            const exp = choice.querySelector('.answer-explanation');
-                            if (exp) exp.dataset.visible = '';
-                        }
-                    });
-                });
-            });
-
-            // Add a "Retry wrong ones" button, shown once a question has been answered wrongly
             if (section.querySelector('.retry-wrong')) return;
 
             const retryButton = document.createElement('button');
             retryButton.type = 'button';
             retryButton.className = 'retry-wrong';
             retryButton.textContent = 'Retry wrong ones';
-            retryButton.hidden = true;
             section.append(retryButton);
 
-            const getWrongSteps = () => [...steps].filter(step => {
-                const selected = step.querySelector('.step-question-choice[data-variant="selected"]');
-                return selected && selected.dataset.type !== 'correct';
-            });
-
-            section.addEventListener('click', () => {
-                retryButton.hidden = getWrongSteps().length === 0;
-            });
-
             retryButton.addEventListener('click', () => {
-                getWrongSteps().forEach(step => {
-                    step.querySelectorAll('.step-question-choice').forEach(choice => {
-                        delete choice.dataset.variant;
-                        choice.querySelector('.step-question-radio').checked = false;
-                    });
-                    delete step.querySelector('.step-question-choices').dataset.answered;
-                    step.querySelectorAll('.answer-explanation').forEach(explanation => delete explanation.dataset.visible);
+                section.querySelectorAll('.step-question-choice:not([data-type="correct"]) .step-question-radio:checked').forEach(radio => {
+                    radio.checked = false;
                 });
-                retryButton.hidden = true;
             });
         });
     }
