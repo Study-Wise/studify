@@ -64,10 +64,6 @@ const themes = [
         globalThis.localStorage.setItem('user-theme', value);
     }
 
-    function isMenuOpen() {
-        return themeMenu ? !themeMenu.hasAttribute('hidden') : false;
-    }
-
     function openMenu() {
         themeMenu?.removeAttribute('hidden');
         themeSwitcher?.setAttribute('aria-expanded', 'true');
@@ -88,7 +84,7 @@ const themes = [
 
     themeSwitcher?.addEventListener('click', (e) => {
         e.stopPropagation();
-        if (isMenuOpen()) closeMenu(false);
+        if (themeMenu && !themeMenu.hasAttribute('hidden')) closeMenu(false);
         else openMenu();
     });
 
@@ -142,6 +138,6 @@ const themes = [
 
     // Close menu when clicking outside
     document.addEventListener('click', () => {
-        if (isMenuOpen()) closeMenu(false);
+        if (themeMenu && !themeMenu.hasAttribute('hidden')) closeMenu(false);
     });
 </script>
