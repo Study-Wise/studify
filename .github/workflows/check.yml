@@ -17,6 +17,8 @@ jobs:
                   node-version: '20'
                   cache: 'npm'
             - run: npm ci
+            - name: ESLint
+              run: npx eslint src --max-warnings 0
             - name: Astro Check
               run: npx astro check
             - name: Stylelint
