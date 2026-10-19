@@ -36,7 +36,7 @@ body:has(.webpage-page) {
 
         .btn-primary {
             padding: $spacing-medium $spacing-large;
-            background-color: list.nth(map.get($accent-colors, primary), 1);
+            background-color: $section-title-light;
             color: white;
             border: none;
             border-radius: $border-radius-medium;
@@ -44,7 +44,7 @@ body:has(.webpage-page) {
             transition: background-color $transition-base $ease;
 
             &:hover {
-                background-color: list.nth(map.get($accent-colors, primary), 1);
+                background-color: $section-title-light;
                 filter: brightness(1.1);
                 translate: none;
                 box-shadow: none;

@@ -30,7 +30,7 @@
         }
 
         .btn-primary {
-            background-color: list.nth(map.get($accent-colors, primary), 1);
+            background-color: $section-title-light;
             color: white;
             border: none;
             border-radius: 0.5rem;
@@ -38,7 +38,7 @@
             transition: background-color 0.2s;
 
             &:hover {
-                background-color: list.nth(map.get($accent-colors, primary), 2);
+                background-color: $section-title-light;
                 translate: none;
                 box-shadow: none;
             }
