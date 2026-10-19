@@ -3,6 +3,7 @@ import { labels } from '@/lib/tools';
 
 const { page, category, mode, id } = Astro.props;
 ---
+{page === 'chat' && <script is:inline src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js"></script>}
 <script is:inline define:vars={{ page, category, mode, id, labels }}>
     let threadId = 0;
     let userSettings = {};
@@ -445,38 +446,26 @@ const { page, category, mode, id } = Astro.props;
     const streamRenderInterval = 100;
     let streamRendering = false;
 
-    // Cut off a formula that is still being written, so half a formula never shows
+    // Drop a formula that is still being written, so half a formula never shows
     function hideIncompleteMath(text) {
         const closers = { '$$': '$$', '$': '$', '\\(': '\\)', '\\[': '\\]' };
-        let open = null;
-        let openIndex = 0;
-        for (const match of text.matchAll(/\$\$|\$|\\\(|\\\[|\\\)|\\\]/g)) {
-            if (open === null) {
-                if (closers[match[0]]) {
-                    open = match[0];
-                    openIndex = match.index;
-                }
-            }
-            else if (match[0] === closers[open]) open = null;
+        let open;
+        for (const match of text.matchAll(/\$\$|\$|\\[()[\]]/g)) {
+            if (!open && closers[match[0]]) open = match;
+            else if (open && match[0] === closers[open[0]]) open = undefined;
         }
-        return open === null ? text : text.slice(0, openIndex);
+        return open ? text.slice(0, open.index) : text;
     }
 
-    // Render the reply so far as markdown. Math is typeset off screen first, then swapped in, so raw LaTeX never shows
+    // Typeset the reply so far off screen, then swap it in, so raw LaTeX never shows
     async function renderStreamedText(target, text) {
-        if (!window.marked) {
-            target.textContent = text;
-            return;
-        }
-
         streamRendering = true;
         const staging = document.createElement('div');
         staging.className = 'message-content stream-staging';
-        staging.innerHTML = window.marked.parse(hideIncompleteMath(text), { breaks: true, gfm: true });
+        staging.innerHTML = window.marked.parse(hideIncompleteMath(text), { breaks: true });
         target.after(staging);
         try {
             await typesetMathJax([staging]);
-            // The final reply may have arrived while this was typesetting
             if (target.dataset.final === undefined) target.innerHTML = staging.innerHTML;
         } finally {
             staging.remove();
