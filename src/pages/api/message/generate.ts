@@ -23,6 +23,10 @@ import type { APIRoute } from 'astro';
 
 type Thread = InferSelectModel<typeof threadsTable>;
 
+const STREAM_HTML_INTERVAL = 100;
+
+const MATH_CLOSERS: Record<string, string> = { '$$': '$$', '$': '$', '\\(': '\\)', '\\[': '\\]' };
+
 export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();
     const startTime = Date.now();
@@ -432,12 +436,28 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
             async start(controller) {
                 try {
                     const pendingCalls = new Map<string, string>(); // toolCallId -> toolName
+                    let streamedText = '';
+                    let lastHtmlAt = 0;
+                    const { marked } = await import('marked');
+                    marked.setOptions({ breaks: true, gfm: true });
 
                     for await (const part of streamResult.fullStream) {
                         const streamPart = part;
                         if (streamPart.type === 'text-delta') {
                             const textDelta = streamPart.text || '';
-                            controller.enqueue(sendEvent({ type: 'text', text: textDelta }));
+                            streamedText += textDelta;
+                            let html: string | undefined;
+                            if (Date.now() - lastHtmlAt >= STREAM_HTML_INTERVAL) {
+                                lastHtmlAt = Date.now();
+                                // Leave out a formula that is still being written, so half a formula never shows
+                                let open: RegExpMatchArray | undefined;
+                                for (const match of streamedText.matchAll(/\$\$|\$|\\[()[\]]/g)) {
+                                    if (!open && MATH_CLOSERS[match[0]]) open = match;
+                                    else if (open && match[0] === MATH_CLOSERS[open[0]]) open = undefined;
+                                }
+                                html = await marked.parse(open ? streamedText.slice(0, open.index) : streamedText);
+                            }
+                            controller.enqueue(sendEvent({ type: 'text', text: textDelta, html }));
                         }
                         else if (streamPart.type === 'tool-call') {
                             const toolCallId = streamPart.toolCallId || '';
@@ -466,8 +486,6 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                     const [fullText, steps] = await Promise.all([streamResult.text, streamResult.steps]);
                     const { clientToolCalls, toolCallLog } = extractToolData(steps);
 
-                    const { marked } = await import('marked');
-                    marked.setOptions({ breaks: true, gfm: true });
                     const htmlText = await marked.parse(fullText);
 
                     const assistantMessage: Message = { id: nanoid(), role: 'assistant', content: fullText };

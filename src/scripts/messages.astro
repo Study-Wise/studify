@@ -442,6 +442,24 @@ const { page, category, mode, id } = Astro.props;
         throw new Error('The response ended before the chat was created. Please try again.');
     }
 
+    let streamRendering = false;
+
+    // Typeset the reply so far off screen, then swap it in, so raw LaTeX never shows
+    async function renderStreamedHtml(target, html) {
+        streamRendering = true;
+        const staging = document.createElement('div');
+        staging.className = 'message-content stream-staging';
+        staging.innerHTML = html;
+        target.after(staging);
+        try {
+            await typesetMathJax([staging]);
+            if (target.dataset.final === undefined) target.innerHTML = staging.innerHTML;
+        } finally {
+            staging.remove();
+            streamRendering = false;
+        }
+    }
+
     async function readStream(response) {
         if (page === 'home') {
             await readHomeStream(response);
@@ -457,7 +475,6 @@ const { page, category, mode, id } = Astro.props;
         let messageDiv = null;
         let messageContent = null;
         let toolCallLogDiv = null;
-        let accumulatedText = '';
         let doneData = null;
         const toolCallMap = new Map();
 
@@ -484,8 +501,7 @@ const { page, category, mode, id } = Astro.props;
                             messageDiv.appendChild(messageContent);
                             chatMessages.appendChild(messageDiv);
                         }
-                        accumulatedText += data.text;
-                        messageContent.textContent = accumulatedText;
+                        if (data.html && !streamRendering) renderStreamedHtml(messageContent, data.html);
                         chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
 
                     }
@@ -524,6 +540,7 @@ const { page, category, mode, id } = Astro.props;
                     else if (data.type === 'done') {
                         doneData = data;
                         if (messageContent && data.generatedText) {
+                            messageContent.dataset.final = '';
                             messageContent.innerHTML = data.generatedText;
                         }
 
