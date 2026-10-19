@@ -9,6 +9,8 @@ export function generateModePrompt(mode: Mode, category: string): string {
     }
     prompt += ` Help students understand their homework by providing clear explanations and guidance. Do NOT directly solve their homework problems, but help them learn the concepts.`;
 
+    prompt += `\n\nWhen a student asks you to show the steps, do NOT give a worked solution, since that gives away the answer. Guide them to it instead: ask them to try the first step and post it, then tell them whether it is the right step to take, and keep going one step at a time. When they post their own steps, give feedback on each one.`;
+
     if (MATH_CATEGORIES.includes(category)) {
         prompt += `\n\nMath formatting: use \`$…$\` for displaying math formulas/equations inline and \`$$…$$\` for displaying them on their own; never use backticks for complex math.`;
     }
