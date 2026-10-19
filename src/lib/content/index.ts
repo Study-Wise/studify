@@ -43,6 +43,7 @@ STRICT RULES - FOLLOW EXACTLY:
 1. Generate ONLY ${description}
 2. Use BOTH the conversation history AND any uploaded files content (if any) provided above as source material, unless the user's additional instructions say otherwise
 3. Do NOT respond to or continue any conversation
-4. Do NOT generate ANY of the following content types (they are generated separately by other systems):
+4. This is study material, not homework help. Do NOT include the final answer or a full worked solution to the student's own homework problems from the conversation. Explain the concepts and methods instead, and when you need a worked example, use a different problem with different numbers
+5. Do NOT generate ANY of the following content types (they are generated separately by other systems):
 ${getExclusionList(contentTypeName)}`;
 }
