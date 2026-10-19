@@ -86,8 +86,7 @@ const processedMessages = await Promise.all(
     messages
         .filter(message => message.role !== 'system')
         .map(async message => ({
-            id: message.id,
-            role: message.role,
+            ...message,
             htmlContent: await (message.role === 'user' ? userMarked : marked).parse(message.content),
             toolCallLog: message.toolCallLog ?? []
         }))

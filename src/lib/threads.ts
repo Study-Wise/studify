@@ -43,7 +43,7 @@ export function parseThreadData(value: ThreadData | string): ThreadData {
         if ((message.role !== 'system' && message.role !== 'user' && message.role !== 'assistant') || typeof message.content !== 'string') {
             throw new Error('Invalid thread message');
         }
-        return { id: message.id, role: message.role, content: message.content };
+        return message;
     });
     return { messages };
 }
