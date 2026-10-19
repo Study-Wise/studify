@@ -442,6 +442,48 @@ const { page, category, mode, id } = Astro.props;
         throw new Error('The response ended before the chat was created. Please try again.');
     }
 
+    const streamRenderInterval = 100;
+    let streamRendering = false;
+
+    // Cut off a formula that is still being written, so half a formula never shows
+    function hideIncompleteMath(text) {
+        const closers = { '$$': '$$', '$': '$', '\\(': '\\)', '\\[': '\\]' };
+        let open = null;
+        let openIndex = 0;
+        for (const match of text.matchAll(/\$\$|\$|\\\(|\\\[|\\\)|\\\]/g)) {
+            if (open === null) {
+                if (closers[match[0]]) {
+                    open = match[0];
+                    openIndex = match.index;
+                }
+            }
+            else if (match[0] === closers[open]) open = null;
+        }
+        return open === null ? text : text.slice(0, openIndex);
+    }
+
+    // Render the reply so far as markdown. Math is typeset off screen first, then swapped in, so raw LaTeX never shows
+    async function renderStreamedText(target, text) {
+        if (!window.marked) {
+            target.textContent = text;
+            return;
+        }
+
+        streamRendering = true;
+        const staging = document.createElement('div');
+        staging.className = 'message-content stream-staging';
+        staging.innerHTML = window.marked.parse(hideIncompleteMath(text), { breaks: true, gfm: true });
+        target.after(staging);
+        try {
+            await typesetMathJax([staging]);
+            // The final reply may have arrived while this was typesetting
+            if (target.dataset.final === undefined) target.innerHTML = staging.innerHTML;
+        } finally {
+            staging.remove();
+            streamRendering = false;
+        }
+    }
+
     async function readStream(response) {
         if (page === 'home') {
             await readHomeStream(response);
@@ -458,6 +500,7 @@ const { page, category, mode, id } = Astro.props;
         let messageContent = null;
         let toolCallLogDiv = null;
         let accumulatedText = '';
+        let lastRender = 0;
         let doneData = null;
         const toolCallMap = new Map();
 
@@ -485,7 +528,10 @@ const { page, category, mode, id } = Astro.props;
                             chatMessages.appendChild(messageDiv);
                         }
                         accumulatedText += data.text;
-                        messageContent.textContent = accumulatedText;
+                        if (!streamRendering && Date.now() - lastRender >= streamRenderInterval) {
+                            lastRender = Date.now();
+                            renderStreamedText(messageContent, accumulatedText);
+                        }
                         chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
 
                     }
@@ -524,6 +570,7 @@ const { page, category, mode, id } = Astro.props;
                     else if (data.type === 'done') {
                         doneData = data;
                         if (messageContent && data.generatedText) {
+                            messageContent.dataset.final = '';
                             messageContent.innerHTML = data.generatedText;
                         }
 
