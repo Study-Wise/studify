@@ -6,6 +6,7 @@ import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
 import categories from '@/lib/modes';
 import config from '@/lib/config';
 import type { Message } from '@/lib/threads';
+import { nanoid } from 'nanoid';
 
 import { eq } from 'drizzle-orm';
 
@@ -54,7 +55,7 @@ export async function checkForOneMessage({
 
                 const updatedMessages: Message[] = [
                     ...nonSystemMessages,
-                    { role: 'assistant', content: welcomeMessage }
+                    { id: nanoid(), role: 'assistant', content: welcomeMessage }
                 ];
 
                 const currentThreadData = typeof thread.thread === 'string' ? {} : thread.thread;

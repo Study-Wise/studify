@@ -86,6 +86,7 @@ const processedMessages = await Promise.all(
     messages
         .filter(message => message.role !== 'system')
         .map(async message => ({
+            id: message.id,
             role: message.role,
             htmlContent: await (message.role === 'user' ? userMarked : marked).parse(message.content),
             toolCallLog: message.toolCallLog ?? []
@@ -161,7 +162,7 @@ export const inNav = 'hide';
                                     ))}
                                 </div>
                             )}
-                            <div class:list={['message', message.role]}>
+                            <div id={message.id && `message-${message.id}`} class:list={['message', message.role]}>
                                 <div class:list={['message-content', { 'bg-primary': message.role === 'user', 'mathjax-pending': mathDelimiterPattern.test(message.htmlContent) }]} set:html={message.htmlContent} />
                             </div>
                         </>

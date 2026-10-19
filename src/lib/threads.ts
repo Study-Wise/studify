@@ -16,6 +16,7 @@ export interface ToolCallLogEntry {
 
 // Message type for AI conversations
 export interface Message {
+    id?: string;
     role: 'system' | 'user' | 'assistant';
     content: string;
     toolCallLog?: ToolCallLogEntry[];
@@ -35,14 +36,14 @@ export function parseThreadData(value: ThreadData | string): ThreadData {
     if (typeof parsed !== 'object' || parsed === null || !('messages' in parsed) || !Array.isArray(parsed.messages)) {
         throw new Error('Invalid thread data');
     }
-    const messages: Message[] = parsed.messages.map((message: JSONValue) => {
+    const messages: Message[] = parsed.messages.map((message: Message) => {
         if (typeof message !== 'object' || message === null || Array.isArray(message) || !('role' in message) || !('content' in message)) {
             throw new Error('Invalid thread message');
         }
         if ((message.role !== 'system' && message.role !== 'user' && message.role !== 'assistant') || typeof message.content !== 'string') {
             throw new Error('Invalid thread message');
         }
-        return { role: message.role, content: message.content };
+        return { id: message.id, role: message.role, content: message.content };
     });
     return { messages };
 }

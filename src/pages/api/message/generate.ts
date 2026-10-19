@@ -255,7 +255,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
         if (convoHistory.length === 1) {
             let messagesSaved = false;
             try {
-                convoHistory.push({ role: 'user', content: userPrompt });
+                convoHistory.push({ id: nanoid(), role: 'user', content: userPrompt });
 
                 const tools = modeObj.tools || {};
                 const welcomeMessage = await generateWelcomeMessage({
@@ -268,7 +268,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                     toolContext
                 });
 
-                convoHistory.push({ role: 'assistant', content: welcomeMessage });
+                convoHistory.push({ id: nanoid(), role: 'assistant', content: welcomeMessage });
 
                 const convoHistoryWithoutSystem = convoHistory.filter(msg => msg.role !== 'system');
 
@@ -355,7 +355,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
         }
 
         // Add the user message to the history that gets saved. streamText works on a filtered copy, so a user message it appends never reaches this array
-        convoHistory.push({ role: 'user', content: userPrompt });
+        convoHistory.push({ id: nanoid(), role: 'user', content: userPrompt });
 
         const tools = modeObj.tools || {};
         let streamResult: Awaited<ReturnType<typeof streamText>>;
@@ -470,7 +470,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                     marked.setOptions({ breaks: true, gfm: true });
                     const htmlText = await marked.parse(fullText);
 
-                    const assistantMessage: Message = { role: 'assistant', content: fullText };
+                    const assistantMessage: Message = { id: nanoid(), role: 'assistant', content: fullText };
                     if (toolCallLog.length > 0) assistantMessage.toolCallLog = toolCallLog;
                     convoHistory.push(assistantMessage);
                     const convoHistoryWithoutSystem = convoHistory.filter(msg => msg.role !== 'system');
