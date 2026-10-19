@@ -29,6 +29,12 @@ $pad: $spacing-medium;
         background-color: var(--bor);
     }
 
+    .quiz-score {
+        margin: 0;
+        font-weight: $font-weight-semibold;
+        color: var(--body-text);
+    }
+
     .retry-wrong,
     .check-answer {
         align-self: flex-start;
