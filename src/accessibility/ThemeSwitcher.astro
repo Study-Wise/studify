@@ -1,54 +1,148 @@
 ---
 import '@/styles/accessibility/theme-switcher.scss';
+
+const themes = [
+    { value: 'system', icon: 'contrast', label: 'System' },
+    { value: 'light', icon: 'light_mode', label: 'Light' },
+    { value: 'dark', icon: 'dark_mode', label: 'Dark' },
+];
 ---
 
-<button type="button" id="theme-switcher" class="theme-switcher" aria-label="Toggle high contrast mode" role="button" tabindex="0">
-    <span class="material-symbols-outlined" aria-hidden="true">contrast</span>
-</button>
+<div class="theme-switcher-container">
+    <button
+        type="button"
+        id="theme-switcher"
+        class="theme-switcher"
+        aria-label="Theme: System"
+        aria-haspopup="menu"
+        aria-expanded="false"
+        aria-controls="theme-menu"
+    >
+        <span class="material-symbols-outlined" aria-hidden="true">contrast</span>
+    </button>
+    <div class="theme-menu" id="theme-menu" role="menu" aria-label="Theme" hidden>
+        {themes.map((theme) => (
+            <button
+                type="button"
+                class="theme-menu-item"
+                role="menuitemradio"
+                aria-checked="false"
+                tabindex="-1"
+                data-theme-value={theme.value}
+                data-theme-icon={theme.icon}
+            >
+                <span class="material-symbols-outlined" aria-hidden="true">{theme.icon}</span>
+                <span class="theme-menu-label">{theme.label}</span>
+                <span class="material-symbols-outlined theme-menu-check" aria-hidden="true">check</span>
+            </button>
+        ))}
+    </div>
+</div>
 
 <script>
-    let userTheme = localStorage.getItem('user-theme') as keyof typeof themes || 'system';
+    const themeSwitcher = document.getElementById('theme-switcher');
+    const themeMenu = document.getElementById('theme-menu');
+    const switcherIcon = themeSwitcher?.querySelector('.material-symbols-outlined');
+    const menuItems = Array.from(themeMenu?.querySelectorAll<globalThis.HTMLButtonElement>('.theme-menu-item') ?? []);
 
-    const themeSwitcher = document.querySelector('.theme-switcher') || document.createElement('div');
-    const switcherIcon = themeSwitcher.querySelector('.material-symbols-outlined') || document.createElement('span');
+    const storedTheme = globalThis.localStorage.getItem('user-theme') ?? 'system';
+    const isKnownTheme = menuItems.some((item) => item.dataset.themeValue === storedTheme);
 
-    const themes = {
-        'system': {
-            icon: 'contrast',
-            ariaLabel: 'System theme',
-        },
-        'light': {
-            icon: 'light_mode',
-            ariaLabel: 'Light theme',
-        },
-        'dark': {
-            icon: 'dark_mode',
-            ariaLabel: 'Dark theme',
-        }
-    };
+    setTheme(isKnownTheme ? storedTheme : 'system');
 
-    document.addEventListener('DOMContentLoaded', () => {
-        setTheme(userTheme);
+    function setTheme(value: string) {
+        const selectedItem = menuItems.find((item) => item.dataset.themeValue === value);
+        if (!selectedItem) return;
 
-        addListener();
+        menuItems.forEach((item) => {
+            item.setAttribute('aria-checked', String(item === selectedItem));
+        });
+
+        const label = selectedItem.querySelector('.theme-menu-label')?.textContent ?? value;
+        if (switcherIcon) switcherIcon.textContent = selectedItem.dataset.themeIcon ?? '';
+        themeSwitcher?.setAttribute('aria-label', `Theme: ${label}`);
+        document.documentElement.setAttribute('data-theme', value);
+        globalThis.localStorage.setItem('user-theme', value);
+    }
+
+    function isMenuOpen() {
+        return themeMenu ? !themeMenu.hasAttribute('hidden') : false;
+    }
+
+    function openMenu() {
+        themeMenu?.removeAttribute('hidden');
+        themeSwitcher?.setAttribute('aria-expanded', 'true');
+        const checkedItem = menuItems.find((item) => item.getAttribute('aria-checked') === 'true');
+        (checkedItem ?? menuItems[0])?.focus();
+    }
+
+    function closeMenu(returnFocus: boolean) {
+        themeMenu?.setAttribute('hidden', '');
+        themeSwitcher?.setAttribute('aria-expanded', 'false');
+        if (returnFocus) themeSwitcher?.focus();
+    }
+
+    function focusItem(index: number) {
+        const count = menuItems.length;
+        menuItems[(index + count) % count]?.focus();
+    }
+
+    themeSwitcher?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (isMenuOpen()) closeMenu(false);
+        else openMenu();
     });
 
-    function setTheme(t: keyof typeof themes) {
-        const theme = themes[t];
-        switcherIcon.textContent = theme.icon;
-        document.documentElement.setAttribute('data-theme', t);
-        themeSwitcher.setAttribute('aria-label', theme.ariaLabel);
-        localStorage.setItem('user-theme', t);
-    }
+    themeSwitcher?.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            openMenu();
+        }
+    });
 
-    function addListener() {
-        themeSwitcher.addEventListener('click', () => {
-            let newIndex = Object.keys(themes).indexOf(userTheme) + 1;
-            if (newIndex >= Object.keys(themes).length) {
-                newIndex = 0;
-            }
-            userTheme = Object.keys(themes)[newIndex] as keyof typeof themes;
-            setTheme(userTheme);
+    menuItems.forEach((item) => {
+        item.addEventListener('click', () => {
+            setTheme(item.dataset.themeValue ?? 'system');
+            closeMenu(true);
         });
-    }
+    });
+
+    themeMenu?.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+
+    themeMenu?.addEventListener('keydown', (e) => {
+        const currentIndex = menuItems.findIndex((item) => item === document.activeElement);
+
+        switch (e.key) {
+            case 'ArrowDown':
+                e.preventDefault();
+                focusItem(currentIndex + 1);
+                break;
+            case 'ArrowUp':
+                e.preventDefault();
+                focusItem(currentIndex - 1);
+                break;
+            case 'Home':
+                e.preventDefault();
+                focusItem(0);
+                break;
+            case 'End':
+                e.preventDefault();
+                focusItem(menuItems.length - 1);
+                break;
+            case 'Escape':
+                e.preventDefault();
+                closeMenu(true);
+                break;
+            case 'Tab':
+                closeMenu(false);
+                break;
+        }
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', () => {
+        if (isMenuOpen()) closeMenu(false);
+    });
 </script>
