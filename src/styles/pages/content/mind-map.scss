@@ -1,5 +1,4 @@
 @use '../../variables/globals' as *;
-@use 'sass:color';
 @use 'sass:list';
 @use 'sass:map';
 
@@ -31,7 +30,7 @@
         }
 
         .btn-primary {
-            background-color: color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: -15%);
+            background-color: list.nth(map.get($accent-colors, primary), 1);
             color: white;
             border: none;
             border-radius: 0.5rem;
@@ -39,7 +38,7 @@
             transition: background-color 0.2s;
 
             &:hover {
-                background-color: color.adjust(list.nth(map.get($accent-colors, primary), 2), $lightness: -15%);
+                background-color: list.nth(map.get($accent-colors, primary), 2);
                 translate: none;
                 box-shadow: none;
             }

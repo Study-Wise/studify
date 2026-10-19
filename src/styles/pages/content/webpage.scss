@@ -1,6 +1,5 @@
 @use '../../variables/globals' as *;
 @use '../../variables/tokens' as *;
-@use 'sass:color';
 @use 'sass:list';
 @use 'sass:map';
 
@@ -37,7 +36,7 @@ body:has(.webpage-page) {
 
         .btn-primary {
             padding: $spacing-medium $spacing-large;
-            background-color: color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: -15%);
+            background-color: list.nth(map.get($accent-colors, primary), 1);
             color: white;
             border: none;
             border-radius: $border-radius-medium;
@@ -45,7 +44,7 @@ body:has(.webpage-page) {
             transition: background-color $transition-base $ease;
 
             &:hover {
-                background-color: color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: -15%);
+                background-color: list.nth(map.get($accent-colors, primary), 1);
                 filter: brightness(1.1);
                 translate: none;
                 box-shadow: none;
