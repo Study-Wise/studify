@@ -11,11 +11,11 @@ import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
 import { getValidModelAndProvider, providers } from '@/lib/models';
 import categories from '@/lib/modes';
 import type { Mode } from '@/lib/modes';
-import { renderStreamedText } from '@/lib/render-streamed-text';
 import { parseThreadData, type Message } from '@/lib/threads';
 import type { ToolContext } from '@/lib/tools';
 import { VendorError, getUserErrorMessage } from '@/lib/user-errors';
 import isValidEmail from '@/lib/validation';
+import { marked } from 'marked';
 import { nanoid } from 'nanoid';
 
 import { and, eq, type InferSelectModel } from 'drizzle-orm';
@@ -25,6 +25,18 @@ import type { APIRoute } from 'astro';
 type Thread = InferSelectModel<typeof threadsTable>;
 
 const STREAM_HTML_INTERVAL = 100;
+
+const MATH_CLOSERS: Record<string, string> = { '$$': '$$', '$': '$', '\\(': '\\)', '\\[': '\\]' };
+
+// Render the reply so far as HTML, leaving out a formula that is still being written so half a formula never shows
+async function renderStreamedText(text: string): Promise<string> {
+    let open: RegExpMatchArray | undefined;
+    for (const match of text.matchAll(/\$\$|\$|\\[()[\]]/g)) {
+        if (!open && MATH_CLOSERS[match[0]]) open = match;
+        else if (open && match[0] === MATH_CLOSERS[open[0]]) open = undefined;
+    }
+    return marked.parse(open ? text.slice(0, open.index) : text, { breaks: true, gfm: true });
+}
 
 export const POST: APIRoute = async ({ request, locals }) => {
     const requestId = nanoid();
