@@ -46,9 +46,8 @@ const themes = [
     const menuItems = Array.from(themeMenu?.querySelectorAll<globalThis.HTMLButtonElement>('.theme-menu-item') ?? []);
 
     const storedTheme = globalThis.localStorage.getItem('user-theme') ?? 'system';
-    const isKnownTheme = menuItems.some((item) => item.dataset.themeValue === storedTheme);
 
-    setTheme(isKnownTheme ? storedTheme : 'system');
+    setTheme(menuItems.some((item) => item.dataset.themeValue === storedTheme) ? storedTheme : 'system');
 
     function setTheme(value: string) {
         const selectedItem = menuItems.find((item) => item.dataset.themeValue === value);
