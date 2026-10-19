@@ -25,12 +25,12 @@
         }
 
         p {
-            color: rgb(from var(--body-text) r g b / 70%);
+            color: var(--body-text);
             opacity: 1;
         }
 
         .btn-primary {
-            background-color: list.nth(map.get($accent-colors, primary), 1);
+            background-color: $section-title-light;
             color: white;
             border: none;
             border-radius: 0.5rem;
@@ -38,7 +38,8 @@
             transition: background-color 0.2s;
 
             &:hover {
-                background-color: list.nth(map.get($accent-colors, primary), 2);
+                background-color: $section-title-light;
+                filter: brightness(1.1);
                 translate: none;
                 box-shadow: none;
             }
