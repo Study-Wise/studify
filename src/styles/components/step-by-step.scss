@@ -29,7 +29,8 @@ $pad: $spacing-medium;
         background-color: var(--bor);
     }
 
-    .retry-wrong {
+    .retry-wrong,
+    .check-answer {
         align-self: flex-start;
         padding: $spacing-small $spacing-medium;
         font: inherit;
@@ -39,9 +40,14 @@ $pad: $spacing-medium;
         border-radius: $border-radius-medium;
         cursor: pointer;
 
-        &:hover,
+        &:hover:not(:disabled),
         &:focus-visible {
             background-color: var(--message-bg);
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
     }
 
@@ -78,6 +84,10 @@ $pad: $spacing-medium;
                     border-radius: math.div($bdr, 16);
                     padding: math.div($pad, 2) $pad;
                     transition: background-color $transition-fast $ease;
+                }
+
+                &[data-variant="picked"] .step-question-choice-content {
+                    background-color: rgb(from lightblue r g b / 60%);
                 }
 
                 &[data-type="correct"][data-variant="selected"] .step-question-choice-content {
@@ -128,10 +138,6 @@ $pad: $spacing-medium;
             &[data-answered] .step-question-choice[data-type="correct"]:not([data-variant]) .step-question-choice-content {
                 background-color: hsl(120deg 73% 87%);
                 color: $body-text;
-            }
-
-            &[data-answered] .step-question-choice:not([data-type="correct"], [data-variant]) .step-question-choice-content {
-                background-color: hsl(0deg 100% 80% / 50%);
             }
 
             .answer-explanation[data-visible] {

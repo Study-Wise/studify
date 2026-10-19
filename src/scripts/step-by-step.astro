@@ -9,12 +9,27 @@
             const steps = section.querySelectorAll('.step');
 
             steps.forEach(step => {
+                // Setting up a step twice would add its listeners and button twice
+                if (step.dataset.ready !== undefined) return;
+                step.dataset.ready = '';
+
                 const choices = step.querySelectorAll('.step-question-choice');
+                const choicesContainer = step.querySelector('.step-question-choices');
+
+                const checkButton = document.createElement('button');
+                checkButton.type = 'button';
+                checkButton.className = 'check-answer';
+                checkButton.textContent = 'Check answer';
+                checkButton.disabled = true;
+                step.append(checkButton);
 
                 choices.forEach(choice => {
                     const radio = choice.querySelector('.step-question-radio');
 
+                    // Picking an answer only highlights it. Nothing is revealed until the answer is checked
                     choice.addEventListener('click', () => {
+                        if (step.dataset.checked !== undefined) return;
+
                         if (radio) {
                             radio.checked = true;
                         }
@@ -23,24 +38,27 @@
                             delete c.dataset.variant;
                         });
 
-                        choice.dataset.variant = 'selected';
+                        choice.dataset.variant = 'picked';
+                        checkButton.disabled = false;
+                    });
+                });
 
-                        const choicesContainer = step.querySelector('.step-question-choices');
-                        if (choicesContainer) {
-                            choicesContainer.dataset.answered = '';
-                        }
+                // Checking reveals only the picked answer and the correct one, with their explanations
+                checkButton.addEventListener('click', () => {
+                    const picked = step.querySelector('.step-question-choice[data-variant="picked"]');
+                    if (!picked) return;
 
-                        const allExplanations = step.querySelectorAll('.answer-explanation');
-                        allExplanations.forEach(exp => delete exp.dataset.visible);
+                    picked.dataset.variant = 'selected';
+                    step.dataset.checked = '';
+                    checkButton.hidden = true;
+                    if (choicesContainer) {
+                        choicesContainer.dataset.answered = '';
+                    }
 
-                        const isCorrect = choice.dataset.type === 'correct';
-                        if (isCorrect) {
-                            allExplanations.forEach(exp => exp.dataset.visible = '');
-                        }
-                        else {
-                            const exp = choice.querySelector('.answer-explanation');
-                            if (exp) exp.dataset.visible = '';
-                        }
+                    step.querySelectorAll('.answer-explanation').forEach(exp => delete exp.dataset.visible);
+                    [picked, step.querySelector('.step-question-choice[data-type="correct"]')].forEach(choice => {
+                        const exp = choice?.querySelector('.answer-explanation');
+                        if (exp) exp.dataset.visible = '';
                     });
                 });
             });
@@ -71,7 +89,12 @@
                         choice.querySelector('.step-question-radio').checked = false;
                     });
                     delete step.querySelector('.step-question-choices').dataset.answered;
+                    delete step.dataset.checked;
                     step.querySelectorAll('.answer-explanation').forEach(explanation => delete explanation.dataset.visible);
+
+                    const checkButton = step.querySelector('.check-answer');
+                    checkButton.hidden = false;
+                    checkButton.disabled = true;
                 });
                 retryButton.hidden = true;
             });
