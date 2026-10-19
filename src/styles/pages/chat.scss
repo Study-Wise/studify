@@ -457,6 +457,11 @@ footer, .chat-toolbar {
             }
         }
 
+        &.highlighted .message-content {
+            outline: 2px solid list.nth(map.get($accent-colors, primary), 1);
+            outline-offset: 2px;
+        }
+
         &-timestamp {
             align-self: end;
             padding: 0 math.div($message-space, 2);

@@ -816,6 +816,15 @@ const { page, category, mode, id } = Astro.props;
         }
     }
 
+    function scrollToHashMessage() {
+        const target = window.location.hash ? document.getElementById(window.location.hash.slice('#'.length)) : null;
+        if (!target?.classList.contains('message')) return;
+
+        target.scrollIntoView({ block: 'center' });
+        target.classList.add('highlighted');
+        setTimeout(() => target.classList.remove('highlighted'), 3000);
+    }
+
     async function initializePage() {
         if (page === 'home') {
             onDomLoadHome();
@@ -828,6 +837,11 @@ const { page, category, mode, id } = Astro.props;
             window.activateDesmos();
             const chatMessages = document.querySelector('.chat-messages');
             chatMessages?.scrollTo({ top: chatMessages.scrollHeight, behavior: 'instant' });
+
+            // The page scrolls to the bottom again when it finishes loading, so wait for that before scrolling to a linked message
+            if (document.readyState === 'complete') scrollToHashMessage();
+            else window.addEventListener('load', scrollToHashMessage, { once: true });
+            window.addEventListener('hashchange', scrollToHashMessage);
         }
     }
 
