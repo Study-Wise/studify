@@ -3,7 +3,6 @@ import { labels } from '@/lib/tools';
 
 const { page, category, mode, id } = Astro.props;
 ---
-{page === 'chat' && <script is:inline src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js"></script>}
 <script is:inline define:vars={{ page, category, mode, id, labels }}>
     let threadId = 0;
     let userSettings = {};
@@ -457,14 +456,26 @@ const { page, category, mode, id } = Astro.props;
         return open ? text.slice(0, open.index) : text;
     }
 
+    async function loadMarked() {
+        if (window.marked) return window.marked;
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js';
+            script.addEventListener('load', () => resolve(window.marked));
+            script.addEventListener('error', reject);
+            document.head.appendChild(script);
+        });
+    }
+
     // Typeset the reply so far off screen, then swap it in, so raw LaTeX never shows
     async function renderStreamedText(target, text) {
         streamRendering = true;
         const staging = document.createElement('div');
         staging.className = 'message-content stream-staging';
-        staging.innerHTML = window.marked.parse(hideIncompleteMath(text), { breaks: true });
-        target.after(staging);
         try {
+            const marked = await loadMarked();
+            staging.innerHTML = marked.parse(hideIncompleteMath(text), { breaks: true });
+            target.after(staging);
             await typesetMathJax([staging]);
             if (target.dataset.final === undefined) target.innerHTML = staging.innerHTML;
         } finally {
