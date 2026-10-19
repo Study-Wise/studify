@@ -1,6 +1,7 @@
 @use '../variables/globals' as *;
 @use '../variables/tokens' as *;
 @use '../variables/mixins' as *;
+@use 'sass:color';
 @use 'sass:list';
 @use 'sass:map';
 
@@ -97,8 +98,11 @@
             }
 
             .btn-primary {
-                background: linear-gradient(135deg, $accent-button-bg, $accent-button-bg-end);
-                color: $accent-button-text;
+                background: linear-gradient(135deg,
+                    color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: -15%),
+                    color.adjust(list.nth(map.get($accent-colors, primary), 2), $lightness: -15%)
+                );
+                color: $header-text;
             }
 
             .btn-secondary {

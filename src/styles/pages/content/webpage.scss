@@ -1,5 +1,8 @@
 @use '../../variables/globals' as *;
 @use '../../variables/tokens' as *;
+@use 'sass:color';
+@use 'sass:list';
+@use 'sass:map';
 
 body:has(.webpage-page) {
     max-height: 100dvh;
@@ -34,15 +37,16 @@ body:has(.webpage-page) {
 
         .btn-primary {
             padding: $spacing-medium $spacing-large;
-            background-color: $accent-button-bg;
-            color: $accent-button-text;
+            background-color: color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: -15%);
+            color: white;
             border: none;
             border-radius: $border-radius-medium;
             font-weight: 500;
             transition: background-color $transition-base $ease;
 
             &:hover {
-                background-color: $accent-button-bg-end;
+                background-color: color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: -15%);
+                filter: brightness(1.1);
                 translate: none;
                 box-shadow: none;
             }

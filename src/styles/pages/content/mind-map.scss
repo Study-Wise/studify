@@ -1,4 +1,7 @@
 @use '../../variables/globals' as *;
+@use 'sass:color';
+@use 'sass:list';
+@use 'sass:map';
 
 .mind-map-page {
     width: 100%;
@@ -28,15 +31,15 @@
         }
 
         .btn-primary {
-            background-color: $accent-button-bg;
-            color: $accent-button-text;
+            background-color: color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: -15%);
+            color: white;
             border: none;
             border-radius: 0.5rem;
             font-weight: 500;
             transition: background-color 0.2s;
 
             &:hover {
-                background-color: $accent-button-bg-end;
+                background-color: color.adjust(list.nth(map.get($accent-colors, primary), 2), $lightness: -15%);
                 translate: none;
                 box-shadow: none;
             }
