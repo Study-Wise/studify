@@ -364,7 +364,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                     updateShareLink();
 
                     // Let the chat script use this thread instead of creating another one
-                    window.dispatchEvent(new globalThis.CustomEvent('thread-created', {
+                    window.dispatchEvent(new CustomEvent('thread-created', {
                         detail: { id: data.id, source: 'sidebar' }
                     }));
 
@@ -432,7 +432,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                 else {
                     const CHUNK_SIZE = 3 * 1024 * 1024; // 3MB chunks
                     const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
-                    const uploadId = globalThis.crypto.randomUUID();
+                    const uploadId = crypto.randomUUID();
 
                     for (let i = 0; i < totalChunks; i++) {
                         const start = i * CHUNK_SIZE;

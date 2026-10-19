@@ -312,7 +312,7 @@ const { page, category, mode, id } = Astro.props;
     }
 
     async function typesetMathJax(elements) {
-        const validElements = (Array.isArray(elements) || elements instanceof globalThis.NodeList ? [...elements] : elements ? [elements] : []).filter(el => el != null);
+        const validElements = (Array.isArray(elements) || elements instanceof NodeList || elements ? [...elements] : []).filter(el => el != null);
         if (validElements.length === 0) return;
 
         // Hide messages that contain math until they are typeset so raw LaTeX never shows
@@ -552,7 +552,7 @@ const { page, category, mode, id } = Astro.props;
 
             const isNewChat = id === 'new';
             if (doneData.id && !threadId) {
-                window.dispatchEvent(new globalThis.CustomEvent('thread-created', {
+                window.dispatchEvent(new CustomEvent('thread-created', {
                     detail: { id: doneData.id, source: 'messages' }
                 }));
             }

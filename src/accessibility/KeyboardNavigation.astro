@@ -9,7 +9,7 @@ import '@/styles/accessibility/keyboard-navigation.scss';
 <script>
     class KeyboardNavigation {
         focusableElements: string;
-        skipLinks: globalThis.HTMLElement[];
+        skipLinks: HTMLElement[];
 
         constructor() {
             this.focusableElements = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
@@ -39,7 +39,7 @@ import '@/styles/accessibility/keyboard-navigation.scss';
             });
         }
 
-        handleTabNavigation(e: globalThis.KeyboardEvent) {
+        handleTabNavigation(e: KeyboardEvent) {
             const focusableElements = this.getFocusableElements();
             const currentIndex = focusableElements.findIndex(element => element === document.activeElement);
 
@@ -59,8 +59,8 @@ import '@/styles/accessibility/keyboard-navigation.scss';
             }
         }
 
-        handleTabListNavigation(e: globalThis.KeyboardEvent, tabList: globalThis.Element) {
-            const tabs = Array.from(tabList.querySelectorAll<globalThis.HTMLElement>('[role="tab"]'));
+        handleTabListNavigation(e: KeyboardEvent, tabList: Element) {
+            const tabs = Array.from(tabList.querySelectorAll<HTMLElement>('[role="tab"]'));
             const currentIndex = tabs.findIndex(element => element === document.activeElement);
 
             switch (e.key) {
@@ -84,7 +84,7 @@ import '@/styles/accessibility/keyboard-navigation.scss';
         }
 
         getFocusableElements() {
-            return Array.from(document.querySelectorAll<globalThis.HTMLElement>(this.focusableElements))
+            return Array.from(document.querySelectorAll<HTMLElement>(this.focusableElements))
                 .filter((el) => {
                     return (
                         !el.hasAttribute('disabled') &&

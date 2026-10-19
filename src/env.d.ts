@@ -3,7 +3,7 @@
 declare var document: typeof document;
 
 // Not yet in TypeScript's DOM types
-interface BeforeInstallPromptEvent extends globalThis.Event {
+interface BeforeInstallPromptEvent extends Event {
     prompt(): Promise<void>;
     readonly userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
 }
