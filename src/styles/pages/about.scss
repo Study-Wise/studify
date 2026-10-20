@@ -21,7 +21,8 @@
             flex-wrap: wrap;
         }
 
-        $lh: 1.5;
+        $hover-scale: 1.05;
+        $hover-rotation: 2deg;
 
         .profile-picture, &::before {
             max-width: 65%;
@@ -30,50 +31,40 @@
             border-radius: 50%;
             border: 3px solid #{$profile-border};
             box-shadow: 0 0 5px #{$profile-shadow};
+            transition:
+                opacity $transition-base $ease-out,
+                scale $transition-base $ease-out;
+        }        
+        
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            box-sizing: border-box;
+            width: 100%;
+            aspect-ratio: 1;
+            background-image: var(--data-hover-src);
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
         }
-
-        &[data-hover="true"] {
-            $scale-transition: scale $transition-base $ease-out;
-            $hover-scale: 1.05;
-            $hover-rotation: 2deg;
-
-            .profile-picture {
-                transition:
-                    opacity $transition-base $ease-out,
-                    $scale-transition;
-                
-                &:hover {
-                    opacity: 0;
-                }
-            }
-            
-            &::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                box-sizing: border-box;
-                width: 100%;
-                aspect-ratio: 1;
-                background-image: var(--data-hover-src);
-                background-size: cover;
-                background-position: center;
-                z-index: -1;
-                transition: $scale-transition;
-            }
-
-            .profile-picture:hover,
-            &:has(.profile-picture:hover)::before {
-                animation: --hover-swivel 0.5s ease-in-out;
-                scale: $hover-scale;
-            }
-
-            @keyframes --hover-swivel {
-                  0% { rotate:    0                  }
-                 25% { rotate: #{-1*$hover-rotation} }
-                 50% { rotate:      $hover-rotation  }
-                 75% { rotate: #{-1*$hover-rotation} }
-                100% { rotate:    0                  }
-            }
+        
+        .profile-picture:hover,
+        &:has(.profile-picture:hover)::before {
+            animation: --hover-swivel 0.5s ease-in-out;
+            scale: $hover-scale;
+        }
+        
+        &[data-hover="true"] .profile-picture:hover {
+            opacity: 0;
+        }
+        
+        @keyframes --hover-swivel {
+              0% { rotate: #{ 0*$hover-rotation} }
+             25% { rotate: #{-1*$hover-rotation} }
+             50% { rotate: #{ 1*$hover-rotation} }
+             75% { rotate: #{-1*$hover-rotation} }
+            100% { rotate: #{ 0*$hover-rotation} }
         }
     }
 
