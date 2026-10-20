@@ -6,13 +6,13 @@ const regularMargoImages = import.meta.glob('../../public/assets/people/margo/re
 const regularMargoImageArray = Object.keys(regularMargoImages)
     .sort()
     .map(key => `/assets/people/margo/${key.split('/').pop()}`);
-const regularRandomMargo = regularMargoImageArray[1 + Math.floor(Math.random() * (regularMargoImageArray.length - 1))];
+const randomRegularMargo = regularMargoImageArray[1 + Math.floor(Math.random() * (regularMargoImageArray.length - 1))];
 
-const margoImages = import.meta.glob('../../public/assets/people/margo/*.jpeg');
-const margoImageArray = Object.keys(margoImages)
+const playfulMargoImages = import.meta.glob('../../public/assets/people/margo/playful/*.jpeg');
+const playfulMargoImageArray = Object.keys(playfulMargoImages)
     .sort()
     .map(key => `/assets/people/margo/${key.split('/').pop()}`);
-const randomMargo = margoImageArray[1 + Math.floor(Math.random() * (margoImageArray.length - 1))];
+const randomPlayfulMargo = playfulMargoImageArray[1 + Math.floor(Math.random() * (playfulMargoImageArray.length - 1))];
 ---
 <Layout title="About">
     <section class="about-section card">
@@ -67,8 +67,8 @@ const randomMargo = margoImageArray[1 + Math.floor(Math.random() * (margoImageAr
         </h2>
 
         <div class="about-content">
-            <div class="image-intro" style={{ '--data-hover': 1, '--data-hover-src': `url('${randomMargo}')` }}>
-                <img src={regularRandomMargo} alt="Margo Page profile picture" class="profile-picture" />
+            <div class="image-intro" style={{ '--data-hover': 1, '--data-hover-src': `url('${randomPlayfulMargo}')` }}>
+                <img src={randomRegularMargo} alt="Margo Page profile picture" class="profile-picture" />
                 <p>Hi, I'm Margo Page, the Studify team's AI assistant and the friendly face of Studify support.</p>
             </div>
 
