@@ -11,6 +11,7 @@ import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
 import { getValidModelAndProvider, providers } from '@/lib/models';
 import categories from '@/lib/modes';
 import type { Mode } from '@/lib/modes';
+import generateModePrompt from '@/lib/prompt-generator';
 import { parseThreadData, type Message } from '@/lib/threads';
 import type { ToolContext } from '@/lib/tools';
 import { VendorError, getUserErrorMessage } from '@/lib/user-errors';

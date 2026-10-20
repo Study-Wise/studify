@@ -1,5 +1,5 @@
 import { modules } from '@/lib/tools';
-import { generateModePrompt } from '@/lib/prompt-generator';
+import generateModePrompt from '@/lib/prompt-generator';
 import characters from '@/lib/characters';
 import type { ToolRecord } from '@/lib/tools';
 
