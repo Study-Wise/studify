@@ -16,32 +16,28 @@
 }
 
 .about-section {
-    display: flex;
-    // flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr 4fr;
     gap: $spacing-extra-large;
     align-items: flex-start;
     justify-content: start;
 
     .image-intro {
-        width: 100%;
         display: flex;
         flex-direction: column;
+        align-items: center;
+        text-align: center;
         gap: $spacing-medium;
         isolation: isolate;
 
         @media (width < 500px) {
             flex-wrap: wrap;
-
-            p {
-                text-align: center;
-            }
         }
 
         $lh: 1.5;
 
         .profile-picture, &::before {
-            height: #{2.5lh * $lh};
-            width: #{2.5lh * $lh};
+            max-width: 65%;
             aspect-ratio: 1;
             object-fit: cover;
             border-radius: 50%;
@@ -67,16 +63,18 @@
             background-position: center;
             z-index: -1;
         }
+    }
 
-        p {
-            line-height: $lh;
-            font-size: 2em;
-        }
+    .about-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: $spacing-medium;
     }
 
     .about-text {
         flex-grow: 1;
-        min-width: min(300px, 100%);
+        // min-width: min(300px, 100%);
     }
 
     p {

@@ -255,11 +255,14 @@ main {
     h2 {
         color: var(--section-title);
         font-size: clamp(1.4rem, 4vw, 1.6rem);
-        display: flex;
-        align-items: center;
         font-weight: 600;
+        
+        &:not(.about-name) {
+            display: flex;
+            align-items: center;
+        }
 
-        &:not(.chat-header h2) {
+        &:not(.chat-header h2):not(.about-name) {
             margin-block-end: 25px;
             border-block-end: 1px solid #{$section-title-border};
             padding-block-end: 12px;
