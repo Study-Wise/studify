@@ -87,7 +87,7 @@ const team: TeamData[] = [
             {/* <h2>
                 <span class="material-symbols-outlined" aria-hidden="true">account_circle</span>&nbsp;About {member.name}
             </h2> */}
-            <div class="image-intro" style={member.images?.hover && { '--data-hover': member.images?.hover && 1, '--data-hover-src': member.images?.hover && `url('${member.images.hover}')` }}>
+            <div class="image-intro" data-hover={!!member.images?.hover} style={member.images?.hover && { '--data-hover-src': member.images?.hover && `url('${member.images.hover}')` }}>
                 <img src={member.images?.regular} alt={`${member.name} profile picture`} class="profile-picture" />
                 <div class="about-info">
                     <h2 class="about-name">{member.name}</h2>

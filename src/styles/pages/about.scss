@@ -32,14 +32,6 @@
             box-shadow: 0 0 5px #{$profile-shadow};
         }
 
-        .profile-picture {
-            transition: opacity calc($transition-base * var(--data-hover, 0)) $ease-out;
-
-            &:hover {
-                opacity: clamp(0, calc(1 - var(--data-hover, 0)), 1);
-            }
-        }
-
         &::before {
             content: '';
             position: absolute;
@@ -53,7 +45,15 @@
             z-index: -1;
         }
 
-        &[style*="--data-hover:1"] .profile-picture:hover,
+        &[data-hover="true"] .profile-picture {
+            transition: opacity $transition-base $ease-out;
+
+            &:hover {
+                opacity: 0;
+            }
+        }
+
+        &[data-hover="true"] .profile-picture:hover,
         &:has(.profile-picture:hover)::before {
             animation: --hover-swivel 0.5s ease-in-out;
         }
