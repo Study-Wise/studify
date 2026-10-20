@@ -64,12 +64,14 @@
 
         a {
             color: $color-link;
-            text-decoration: none;
             transition: color 0.2s;
+
+            &:not(:hover) {
+                text-decoration: none;
+            }
 
             &:hover {
                 color: color.adjust($color-link, $lightness: -10%);
-                text-decoration: underline;
             }
         }
 

@@ -76,9 +76,10 @@
                 font-weight: $font-weight-semibold;
                 font-size: $font-size-base;
                 box-shadow: $box-shadow-medium;
-                transition: scale $transition-base $ease-out,
-                            box-shadow $transition-base $ease-out,
-                            translate $transition-base $ease-out;
+                transition: 
+                    scale $transition-base $ease-out,
+                    box-shadow $transition-base $ease-out,
+                    translate $transition-base $ease-out;
 
                 .material-symbols-outlined {
                     font-size: 1.25rem;
@@ -142,10 +143,11 @@
                     text-decoration: none;
                     color: inherit;
                     box-shadow: $box-shadow-small;
-                    transition: scale $transition-base $ease-out,
-                                box-shadow $transition-base $ease-out,
-                                translate $transition-base $ease-out,
-                                border-color $transition-base $ease-out;
+                    transition: 
+                        scale $transition-base $ease-out,
+                        box-shadow $transition-base $ease-out,
+                        translate $transition-base $ease-out,
+                        border-color $transition-base $ease-out;
 
                     &:hover {
                         scale: 1.05;

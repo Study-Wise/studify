@@ -184,9 +184,10 @@
                 border: 1px solid var(--card-border);
                 text-decoration: none;
                 color: inherit;
-                transition: scale $transition-base $ease-out,
-                            box-shadow $transition-base $ease-out,
-                            translate $transition-base $ease-out;
+                transition:
+                    scale $transition-base $ease-out,
+                    box-shadow $transition-base $ease-out,
+                    translate $transition-base $ease-out;
 
                 &:hover {
                     scale: 1.05;
