@@ -2,15 +2,19 @@
 import '@/styles/pages/about.scss';
 import Layout from '@/layouts/Layout.astro';
 
-const allMargoImages = import.meta.glob('../../public/assets/people/margo/*/*.jpeg');
-const allMargoImagesObject: Record<string, string[]> = {};
-Object.keys(allMargoImages).sort().forEach(key => {
+const allTeamImages = import.meta.glob('../../public/assets/people/*/*/*.jpeg');
+const allTeamImagesObject: Record<string, Record<string, string[]>> = {};
+Object.keys(allTeamImages).sort().forEach(key => {
     const pathParts = key.split('/').slice(['..', '..', 'public'].length);
-    const objKey = pathParts[pathParts.length - 2];
+    const username = pathParts[pathParts.length - 3];
+    const type = pathParts[pathParts.length - 2];
 
-    if (!allMargoImagesObject[objKey]) allMargoImagesObject[objKey] = [];
-    allMargoImagesObject[objKey].push(`/${pathParts.join('/')}`);
+    if (!allTeamImagesObject[username]) allTeamImagesObject[username] = {};
+    if (!allTeamImagesObject[username][type]) allTeamImagesObject[username][type] = [];
+    allTeamImagesObject[username][type].push(`/${pathParts.join('/')}`);
 });
+
+const allMargoImagesObject = allTeamImagesObject['margo'];
 
 function random(array: string[]) {
     return array[Math.floor(Math.random() * array.length)]
