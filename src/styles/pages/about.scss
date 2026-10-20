@@ -3,7 +3,7 @@
 
 .about-section {
     display: grid;
-    grid-template-columns: 1fr 4fr;
+    grid-template-columns: 2fr 9fr;
     gap: $spacing-extra-large;
     align-items: flex-start;
     justify-content: start;
@@ -93,6 +93,8 @@
     }
 
     .about-links {
+        padding-block-start: $spacing-small;
+        border-block-start: 1px solid #{$section-title-border};
         display: flex;
         flex-wrap: wrap;
         gap: $spacing-extra-small;
