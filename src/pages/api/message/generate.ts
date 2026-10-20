@@ -132,8 +132,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
             }
         }
 
-        const baseSystemPrompt = await (modeObj.prompt || Promise.resolve(config.systemPrompt));
-
         const threadContext = `
 <thread-context>
 threadId: ${current_thread_id}
@@ -146,7 +144,7 @@ Use the above thread context when calling tools that require category or mode pa
 IMPORTANT: When the user asks you to search, look up information, or use a tool, you MUST actually call the appropriate tool. Do NOT pretend or hallucinate that you used a tool—instead make the actual tool call and use the real results. If a tool call is available and relevant to the user's request, use it.
 `;
 
-        let systemPrompt = baseSystemPrompt + threadContext;
+        let systemPrompt = await (modeObj.prompt || generateModePrompt(categories[config.defaultCategory].modes[config.defaultMode], config.defaultCategory)) + threadContext;
 
         const systemObj: Message = {
             role: 'system',
