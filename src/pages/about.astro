@@ -5,13 +5,13 @@ import Layout from '@/layouts/Layout.astro';
 const regularMargoImages = import.meta.glob('../../public/assets/people/margo/regular/*.jpeg');
 const regularMargoImageArray = Object.keys(regularMargoImages)
     .sort()
-    .map(key => `/assets/people/margo/${key.split('/').pop()}`);
+    .map(key => `/assets/people/margo/regular/${key.split('/').pop()}`);
 const randomRegularMargo = regularMargoImageArray[1 + Math.floor(Math.random() * (regularMargoImageArray.length - 1))];
 
 const playfulMargoImages = import.meta.glob('../../public/assets/people/margo/playful/*.jpeg');
 const playfulMargoImageArray = Object.keys(playfulMargoImages)
     .sort()
-    .map(key => `/assets/people/margo/${key.split('/').pop()}`);
+    .map(key => `/assets/people/margo/playful/${key.split('/').pop()}`);
 const randomPlayfulMargo = playfulMargoImageArray[1 + Math.floor(Math.random() * (playfulMargoImageArray.length - 1))];
 ---
 <Layout title="About">
