@@ -2,16 +2,20 @@
 import '@/styles/pages/about.scss';
 import Layout from '@/layouts/Layout.astro';
 
-const regularMargoImages = import.meta.glob('../../public/assets/people/margo/regular/*.jpeg');
-const regularMargoImageArray = Object.keys(regularMargoImages)
-    .sort()
-    .map(key => `/assets/people/margo/regular/${key.split('/').pop()}`);
+const allMargoImages = import.meta.glob('../../public/assets/people/margo/*/*.jpeg');
+const allMargoImagesObject: Record<string, string[]> = {};
+Object.keys(allMargoImages).sort().forEach(key => {
+    const pathParts = key.split('/').slice(['..', '..', 'public'].length);
+    const objKey = pathParts[pathParts.length - 2];
+
+    if (!allMargoImagesObject[objKey]) allMargoImagesObject[objKey] = [];
+    allMargoImagesObject[objKey].push(`/${pathParts.join('/')}`);
+});
+
+const regularMargoImageArray = allMargoImagesObject['regular'];
 const randomRegularMargo = regularMargoImageArray[1 + Math.floor(Math.random() * (regularMargoImageArray.length - 1))];
 
-const playfulMargoImages = import.meta.glob('../../public/assets/people/margo/playful/*.jpeg');
-const playfulMargoImageArray = Object.keys(playfulMargoImages)
-    .sort()
-    .map(key => `/assets/people/margo/playful/${key.split('/').pop()}`);
+const playfulMargoImageArray = allMargoImagesObject['playful'];
 const randomPlayfulMargo = playfulMargoImageArray[1 + Math.floor(Math.random() * (playfulMargoImageArray.length - 1))];
 ---
 <Layout title="About">
