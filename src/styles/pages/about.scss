@@ -52,6 +52,19 @@
             background-position: center;
             z-index: -1;
         }
+
+        &[style*="--data-hover:1"] .profile-picture:hover,
+        &:has(.profile-picture:hover)::before {
+            animation: --hover-swivel 0.5s ease-in-out;
+        }
+
+        @keyframes --hover-swivel {
+            0% { rotate: 0; }
+            25% { rotate: -2deg; }
+            50% { rotate: 2deg; }
+            75% { rotate: -2deg; }
+            100% { rotate: 0; }
+        }
     }
 
     .about-content {
