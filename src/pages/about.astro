@@ -14,17 +14,17 @@ Object.keys(allTeamImages).sort().forEach(key => {
     allTeamImagesObject[username][type].push(`/${pathParts.join('/')}`);
 });
 
-const allMargoImagesObject = allTeamImagesObject['margo'];
-
 function random(array: string[]) {
     return array[Math.floor(Math.random() * array.length)]
 }
-
 const regularKey = 'regular';
-const hoverKey = random(Object.keys(allMargoImagesObject).filter(key => key !== regularKey && !key.startsWith('_')));
-
-const randomRegularMargo = random(allMargoImagesObject[regularKey]);
-const   randomHoverMargo = random(allMargoImagesObject[  hoverKey]);
+function getRegularImage(username: string) {
+    return random(allTeamImagesObject[username][regularKey])
+};
+function   getHoverImage(username: string) {
+    const hoverKey = random(Object.keys(allTeamImagesObject[username]).filter(key => key !== regularKey && !key.startsWith('_')));
+    return random(allTeamImagesObject[username][  hoverKey])
+};
 
 interface TeamData {
     username: string;
@@ -73,8 +73,8 @@ const team: TeamData[] = [
         name: 'Margo Page',
         role: 'AI Assistant',
         images: {
-            regular: randomRegularMargo,
-            hover: randomHoverMargo
+            regular: getRegularImage('margo'),
+            hover: getHoverImage('margo')
         },
         blurb: "Hi, I'm Margo Page, the Studify team's AI assistant and the friendly face of Studify support.",
         description: "<p>I'm the face of the Studify support team, so I reply to users' support questions, bug reports, and feature requests. I also work on the app itself, helping to design and build new features and improve the user experience.</p>",
