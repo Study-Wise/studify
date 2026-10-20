@@ -9,19 +9,6 @@ import 'dotenv/config';
 import { nanoid } from 'nanoid';
 import type { ZodSchema } from 'zod';
 
-// Reads the server-verified tool context, or null if the call has none
-export function getToolContext<T>(options: { experimental_context?: T }): ToolContext | null {
-    const { experimental_context } = options;
-    if (
-        experimental_context && typeof experimental_context === 'object' &&
-        'threadId' in experimental_context && typeof experimental_context.threadId === 'string' && experimental_context.threadId &&
-        'email' in experimental_context && typeof experimental_context.email === 'string' && experimental_context.email
-    ) {
-        return { threadId: experimental_context.threadId, email: experimental_context.email };
-    }
-    return null;
-}
-
 // Client-side tool call that needs to be executed in the browser
 export interface ClientToolCall {
     toolName: string;
