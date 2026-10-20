@@ -1,4 +1,4 @@
-import { getToolContext } from '@/lib/ai-service';
+import { getToolContext } from '@/lib/tools';
 import { getContentTypesList } from '@/lib/content/get-types';
 import { getLatestContent } from '@/lib/content/latest';
 import { tool } from 'ai';

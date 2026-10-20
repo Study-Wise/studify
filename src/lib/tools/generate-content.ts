@@ -1,4 +1,4 @@
-import { getToolContext } from '@/lib/ai-service';
+import { getToolContext } from '@/lib/tools';
 import { tool } from 'ai';
 import { z } from 'zod';
 
