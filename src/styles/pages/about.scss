@@ -16,9 +16,16 @@
 }
 
 .about-section {
+    display: flex;
+    // flex-wrap: wrap;
+    gap: $spacing-extra-large;
+    align-items: flex-start;
+    justify-content: start;
+
     .image-intro {
         width: 100%;
         display: flex;
+        flex-direction: column;
         gap: $spacing-medium;
         isolation: isolate;
 
@@ -72,57 +79,49 @@
         min-width: min(300px, 100%);
     }
 
-    .about-content {
-        display: flex;
-        flex-wrap: wrap;
-        gap: $spacing-extra-large;
-        align-items: flex-start;
-        justify-content: start;
-
-        p {
-            &:not(.image-intro p) {
-                &:not(:last-child) {
-                    margin-block-end: 1.2em;
-                }
-
-                font-size: 1.05em;
-
-                &:has(.material-symbols-outlined) {
-                    &, * {
-                        vertical-align: middle;
-                    }
-                }
+    p {
+        &:not(.image-intro p) {
+            &:not(:last-child) {
+                margin-block-end: 1.2em;
             }
 
-            a {
-                color: $about-link;
-                text-decoration: none;
-                font-weight: $font-weight-medium;
+            font-size: 1.05em;
 
-                &:hover .text {
-                    text-decoration: underline;
+            &:has(.material-symbols-outlined) {
+                &, * {
+                    vertical-align: middle;
                 }
             }
         }
 
-        .about-links {
-            display: flex;
-            flex-wrap: wrap;
-            gap: $spacing-extra-small;
+        a {
+            color: $about-link;
+            text-decoration: none;
+            font-weight: $font-weight-medium;
 
-            > a {
-                display: inline-flex;
-                align-items: center;
-                gap: $spacing-tiny;
+            &:hover .text {
+                text-decoration: underline;
+            }
+        }
+    }
 
-                .social-icon {
-                    height: 1em;
-                    width: auto;
-                }
+    .about-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: $spacing-extra-small;
 
-                .material-symbols-outlined {
-                    font-size: 1.2em;
-                }
+        > a {
+            display: inline-flex;
+            align-items: center;
+            gap: $spacing-tiny;
+
+            .social-icon {
+                height: 1em;
+                width: auto;
+            }
+
+            .material-symbols-outlined {
+                font-size: 1.2em;
             }
         }
     }
