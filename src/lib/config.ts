@@ -1,7 +1,5 @@
 // Application Configuration
 
-import { generateModePrompt } from '@/lib/prompt-generator';
-import categories from '@/lib/modes';
 import type { CategoryName, ModeName } from '@/lib/modes';
 import type { ImageSize } from '@/lib/models';
 
@@ -11,7 +9,6 @@ export interface Config {
     model: string;
     imageModel: string;
     imageSize: ImageSize;
-    systemPrompt: string;
     welcomeMessagePrompt: string;
     maxThreadsPerUser: number;
     maxMessagesPerThread: number;
@@ -23,15 +20,12 @@ export interface Config {
 const defaultCategory = 'general';
 const defaultMode = 'general';
 
-const prompt = generateModePrompt(categories[defaultCategory].modes[defaultMode], defaultCategory);
-
 const config: Config = {
     provider: 'openai',
     tier: 'default',
     model: 'gpt-5.1',
     imageModel: 'gpt-image-1.5',
     imageSize: '1024x1536', // portrait
-    systemPrompt: prompt,
     welcomeMessagePrompt: 'Based on the user\'s question or homework, ask them what specifically they want to study. Be friendly and encouraging.',
     maxThreadsPerUser: 5, // Maximum number of threads a user can create
     maxMessagesPerThread: 10, // Maximum number of messages per thread
