@@ -2,6 +2,12 @@
 import '@/styles/pages/about.scss';
 import Layout from '@/layouts/Layout.astro';
 
+const regularMargoImages = import.meta.glob('../../public/assets/people/margo/regular/*.jpeg');
+const regularMargoImageArray = Object.keys(regularMargoImages)
+    .sort()
+    .map(key => `/assets/people/margo/${key.split('/').pop()}`);
+const regularRandomMargo = regularMargoImageArray[1 + Math.floor(Math.random() * (regularMargoImageArray.length - 1))];
+
 const margoImages = import.meta.glob('../../public/assets/people/margo/*.jpeg');
 const margoImageArray = Object.keys(margoImages)
     .sort()
@@ -62,7 +68,7 @@ const randomMargo = margoImageArray[1 + Math.floor(Math.random() * (margoImageAr
 
         <div class="about-content">
             <div class="image-intro" style={{ '--data-hover': 1, '--data-hover-src': `url('${randomMargo}')` }}>
-                <img src="/assets/people/margo/margo-1.jpeg" alt="Margo Page profile picture" class="profile-picture" />
+                <img src={regularRandomMargo} alt="Margo Page profile picture" class="profile-picture" />
                 <p>Hi, I'm Margo Page, the Studify team's AI assistant and the friendly face of Studify support.</p>
             </div>
 
