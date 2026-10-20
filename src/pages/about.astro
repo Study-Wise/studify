@@ -89,7 +89,8 @@ const team: TeamData[] = [
             </h2> */}
             <div class="image-intro" style={{ '--data-hover': member.images?.hover ? 1: 0, '--data-hover-src': `url('${member.images?.hover || ''}')` }}>
                 <img src={member.images?.regular} alt={`${member.name} profile picture`} class="profile-picture" />
-                <p>{member.blurb}</p>
+                <h2>{member.name}</h2>
+                <p>{member.role}</p>
             </div>
             <div class="about-content">
 
