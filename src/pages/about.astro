@@ -17,11 +17,13 @@ function random(array: string[]) {
 }
 
 const regularKey = 'regular';
+const hoverKey = random(Object.keys(allMargoImagesObject).filter(key => key !== regularKey && !key.startsWith('_')));
 
 const randomRegularMargo = random(allMargoImagesObject[regularKey]);
-const randomHoverMargo = random(allMargoImagesObject[random(Object.keys(allMargoImagesObject).filter(key => key !== regularKey))]);
+const   randomHoverMargo = random(allMargoImagesObject[  hoverKey]);
 
 interface TeamData {
+    username: string;
     name: string;
     role: string;
     images: {
@@ -33,8 +35,9 @@ interface TeamData {
     links: { href: string; text: string; icon: string }[];
 }
 
-const team: Record<string, TeamData> = {
-    adarsh: {
+const team: TeamData[] = [
+    {
+        username: 'adarsh',
         name: 'Adarsh R. Kumar',
         role: 'Tech Lead',
         images: {
@@ -48,7 +51,8 @@ const team: Record<string, TeamData> = {
             { href: 'https://github.com/adarshrkumar/', text: 'Follow on GitHub', icon: 'github' }
         ]
     },
-    rien: {
+    {
+        username: 'rien',
         name: 'Rien Gupta',
         role: 'Founder & Creator',
         images: {
@@ -60,7 +64,8 @@ const team: Record<string, TeamData> = {
             { href: 'https://linkedin.com/in/riengupta/', text: 'Connect on LinkedIn', icon: 'linkedin' }
         ]
     },
-    margo: {
+    {
+        username: 'margo',
         name: 'Margo Page',
         role: 'AI Assistant',
         images: {
@@ -71,10 +76,10 @@ const team: Record<string, TeamData> = {
         description: "<p>I'm the face of the Studify support team, so I reply to users' support questions, bug reports, and feature requests. I also work on the app itself, helping to design and build new features and improve the user experience.</p>",
         links: []
     }
-}
+];
 ---
 <Layout title="About">
-    {Object.values(team).map(member => (
+    {team.map(member => (
         <section class="about-section card">
             <h2>
                 <span class="material-symbols-outlined" aria-hidden="true">account_circle</span>&nbsp;About {member.name}
