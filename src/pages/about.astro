@@ -23,6 +23,7 @@ function getRegularImage(username: string) {
 };
 function   getHoverImage(username: string) {
     const hoverKey = random(Object.keys(allTeamImagesObject[username]).filter(key => key !== regularKey && !key.startsWith('_')));
+    if (!hoverKey) return undefined;
     return random(allTeamImagesObject[username][  hoverKey])
 };
 
@@ -68,7 +69,9 @@ const team: TeamData[] = [
         role: 'AI Assistant',
         blurb: "Hi, I'm Margo Page, the Studify team's AI assistant and the friendly face of Studify support.",
         description: "<p>I'm the face of the Studify support team, so I reply to users' support questions, bug reports, and feature requests. I also work on the app itself, helping to design and build new features and improve the user experience.</p>",
-        links: []
+        links: [
+            { href: 'https://github.com/margo-page/', text: 'Follow on GitHub', icon: 'github' }
+        ]
     }
 ].map((u: TeamData) => ({
     ...u,
@@ -81,9 +84,9 @@ const team: TeamData[] = [
 <Layout title="About">
     {team.map(member => (
         <section class="about-section card">
-            <h2>
+            {/* <h2>
                 <span class="material-symbols-outlined" aria-hidden="true">account_circle</span>&nbsp;About {member.name}
-            </h2>
+            </h2> */}
             <div class="about-content">
                 <div class="image-intro" style={{ '--data-hover': member.images?.hover ? 1: 0, '--data-hover-src': `url('${member.images?.hover || ''}')` }}>
                     <img src={member.images?.regular} alt={`${member.name} profile picture`} class="profile-picture" />
@@ -93,18 +96,18 @@ const team: TeamData[] = [
                 <div class="about-text" set:html={member.description}></div>
 
                 {member.links && member.links.length > 0 && (
-                    <p>
-                    {member.links.map(link => (
-                        <a href={link.href} target="_blank" rel="noopener noreferrer">
-                            {link.icon === 'language' ? (
-                                <span class="material-symbols-outlined" aria-hidden="true">{link.icon}</span>
-                            ) : (
-                                <img src={`https://skillicons.dev/icons?i=${link.icon}`} alt={link.text} class="social-icon" />
-                            )}
-                            &nbsp;<span class="text">{link.text}</span>
-                        </a>
-                    )).reduce((prev, curr) => [prev, ' | ', curr])}
-                </p>
+                    <p class="about-links">
+                        {member.links.map(link => (
+                            <a href={link.href} target="_blank" rel="noopener noreferrer">
+                                {link.icon === 'language' ? (
+                                    <span class="material-symbols-outlined" aria-hidden="true">{link.icon}</span>
+                                ) : (
+                                    <img src={`https://skillicons.dev/icons?i=${link.icon}`} alt={link.text} class="social-icon" />
+                                )}
+                                <span class="text">{link.text}</span>
+                            </a>
+                        )).reduce((prev, curr) => [prev, ' | ', curr])}
+                    </p>
                 )}
             </div>
         </section>

@@ -101,6 +101,22 @@
                 text-decoration: none;
                 font-weight: $font-weight-medium;
 
+                &:hover .text {
+                    text-decoration: underline;
+                }
+            }
+        }
+
+        .about-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: $spacing-extra-small;
+
+            > a {
+                display: inline-flex;
+                align-items: center;
+                gap: $spacing-tiny;
+
                 .social-icon {
                     height: 1em;
                     width: auto;
@@ -108,10 +124,6 @@
 
                 .material-symbols-outlined {
                     font-size: 1.2em;
-                }
-
-                &:hover .text {
-                    text-decoration: underline;
                 }
             }
         }
