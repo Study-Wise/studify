@@ -80,7 +80,7 @@ const team: Record<string, TeamData> = {
                 <span class="material-symbols-outlined" aria-hidden="true">account_circle</span>&nbsp;About {member.name}
             </h2>
             <div class="about-content">
-                <div class="image-intro" style={{ '--team-hover': member.images?.hover ? 1: 0, '--team-hover-src': `url('${member.images?.hover || ''}')` }}>
+                <div class="image-intro" style={{ '--data-hover': member.images?.hover ? 1: 0, '--data-hover-src': `url('${member.images?.hover || ''}')` }}>
                     <img src={member.images.regular} alt={`${member.name} profile picture`} class="profile-picture" />
                     <p>{member.blurb}</p>
                 </div>
