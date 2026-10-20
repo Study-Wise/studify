@@ -97,11 +97,11 @@
 
         a {
             color: $about-link;
-            text-decoration: none;
             font-weight: $font-weight-medium;
+            text-decoration: none;
 
-            &:hover .text {
-                text-decoration: underline;
+            &:hover {
+                border-bottom: 1px solid $about-link;
             }
         }
     }
