@@ -1,20 +1,6 @@
 @use '../variables/globals' as *;
 @use '../variables/tokens' as *;
 
-@for $i from 1 through 99 {
-    .about-section:nth-of-type(#{$i}) {
-        .image-intro {
-            .profile-picture {
-                anchor-name: --profile-picture-#{$i};
-            }
-
-            &::before {
-                position-anchor: --profile-picture-#{$i};
-            }
-        }
-    }
-}
-
 .about-section {
     display: grid;
     grid-template-columns: 1fr 4fr;
@@ -29,6 +15,7 @@
         text-align: center;
         gap: $spacing-medium;
         isolation: isolate;
+        position: relative;
 
         @media (width < 500px) {
             flex-wrap: wrap;
@@ -56,8 +43,10 @@
         &::before {
             content: '';
             position: absolute;
-            position-area: center;
+            top: 0;
             box-sizing: border-box;
+            width: 100%;
+            aspect-ratio: 1;
             background-image: var(--data-hover-src);
             background-size: cover;
             background-position: center;
