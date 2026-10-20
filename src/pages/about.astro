@@ -12,11 +12,14 @@ Object.keys(allMargoImages).sort().forEach(key => {
     allMargoImagesObject[objKey].push(`/${pathParts.join('/')}`);
 });
 
-const regularMargoImageArray = allMargoImagesObject['regular'];
-const randomRegularMargo = regularMargoImageArray[1 + Math.floor(Math.random() * (regularMargoImageArray.length - 1))];
+function random(array: string[]) {
+    return array[Math.floor(Math.random() * array.length)]
+}
 
-const playfulMargoImageArray = allMargoImagesObject['playful'];
-const randomPlayfulMargo = playfulMargoImageArray[1 + Math.floor(Math.random() * (playfulMargoImageArray.length - 1))];
+const regularKey = 'regular';
+
+const randomRegularMargo = random(allMargoImagesObject[regularKey]);
+const randomHoverMargo = random(allMargoImagesObject[random(Object.keys(allMargoImagesObject).filter(key => key !== regularKey))]);
 ---
 <Layout title="About">
     <section class="about-section card">
@@ -71,7 +74,7 @@ const randomPlayfulMargo = playfulMargoImageArray[1 + Math.floor(Math.random() *
         </h2>
 
         <div class="about-content">
-            <div class="image-intro" style={{ '--data-hover': 1, '--data-hover-src': `url('${randomPlayfulMargo}')` }}>
+            <div class="image-intro" style={{ '--data-hover': 1, '--data-hover-src': `url('${randomHoverMargo}')` }}>
                 <img src={randomRegularMargo} alt="Margo Page profile picture" class="profile-picture" />
                 <p>Hi, I'm Margo Page, the Studify team's AI assistant and the friendly face of Studify support.</p>
             </div>
