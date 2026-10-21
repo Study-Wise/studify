@@ -1,22 +1,46 @@
-const groupNames = {
-    1: 'external package',
-    2: '"../" path',
-    3: '"./" path',
-    4: '"sass:" module'
-};
+function parseUse(source) {
+    if (source.startsWith('sass:')) return { group: 4, up: 0, dirs: [], name: source };
 
-function getUseGroup(source) {
-    if (source.startsWith('sass:')) return 4;
-    if (source.startsWith('../')) return 2;
-    if (source.startsWith('./')) return 3;
-    return 1;
+    const segments = source.split('/');
+    let group = 1;
+    let up = 0;
+
+    if (source.startsWith('../')) {
+        group = 2;
+
+        while (segments[0] === '..') {
+            up++;
+            segments.shift();
+        }
+    }
+    else if (source.startsWith('./')) {
+        group = 3;
+        segments.shift();
+    }
+
+    const name = segments.pop();
+
+    return { group, up, dirs: segments, name };
+}
+
+function compareUses(a, b) {
+    if (a.group !== b.group) return a.group - b.group;
+    if (a.up !== b.up) return b.up - a.up;
+
+    for (let i = 0; i < Math.min(a.dirs.length, b.dirs.length); i++) {
+        if (a.dirs[i] !== b.dirs[i]) return a.dirs[i] < b.dirs[i] ? -1 : 1;
+    }
+
+    if (a.dirs.length !== b.dirs.length) return a.dirs.length - b.dirs.length;
+
+    return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
 }
 
 export default {
     meta: {
         type: 'problem',
         docs: {
-            description: 'SCSS @use order standards: external packages, then ../ paths, then ./ paths, then sass: modules, with @use rules from the same folder together',
+            description: 'SCSS @use order standards: sorted by external packages, then ../ paths, then ./ paths, then sass: modules, with folders and files in alphabetical order',
             category: 'Best Practices'
         },
         fixable: 'code',
@@ -32,8 +56,7 @@ export default {
                 let offset = 0;
 
                 for (const line of context.sourceCode.text.split('\n')) {
-                    const lineText = line.replace(/\r$/, '');
-                    const lineMatch = lineText.match(/^@use\s+(['"])(.+?)\1[^;]*;[ \t]*$/);
+                    const lineMatch = line.replace(/\r$/, '').match(/^@use\s+(['"])(.+?)\1[^;]*;[ \t]*$/);
 
                     if (lineMatch) {
                         if (!currentBlock) {
@@ -41,42 +64,20 @@ export default {
                             blocks.push(currentBlock);
                         }
 
-                        currentBlock.lines.push({ text: lineText, group: getUseGroup(lineMatch[2]) });
-                        currentBlock.end = offset + lineText.length;
+                        currentBlock.lines.push({ text: line.replace(/\r$/, ''), source: lineMatch[2] });
+                        currentBlock.end = offset + line.replace(/\r$/, '').length;
                     }
                     else currentBlock = null;
 
                     offset += line.length + 1;
                 }
 
-                let highestGroup = 0;
-                let previousFolder = null;
-                const closedFolders = new Set();
+                let highestSource = null;
 
                 for (const match of context.sourceCode.text.matchAll(/^@use\s+(['"])(.+?)\1[^;]*;/gm)) {
-                    const group = getUseGroup(match[2]);
-                    const folder = match[2].match(/^(?:\.{1,2}\/)+([^/]+)\/./)?.[1] ?? null;
-
-                    if (folder !== previousFolder) {
-                        if (previousFolder) closedFolders.add(previousFolder);
-
-                        if (folder && closedFolders.has(folder)) {
-                            context.report({
-                                node,
-                                loc: {
-                                    start: context.sourceCode.getLocFromIndex(match.index),
-                                    end: context.sourceCode.getLocFromIndex(match.index + match[0].length)
-                                },
-                                message: `@use "${match[2]}" must be next to the other @use rules from the "${folder}" folder. Group all @use rules from the same folder consecutively.`
-                            });
-                        }
-
-                        previousFolder = folder;
-                    }
-
-                    if (group < highestGroup) {
+                    if (highestSource !== null && compareUses(parseUse(highestSource), parseUse(match[2])) > 0) {
                         const block = blocks.find(candidate => match.index >= candidate.start && match.index <= candidate.end);
-                        const sortedLines = block ? [...block.lines].sort((a, b) => a.group - b.group) : null;
+                        const sortedLines = block ? [...block.lines].sort((a, b) => compareUses(parseUse(a.source), parseUse(b.source))) : null;
 
                         const reportObj = {
                             node,
@@ -84,7 +85,7 @@ export default {
                                 start: context.sourceCode.getLocFromIndex(match.index),
                                 end: context.sourceCode.getLocFromIndex(match.index + match[0].length)
                             },
-                            message: `@use "${match[2]}" (${groupNames[group]}) must come before the ${groupNames[highestGroup]} @use above it. Order @use rules as: external packages, then "../" paths, then "./" paths, then "sass:" modules.`
+                            message: `@use "${match[2]}" must come before "${highestSource}". Sort @use rules as: external packages, then "../" paths (farthest first), then "./" paths, then "sass:" modules. Within each, a folder's files come before its subfolders, alphabetically.`
                         };
 
                         if (sortedLines && sortedLines.some((line, index) => line !== block.lines[index])) {
@@ -96,7 +97,7 @@ export default {
                         context.report(reportObj);
                     }
 
-                    if (group > highestGroup) highestGroup = group;
+                    if (highestSource === null || compareUses(parseUse(highestSource), parseUse(match[2])) < 0) highestSource = match[2];
                 }
             }
         };
