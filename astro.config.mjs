@@ -6,9 +6,36 @@ import sitemap from '@astrojs/sitemap';
 import vercel from '@astrojs/vercel';
 import { defineConfig } from 'astro/config';
 
+import appConfig from './src/lib/app.config.ts';
+
 const contentTypes = fs.readdirSync('src/lib/content/latest')
     .filter(file => file.endsWith('.ts') && file !== 'index.ts')
     .map(file => file.slice(0, -'.ts'.length));
+
+const manifest = {
+    name: appConfig.name,
+    short_name: appConfig.name,
+    description: appConfig.subtitle,
+    start_url: '/',
+    display: 'standalone',
+    theme_color: '#6366f1',
+    orientation: 'portrait-primary',
+    icons: [
+        {
+            src: '/assets/logos/favicon.png',
+            sizes: '1024x1024',
+            type: 'image/png'
+        },
+        ...[512, 192, 64, 32].map(size => ({
+            src: `/assets/logos/pwa-${size}x${size}.png`,
+            sizes: `${size}x${size}`,
+            type: 'image/png',
+            purpose: 'any maskable'
+        }))
+    ]
+};
+
+fs.writeJSONSync('public/manifest.webmanifest', manifest, { spaces: 4 });
 
 // https://astro.build/config
 export default defineConfig({
@@ -24,7 +51,7 @@ export default defineConfig({
                 '/assets/logos/logo.png',
                 '/assets/logos/logo.svg'
             ],
-            manifest: fs.readJSONSync('public/manifest.webmanifest'),
+            manifest,
             workbox: {
                 globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
                 // Pages are server-rendered, so there is no precached shell; the default route would also catch every navigation

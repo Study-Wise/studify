@@ -17,17 +17,10 @@ import 'dotenv/config';
 
 const { title, description, hideCopyright, isChatArea, mathjax = false, desmos = false } = Astro.props;
 var { className, container } = Astro.props;
-const isSignedIn = !!Astro.locals.user;
-const noTitle = title === 'Home' || title === '' || !title;
-const pTitle = noTitle ? appConfig.title : `${title} | ${appConfig.name}`;
 
-// Desmos API key (https://www.desmos.com/api). Falls back to the public trial key, which is not for production use.
+const pTitle = (title === 'Home' || !title) ? appConfig.fullTitle : `${title} | ${appConfig.name}`;
+
 const desmosApiKey = import.meta.env.DESMOS_API_KEY || process.env.DESMOS_API_KEY || 'dcb31709b452b1cf9dc26972add0fda6';
-
-// The TawkTo support widget looks like part of the AI on chat and generated-content pages, so it's left off everything under /[category]/[mode]
-const showTawkTo = !Astro.routePattern.startsWith('/[category]/[mode]');
-
-const canonicalURL = `${new URL(Astro.url.pathname, Astro.site)}${Astro.url.search}`;
 
 container ??= true;
 className ??= '';
@@ -55,7 +48,7 @@ if (container) className += ' container'
         <link rel="apple-touch-icon" href="/assets/logos/apple-touch-icon.png">
         <link rel="icon" type="image/png" href="/assets/logos/favicon.png">
         <link rel="manifest" href="/manifest.webmanifest">
-        <link rel="canonical" href={canonicalURL} />
+        <link rel="canonical" href={`${new URL(Astro.url.pathname, Astro.site)}${Astro.url.search}`} />
         <meta name="theme-color" content="#6366f1" />
         <title>{pTitle}</title>
 
@@ -66,7 +59,7 @@ if (container) className += ' container'
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
         {/* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" /> */}
         {/* Only prerender auth pages for signed-out visitors; signed-in users get redirected away from them */}
-        {!isSignedIn && (
+        {!Astro.locals.user && (
             <script is:inline type="speculationrules">
                 {
                     "prerender": [
@@ -125,7 +118,7 @@ if (container) className += ' container'
         <KeyboardNavigation />
         <ThemeSwitcher />
         <Dialog />
-        {showTawkTo && <TawkTo />}
+        {!Astro.routePattern.startsWith('/[category]/[mode]') && <TawkTo />}
         {!isChatArea ? <Header /> : ''}
 
         <main class={className?.trim()} id="main-content">
@@ -157,7 +150,6 @@ if (container) className += ' container'
                 }
             }
 
-            // Render the given Desmos graphs
             function renderDesmosGraphs(graphs) {
                 graphs.forEach(graph => {
                     if (!graph) {
@@ -209,20 +201,17 @@ if (container) className += ' container'
                 window.loadDesmos().then(() => renderDesmosGraphs(graphs)).catch(error => console.warn(error.message));
             }
 
-            // Set up each graph only when it is about to scroll into view
             const desmosObserver = new IntersectionObserver(entries => {
                 const visible = entries.filter(entry => entry.isIntersecting).map(entry => entry.target);
                 visible.forEach(graph => desmosObserver.unobserve(graph));
                 if (visible.length > 0) showDesmosGraphs(visible);
             }, { rootMargin: '200px' });
 
-            // Also called when graphs are added later (new chat messages, regenerated content)
             function activateDesmos() {
                 if (!window.loadDesmos) return;
                 document.querySelectorAll('.desmos-graph:not([done])').forEach(graph => desmosObserver.observe(graph));
             }
 
-            // Graphs that never scrolled into view would print blank
             window.addEventListener('beforeprint', () => {
                 if (window.loadDesmos) showDesmosGraphs(document.querySelectorAll('.desmos-graph:not([done])'));
             });
@@ -235,7 +224,6 @@ if (container) className += ' container'
             }
         </script>
         {desmos && <script is:inline define:vars={{ desmosApiKey }}>
-            // Loads the Desmos script the first time a graph needs it
             let desmosLoading;
             window.loadDesmos = () => {
                 desmosLoading ??= new Promise((resolve, reject) => {
