@@ -76,11 +76,40 @@ function isAstroScriptImport(importNode, sourceCode, filename) {
     return sourceCode.text.slice(0, importNode.range[0]).lastIndexOf('<script') > sourceCode.text.slice(0, importNode.range[0]).lastIndexOf('</script>');
 }
 
+function parseImportSource(source) {
+    const segments = source.split('/');
+    let up = 0;
+
+    while (segments[0] === '..') {
+        up++;
+        segments.shift();
+    }
+
+    if (segments[0] === '.') segments.shift();
+
+    return { up, name: segments.pop() ?? '', dirs: segments };
+}
+
+function compareImportSources(firstSource, secondSource) {
+    const a = parseImportSource(firstSource);
+    const b = parseImportSource(secondSource);
+
+    if (a.up !== b.up) return b.up - a.up;
+
+    for (let i = 0; i < Math.min(a.dirs.length, b.dirs.length); i++) {
+        if (a.dirs[i] !== b.dirs[i]) return a.dirs[i] < b.dirs[i] ? -1 : 1;
+    }
+
+    if (a.dirs.length !== b.dirs.length) return a.dirs.length - b.dirs.length;
+
+    return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
+}
+
 export default {
     meta: {
         type: 'problem',
         docs: {
-            description: 'Import order standards: group spacing and lib grouping',
+            description: 'Import order standards: group spacing, lib grouping, and alphabetical order within each group',
             category: 'Best Practices'
         },
         fixable: 'code',
@@ -180,6 +209,57 @@ export default {
                                 }
                             }
                         }
+                    }
+                }
+
+                const sortableRuns = [];
+                let currentRun = [];
+
+                for (const importNode of node.body.filter(statement =>
+                    statement &&
+                    statement.type === 'ImportDeclaration' &&
+                    !isAstroScriptImport(statement, context.sourceCode, context.filename)
+                )) {
+                    if (
+                        typeof importNode.source.value !== 'string' ||
+                        importNode.specifiers.length === 0 ||
+                        (currentRun[currentRun.length - 1] && (
+                            getImportGroup(currentRun[currentRun.length - 1].source.value) !== getImportGroup(importNode.source.value) ||
+                            context.sourceCode.text.slice(currentRun[currentRun.length - 1].range[1], importNode.range[0]).trim() !== ''
+                        ))
+                    ) {
+                        if (currentRun.length > 1) sortableRuns.push(currentRun);
+                        currentRun = [];
+                    }
+
+                    if (typeof importNode.source.value === 'string' && importNode.specifiers.length !== 0) currentRun.push(importNode);
+                }
+
+                if (currentRun.length > 1) sortableRuns.push(currentRun);
+
+                for (const run of sortableRuns) {
+                    const sortedRun = [...run].sort((a, b) => compareImportSources(a.source.value, b.source.value));
+                    let highestImport = run[0];
+
+                    for (const importNode of run.slice(1)) {
+                        if (compareImportSources(highestImport.source.value, importNode.source.value) > 0) {
+                            const reportObj = {
+                                node: importNode,
+                                message: `Import "${importNode.source.value}" must come before "${highestImport.source.value}". Sort imports in each group alphabetically, with a folder's own files before its subfolders.`
+                            };
+
+                            if (sortedRun.some((sortedImport, index) => sortedImport !== run[index])) {
+                                reportObj.fix = function(fixer) {
+                                    return fixer.replaceTextRange(
+                                        [run[0].range[0], run[run.length - 1].range[1]],
+                                        sortedRun.map(sortedImport => context.sourceCode.text.slice(sortedImport.range[0], sortedImport.range[1])).join(context.sourceCode.text.slice(run[0].range[1], run[1].range[0]))
+                                    );
+                                };
+                            }
+
+                            context.report(reportObj);
+                        }
+                        else highestImport = importNode;
                     }
                 }
             }
