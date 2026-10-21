@@ -35,7 +35,7 @@
                 opacity $transition-base $ease-out,
                 scale $transition-base $ease-out;
         }
-        
+
         &::before {
             content: '';
             position: absolute;
