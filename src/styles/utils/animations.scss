@@ -1,14 +1,4 @@
-// Easing curves
-$ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
-$ease-out: cubic-bezier(0, 0, 0.2, 1);
-$ease-in: cubic-bezier(0.4, 0, 1, 1);
-$ease-spring: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-
-// Transition speeds
-$transition-fast: 150ms;
-$transition-base: 250ms;
-$transition-slow: 350ms;
-$transition-bounce: 500ms;
+@use '../variables/tokens' as *;
 
 // Entrance Animations
 @keyframes --fade-in {

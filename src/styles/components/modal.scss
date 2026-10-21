@@ -24,7 +24,7 @@
     }
 
     &[open] {
-        animation: modal-fade-in $transition-fast $ease-out;
+        animation: --modal-fade-in $transition-fast $ease-out;
     }
 
     // Non-blocking toasts stack inside .toast-region instead of being centered
@@ -65,7 +65,7 @@
         }
     }
 
-    @keyframes modal-fade-in {
+    @keyframes --modal-fade-in {
         from {
             opacity: 0;
             scale: 0.95;
