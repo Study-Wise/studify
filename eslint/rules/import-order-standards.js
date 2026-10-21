@@ -91,7 +91,7 @@ function parseImportSource(source) {
 }
 
 function compareImportSources(firstSource, secondSource) {
-    if (firstSource.startsWith('.') || firstSource.startsWith('@/') !== secondSource.startsWith('.') || secondSource.startsWith('@/')) return firstSource.startsWith('.') || firstSource.startsWith('@/') ? 1 : -1;
+    if ((firstSource.startsWith('.') || firstSource.startsWith('@/')) !== (secondSource.startsWith('.') || secondSource.startsWith('@/'))) return firstSource.startsWith('.') || firstSource.startsWith('@/') ? 1 : -1;
     if (!(firstSource.startsWith('.') || firstSource.startsWith('@/'))) return firstSource < secondSource ? -1 : firstSource > secondSource ? 1 : 0;
 
     const a = parseImportSource(firstSource);
