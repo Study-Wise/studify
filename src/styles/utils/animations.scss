@@ -11,7 +11,7 @@ $transition-slow: 350ms;
 $transition-bounce: 500ms;
 
 // Entrance Animations
-@keyframes fade-in {
+@keyframes --fade-in {
     from {
         opacity: 0;
         translate: 0 10px;
@@ -23,7 +23,7 @@ $transition-bounce: 500ms;
     }
 }
 
-@keyframes slide-in-from-left {
+@keyframes --slide-in-from-left {
     from {
         opacity: 0;
         translate: -20px 10px;
@@ -37,7 +37,7 @@ $transition-bounce: 500ms;
     }
 }
 
-@keyframes slide-in-from-right {
+@keyframes --slide-in-from-right {
     from {
         opacity: 0;
         translate: 20px 10px;
@@ -51,7 +51,7 @@ $transition-bounce: 500ms;
     }
 }
 
-@keyframes slide-in-down {
+@keyframes --slide-in-down {
     from {
         opacity: 0;
         transform: translateY(-30px);
@@ -63,7 +63,7 @@ $transition-bounce: 500ms;
     }
 }
 
-@keyframes slide-in-up {
+@keyframes --slide-in-up {
     from {
         opacity: 0;
         transform: translateY(30px);
@@ -75,7 +75,7 @@ $transition-bounce: 500ms;
     }
 }
 
-@keyframes scale-in {
+@keyframes --scale-in {
     from {
         opacity: 0;
         scale: 0.95;
@@ -88,7 +88,7 @@ $transition-bounce: 500ms;
 }
 
 // Loading Animations
-@keyframes float {
+@keyframes --float {
     0%, 100% {
         transform: translateY(0);
     }
@@ -98,7 +98,7 @@ $transition-bounce: 500ms;
     }
 }
 
-@keyframes shimmer {
+@keyframes --shimmer {
     0% {
         background-position: -1000px 0;
     }
@@ -108,7 +108,7 @@ $transition-bounce: 500ms;
     }
 }
 
-@keyframes pulse {
+@keyframes --pulse {
     0%, 100% {
         opacity: 1;
     }
@@ -118,7 +118,7 @@ $transition-bounce: 500ms;
     }
 }
 
-@keyframes spin {
+@keyframes --spin {
     from {
         rotate: 0deg;
     }
@@ -128,7 +128,7 @@ $transition-bounce: 500ms;
     }
 }
 
-@keyframes blink {
+@keyframes --blink {
     0%, 100% {
         opacity: 1;
     }
@@ -138,14 +138,30 @@ $transition-bounce: 500ms;
     }
 }
 
-// Utility Classes
-.stagger-children > * {
-    opacity: 0;
-    animation: fade-in 0.5s $ease-out forwards;
+// Fade in animation
+@mixin fade-in($duration: $transition-base, $delay: 0s) {
+    animation: --fade-in $duration $ease-out $delay;
+}
 
-    @for $i from 1 through 10 {
-        &:nth-child(#{$i}) {
-            animation-delay: #{$i * 0.05}s;
+// Slide in from direction
+@mixin slide-in($direction: 'left', $duration: $transition-base, $delay: 0s) {
+    @if $direction == 'left' {
+        animation: --slide-in-from-left $duration $ease-out $delay;
+    } @else if $direction == 'right' {
+        animation: --slide-in-from-right $duration $ease-out $delay;
+    }
+}
+
+// Fade in each direct child one after another
+@mixin stagger-children {
+    > * {
+        opacity: 0;
+        animation: --fade-in 0.5s $ease-out forwards;
+
+        @for $i from 1 through 10 {
+            &:nth-child(#{$i}) {
+                animation-delay: #{$i * 0.05}s;
+            }
         }
     }
 }
