@@ -1,7 +1,7 @@
 @use '../variables/globals' as *;
 @use '../variables/tokens' as *;
-@use 'sass:map';
 @use 'sass:list';
+@use 'sass:map';
 
 $color: list.nth(map.get($accent-colors, primary), 1);
 

@@ -1,9 +1,9 @@
 @use '../../variables/globals' as *;
 @use '../../variables/tokens' as *;
 @use '../../variables/colors/statuses' as *;
-@use 'sass:map';
 @use 'sass:color';
 @use 'sass:list';
+@use 'sass:map';
 
 $color: list.nth(map.get($accent-colors, primary), 1);
 $radius: $border-radius-huge;

@@ -1,11 +1,11 @@
 @use '../variables/globals' as *;
 @use '../variables/tokens' as *;
-@use '../variables/colors/accent/colors' as colors;
 @use '../variables/colors/statuses' as *;
+@use '../variables/colors/accent/colors' as colors;
 @use 'sass:color';
-@use 'sass:math';
 @use 'sass:list';
 @use 'sass:map';
+@use 'sass:math';
 
 .unauthorized-message {
     display: flex;

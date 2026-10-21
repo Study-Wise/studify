@@ -1,9 +1,9 @@
-@use '../../variables/mixins' as *;
 @use '../../variables/globals' as *;
+@use '../../variables/mixins' as *;
 @use '../../variables/colors/statuses' as *;
+@use 'sass:color';
 @use 'sass:list';
 @use 'sass:map';
-@use 'sass:color';
 
 .question-page {
     max-width: 900px;
