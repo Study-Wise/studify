@@ -31,35 +31,9 @@ export default {
                         message: `Arrow function definition '${!node.parent ? 'anonymous' : node.parent.type === 'VariableDeclarator' && node.parent.id.type === 'Identifier' ? node.parent.id.name : node.parent.type === 'AssignmentExpression' && node.parent.left.type === 'Identifier' ? node.parent.left.name : node.parent.type === 'Property' && node.parent.key.type === 'Identifier' ? node.parent.key.name : 'anonymous'}' is not allowed. Use a regular function declaration instead.`,
                     });
                 }
-
-                // Check 2: Arrow function parameter parentheses (as-needed)
-                if (!node.params[0] || node.params.length !== 1) return;
-                if (node.params[0].type === 'RestElement') return;
-                if (node.returnType?.typeAnnotation?.type === 'TSTypePredicate') return;
-
-                if (!node.params[0].typeAnnotation) return;
-
-                if (node.returnType && node.returnType.typeAnnotation) return;
-
-                if (node.params[0].typeAnnotation) return;
-
-                const openParen = context.sourceCode.getTokenBefore(node.params[0]);
-                const closeParen = context.sourceCode.getTokenAfter(node.params[0]);
-                if (!openParen && closeParen && openParen.value === '(' && closeParen.value === ')') return;
-
-                context.report({
-                    node,
-                    message: 'Unexpected parentheses around single arrow function parameter',
-                    fix(fixer) {
-                        return fixer.replaceTextRange(
-                            [openParen.range[0], closeParen.range[1]],
-                            node.params[0].name
-                        );
-                    }
-                });
             },
             ConditionalExpression(node) {
-                // Check 3: Unnecessary parentheses around ternary condition test
+                // Check 2: Unnecessary parentheses around ternary condition test
                 if (!node.test) return;
 
                 const tokenBeforeTest = context.sourceCode.getTokenBefore(node.test);
