@@ -101,7 +101,7 @@ import '@/styles/accessibility/touch-gestures.scss';
             this.refreshIndicator.style.opacity = progress.toString();
 
             if (progress >= 1) {
-                this.refreshIndicator.querySelector<HTMLElement>('.material-symbols-outlined')?.style.setProperty('animation', 'spin 1s linear infinite');
+                this.refreshIndicator.querySelector<HTMLElement>('.material-symbols-outlined')?.style.setProperty('animation', '--spin 1s linear infinite');
             }
             else {
                 this.refreshIndicator.querySelector<HTMLElement>('.material-symbols-outlined')?.style.setProperty('animation', 'none');
@@ -121,7 +121,7 @@ import '@/styles/accessibility/touch-gestures.scss';
 
             this.refreshIndicator.innerHTML = `
                 <div class="refresh-content">
-                    <span class="material-symbols-outlined" aria-hidden="true" style="animation: spin 1s linear infinite;">refresh</span>
+                    <span class="material-symbols-outlined" aria-hidden="true" style="animation: --spin 1s linear infinite;">refresh</span>
                     <span>Refreshing...</span>
                 </div>
             `;
