@@ -20,14 +20,8 @@
     border-top-color: $header-text;
     width: 1.2em;
     height: 1.2em;
-    animation: spin 1s linear infinite;
+    animation: --spin 1s linear infinite;
     margin-inline-start: $spacing-small - 0.125rem;
-}
-
-@keyframes spin {
-    to {
-        rotate: 360deg;
-    }
 }
 
 .error-box {

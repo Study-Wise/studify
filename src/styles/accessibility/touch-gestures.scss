@@ -28,11 +28,6 @@
     }
 }
 
-@keyframes spin {
-    from { rotate: 0deg; }
-    to { rotate: 360deg; }
-}
-
 @media (hover: none) and (pointer: coarse) {
     button, .nav-btn, .fancy-button {
         -webkit-tap-highlight-color: rgb(0 0 0 / 10%);

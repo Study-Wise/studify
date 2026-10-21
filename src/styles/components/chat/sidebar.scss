@@ -212,7 +212,7 @@
             }
 
             .spinning {
-                animation: spin 1s linear infinite;
+                animation: --spin 1s linear infinite;
             }
         }
 
@@ -380,14 +380,13 @@
                 }
 
                 .spinning {
-                    animation: spin 1s linear infinite;
+                    animation: --spin 1s linear infinite;
                 }
             }
         }
     }
 }
 
-// At widths ≤1024px the sidebars become off-canvas drawers opened from these toggles
 .sidebar-drawer-toggles {
     display: none;
 
@@ -520,15 +519,5 @@ body:has(.sidebar-drawer-input.right:focus-visible) .sidebar-drawer-toggle.right
         &:hover {
             background-color: rgb(from var(--card-text) r g b / 5%);
         }
-    }
-}
-
-@keyframes spin {
-    from {
-        rotate: 0deg;
-    }
-
-    to {
-        rotate: 360deg;
     }
 }
