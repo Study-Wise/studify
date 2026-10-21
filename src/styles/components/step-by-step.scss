@@ -29,10 +29,10 @@ $pad: $spacing-medium;
         background-color: var(--bor);
     }
 
-    counter-reset: quiz-total 0 quiz-correct 0;
+    counter-reset: --quiz-total 0 --quiz-correct 0;
 
     &::after {
-        content: 'Score: ' counter(quiz-correct) ' / ' counter(quiz-total);
+        content: 'Score: ' counter(--quiz-correct) ' / ' counter(--quiz-total);
         display: none;
         font-weight: $font-weight-semibold;
         color: var(--body-text);
@@ -64,10 +64,10 @@ $pad: $spacing-medium;
     }
 
     .step {
-        counter-increment: quiz-total;
+        counter-increment: --quiz-total;
 
         &:has(.step-question-choice[data-type="correct"] .step-question-radio:checked) {
-            counter-increment: quiz-total quiz-correct;
+            counter-increment: --quiz-total --quiz-correct;
         }
 
         box-sizing: border-box;
