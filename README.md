@@ -147,10 +147,7 @@ Studify supports multiple educational categories, each with specialized modes:
 
 ### AI Tools System
 
-Tools are defined in `src/lib/tools/*.ts` and automatically imported. Each tool provides specific functionality:
-
-- **search.ts** - Web search using Exa API
-- **runJSCode.ts** - Execute JavaScript code (with security sanitization)
+Tools are defined in `src/lib/tools/*.ts` and automatically imported. List `src/lib/tools/` for the current set.
 
 ### Content Generation
 

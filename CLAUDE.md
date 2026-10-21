@@ -70,10 +70,7 @@ Each category contains multiple modes (e.g., Math → Algebra, Geometry, Calculu
 
 ### AI Tools System
 
-Tools are defined in `src/lib/tools/*.ts` and automatically imported via `src/lib/tools.ts`:
-
-- **search.ts**: Web search using Exa API
-- **runJSCode.ts**: Execute JavaScript code (sanitizes imports for security)
+Tools are defined in `src/lib/tools/*.ts` and automatically imported via `src/lib/tools.ts`. List `src/lib/tools/` for the current set.
 
 Tools use the Vercel AI SDK's `tool()` function with Zod schemas for inputSchema.
 
@@ -133,7 +130,7 @@ API endpoints in `src/pages/api/`:
 - Returns users to original URL after authentication
 - Session management via Better Auth's `auth.api.getSession()`
 
-Route access control in `src/lib/auth/checkThreadAccess.ts` validates thread ownership.
+Route access control in `src/lib/auth/check-thread-access.ts` validates thread ownership.
 
 **Authentication Pages:**
 
