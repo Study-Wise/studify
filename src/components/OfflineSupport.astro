@@ -71,8 +71,8 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
             }
         });
 
-        window.navigator.serviceWorker.addEventListener('message', (event) => {
-            if (event.data && event.data.action === 'reload') {
+        window.navigator.serviceWorker.addEventListener('message', e => {
+            if (e.data && e.data.action === 'reload') {
                 window.location.reload();
             }
         });

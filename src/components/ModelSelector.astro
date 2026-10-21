@@ -69,7 +69,7 @@ const selectorSettings: SelectorSettings = {
         const tier = userSettings['tier'] || 'default';
         selector.value = `${provider}/${tier}`;
 
-        selector.addEventListener('change', (e) => {
+        selector.addEventListener('change', e => {
             const value = e.target.value;
             if (!value) return;
             const [providerKey, tierKey] = value.split('/');

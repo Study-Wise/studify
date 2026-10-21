@@ -43,7 +43,7 @@ const { providers, defaultProvider, defaultTier } = Astro.props;
     }
 
     document.querySelectorAll('.provider-button').forEach(btn => {
-        btn.addEventListener('click', (e) => {
+        btn.addEventListener('click', e => {
             e.preventDefault();
             const providerKey = btn.dataset.provider;
             setSetting('provider', providerKey);
@@ -66,7 +66,7 @@ const { providers, defaultProvider, defaultTier } = Astro.props;
     });
 
     document.querySelectorAll('.tier-button').forEach(btn => {
-        btn.addEventListener('click', (e) => {
+        btn.addEventListener('click', e => {
             e.preventDefault();
             const tierKey = btn.dataset.tier;
             setSetting('tier', tierKey);
@@ -78,7 +78,7 @@ const { providers, defaultProvider, defaultTier } = Astro.props;
 
     const settingsForm = document.getElementById('settings-form');
     if (settingsForm) {
-        settingsForm.addEventListener('submit', (e) => {
+        settingsForm.addEventListener('submit', e => {
             e.preventDefault();
         });
     }

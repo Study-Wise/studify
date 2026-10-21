@@ -93,16 +93,16 @@ const { title, threadId, canRename } = Astro.props;
                 titleInput.select();
             });
 
-            titleInput.addEventListener('keydown', (event) => {
+            titleInput.addEventListener('keydown', e => {
                 // Enter and Escape confirm or cancel IME composition
-                if (event.isComposing || event.key === 'Process') return;
+                if (e.isComposing || e.key === 'Process') return;
 
-                if (event.key === 'Enter') {
-                    event.preventDefault();
+                if (e.key === 'Enter') {
+                    e.preventDefault();
                     save(true);
                 }
-                else if (event.key === 'Escape') {
-                    event.preventDefault();
+                else if (e.key === 'Escape') {
+                    e.preventDefault();
                     cancel(true);
                 }
             });

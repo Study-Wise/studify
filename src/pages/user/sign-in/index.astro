@@ -85,7 +85,7 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
     if (!(form instanceof window.HTMLFormElement)) throw new Error('Sign-in form was not found.');
     const { showError, hideError } = window.authUtils;
 
-    form?.addEventListener('submit', async (e) => {
+    form?.addEventListener('submit', async e => {
         e.preventDefault();
         hideError();
 

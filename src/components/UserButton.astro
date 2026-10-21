@@ -28,7 +28,7 @@ const user = Astro.locals.user;
     const menuTrigger = document.getElementById('user-menu-trigger');
     const menu = document.getElementById('user-menu');
 
-    menuTrigger?.addEventListener('click', (e) => {
+    menuTrigger?.addEventListener('click', e => {
         e.stopPropagation();
         menu?.toggleAttribute('hidden');
     });
@@ -41,7 +41,7 @@ const user = Astro.locals.user;
     });
 
     // Prevent menu from closing when clicking inside it
-    menu?.addEventListener('click', (e) => {
+    menu?.addEventListener('click', e => {
         e.stopPropagation();
     });
 </script>

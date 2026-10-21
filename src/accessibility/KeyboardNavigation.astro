@@ -23,14 +23,14 @@ import '@/styles/accessibility/keyboard-navigation.scss';
 
         setupTabNavigation() {
             // Enhanced tab navigation for complex components
-            document.addEventListener('keydown', (e) => {
+            document.addEventListener('keydown', e => {
                 if (e.key === 'Tab') {
                     this.handleTabNavigation(e);
                 }
             });
 
             // Arrow key navigation for tab lists
-            document.addEventListener('keydown', (e) => {
+            document.addEventListener('keydown', e => {
                 const tabList = e.target instanceof window.HTMLElement ? e.target.closest('[role="tablist"]') : null;
                 if (tabList && ['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) {
                     e.preventDefault();

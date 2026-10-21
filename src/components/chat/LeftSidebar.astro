@@ -274,8 +274,8 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
     }
 
     // Adopt a thread created by the chat script (e.g. first message sent before uploading)
-    window.addEventListener('thread-created', (event) => {
-        const { id: createdId, source } = event.detail || {};
+    window.addEventListener('thread-created', e => {
+        const { id: createdId, source } = e.detail || {};
         if (source !== 'sidebar' && createdId && currentThreadId === 'new') {
             currentThreadId = createdId;
             updateShareLink();
@@ -514,7 +514,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
     }
 
     if (fileUpload && fileList) {
-        fileUpload.addEventListener('change', async (e) => {
+        fileUpload.addEventListener('change', async e => {
             const target = e.target;
             const files = target.files;
 
@@ -534,7 +534,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
         });
     }
 
-    fileList?.addEventListener('click', async (e) => {
+    fileList?.addEventListener('click', async e => {
         const target = e.target;
         const deleteButton = target.closest('.file-delete');
 

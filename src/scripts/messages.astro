@@ -38,8 +38,8 @@ const { page, category, mode, id } = Astro.props;
     });
 
     // Adopt a thread created elsewhere on the page (e.g. by a file upload in the sidebar) so the first message is added to it instead of creating a separate thread
-    window.addEventListener('thread-created', (event) => {
-        const { id: createdId, source } = event.detail || {};
+    window.addEventListener('thread-created', e => {
+        const { id: createdId, source } = e.detail || {};
         if (source !== 'messages' && createdId && !threadId) {
             threadId = createdId;
         }
@@ -57,16 +57,16 @@ const { page, category, mode, id } = Astro.props;
     }
 
     // Unlock the page if Back restores it from the back/forward cache mid-redirect
-    window.addEventListener('pageshow', (event) => {
-        if (event.persisted && isRedirecting) {
+    window.addEventListener('pageshow', e => {
+        if (e.persisted && isRedirecting) {
             isRedirecting = false;
             setLoadingState(false);
         }
     });
 
-    function handleEnterKey(event) {
-        if (event.key === 'Enter' && !event.shiftKey && event.target.value.trim() !== '') {
-            event.preventDefault();
+    function handleEnterKey(e) {
+        if (e.key === 'Enter' && !e.shiftKey && e.target.value.trim() !== '') {
+            e.preventDefault();
             if (!isGenerating && !sendButton.disabled) window.generateOutput();
         }
     }

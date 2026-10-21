@@ -124,13 +124,13 @@ import '@/styles/components/modal.scss';
             element.addEventListener('mouseenter', stopDismissTimer);
             element.addEventListener('focusin', stopDismissTimer);
             element.addEventListener('mouseleave', startDismissTimer);
-            element.addEventListener('focusout', (event) => {
-                if (!(event.relatedTarget instanceof Node && element.contains(event.relatedTarget))) startDismissTimer();
+            element.addEventListener('focusout', e => {
+                if (!(e.relatedTarget instanceof Node && element.contains(e.relatedTarget))) startDismissTimer();
             });
         }
         else {
-            element.addEventListener('click', (event) => {
-                if (event.target === element) element.close();
+            element.addEventListener('click', e => {
+                if (e.target === element) element.close();
             });
         }
         element.addEventListener('close', stopDismissTimer);

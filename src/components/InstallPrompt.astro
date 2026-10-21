@@ -24,10 +24,10 @@ import '@/styles/components/install-prompt.scss';
         if (prompt) prompt.hidden = true;
     }
 
-    window.addEventListener('beforeinstallprompt', (event) => {
+    window.addEventListener('beforeinstallprompt', e => {
         // Show our own prompt instead of the browser's mini-infobar
-        event.preventDefault();
-        deferredPrompt = event;
+        e.preventDefault();
+        deferredPrompt = e;
 
         let isDismissed;
         try {
