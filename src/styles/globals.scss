@@ -262,7 +262,7 @@ main {
             align-items: center;
         }
 
-        &:not(.chat-header h2):not(.about-name) {
+        &:not(.chat-header h2, .about-name) {
             margin-block-end: 25px;
             border-block-end: 1px solid #{$section-title-border};
             padding-block-end: 12px;

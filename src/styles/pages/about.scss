@@ -60,11 +60,11 @@
         }
 
         @keyframes --hover-swivel {
-             0% { rotate: #{ 0*$hover-rotation} }
-            25% { rotate: #{-1*$hover-rotation} }
-            50% { rotate: #{ 1*$hover-rotation} }
-            75% { rotate: #{-1*$hover-rotation} }
-           100% { rotate: #{ 0*$hover-rotation} }
+             0% { rotate: #{ 0 * $hover-rotation} }
+            25% { rotate: #{-1 * $hover-rotation} }
+            50% { rotate: #{ 1 * $hover-rotation} }
+            75% { rotate: #{-1 * $hover-rotation} }
+           100% { rotate: #{ 0 * $hover-rotation} }
         }
     }
 
@@ -77,7 +77,6 @@
 
     .about-text {
         flex-grow: 1;
-        // min-width: min(300px, 100%);
     }
 
     p {
