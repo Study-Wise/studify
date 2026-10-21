@@ -1,10 +1,11 @@
 @use '../variables/globals' as *;
 @use '../variables/tokens' as *;
+@use '../variables/colors/accent/colors' as colors;
+@use '../variables/colors/statuses' as *;
 @use 'sass:color';
 @use 'sass:math';
 @use 'sass:list';
 @use 'sass:map';
-@use '../variables/colors/statuses' as *;
 
 .unauthorized-message {
     display: flex;
@@ -20,7 +21,8 @@
         .message-content {
             $brdr: 15px;
 
-            background: linear-gradient($gradient-angle, list.nth(map.get($accent-colors, primary), 1), list.nth(map.get($accent-colors, primary), 2));
+            @include colors.accent-gradient($angle: $gradient-angle);
+
             border-radius: $brdr;
             padding: $spacing-extra-large;
             text-align: center;
@@ -156,7 +158,8 @@ footer, .chat-toolbar {
     flex-wrap: wrap;
     padding: $spacing-medium + 0.25rem $spacing-large;
     border-block-end: 1px solid rgb(from var(--section-title) r g b / 10%);
-    background: linear-gradient($gradient-angle, list.nth(map.get($accent-colors, primary), 1), list.nth(map.get($accent-colors, primary), 2));
+
+    @include colors.accent-gradient($angle: $gradient-angle);
 
     --bd: blur(10px);
 
