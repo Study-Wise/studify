@@ -6,9 +6,9 @@
 @use './utils/helpers' as *;
 @use './utils/animations' as *;
 @use './utils/print' as *;
-@use './accessibility/globals' as *;
 @use './utils/buttons' as *;
 @use './utils/card' as *;
+@use './accessibility/globals' as *;
 @use 'sass:color';
 @use 'sass:list';
 @use 'sass:map';
