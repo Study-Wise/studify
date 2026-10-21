@@ -1,14 +1,10 @@
 import fs from 'fs-extra';
-import path from 'path';
 import AstroPWA from '@vite-pwa/astro';
 import sentryAstro from '@sentry/astro';
 
 import vercel from '@astrojs/vercel';
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
-
-const manifestPath = path.join(process.cwd(), 'public', 'manifest.webmanifest');
-const manifest = fs.readJSONSync(manifestPath);
 
 // https://astro.build/config
 export default defineConfig({
@@ -24,7 +20,7 @@ export default defineConfig({
                 '/assets/logos/logo.png',
                 '/assets/logos/logo.svg'
             ],
-            manifest,
+            manifest: fs.readJSONSync('public/manifest.webmanifest'),
             workbox: {
                 globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
                 // Pages are server-rendered, so there is no precached shell; the default route would also catch every navigation
