@@ -24,9 +24,7 @@ self.addEventListener('fetch', (event) => {
         caches.match(event.request)
             .then((response) => {
                 // Return cached version or fetch from network
-                if (response) {
-                    return response;
-                }
+                if (response) return response;
                 return fetch(event.request);
             })
     );
