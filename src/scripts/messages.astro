@@ -312,13 +312,13 @@ const { page, category, mode, id } = Astro.props;
     }
 
     async function typesetMathJax(elements) {
-        const validElements = (Array.isArray(elements) || elements instanceof NodeList || elements ? [...elements] : []).filter(el => el != null);
+        const validElements = (Array.isArray(elements) || elements instanceof NodeList || elements ? [...elements] : []).filter(element => element != null);
         if (validElements.length === 0) return;
 
         // Hide messages that contain math until they are typeset so raw LaTeX never shows
         validElements
-            .filter(el => mathDelimiterPattern.test(el.textContent || ''))
-            .forEach(el => el.classList.add('mathjax-pending'));
+            .filter(element => mathDelimiterPattern.test(element.textContent || ''))
+            .forEach(element => element.classList.add('mathjax-pending'));
 
         try {
             // Loading, startup and typesetting can each stall on a hung request, so limit the whole wait
@@ -342,7 +342,7 @@ const { page, category, mode, id } = Astro.props;
         } catch (error) {
             console.error('MathJax typesetting error:', error);
         } finally {
-            validElements.forEach(el => el.classList.remove('mathjax-pending'));
+            validElements.forEach(element => element.classList.remove('mathjax-pending'));
         }
     }
 

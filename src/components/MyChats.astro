@@ -119,14 +119,14 @@ const threadsByCategory = threads.reduce<Record<string, Record<string, typeof th
         const query = searchInput.value.trim().toLowerCase();
         const subject = filterSelect.value;
 
-        document.querySelectorAll('.thread-row').forEach((row) => {
+        document.querySelectorAll('.thread-row').forEach(row => {
             const title = row.querySelector('.thread-title').textContent.toLowerCase();
             const matchesSubject = !subject || subject === row.dataset.category || subject === `${row.dataset.category}/${row.dataset.mode}`;
             row.classList.toggle('is-hidden', !(title.includes(query) && matchesSubject));
         });
 
         // Hide the mode and category sections that have no matching chats left
-        document.querySelectorAll('.mode-section, .category-section').forEach((section) => {
+        document.querySelectorAll('.mode-section, .category-section').forEach(section => {
             section.classList.toggle('is-hidden', !section.querySelector('.thread-row:not(.is-hidden)'));
         });
 
@@ -136,7 +136,7 @@ const threadsByCategory = threads.reduce<Record<string, Record<string, typeof th
     searchInput?.addEventListener('input', applyFilters);
     filterSelect?.addEventListener('change', applyFilters);
 
-    document.querySelector('.my-chats-container')?.addEventListener('click', async (e) => {
+    document.querySelector('.my-chats-container')?.addEventListener('click', async e => {
         const deleteButton = e.target.closest('.thread-delete');
         if (!deleteButton) return;
 

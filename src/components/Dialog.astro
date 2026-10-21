@@ -210,7 +210,7 @@ import '@/styles/components/modal.scss';
             renderDialog(next);
         }
         else {
-            pendingToasts.splice(0).forEach((message) => showToast(message, { title: 'Success', type: 'success' }));
+            pendingToasts.splice(0).forEach(message => showToast(message, { title: 'Success', type: 'success' }));
         }
     }
 
@@ -303,7 +303,7 @@ import '@/styles/components/modal.scss';
     ): Promise<boolean> {
         const { title = 'Are you sure?', confirmLabel = 'Confirm', cancelLabel = 'Cancel', icon, type = 'warning' } = options;
 
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             let confirmed = false;
             const confirmModal = createModal({
                 title,
@@ -343,7 +343,7 @@ import '@/styles/components/modal.scss';
     ): Promise<string | null> {
         const { title = 'Are you sure?', confirmLabel = 'Confirm', cancelLabel = 'Cancel', icon, type = 'warning', inputLabel = 'Details (optional)', placeholder, maxLength } = options;
 
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             let answer: string | null = null;
             const input = document.createElement('textarea');
             const promptModal = createModal({

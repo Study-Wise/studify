@@ -85,12 +85,12 @@ import '@/styles/accessibility/keyboard-navigation.scss';
 
         getFocusableElements() {
             return Array.from(document.querySelectorAll<HTMLElement>(this.focusableElements))
-                .filter((el) => {
+                .filter(element => {
                     return (
-                        !el.hasAttribute('disabled') &&
-                        !el.hasAttribute('hidden') &&
-                        el.offsetParent !== null &&
-                        !el.hasAttribute('aria-hidden')
+                        !element.hasAttribute('disabled') &&
+                        !element.hasAttribute('hidden') &&
+                        element.offsetParent !== null &&
+                        !element.hasAttribute('aria-hidden')
                     );
                 });
         }

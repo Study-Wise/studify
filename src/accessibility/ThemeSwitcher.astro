@@ -47,13 +47,13 @@ const themes = [
 
     const storedTheme = localStorage.getItem('user-theme') ?? 'system';
 
-    setTheme(menuItems.some((item) => item.dataset.themeValue === storedTheme) ? storedTheme : 'system');
+    setTheme(menuItems.some(item => item.dataset.themeValue === storedTheme) ? storedTheme : 'system');
 
     function setTheme(value: string) {
-        const selectedItem = menuItems.find((item) => item.dataset.themeValue === value);
+        const selectedItem = menuItems.find(item => item.dataset.themeValue === value);
         if (!selectedItem) return;
 
-        menuItems.forEach((item) => {
+        menuItems.forEach(item => {
             item.setAttribute('aria-checked', String(item === selectedItem));
         });
 
@@ -67,7 +67,7 @@ const themes = [
     function openMenu() {
         themeMenu?.removeAttribute('hidden');
         themeSwitcher?.setAttribute('aria-expanded', 'true');
-        const checkedItem = menuItems.find((item) => item.getAttribute('aria-checked') === 'true');
+        const checkedItem = menuItems.find(item => item.getAttribute('aria-checked') === 'true');
         (checkedItem ?? menuItems[0])?.focus();
     }
 
@@ -82,32 +82,32 @@ const themes = [
         menuItems[(index + count) % count]?.focus();
     }
 
-    themeSwitcher?.addEventListener('click', (e) => {
+    themeSwitcher?.addEventListener('click', e => {
         e.stopPropagation();
         if (themeMenu && !themeMenu.hasAttribute('hidden')) closeMenu(false);
         else openMenu();
     });
 
-    themeSwitcher?.addEventListener('keydown', (e) => {
+    themeSwitcher?.addEventListener('keydown', e => {
         if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
             e.preventDefault();
             openMenu();
         }
     });
 
-    menuItems.forEach((item) => {
+    menuItems.forEach(item => {
         item.addEventListener('click', () => {
             setTheme(item.dataset.themeValue ?? 'system');
             closeMenu(true);
         });
     });
 
-    themeMenu?.addEventListener('click', (e) => {
+    themeMenu?.addEventListener('click', e => {
         e.stopPropagation();
     });
 
-    themeMenu?.addEventListener('keydown', (e) => {
-        const currentIndex = menuItems.findIndex((item) => item === document.activeElement);
+    themeMenu?.addEventListener('keydown', e => {
+        const currentIndex = menuItems.findIndex(item => item === document.activeElement);
 
         switch (e.key) {
             case 'ArrowDown':

@@ -14,12 +14,12 @@ import '@/styles/pages/content/globals.scss';
 const mathExtension: TokenizerAndRendererExtension = {
     name: 'math',
     level: 'inline',
-    start: (src) => src.indexOf('$'),
-    tokenizer: (src) => {
+    start: src => src.indexOf('$'),
+    tokenizer: src => {
         const match = /^\$\$[\s\S]+?\$\$|^\$[^$\n]+?\$/.exec(src);
         return match ? { type: 'math', raw: match[0] } : undefined;
     },
-    renderer: (token) => token.raw.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'),
+    renderer: token => token.raw.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'),
 };
 const marked = new Marked({ extensions: [mathExtension] });
 
@@ -188,7 +188,7 @@ const hasContent = !!(isStructured ? (flashcardData && flashcardData.questions.l
         });
 
         // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
+        document.addEventListener('keydown', e => {
             if (e.key === 'ArrowLeft' && currentIndex > 0) {
                 currentIndex--;
                 updateDisplay();

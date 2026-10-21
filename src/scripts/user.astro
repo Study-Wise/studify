@@ -22,8 +22,8 @@
     }
 
     // Social sign-in click handlers
-    document.querySelectorAll('.social-button[data-provider]').forEach((button) => {
-        button.addEventListener('click', async (e) => {
+    document.querySelectorAll('.social-button[data-provider]').forEach(button => {
+        button.addEventListener('click', async e => {
             e.preventDefault();
             if (!(button instanceof window.HTMLElement)) return;
             const provider = button.dataset.provider;
