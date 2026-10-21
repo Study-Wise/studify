@@ -1,6 +1,7 @@
 @use '../variables/globals' as *;
 @use '../variables/tokens' as *;
 @use '../variables/mixins' as *;
+@use '../variables/colors/accent/colors' as colors;
 @use 'sass:list';
 @use 'sass:map';
 
@@ -33,12 +34,9 @@
             font-weight: $font-weight-bold;
             line-height: 1;
             margin-bottom: $spacing-small;
-            background: linear-gradient(135deg,
-                list.nth(map.get($accent-colors, primary), 1),
-                list.nth(map.get($accent-colors, primary), 2)
-            );
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+
+            @include colors.accent-text-gradient;
+
             animation: --slide-in-down 0.6s $ease-out forwards;
         }
 

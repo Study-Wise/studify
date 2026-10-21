@@ -1,7 +1,6 @@
 @use '../variables/globals' as *;
 @use '../variables/tokens' as *;
-@use 'sass:list';
-@use 'sass:map';
+@use '../variables/colors/accent/colors' as colors;
 @use 'sass:math';
 
 @property --g-angle {
@@ -28,7 +27,9 @@
     box-sizing: content-box;
     padding: $spacing-extra-small;
     aspect-ratio: 1;
-    background: linear-gradient(var(--g-angle), list.nth(map.get($accent-colors, primary), 1), list.nth(map.get($accent-colors, primary), 2));
+
+    @include colors.accent-gradient($angle: var(--g-angle));
+
     color: var(--body-bg);
     border: none;
     border-radius: 50%;
