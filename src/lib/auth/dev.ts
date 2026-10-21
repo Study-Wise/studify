@@ -3,7 +3,7 @@
 import { account, user as userTable } from '@/db/auth-schema';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
-import type { ThreadAccessResult } from '@/lib/auth/checkThreadAccess';
+import type { ThreadAccessResult } from '@/lib/auth/check-thread-access';
 import type { UserRole, User } from '@/lib/auth/types';
 
 import { eq } from 'drizzle-orm';
