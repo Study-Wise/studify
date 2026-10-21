@@ -24,7 +24,7 @@
                 font-size: 6rem;
                 color: list.nth(map.get($accent-colors, primary), 1);
                 opacity: 0.6;
-                animation: float 3s ease-in-out infinite;
+                animation: --float 3s ease-in-out infinite;
             }
         }
 
