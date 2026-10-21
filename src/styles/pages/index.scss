@@ -2,6 +2,7 @@
 @use '../variables/tokens' as *;
 @use '../variables/mixins' as *;
 @use '../variables/colors/statuses' as *;
+@use '../utils/animations' as *;
 @use 'sass:list';
 @use 'sass:map';
 @use 'sass:math';
@@ -93,6 +94,8 @@
     grid-template-columns: repeat(auto-fit, minmax(min(500px, 100%), 1fr));
     gap: $spacing-large;
 
+    @include stagger-children(0.1s);
+
     .category-card {
         background-color: var(--card-bg);
         border-radius: $border-radius-extra-large;
@@ -117,17 +120,6 @@
             border-radius: inherit;
             opacity: 1;
             z-index: -1;
-        }
-
-        opacity: 0;
-        animation: --fade-in 0.5s $ease-out forwards;
-
-        $max: 10;
-
-        @for $i from 1 through $max {
-            &:nth-child(#{$max}n - #{$max - $i}) {
-                animation-delay: #{$i * 0.1}s;
-            }
         }
 
         @include interactive-lift;

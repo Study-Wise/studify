@@ -153,14 +153,16 @@ $transition-bounce: 500ms;
 }
 
 // Fade in each direct child one after another
-@mixin stagger-children {
+@mixin stagger-children($step: 0.05s) {
+    $max: 10;
+
     > * {
         opacity: 0;
         animation: --fade-in 0.5s $ease-out forwards;
 
-        @for $i from 1 through 10 {
-            &:nth-child(#{$i}) {
-                animation-delay: #{$i * 0.05}s;
+        @for $i from 1 through $max {
+            &:nth-child(#{$max}n - #{$max - $i}) {
+                animation-delay: $i * $step;
             }
         }
     }
