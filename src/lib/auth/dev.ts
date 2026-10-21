@@ -1,10 +1,10 @@
 // Uses USER_ACCESS_TOKEN env variable to authenticate in development
 
+import { account, user as userTable } from '@/db/auth-schema';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
-import { account, user as userTable } from '@/db/auth-schema';
-import type { UserRole, User } from '@/lib/auth/types';
 import type { ThreadAccessResult } from '@/lib/auth/checkThreadAccess';
+import type { UserRole, User } from '@/lib/auth/types';
 
 import { eq } from 'drizzle-orm';
 

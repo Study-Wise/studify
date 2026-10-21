@@ -3,10 +3,10 @@ import { threadsTable } from '@/db/schema';
 import { generateText } from '@/lib/ai-service';
 import config from '@/lib/config';
 import { buildContentSystemPrompt } from '@/lib/content';
-import { saveContent } from '@/lib/content/latest';
 import categories from '@/lib/modes';
-import desmosSection from '@/lib/prompt-templates/desmos';
 import { parseThreadData, type UploadedFile } from '@/lib/threads';
+import { saveContent } from '@/lib/content/latest';
+import desmosSection from '@/lib/prompt-templates/desmos';
 
 import { eq } from 'drizzle-orm';
 

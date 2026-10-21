@@ -1,9 +1,9 @@
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
+import type { JSONValue } from '@/lib/threads';
 import type { FlashcardData } from '@/lib/content/latest/flashcards';
 import type { InfographicData } from '@/lib/content/latest/infographic';
 import type { SlideshowData } from '@/lib/content/latest/slideshow';
-import type { JSONValue } from '@/lib/threads';
 
 import { eq, sql } from 'drizzle-orm';
 

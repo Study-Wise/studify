@@ -1,6 +1,6 @@
-import { modules } from '@/lib/tools';
-import generateModePrompt from '@/lib/prompt-generator';
 import characters from '@/lib/characters';
+import generateModePrompt from '@/lib/prompt-generator';
+import { modules } from '@/lib/tools';
 import type { ToolRecord } from '@/lib/tools';
 
 export interface Mode {

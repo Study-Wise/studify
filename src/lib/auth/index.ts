@@ -1,9 +1,9 @@
-import { user, session, account, verification } from '@/db/auth-schema';
-import { db } from '@/db/initialize';
-import type { UserRole, SocialProviderConfig } from '@/lib/auth/types';
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { magicLink } from 'better-auth/plugins';
+import { user, session, account, verification } from '@/db/auth-schema';
+import { db } from '@/db/initialize';
+import type { UserRole, SocialProviderConfig } from '@/lib/auth/types';
 
 const ADMIN_EMAILS = [
     'adarshravikumar2@gmail.com',

@@ -1,5 +1,5 @@
-import { VendorError } from '@/lib/user-errors';
 import { UTApi } from 'uploadthing/server';
+import { VendorError } from '@/lib/user-errors';
 
 export interface UploadOptions {
     metadata?: Record<string, string>;

@@ -1,7 +1,7 @@
+import OpenAI from 'openai';
 import config from '@/lib/config';
 import { uploadFile } from '@/lib/uploadthing';
 import { VendorError } from '@/lib/user-errors';
-import OpenAI from 'openai';
 
 const openai = new OpenAI({
     apiKey: import.meta.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY,

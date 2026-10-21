@@ -1,8 +1,8 @@
+import { tool } from 'ai';
+import { z } from 'zod';
 import { getToolContext } from '@/lib/tools';
 import { getContentTypesList } from '@/lib/content/get-types';
 import { getLatestContent } from '@/lib/content/latest';
-import { tool } from 'ai';
-import { z } from 'zod';
 
 const [firstContentType, ...remainingContentTypes] = getContentTypesList();
 if (!firstContentType) throw new Error('No content types are available');

@@ -1,17 +1,17 @@
 ---
-import { checkThreadAccess } from '@/lib/auth/checkThreadAccess';
+import { marked, Marked } from 'marked';
 import { checkForOneMessage } from '@/lib/check-for-one-message';
 import categories from '@/lib/modes';
 import { getMessages, getMessagesLength, getThreadByToken, type Message } from '@/lib/threads';
 import { labels } from '@/lib/tools';
-import { marked, Marked } from 'marked';
+import { checkThreadAccess } from '@/lib/auth/checkThreadAccess';
 
+import Footer from '@/components/Footer.astro';
 import ChatTitle from '@/components/chat/ChatTitle.astro';
 import Header from '@/components/chat/Header.astro';
 import LeftSidebar from '@/components/chat/LeftSidebar.astro';
 import RightSidebar from '@/components/chat/RightSidebar.astro';
 import Toolbar from '@/components/chat/Toolbar.astro';
-import Footer from '@/components/Footer.astro';
 import Layout from '@/layouts/Layout.astro';
 import MessagesScript from '@/scripts/messages.astro';
 import StepByStepScript from '@/scripts/step-by-step.astro';

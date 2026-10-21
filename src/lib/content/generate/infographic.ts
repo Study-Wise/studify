@@ -3,10 +3,10 @@ import { threadsTable } from '@/db/schema';
 import { generateText } from '@/lib/ai-service';
 import config from '@/lib/config';
 import { buildContentSystemPrompt } from '@/lib/content';
-import { saveContent } from '@/lib/content/latest';
 import { generateImage } from '@/lib/genai-image';
 import { parseThreadData, type UploadedFile } from '@/lib/threads';
 import { VendorError } from '@/lib/user-errors';
+import { saveContent } from '@/lib/content/latest';
 
 import { eq } from 'drizzle-orm';
 

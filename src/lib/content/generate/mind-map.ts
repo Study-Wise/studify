@@ -1,12 +1,12 @@
+import type { GatewayProviderOptions } from '@ai-sdk/gateway';
+import { generateText, stepCountIs } from 'ai';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 import config from '@/lib/config';
 import { buildContentSystemPrompt } from '@/lib/content';
-import { saveContent } from '@/lib/content/latest';
 import { parseThreadData, type Message, type UploadedFile } from '@/lib/threads';
 import { modules } from '@/lib/tools';
-import type { GatewayProviderOptions } from '@ai-sdk/gateway';
-import { generateText, stepCountIs } from 'ai';
+import { saveContent } from '@/lib/content/latest';
 
 import { eq } from 'drizzle-orm';
 

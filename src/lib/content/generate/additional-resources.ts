@@ -1,10 +1,10 @@
+import Exa from 'exa-js';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
-import { saveContent } from '@/lib/content/latest';
 import findSimulations from '@/lib/phet';
 import { parseThreadData } from '@/lib/threads';
 import { VendorError } from '@/lib/user-errors';
-import Exa from 'exa-js';
+import { saveContent } from '@/lib/content/latest';
 
 import { eq } from 'drizzle-orm';
 

@@ -1,7 +1,7 @@
 // Application Configuration
 
-import type { CategoryName, ModeName } from '@/lib/modes';
 import type { ImageSize } from '@/lib/models';
+import type { CategoryName, ModeName } from '@/lib/modes';
 
 export interface Config {
     provider: string;

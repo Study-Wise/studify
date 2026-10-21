@@ -1,6 +1,6 @@
 import config from '@/lib/config';
-import type { ThreadContent } from '@/lib/content/latest/index';
 import type { ThreadData, UploadedFile } from '@/lib/threads';
+import type { ThreadContent } from '@/lib/content/latest/index';
 
 import { pgTable, varchar, timestamp, jsonb, boolean, text } from 'drizzle-orm/pg-core';
 

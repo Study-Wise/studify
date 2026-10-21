@@ -1,6 +1,6 @@
-import findSimulations from '@/lib/phet';
 import { tool } from 'ai';
 import { z } from 'zod';
+import findSimulations from '@/lib/phet';
 
 const findSimulationTool = tool({
     description: 'Find interactive PhET simulations for a physics, chemistry, math, biology or earth science topic. Returns the simulation page and a URL that can be embedded in an iframe so the student can change parameters and watch what happens.',

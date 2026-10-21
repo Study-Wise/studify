@@ -1,10 +1,10 @@
-import fs from 'fs-extra';
-import AstroPWA from '@vite-pwa/astro';
 import sentryAstro from '@sentry/astro';
+import AstroPWA from '@vite-pwa/astro';
+import fs from 'fs-extra';
 
+import sitemap from '@astrojs/sitemap';
 import vercel from '@astrojs/vercel';
 import { defineConfig } from 'astro/config';
-import sitemap from '@astrojs/sitemap';
 
 const contentTypes = fs.readdirSync('src/lib/content/latest')
     .filter(file => file.endsWith('.ts') && file !== 'index.ts')

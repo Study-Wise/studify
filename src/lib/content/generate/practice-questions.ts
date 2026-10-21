@@ -3,9 +3,9 @@ import { threadsTable } from '@/db/schema';
 import { generateText } from '@/lib/ai-service';
 import config from '@/lib/config';
 import { buildContentSystemPrompt } from '@/lib/content';
+import { parseThreadData, type UploadedFile } from '@/lib/threads';
 import { saveContent } from '@/lib/content/latest';
 import stepByStepHTML from '@/lib/prompt-templates/step-by-step-html';
-import { parseThreadData, type UploadedFile } from '@/lib/threads';
 
 import { eq } from 'drizzle-orm';
 

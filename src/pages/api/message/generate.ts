@@ -1,3 +1,4 @@
+import { nanoid } from 'nanoid';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 import {
@@ -5,7 +6,6 @@ import {
     extractToolData,
     generateTitle,
 } from '@/lib/ai-service';
-import { isUserAdmin } from '@/lib/auth/admin';
 import config from '@/lib/config';
 import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
 import { getValidModelAndProvider, providers } from '@/lib/models';
@@ -16,7 +16,7 @@ import { parseThreadData, type Message } from '@/lib/threads';
 import type { ToolContext } from '@/lib/tools';
 import { VendorError, getUserErrorMessage } from '@/lib/user-errors';
 import isValidEmail from '@/lib/validation';
-import { nanoid } from 'nanoid';
+import { isUserAdmin } from '@/lib/auth/admin';
 
 import { and, eq, type InferSelectModel } from 'drizzle-orm';
 

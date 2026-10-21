@@ -1,6 +1,6 @@
-import { getToolContext } from '@/lib/tools';
 import { tool } from 'ai';
 import { z } from 'zod';
+import { getToolContext } from '@/lib/tools';
 
 const validTypes: [string, ...string[]] = [
     'study-guide',

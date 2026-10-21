@@ -1,11 +1,11 @@
+import { nanoid } from 'nanoid';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
-import { userFilesUpload } from '@/lib/uploadthing';
-import { getUserErrorMessage } from '@/lib/user-errors';
-import { nanoid } from 'nanoid';
+import { chunkedUploads, cleanupStaleUploads } from '@/lib/chunked-upload-store';
 import { extractTextFromFile } from '@/lib/file-processing';
 import type { UploadedFile } from '@/lib/threads';
-import { chunkedUploads, cleanupStaleUploads } from '@/lib/chunked-upload-store';
+import { userFilesUpload } from '@/lib/uploadthing';
+import { getUserErrorMessage } from '@/lib/user-errors';
 
 import { eq } from 'drizzle-orm';
 

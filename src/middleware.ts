@@ -1,10 +1,10 @@
 import { auth } from '@/lib/auth';
+import { SENTRY_TUNNEL_PATH } from '@/lib/sentry';
 import { getUserRole } from '@/lib/auth/admin';
 import { isDev, getDevUser } from '@/lib/auth/dev';
 import { getSafeReturnBackUrl } from '@/lib/auth/return-url';
 import type { User } from '@/lib/auth/types';
 import { getContentTypesList } from '@/lib/content/get-types';
-import { SENTRY_TUNNEL_PATH } from '@/lib/sentry';
 
 import type { MiddlewareHandler } from 'astro';
 

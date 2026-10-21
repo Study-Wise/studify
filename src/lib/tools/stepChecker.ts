@@ -1,6 +1,6 @@
-import config from '@/lib/config';
 import { generateText, tool } from 'ai';
 import { z } from 'zod';
+import config from '@/lib/config';
 
 const stepCheckerTool = tool({
     description: 'Check a student\'s own working line by line when they type it out in a math or science problem. Call it with the problem and the student\'s working. It returns the first line with an error and what went wrong on that line, without solving or checking the remaining steps, or says every line is correct. Share the result with the student.',
