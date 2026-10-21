@@ -57,6 +57,15 @@ export default [
         }
     },
     {
+        files: ['public/sw.js'],
+        languageOptions: {
+            globals: {
+                self: 'readonly',
+                caches: 'readonly'
+            }
+        }
+    },
+    {
         files: ['src/**/*.astro'],
         languageOptions: {
             parser: parsers.astroParser,
