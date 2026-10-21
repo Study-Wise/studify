@@ -52,13 +52,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
             // Continue even if UploadThing deletion fails
         }
 
-        const currentFiles = thread[0].uploadedFiles || [];
-        const updatedFiles = currentFiles.filter((file) => file.key !== fileKey);
-
         await db
             .update(threadsTable)
             .set({
-                uploadedFiles: updatedFiles,
+                uploadedFiles: (thread[0].uploadedFiles || []).filter(file => file.key !== fileKey),
                 updatedAt: new Date()
             })
             .where(eq(threadsTable.id, threadId));
