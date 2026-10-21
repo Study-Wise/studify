@@ -1,9 +1,9 @@
 @use '../../variables/globals' as *;
 @use '../../variables/tokens' as *;
 @use '../../variables/mixins' as *;
+@use '../../variables/colors/statuses' as *;
 @use 'sass:list';
 @use 'sass:map';
-@use '../../variables/colors/statuses' as *;
 
 .chat-sidebar.left {
     border-right: 1px solid rgb(from var(--card-border) r g b / 30%);
