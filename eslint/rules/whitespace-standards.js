@@ -1,11 +1,3 @@
-import mistakeenTrailingWhitespaceIssues from '../mistaken-trailing-whitespace-issues.json' with { type: 'json' };
-
-function isMistakenTrailingWhitespaceIssue(filepath, line, column) {
-    return mistakeenTrailingWhitespaceIssues.some(issue =>
-        filepath.replace(/\\/g, '/').includes(issue.filepath) && issue.line === line && issue.column === column
-    );
-}
-
 export default {
     meta: {
         type: 'problem',
@@ -49,7 +41,7 @@ export default {
                             }
                         }
                     }
-                    if (/[ \t]+$/.test(line) && !isMistakenTrailingWhitespaceIssue(context.filename, i + 1, line.length - line.trimEnd().length + 1)) {
+                    if (/[ \t]+$/.test(line)) {
                         context.report({
                             loc: {
                                 line: i + 1,
