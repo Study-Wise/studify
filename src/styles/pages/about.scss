@@ -34,7 +34,7 @@
             transition:
                 opacity $transition-base $ease-out,
                 scale $transition-base $ease-out;
-        }        
+        }
         
         &::before {
             content: '';
@@ -48,17 +48,17 @@
             background-position: center;
             z-index: -1;
         }
-        
+
         .profile-picture:hover,
         &:has(.profile-picture:hover)::before {
             animation: --hover-swivel 0.5s ease-in-out;
             scale: $hover-scale;
         }
-        
+
         &[data-hover="true"] .profile-picture:hover {
             opacity: 0;
         }
-        
+
         @keyframes --hover-swivel {
               0% { rotate: #{ 0*$hover-rotation} }
              25% { rotate: #{-1*$hover-rotation} }

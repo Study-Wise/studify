@@ -256,7 +256,7 @@ main {
         color: var(--section-title);
         font-size: clamp(1.4rem, 4vw, 1.6rem);
         font-weight: 600;
-        
+
         &:not(.about-name) {
             display: flex;
             align-items: center;
