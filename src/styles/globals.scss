@@ -2,6 +2,7 @@
 @use './variables/globals' as *;
 @use './variables/tokens' as *;
 @use './variables/mixins' as *;
+@use './variables/colors/accent/colors' as colors;
 @use './utils/helpers' as *;
 @use './utils/animations' as *;
 @use './utils/print' as *;
@@ -206,7 +207,8 @@ select.fancy-select,
 ::picker(select) {
     margin-block: 0.5rem;
     border-radius: 0.5rem;
-    background: linear-gradient(30deg, list.nth(map.get($accent-colors, primary), 1), list.nth(map.get($accent-colors, primary), 2));
+
+    @include colors.accent-gradient($angle: 30deg);
 }
 
 select.fancy-select {
