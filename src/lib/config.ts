@@ -31,7 +31,7 @@ const config: Config = {
     maxMessagesPerThread: 10, // Maximum number of messages per thread
     defaultCategory: defaultCategory,
     defaultMode: defaultMode,
-    contentGenerationExcludeTools: ['generate-content', 'get-content-types', 'open-content'],
+    contentGenerationExcludeTools: ['generate-content', 'get-content-types', 'open-content', 'step-checker', 'hint-ladder', 'grade-explanation'],
 };
 
 export default config;
