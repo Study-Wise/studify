@@ -16,7 +16,7 @@ export default {
     meta: {
         type: 'problem',
         docs: {
-            description: 'SCSS @use order standards: external packages, then ../ paths, then ./ paths, then sass: modules',
+            description: 'SCSS @use order standards: external packages, then ../ paths, then ./ paths, then sass: modules, with @use rules from the same folder together',
             category: 'Best Practices'
         },
         fixable: 'code',
@@ -50,9 +50,29 @@ export default {
                 }
 
                 let highestGroup = 0;
+                let previousFolder = null;
+                const closedFolders = new Set();
 
                 for (const match of context.sourceCode.text.matchAll(/^@use\s+(['"])(.+?)\1[^;]*;/gm)) {
                     const group = getUseGroup(match[2]);
+                    const folder = match[2].match(/^(?:\.{1,2}\/)+([^/]+)\/./)?.[1] ?? null;
+
+                    if (folder !== previousFolder) {
+                        if (previousFolder) closedFolders.add(previousFolder);
+
+                        if (folder && closedFolders.has(folder)) {
+                            context.report({
+                                node,
+                                loc: {
+                                    start: context.sourceCode.getLocFromIndex(match.index),
+                                    end: context.sourceCode.getLocFromIndex(match.index + match[0].length)
+                                },
+                                message: `@use "${match[2]}" must be next to the other @use rules from the "${folder}" folder. Group all @use rules from the same folder consecutively.`
+                            });
+                        }
+
+                        previousFolder = folder;
+                    }
 
                     if (group < highestGroup) {
                         const block = blocks.find(candidate => match.index >= candidate.start && match.index <= candidate.end);
