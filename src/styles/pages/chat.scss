@@ -392,7 +392,7 @@ footer, .chat-toolbar {
         border-radius: $message-space;
         max-width: min(calc(600px + 4 * $message-space), 100%);
         position: relative;
-        animation: slide-in-from-left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        animation: --slide-in-from-left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 
         &-content {
             box-sizing: border-box;
@@ -484,7 +484,7 @@ footer, .chat-toolbar {
 
         &.user {
             align-self: end;
-            animation: slide-in-from-right 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: --slide-in-from-right 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 
             .message-content {
                 background: linear-gradient(135deg,
