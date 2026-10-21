@@ -1,4 +1,6 @@
 ---
+import appConfig from '@/lib/app.config';
+
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import OfflineSupport from '@/components/OfflineSupport.astro';
@@ -13,13 +15,11 @@ import '@/styles/accessibility/globals.scss';
 
 import 'dotenv/config';
 
-const sTitle = 'Studify';
-const lTitle = `${sTitle} - AI Study Partner`;
 const { title, description, hideCopyright, isChatArea, mathjax = false, desmos = false } = Astro.props;
 var { className, container } = Astro.props;
 const isSignedIn = !!Astro.locals.user;
 const noTitle = title === 'Home' || title === '' || !title;
-const pTitle = noTitle ? lTitle : `${title} | ${sTitle}`;
+const pTitle = noTitle ? appConfig.title : `${title} | ${appConfig.name}`;
 
 // Desmos API key (https://www.desmos.com/api). Falls back to the public trial key, which is not for production use.
 const desmosApiKey = import.meta.env.DESMOS_API_KEY || process.env.DESMOS_API_KEY || 'dcb31709b452b1cf9dc26972add0fda6';
@@ -50,7 +50,7 @@ if (container) className += ' container'
         {/* PWA meta */}
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-        <meta name="apple-mobile-web-app-title" content={sTitle}>
+        <meta name="apple-mobile-web-app-title" content={appConfig.name}>
         {description ? <meta name="description" content={description} /> : ''}
         <link rel="apple-touch-icon" href="/assets/logos/apple-touch-icon.png">
         <link rel="icon" type="image/png" href="/assets/logos/favicon.png">
@@ -126,7 +126,7 @@ if (container) className += ' container'
         <ThemeSwitcher />
         <Dialog />
         {showTawkTo && <TawkTo />}
-        {!isChatArea ? <Header {sTitle} /> : ''}
+        {!isChatArea ? <Header /> : ''}
 
         <main class={className?.trim()} id="main-content">
             <slot />

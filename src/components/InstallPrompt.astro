@@ -1,9 +1,11 @@
 ---
+import appConfig from '@/lib/app.config';
+
 import '@/styles/components/install-prompt.scss';
 ---
 <div id="install-prompt" class="install-prompt" role="region" aria-label="Install app" hidden>
     <span class="material-symbols-outlined install-prompt-icon" aria-hidden="true">install_mobile</span>
-    <p class="install-prompt-text">Install Studify to review your saved flashcards and study guides offline.</p>
+    <p class="install-prompt-text">Install {appConfig.name} to review your saved flashcards and study guides offline.</p>
     <div class="install-prompt-actions">
         <button type="button" id="install-prompt-accept" class="install-prompt-btn primary">Install</button>
         <button type="button" id="install-prompt-dismiss" class="install-prompt-btn secondary">Not now</button>

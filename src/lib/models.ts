@@ -1,4 +1,4 @@
-import config from '@/lib/config';
+import config from '@/lib/ai.config';
 
 // OpenAI gpt-image models supported sizes
 export type ImageSize = '1024x1024' | '1024x1536' | '1536x1024' | 'auto';

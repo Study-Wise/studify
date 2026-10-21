@@ -21,9 +21,7 @@ function getImportGroup(source) {
     }
 
     if (!source.startsWith('.')) {
-        if (path.extname(source.toLowerCase()).slice(1).length === 0) {
-            return 1;
-        }
+        if (path.extname(source.toLowerCase()).slice(1).length === 0 || path.extname(source.toLowerCase()).slice(1) === 'config') return 1;
 
         if (['js', 'ts'].some(prefix => path.extname(source.toLowerCase()).slice(1).startsWith(prefix) || path.extname(source.toLowerCase()).slice(1).endsWith(prefix))) {
             return 6;

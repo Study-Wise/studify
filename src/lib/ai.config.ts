@@ -21,9 +21,9 @@ const defaultCategory = 'general';
 const defaultMode = 'general';
 
 const config: Config = {
-    provider: 'openai',
+    provider: 'google',
     tier: 'default',
-    model: 'gpt-5.1',
+    model: 'gemini-3.8-flash',
     imageModel: 'gpt-image-1.5',
     imageSize: '1024x1536', // portrait
     welcomeMessagePrompt: 'Based on the user\'s question or homework, ask them what specifically they want to study. Be friendly and encouraging.',

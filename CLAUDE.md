@@ -44,7 +44,7 @@ The application supports multiple AI providers defined in `src/lib/models.ts`:
 - **Google**: gemini-3-pro-preview, gemini-2.5-flash, gemini-2.5-flash-lite
 - **Vercel**: v0-1.5-md, v0-1.5-lg (internal use only)
 
-Default configuration in `src/lib/config.ts`:
+Default configuration in `src/lib/ai.config.ts`:
 
 - Provider: `openai`
 - Model: `gpt-4.1`
@@ -109,7 +109,7 @@ API endpoints in `src/pages/api/`:
 - **POST /api/message/generate.ts**: Main chat endpoint
   - Handles message generation with AI provider selection
   - Creates/updates threads in database
-  - Enforces thread limits per user (configurable in `config.ts`)
+  - Enforces thread limits per user (configurable in `ai.config.ts`)
   - Returns streaming or complete responses
 
 **Content Generation:**
