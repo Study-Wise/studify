@@ -16,7 +16,7 @@ function checkSingleDeclarationBlock(node, blockNode, context) {
 
     const reportObj = {
         node,
-        message: 'Single statement in block should be on one line'
+        message: 'Single statement in block should be on the same line as its condition with no curly braces (e.g. "if (x) return y;")'
     };
 
     if (!context.filename.endsWith('.astro')) {

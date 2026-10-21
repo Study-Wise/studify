@@ -45,6 +45,7 @@ export default [
                     varsIgnorePattern: '^_'
                 }
             ],
+            'arrow-parens': ['error', 'as-needed'],
             'no-multiple-empty-lines': [
                 'error',
                 {
@@ -115,6 +116,7 @@ export default [
             ...tsPlugin.configs.recommended.rules,
             '@typescript-eslint/no-explicit-any': 'error',
             '@typescript-eslint/no-unused-vars': 'off',
+            'arrow-parens': ['error', 'as-needed'],
             'no-multiple-empty-lines': [
                 'error',
                 {
