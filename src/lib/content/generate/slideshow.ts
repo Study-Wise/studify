@@ -60,7 +60,7 @@ function markdownToSlideshowHTML(markdown: string): string {
         pages[pages.length - 1].tokens!.push(token);
     });
 
-    pages.forEach((page) => {
+    pages.forEach(page => {
         const renderer = new marked.Renderer();
         renderer.heading = function heading(text: string, level: number) {
             return `<h${level}>${text}</h${level}>`;

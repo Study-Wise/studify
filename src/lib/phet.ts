@@ -24,7 +24,7 @@ export default async function findSimulations(topic: string): Promise<Simulation
     );
 
     const seen = new Set<string>();
-    return searchResult.results.flatMap((result) => {
+    return searchResult.results.flatMap(result => {
         let slug: string | undefined;
         try {
             const { hostname, pathname } = new URL(result.url);

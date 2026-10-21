@@ -72,7 +72,7 @@ const baseURL = getEnvVar('BETTER_AUTH_URL') || 'http://localhost:4321';
 
 const vercelOrigins = [getEnvVar('VERCEL_URL'), getEnvVar('VERCEL_BRANCH_URL'), getEnvVar('VERCEL_PROJECT_PRODUCTION_URL')]
     .filter(Boolean)
-    .map((host) => `https://${host}`);
+    .map(host => `https://${host}`);
 
 export const auth = betterAuth({
     database: drizzleAdapter(db, {
@@ -110,7 +110,7 @@ export const auth = betterAuth({
     databaseHooks: {
         user: {
             create: {
-                before: async (user) => {
+                before: async user => {
                     // Auto-promote user based on email/domain whitelist
                     const role = determineUserRole(user.email);
                     return {

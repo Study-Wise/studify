@@ -79,7 +79,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
 
         // Remove uploaded files from UploadThing
-        const fileKeys = (thread.uploadedFiles || []).map((file) => file.key).filter(Boolean);
+        const fileKeys = (thread.uploadedFiles || []).map(file => file.key).filter(Boolean);
         if (fileKeys.length > 0) {
             try {
                 await userFilesUpload.deleteFiles(fileKeys);
