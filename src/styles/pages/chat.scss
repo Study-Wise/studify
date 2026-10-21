@@ -598,15 +598,3 @@ footer, .chat-toolbar {
         }
     }
 }
-
-@keyframes --typing-dot {
-    0%, 60%, 100% {
-        opacity: 0.4;
-        scale: 1;
-    }
-
-    30% {
-        opacity: 1;
-        scale: 1.2;
-    }
-}

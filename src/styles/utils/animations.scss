@@ -128,17 +128,15 @@
     }
 }
 
-// Fade in animation
-@mixin fade-in($duration: $transition-base, $delay: 0s) {
-    animation: --fade-in $duration $ease-out $delay;
-}
+@keyframes --typing-dot {
+    0%, 60%, 100% {
+        opacity: 0.4;
+        scale: 1;
+    }
 
-// Slide in from direction
-@mixin slide-in($direction: 'left', $duration: $transition-base, $delay: 0s) {
-    @if $direction == 'left' {
-        animation: --slide-in-from-left $duration $ease-out $delay;
-    } @else if $direction == 'right' {
-        animation: --slide-in-from-right $duration $ease-out $delay;
+    30% {
+        opacity: 1;
+        scale: 1.2;
     }
 }
 
