@@ -19,8 +19,8 @@
         "test:nopause:chrome:headed": "npx playwright test tests/browser.test.nopause.ts --headed --browser=chromium",
         "test:nopause:firefox:headed": "npx playwright test tests/browser.test.nopause.ts --headed --browser=firefox",
         "test:nopause:safari:headed": "npx playwright test tests/browser.test.nopause.ts --headed --browser=webkit",
-        "check": "eslint src --max-warnings 0 && astro check && stylelint \"src/**/*.scss\" && astro build",
-        "stylelint:fix": "stylelint \"src/**/*.scss\" --fix"
+        "check": "eslint . --max-warnings 0 && astro check && stylelint \"./**/*.scss\" && astro build",
+        "stylelint:fix": "stylelint \"./**/*.scss\" --fix"
     },
     "devDependencies": {
         "@astrojs/ts-plugin": "^1.10.6",

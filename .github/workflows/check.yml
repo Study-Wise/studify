@@ -7,7 +7,7 @@ on:
 
 jobs:
     check:
-        name: ESLint, Astro Check & Stylelint
+        name: ESLint, Astro Check, Stylelint, and Build
         runs-on: ubuntu-latest
         timeout-minutes: 5
         steps:
@@ -17,9 +17,5 @@ jobs:
                   node-version: '20'
                   cache: 'npm'
             - run: npm ci
-            - name: ESLint
-              run: npx eslint src --max-warnings 0
-            - name: Astro Check
-              run: npx astro check
-            - name: Stylelint
-              run: npx stylelint "src/**/*.scss"
+            - name: Full Check Suite
+              run: npm run check
