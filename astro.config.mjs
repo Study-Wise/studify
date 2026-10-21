@@ -1,11 +1,10 @@
-import { defineConfig } from 'astro/config';
-import AstroPWA from '@vite-pwa/astro';
-import vercel from '@astrojs/vercel';
-
 import fs from 'fs-extra';
 import path from 'path';
-
+import AstroPWA from '@vite-pwa/astro';
 import sentryAstro from '@sentry/astro';
+
+import vercel from '@astrojs/vercel';
+import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
 const manifestPath = path.join(process.cwd(), 'public', 'manifest.webmanifest');
