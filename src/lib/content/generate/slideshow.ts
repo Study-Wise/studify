@@ -7,7 +7,7 @@ import { dirname, join } from 'path';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 import { generateText } from '@/lib/ai-service';
-import config from '@/lib/config';
+import config from '@/lib/ai.config';
 import { buildContentSystemPrompt } from '@/lib/content';
 import { parseThreadData, type UploadedFile, type JSONValue } from '@/lib/threads';
 import { saveContent } from '@/lib/content/latest';

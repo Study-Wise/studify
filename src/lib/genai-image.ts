@@ -1,5 +1,5 @@
 import OpenAI from 'openai';
-import config from '@/lib/config';
+import config from '@/lib/ai.config';
 import { uploadFile } from '@/lib/uploadthing';
 import { VendorError } from '@/lib/user-errors';
 

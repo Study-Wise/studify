@@ -2,7 +2,7 @@ import type { GatewayProviderOptions } from '@ai-sdk/gateway';
 import { generateText, stepCountIs } from 'ai';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
-import config from '@/lib/config';
+import config from '@/lib/ai.config';
 import { buildContentSystemPrompt } from '@/lib/content';
 import { parseThreadData, type Message, type UploadedFile } from '@/lib/threads';
 import { modules } from '@/lib/tools';

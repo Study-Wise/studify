@@ -1,6 +1,6 @@
 import { generateText, tool } from 'ai';
 import { z } from 'zod';
-import config from '@/lib/config';
+import config from '@/lib/ai.config';
 
 const levels: Record<1 | 2 | 3, string> = {
     1: 'a nudge: point the student toward where to look, without naming the method or any part of the answer',

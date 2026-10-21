@@ -1,15 +1,14 @@
 ---
+import appConfig from '@/lib/app.config';
 import getAllSitePages from '@/lib/get-all-site-pages';
 
 import Nav from '@/components/Nav.astro';
 import '@/styles/components/header.scss';
 
-const { sTitle } = Astro.props;
-
 const pages = getAllSitePages();
 
-const imgAriaLabel = `${sTitle} Homepage`;
-const imgAlt= `${sTitle} Logo`;
+const imgAriaLabel = `${appConfig.name} Homepage`;
+const imgAlt= `${appConfig.name} Logo`;
 ---
 <header role="banner">
     {/* Wrap the logo image in an anchor tag */}
@@ -20,8 +19,8 @@ const imgAlt= `${sTitle} Logo`;
     {/* Container wraps text and nav */}
     <div class="header-content-wrapper">
         <div class="header-text-container">
-            <h1><span class="material-symbols-outlined" aria-hidden="true">school</span> {sTitle}</h1>
-            <p class="tagline">Your AI-Powered Study Partner - By Adarsh R. Kumar and Rien Gupta</p>
+            <h1><span class="material-symbols-outlined" aria-hidden="true">school</span> {appConfig.name}</h1>
+            <p class="tagline">{appConfig.tagline} - By {appConfig.creators}</p>
         </div>
         <Nav pages={pages} />
     </div>

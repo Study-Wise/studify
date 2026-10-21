@@ -1,7 +1,7 @@
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 import { generateText } from '@/lib/ai-service';
-import config from '@/lib/config';
+import config from '@/lib/ai.config';
 import { buildContentSystemPrompt } from '@/lib/content';
 import { generateImage } from '@/lib/genai-image';
 import { parseThreadData, type UploadedFile } from '@/lib/threads';

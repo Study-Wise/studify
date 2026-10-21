@@ -1,6 +1,6 @@
 import * as ai from 'ai';
 import { stepCountIs } from 'ai';
-import config from '@/lib/config';
+import config from '@/lib/ai.config';
 import { providers } from '@/lib/models';
 import type { Message, ToolCallLogEntry } from '@/lib/threads';
 import type { ToolContext, ToolRecord } from '@/lib/tools';

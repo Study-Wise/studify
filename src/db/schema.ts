@@ -1,4 +1,4 @@
-import config from '@/lib/config';
+import config from '@/lib/ai.config';
 import type { ThreadData, UploadedFile } from '@/lib/threads';
 import type { ThreadContent } from '@/lib/content/latest/index';
 

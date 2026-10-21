@@ -1,4 +1,5 @@
 ---
+import appConfig from '@/lib/app.config';
 import categories from '@/lib/modes';
 
 import FancyButton from '@/components/fancy/Button.astro';
@@ -27,7 +28,7 @@ const modeName = modeObj?.name || mode;
             <span class="material-symbols-outlined" aria-hidden="true">info</span>&nbsp;How It Works
         </h2>
         <p>
-            Welcome to <b>Studify</b>! Turn your {modeName} homework into powerful learning tools.
+            Welcome to <b>{appConfig.name}</b>! Turn your {modeName} homework into powerful learning tools.
         </p>
         <ol class="steps-list">
             <li>

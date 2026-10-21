@@ -6,7 +6,7 @@ import {
     extractToolData,
     generateTitle,
 } from '@/lib/ai-service';
-import config from '@/lib/config';
+import config from '@/lib/ai.config';
 import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
 import { getValidModelAndProvider, providers } from '@/lib/models';
 import categories from '@/lib/modes';

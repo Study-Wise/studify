@@ -3,7 +3,7 @@
 import { nanoid } from 'nanoid';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
-import config from '@/lib/config';
+import config from '@/lib/ai.config';
 import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
 import categories from '@/lib/modes';
 import type { Message } from '@/lib/threads';

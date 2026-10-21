@@ -1,6 +1,6 @@
 import { generateText, tool } from 'ai';
 import { z } from 'zod';
-import config from '@/lib/config';
+import config from '@/lib/ai.config';
 
 const gradeExplanationTool = tool({
     description: 'Grade a student\'s explanation of a concept in their own words (explain it back, or Feynman mode). Call it with the concept and the student\'s explanation. It returns what they got right, plus any gaps and misconceptions, which you then share with the student.',

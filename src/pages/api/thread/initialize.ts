@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
-import config from '@/lib/config';
+import config from '@/lib/ai.config';
 import { getValidModelAndProvider } from '@/lib/models';
 import { isUserAdmin } from '@/lib/auth/admin';
 

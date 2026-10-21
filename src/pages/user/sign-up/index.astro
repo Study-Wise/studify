@@ -1,4 +1,5 @@
 ---
+import appConfig from '@/lib/app.config';
 import { getSafeReturnBackUrl, withReturnBackUrl } from '@/lib/auth/return-url';
 
 import Layout from '@/layouts/Layout.astro';
@@ -16,7 +17,7 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
     <div class="auth-container">
         <div class="auth-card">
             <h1 class="auth-title">Sign Up</h1>
-            <p class="auth-subtitle">to access Studify</p>
+            <p class="auth-subtitle">to access {appConfig.name}</p>
 
             {/* Email/Password Form */}
             <form id="signup-form" class="auth-form">

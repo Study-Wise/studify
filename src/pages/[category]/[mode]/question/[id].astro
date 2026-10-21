@@ -2,6 +2,7 @@
 import { marked } from 'marked';
 import { db } from '@/db/initialize';
 import { questionTable } from '@/db/schema';
+import appConfig from '@/lib/app.config';
 import categories from '@/lib/modes';
 import { idToQuestion } from '@/lib/question-utils';
 
@@ -62,8 +63,7 @@ const structuredData = {
 };
 
 // SEO metadata
-const sTitle = 'Studify'
-const pageTitle = `${displayQuestion} | ${modeName} Questions | ${sTitle}`;
+const pageTitle = `${displayQuestion} | ${modeName} Questions | ${appConfig.name}`;
 const pageDescription = questionData?.answer
     ? questionData.answer.substring(0, 155) + '...'
     : `Find answers to questions about ${modeName} in ${categoryName}. Get expert help with ${displayQuestion}`;
@@ -96,7 +96,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
         {/* Additional SEO hints */}
         <meta name="robots" content="index, follow" />
-        <meta name="author" content={sTitle} />
+        <meta name="author" content={appConfig.name} />
         <meta name="category" content={categoryName} />
         <meta name="topic" content={modeName} />
     </Fragment>

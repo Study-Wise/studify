@@ -2,7 +2,7 @@ import { nanoid } from 'nanoid';
 import { db } from '@/db/initialize';
 import { questionTable } from '@/db/schema';
 import { generateText, paraphraseQuestion } from '@/lib/ai-service';
-import config from '@/lib/config';
+import config from '@/lib/ai.config';
 import { questionToId } from '@/lib/question-utils';
 import type { Message } from '@/lib/threads';
 import { getUserErrorMessage } from '@/lib/user-errors';
