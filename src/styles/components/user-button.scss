@@ -1,4 +1,5 @@
 @use '../variables/tokens' as *;
+@use '../variables/mixins' as *;
 @use '../variables/colors/statuses' as *;
 @use 'sass:color';
 
@@ -30,9 +31,8 @@
 
     .user-name {
         max-width: 150px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+
+        @include text-ellipsis;
     }
 }
 

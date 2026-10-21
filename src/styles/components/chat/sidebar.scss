@@ -1,5 +1,6 @@
 @use '../../variables/globals' as *;
 @use '../../variables/tokens' as *;
+@use '../../variables/mixins' as *;
 @use 'sass:list';
 @use 'sass:map';
 @use '../../variables/colors/statuses' as *;
@@ -417,9 +418,7 @@
     transition: all $transition-base $ease-in-out;
 
     span:not(.material-symbols-outlined) {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        @include text-ellipsis;
     }
 
     .material-symbols-outlined {

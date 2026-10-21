@@ -1,5 +1,6 @@
 @use '../../variables/globals' as *;
 @use '../../variables/tokens' as *;
+@use '../../variables/mixins' as *;
 @use 'sass:list';
 @use 'sass:map';
 @use '../../variables/colors/statuses' as *;
@@ -97,9 +98,8 @@
                             font-size: $font-size-small;
                             font-weight: $font-weight-medium;
                             color: var(--card-text);
-                            white-space: nowrap;
-                            overflow: hidden;
-                            text-overflow: ellipsis;
+
+                            @include text-ellipsis;
                         }
 
                         .file-size {

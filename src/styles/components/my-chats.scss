@@ -241,9 +241,8 @@
                             font-weight: $font-weight-semibold;
                             margin: 0 0 $spacing-extra-small;
                             transition: color $transition-base $ease-out;
-                            overflow: hidden;
-                            text-overflow: ellipsis;
-                            white-space: nowrap;
+
+                            @include text-ellipsis;
                         }
 
                         .thread-mode {

@@ -1,12 +1,12 @@
 @use '../variables/globals' as *;
 @use '../variables/tokens' as *;
+@use '../variables/mixins' as *;
 
 .chat-title {
     .chat-title-text {
         min-width: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+
+        @include text-ellipsis;
     }
 
     .chat-title-button {
