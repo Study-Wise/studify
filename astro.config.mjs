@@ -6,6 +6,10 @@ import vercel from '@astrojs/vercel';
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
+const contentTypes = fs.readdirSync('src/lib/content/latest')
+    .filter(file => file.endsWith('.ts') && file !== 'index.ts')
+    .map(file => file.slice(0, -'.ts'.length));
+
 // https://astro.build/config
 export default defineConfig({
     site: 'https://studywise.adarshrkumar.app',
@@ -98,14 +102,7 @@ export default defineConfig({
             filter: page =>
                 !page.includes('/api/') &&
                 !page.includes('/chat/') &&
-                !page.includes('/study-guide/') &&
-                !page.includes('/reference-sheet/') &&
-                !page.includes('/infographic/') &&
-                !page.includes('/webpage/') &&
-                !page.includes('/mind-map/') &&
-                !page.includes('/resources/') &&
-                !page.includes('/flashcards/') &&
-                !page.includes('/practice-questions/') &&
+                !contentTypes.some(type => page.includes(`/${type}/`)) &&
                 !page.includes('/user/sso-callback'),
             changefreq: 'weekly',
             priority: 0.7,
