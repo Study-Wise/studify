@@ -95,7 +95,7 @@ export default defineConfig({
         }),
         sentryAstro(),
         sitemap({
-            filter: (page) =>
+            filter: page =>
                 !page.includes('/api/') &&
                 !page.includes('/chat/') &&
                 !page.includes('/study-guide/') &&

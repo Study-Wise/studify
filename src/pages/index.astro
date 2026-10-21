@@ -179,7 +179,7 @@ const description = 'Studify is your AI-powered study partner. Paste your homewo
 
     toggle?.addEventListener('click', e => {
         e.stopPropagation();
-        setOpen(panel?.hidden ?? false);
+        setOpen(!!panel?.hidden);
     });
 
     panel?.addEventListener('click', e => e.stopPropagation());
