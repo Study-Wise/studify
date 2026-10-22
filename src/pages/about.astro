@@ -84,9 +84,6 @@ const team: TeamData[] = [
 <Layout title="About">
     {team.map(member => (
         <section class="about-section card">
-            {/* <h2>
-                <span class="material-symbols-outlined" aria-hidden="true">account_circle</span>&nbsp;About {member.name}
-            </h2> */}
             <div class="image-intro" data-hover={!!member.images?.hover} style={member.images?.hover && { '--data-hover-src': member.images?.hover && `url('${member.images.hover}')` }}>
                 <img src={member.images?.regular} alt={`${member.name} profile picture`} class="profile-picture" />
                 <div class="about-info">

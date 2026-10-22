@@ -11,7 +11,6 @@ import type { MiddlewareHandler } from 'astro';
 // Material pages (study guide, flashcards, ...) live at /[category]/[mode]/[content-type]/[id]
 const materialRouteSegments = getContentTypesList().filter(type => type !== 'index');
 
-// Define protected routes
 const protectedRoutes = [
     /^\/[^/]+\/[^/]+\/chat\/.*/,
     // Material pages require sign-in even for public threads, like the chat page (#342).

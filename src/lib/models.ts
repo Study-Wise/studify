@@ -44,7 +44,6 @@ const providers: Providers = {
     },
 };
 
-// Get selectable providers (hide Vercel from UI)
 export function getSelectableProviders(): Providers {
     const selectable: Providers = {};
     for (const [key, provider] of Object.entries(providers)) {

@@ -29,7 +29,6 @@ export interface TitleGenerationOptions {
     provider: string;
 }
 
-// Generates AI response for a conversation
 export async function generateText(
     systemPrompt: string,
     userPrompt: string,
@@ -290,7 +289,6 @@ export function extractToolData(steps: Awaited<Awaited<ReturnType<typeof ai.stre
     return { clientToolCalls, toolCallLog };
 }
 
-// Generates a title for a conversation
 export async function generateTitle(options: TitleGenerationOptions): Promise<string> {
     const { convoHistory, userModel, provider } = options;
     const titleRequestId = nanoid();

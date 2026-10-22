@@ -4,7 +4,6 @@ import { threadsTable } from '@/db/schema';
 import { eq, desc } from 'drizzle-orm';
 import type { InferSelectModel } from 'drizzle-orm';
 
-// JSON-serializable value type
 export type JSONValue = string | number | boolean | null | { [key: string]: JSONValue } | JSONValue[];
 
 export interface ToolCallLogEntry {

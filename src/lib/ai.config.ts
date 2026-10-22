@@ -1,5 +1,3 @@
-// Application Configuration
-
 import type { ImageSize } from '@/lib/models';
 import type { CategoryName, ModeName } from '@/lib/modes';
 

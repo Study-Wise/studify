@@ -7,7 +7,6 @@ const openai = new OpenAI({
     apiKey: import.meta.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY,
 });
 
-// Generate image and return buffer (gpt-image models return base64)
 async function generateImageBuffer(prompt: string) {
     try {
         // gpt-image models use output_format and always return base64

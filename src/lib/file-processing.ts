@@ -1,6 +1,3 @@
-// Extracts text content from various file types for AI context
-
-// Extract text from PDF (basic implementation)
 export async function extractTextFromPDF(file: File): Promise<string | null> {
     try {
         // For MVP: Return placeholder

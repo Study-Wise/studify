@@ -12,7 +12,6 @@ export const contentTypes: [string, ...string[]] = [
     'Chat Summary',
 ];
 
-// Helper to get exclusion list for a specific content type
 export function getExclusionList(currentType: string): string {
     const exclusions = contentTypes.filter(type => type !== currentType);
     return exclusions.map(type => `- ${type}`).join('\n');
