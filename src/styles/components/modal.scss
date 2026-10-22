@@ -78,7 +78,7 @@
         }
     }
 
-    @media (width <= 640px) {
+    @media (width <= $breakpoint-small) {
         width: 95%;
         max-width: none;
     }
@@ -158,7 +158,7 @@
         }
     }
 
-    @media (width <= 640px) {
+    @media (width <= $breakpoint-small) {
         padding: $spacing-medium + 0.25rem;
         gap: $spacing-medium + 0.25rem;
     }
@@ -183,7 +183,7 @@
     font-weight: $font-weight-semibold;
     flex: 1;
 
-    @media (width <= 640px) {
+    @media (width <= $breakpoint-small) {
         font-size: $font-size-large;
     }
 }
@@ -198,7 +198,7 @@
     line-height: $line-height-relaxed;
     color: var(--body-text);
 
-    @media (width <= 640px) {
+    @media (width <= $breakpoint-small) {
         font-size: 0.9375rem;
     }
 }

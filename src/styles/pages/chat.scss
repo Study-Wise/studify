@@ -250,7 +250,7 @@ footer, .chat-toolbar {
             }
         }
 
-        @media (width <= 768px) {
+        @media (width <= $breakpoint-medium) {
             display: none;
         }
     }
@@ -318,7 +318,7 @@ footer, .chat-toolbar {
     overflow: hidden;
     position: relative;
 
-    @media (width <= 1200px) {
+    @media (width <= $breakpoint-huge) {
         grid-template-columns: auto 1fr;
 
         .chat-section {
@@ -326,7 +326,7 @@ footer, .chat-toolbar {
         }
     }
 
-    @media (width <= 1024px) {
+    @media (width <= $breakpoint-extra-large) {
         grid-template-columns: 1fr;
 
         .chat-section {
@@ -340,7 +340,7 @@ footer, .chat-toolbar {
     grid-template-rows: 1fr auto;
     min-height: 0;
 
-    @media (width <= 768px) {
+    @media (width <= $breakpoint-medium) {
         padding: $spacing-large + 0.25rem;
     }
 }
@@ -514,7 +514,7 @@ footer, .chat-toolbar {
             }
         }
 
-        @media (width <= 768px) {
+        @media (width <= $breakpoint-medium) {
             max-width: 100%;
         }
     }

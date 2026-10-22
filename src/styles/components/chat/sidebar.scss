@@ -391,7 +391,7 @@
 .sidebar-drawer-toggles {
     display: none;
 
-    @media (width <= 1024px) {
+    @media (width <= $breakpoint-extra-large) {
         display: flex;
         gap: $spacing-extra-small;
         padding: $spacing-extra-small $spacing-medium;
@@ -450,7 +450,7 @@ body:has(.sidebar-drawer-input.right:focus-visible) .sidebar-drawer-toggle.right
     display: none;
 }
 
-@media (width <= 1024px) {
+@media (width <= $breakpoint-extra-large) {
     .chat-sidebar.left,
     .chat-sidebar.right {
         position: fixed;

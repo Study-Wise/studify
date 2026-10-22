@@ -46,7 +46,7 @@
     }
 
     .btn.generate-button {
-        @media (width <= 600px) {
+        @media (width <= $breakpoint-small) {
             font-size: 1.05rem;
             padding: 12px 15px;
         }

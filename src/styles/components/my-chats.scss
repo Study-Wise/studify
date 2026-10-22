@@ -270,7 +270,7 @@
         }
     }
 
-    @media (width <= 768px) {
+    @media (width <= $breakpoint-medium) {
         padding: $spacing-large $spacing-small;
 
         .page-header {

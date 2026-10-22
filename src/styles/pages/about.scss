@@ -17,7 +17,7 @@
         isolation: isolate;
         position: relative;
 
-        @media (width < 500px) {
+        @media (width <= $breakpoint-extra-small) {
             flex-wrap: wrap;
         }
 

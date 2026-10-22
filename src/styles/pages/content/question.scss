@@ -1,5 +1,6 @@
 @use '../../variables/globals' as *;
 @use '../../variables/mixins' as *;
+@use '../../variables/tokens' as *;
 @use '../../variables/colors/statuses' as *;
 @use 'sass:color';
 @use 'sass:list';
@@ -33,7 +34,7 @@
     color: var(--body-text);
     margin: 0 0 1rem;
 
-    @media (width <= 768px) {
+    @media (width <= $breakpoint-medium) {
         font-size: 1.5rem;
     }
 }
@@ -206,7 +207,7 @@
         }
     }
 
-    @media (width <= 768px) {
+    @media (width <= $breakpoint-medium) {
         padding: 1.5rem;
         font-size: 1rem;
     }
@@ -233,7 +234,7 @@
     gap: 1rem;
     flex-wrap: wrap;
 
-    @media (width <= 640px) {
+    @media (width <= $breakpoint-small) {
         flex-direction: column;
 
         a {

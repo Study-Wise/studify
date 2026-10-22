@@ -38,7 +38,7 @@ header {
         overflow-wrap: normal;
     }
 
-    @media (width <= 992px) {
+    @media (width <= $breakpoint-large) {
         h1 {
             font-size: $font-size-2x-large - 0.1rem;
         }
@@ -48,7 +48,7 @@ header {
         }
     }
 
-    @media (width <= 768px) {
+    @media (width <= $breakpoint-medium) {
         h1 {
             font-size: $font-size-2x-large;
         }
@@ -58,7 +58,7 @@ header {
         }
     }
 
-    @media (width <= 600px) {
+    @media (width <= $breakpoint-small) {
         padding-block: 0.5rem;
 
         h1 {
@@ -96,7 +96,7 @@ header {
         display: block;
     }
 
-    @media (width <= 992px) {
+    @media (width <= $breakpoint-large) {
         text-decoration: none;
         border: none;
         line-height: 0;
@@ -106,13 +106,13 @@ header {
         }
     }
 
-    @media (width <= 768px) {
+    @media (width <= $breakpoint-medium) {
         .header-logo {
             height: 55px;
         }
     }
 
-    @media (width <= 600px) {
+    @media (width <= $breakpoint-small) {
         text-align: center;
         margin-block-end: 10px;
 
@@ -156,16 +156,16 @@ header {
         }
     }
 
-    @media (width <= 992px) {
+    @media (width <= $breakpoint-large) {
         padding-inline-start: 90px;
     }
 
-    @media (width <= 768px) {
+    @media (width <= $breakpoint-medium) {
         padding-inline: 75px 15px;
         gap: 15px;
     }
 
-    @media (width <= 600px) {
+    @media (width <= $breakpoint-small) {
         flex-direction: column;
         padding-inline: 15px;
         gap: 10px;
@@ -178,7 +178,7 @@ header {
 }
 
 .header-nav {
-    @media (width <= 768px) {
+    @media (width <= $breakpoint-medium) {
         gap: 5px;
 
         .nav-btn {
@@ -187,13 +187,13 @@ header {
         }
     }
 
-    @media (width <= 600px) {
+    @media (width <= $breakpoint-small) {
         margin-inline-start: 0;
         justify-content: center;
     }
 }
 
-@media (width <= 600px) {
+@media (width <= $breakpoint-small) {
     .output-content h4 {
         font-size: 1.1rem;
     }

@@ -105,7 +105,7 @@
         transition: scale $transition-slower $ease-spring;
     }
 
-    @media (width <= 768px) {
+    @media (width <= $breakpoint-medium) {
         padding: $spacing-small $spacing-small;
         font-size: $font-size-extra-small;
 

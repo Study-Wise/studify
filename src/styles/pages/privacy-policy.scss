@@ -96,7 +96,7 @@
         }
     }
 
-    @media (width <= 768px) {
+    @media (width <= $breakpoint-medium) {
         h1 {
             font-size: $spacing-extra-large;
         }

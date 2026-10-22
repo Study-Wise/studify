@@ -47,7 +47,7 @@
         }
     }
 
-    @media (width <= 768px) {
+    @media (width <= $breakpoint-medium) {
         gap: 10px;
 
         .nav-btn {

@@ -168,7 +168,7 @@
         }
     }
 
-    @media (width <= 768px) {
+    @media (width <= $breakpoint-medium) {
         padding: 1rem;
 
         .resources-header {

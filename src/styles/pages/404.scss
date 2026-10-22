@@ -179,7 +179,7 @@
         }
     }
 
-    @media (width <= 768px) {
+    @media (width <= $breakpoint-medium) {
         padding: $spacing-large $spacing-small;
 
         .error-content {
@@ -220,7 +220,7 @@
         }
     }
 
-    @media (width <= 480px) {
+    @media (width <= $breakpoint-extra-small) {
         .error-content {
             .error-title {
                 font-size: 3rem;
