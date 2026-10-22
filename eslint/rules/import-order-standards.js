@@ -151,6 +151,9 @@ export default {
                         context.report({
                             node: importNode,
                             message: previousGroup !== group ? `Add a blank line between import groups. Previous: "${previousNode.source.value}" (group ${previousGroup}), Current: "${importNode.source.value}" (group ${group})` : `Remove blank line between same import group (group ${previousGroup}).`,
+                            fix: fixer => context.sourceCode.text.slice(previousNode.range[1], importNode.range[0]).trim() === ''
+                                ? fixer.replaceTextRange([previousNode.range[1], importNode.range[0]], previousGroup !== group ? '\n\n' : '\n')
+                                : null,
                         });
                     }
 
