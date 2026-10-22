@@ -121,9 +121,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             }
         });
 
-        if (!uploadResult.data) {
-            throw new Error('Upload failed');
-        }
+        if (!uploadResult.data) throw new Error('Upload failed');
 
         const fileMetadata: UploadedFile = {
             key: uploadResult.data.key,
