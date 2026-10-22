@@ -40,9 +40,7 @@ const { page, category, mode, id } = Astro.props;
     // Adopt a thread created elsewhere on the page (e.g. by a file upload in the sidebar) so the first message is added to it instead of creating a separate thread
     window.addEventListener('thread-created', e => {
         const { id: createdId, source } = e.detail || {};
-        if (source !== 'messages' && createdId && !threadId) {
-            threadId = createdId;
-        }
+        if (source !== 'messages' && createdId && !threadId) threadId = createdId;
     });
 
     const API_ENDPOINT = '/api/message/generate';
@@ -85,9 +83,7 @@ const { page, category, mode, id } = Astro.props;
         }
 
         // The file sidebar may have created this chat's thread (uploading on /chat/new rewrites the URL), so pick up that ID to send messages to the same thread
-        if (page === 'chat' && !threadId) {
-            threadId = getThreadIdFromUrl();
-        }
+        if (page === 'chat' && !threadId) threadId = getThreadIdFromUrl();
 
         const { provider, tier } = getProviderAndTier();
         if (!provider || !tier) {
@@ -150,9 +146,7 @@ const { page, category, mode, id } = Astro.props;
             }
 
             const contentType = response.headers.get('Content-Type') || '';
-            if (contentType.includes('text/event-stream')) {
-                await readStream(response);
-            }
+            if (contentType.includes('text/event-stream')) await readStream(response);
             else {
                 const data = await response.json();
                 if (!data?.generatedText && !data?.id) {
@@ -250,12 +244,8 @@ const { page, category, mode, id } = Astro.props;
     function displayError(message) {
         try {
             let messageToShow = 'An unknown error occurred.';
-            if (typeof message === 'string' && message.trim() !== '') {
-                messageToShow = message;
-            }
-            else if (message instanceof Error && message.message) {
-                messageToShow = message.message;
-            }
+            if (typeof message === 'string' && message.trim() !== '') messageToShow = message;
+            else if (message instanceof Error && message.message) messageToShow = message.message;
             else if (typeof message === 'object' && message !== null) {
                 try {
                     messageToShow = JSON.stringify(message);
@@ -266,9 +256,7 @@ const { page, category, mode, id } = Astro.props;
             const errorDiv = document.getElementById('error-message');
             if (errorDiv) {
                 let showErrorText = '';
-                if (!messageToShow.includes(': ')) {
-                    showErrorText = 'Error: ';
-                }
+                if (!messageToShow.includes(': ')) showErrorText = 'Error: ';
                 errorDiv.textContent = `${showErrorText}${messageToShow}`;
                 errorDiv.style.display = 'block';
             }
@@ -288,9 +276,7 @@ const { page, category, mode, id } = Astro.props;
                 errorDiv.textContent = 'Error: Critical UI failure during error reporting.';
                 errorDiv.style.display = 'block';
             }
-            else {
-                window.showError('Error: Critical UI failure during error reporting.');
-            }
+            else window.showError('Error: Critical UI failure during error reporting.');
         }
     }
 
@@ -545,9 +531,7 @@ const { page, category, mode, id } = Astro.props;
                         }
 
                     }
-                    else if (data.type === 'error') {
-                        throw new Error(data.error);
-                    }
+                    else if (data.type === 'error') throw new Error(data.error);
                 } catch (error) {
                     console.error('Error parsing stream event:', error, e);
                 }
@@ -588,35 +572,23 @@ const { page, category, mode, id } = Astro.props;
             return;
         }
 
-        if (data.clientToolCalls) {
-            await executeClientToolCalls(data.clientToolCalls);
-        }
+        if (data.clientToolCalls) await executeClientToolCalls(data.clientToolCalls);
 
-        if (page === 'home' && data.id && category && mode) {
-            redirectToChat(data.id);
-        }
+        if (page === 'home' && data.id && category && mode) redirectToChat(data.id);
         else if (page === 'chat') {
             const isNewChat = (id === 'new');
 
             if (isNewChat && data.id && category && mode) {
                 window.location.href = `/${category}/${mode}/chat/${data.id}`;
             }
-            else {
-                await addMessage('assistant', data);
-            }
+            else await addMessage('assistant', data);
         }
-        else if (page === 'home') {
-            displayError('Failed to redirect to chat page.');
-        }
+        else if (page === 'home') displayError('Failed to redirect to chat page.');
     }
 
     async function addMessage(role, data) {
-        if (role === 'assistant') {
-            await addAssistantMessage(data);
-        }
-        else if (role === 'user') {
-            createPlainMessage(role, data);
-        }
+        if (role === 'assistant') await addAssistantMessage(data);
+        else if (role === 'user') createPlainMessage(role, data);
     }
 
     async function createPlainMessage(role, content) {
@@ -793,9 +765,7 @@ const { page, category, mode, id } = Astro.props;
         spinner = sendButton?.querySelector('.spinner');
         errorMessageDiv = document.getElementById('error-message');
 
-        if (messageInput && sendButton) {
-            messageInput.addEventListener('keydown', handleEnterKey);
-        }
+        if (messageInput && sendButton) messageInput.addEventListener('keydown', handleEnterKey);
     }
 
     // Extract thread id from the chat page URL; null for "new" so the API creates a thread
@@ -843,9 +813,7 @@ const { page, category, mode, id } = Astro.props;
     }
 
     async function initializePage() {
-        if (page === 'home') {
-            onDomLoadHome();
-        }
+        if (page === 'home') onDomLoadHome();
         else if (page === 'chat') {
             onDomLoadChat();
 
@@ -865,7 +833,5 @@ const { page, category, mode, id } = Astro.props;
     document.addEventListener('DOMContentLoaded', initializePage);
 
     // Also call appropriate handler immediately in case DOM is already loaded
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
-        initializePage();
-    }
+    if (document.readyState === 'complete' || document.readyState === 'interactive') initializePage();
 </script>
