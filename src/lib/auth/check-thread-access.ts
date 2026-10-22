@@ -13,8 +13,7 @@ export interface ThreadAccessResult {
     // Thread is marked public, regardless of who is viewing
     isPublicThread: boolean;
     threadOwner: string | null;
-    // A thread with this ID is in the database. Unknown IDs still count as authorized (unclaimed),
-    // so pages that only show an existing thread must check this too.
+    // A thread with this ID is in the database. Unknown IDs still count as authorized (unclaimed), so pages that only show an existing thread must check this too.
     threadExists: boolean;
 }
 

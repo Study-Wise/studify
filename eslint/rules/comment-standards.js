@@ -64,6 +64,25 @@ export default {
                         }
                     }
                 }
+
+                // Check 3: Hard line breaks in single-line comments. A comment must not wrap across several // lines. Adjacent lines count as one wrapped-up comment, unless the first one ends a sentence or introduces a list (.!? :), which makes them separate comments
+                const TERMINATOR = /[.!?:]$/;
+                for (let i = 0; i < comments.length - 1; i++) {
+                    if (comments[i].type !== 'Line' || comments[i + 1].type !== 'Line') continue;
+                    if (comments[i + 1].loc.start.line !== comments[i].loc.start.line + 1) continue;
+
+                    if (TERMINATOR.test(comments[i].value.trim())) continue;
+                    if (!comments[i].value.trim().endsWith(',') && !/^[a-z]/.test(comments[i + 1].value.trim())) continue;
+
+                    context.report({
+                        node: node,
+                        loc: comments[i + 1].loc,
+                        message: 'Hard line breaks are not allowed in single-line comments. Keep the comment on one line, or split it into separate full-sentence comments.',
+                        fix(fixer) {
+                            return fixer.replaceTextRange([comments[i].range[0], comments[i + 1].range[1]], `// ${comments[i].value.trim()} ${comments[i + 1].value.trim()}`);
+                        }
+                    });
+                }
             }
         };
     }
