@@ -7,7 +7,9 @@ const COMPLEX_TYPES = new Set([
     'ArrowFunctionExpression',
     'FunctionExpression',
     'ClassExpression',
-    'TaggedTemplateExpression'
+    'TaggedTemplateExpression',
+    'ArrayExpression',
+    'ObjectExpression'
 ]);
 
 // Checks whether an expression at any depth contains a deliberately computed construct
@@ -99,6 +101,8 @@ export default {
 
                         // Allow variables that get reassigned (e.g. state accumulators or mutable trackers)
                         if (variable.references.some(ref => ref.isWrite())) return;
+
+                        // A binding that only copies one element or property out of an already named value is pointless at any usage count
                         // Object destructuring is excluded because pulling named fields out of a struct is deliberate
                         if (
                             variable.defs[0].node.init &&
@@ -136,7 +140,7 @@ export default {
                         if (variable.defs[0].type === 'FunctionName' && reads !== 1) return;
                         if (variable.defs[0].type !== 'FunctionName' && reads !== 1 && reads !== 2) return;
 
-                        // A deliberately computed initializer (call, await, function, long expression) earns its variable even at low use
+                        // A deliberately computed initializer (call, await, function, collection, long expression) earns its variable even at low use
                         if (isComplexExpression(variable.defs[0].node.init)) return;
                         if (variable.defs[0].node.init && context.sourceCode.getText(variable.defs[0].node.init).length >= 80) return;
                         // Pulling named fields out of a struct is deliberate even at low use
