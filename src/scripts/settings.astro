@@ -31,9 +31,7 @@ const { providers, defaultProvider, defaultTier } = Astro.props;
             group.style.display = 'none';
         });
         const currentTierGroup = document.getElementById(`tiers-${currentProvider}`);
-        if (currentTierGroup) {
-            currentTierGroup.style.display = 'flex';
-        }
+        if (currentTierGroup) currentTierGroup.style.display = 'flex';
 
         document.querySelectorAll('.tier-button').forEach(btn => {
             const tierKey = btn.dataset.tier;
@@ -58,9 +56,7 @@ const { providers, defaultProvider, defaultTier } = Astro.props;
             if (tierGroup) {
                 tierGroup.style.display = 'flex';
                 const firstTierBtn = tierGroup.querySelector('.tier-button');
-                if (firstTierBtn) {
-                    firstTierBtn.click();
-                }
+                if (firstTierBtn) firstTierBtn.click();
             }
         });
     });
@@ -84,7 +80,5 @@ const { providers, defaultProvider, defaultTier } = Astro.props;
     }
 
     window.addEventListener('DOMContentLoaded', initializeUI);
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
-        initializeUI();
-    }
+    if (document.readyState === 'complete' || document.readyState === 'interactive') initializeUI();
 </script>

@@ -113,9 +113,7 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
                 name,
             });
 
-            if (error) {
-                showError(error.message || 'Sign up failed. Please try again.');
-            }
+            if (error) showError(error.message || 'Sign up failed. Please try again.');
             else {
                 window.location.href = getClientSafeReturnBackUrl(new URLSearchParams(window.location.search).get('returnBackUrl'));
             }
