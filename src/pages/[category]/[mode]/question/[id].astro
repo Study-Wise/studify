@@ -112,7 +112,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
                     <h2>Answer Not Found</h2>
                     <p>This question hasn't been answered yet. Our AI is generating a response.</p>
                     <p>Please check back shortly, or ask your question in a new chat session.</p>
-                    <a href={`/${category}/${mode}`} class="btn-primary">Ask in {modeName}</a>
+                    <a href={`/${category}/${mode}`} class="btn primary">Ask in {modeName}</a>
                 </div>
             </article>
         ) : (
@@ -164,8 +164,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
                     <div class="question-helpful">
                         <p>Was this answer helpful?</p>
                         <div class="question-actions">
-                            <a href={`/${category}/${mode}`} class="btn-secondary">Ask Another Question</a>
-                            <a href={`/${category}/${mode}/chat/new`} class="btn-primary">Start a Chat</a>
+                            <a href={`/${category}/${mode}`} class="btn secondary">Ask Another Question</a>
+                            <a href={`/${category}/${mode}/chat/new`} class="btn primary">Start a Chat</a>
                         </div>
                     </div>
 
