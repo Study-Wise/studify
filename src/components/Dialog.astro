@@ -167,7 +167,6 @@ import '@/styles/components/modal.scss';
         type: ModalType;
     }
 
-    // Messages waiting for the error currently on screen to be dismissed
     const pendingErrors: DialogEntry[] = [];
     let pendingNotice: DialogEntry | null = null;
     // Success messages waiting for the error on screen to be dismissed, since a toast would be hidden under the error dialog's backdrop
@@ -179,13 +178,11 @@ import '@/styles/components/modal.scss';
         modal ??= createModal({
             title: '',
             message: '',
-            // Once a message is dismissed, show the next one that was waiting
             onClose: showNextDialog,
         });
         return modal;
     }
 
-    // Label the button "Next" while more messages are waiting
     function toModalContent(entry: DialogEntry): ModalContent {
         const waiting = pendingErrors.length + (pendingNotice ? 1 : 0);
         return {
@@ -201,7 +198,6 @@ import '@/styles/components/modal.scss';
         appModal.open();
     }
 
-    // Show the next waiting message, errors first
     function showNextDialog() {
         current = null;
         const next = pendingErrors.shift() ?? pendingNotice;
@@ -212,12 +208,11 @@ import '@/styles/components/modal.scss';
         }
     }
 
-    // Show a dialog with a message
     function showDialog(message: string, options: { title?: string; icon?: string; type?: ModalType } = {}) {
         const { title = 'Alert', icon, type = 'info' } = options;
         const entry: DialogEntry = { message, title, icon, type };
 
-        // An error on screen must never be overwritten, so anything thatarrives while one is showing waits its turn. Every error is kept; only the latest non-error message is kept, since those are transient status updates.
+        // An error on screen must never be overwritten, so anything that arrives while one is showing waits its turn. Every error is kept; only the latest non-error message is kept, since those are transient status updates.
         if (current?.type === 'error') {
             if (type === 'error') pendingErrors.push(entry);
             else pendingNotice = entry;
@@ -228,7 +223,6 @@ import '@/styles/components/modal.scss';
         renderDialog(entry);
     }
 
-    // Show a non-blocking toast that closes itself and keeps focus where the user is
     function showToast(message: string, options: { title?: string; icon?: string; type?: ModalType } = {}) {
         const { title = 'Notice', icon, type = 'info' } = options;
         const toast = createModal({
@@ -237,19 +231,16 @@ import '@/styles/components/modal.scss';
             message,
             icon,
             type,
-            // Each toast is single-use, so drop it from the page once it closes
             onClose: () => toast.element.remove(),
         });
         toast.open();
     }
 
-    // Show a success message as a non-blocking toast. It never replaces an error dialog; while one is showing, the toast waits for it to close.
     function showSuccessToast(message: string) {
         // A success message ends whatever was in progress, so a status update on screen or waiting (e.g. "Uploading...") is no longer needed. Errors are kept.
         pendingNotice = null;
         if (current && current.type !== 'error') getModal().close();
         else if (current) {
-            // Drop the waiting status update from the "Next" count
             getModal().setContent(toModalContent(current));
             pendingToasts.push(message);
             return;
@@ -281,16 +272,16 @@ import '@/styles/components/modal.scss';
         // Storage unavailable, so nothing can be waiting
     }
 
-    function showError(message: string) {
-        showDialog(message, { title: 'Error', type: 'error' });
+    function showError(message: string, title?: string) {
+        showDialog(message, { title: `Error${title ? `: ${title}` : ''}`, type: 'error' });
     }
 
-    function showWarning(message: string) {
-        showDialog(message, { title: 'Warning', type: 'warning' });
+    function showWarning(message: string, title?: string) {
+        showDialog(message, { title: `Warning${title ? `: ${title}` : ''}`, type: 'warning' });
     }
 
-    function showInfo(message: string) {
-        showDialog(message, { title: 'Information', type: 'info' });
+    function showInfo(message: string, title?: string) {
+        showDialog(message, { title: `Information${title ? `: ${title}` : ''}`, type: 'info' });
     }
 
     function showConfirm(
@@ -308,12 +299,7 @@ import '@/styles/components/modal.scss';
                 type,
                 buttons: [
                     { label: cancelLabel, variant: 'secondary' },
-                    {
-                        label: confirmLabel,
-                        onClick: () => {
-                            confirmed = true;
-                        },
-                    },
+                    { label: confirmLabel, onClick: () => confirmed = true },
                 ],
                 onClose: () => {
                     confirmModal.element.remove();
@@ -351,9 +337,7 @@ import '@/styles/components/modal.scss';
                     { label: cancelLabel, variant: 'secondary' },
                     {
                         label: confirmLabel,
-                        onClick: () => {
-                            answer = input.value.trim();
-                        },
+                        onClick: () => { answer = input.value.trim() },
                     },
                 ],
                 onClose: () => {

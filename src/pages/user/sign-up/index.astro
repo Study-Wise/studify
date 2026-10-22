@@ -53,7 +53,6 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
                         minlength="8"
                     />
                 </div>
-                <div id="error-message" class="error-message" style="display: none;"></div>
                 <button type="submit" class="auth-button">Sign Up</button>
             </form>
 
@@ -93,11 +92,9 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
 
     const form = document.querySelector('#signup-form');
     if (!(form instanceof window.HTMLFormElement)) throw new Error('Sign-up form was not found.');
-    const { showError, hideError } = window.authUtils;
 
     form?.addEventListener('submit', async e => {
         e.preventDefault();
-        hideError();
 
         const formData = new window.FormData(form);
         const nameValue = formData.get('name');
@@ -113,13 +110,13 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
                 name,
             });
 
-            if (error) showError(error.message || 'Sign up failed. Please try again.');
+            if (error) window.showError(error.message || 'Sign up failed. Please try again.');
             else {
                 window.location.href = getClientSafeReturnBackUrl(new URLSearchParams(window.location.search).get('returnBackUrl'));
             }
         } catch (error) {
             console.error('Sign up error:', error);
-            showError('Sign up failed. Please try again.');
+            window.showError('Sign up failed. Please try again.');
         }
     });
 </script>

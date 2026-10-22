@@ -1,23 +1,8 @@
 <script>
     import { authClient } from '@/lib/auth/client';
-    const errorMessage: HTMLElement | null = document.querySelector('.error-message');
+
     const socialButtonsContainer = document.querySelector('.social-buttons');
     const callbackURL = socialButtonsContainer instanceof window.HTMLElement ? socialButtonsContainer.dataset.callbackUrl || '/user/sso-callback' : '/user/sso-callback';
-
-    function showError(message: string) {
-        if (errorMessage) {
-            errorMessage.textContent = message;
-            errorMessage.style.display = 'block';
-        }
-    }
-
-    function hideError() {
-        if (errorMessage) errorMessage.style.display = 'none';
-    }
-
-    function getRedirectUrl() {
-        return
-    }
 
     // Social sign-in click handlers
     document.querySelectorAll('.social-button[data-provider]').forEach(button => {
@@ -33,16 +18,8 @@
                 });
             } catch (error) {
                 console.error(`${provider} sign-in error:`, error);
-                showError(`${provider} sign-in failed. Please try again.`);
+                window.showError(`${provider} sign-in failed. Please try again.`);
             }
         });
     });
-
-    // Expose utilities for page-specific scripts
-    window.authUtils = {
-        showError,
-        hideError,
-        getRedirectUrl,
-        callbackURL,
-    };
 </script>

@@ -23,13 +23,3 @@
     animation: --spin 1s linear infinite;
     margin-inline-start: $spacing-small - 0.125rem;
 }
-
-.error-box {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-    padding: $spacing-medium - 0.0625rem;
-    border-radius: $border-radius-small;
-    margin-block-start: $spacing-medium + 0.25rem;
-    font-size: 1em;
-}

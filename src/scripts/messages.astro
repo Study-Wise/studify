@@ -9,8 +9,6 @@ const { page, category, mode, id } = Astro.props;
 
     let messageInput, sendButton, spinner;
 
-    const errorDiv = document.querySelector('.error-box');
-
     function loadUserSettings() {
         try {
             userSettings = JSON.parse(localStorage?.getItem('settings') || '{}') || {};
@@ -73,7 +71,6 @@ const { page, category, mode, id } = Astro.props;
 
     window.generateOutput = async function generateOutput() {
         if (isRedirecting) return;
-        clearError();
         if (!messageInput) {
             displayError('Input field missing!');
             return;
@@ -218,7 +215,6 @@ const { page, category, mode, id } = Astro.props;
                 }
                 const icon = sendButton?.querySelector('i.material-symbols-outlined');
                 if (icon) icon.style.display = 'none';
-                clearError();
             }
             else {
                 if (spinner) spinner.style.display = 'none';
@@ -235,13 +231,6 @@ const { page, category, mode, id } = Astro.props;
         }
     }
 
-    function clearError() {
-        if (errorDiv) {
-            errorDiv.style.display = 'none';
-            errorDiv.textContent = '';
-        }
-    }
-
     function displayError(message) {
         try {
             let messageToShow = 'An unknown error occurred.';
@@ -254,22 +243,10 @@ const { page, category, mode, id } = Astro.props;
                     messageToShow = '[Complex Error Object]';
                 }
             }
-            if (errorDiv) {
-                let showErrorText = '';
-                if (!messageToShow.includes(': ')) showErrorText = 'Error: ';
-                errorDiv.textContent = `${showErrorText}${messageToShow}`;
-                errorDiv.style.display = 'block';
-            }
-            else {
-                window.showError('Critical error occurred; error display area missing.\nHint: ' + messageToShow);
-            }
+            window.showError(`${messageToShow.includes(': ') ? '' :  'Error: '}${messageToShow}`);
         } catch (error) {
             console.error('FATAL ERROR inside displayError function:', error);
-            if (errorDiv) {
-                errorDiv.textContent = 'Error: Critical UI failure during error reporting.';
-                errorDiv.style.display = 'block';
-            }
-            else window.showError('Error: Critical UI failure during error reporting.');
+            window.showError('Error: Critical UI failure during error reporting.');
         }
     }
 

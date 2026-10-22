@@ -42,7 +42,6 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
                         autocomplete="current-password"
                     />
                 </div>
-                <div id="error-message" class="error-message" style="display: none;"></div>
                 <button type="submit" class="auth-button">Sign In</button>
             </form>
 
@@ -82,11 +81,9 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
 
     const form = document.querySelector('#signin-form');
     if (!(form instanceof window.HTMLFormElement)) throw new Error('Sign-in form was not found.');
-    const { showError, hideError } = window.authUtils;
 
     form?.addEventListener('submit', async e => {
         e.preventDefault();
-        hideError();
 
         const formData = new window.FormData(form);
         const email = formData.get('email');
@@ -99,13 +96,13 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
                 password,
             });
 
-            if (error) showError(error.message || 'Sign in failed. Please check your credentials.');
+            if (error) window.showError(error.message || 'Sign in failed. Please check your credentials.');
             else {
                 window.location.href = getClientSafeReturnBackUrl(new URLSearchParams(window.location.search).get('returnBackUrl'));
             }
         } catch (error) {
             console.error('Sign in error:', error);
-            showError('Sign in failed. Please check your credentials.');
+            window.showError('Sign in failed. Please check your credentials.');
         }
     });
 </script>

@@ -110,17 +110,6 @@
     }
 }
 
-.error-message {
-    padding: $spacing-small $spacing-medium;
-    background: color.change($color-error, $alpha: 0.1);
-    color: $color-error;
-    border: 1px solid color.change($color-error, $alpha: 0.3);
-    border-radius: $border-radius-medium;
-    font-size: $font-size-small;
-    line-height: $line-height-normal;
-    margin-top: -$spacing-small;
-}
-
 .auth-button {
     width: 100%;
     padding: $spacing-small $spacing-large;

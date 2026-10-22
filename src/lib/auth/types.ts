@@ -14,13 +14,6 @@ export interface User extends BetterAuthUser {
     role?: UserRole;
 }
 
-export interface AuthUtils {
-    showError: (message: string) => void;
-    hideError: () => void;
-    getRedirectUrl: () => void;
-    callbackURL: string;
-}
-
 // Each provider is only added if both clientId and clientSecret are available
 export type SocialProviderConfig = {
     google?: { clientId: string; clientSecret: string };
