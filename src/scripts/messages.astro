@@ -7,7 +7,9 @@ const { page, category, mode, id } = Astro.props;
     let threadId = 0;
     let userSettings = {};
 
-    let messageInput, sendButton, spinner, errorMessageDiv;
+    let messageInput, sendButton, spinner;
+
+    const errorDiv = document.querySelector('.error-box');
 
     function loadUserSettings() {
         try {
@@ -234,7 +236,6 @@ const { page, category, mode, id } = Astro.props;
     }
 
     function clearError() {
-        const errorDiv = errorMessageDiv || document.getElementById('error-message');
         if (errorDiv) {
             errorDiv.style.display = 'none';
             errorDiv.textContent = '';
@@ -253,7 +254,6 @@ const { page, category, mode, id } = Astro.props;
                     messageToShow = '[Complex Error Object]';
                 }
             }
-            const errorDiv = document.getElementById('error-message');
             if (errorDiv) {
                 let showErrorText = '';
                 if (!messageToShow.includes(': ')) showErrorText = 'Error: ';
@@ -263,15 +263,8 @@ const { page, category, mode, id } = Astro.props;
             else {
                 window.showError('Critical error occurred; error display area missing.\nHint: ' + messageToShow);
             }
-            const outputSec = document.getElementById('output-section');
-            if (outputSec) outputSec.style.display = 'none';
-            const guideBtn = document.getElementById('download-guide-pdf');
-            if (guideBtn) guideBtn.disabled = true;
-            const sheetBtn = document.getElementById('download-sheet-pdf');
-            if (sheetBtn) sheetBtn.disabled = true;
         } catch (error) {
             console.error('FATAL ERROR inside displayError function:', error);
-            const errorDiv = document.getElementById('error-message');
             if (errorDiv) {
                 errorDiv.textContent = 'Error: Critical UI failure during error reporting.';
                 errorDiv.style.display = 'block';
@@ -760,10 +753,9 @@ const { page, category, mode, id } = Astro.props;
     function onDomLoadHome() {
         initializeCommon();
 
-        messageInput = document.getElementById('text-paste');
+        messageInput = document.querySelector('.text-paste');
         sendButton = document.querySelector('.generate-button');
         spinner = sendButton?.querySelector('.spinner');
-        errorMessageDiv = document.getElementById('error-message');
 
         if (messageInput && sendButton) messageInput.addEventListener('keydown', handleEnterKey);
     }

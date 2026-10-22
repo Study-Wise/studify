@@ -23,9 +23,9 @@ const pTitle = (title === 'Home' || !title) ? appConfig.fullTitle : `${title} | 
 const desmosApiKey = import.meta.env.DESMOS_API_KEY || process.env.DESMOS_API_KEY || 'dcb31709b452b1cf9dc26972add0fda6';
 
 container ??= true;
-className ??= '';
+const classList = className?.trim() ? [className?.trim()] : [];
 
-if (container) className += ' container'
+if (container) classList.push('container');
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -121,7 +121,7 @@ if (container) className += ' container'
         {!Astro.routePattern.startsWith('/[category]/[mode]') && <TawkTo />}
         {!isChatArea ? <Header /> : ''}
 
-        <main class={className?.trim()} id="main-content">
+        <main class:list={['main-content', ...classList]} id="main-content">
             <slot />
         </main>
 
