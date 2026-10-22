@@ -16,9 +16,7 @@ export const POST: APIRoute = async ({ request }) => {
         const headerLine = bytes.toString('utf8', 0, headerEnd === -1 ? bytes.length : headerEnd);
         const header: { dsn?: string } = JSON.parse(headerLine);
 
-        if (typeof header.dsn !== 'string') {
-            return new Response('Missing DSN', { status: 400 });
-        }
+        if (typeof header.dsn !== 'string') return new Response('Missing DSN', { status: 400 });
 
         const dsn = new URL(header.dsn);
         const projectId = dsn.pathname.replace(/^\//, '');
@@ -38,9 +36,7 @@ export const POST: APIRoute = async ({ request }) => {
 
         // Keep the user's IP for Sentry (sendDefaultPii) instead of the server's
         const forwardedFor = request.headers.get('x-forwarded-for');
-        if (forwardedFor) {
-            headers['X-Forwarded-For'] = forwardedFor;
-        }
+        if (forwardedFor) headers['X-Forwarded-For'] = forwardedFor;
 
         const upstream = await fetch(`https://${allowedDsn.hostname}/api/${allowedProjectId}/envelope/`, {
             method: 'POST',
@@ -48,17 +44,13 @@ export const POST: APIRoute = async ({ request }) => {
             body: envelope,
         });
 
-        if (!upstream.ok) {
-            console.error(`❌ Sentry ingest returned ${upstream.status}`);
-        }
+        if (!upstream.ok) console.error(`❌ Sentry ingest returned ${upstream.status}`);
 
         // Pass the status and rate-limit headers through so the SDK can back off
         const responseHeaders: Record<string, string> = {};
         for (const name of ['retry-after', 'x-sentry-rate-limits']) {
             const value = upstream.headers.get(name);
-            if (value) {
-                responseHeaders[name] = value;
-            }
+            if (value) responseHeaders[name] = value;
         }
 
         return new Response(await upstream.text(), {
