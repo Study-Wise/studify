@@ -5,7 +5,7 @@
     display: grid;
     grid-template-columns: 2fr 9fr;
     gap: $spacing-extra-large;
-    align-items: flex-start;
+    align-items: start;
     justify-content: start;
 
     .image-intro {
