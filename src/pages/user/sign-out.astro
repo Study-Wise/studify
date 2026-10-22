@@ -3,9 +3,7 @@ import Layout from '@/layouts/Layout.astro';
 import SignOutScript from '@/scripts/auth/sign-out.astro';
 import '@/styles/pages/sign-out.scss';
 
-const user = Astro.locals.user;
-
-if (!user) return Astro.redirect('/');
+if (!Astro.locals.user) return Astro.redirect('/');
 ---
 
 <Layout title="Sign Out">

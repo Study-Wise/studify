@@ -3,9 +3,7 @@
 
 <script is:inline>
     function initializeStepByStep() {
-        const stepByStepSections = document.querySelectorAll('.step-by-step');
-
-        stepByStepSections.forEach(section => {
+        document.querySelectorAll('.step-by-step').forEach(section => {
             if (section.querySelector('.retry-wrong')) return;
 
             const retryButton = document.createElement('button');

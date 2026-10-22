@@ -7,10 +7,7 @@ import Layout from '@/layouts/Layout.astro';
 import '@/styles/pages/index.scss';
 import '@/styles/components/step-by-step.scss';
 
-const session = await auth.api.getSession({
-    headers: Astro.request.headers,
-});
-const isLoggedIn = !!session?.user;
+const isLoggedIn = !!(await auth.api.getSession({ headers: Astro.request.headers }))?.user;
 
 const visibleCategories = Object.entries(categories).filter(([_, category]) =>
     Object.values(category.modes).some(mode => mode.show),
@@ -141,30 +138,26 @@ const visibleCategories = Object.entries(categories).filter(([_, category]) =>
     const input = document.getElementById('subject-search-input');
     const empty = document.getElementById('subjects-empty');
     const chips = Array.from(document.querySelectorAll<HTMLButtonElement>('.subject-filter-chip'));
-    const categoryCards = Array.from(document.querySelectorAll<HTMLElement>('.category-card'));
 
     let activeCategory = '';
 
     function applyFilters() {
         const terms = (input instanceof HTMLInputElement ? input.value.trim().toLowerCase() : '').split(/\s+/).filter(Boolean);
-        let anyVisible = false;
 
-        for (const card of categoryCards) {
-            const inCategory = !activeCategory || card.dataset.category === activeCategory;
+        if (empty) empty.hidden = true;
+        for (const card of Array.from(document.querySelectorAll<HTMLElement>('.category-card'))) {
             let visibleModes = 0;
 
             for (const mode of card.querySelectorAll<HTMLElement>('.mode-card')) {
-                const text = mode.dataset.search ?? '';
-                const matches = inCategory && terms.every(term => text.includes(term));
+                const matches = (!activeCategory || card.dataset.category === activeCategory) && terms.every(term => (mode.dataset.search ?? '').includes(term));
                 mode.hidden = !matches;
                 if (matches) visibleModes++;
             }
 
             card.hidden = visibleModes === 0;
-            if (visibleModes > 0) anyVisible = true;
+            if (empty && visibleModes > 0) empty.hidden = false;
         }
 
-        if (empty) empty.hidden = anyVisible;
         toggle?.classList.toggle('is-filtering', terms.length > 0 || activeCategory !== '');
     }
 

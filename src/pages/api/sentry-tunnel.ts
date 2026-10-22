@@ -13,15 +13,16 @@ export const POST: APIRoute = async ({ request }) => {
         // The first line of an envelope is a JSON header that carries the DSN
         const bytes = Buffer.from(envelope);
         const headerEnd = bytes.indexOf('\n');
-        const headerLine = bytes.toString('utf8', 0, headerEnd === -1 ? bytes.length : headerEnd);
-        const header: { dsn?: string } = JSON.parse(headerLine);
+        const header: { dsn?: string } = JSON.parse(bytes.toString('utf8', 0, headerEnd === -1 ? bytes.length : headerEnd));
 
         if (typeof header.dsn !== 'string') return new Response('Missing DSN', { status: 400 });
 
         const dsn = new URL(header.dsn);
-        const projectId = dsn.pathname.replace(/^\//, '');
 
-        if (dsn.hostname !== allowedDsn.hostname || projectId !== allowedProjectId) {
+        if (
+            dsn.hostname !== allowedDsn.hostname
+            || dsn.pathname.replace(/^\//, '') !== allowedProjectId
+        ) {
             return new Response('Invalid DSN', { status: 403 });
         }
     } catch (error) {
@@ -30,17 +31,15 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     try {
-        const headers: Record<string, string> = {
-            'Content-Type': 'application/x-sentry-envelope',
-        };
-
         // Keep the user's IP for Sentry (sendDefaultPii) instead of the server's
-        const forwardedFor = request.headers.get('x-forwarded-for');
-        if (forwardedFor) headers['X-Forwarded-For'] = forwardedFor;
+        const _forwardedFor = request.headers.get('x-forwarded-for');
 
         const upstream = await fetch(`https://${allowedDsn.hostname}/api/${allowedProjectId}/envelope/`, {
             method: 'POST',
-            headers,
+            headers: {
+                'Content-Type': 'application/x-sentry-envelope',
+                ...(_forwardedFor ? { 'X-Forwarded-For': _forwardedFor } : {}),
+            },
             body: envelope,
         });
 

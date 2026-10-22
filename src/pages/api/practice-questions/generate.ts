@@ -27,8 +27,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        const user = locals.user;
-        if (!user) {
+        if (!locals.user) {
             console.error(`❌ [${requestId}] Authentication required but not provided`);
             return new Response(
                 JSON.stringify({ status: 'error', error: 'Authentication required' }),
@@ -39,7 +38,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        const user_email = user.email;
+        const user_email = locals.user.email;
 
         if (!isValidEmail(user_email)) {
             console.error(`❌ [${requestId}] Invalid email format:`, user_email);
@@ -65,9 +64,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        const thread = threads[0];
-
-        if (thread.email !== user_email && !thread.isPublic) {
+        if (threads[0].email !== user_email && !threads[0].isPublic) {
             console.error(`❌ [${requestId}] Unauthorized access to thread:`, threadId);
             return new Response(
                 JSON.stringify({ status: 'error', error: 'Unauthorized' }),
@@ -78,12 +75,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        const content = await generatePracticeQuestions(threadId, userPrompt);
-
         return new Response(
             JSON.stringify({
                 status: 'success',
-                content: content
+                content: await generatePracticeQuestions(threadId, userPrompt)
             }),
             {
                 status: 200,

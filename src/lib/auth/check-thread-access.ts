@@ -27,9 +27,7 @@ export async function checkThreadAccess(
     let isPublicThread = false;
     let threadExists = false;
 
-    let effectiveUser = user;
-    if (!effectiveUser && isDev()) effectiveUser = await getDevUser();
-    const userEmail = effectiveUser?.email || null;
+    const userEmail = (user ?? (isDev() ? await getDevUser() : null))?.email || null;
 
     let isUserAdminFlag = false;
     if (userEmail) {
@@ -50,9 +48,8 @@ export async function checkThreadAccess(
 
     if (threadId) {
         try {
-            const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
-            if (threads.length > 0) {
-                const thread = threads[0];
+            const [thread] = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
+            if (thread) {
                 threadExists = true;
                 threadOwner = thread.email;
                 isPublicThread = thread.isPublic;
@@ -99,12 +96,10 @@ export async function checkThreadAccess(
         ((threadOwner && threadOwner === userEmail) || !threadOwner || isUserAdminFlag)
     );
 
-    const isPublic = !isAuthorized && isPublicThread;
-
     return {
-        isAuthorized,
-        isPublic,
-        isPublicThread,
+        isAuthorized: isAuthorized,
+        isPublic: !isAuthorized && isPublicThread,
+        isPublicThread: isPublicThread,
         threadOwner,
         threadExists
     };

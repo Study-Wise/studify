@@ -7,8 +7,7 @@
     async function clearUserCaches() {
         try {
             if (!('caches' in window)) return;
-            const results = await Promise.allSettled(USER_CACHES.map(name => window.caches.delete(name)));
-            for (const result of results) {
+            for (const result of await Promise.allSettled(USER_CACHES.map(name => window.caches.delete(name)))) {
                 if (result.status === 'rejected') console.error('Failed to delete cache:', result.reason);
             }
         } catch (error) {

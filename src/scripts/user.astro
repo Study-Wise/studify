@@ -14,7 +14,7 @@
             try {
                 await authClient.signIn.social({
                     provider,
-                    callbackURL,
+                    callbackURL: socialButtonsContainer instanceof window.HTMLElement ? socialButtonsContainer.dataset.callbackUrl || '/user/sso-callback' : '/user/sso-callback',
                 });
             } catch (error) {
                 console.error(`${provider} sign-in error:`, error);

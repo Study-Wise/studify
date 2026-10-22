@@ -2,9 +2,8 @@
 import '@/styles/pages/about.scss';
 import Layout from '@/layouts/Layout.astro';
 
-const allTeamImages = import.meta.glob('../../public/assets/people/*/*/*.jpeg');
 const allTeamImagesObject: Record<string, Record<string, string[]>> = {};
-Object.keys(allTeamImages).sort().forEach(key => {
+Object.keys(import.meta.glob('../../public/assets/people/*/*/*.jpeg')).sort().forEach(key => {
     const pathParts = key.split('/').slice(['..', '..', 'public'].length);
     const username = pathParts[pathParts.length - 3];
     const type = pathParts[pathParts.length - 2];
@@ -17,14 +16,13 @@ Object.keys(allTeamImages).sort().forEach(key => {
 function random(array: string[]) {
     return array[Math.floor(Math.random() * array.length)]
 }
-const regularKey = 'regular';
 function getRegularImage(username: string) {
-    return random(allTeamImagesObject[username][regularKey])
+    return random(allTeamImagesObject[username]['regular'])
 };
-function   getHoverImage(username: string) {
-    const hoverKey = random(Object.keys(allTeamImagesObject[username]).filter(key => key !== regularKey && !key.startsWith('_')));
-    if (!hoverKey) return undefined;
-    return random(allTeamImagesObject[username][  hoverKey])
+function getHoverImage(username: string) {
+    const _hoverKey = random(Object.keys(allTeamImagesObject[username]).filter(key => key !== 'regular' && !key.startsWith('_')));
+    if (!_hoverKey) return undefined;
+    return random(allTeamImagesObject[username][_hoverKey])
 };
 
 interface TeamData {

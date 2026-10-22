@@ -121,6 +121,6 @@ export const auth = betterAuth({
         },
     },
 
-    baseURL,
-    trustedOrigins: [baseURL, import.meta.env.SITE, ...vercelOrigins],
+    baseURL: baseURL,
+    trustedOrigins: [baseURL, import.meta.env.SITE, ...[getEnvVar('VERCEL_URL'), getEnvVar('VERCEL_BRANCH_URL'), getEnvVar('VERCEL_PROJECT_PRODUCTION_URL')].filter(Boolean).map(host => `https://${host}`)],
 });

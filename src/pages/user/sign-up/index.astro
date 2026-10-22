@@ -100,14 +100,13 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
         const nameValue = formData.get('name');
         const email = formData.get('email');
         const password = formData.get('password');
-        const name = typeof nameValue === 'string' ? nameValue : '';
         if (typeof email !== 'string' || typeof password !== 'string') return;
 
         try {
             const { error } = await authClient.signUp.email({
                 email,
                 password,
-                name,
+                name: typeof nameValue === 'string' ? nameValue : '',
             });
 
             if (error) window.showError(error.message || 'Sign up failed. Please try again.');

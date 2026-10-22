@@ -2,8 +2,7 @@
 import Layout from '@/layouts/Layout.astro';
 import '@/styles/pages/features.scss';
 
-const generalModule = await import('@/lib/features.md');
-const markdownContent = await generalModule.compiledContent();
+const markdownContent = await (await import('@/lib/features.md')).compiledContent();
 ---
 
 <Layout title="Features">

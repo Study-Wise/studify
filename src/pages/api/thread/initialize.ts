@@ -13,8 +13,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     try {
         const { category, mode, provider, tier, isPublic } = await request.json();
 
-        const user = locals.user;
-        if (!user) {
+        if (!locals.user) {
             return new Response(
                 JSON.stringify({ status: 'error', error: 'Authentication required' }),
                 {
@@ -24,13 +23,13 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        const user_email = user.email;
-        const isAdmin = await isUserAdmin(user_email);
+        const user_email = locals.user.email;
 
-        if (!isAdmin) {
-            const userThreads = await db.select().from(threadsTable).where(eq(threadsTable.email, user_email));
-
-            if (userThreads.length >= config.maxThreadsPerUser) {
+        if (!(await isUserAdmin(user_email))) {
+            if (
+                (await db.select().from(threadsTable).where(eq(threadsTable.email, user_email))).length
+                >= config.maxThreadsPerUser
+            ) {
                 return new Response(
                     JSON.stringify({
                         status: 'error',
@@ -48,7 +47,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
         const { model: initialModel, provider: initialProvider } = await getValidModelAndProvider(provider, tier);
 
-        const newThread = {
+        await db.insert(threadsTable).values({
             id: newThreadId,
             title: '',
             thread: { messages: [] },
@@ -59,9 +58,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             provider: initialProvider,
             isPublic: isPublic === true,
             isDev: (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development'
-        };
-
-        await db.insert(threadsTable).values(newThread);
+        });
 
         return new Response(
             JSON.stringify({

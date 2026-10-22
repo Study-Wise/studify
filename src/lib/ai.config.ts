@@ -15,7 +15,7 @@ export interface Config {
     contentGenerationExcludeTools: string[];
 }
 
-const config: Config = {
+export default {
     provider: 'google',
     tier: 'default',
     model: 'gemini-3.8-flash',
@@ -27,6 +27,4 @@ const config: Config = {
     defaultCategory: 'general',
     defaultMode: 'general',
     contentGenerationExcludeTools: ['generate-content', 'get-content-types', 'open-content', 'step-checker', 'hint-ladder', 'grade-explanation'],
-};
-
-export default config;
+} satisfies Config;

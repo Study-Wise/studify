@@ -36,8 +36,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        const user = locals.user;
-        if (!user) {
+        if (!locals.user) {
             console.error(`❌ [${requestId}] Authentication required but not provided`);
             return new Response(
                 JSON.stringify({ status: 'error', error: 'Authentication required' }),
@@ -48,7 +47,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        const user_email = user.email;
+        const user_email = locals.user.email;
 
         if (!isValidEmail(user_email)) {
             console.error(`❌ [${requestId}] Invalid email format:`, user_email);
@@ -61,9 +60,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
+        const _threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
-        if (threads.length === 0) {
+        if (_threads.length === 0) {
             console.error(`❌ [${requestId}] Thread not found:`, threadId);
             return new Response(
                 JSON.stringify({ status: 'error', error: 'Thread not found' }),
@@ -74,10 +73,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        const thread = threads[0];
-
         // Check if user owns the thread - only owner can toggle public status
-        if (thread.email !== user_email) {
+        if (_threads[0].email !== user_email) {
             console.error(`❌ [${requestId}] Unauthorized: User does not own this thread`);
             return new Response(
                 JSON.stringify({ status: 'error', error: 'Only the thread owner can change sharing settings' }),

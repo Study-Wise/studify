@@ -26,8 +26,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        const user = locals.user;
-        if (!user) {
+        if (!locals.user) {
             console.error(`❌ [${requestId}] Authentication required but not provided`);
             return new Response(
                 JSON.stringify({ status: 'error', error: 'Authentication required' }),
@@ -38,7 +37,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        const user_email = user.email;
+        const user_email = locals.user.email;
 
         if (!isValidEmail(user_email)) {
             console.error(`❌ [${requestId}] Invalid email format:`, user_email);
@@ -64,10 +63,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        const thread = threads[0];
-
         // Only the owner can delete the thread
-        if (thread.email !== user_email) {
+        if (threads[0].email !== user_email) {
             console.error(`❌ [${requestId}] Unauthorized: User does not own this thread`);
             return new Response(
                 JSON.stringify({ status: 'error', error: 'Only the thread owner can delete this chat' }),
@@ -79,10 +76,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
 
         // Remove uploaded files from UploadThing
-        const fileKeys = (thread.uploadedFiles || []).map(file => file.key).filter(Boolean);
-        if (fileKeys.length > 0) {
+        const _fileKeys = (threads[0].uploadedFiles || []).map(file => file.key).filter(Boolean);
+        if (_fileKeys.length > 0) {
             try {
-                await userFilesUpload.deleteFiles(fileKeys);
+                await userFilesUpload.deleteFiles(_fileKeys);
             } catch (error) {
                 console.error(`❌ [${requestId}] UploadThing deletion error:`, error);
                 // Continue even if UploadThing deletion fails

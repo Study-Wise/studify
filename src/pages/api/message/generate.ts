@@ -24,8 +24,6 @@ import type { APIRoute } from 'astro';
 
 type Thread = InferSelectModel<typeof threadsTable>;
 
-const STREAM_HTML_INTERVAL = 100;
-
 const MATH_CLOSERS: Record<string, string> = { '$$': '$$', '$': '$', '\\(': '\\)', '\\[': '\\]' };
 
 export const POST: APIRoute = async ({ request, locals }) => {
@@ -41,8 +39,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
         let current_thread_id: string | undefined = thread_id;
 
-        const user = locals.user;
-        if (!user) {
+        if (!locals.user) {
             console.error(`❌ [${requestId}] Authentication required but not provided`);
             return new Response(
                 JSON.stringify({ status: 'error', error: 'Authentication required' }),
@@ -53,7 +50,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        const user_email = user.email;
+        const user_email = locals.user.email;
         const isAdmin = await isUserAdmin(user_email);
 
         if (!isValidEmail(user_email)) {
@@ -74,9 +71,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
                 if (user_email) {
                     if (!isAdmin) {
-                        const userThreads = await db.select().from(threadsTable).where(eq(threadsTable.email, user_email));
-
-                        if (userThreads.length >= config.maxThreadsPerUser) {
+                        if ((await db.select().from(threadsTable).where(eq(threadsTable.email, user_email))).length >= config.maxThreadsPerUser) {
                             console.error(`❌ [${requestId}] Thread limit exceeded for user:`, user_email);
                             return new Response(
                                 JSON.stringify({
@@ -98,22 +93,20 @@ export const POST: APIRoute = async ({ request, locals }) => {
                     throw new Error('Failed to generate thread ID');
                 }
 
-                const { model: initialModel, provider: initialProvider } = await getValidModelAndProvider(provider, tier);
+                const resolved = await getValidModelAndProvider(provider, tier);
 
-                const newThread = {
+                await db.insert(threadsTable).values({
                     id: newThreadId,
                     title: '',
                     thread: { messages: [] },
                     email: user_email,
                     category: category || config.defaultCategory,
                     mode: mode || config.defaultMode,
-                    model: initialModel,
-                    provider: initialProvider,
+                    model: resolved.model,
+                    provider: resolved.provider,
                     isPublic: isPublic,
                     isDev: (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development'
-                };
-
-                await db.insert(threadsTable).values(newThread);
+                });
                 current_thread_id = newThreadId;
                 isNewThread = true;
             } catch (error) {
@@ -128,7 +121,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             }
         }
 
-        const threadContext = `
+        let systemPrompt = await (modeObj.prompt || generateModePrompt(categories[config.defaultCategory].modes[config.defaultMode], config.defaultCategory)) + `
 <thread-context>
 threadId: ${current_thread_id}
 category: ${category || config.defaultCategory}
@@ -140,14 +133,12 @@ Use the above thread context when calling tools that require category or mode pa
 IMPORTANT: When the user asks you to search, look up information, or use a tool, you MUST actually call the appropriate tool. Do NOT pretend or hallucinate that you used a tool—instead make the actual tool call and use the real results. If a tool call is available and relevant to the user's request, use it.
 `;
 
-        let systemPrompt = await (modeObj.prompt || generateModePrompt(categories[config.defaultCategory].modes[config.defaultMode], config.defaultCategory)) + threadContext;
-
-        const systemObj: Message = {
+        const objPlace: Message = {
             role: 'system',
             content: systemPrompt,
         }
 
-        let convoHistory: Message[] = [systemObj];
+        let convoHistory: Message[] = [objPlace];
 
         let userData: Thread | undefined = undefined;
         if (current_thread_id) {

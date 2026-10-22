@@ -18,17 +18,16 @@ function getDevAccessToken(): string | null {
 }
 
 export async function getDevUserId(): Promise<string | null> {
+    if (!isDev()) return null;
     const accessToken = getDevAccessToken();
     if (!accessToken) return null;
 
     try {
-        const accounts = await db
+        return (await db
             .select({ userId: account.userId })
             .from(account)
             .where(eq(account.accessToken, accessToken))
-            .limit(1);
-
-        return accounts[0]?.userId || null;
+            .limit(1))[0]?.userId || null;
     } catch (error) {
         console.error('Error fetching dev user ID from account:', error);
         return null;
@@ -36,19 +35,18 @@ export async function getDevUserId(): Promise<string | null> {
 }
 
 export async function getDevUser(): Promise<User | null> {
-    const userId = await getDevUserId();
-    if (!userId) return null;
+    const _userId = await getDevUserId();
+    if (!_userId) return null;
 
     try {
-        const users = await db
+        const [user] = await db
             .select()
             .from(userTable)
-            .where(eq(userTable.id, userId))
+            .where(eq(userTable.id, _userId))
             .limit(1);
 
-        if (users.length === 0) return null;
+        if (!user) return null;
 
-        const user = users[0];
         return {
             id: user.id,
             name: user.name,
@@ -66,23 +64,19 @@ export async function getDevUser(): Promise<User | null> {
 }
 
 export async function getDevUserRole(): Promise<UserRole | null> {
-    const user = await getDevUser();
-    return user?.role || null;
+    return (await getDevUser())?.role || null;
 }
 
 export async function isDevUserAdmin(): Promise<boolean> {
-    const role = await getDevUserRole();
-    return role === 'admin';
+    return (await getDevUserRole()) === 'admin';
 }
 
 export async function isDevUserModerator(): Promise<boolean> {
-    const role = await getDevUserRole();
-    return role === 'moderator' || role === 'admin';
+    return ['moderator', 'admin'].includes(await getDevUserRole());
 }
 
 export async function isDevUserPremium(): Promise<boolean> {
-    const role = await getDevUserRole();
-    return role === 'premium' || role === 'moderator' || role === 'admin';
+    return ['premium', 'moderator', 'admin'].includes(await getDevUserRole());
 }
 
 // Similar to checkThreadAccess but uses the dev access token
@@ -108,17 +102,14 @@ export async function checkDevThreadAccess(
 
     const userEmail = devUser?.email || null;
 
-    const isUserAdminFlag = devUser?.role === 'admin';
-
     if (threadId) {
         try {
-            const threads = await db
+            const [thread] = await db
                 .select()
                 .from(threadsTable)
                 .where(eq(threadsTable.id, threadId));
 
-            if (threads.length > 0) {
-                const thread = threads[0];
+            if (thread) {
                 threadExists = true;
                 threadOwner = thread.email;
                 isPublicThread = thread.isPublic;
@@ -169,15 +160,13 @@ export async function checkDevThreadAccess(
         threadId &&
             ((threadOwner && threadOwner === userEmail) ||
                 !threadOwner ||
-                isUserAdminFlag)
+                devUser?.role === 'admin')
     );
 
-    const isPublic = !isAuthorized && isPublicThread;
-
     return {
-        isAuthorized,
-        isPublic,
-        isPublicThread,
+        isAuthorized: isAuthorized,
+        isPublic: !isAuthorized && isPublicThread,
+        isPublicThread: isPublicThread,
         threadOwner,
         threadExists,
     };
