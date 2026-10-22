@@ -57,13 +57,12 @@ export default {
                 });
 
                 // Check 2: Excessive newlines (3 or more consecutive)
-                const skipLines = 3;
-                const codeAfterFrontmatter = code.replace(/(?:\r\n|\r|\n)+$/, '').split(/\r\n|\r|\n/).slice(skipLines).join('\n');
+                const codeAfterFrontmatter = code.replace(/(?:\r\n|\r|\n)+$/, '').split(/\r\n|\r|\n/).slice(3).join('\n');
 
                 if (/(?:\n){3,}/g.test(codeAfterFrontmatter)) {
                     context.report({
                         loc: {
-                            line: skipLines + codeAfterFrontmatter.substring(0, codeAfterFrontmatter.search(/(?:\n){3,}/)).split('\n').length,
+                            line: 3 + codeAfterFrontmatter.substring(0, codeAfterFrontmatter.search(/(?:\n){3,}/)).split('\n').length,
                             column: 0
                         },
                         message: 'Found 3+ consecutive newlines. Use at most 1 blank line (2 consecutive newlines).',

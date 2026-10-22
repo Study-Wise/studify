@@ -17,10 +17,9 @@ function checkSingleDeclarationBlock(node, blockNode, context) {
         message: 'Single statement in block should be on the same line as its condition with no curly braces (e.g. "if (x) return y;',
         fix(fixer) {
             const beforeBrace = context.sourceCode.text[context.sourceCode.getFirstToken(blockNode).range[0] - 1];
-            const needsSpace = beforeBrace !== ' ' && beforeBrace !== '\t' && beforeBrace !== '\n';
             return fixer.replaceTextRange(
                 [context.sourceCode.getFirstToken(blockNode).range[0], context.sourceCode.getLastToken(blockNode).range[1]],
-                `${needsSpace ? ' ' : ''}${context.sourceCode.getText(blockNode.body[0]).trim()}`
+                `${beforeBrace !== ' ' && beforeBrace !== '\t' && beforeBrace !== '\n' ? ' ' : ''}${context.sourceCode.getText(blockNode.body[0]).trim()}`
             );
         }
     });

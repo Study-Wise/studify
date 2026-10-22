@@ -17,9 +17,6 @@ export default {
         }]
     },
     create(context) {
-        const options = context.options[0] || {};
-        const lineLength = options.lineLength || 100;
-
         return {
             Program(node) {
                 if (!node.body) return;
@@ -35,7 +32,7 @@ export default {
                         importNode.specifiers.some(spec => spec.importKind === 'type') &&
                         importNode.specifiers.some(spec => spec.importKind !== 'type');
 
-                    if (hasMixedImports && fullLine.length > lineLength) {
+                    if (hasMixedImports && fullLine.length > (context.options[0]?.lineLength || 100)) {
                         context.report({
                             node: importNode,
                             message: `Long import line (${fullLine.length} chars) with mixed type and value imports. Separate them into two statements: \`import type { ... } from "..."\` and \`import { ... } from "..."\`.`
