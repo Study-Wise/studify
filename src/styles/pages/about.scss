@@ -1,12 +1,20 @@
 @use '../variables/globals' as *;
 @use '../variables/tokens' as *;
 
+.card:has(> .about-section:first-child:last-child) {
+    container-type: inline-size;
+}
+
 .about-section {
     display: grid;
     grid-template-columns: 2fr 9fr;
     gap: $spacing-extra-large;
     align-items: start;
     justify-content: start;
+
+    @media (width <= $breakpoint-medium) {
+        grid-template-columns: 1fr;
+    }
 
     .image-intro {
         display: flex;

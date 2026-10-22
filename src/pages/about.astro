@@ -83,32 +83,34 @@ const team: TeamData[] = [
 ---
 <Layout title="About">
     {team.map(member => (
-        <section class="about-section card">
-            <div class="image-intro" data-hover={!!member.images?.hover} style={member.images?.hover && { '--data-hover-src': member.images?.hover && `url('${member.images.hover}')` }}>
-                <img src={member.images?.regular} alt={`${member.name} profile picture`} class="profile-picture" />
-                <div class="about-info">
-                    <h2 class="about-name">{member.name}</h2>
-                    <p>{member.role}</p>
+        <section class="card">
+            <div class="about-section">
+                <div class="image-intro" data-hover={!!member.images?.hover} style={member.images?.hover && { '--data-hover-src': member.images?.hover && `url('${member.images.hover}')` }}>
+                    <img src={member.images?.regular} alt={`${member.name} profile picture`} class="profile-picture" />
+                    <div class="about-info">
+                        <h2 class="about-name">{member.name}</h2>
+                        <p>{member.role}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="about-content">
+                <div class="about-content">
 
-                <div class="about-text" set:html={member.description}></div>
+                    <div class="about-text" set:html={member.description}></div>
 
-                {member.links && member.links.length > 0 && (
-                    <p class="about-links">
-                        {member.links.map(link => (
-                            <a href={link.href} target="_blank" rel="noopener noreferrer">
-                                {link.icon === 'language' ? (
-                                    <span class="material-symbols-outlined" aria-hidden="true">{link.icon}</span>
-                                ) : (
-                                    <img src={`https://skillicons.dev/icons?i=${link.icon}`} alt={link.text} class="social-icon" />
-                                )}
-                                <span class="text">{link.text}</span>
-                            </a>
-                        )).reduce((prev, curr) => [prev, ' | ', curr])}
-                    </p>
-                )}
+                    {member.links && member.links.length > 0 && (
+                        <p class="about-links">
+                            {member.links.map(link => (
+                                <a href={link.href} target="_blank" rel="noopener noreferrer">
+                                    {link.icon === 'language' ? (
+                                        <span class="material-symbols-outlined" aria-hidden="true">{link.icon}</span>
+                                    ) : (
+                                        <img src={`https://skillicons.dev/icons?i=${link.icon}`} alt={link.text} class="social-icon" />
+                                    )}
+                                    <span class="text">{link.text}</span>
+                                </a>
+                            )).reduce((prev, curr) => [prev, ' | ', curr])}
+                        </p>
+                    )}
+                </div>
             </div>
         </section>
     ))}
