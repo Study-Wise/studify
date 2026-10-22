@@ -1,7 +1,5 @@
 function checkSingleDeclarationBlock(node, blockNode, context) {
-    if (!blockNode || blockNode.type !== 'BlockStatement' || blockNode.body.length !== 1) {
-        return;
-    }
+    if (!blockNode || blockNode.type !== 'BlockStatement' || blockNode.body.length !== 1) return;
 
     if (!blockNode.body[0].loc?.start?.line || !blockNode.body[0].loc?.end?.line || blockNode.body[0].loc?.start?.line !== blockNode.body[0].loc?.end?.line) {
         return;
@@ -11,7 +9,7 @@ function checkSingleDeclarationBlock(node, blockNode, context) {
         return;
     }
 
-    const condensedLine = `${context.sourceCode.getText(node).trim()} ${context.sourceCode.getText(blockNode.body[0]).trim()}`;
+    const condensedLine = `${node === blockNode ? 'else' : context.sourceCode.text.slice(node.range[0], blockNode.range[0]).trim()} ${context.sourceCode.getText(blockNode.body[0]).trim()}`;
     if (condensedLine.length >= 100) return;
 
     const reportObj = {

@@ -27,20 +27,14 @@ export default {
 
                     if (comment.type !== 'Block') return;
 
-                    if (comment.loc.start.line === comment.loc.end.line) {
-                        return;
-                    }
+                    if (comment.loc.start.line === comment.loc.end.line) return;
 
                     if (jsDocTags.test(comment.value)) return;
 
                     const lines = comment.value.split('\n').map(line => line.trim());
 
-                    while (lines.length > 0 && lines[0] === '') {
-                        lines.shift();
-                    }
-                    while (lines.length > 0 && lines[lines.length - 1] === '') {
-                        lines.pop();
-                    }
+                    while (lines.length > 0 && lines[0] === '') lines.shift();
+                    while (lines.length > 0 && lines[lines.length - 1] === '') lines.pop();
 
                     const cleanedLines = lines.map(line => {
                         return line.replace(/^\*\s?/, '').trim();

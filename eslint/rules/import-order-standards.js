@@ -42,9 +42,7 @@ function getImportModulePath(source, currentDir) {
         let targetPath = path.resolve(currentDir, source);
         try {
             const stat = fs.statSync(targetPath, { throwIfNoEntry: false });
-            if (stat && stat.isFile()) {
-                return path.dirname(targetPath);
-            }
+            if (stat && stat.isFile()) return path.dirname(targetPath);
         } catch {
             // Ignore errors
         }
@@ -147,9 +145,7 @@ export default {
                         });
                     }
 
-                    if (group > maxSeenGroup) {
-                        maxSeenGroup = group;
-                    }
+                    if (group > maxSeenGroup) maxSeenGroup = group;
 
                     if (previousNode && previousGroup !== null && ((previousGroup !== group && (importNode.loc.start.line || 0) - (previousNode.loc.end.line || 0) < 2) || (previousGroup === group && (importNode.loc.start.line || 0) - (previousNode.loc.end.line || 0) >= 2))) {
                         context.report({
