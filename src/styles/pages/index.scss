@@ -245,7 +245,7 @@
         transition: $transition-colors, box-shadow $transition-base $ease-out;
 
         &:hover,
-        &[aria-expanded='true'] {
+        &[aria-expanded="true"] {
             background-color: var(--message-bg);
             box-shadow: $box-shadow-medium;
         }
@@ -262,7 +262,7 @@
         }
 
         .material-symbols-outlined {
-            font-size: $font-size-extra-large;
+            font-size: $font-size-1x-large;
         }
 
         &.is-filtering .subject-search-indicator {
@@ -339,7 +339,7 @@
             background-color: var(--message-bg);
         }
 
-        &[aria-pressed='true'] {
+        &[aria-pressed="true"] {
             background: linear-gradient(135deg,
                 list.nth(map.get($accent-colors, primary), 1),
                 list.nth(map.get($accent-colors, primary), 2)

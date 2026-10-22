@@ -4,7 +4,7 @@
 @use 'sass:map';
 
 .input-section {
-    #text-paste {
+    .text-paste {
         width: 100%;
         min-height: 200px;
         padding: $spacing-medium - 0.0625rem;
@@ -102,56 +102,6 @@
     padding: 0;
     margin: 0;
     cursor: pointer;
-}
-
-.output-content {
-    display: none;
-    padding: $spacing-medium + 0.25rem 0;
-    margin-block-start: $spacing-medium - 0.0625rem;
-
-    &.active-output {
-        display: block;
-        animation: --fade-in 0.5s $ease-in-out;
-    }
-
-    article {
-        margin-block-start: $spacing-small - 0.125rem;
-        padding: 0 5px;
-    }
-
-    h3, h4 {
-        color: #0056b3;
-        margin-block: $spacing-extra-large - 0.2rem $spacing-medium;
-        padding-block-end: $border-radius-small;
-        border-block-end: 1px solid #eee;
-        font-weight: $font-weight-semibold;
-
-        &.h3 {
-            font-size: 1.4rem;
-        }
-
-        &.h4 {
-            font-size: 1.2rem;
-        }
-    }
-
-    ul, ol {
-        margin-inline-start: 30px;
-        margin-block-end: 1.1em;
-        padding-inline-start: $spacing-medium - 0.0625rem;
-
-        li {
-            margin-block-end: 0.6em;
-        }
-    }
-
-    p {
-        margin-block-end: 1em;
-
-        &.answer-explanation {
-            margin-block-start: 1em;
-        }
-    }
 }
 
 .chat-button-container {

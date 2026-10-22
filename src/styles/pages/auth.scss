@@ -142,12 +142,12 @@
 
     &:hover {
         opacity: $opacity-hover;
-        transform: translateY(-1px);
+        translate: 0 -1px;
         box-shadow: $box-shadow-medium;
     }
 
     &:active {
-        transform: translateY(0);
+        translate: 0 0;
         box-shadow: $box-shadow-extra-small;
     }
 
@@ -219,11 +219,11 @@
         background: hsl(from var(--card-bg) h s calc(l - 2%));
         border-color: hsl(from var(--card-border) h s calc(l - 10%));
         box-shadow: $box-shadow-small;
-        transform: translateY(-1px);
+        translate: 0 -1px;
     }
 
     &:active {
-        transform: translateY(0);
+        translate: 0 0;
         box-shadow: $box-shadow-extra-small;
     }
 
@@ -253,13 +253,15 @@
 
 .footer-link {
     color: list.nth(map.get(colors.$accent-colors, 'primary'), 1);
-    text-decoration: none;
     font-weight: $font-weight-medium;
     transition: $transition-colors;
 
-    &:hover {
+    &:not(:hover, :focus-visible) {
+        text-decoration: none;
+    }
+
+    &:hover, &:focus-visible {
         color: list.nth(map.get(colors.$accent-colors, 'primary'), 2);
-        text-decoration: underline;
     }
 
     &:focus-visible {

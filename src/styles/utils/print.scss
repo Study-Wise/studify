@@ -6,19 +6,19 @@
         line-height: 1.4;
     }
 
-    body > header,
-    body > footer,
+    .header, .footer,
     .chat-toolbar,
     .header-content-wrapper,
     button,
-    #error-message {
+    .error-box,
+    .auth-page .error-message {
         display: none !important;
         visibility: hidden !important;
     }
 
-    body > main > .introduction-section,
-    body > main > .input-section,
-    body > main > .about-section {
+    .main-content > .introduction-section,
+    .main-content > .input-section,
+    .main-content > .card > .about-section {
         display: none !important;
         visibility: hidden !important;
     }
@@ -27,9 +27,7 @@
         display: none !important;
     }
 
-    body,
-    body > main,
-    body > main > #output-section {
+    body, .main-content {
         display: block !important;
         visibility: visible !important;
         box-shadow: none !important;
@@ -40,55 +38,12 @@
         max-width: none !important;
     }
 
-    .output-section-title,
-    .output-content {
-        display: none !important;
-        visibility: hidden !important;
-    }
-
-    .output-content.print-target-container,
-    .output-section:not(:has(.output-content.print-target-container)) .output-content {
-        display: block !important;
-        visibility: visible !important;
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 1cm !important;
-        border: none !important;
-        box-shadow: none !important;
-        break-before: auto;
-        break-after: auto;
-        animation: none !important;
-
-        > article {
-            visibility: visible !important;
-            display: block !important;
-            margin-block-start: 0 !important;
-
-            > :first-child {
-                margin-block-start: 0 !important;
-            }
-
-            :last-child {
-                margin-block-end: 0 !important;
-            }
-        }
-    }
-
-    h2,
-    h3,
-    h4,
-    pre {
+    h2, h3, h4, pre {
         break-before: auto !important;
         break-after: avoid !important;
     }
 
-    ul,
-    ol,
-    p,
-    li,
-    pre,
-    code,
-    mjx-container {
+    ul, ol, p, li, pre, code, mjx-container {
         break-inside: avoid !important;
     }
 

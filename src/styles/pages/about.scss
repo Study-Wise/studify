@@ -1,12 +1,20 @@
 @use '../variables/globals' as *;
 @use '../variables/tokens' as *;
 
+.card:has(> .about-section:first-child:last-child) {
+    container-type: inline-size;
+}
+
 .about-section {
     display: grid;
     grid-template-columns: 2fr 9fr;
     gap: $spacing-extra-large;
-    align-items: flex-start;
+    align-items: start;
     justify-content: start;
+
+    @media (width <= $breakpoint-medium) {
+        grid-template-columns: 1fr;
+    }
 
     .image-intro {
         display: flex;
@@ -25,7 +33,7 @@
         $hover-rotation: 2deg;
 
         .profile-picture, &::before {
-            max-width: 65%;
+            max-width: 125px;
             aspect-ratio: 1;
             object-fit: cover;
             border-radius: 50%;
@@ -77,30 +85,22 @@
 
     .about-text {
         flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        gap: $spacing-small;
     }
 
     p {
         &:not(.image-intro p) {
-            &:not(:last-child) {
-                margin-block-end: 1.2em;
-            }
-
             font-size: 1.05em;
-
-            &:has(.material-symbols-outlined) {
-                &, * {
-                    vertical-align: middle;
-                }
-            }
         }
 
         a {
             color: $about-link;
             font-weight: $font-weight-medium;
-            text-decoration: none;
 
-            &:hover {
-                border-bottom: 1px solid $about-link;
+            &:not(:hover, :focus-visible) {
+                text-decoration: none;
             }
         }
     }
@@ -116,6 +116,17 @@
             display: inline-flex;
             align-items: center;
             gap: $spacing-tiny;
+
+            &:has(.material-symbols-outlined) {
+                &, * {
+                    vertical-align: middle;
+                }
+            }
+
+            &:hover, &:focus-visible {
+                text-decoration: none;
+                border-bottom: 1px solid $about-link;
+            }
 
             .social-icon {
                 height: 1em;

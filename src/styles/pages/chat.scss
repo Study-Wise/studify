@@ -56,7 +56,7 @@
                     line-height: $line-height-relaxed;
                 }
 
-                .btn-primary {
+                .btn.primary {
                     display: inline-block;
                     background-color: var(--card-bg);
                     color: var(--body-text);
@@ -203,7 +203,7 @@ footer, .chat-toolbar {
         }
 
         .material-symbols-outlined {
-            font-size: $font-size-extra-large;
+            font-size: $font-size-1x-large;
             flex-shrink: 0;
         }
     }
@@ -243,10 +243,9 @@ footer, .chat-toolbar {
 
         a {
             color: inherit;
-            text-decoration: none;
 
-            &:hover {
-                text-decoration: underline;
+            &:not(:hover, :focus-visible) {
+                text-decoration: none;
             }
         }
 
@@ -476,7 +475,7 @@ footer, .chat-toolbar {
             align-self: end;
             padding: 0 math.div($message-space, 2);
             opacity: $opacity-subtle;
-            font-size: $font-size-extra-small;
+            font-size: $font-size-1x-small;
             transition: opacity $transition-base $ease-out;
 
             &:hover {
@@ -533,7 +532,7 @@ footer, .chat-toolbar {
             border-radius: $border-radius-extra-small;
             background-color: rgb(from var(--card-border) r g b / 20%);
             border: 1px solid rgb(from var(--card-border) r g b / 40%);
-            font-size: $font-size-extra-small;
+            font-size: $font-size-1x-small;
             color: rgb(from var(--body-text) r g b / 70%);
             width: fit-content;
 

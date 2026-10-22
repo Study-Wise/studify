@@ -59,22 +59,22 @@ p {
     font-family: inherit;
 }
 
-.btn-primary {
+.btn.primary {
     background-color: #ef4444;
     color: white;
 
     &:hover {
         background-color: #dc2626;
-        transform: translateY(-1px);
+        translate: 0 -1px;
         box-shadow: 0 0 8px rgb(239 68 68 / 30%);
     }
 
     &:active {
-        transform: translateY(0);
+        translate: 0 0;
     }
 }
 
-.btn-secondary {
+.btn.secondary {
     background-color: var(--card-bg);
     color: var(--card-text);
     border: 1px solid var(--card-border);
@@ -86,5 +86,5 @@ p {
 }
 
 .material-symbols-outlined {
-    font-size: $font-size-extra-large;
+    font-size: $font-size-1x-large;
 }

@@ -44,24 +44,24 @@
 @keyframes --slide-in-down {
     from {
         opacity: 0;
-        transform: translateY(-30px);
+        translate: 0 -30px;
     }
 
     to {
         opacity: 1;
-        transform: translateY(0);
+        translate: 0 0;
     }
 }
 
 @keyframes --slide-in-up {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        translate: 0 30px;
     }
 
     to {
         opacity: 1;
-        transform: translateY(0);
+        translate: 0 0;
     }
 }
 
@@ -80,11 +80,11 @@
 // Loading Animations
 @keyframes --float {
     0%, 100% {
-        transform: translateY(0);
+        translate: 0 0;
     }
 
     50% {
-        transform: translateY(-20px);
+        translate: 0 -20px;
     }
 }
 

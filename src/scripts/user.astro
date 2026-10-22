@@ -1,6 +1,6 @@
 <script>
     import { authClient } from '@/lib/auth/client';
-    const errorMessage = document.getElementById('error-message');
+    const errorMessage: HTMLElement | null = document.querySelector('.error-message');
     const socialButtonsContainer = document.querySelector('.social-buttons');
     const callbackURL = socialButtonsContainer instanceof window.HTMLElement ? socialButtonsContainer.dataset.callbackUrl || '/user/sso-callback' : '/user/sso-callback';
 

@@ -45,10 +45,10 @@
     }
 }
 
-body:has(.offline-indicator[style*='flex']) {
+body:has(.offline-indicator[style*="flex"]) {
     padding-top: 40px;
 }
 
-body:has(.update-indicator[style*='flex']) {
+body:has(.update-indicator[style*="flex"]) {
     padding-top: 40px;
 }

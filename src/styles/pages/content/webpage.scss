@@ -24,7 +24,7 @@ body:has(.webpage-page) {
         }
 
         h2 {
-            font-size: $font-size-extra-large;
+            font-size: $font-size-1x-large;
             margin: 0 0 $spacing-small;
         }
 
@@ -34,7 +34,7 @@ body:has(.webpage-page) {
             margin-block-end: $spacing-large;
         }
 
-        .btn-primary {
+        .btn.primary {
             padding: $spacing-medium $spacing-large;
             background-color: $section-title-light;
             color: white;

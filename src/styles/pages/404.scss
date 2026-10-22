@@ -95,12 +95,12 @@
                 }
             }
 
-            .btn-primary {
+            .btn.primary {
                 background: $section-title-light;
                 color: $header-text;
             }
 
-            .btn-secondary {
+            .btn.secondary {
                 background-color: var(--card-bg);
                 color: var(--body-text);
                 border: 2px solid var(--card-border);
@@ -196,7 +196,7 @@
             }
 
             .error-subtitle {
-                font-size: $font-size-extra-large;
+                font-size: $font-size-1x-large;
             }
 
             .error-message {

@@ -67,16 +67,16 @@
             color: $color-link;
             transition: color 0.2s;
 
-            &:not(:hover) {
+            &:not(:hover, :focus-visible) {
                 text-decoration: none;
             }
 
-            &:hover {
+            &:hover, &:focus-visible {
                 color: color.adjust($color-link, $lightness: -10%);
             }
         }
 
-        &[aria-current='page'] {
+        &[aria-current="page"] {
             color: var(--body-text);
             font-weight: 500;
         }
@@ -281,8 +281,8 @@
     @include empty-state;
 }
 
-.btn-primary,
-.btn-secondary {
+.btn.primary,
+.btn.secondary {
     display: inline-block;
     padding: 0.75rem 1.5rem;
     border-radius: 8px;
@@ -292,18 +292,18 @@
     cursor: pointer;
 }
 
-.btn-primary {
+.btn.primary {
     background: list.nth(map.get($accent-colors, primary), 1);
     color: white;
 
     &:hover {
         background: list.nth(map.get($accent-colors, primary), 2);
-        transform: translateY(-1px);
+        translate: 0 -1px;
         box-shadow: 0 0 12px rgb(59 130 246 / 30%);
     }
 }
 
-.btn-secondary {
+.btn.secondary {
     background: var(--message-bg);
     color: var(--body-text);
     border: 1px solid var(--border-color);
