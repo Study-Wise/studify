@@ -1,16 +1,6 @@
 ---
 import '@/styles/components/content-actions.scss';
 
-interface Props {
-    contentType: string;
-    threadId: string;
-    hasContent: boolean;
-    isAuthorized: boolean;
-    chatUrl: string;
-    generateVerb?: string;
-    regenerateVerb?: string;
-}
-
 const {
     contentType,
     threadId,
@@ -21,7 +11,7 @@ const {
     regenerateVerb = 'Regenerate',
 } = Astro.props;
 
-const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase());
 ---
 
 <div class="content-actions">

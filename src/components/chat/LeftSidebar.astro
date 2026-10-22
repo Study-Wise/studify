@@ -5,16 +5,6 @@ import SidebarSection from '@/components/chat/SidebarSection.astro';
 import '@/styles/components/chat/left-sidebar.scss';
 import '@/styles/components/chat/sidebar.scss';
 
-interface Props {
-    isPublic: boolean;
-    isAuthorized: boolean;
-    threadId: string;
-    uploadedFiles: UploadedFile[];
-    email: string;
-    category: string;
-    mode: string;
-}
-
 const {
     isPublic,
     isAuthorized,
@@ -120,7 +110,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                     {uploadedFiles.length === 0 ? (
                         <p class="empty-message">No files uploaded yet. Upload files to see them here.</p>
                     ) : (
-                        uploadedFiles.map((file) => (
+                        uploadedFiles.map((file: UploadedFile) => (
                         <div class="file-item" data-file-key={file.key}>
                             <div class="file-icon">
                                 {file.type.startsWith('image/') ? (

@@ -1,19 +1,4 @@
 ---
-interface Props {
-    title: string;
-    icon: string;
-    hasContent: boolean;
-    threadId: string;
-    viewUrl?: string;
-    viewButtonText?: string;
-    emptyMessage?: string;
-    id: string;
-    generateVerb?: string; // e.g., "Generate", "Find", "Create" (default: 'Generate')
-    regenerateVerb?: string; // e.g., "Regenerate", "Find New", "Recreate" (default: 'Regenerate')
-    isAuthorized?: boolean;
-    canRegenerate?: boolean; // false for sections whose content isn't generated (default: true)
-}
-
 const {
     title,
     icon,
