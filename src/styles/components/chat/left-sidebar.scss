@@ -82,7 +82,7 @@
                         flex-shrink: 0;
 
                         .material-symbols-outlined {
-                            font-size: $font-size-extra-large;
+                            font-size: $font-size-1x-large;
                             color: list.nth(map.get($accent-colors, primary), 1);
                         }
                     }
@@ -103,7 +103,7 @@
                         }
 
                         .file-size {
-                            font-size: $font-size-extra-small;
+                            font-size: $font-size-1x-small;
                             color: var(--card-text);
                             opacity: $opacity-subtle;
                         }
@@ -124,7 +124,7 @@
                         opacity: $opacity-overlay;
 
                         .material-symbols-outlined {
-                            font-size: $font-size-extra-large;
+                            font-size: $font-size-1x-large;
                             color: $color-error;
                         }
 

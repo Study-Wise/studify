@@ -77,7 +77,7 @@
         background-color: var(--card-bg);
         color: var(--card-text);
         border-radius: $border-radius-medium;
-        font-size: $font-size-extra-small;
+        font-size: $font-size-1x-small;
         white-space: nowrap;
         opacity: 0;
         pointer-events: none;
@@ -100,14 +100,14 @@
     }
 
     .material-symbols-outlined {
-        font-size: $font-size-extra-large;
+        font-size: $font-size-1x-large;
         aspect-ratio: 1;
         transition: scale $transition-slower $ease-spring;
     }
 
     @media (width <= $breakpoint-medium) {
         padding: $spacing-small $spacing-small;
-        font-size: $font-size-extra-small;
+        font-size: $font-size-1x-small;
 
         .material-symbols-outlined {
             font-size: $font-size-large;
