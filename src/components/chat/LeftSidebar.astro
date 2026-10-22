@@ -210,9 +210,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
 
             // Unsaved thread: only update the label; the first message saves the visibility
             if (!currentThreadId || currentThreadId === 'new') {
-                if (shareStatusText) {
-                    shareStatusText.textContent = isPublic ? 'Public' : 'Private';
-                }
+                if (shareStatusText) shareStatusText.textContent = isPublic ? 'Public' : 'Private';
 
                 const shareDescription = document.querySelector('.share-description');
                 if (shareDescription) {
@@ -237,9 +235,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                 const data = await response.json();
 
                 if (data.status === 'success') {
-                    if (shareStatusText) {
-                        shareStatusText.textContent = isPublic ? 'Public' : 'Private';
-                    }
+                    if (shareStatusText) shareStatusText.textContent = isPublic ? 'Public' : 'Private';
 
                     const shareDescription = document.querySelector('.share-description');
                     if (shareDescription) {
@@ -256,9 +252,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                             : 'Thread is now private. Only you can view it.'
                     );
                 }
-                else {
-                    throw new Error(data.error || 'Failed to update sharing settings');
-                }
+                else throw new Error(data.error || 'Failed to update sharing settings');
             } catch (error) {
                 console.error('Error toggling public status:', error);
                 window.showError?.(
@@ -319,9 +313,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                     window.showSuccessAfterNavigation?.('Chat deleted');
                     window.location.href = newChatUrl;
                 }
-                else {
-                    throw new Error(data.error || 'Failed to delete chat');
-                }
+                else throw new Error(data.error || 'Failed to delete chat');
             } catch (error) {
                 console.error('Error deleting chat:', error);
                 window.showError?.(
@@ -371,9 +363,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                     const newUrl = `/${category}/${mode}/chat/${data.id}`;
                     window.history.replaceState({}, '', newUrl);
                 }
-                else {
-                    throw new Error(data.error || 'Failed to create thread');
-                }
+                else throw new Error(data.error || 'Failed to create thread');
             } catch (error) {
                 console.error('Error creating thread:', error);
                 window.showError?.(
@@ -464,9 +454,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                             throw new Error(`Server error (${chunkRes.status}): ${chunkText.substring(0, 200)}`, { cause: error });
                         }
 
-                        if (chunkData.status !== 'success') {
-                            throw new Error(chunkData.error || 'Chunk upload failed');
-                        }
+                        if (chunkData.status !== 'success') throw new Error(chunkData.error || 'Chunk upload failed');
                     }
 
                     window.showInfo?.(`Processing ${file.name}...`);
@@ -486,20 +474,14 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
 
                 if (data.status === 'success') {
                     const emptyMessage = fileList.querySelector('.empty-message');
-                    if (emptyMessage) {
-                        emptyMessage.remove();
-                    }
+                    if (emptyMessage) emptyMessage.remove();
 
                     const fileItem = createFileElement(data.file);
                     fileList.appendChild(fileItem);
 
-                    if (remainingCount === 0) {
-                        window.showSuccess?.(`${file.name} uploaded successfully`);
-                    }
+                    if (remainingCount === 0) window.showSuccess?.(`${file.name} uploaded successfully`);
                 }
-                else {
-                    throw new Error(data.error || 'Upload failed');
-                }
+                else throw new Error(data.error || 'Upload failed');
             } catch (error) {
                 console.error('File upload error:', error);
                 window.showError?.(
@@ -521,14 +503,10 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
             if (!files || files.length === 0) return;
             if (!email) return;
 
-            for (let i = 0; i < files.length; i++) {
-                uploadQueue.push(files[i]);
-            }
+            for (let i = 0; i < files.length; i++) uploadQueue.push(files[i]);
 
             const totalFiles = uploadQueue.length;
-            if (totalFiles > 1) {
-                window.showInfo?.(`Queued ${totalFiles} files for upload...`);
-            }
+            if (totalFiles > 1) window.showInfo?.(`Queued ${totalFiles} files for upload...`);
 
             processUploadQueue();
         });
@@ -579,9 +557,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
 
                 window.showSuccess?.('File deleted');
             }
-            else {
-                throw new Error(data.error || 'Deletion failed');
-            }
+            else throw new Error(data.error || 'Deletion failed');
         } catch (error) {
             console.error('File deletion error:', error);
             window.showError?.(
@@ -598,21 +574,11 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
         fileItem.setAttribute('data-file-key', file.key);
 
         let iconName = 'insert_drive_file';
-        if (file.type.startsWith('image/')) {
-            iconName = 'image';
-        }
-        else if (file.type === 'application/pdf') {
-            iconName = 'picture_as_pdf';
-        }
-        else if (file.type.includes('spreadsheet') || file.type.includes('excel')) {
-            iconName = 'table_chart';
-        }
-        else if (file.type.includes('presentation') || file.type.includes('powerpoint')) {
-            iconName = 'slideshow';
-        }
-        else if (file.type.includes('word')) {
-            iconName = 'description';
-        }
+        if (file.type.startsWith('image/')) iconName = 'image';
+        else if (file.type === 'application/pdf') iconName = 'picture_as_pdf';
+        else if (file.type.includes('spreadsheet') || file.type.includes('excel')) iconName = 'table_chart';
+        else if (file.type.includes('presentation') || file.type.includes('powerpoint')) iconName = 'slideshow';
+        else if (file.type.includes('word')) iconName = 'description';
 
         fileItem.innerHTML = `
             <div class="file-icon">

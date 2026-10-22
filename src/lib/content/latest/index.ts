@@ -104,13 +104,9 @@ export async function getThreadContentStatus(
                             else if (type === 'slideshow') {
                                 status[statusKey] = 'content' in contentValue && typeof contentValue.content === 'string' && !!contentValue.content;
                             }
-                            else {
-                                status[statusKey] = Object.keys(contentValue).length > 0;
-                            }
+                            else status[statusKey] = Object.keys(contentValue).length > 0;
                         }
-                        else {
-                            status[statusKey] = !!contentValue;
-                        }
+                        else status[statusKey] = !!contentValue;
                     }
                 });
             }

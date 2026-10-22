@@ -24,9 +24,9 @@ const user = Astro.locals.user;
 
 const { isAuthorized, isPublic, threadExists } = await checkThreadAccess(id || '', user, category, mode);
 
-if (!threadExists) { return new Response(null, { status: 404 }); }
+if (!threadExists) return new Response(null, { status: 404 });
 
-if (!user && !isPublic) { return Astro.redirect('/user/sign-in'); }
+if (!user && !isPublic) return Astro.redirect('/user/sign-in');
 
 const { content: latestResourcesJSON } = (isAuthorized || isPublic)
     ? await getLatestResources(id || '')

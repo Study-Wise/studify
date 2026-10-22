@@ -77,9 +77,7 @@ async function getMessages(id: string, isAuthorized?: boolean | null) {
             threadData = parseThreadData(cleanedJson);
             await db.update(threadsTable).set({ thread: threadData }).where(eq(threadsTable.id, id));
         }
-        else {
-            threadData = parseThreadData(rawThread);
-        }
+        else threadData = parseThreadData(rawThread);
         return threadData?.messages ?? [];
     } catch (error) {
         console.error(error);
@@ -104,9 +102,7 @@ async function getMessagesLength(id: string) {
             threadData = parseThreadData(cleanedJson);
             await db.update(threadsTable).set({ thread: threadData }).where(eq(threadsTable.id, id));
         }
-        else {
-            threadData = parseThreadData(rawThread);
-        }
+        else threadData = parseThreadData(rawThread);
         return threadData?.messages?.length ?? 0;
     } catch (error) {
         console.error(error);

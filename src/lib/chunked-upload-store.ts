@@ -17,10 +17,7 @@ export const chunkedUploads = new Map<string, ChunkedUpload>();
 const STALE_TIMEOUT = 10 * 60 * 1000;
 
 export function cleanupStaleUploads() {
-    const now = Date.now();
     for (const [id, upload] of chunkedUploads) {
-        if (now - upload.createdAt > STALE_TIMEOUT) {
-            chunkedUploads.delete(id);
-        }
+        if (Date.now() - upload.createdAt > STALE_TIMEOUT) chunkedUploads.delete(id);
     }
 }

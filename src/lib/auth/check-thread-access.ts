@@ -29,9 +29,7 @@ export async function checkThreadAccess(
     let threadExists = false;
 
     let effectiveUser = user;
-    if (!effectiveUser && isDev()) {
-        effectiveUser = await getDevUser();
-    }
+    if (!effectiveUser && isDev()) effectiveUser = await getDevUser();
     const userEmail = effectiveUser?.email || null;
 
     let isUserAdminFlag = false;

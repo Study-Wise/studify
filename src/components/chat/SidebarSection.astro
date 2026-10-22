@@ -107,9 +107,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
             newRegenerateBtn.addEventListener('click', async () => {
                 const confirmMessage = `Are you sure you want to ${regenerateVerb.toLowerCase()} the ${title.toLowerCase()}? This will replace the existing one.`;
                 const userPrompt = await window.showPrompt(confirmMessage, { title: `${regenerateVerb} ${title}?`, confirmLabel: regenerateVerb, icon: 'refresh', inputLabel: 'What should change? (optional)', placeholder: 'For example: make it shorter, or add more examples', maxLength: 500 });
-                if (userPrompt !== null) {
-                    generateContent(threadId, true, newRegenerateBtn, userPrompt);
-                }
+                if (userPrompt !== null) generateContent(threadId, true, newRegenerateBtn, userPrompt);
             });
 
             regenerateBtn = newRegenerateBtn;
@@ -159,9 +157,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
                     btn.innerHTML = '<span class="material-symbols-outlined" aria-hidden="true">refresh</span>';
                 }
             }
-            else {
-                throw new Error(data.error || `Failed to generate ${title.toLowerCase()}`);
-            }
+            else throw new Error(data.error || `Failed to generate ${title.toLowerCase()}`);
         } catch (error) {
             console.error(`Error generating ${title.toLowerCase()}:`, error);
             window.showError?.(error instanceof Error ? error.message : `Failed to generate ${title.toLowerCase()}. Please try again.`);
@@ -186,9 +182,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
             if (tid) {
                 const confirmMessage = `Are you sure you want to ${regenerateVerb.toLowerCase()} the ${title.toLowerCase()}? This will replace the existing one.`;
                 const userPrompt = await window.showPrompt(confirmMessage, { title: `${regenerateVerb} ${title}?`, confirmLabel: regenerateVerb, icon: 'refresh', inputLabel: 'What should change? (optional)', placeholder: 'For example: make it shorter, or add more examples', maxLength: 500 });
-                if (userPrompt !== null) {
-                    generateContent(tid, true, null, userPrompt);
-                }
+                if (userPrompt !== null) generateContent(tid, true, null, userPrompt);
             }
         });
     }

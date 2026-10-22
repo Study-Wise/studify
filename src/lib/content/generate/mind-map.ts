@@ -24,9 +24,7 @@ function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
 export async function generateMindMap(threadId: string, userPrompt?: string) {
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
-    if (threads.length === 0) {
-        throw new Error('Thread not found');
-    }
+    if (threads.length === 0) throw new Error('Thread not found');
 
     const thread = threads[0];
 
@@ -35,9 +33,7 @@ export async function generateMindMap(threadId: string, userPrompt?: string) {
 
     const uploadedFiles = thread.uploadedFiles ?? [];
 
-    if (messages.length === 0) {
-        throw new Error('No messages found in thread');
-    }
+    if (messages.length === 0) throw new Error('No messages found in thread');
 
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
@@ -128,9 +124,7 @@ You may remove or modify sections as you see fit based on relevance to the topic
         }
     });
 
-    if (!result.text || result.text.length === 0) {
-        throw new Error('Generated mind map is empty');
-    }
+    if (!result.text || result.text.length === 0) throw new Error('Generated mind map is empty');
 
     await saveContent(threadId, 'mind-map', result.text);
 

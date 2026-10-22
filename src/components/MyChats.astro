@@ -7,7 +7,7 @@ import '@/styles/components/my-chats.scss';
 
 const user = Astro.locals.user;
 
-if (!user) { return Astro.redirect('/user/sign-in?redirect=/user/my-chats'); }
+if (!user) return Astro.redirect('/user/sign-in?redirect=/user/my-chats');
 
 const userEmail = user.email;
 
@@ -163,9 +163,7 @@ const threadsByCategory = threads.reduce<Record<string, Record<string, typeof th
 
             const data = await response.json();
 
-            if (data.status !== 'success') {
-                throw new Error(data.error || 'Failed to delete chat');
-            }
+            if (data.status !== 'success') throw new Error(data.error || 'Failed to delete chat');
 
             const row = deleteButton.closest('.thread-row');
             const modeSection = row?.closest('.mode-section');
@@ -173,12 +171,8 @@ const threadsByCategory = threads.reduce<Record<string, Record<string, typeof th
             row?.remove();
 
             // Remove the mode and category sections if they have no chats left
-            if (modeSection && !modeSection.querySelector('.thread-row')) {
-                modeSection.remove();
-            }
-            if (section && !section.querySelector('.thread-row')) {
-                section.remove();
-            }
+            if (modeSection && !modeSection.querySelector('.thread-row')) modeSection.remove();
+            if (section && !section.querySelector('.thread-row')) section.remove();
 
             // Reload to show the empty state when no chats remain
             if (!document.querySelector('.my-chats-container .thread-row')) {

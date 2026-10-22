@@ -24,9 +24,7 @@ function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
 export async function generateStudyGuide(threadId: string, userPrompt?: string) {
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
-    if (threads.length === 0) {
-        throw new Error('Thread not found');
-    }
+    if (threads.length === 0) throw new Error('Thread not found');
 
     const thread = threads[0];
     const category = thread.category;
@@ -40,9 +38,7 @@ export async function generateStudyGuide(threadId: string, userPrompt?: string) 
 
     const uploadedFiles = thread.uploadedFiles ?? [];
 
-    if (messages.length === 0) {
-        throw new Error('No messages found in thread');
-    }
+    if (messages.length === 0) throw new Error('No messages found in thread');
 
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
@@ -106,9 +102,7 @@ REMEMBER: Output ONLY the Study Guide. No quizzes, no practice questions, no fla
         config.contentGenerationExcludeTools,
     );
 
-    if (!result.text || result.text.length === 0) {
-        throw new Error('Generated study guide is empty');
-    }
+    if (!result.text || result.text.length === 0) throw new Error('Generated study guide is empty');
 
     await saveContent(threadId, 'study-guide', result.text);
 

@@ -22,9 +22,7 @@ import '@/styles/accessibility/keyboard-navigation.scss';
         setupTabNavigation() {
             // Enhanced tab navigation for complex components
             document.addEventListener('keydown', e => {
-                if (e.key === 'Tab') {
-                    this.handleTabNavigation(e);
-                }
+                if (e.key === 'Tab') this.handleTabNavigation(e);
             });
 
             // Arrow key navigation for tab lists
@@ -105,9 +103,7 @@ import '@/styles/accessibility/keyboard-navigation.scss';
                 const label = document.querySelector(`label[for="${element.id}"]`);
                 if (label) {
                     element.setAttribute('aria-labelledby', label.id || `label-${element.id}`);
-                    if (!label.id) {
-                        label.id = `label-${element.id}`;
-                    }
+                    if (!label.id) label.id = `label-${element.id}`;
                 }
             }
 

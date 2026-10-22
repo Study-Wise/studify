@@ -20,9 +20,7 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
 <script is:inline define:vars={{ isProd }}>
     function updateOnlineStatus() {
         const indicator = document.getElementById('offline-indicator');
-        if (indicator) {
-            indicator.style.display = window.navigator.onLine ? 'none' : 'flex';
-        }
+        if (indicator) indicator.style.display = window.navigator.onLine ? 'none' : 'flex';
     }
 
     window.addEventListener('online', updateOnlineStatus);
@@ -56,9 +54,7 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
                         const updateIndicator = document.getElementById('update-available');
                         const updateButton = document.getElementById('update-button');
 
-                        if (updateIndicator) {
-                            updateIndicator.style.display = 'flex';
-                        }
+                        if (updateIndicator) updateIndicator.style.display = 'flex';
 
                         if (updateButton) {
                             updateButton.addEventListener('click', () => {
@@ -72,9 +68,7 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
         });
 
         window.navigator.serviceWorker.addEventListener('message', e => {
-            if (e.data && e.data.action === 'reload') {
-                window.location.reload();
-            }
+            if (e.data && e.data.action === 'reload') window.location.reload();
         });
     }
 

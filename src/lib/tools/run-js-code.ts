@@ -35,9 +35,7 @@ const runJSCodeTool = tool({
                 .filter((line: string | null) => line)
 
             const last = ranCode[ranCode.length - 1]
-            if (last && !last.includes('return')) {
-                ranCode[ranCode.length - 1] = 'return ' + last
-            }
+            if (last && !last.includes('return')) ranCode[ranCode.length - 1] = 'return ' + last
             const joinedCode = ranCode.join(';') || ''
 
             const codeResult = await Function(joinedCode)();

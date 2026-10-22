@@ -32,9 +32,7 @@ export async function generateInfographic(
 
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
-    if (threads.length === 0) {
-        throw new Error('Thread not found');
-    }
+    if (threads.length === 0) throw new Error('Thread not found');
 
     const thread = threads[0];
 
@@ -43,9 +41,7 @@ export async function generateInfographic(
 
     const uploadedFiles = thread.uploadedFiles ?? [];
 
-    if (messages.length === 0) {
-        throw new Error('No messages found in thread');
-    }
+    if (messages.length === 0) throw new Error('No messages found in thread');
 
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 

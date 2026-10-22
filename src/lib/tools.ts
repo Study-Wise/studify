@@ -35,8 +35,6 @@ for (const [path, module] of Object.entries(toolModules)) {
     if (module.default.ready) {
         const toolName = path.replace('./tools/', '').replace('.ts', '');
         modules[toolName] = module.default;
-        if (module.default.label) {
-            labels[toolName] = module.default.label;
-        }
+        if (module.default.label) labels[toolName] = module.default.label;
     }
 }

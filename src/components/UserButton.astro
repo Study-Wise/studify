@@ -35,9 +35,7 @@ const user = Astro.locals.user;
 
     // Close menu when clicking outside
     document.addEventListener('click', () => {
-        if (menu && !menu.hasAttribute('hidden')) {
-            menu.setAttribute('hidden', '');
-        }
+        if (menu && !menu.hasAttribute('hidden')) menu.setAttribute('hidden', '');
     });
 
     // Prevent menu from closing when clicking inside it

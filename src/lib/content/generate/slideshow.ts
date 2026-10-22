@@ -48,9 +48,7 @@ function markdownToSlideshowHTML(markdown: string): string {
     const pages: { tokens?: MarkedToken[]; html?: string }[] = [];
 
     tokens.forEach((token: MarkedToken) => {
-        if (token.type === 'heading' || pages.length === 0) {
-            pages.push({ tokens: [] });
-        }
+        if (token.type === 'heading' || pages.length === 0) pages.push({ tokens: [] });
         if (!title) {
             const t: MarkedToken[] & { links: Record<string, JSONValue> } = Object.assign([token], { links: {} });
             const h = marked.parser(t);
@@ -85,9 +83,7 @@ function markdownToSlideshowHTML(markdown: string): string {
 export async function generateSlideshow(threadId: string, userPrompt?: string) {
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
-    if (threads.length === 0) {
-        throw new Error('Thread not found');
-    }
+    if (threads.length === 0) throw new Error('Thread not found');
 
     const thread = threads[0];
     // Always use default model for content generation (more reliable)
@@ -99,9 +95,7 @@ export async function generateSlideshow(threadId: string, userPrompt?: string) {
 
     const uploadedFiles = thread.uploadedFiles ?? [];
 
-    if (messages.length === 0) {
-        throw new Error('No messages found in thread');
-    }
+    if (messages.length === 0) throw new Error('No messages found in thread');
 
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
@@ -145,9 +139,7 @@ REMEMBER: Output ONLY the markdown content. No quizzes, no practice questions, n
         config.contentGenerationExcludeTools,
     );
 
-    if (!result.text || result.text.length === 0) {
-        throw new Error('Generated slideshow is empty');
-    }
+    if (!result.text || result.text.length === 0) throw new Error('Generated slideshow is empty');
 
     const html = markdownToSlideshowHTML(result.text);
 

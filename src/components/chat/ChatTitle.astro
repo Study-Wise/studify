@@ -68,9 +68,7 @@ const { title, threadId, canRename } = Astro.props;
                         titleButton.setAttribute('aria-label', `Rename chat: ${data.title}`);
                         window.showSuccess?.('Chat renamed');
                     }
-                    else {
-                        throw new Error(data.error || 'Failed to rename chat');
-                    }
+                    else throw new Error(data.error || 'Failed to rename chat');
                 } catch (error) {
                     console.error('Error renaming chat:', error);
                     window.showError?.(

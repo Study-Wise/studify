@@ -32,9 +32,7 @@ function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
 export async function generateFlashcards(threadId: string, userPrompt?: string): Promise<FlashcardData> {
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
-    if (threads.length === 0) {
-        throw new Error('Thread not found');
-    }
+    if (threads.length === 0) throw new Error('Thread not found');
 
     const thread = threads[0];
     // Always use default model for content generation (more reliable)
@@ -46,9 +44,7 @@ export async function generateFlashcards(threadId: string, userPrompt?: string):
 
     const uploadedFiles = thread.uploadedFiles ?? [];
 
-    if (messages.length === 0) {
-        throw new Error('No messages found in thread');
-    }
+    if (messages.length === 0) throw new Error('No messages found in thread');
 
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 

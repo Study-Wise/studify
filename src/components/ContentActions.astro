@@ -187,17 +187,13 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, c => c.t
 
                 if (data.status === 'success') {
                     const content = data.content || data.infographic;
-                    if (content) {
-                        await updatePageContent(content);
-                    }
+                    if (content) await updatePageContent(content);
 
                     actionBtn.setAttribute('data-has-content', 'true');
                     actionBtn.innerHTML = `<span class="material-symbols-outlined" aria-hidden="true">refresh</span><span>${regenerateVerb} ${contentTypeName}</span>`;
                     actionBtn.removeAttribute('disabled');
                 }
-                else {
-                    throw new Error(data.error || `Failed to generate ${contentTypeName.toLowerCase()}`);
-                }
+                else throw new Error(data.error || `Failed to generate ${contentTypeName.toLowerCase()}`);
             } catch (error) {
                 console.error(`Error generating ${contentTypeName.toLowerCase()}:`, error);
                 window.showError?.(error instanceof Error ? error.message : `Failed to generate ${contentTypeName.toLowerCase()}. Please try again.`);

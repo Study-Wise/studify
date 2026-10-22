@@ -39,13 +39,9 @@ export async function extractTextFromFile(file: File): Promise<string | null> {
         return await extractTextFromPlainText(file);
     }
 
-    if (fileType === 'application/pdf') {
-        return await extractTextFromPDF(file);
-    }
+    if (fileType === 'application/pdf') return await extractTextFromPDF(file);
 
-    if (fileType.startsWith('image/')) {
-        return await extractTextFromImage(file);
-    }
+    if (fileType.startsWith('image/')) return await extractTextFromImage(file);
 
     // For other file types, return metadata only
     return `[File: ${file.name}, Type: ${fileType}, Size: ${(file.size / 1024).toFixed(1)} KB]`;

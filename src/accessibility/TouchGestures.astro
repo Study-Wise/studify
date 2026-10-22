@@ -85,9 +85,7 @@ import '@/styles/accessibility/touch-gestures.scss';
 
             const deltaY = this.endY - this.startY;
 
-            if (deltaY >= this.pullThreshold) {
-                this.triggerRefresh();
-            }
+            if (deltaY >= this.pullThreshold) this.triggerRefresh();
             else this.hideRefreshIndicator();
 
             this.isPulling = false;

@@ -24,9 +24,7 @@ function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
 export async function generateWebpage(threadId: string, userPrompt?: string) {
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 
-    if (threads.length === 0) {
-        throw new Error('Thread not found');
-    }
+    if (threads.length === 0) throw new Error('Thread not found');
 
     const thread = threads[0];
 
@@ -35,9 +33,7 @@ export async function generateWebpage(threadId: string, userPrompt?: string) {
 
     const uploadedFiles = thread.uploadedFiles ?? [];
 
-    if (messages.length === 0) {
-        throw new Error('No messages found in thread');
-    }
+    if (messages.length === 0) throw new Error('No messages found in thread');
 
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
@@ -104,9 +100,7 @@ ONLY INCLUDE THE HTML CONTENT IN YOUR RESPONSE. DO NOT RESPOND WITH ANYTHING ELS
         }
     });
 
-    if (!result.text || result.text.length === 0) {
-        throw new Error('Generated webpage is empty');
-    }
+    if (!result.text || result.text.length === 0) throw new Error('Generated webpage is empty');
 
     // Strip away any text before and after the HTML
     const text = result.text;
