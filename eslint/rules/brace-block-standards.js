@@ -12,23 +12,18 @@ function checkSingleDeclarationBlock(node, blockNode, context) {
     const condensedLine = `${node === blockNode ? 'else' : context.sourceCode.text.slice(node.range[0], blockNode.range[0]).trim()} ${context.sourceCode.getText(blockNode.body[0]).trim()}`;
     if (condensedLine.length >= 100) return;
 
-    const reportObj = {
+    context.report({
         node,
-        message: 'Single statement in block should be on the same line as its condition with no curly braces (e.g. "if (x) return y;")'
-    };
-
-    if (!context.filename.endsWith('.astro')) {
-        reportObj.fix = function(fixer) {
+        message: 'Single statement in block should be on the same line as its condition with no curly braces (e.g. "if (x) return y;',
+        fix(fixer) {
             const beforeBrace = context.sourceCode.text[context.sourceCode.getFirstToken(blockNode).range[0] - 1];
             const needsSpace = beforeBrace !== ' ' && beforeBrace !== '\t' && beforeBrace !== '\n';
             return fixer.replaceTextRange(
                 [context.sourceCode.getFirstToken(blockNode).range[0], context.sourceCode.getLastToken(blockNode).range[1]],
                 `${needsSpace ? ' ' : ''}${context.sourceCode.getText(blockNode.body[0]).trim()}`
             );
-        };
-    }
-
-    context.report(reportObj);
+        }
+    });
 }
 
 export default {
