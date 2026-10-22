@@ -20,6 +20,7 @@
         "test:nopause:firefox:headed": "npx playwright test tests/browser.test.nopause.ts --headed --browser=firefox",
         "test:nopause:safari:headed": "npx playwright test tests/browser.test.nopause.ts --headed --browser=webkit",
         "check": "eslint . --max-warnings 0 && stylelint \"./**/*.scss\" && astro check && astro build",
+        "eslint:fix": "eslint --fix",
         "stylelint:fix": "stylelint \"./**/*.scss\" --fix"
     },
     "devDependencies": {
