@@ -405,7 +405,6 @@ for (const topicKey of Object.keys(categories)) {
     categories[topicKeyTyped] = topic;
 }
 
-// Export auto-generated types based on the categories object
 export type CategoryName = keyof typeof categories;
 
 export type ModeName = {

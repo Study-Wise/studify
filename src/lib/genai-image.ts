@@ -44,7 +44,6 @@ async function generateImageBuffer(prompt: string) {
     }
 }
 
-// Generate image and upload to UploadThing
 async function generateImage(prompt: string, filename: string = 'infographic.png') {
     const buffer = await generateImageBuffer(prompt);
 
