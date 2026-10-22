@@ -32,8 +32,7 @@ const getContentTool = tool({
     execute: async ({ type, regenerate = false, userPrompt }, options) => {
         let stage = 'initializing';
 
-        // Always use the server-verified thread, never a model-supplied ID, so content
-        // (including uploaded files) from other users' threads can never be read
+        // Always use the server-verified thread, never a model-supplied ID, so content (including uploaded files) from other users' threads can never be read
         const toolContext = getToolContext(options);
         if (!toolContext) {
             return {
