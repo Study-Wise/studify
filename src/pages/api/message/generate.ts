@@ -36,12 +36,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
         const { text: userPrompt, id: thread_id, provider, tier, isPublic = false, category, mode } = await request.json();
 
         let modeObj: Mode = {name: '', description: ''};
-        if (category && mode) {
-            modeObj = categories[category]?.modes?.[mode];
-        }
-        else {
-            console.warn(`⚠️ [${requestId}] No category/mode specified, using default mode`);
-        }
+        if (category && mode) modeObj = categories[category]?.modes?.[mode];
+        else console.warn(`⚠️ [${requestId}] No category/mode specified, using default mode`);
 
         let current_thread_id: string | undefined = thread_id;
 
