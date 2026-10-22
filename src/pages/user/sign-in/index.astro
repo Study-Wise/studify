@@ -77,7 +77,7 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
 </Layout>
 
 <script>
-    import { signIn } from '@/lib/auth/client';
+    import { authClient } from '@/lib/auth/client';
     import { getSafeReturnBackUrl as getClientSafeReturnBackUrl } from '@/lib/auth/return-url';
 
     const form = document.querySelector('#signin-form');
@@ -94,7 +94,7 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
         if (typeof email !== 'string' || typeof password !== 'string') return;
 
         try {
-            const { error } = await signIn.email({
+            const { error } = await authClient.signIn.email({
                 email,
                 password,
             });

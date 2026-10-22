@@ -107,7 +107,7 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
         if (typeof email !== 'string' || typeof password !== 'string') return;
 
         try {
-            const { error } = await signUp.email({
+            const { error } = await authClient.signUp.email({
                 email,
                 password,
                 name,
