@@ -17,10 +17,9 @@ export function getSafeReturnBackUrl(returnBackUrl: string | null | undefined): 
         if (url.origin !== SAME_SITE_ORIGIN) return '/';
 
         // Check what we actually return too: dot segments can normalize to a protocol-relative path (/.//evil.com → //evil.com) that would leave the site.
-        const normalized = `${url.pathname}${url.search}${url.hash}`;
-        if (new URL(normalized, SAME_SITE_ORIGIN).origin !== SAME_SITE_ORIGIN) return '/';
+        if (new URL(`${url.pathname}${url.search}${url.hash}`, SAME_SITE_ORIGIN).origin !== SAME_SITE_ORIGIN) return '/';
 
-        return normalized;
+        return `${url.pathname}${url.search}${url.hash}`;
     } catch {
         return '/';
     }

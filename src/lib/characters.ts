@@ -1,7 +1,7 @@
 import type { Mode } from '@/lib/modes';
 
 // One tutor character per mode, grouped by category
-const characters: Record<string, Record<string, Pick<Mode, 'character' | 'personality' | 'interests'>>> = {
+export default {
     science: {
         physics: {
             character: 'Newt',
@@ -262,6 +262,4 @@ const characters: Record<string, Record<string, Pick<Mode, 'character' | 'person
             interests: 'planners, highlighters, and good playlists',
         },
     },
-};
-
-export default characters;
+} satisfies Record<string, Record<string, Pick<Mode, 'character' | 'personality' | 'interests'>>>;

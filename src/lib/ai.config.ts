@@ -15,9 +15,6 @@ export interface Config {
     contentGenerationExcludeTools: string[];
 }
 
-const defaultCategory = 'general';
-const defaultMode = 'general';
-
 const config: Config = {
     provider: 'google',
     tier: 'default',
@@ -25,10 +22,10 @@ const config: Config = {
     imageModel: 'gpt-image-1.5',
     imageSize: '1024x1536', // portrait
     welcomeMessagePrompt: 'Based on the user\'s question or homework, ask them what specifically they want to study. Be friendly and encouraging.',
-    maxThreadsPerUser: 5, // Maximum number of threads a user can create
-    maxMessagesPerThread: 10, // Maximum number of messages per thread
-    defaultCategory: defaultCategory,
-    defaultMode: defaultMode,
+    maxThreadsPerUser: 5,
+    maxMessagesPerThread: 10,
+    defaultCategory: 'general',
+    defaultMode: 'general',
     contentGenerationExcludeTools: ['generate-content', 'get-content-types', 'open-content', 'step-checker', 'hint-ladder', 'grade-explanation'],
 };
 

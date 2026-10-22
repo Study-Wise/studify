@@ -11,9 +11,8 @@ export async function extractTextFromPDF(file: File): Promise<string | null> {
 
 export async function extractTextFromPlainText(file: File): Promise<string | null> {
     try {
-        const text = await file.text();
         // Limit to 10,000 characters to avoid token limits
-        return text.substring(0, 10000);
+        return (await file.text()).substring(0, 10000);
     } catch (error) {
         console.error('Text extraction error:', error);
         return null;

@@ -72,7 +72,6 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
         });
     }
 
-    // Cache management for offline support
     class OfflineCache {
         constructor() {
             this.cacheName = 'studywise-offline-v1';
@@ -108,17 +107,14 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
 
     window.offlineCache = new OfflineCache();
 
-    // Enhanced error handling for offline scenarios
     const originalFetch = window.fetch;
     window.fetch = async function(...args) {
         try {
             return await originalFetch.apply(this, args);
         } catch (error) {
             if (!window.navigator.onLine) {
-                // Handle offline scenarios
                 console.warn('Network request failed - offline mode');
 
-                // Try to return cached data if available
                 if (args[0] && String(args[0]).includes('/api/message/generate')) {
                     const cachedData = await window.offlineCache?.getCachedStudyMaterials();
                     if (cachedData) {

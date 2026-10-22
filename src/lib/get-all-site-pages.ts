@@ -8,12 +8,10 @@ export default function getAllSitePages() {
 
             const name = fileName.replace('.astro', '');
 
-            // Skip pages that start with underscore
             if (name.startsWith('_')) return null;
 
             const route = `/${name === 'index' ? '' : name}`;
 
-            // Astro module type checking
             const hiddenFromNav = mod?.inNav === 'hide';
             const isHidden = pagesToHide.includes(name);
 

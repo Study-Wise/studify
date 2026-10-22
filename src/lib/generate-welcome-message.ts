@@ -1,5 +1,3 @@
-// This module handles generating the welcome message for the first message in a conversation.
-
 import { generateText } from '@/lib/ai-service';
 import config from '@/lib/ai.config';
 import type { Message } from '@/lib/threads';

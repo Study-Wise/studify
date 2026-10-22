@@ -14,10 +14,8 @@ interface ChunkedUpload {
 export const chunkedUploads = new Map<string, ChunkedUpload>();
 
 // Clean up stale uploads older than 10 minutes
-const STALE_TIMEOUT = 10 * 60 * 1000;
-
 export function cleanupStaleUploads() {
     for (const [id, upload] of chunkedUploads) {
-        if (Date.now() - upload.createdAt > STALE_TIMEOUT) chunkedUploads.delete(id);
+        if (Date.now() - upload.createdAt > 10 * 60 * 1000) chunkedUploads.delete(id);
     }
 }

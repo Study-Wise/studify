@@ -40,7 +40,6 @@ export const onRequest: MiddlewareHandler = async function onRequest(context, ne
     const pathname = new URL(request.url).pathname;
 
     // Handle HEAD requests early to avoid rendering issues
-    // HEAD requests should return 200 OK without body
     if (request.method === 'HEAD') {
         return new Response(null, {
             status: 200,
@@ -57,7 +56,6 @@ export const onRequest: MiddlewareHandler = async function onRequest(context, ne
         return next();
     }
 
-    // Get session using Better Auth
     const session = await auth.api.getSession({ headers: request.headers });
 
     if (session) {
@@ -70,7 +68,6 @@ export const onRequest: MiddlewareHandler = async function onRequest(context, ne
             user.role = role;
         }
 
-        // Check if user is banned
         if (user.role === 'banned') {
             return new Response(`Access Denied: Your account has been ${user.role}.`, { status: 403 });
         }
