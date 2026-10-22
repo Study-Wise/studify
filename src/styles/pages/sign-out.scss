@@ -59,7 +59,7 @@ p {
     font-family: inherit;
 }
 
-.btn-primary {
+.btn.primary {
     background-color: #ef4444;
     color: white;
 
@@ -74,7 +74,7 @@ p {
     }
 }
 
-.btn-secondary {
+.btn.secondary {
     background-color: var(--card-bg);
     color: var(--card-text);
     border: 1px solid var(--card-border);
