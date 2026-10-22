@@ -243,10 +243,9 @@ footer, .chat-toolbar {
 
         a {
             color: inherit;
-            text-decoration: none;
 
-            &:hover {
-                text-decoration: underline;
+            &:not(:hover, :focus-visible) {
+                text-decoration: none;
             }
         }
 

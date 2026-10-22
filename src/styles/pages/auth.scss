@@ -253,13 +253,15 @@
 
 .footer-link {
     color: list.nth(map.get(colors.$accent-colors, 'primary'), 1);
-    text-decoration: none;
     font-weight: $font-weight-medium;
     transition: $transition-colors;
 
-    &:hover {
+    &:not(:hover, :focus-visible) {
+        text-decoration: none;
+    }
+
+    &:hover, &:focus-visible {
         color: list.nth(map.get(colors.$accent-colors, 'primary'), 2);
-        text-decoration: underline;
     }
 
     &:focus-visible {

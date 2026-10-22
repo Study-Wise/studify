@@ -97,11 +97,11 @@
             color: $color-link;
             transition: opacity 0.2s $ease;
 
-            &:not(:hover) {
+            &:not(:hover, :focus-visible) {
                 text-decoration: none;
             }
 
-            &:hover {
+            &:hover, &:focus-visible {
                 opacity: 0.8;
             }
         }

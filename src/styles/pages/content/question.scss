@@ -67,11 +67,11 @@
             color: $color-link;
             transition: color 0.2s;
 
-            &:not(:hover) {
+            &:not(:hover, :focus-visible) {
                 text-decoration: none;
             }
 
-            &:hover {
+            &:hover, &:focus-visible {
                 color: color.adjust($color-link, $lightness: -10%);
             }
         }
@@ -281,8 +281,8 @@
     @include empty-state;
 }
 
-.btn-primary,
-.btn-secondary {
+.btn.primary,
+.btn.secondary {
     display: inline-block;
     padding: 0.75rem 1.5rem;
     border-radius: 8px;
