@@ -95,7 +95,7 @@
         scale: 1;
     }
 
-    &[aria-expanded='true']::before {
+    &[aria-expanded="true"]::before {
         opacity: 0;
     }
 
@@ -168,7 +168,7 @@
         visibility: hidden;
     }
 
-    &[aria-checked='true'] {
+    &[aria-checked="true"] {
         font-weight: 600;
 
         .theme-menu-check {
