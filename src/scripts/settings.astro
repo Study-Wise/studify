@@ -11,15 +11,11 @@ const { providers, defaultProvider, defaultTier } = Astro.props;
     }
 
     function setSetting(key, value) {
-        const userSettings = getSettings();
-        userSettings[key] = value;
-        localStorage.setItem('settings', JSON.stringify(userSettings));
+        localStorage.setItem('settings', JSON.stringify(Object.assign(getSettings(), { [key]: value })));
     }
 
     function initializeUI() {
         const userSettings = getSettings();
-        const currentProvider = userSettings['provider'] || defaultProvider;
-        const currentTier = userSettings['tier'] || defaultTier;
 
         document.querySelectorAll('.provider-button').forEach(btn => {
             const providerKey = btn.dataset.provider;
@@ -43,8 +39,7 @@ const { providers, defaultProvider, defaultTier } = Astro.props;
     document.querySelectorAll('.provider-button').forEach(btn => {
         btn.addEventListener('click', e => {
             e.preventDefault();
-            const providerKey = btn.dataset.provider;
-            setSetting('provider', providerKey);
+            setSetting('provider', btn.dataset.provider);
 
             document.querySelectorAll('.provider-button').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
@@ -52,32 +47,23 @@ const { providers, defaultProvider, defaultTier } = Astro.props;
             document.querySelectorAll('.tier-group').forEach(group => {
                 group.style.display = 'none';
             });
-            const tierGroup = document.getElementById(`tiers-${providerKey}`);
-            if (tierGroup) {
-                tierGroup.style.display = 'flex';
-                const firstTierBtn = tierGroup.querySelector('.tier-button');
-                if (firstTierBtn) firstTierBtn.click();
-            }
+            document.getElementById(`tiers-${btn.dataset.provider}`)?.querySelector('.tier-button')?.click();
         });
     });
 
     document.querySelectorAll('.tier-button').forEach(btn => {
         btn.addEventListener('click', e => {
             e.preventDefault();
-            const tierKey = btn.dataset.tier;
-            setSetting('tier', tierKey);
+            setSetting('tier', btn.dataset.tier);
 
             document.querySelectorAll('.tier-button').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
         });
     });
 
-    const settingsForm = document.getElementById('settings-form');
-    if (settingsForm) {
-        settingsForm.addEventListener('submit', e => {
-            e.preventDefault();
-        });
-    }
+    document.getElementById('settings-form')?.addEventListener('submit', e => {
+        e.preventDefault();
+    });
 
     window.addEventListener('DOMContentLoaded', initializeUI);
     if (document.readyState === 'complete' || document.readyState === 'interactive') initializeUI();
