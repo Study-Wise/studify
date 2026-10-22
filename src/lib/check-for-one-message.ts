@@ -1,5 +1,3 @@
-// This module checks if a thread has only one message and generates a welcome message if needed.
-
 import { nanoid } from 'nanoid';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
