@@ -1,4 +1,5 @@
 import characters from '@/lib/characters';
+import margoPagePrompt from '@/lib/margo-page-prompt';
 import generateModePrompt from '@/lib/prompt-generator';
 import { modules } from '@/lib/tools';
 import type { ToolRecord } from '@/lib/tools';
@@ -381,6 +382,19 @@ const categories: Record<string, Category> = {
             },
         },
     },
+    support: {
+        name: 'Support',
+        description: 'Get help with Studify itself: how the app works, issues, and feedback',
+        modes: {
+            margo: {
+                show: false,
+                name: 'Margo Page',
+                description: 'Chat with Margo Page from the Studify support team about the app, issues, and feedback',
+                icon: '🎧',
+                prompt: Promise.resolve(margoPagePrompt),
+            },
+        },
+    },
 }
 
 // Generate prompts programmatically for each mode
@@ -394,8 +408,7 @@ for (const topicKey of Object.keys(categories)) {
 
         Object.assign(mode, characters[topicKey]?.[modeKey]);
 
-        const prompt = generateModePrompt(mode, topicKey);
-        mode.prompt = Promise.resolve(prompt);
+        if (!mode.prompt) mode.prompt = Promise.resolve(generateModePrompt(mode, topicKey));
 
         if (!mode.tools) mode.tools = modules;
 
