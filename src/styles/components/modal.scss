@@ -27,7 +27,6 @@
         animation: --modal-fade-in $transition-fast $ease-out;
     }
 
-    // Non-blocking toasts stack inside .toast-region instead of being centered
     &.modal-toast {
         position: static;
         inset: auto;
@@ -94,8 +93,6 @@
     flex-direction: column-reverse;
     gap: $spacing-small;
     width: min(380px, calc(100% - #{$spacing-medium * 2}));
-
-    // Clicks between toasts reach the page underneath
     pointer-events: none;
 }
 

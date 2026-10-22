@@ -326,7 +326,6 @@ footer, .chat-toolbar {
         }
     }
 
-    // The sidebars are drawers at this width (see components/chat/sidebar.scss)
     @media (width <= 1024px) {
         grid-template-columns: 1fr;
 
