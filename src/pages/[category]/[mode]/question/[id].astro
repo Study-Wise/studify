@@ -44,11 +44,9 @@ try {
     console.error('Error fetching question:', error);
 }
 
-// Fallback question from ID if not found in database
 const displayQuestion = questionData?.question || idToQuestion(id || '');
 const displayAnswer = parsedAnswer;
 
-// Generate structured data for SEO (Question Schema)
 const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'QAPage',
@@ -62,7 +60,6 @@ const structuredData = {
     }
 };
 
-// SEO metadata
 const pageTitle = `${displayQuestion} | ${modeName} Questions | ${appConfig.name}`;
 const pageDescription = questionData?.answer
     ? questionData.answer.substring(0, 155) + '...'
@@ -71,30 +68,24 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <Layout title={pageTitle} mathjax={true}>
-    {/* SEO Meta Tags */}
     <Fragment slot="head">
         <meta name="description" content={pageDescription} />
         <meta name="keywords" content={`${modeName}, ${categoryName}, questions, ${displayQuestion}, education, learning, study help`} />
 
-        {/* Open Graph / Facebook */}
         <meta property="og:type" content="article" />
         <meta property="og:url" content={canonicalURL} />
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDescription} />
 
-        {/* Twitter */}
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content={canonicalURL} />
         <meta property="twitter:title" content={pageTitle} />
         <meta property="twitter:description" content={pageDescription} />
 
-        {/* Canonical URL */}
         <link rel="canonical" href={canonicalURL} />
 
-        {/* Structured Data (JSON-LD) */}
         <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 
-        {/* Additional SEO hints */}
         <meta name="robots" content="index, follow" />
         <meta name="author" content={appConfig.name} />
         <meta name="category" content={categoryName} />

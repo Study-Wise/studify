@@ -38,26 +38,22 @@ const user = Astro.locals.user;
 
 const { isAuthorized, isPublic, threadExists } = await checkThreadAccess(id || '', user, category, mode);
 
-if (!threadExists) { return new Response(null, { status: 404 }); }
+if (!threadExists) return new Response(null, { status: 404 });
 
-if (!user && !isPublic) { return Astro.redirect('/user/sign-in'); }
+if (!user && !isPublic) return Astro.redirect('/user/sign-in');
 
 const { content: latestFlashcards } = (isAuthorized || isPublic)
     ? await getLatestFlashcards(id || '')
     : { content: null };
 
 // Determine if content is structured (object with text/questions) or legacy (string)
-const flashcardData: FlashcardData | null = latestFlashcards && typeof latestFlashcards === 'object'
-    ? latestFlashcards
-    : null;
-const isStructured = flashcardData !== null;
+const flashcardData: FlashcardData | string | null = latestFlashcards ?? null;
 
-// Parse markdown to HTML for legacy string format
-const parsedContent = (!isStructured && typeof latestFlashcards === 'string')
-    ? await marked.parse(latestFlashcards)
+const parsedContent = (typeof flashcardData === 'string')
+    ? await marked.parse(flashcardData)
     : null;
 
-const hasContent = !!(isStructured ? (flashcardData && flashcardData.questions.length > 0) : parsedContent);
+const hasContent = !!(flashcardData !== null ? (typeof flashcardData !== 'string' && flashcardData.questions.length > 0) : parsedContent);
 ---
 
 <Layout title={`Flashcards | ${modeName} | ${categoryName}`} className="flashcard-page content-page" mathjax={true}>
@@ -77,7 +73,7 @@ const hasContent = !!(isStructured ? (flashcardData && flashcardData.questions.l
                 isAuthorized={isAuthorized}
                 chatUrl={chatUrl}
             />
-            {isStructured && flashcardData && flashcardData.questions.length > 0 ? (
+            {typeof flashcardData !== 'string' && flashcardData && flashcardData.questions.length > 0 ? (
                 <div class="content-container quizlet-flashcards">
                     {flashcardData.text && (
                         <div class="flashcard-intro" set:html={marked.parse(flashcardData.text)} />
@@ -150,9 +146,7 @@ const hasContent = !!(isStructured ? (flashcardData && flashcardData.questions.l
         function updateDisplay() {
             flashcards.forEach((card, i) => {
                 card.style.display = i === currentIndex ? 'block' : 'none';
-                if (i !== currentIndex) {
-                    card.dataset.flipped = 'false';
-                }
+                if (i !== currentIndex) card.dataset.flipped = 'false';
             });
             if (currentSpan) currentSpan.textContent = String(currentIndex + 1);
             if (prevBtn) prevBtn.disabled = currentIndex === 0;

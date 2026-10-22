@@ -52,7 +52,6 @@ if (id !== 'new') {
 
 }
 
-// Get thread data to access the title and uploaded files (skip for new chats)
 const thread = id !== 'new' ? await getThreadByToken(id ?? '', (isAuthorized || isPublic)) : null;
 
 // Unknown thread IDs pass the access check as unclaimed, so start a fresh chat instead of rendering an empty one
@@ -64,7 +63,6 @@ if ((id === 'new' && !user) || (!user && !isPublic)) return Astro.redirect(`/use
 const threadTitle = thread?.title || null;
 const uploadedFiles = thread?.uploadedFiles || [];
 
-// Get messages only if authorized or public (skip for new chats)
 let messages: Message[] = [];
 if (id !== 'new') {
     const messagesLength = await getMessagesLength(id || '');
