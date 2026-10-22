@@ -13,7 +13,6 @@ export interface ToolCallLogEntry {
     result: string;
 }
 
-// Message type for AI conversations
 export interface Message {
     id?: string;
     role: 'system' | 'user' | 'assistant';

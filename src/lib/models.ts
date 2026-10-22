@@ -53,7 +53,6 @@ export function getSelectableProviders(): Providers {
     return selectable;
 }
 
-// Validates and returns a proper model-provider-tier tuple
 export async function getValidModelAndProvider(
     providerKey: string | null,
     tierKey: string | null

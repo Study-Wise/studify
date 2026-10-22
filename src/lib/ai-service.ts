@@ -325,7 +325,6 @@ export async function generateTitle(options: TitleGenerationOptions): Promise<st
     }
 }
 
-// Paraphrases a user's question to make it clearer and more concise
 export async function paraphraseQuestion(question: string, category: string, mode: string): Promise<string> {
     const requestId = nanoid();
 
@@ -364,7 +363,6 @@ IMPORTANT: Only output the paraphrased question, nothing else. Do not add any ex
     }
 }
 
-// Generates a structured object using AI
 export async function generateObject<T>(
     systemPrompt: string,
     userPrompt: string,

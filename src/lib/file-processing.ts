@@ -20,7 +20,6 @@ export async function extractTextFromPlainText(file: File): Promise<string | nul
     }
 }
 
-// Extract text from images using OCR (placeholder)
 export async function extractTextFromImage(file: File): Promise<string | null> {
     try {
         // For MVP: Return placeholder

@@ -1,4 +1,3 @@
-// Converts a question string to a URL-friendly ID
 export function questionToId(question: string): string {
     return question
         .toLowerCase()
@@ -9,7 +8,6 @@ export function questionToId(question: string): string {
         .replace(/^-+|-+$/g, '');
 }
 
-// Converts a question ID back to a readable question format
 export function idToQuestion(id: string): string {
     return id
         .split('-')

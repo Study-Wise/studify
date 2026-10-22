@@ -14,10 +14,3 @@ function resolveBaseURL(): string {
 export const authClient = createAuthClient({
     baseURL: resolveBaseURL(),
 });
-
-// Export convenience methods for backward compatibility
-export const { signIn, signUp, signOut } = authClient;
-
-export function getSession() {
-    return authClient.getSession();
-}
