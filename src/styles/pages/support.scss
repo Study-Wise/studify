@@ -10,7 +10,6 @@ main.support-page {
     flex-direction: column;
     width: 100%;
 
-    // Pinned rather than height: 100%, which can't resolve against a flex-grown parent
     .support-embed {
         position: absolute;
         inset: 0;

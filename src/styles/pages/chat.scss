@@ -555,7 +555,6 @@ footer, .chat-toolbar {
         }
     }
 
-    // Hide messages with math until MathJax has typeset them so raw LaTeX never shows
     .message-content.mathjax-pending {
         visibility: hidden;
     }
