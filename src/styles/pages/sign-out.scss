@@ -65,12 +65,12 @@ p {
 
     &:hover {
         background-color: #dc2626;
-        transform: translateY(-1px);
+        translate: 0 -1px;
         box-shadow: 0 0 8px rgb(239 68 68 / 30%);
     }
 
     &:active {
-        transform: translateY(0);
+        translate: 0 0;
     }
 }
 
