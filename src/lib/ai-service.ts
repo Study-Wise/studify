@@ -6,6 +6,7 @@ import type { Message, ToolCallLogEntry } from '@/lib/threads';
 import type { ToolContext, ToolRecord } from '@/lib/tools';
 import { VendorError } from '@/lib/user-errors';
 import 'dotenv/config';
+import type { JSONValue } from 'ai';
 import { nanoid } from 'nanoid';
 import type { ZodSchema } from 'zod';
 
@@ -22,6 +23,9 @@ export interface AIGenerationResult {
     clientToolCalls: ClientToolCall[];
     toolCallLog: ToolCallLogEntry[];
 }
+
+// A tool result arrives either as a serialized JSON string or as an already-parsed JSON object
+type ToolOutput = string | { [key: string]: JSONValue };
 
 export interface TitleGenerationOptions {
     convoHistory: Message[];
@@ -104,6 +108,9 @@ export async function generateText(
                         } catch {
                             // JSON parse error ignored, status remains as initial value
                         }
+                        else toolEntry.result = JSON.stringify(outputValue);
+
+                        if (typeof outputValue === 'object' && outputValue !== null && 'status' in outputValue && outputValue.status === 'error') toolEntry.status = 'error';
                     }
 
                     toolCallLog.push({
@@ -261,6 +268,9 @@ export function extractToolData(steps: Awaited<Awaited<ReturnType<typeof ai.stre
                 } catch {
                     // JSON parse error ignored, status remains as initial value
                 }
+                else toolEntry.result = JSON.stringify(outputValue);
+
+                if (typeof outputValue === 'object' && outputValue !== null && 'status' in outputValue && outputValue.status === 'error') toolEntry.status = 'error';
             }
 
             toolCallLog.push({ toolName: tc.toolName, args: tc.input ?? {}, status, result: resultStr });

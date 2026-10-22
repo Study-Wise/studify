@@ -11,6 +11,7 @@ import config from '@/lib/ai.config';
 import { buildContentSystemPrompt } from '@/lib/content';
 import { parseThreadData, type UploadedFile, type JSONValue } from '@/lib/threads';
 import { saveContent } from '@/lib/content/latest';
+import { buildUploadedFilesContext } from '@/lib/content/generate/uploaded-files-context';
 
 import { eq } from 'drizzle-orm';
 
@@ -25,17 +26,6 @@ export interface MarkedToken {
 const node_require = createRequire(import.meta.url);
 const marked = node_require('slideshow-generator/node_modules/marked');
 const jade = node_require('jade');
-
-function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
-    const filesWithText = uploadedFiles.filter(f => f.extractedText);
-    if (filesWithText.length === 0) return '';
-
-    const fileContents = filesWithText
-        .map(f => `--- File: ${f.name} ---\n${f.extractedText}`)
-        .join('\n\n');
-
-    return `\n\n### Uploaded Files Content\nThe user has uploaded the following files. Include this content in your analysis:\n\n${fileContents}`;
-}
 
 function markdownToSlideshowHTML(markdown: string): string {
     const content = fm(markdown);

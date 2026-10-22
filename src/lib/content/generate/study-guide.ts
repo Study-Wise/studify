@@ -6,20 +6,10 @@ import { buildContentSystemPrompt } from '@/lib/content';
 import categories from '@/lib/modes';
 import { parseThreadData, type UploadedFile } from '@/lib/threads';
 import { saveContent } from '@/lib/content/latest';
+import { buildUploadedFilesContext } from '@/lib/content/generate/uploaded-files-context';
 import desmosSection from '@/lib/prompt-templates/desmos';
 
 import { eq } from 'drizzle-orm';
-
-function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
-    const filesWithText = uploadedFiles.filter(f => f.extractedText);
-    if (filesWithText.length === 0) return '';
-
-    const fileContents = filesWithText
-        .map(f => `--- File: ${f.name} ---\n${f.extractedText}`)
-        .join('\n\n');
-
-    return `\n\n### Uploaded Files Content\nThe user has uploaded the following files. Include this content in your analysis:\n\n${fileContents}`;
-}
 
 export async function generateStudyGuide(threadId: string, userPrompt?: string) {
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));

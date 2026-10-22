@@ -490,6 +490,18 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                         clientToolCalls: clientToolCalls.length > 0 ? clientToolCalls : undefined,
                     }));
                     controller.close();
+
+                    if (!userData?.title) {
+                        try {
+                            const title = await generateTitle({ convoHistory, userModel, provider: selectedProvider });
+                            await db.update(threadsTable)
+                                .set({ title, updatedAt: new Date() })
+                                // Skip if the chat was renamed while the title was generated
+                                .where(and(eq(threadsTable.id, current_thread_id!), eq(threadsTable.title, userData?.title ?? 'Untitled Conversation')));
+                        } catch (error) {
+                            console.error(`❌ [${requestId}] Title generation failed:`, error);
+                        }
+                    }
                 } catch (error) {
                     console.error(`❌ [${requestId}] Stream error:`, error);
                     controller.enqueue(sendEvent({ type: 'error', error: getUserErrorMessage(error, 'get a response', requestId) }));

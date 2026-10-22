@@ -6,6 +6,7 @@ import config from '@/lib/ai.config';
 import { buildContentSystemPrompt } from '@/lib/content';
 import { parseThreadData, type UploadedFile } from '@/lib/threads';
 import { saveContent } from '@/lib/content/latest';
+import { buildUploadedFilesContext } from '@/lib/content/generate/uploaded-files-context';
 import type { FlashcardData } from '@/lib/content/latest/flashcards';
 
 import { eq } from 'drizzle-orm';
@@ -17,17 +18,6 @@ const flashcardSchema = z.object({
         back: z.string().describe('The answer or explanation on the back of the flashcard'),
     })).describe('Array of flashcards with front (question) and back (answer)')
 });
-
-function buildUploadedFilesContext(uploadedFiles: UploadedFile[]): string {
-    const filesWithText = uploadedFiles.filter(f => f.extractedText);
-    if (filesWithText.length === 0) return '';
-
-    const fileContents = filesWithText
-        .map(f => `--- File: ${f.name} ---\n${f.extractedText}`)
-        .join('\n\n');
-
-    return `\n\n### Uploaded Files Content\nThe user has uploaded the following files. Include this content in your analysis:\n\n${fileContents}`;
-}
 
 export async function generateFlashcards(threadId: string, userPrompt?: string): Promise<FlashcardData> {
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));

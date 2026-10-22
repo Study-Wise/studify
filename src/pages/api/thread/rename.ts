@@ -42,6 +42,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
+        // Matches the length of the title column in threadsTable
         if (newTitle.length > MAX_TITLE_LENGTH) {
             console.error(`❌ [${requestId}] Title too long:`, newTitle.length);
             return new Response(
