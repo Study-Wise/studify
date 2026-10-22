@@ -36,7 +36,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
         const modeObj = categories[category || config.defaultCategory]?.modes?.[mode || config.defaultMode];
 
         let current_thread_id: string | undefined = thread_id;
-        let isNewThread = false;
 
         if (!locals.user) {
             console.error(`❌ [${requestId}] Authentication required but not provided`);
@@ -49,11 +48,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        const user_email = locals.user.email;
-        const isAdmin = await isUserAdmin(user_email);
+        const isAdmin = await isUserAdmin(locals.user.email);
 
-        if (!isValidEmail(user_email)) {
-            console.error(`❌ [${requestId}] Invalid email format:`, user_email);
+        if (!isValidEmail(locals.user.email)) {
+            console.error(`❌ [${requestId}] Invalid email format:`, locals.user.email);
             return new Response(
                 JSON.stringify({ status: 'error', error: 'Invalid email' }),
                 {
@@ -66,10 +64,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
         if (!current_thread_id) {
             try {
 
-                if (user_email) {
+                if (locals.user.email) {
                     if (!isAdmin) {
-                        if ((await db.select().from(threadsTable).where(eq(threadsTable.email, user_email))).length >= config.maxThreadsPerUser) {
-                            console.error(`❌ [${requestId}] Thread limit exceeded for user:`, user_email);
+                        if ((await db.select().from(threadsTable).where(eq(threadsTable.email, locals.user.email))).length >= config.maxThreadsPerUser) {
+                            console.error(`❌ [${requestId}] Thread limit exceeded for user:`, locals.user.email);
                             return new Response(
                                 JSON.stringify({
                                     status: 'error',
@@ -96,7 +94,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
                     id: newThreadId,
                     title: '',
                     thread: { messages: [] },
-                    email: user_email,
+                    email: locals.user.email,
                     category: category || config.defaultCategory,
                     mode: mode || config.defaultMode,
                     model: resolved.model,
@@ -105,7 +103,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
                     isDev: (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development'
                 });
                 current_thread_id = newThreadId;
-                isNewThread = true;
             } catch (error) {
                 console.error(`❌ [${requestId}] Error generating thread:`, error);
                 return new Response(
@@ -130,12 +127,7 @@ Use the above thread context when calling tools that require category or mode pa
 IMPORTANT: When the user asks you to search, look up information, or use a tool, you MUST actually call the appropriate tool. Do NOT pretend or hallucinate that you used a tool—instead make the actual tool call and use the real results. If a tool call is available and relevant to the user's request, use it.
 `;
 
-        const objPlace: Message = {
-            role: 'system',
-            content: systemPrompt,
-        }
-
-        let convoHistory: Message[] = [objPlace];
+        let convoHistory: Message[] = [{ role: 'system', content: systemPrompt }];
 
         let userData: Thread | undefined = undefined;
         if (current_thread_id) {
@@ -145,10 +137,10 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                 if (threads.length > 0) {
                     userData = threads[0];
 
-                    if (userData.email && userData.email !== user_email) {
+                    if (userData.email && userData.email !== locals.user.email) {
                         console.error(`❌ [${requestId}] Unauthorized access attempt:`, {
                             threadOwner: userData.email,
-                            requestingUser: user_email
+                            requestingUser: locals.user.email
                         });
                         return new Response(
                             JSON.stringify({ error: 'Unauthorized access to thread' }),
@@ -165,7 +157,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                         'messages' in userData.thread &&
                         Array.isArray(userData.thread.messages)
                     ) {
-                        convoHistory = [objPlace, ...parseThreadData(userData.thread).messages];
+                        convoHistory = [{ role: 'system', content: systemPrompt }, ...parseThreadData(userData.thread).messages];
                     }
                     else {
                         console.warn(`⚠️ [${requestId}] No valid conversation history found in thread data, keeping system message only`);
@@ -202,10 +194,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
         }
 
         if (!isAdmin) {
-            const currentUserMessageCount = convoHistory.filter(msg => msg.role === 'user').length;
-            const newUserMessageCount = currentUserMessageCount + 1;
-
-            if (newUserMessageCount > config.maxMessagesPerThread) {
+            if (convoHistory.filter(msg => msg.role === 'user').length + 1 > config.maxMessagesPerThread) {
                 console.error(`❌ [${requestId}] User message limit exceeded for thread:`, current_thread_id);
                 return new Response(
                     JSON.stringify({
@@ -236,11 +225,11 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
         }
 
         // Server-verified context for tools: thread ownership was checked above, so tools must use this rather than any thread ID chosen by the model
-        const toolContext: ToolContext = { threadId: current_thread_id!, email: user_email };
+        const toolContext: ToolContext = { threadId: current_thread_id!, email: locals.user.email };
 
         // --- Special handling for first message: Generate AI welcome response ---
         if (convoHistory.length === 1) {
-            let messagesSaved = false;
+            const firstMessageState = { created: !thread_id, saved: false };
             try {
                 convoHistory.push({ id: nanoid(), role: 'user', content: userPrompt });
 
@@ -259,7 +248,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
 
                 const convoHistoryWithoutSystem = convoHistory.filter(msg => msg.role !== 'system');
 
-                if (isNewThread || userData) {
+                if (firstMessageState.created || userData) {
                     await db.update(threadsTable)
                         .set({
                             thread: { messages: convoHistoryWithoutSystem },
@@ -276,7 +265,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                         id: current_thread_id,
                         title: '',
                         thread: { messages: convoHistoryWithoutSystem },
-                        email: user_email,
+                        email: locals.user.email,
                         category: category || config.defaultCategory,
                         mode: mode || config.defaultMode,
                         model: userModel,
@@ -295,17 +284,15 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                         }
                     });
                 }
-                messagesSaved = true;
-
-                const convoTitle = await generateTitle({
-                    convoHistory,
-                    userModel: config.model,
-                    provider: config.provider
-                });
+                firstMessageState.saved = true;
 
                 await db.update(threadsTable)
                     .set({
-                        title: convoTitle,
+                        title: await generateTitle({
+                            convoHistory,
+                            userModel: config.model,
+                            provider: config.provider
+                        }),
                         updatedAt: new Date()
                     })
                     .where(eq(threadsTable.id, current_thread_id!));
@@ -328,12 +315,12 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                 console.error(`❌ [${requestId}] Error handling first message:`, error);
 
                 // The thread was created for this message, so remove it rather than leave an empty, untitled chat behind when the first reply fails
-                if (isNewThread && !messagesSaved) {
+                if (firstMessageState.created && !firstMessageState.saved) {
                     try {
                         await db.delete(threadsTable)
-                            .where(and(eq(threadsTable.id, current_thread_id!), eq(threadsTable.email, user_email)));
-                    } catch (error) {
-                        console.error(`❌ [${requestId}] Failed to remove empty thread:`, error);
+                            .where(and(eq(threadsTable.id, current_thread_id!), eq(threadsTable.email, locals.user.email)));
+                    } catch (deleteError) {
+                        console.error(`❌ [${requestId}] Failed to remove empty thread:`, deleteError);
                     }
                 }
                 throw error;
@@ -373,49 +360,46 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
         }
         const isDev = (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development';
 
-        // The title as stored when this request started; generated titles only replace this value
-        const storedTitle = userData?.title ?? 'Untitled Conversation';
-
-        const responseStream = new ReadableStream({
+        return new Response(new ReadableStream({
             async start(controller) {
                 try {
                     let streamedText = '';
-                    let lastHtmlAt = 0;
+                    const htmlThrottle: { lastAt: number; html: string | undefined } = { lastAt: 0, html: undefined };
                     const { marked } = await import('marked');
                     marked.setOptions({ breaks: true, gfm: true });
 
                     for await (const part of streamResult.fullStream) {
                         const streamPart = part;
                         if (streamPart.type === 'text-delta') {
-                            const textDelta = streamPart.text || '';
-                            streamedText += textDelta;
-                            let html: string | undefined;
-                            if (Date.now() - lastHtmlAt >= config.streamHtmlInterval) {
-                                lastHtmlAt = Date.now();
+                            streamedText += streamPart.text || '';
+                            if (Date.now() - htmlThrottle.lastAt >= config.streamHtmlInterval) {
+                                htmlThrottle.lastAt = Date.now();
                                 // Leave out a formula that is still being written, so half a formula never shows
                                 let open: RegExpMatchArray | undefined;
                                 for (const match of streamedText.matchAll(/\$\$|\$|\\[()[\]]/g)) {
                                     if (!open && MATH_CLOSERS[match[0]]) open = match;
                                     else if (open && match[0] === MATH_CLOSERS[open[0]]) open = undefined;
                                 }
-                                html = await marked.parse(open ? streamedText.slice(0, open.index) : streamedText);
+                                htmlThrottle.html = await marked.parse(open ? streamedText.slice(0, open.index) : streamedText);
                             }
-                            controller.enqueue(sendEvent({ type: 'text', text: textDelta, html }));
+                            controller.enqueue(sendEvent({ type: 'text', text: streamPart.text || '', html: htmlThrottle.html }));
+                            htmlThrottle.html = undefined;
                         }
                         else if (streamPart.type === 'tool-call') {
-                            const toolCallId = streamPart.toolCallId || '';
-                            const toolName = streamPart.toolName || '';
-                            controller.enqueue(sendEvent({ type: 'tool-call', toolCallId, toolName }));
+                            controller.enqueue(sendEvent({ type: 'tool-call', toolCallId: streamPart.toolCallId || '', toolName: streamPart.toolName || '' }));
                         }
                         else if (streamPart.type === 'tool-result') {
                             try {
-                                const raw = streamPart.output;
-                                const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
-                                if (typeof parsed === 'object' && parsed !== null && 'status' in parsed && parsed.status === 'error') {
-                                console.warn(`⚠️ [${requestId}] Tool returned an error status:`, parsed);
-                            }
+                                const parsed = typeof streamPart.output === 'string' ? JSON.parse(streamPart.output) : streamPart.output;
+                                controller.enqueue(sendEvent({
+                                    type: 'tool-result',
+                                    toolCallId: streamPart.toolCallId || '',
+                                    toolName: streamPart.toolName || '',
+                                    status: typeof parsed === 'object' && parsed !== null && 'status' in parsed && parsed.status === 'error' ? 'error' : 'success'
+                                }));
                             } catch {
-                                // JSON parse error ignored, status remains as initial value
+                                // JSON parse error ignored, status stays as success
+                                controller.enqueue(sendEvent({ type: 'tool-result', toolCallId: streamPart.toolCallId || '', toolName: streamPart.toolName || '', status: 'success' }));
                             }
                         }
                         else if (streamPart.type === 'error') {
@@ -429,19 +413,19 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                     const assistantMessage: Message = { id: nanoid(), role: 'assistant', content: fullText };
                     if (toolCallLog.length > 0) assistantMessage.toolCallLog = toolCallLog;
                     convoHistory.push(assistantMessage);
-                    const messages = convoHistory.filter(msg => msg.role !== 'system');
+                    const convoHistoryWithoutSystem = convoHistory.filter(msg => msg.role !== 'system');
                     if (current_thread_id && userData) {
                         // Leave the title out: the user may have renamed the chat while this response streamed
                         await db.update(threadsTable)
-                            .set({ thread: { messages }, updatedAt: new Date(), isDev })
+                            .set({ thread: { messages: convoHistoryWithoutSystem }, updatedAt: new Date(), isDev })
                             .where(eq(threadsTable.id, current_thread_id!));
                     }
                     else if (current_thread_id) {
                         await db.insert(threadsTable).values({
                             id: current_thread_id,
-                            title: storedTitle,
-                            thread: { messages },
-                            email: user_email,
+                            title: userData?.title ?? 'Untitled Conversation',
+                            thread: { messages: convoHistoryWithoutSystem },
+                            email: locals.user.email,
                             category: category || config.defaultCategory,
                             mode: mode || config.defaultMode,
                             model: userModel,
@@ -450,20 +434,8 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                             isDev,
                         }).onConflictDoUpdate({
                             target: threadsTable.id,
-                            set: { thread: { messages }, updatedAt: new Date(), isDev },
+                            set: { thread: { messages: convoHistoryWithoutSystem }, updatedAt: new Date(), isDev },
                         });
-                    }
-
-                    if (!userData?.title) {
-                        try {
-                            const title = await generateTitle({ convoHistory, userModel, provider: selectedProvider });
-                            await db.update(threadsTable)
-                                .set({ title, updatedAt: new Date() })
-                                // Skip if the chat was renamed while the title was generated
-                                .where(and(eq(threadsTable.id, current_thread_id!), eq(threadsTable.title, storedTitle)));
-                        } catch (error) {
-                            console.error(`❌ [${requestId}] Title generation failed:`, error);
-                        }
                     }
 
                     controller.enqueue(sendEvent({
@@ -492,9 +464,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                     controller.close();
                 }
             }
-        });
-
-        return new Response(responseStream, {
+        }), {
             status: 200,
             headers: {
                 'Content-Type': 'text/event-stream',
