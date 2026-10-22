@@ -21,22 +21,20 @@ $border-radius-full       :    100vw; // Pill shape / circular
 
 // SHADOW SYSTEM (Elevation-based)
 
-$box-shadow-extra-small     : 0  1px  2px 0 rgb(0 0 0 /  5%);
-$box-shadow-small           : 0  2px  4px 0 rgb(0 0 0 /  8%);
-$box-shadow-medium          : 0  4px  8px 0 rgb(0 0 0 / 10%);
-$box-shadow-large           : 0  8px 16px 0 rgb(0 0 0 / 12%);
-$box-shadow-extra-large     : 0 12px 24px 0 rgb(0 0 0 / 15%);
-$box-shadow-huge            : 0 20px 40px 0 rgb(0 0 0 / 20%);
-$box-shadow-dark-extra-small: 0  1px  2px 0 rgb(0 0 0 / 30%);
-$box-shadow-dark-small      : 0  2px  4px 0 rgb(0 0 0 / 40%);
-$box-shadow-dark-medium     : 0  4px  8px 0 rgb(0 0 0 / 50%);
-$box-shadow-dark-large      : 0  8px 16px 0 rgb(0 0 0 / 60%);
-$box-shadow-dark-extra-large: 0 12px 24px 0 rgb(0 0 0 / 70%);
-$box-shadow-dark-huge       : 0 20px 40px 0 rgb(0 0 0 / 80%);
-
-// Inner shadows (for depth)
-$box-shadow-inner-light: inset 0 2px 4px 0 rgb(0 0 0 / 6%);
-$box-shadow-inner-dark: inset 0 2px 4px 0 rgb(0 0 0 / 40%);
+$box-shadow-extra-small     :       0  1px  2px 0 rgb(0 0 0 /  5%);
+$box-shadow-small           :       0  2px  4px 0 rgb(0 0 0 /  8%);
+$box-shadow-medium          :       0  4px  8px 0 rgb(0 0 0 / 10%);
+$box-shadow-large           :       0  8px 16px 0 rgb(0 0 0 / 12%);
+$box-shadow-extra-large     :       0 12px 24px 0 rgb(0 0 0 / 15%);
+$box-shadow-huge            :       0 20px 40px 0 rgb(0 0 0 / 20%);
+$box-shadow-dark-extra-small:       0  1px  2px 0 rgb(0 0 0 / 30%);
+$box-shadow-dark-small      :       0  2px  4px 0 rgb(0 0 0 / 40%);
+$box-shadow-dark-medium     :       0  4px  8px 0 rgb(0 0 0 / 50%);
+$box-shadow-dark-large      :       0  8px 16px 0 rgb(0 0 0 / 60%);
+$box-shadow-dark-extra-large:       0 12px 24px 0 rgb(0 0 0 / 70%);
+$box-shadow-dark-huge       :       0 20px 40px 0 rgb(0 0 0 / 80%);
+$box-shadow-inner-light     : inset 0 2px 4px 0 rgb(0 0 0 / 6%);
+$box-shadow-inner-dark      : inset 0 2px 4px 0 rgb(0 0 0 / 40%);
 
 // TRANSITION SYSTEM
 
@@ -92,6 +90,9 @@ $line-height-snug     :    1.375;
 $line-height-normal   :    1.500;
 $line-height-relaxed  :    1.625;
 $line-height-loose    :    2.000;
+
+// OPACITY SCALE
+
 $opacity-disabled     :      0.5;
 $opacity-hover        :      0.9;
 $opacity-overlay      :      0.8;
