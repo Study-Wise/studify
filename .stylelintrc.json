@@ -19,5 +19,14 @@
         "property-no-vendor-prefix": [true, {
             "ignoreProperties": ["-webkit-backdrop-filter"]
         }]
-    }
+    },
+    "overrides": [
+        {
+            "files": ["src/styles/variables/tokens.scss"],
+            "rules": {
+                "scss/dollar-variable-colon-space-before": null,
+                "scss/dollar-variable-colon-space-after": null
+            }
+        }
+    ]
 }
