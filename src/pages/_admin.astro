@@ -7,10 +7,8 @@ import '@/styles/pages/admin.scss';
 
 const user = Astro.locals.user;
 
-// Redirect to sign-in if not authenticated
 if (!user) return Astro.redirect('/user/sign-in');
 
-// Redirect non-admins away from admin page
 if (!(await isUserAdmin(user.email))) return Astro.redirect('/');
 ---
 

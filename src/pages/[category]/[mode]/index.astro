@@ -22,7 +22,6 @@ const modeName = modeObj?.name || mode;
 
 ---
 <Layout title={`${modeName} | ${categoryName}`} mathjax={true} desmos={modeObj.desmos === true}>
-    {/* Introduction Section */}
     <section class="introduction-section card" aria-labelledby="how-it-works-heading">
         <h2 id="how-it-works-heading">
             <span class="material-symbols-outlined" aria-hidden="true">info</span>&nbsp;How It Works
@@ -70,7 +69,6 @@ const modeName = modeObj?.name || mode;
         <p>Get ready to understand your homework better and study smarter!</p>
     </section>
 
-    {/* Input Homework Section */}
     <section class="input-section card" aria-labelledby="input-heading">
         <h2 id="input-heading">
             <label for="text-paste">
@@ -94,7 +92,6 @@ Please note that the AI will not provide the answer for your immediate question`
             </span>
         </p>
 
-        {/* Generate Button and Error Message */}
         <div class="toolbar" role="toolbar" aria-label="Generation controls">
             {/* <ModelSelector /> */}
             <FancyButton className="generate-button" onclick="generateOutput()" variant="primary" icon="manufacturing" aria-describedby="error-message">Generate Study Materials</FancyButton>

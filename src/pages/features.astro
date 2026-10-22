@@ -2,7 +2,6 @@
 import Layout from '@/layouts/Layout.astro';
 import '@/styles/pages/features.scss';
 
-// Import the general features markdown file
 const generalModule = await import('@/lib/features.md');
 const markdownContent = await generalModule.compiledContent();
 ---

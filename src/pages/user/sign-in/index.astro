@@ -19,7 +19,6 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
             <h1 class="auth-title">Sign In</h1>
             <p class="auth-subtitle">to access {appConfig.name}</p>
 
-            {/* Email/Password Form */}
             <form id="signin-form" class="auth-form">
                 <div class="form-group">
                     <label for="email" class="form-label">Email</label>
@@ -51,7 +50,6 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
                 <span>or</span>
             </div>
 
-            {/* Social Auth Links */}
             <div class="social-buttons" data-callback-url={callbackURL}>
                 <button type="button" class="social-button" data-provider="google">
                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">

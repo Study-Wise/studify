@@ -6,7 +6,6 @@ import Layout from '@/layouts/Layout.astro';
 
 const user = Astro.locals.user;
 
-// Redirect to sign-in if not authenticated
 if (!user) return Astro.redirect('/user/sign-in');
 ---
 
@@ -17,7 +16,6 @@ if (!user) return Astro.redirect('/user/sign-in');
         </div>
 
         <div class="profile-content">
-            {/* User Info Section */}
             <section class="profile-section">
                 <h2>Account Information</h2>
                 <div class="profile-info">
@@ -40,7 +38,6 @@ if (!user) return Astro.redirect('/user/sign-in');
                 </div>
             </section>
 
-            {/* My Chats Section */}
             <section class="profile-section">
                 <h2>My Chats</h2>
                 <MyChats />
