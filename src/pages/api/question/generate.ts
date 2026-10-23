@@ -84,26 +84,22 @@ Your answer should be:
             providerUsed: config.provider
         };
 
-        await db.insert(questionTable).values({
+        const result = {
             id: questionId,
             question: paraphrasedQuestion,
-            answer,
+            answer: aiResult.text,
             category,
             mode,
             metadata,
             viewCount: '0',
+            exists: false,
             isPublic: true
-        });
+        };
+
+        await db.insert(questionTable).values(result);
 
         return new Response(
-            JSON.stringify({
-                id: questionId,
-                question: paraphrasedQuestion,
-                answer,
-                category,
-                mode,
-                exists: false
-            }),
+            JSON.stringify(result),
             {
                 status: 200,
                 headers: { 'Content-Type': 'application/json' },

@@ -51,7 +51,6 @@ export const onRequest: MiddlewareHandler = async function onRequest(context, ne
     const session = await auth.api.getSession({ headers: request.headers });
 
     if (session) {
-        // Cast to User to include role field
         const user: User = session.user;
 
         // Ensure role is populated (fetch from DB if not in session)
@@ -64,7 +63,7 @@ export const onRequest: MiddlewareHandler = async function onRequest(context, ne
             return new Response(`Access Denied: Your account has been ${user.role}.`, { status: 403 });
         }
 
-        locals.user = user;
+        locals.user = session.user;
         locals.session = session.session;
     }
     else if (isDev()) {
@@ -85,15 +84,14 @@ export const onRequest: MiddlewareHandler = async function onRequest(context, ne
     }
 
     // Redirect authenticated users away from auth pages, to where they were headed
-    if (locals.user && isAuthRoute(pathname)) {
+    if (locals.user && authRoutes.some(route => route.test(pathname))) {
         return redirect(getSafeReturnBackUrl(new URL(request.url).searchParams.get('returnBackUrl')));
     }
 
     // Protect routes requiring authentication
-    if (isProtectedRoute(pathname) && !locals.user) {
+    if (protectedRoutes.some(route => route.test(pathname)) && !locals.user) {
         const currentUrl = new URL(request.url);
-        const returnBackUrl = currentUrl.pathname + currentUrl.search;
-        return redirect(`/user/sign-in?returnBackUrl=${encodeURIComponent(returnBackUrl)}`);
+        return redirect(`/user/sign-in?returnBackUrl=${encodeURIComponent(currentUrl.pathname + currentUrl.search)}`);
     }
 
     return next();

@@ -57,11 +57,11 @@ export async function getValidModelAndProvider(
     providerKey: string | null,
     tierKey: string | null
 ): Promise<{ model: string; provider: string; tier: string }> {
-    const provider = providerKey || config.provider;
-    const tier = tierKey || config.tier;
-    const model = providers[provider]?.tiers[tier]?.model ?? config.model;
-
-    return { model, provider, tier };
+    return {
+        model: providers[providerKey || config.provider]?.tiers[tierKey || config.tier]?.model ?? config.model,
+        provider: providerKey || config.provider,
+        tier: tierKey || config.tier
+    };
 }
 
 export { providers };

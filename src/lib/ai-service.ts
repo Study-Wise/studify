@@ -24,9 +24,6 @@ export interface AIGenerationResult {
     toolCallLog: ToolCallLogEntry[];
 }
 
-// A tool result arrives either as a serialized JSON string or as an already-parsed JSON object
-type ToolOutput = string | { [key: string]: JSONValue };
-
 export interface TitleGenerationOptions {
     convoHistory: Message[];
     userModel: string;
@@ -61,8 +58,7 @@ export async function generateText(
         });
     }
 
-    const lastMessage = convoHistory[convoHistory.length - 1];
-    if (lastMessage?.role !== 'user' || lastMessage?.content !== userPrompt) {
+    if (convoHistory[convoHistory.length - 1]?.role !== 'user' || convoHistory[convoHistory.length - 1]?.content !== userPrompt) {
         convoHistory.push({
             role: 'user',
             content: userPrompt
@@ -96,28 +92,25 @@ export async function generateText(
                 for (const tc of stepToolCalls) {
                     const matchingResult = stepToolResults.find(tr => tr.toolCallId === tc.toolCallId);
 
-                    let resultStr = '';
+                    let result = '';
+                    let parsed = null;
                     let status: 'success' | 'error' = 'success';
 
                     if (matchingResult?.output) {
-                        const raw = matchingResult.output;
-                        resultStr = typeof raw === 'string' ? raw : JSON.stringify(raw);
+                        result = typeof matchingResult.output === 'string' ? matchingResult.output : JSON.stringify(matchingResult.output);
                         try {
-                            const parsed = JSON.parse(resultStr);
+                            parsed = JSON.parse(result);
                             if (parsed?.status === 'error') status = 'error';
                         } catch {
                             // JSON parse error ignored, status remains as initial value
                         }
-                        else toolEntry.result = JSON.stringify(outputValue);
-
-                        if (typeof outputValue === 'object' && outputValue !== null && 'status' in outputValue && outputValue.status === 'error') toolEntry.status = 'error';
                     }
 
                     toolCallLog.push({
                         toolName: tc.toolName,
                         args: tc.input ?? {},
                         status,
-                        result: resultStr,
+                        result,
                     });
                 }
             }
@@ -128,18 +121,23 @@ export async function generateText(
                 try {
                     // Tool results are JSON strings, so we need to parse them
                     // Cast to access the result property which varies by type
-                    const resultValue = typeof toolResult.output === 'string' ? JSON.parse(toolResult.output) : toolResult.output;
+                    let parsed = null;
+                    try {
+                        parsed = typeof toolResult.output === 'string' ? JSON.parse(toolResult.output) : toolResult.output;
+                    } catch {
+                        // JSON parse error ignored, client tool call skipped
+                    }
 
-                    if (resultValue && typeof resultValue === 'object' && resultValue !== null && 'action' in resultValue && resultValue.action === 'open-content' && 'type' in resultValue && typeof resultValue.type === 'string' && 'threadId' in resultValue && typeof resultValue.threadId === 'string' && 'category' in resultValue && typeof resultValue.category === 'string' && 'mode' in resultValue && typeof resultValue.mode === 'string') {
+                    if (parsed && typeof parsed === 'object' && parsed !== null && 'action' in parsed && parsed.action === 'open-content' && 'type' in parsed && typeof parsed.type === 'string' && 'threadId' in parsed && typeof parsed.threadId === 'string' && 'category' in parsed && typeof parsed.category === 'string' && 'mode' in parsed && typeof parsed.mode === 'string') {
                         clientToolCalls.push({
                             toolName: 'open-content',
                             toolCallId: toolResult.toolCallId,
                             args: {
-                                type: resultValue.type,
-                                threadId: resultValue.threadId,
-                                category: resultValue.category,
-                                mode: resultValue.mode,
-                                url: 'url' in resultValue && typeof resultValue.url === 'string' ? resultValue.url : undefined,
+                                type: parsed.type,
+                                threadId: parsed.threadId,
+                                category: parsed.category,
+                                mode: parsed.mode,
+                                url: 'url' in parsed && typeof parsed.url === 'string' ? parsed.url : undefined,
                             },
                         });
                     }
@@ -155,18 +153,24 @@ export async function generateText(
                 if (step.toolResults && step.toolResults.length > 0) {
                     for (const toolResult of step.toolResults) {
                         try {
-                            const resultValue = typeof toolResult.output === 'string' ? JSON.parse(toolResult.output) : toolResult.output;
+                            let parsed = null;
 
-                            if (resultValue && typeof resultValue === 'object' && resultValue !== null && 'action' in resultValue && resultValue.action === 'open-content' && 'type' in resultValue && typeof resultValue.type === 'string' && 'threadId' in resultValue && typeof resultValue.threadId === 'string' && 'category' in resultValue && typeof resultValue.category === 'string' && 'mode' in resultValue && typeof resultValue.mode === 'string') {
+                            try {
+                                parsed = typeof toolResult.output === 'string' ? JSON.parse(toolResult.output) : toolResult.output;
+                            } catch {
+                                // JSON parse error ignored, client tool call skipped
+                            }
+
+                            if (parsed && typeof parsed === 'object' && parsed !== null && 'action' in parsed && parsed.action === 'open-content' && 'type' in parsed && typeof parsed.type === 'string' && 'threadId' in parsed && typeof parsed.threadId === 'string' && 'category' in parsed && typeof parsed.category === 'string' && 'mode' in parsed && typeof parsed.mode === 'string') {
                                 clientToolCalls.push({
                                     toolName: 'open-content',
                                     toolCallId: toolResult.toolCallId,
                                     args: {
-                                        type: resultValue.type,
-                                        threadId: resultValue.threadId,
-                                        category: resultValue.category,
-                                        mode: resultValue.mode,
-                                        url: 'url' in resultValue && typeof resultValue.url === 'string' ? resultValue.url : undefined,
+                                        type: parsed.type,
+                                        threadId: parsed.threadId,
+                                        category: parsed.category,
+                                        mode: parsed.mode,
+                                        url: 'url' in parsed && typeof parsed.url === 'string' ? parsed.url : undefined,
                                     },
                                 });
                             }
@@ -184,9 +188,7 @@ export async function generateText(
             toolCallLog,
         };
     } catch (error) {
-        const aiEndTime = Date.now();
-        const aiDuration = aiEndTime - aiStartTime;
-        console.error(`❌ [${requestId}] AI generation failed after ${aiDuration}ms:`, error);
+        console.error(`❌ [${requestId}] AI generation failed after ${Date.now() - aiStartTime}ms:`, error);
         console.error(`❌ [${requestId}] AI error details:`, {
             errorName: error instanceof Error ? error.name : 'Unknown',
             errorMessage: error instanceof Error ? error.message : String(error),
@@ -222,8 +224,7 @@ export async function streamText(
         convoHistory.unshift({ role: 'system', content: systemPrompt });
     }
 
-    const lastMessage = convoHistory[convoHistory.length - 1];
-    if (lastMessage?.role !== 'user' || lastMessage?.content !== userPrompt) {
+    if (convoHistory[convoHistory.length - 1]?.role !== 'user' || convoHistory[convoHistory.length - 1]?.content !== userPrompt) {
         convoHistory.push({ role: 'user', content: userPrompt });
     }
 
@@ -256,37 +257,39 @@ export function extractToolData(steps: Awaited<Awaited<ReturnType<typeof ai.stre
         for (const tc of stepToolCalls) {
             const matchingResult = stepToolResults.find(tr => tr.toolCallId === tc.toolCallId);
 
-            let resultStr = '';
+            let result = '';
+            let parsed = null;
             let status: 'success' | 'error' = 'success';
 
             if (matchingResult?.output) {
                 const raw = matchingResult.output;
-                resultStr = typeof raw === 'string' ? raw : JSON.stringify(raw);
+                result = typeof raw === 'string' ? raw : JSON.stringify(raw);
                 try {
-                    const parsed = JSON.parse(resultStr);
+                    parsed = JSON.parse(result);
                     if (parsed?.status === 'error') status = 'error';
                 } catch {
                     // JSON parse error ignored, status remains as initial value
                 }
-                else toolEntry.result = JSON.stringify(outputValue);
-
-                if (typeof outputValue === 'object' && outputValue !== null && 'status' in outputValue && outputValue.status === 'error') toolEntry.status = 'error';
             }
 
-            toolCallLog.push({ toolName: tc.toolName, args: tc.input ?? {}, status, result: resultStr });
+            toolCallLog.push({
+                toolName: tc.toolName,
+                args: tc.input ?? {},
+                status,
+                result
+            });
 
             try {
-                const resultValue = typeof resultStr === 'string' ? JSON.parse(resultStr) : resultStr;
-                if (resultValue?.action === 'open-content') {
+                if (parsed?.action === 'open-content') {
                     clientToolCalls.push({
                         toolName: 'open-content',
                         toolCallId: tc.toolCallId,
                         args: {
-                            type: resultValue.type,
-                            threadId: resultValue.threadId,
-                            category: resultValue.category,
-                            mode: resultValue.mode,
-                            url: resultValue.url,
+                            type: parsed.type,
+                            threadId: parsed.threadId,
+                            category: parsed.category,
+                            mode: parsed.mode,
+                            url: parsed.url,
                         },
                     });
                 }
@@ -391,8 +394,7 @@ export async function generateObject<T>(
         });
     }
 
-    const lastMessage = convoHistory[convoHistory.length - 1];
-    if (lastMessage?.role !== 'user' || lastMessage?.content !== userPrompt) {
+    if (convoHistory[convoHistory.length - 1]?.role !== 'user' || convoHistory[convoHistory.length - 1]?.content !== userPrompt) {
         convoHistory.push({
             role: 'user',
             content: userPrompt

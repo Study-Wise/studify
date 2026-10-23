@@ -4,10 +4,10 @@ import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 import config from '@/lib/ai.config';
 import { buildContentSystemPrompt } from '@/lib/content';
-import { parseThreadData, type Message, type UploadedFile } from '@/lib/threads';
+import { parseThreadData, type Message } from '@/lib/threads';
 import { modules } from '@/lib/tools';
 import { saveContent } from '@/lib/content/latest';
-import { buildUploadedFilesContext } from '@/lib/content/generate/uploaded-files-context';
+import { buildUploadedFilesContext } from '@/lib/content/uploaded-files-context';
 
 import { eq } from 'drizzle-orm';
 
@@ -16,12 +16,10 @@ export async function generateMindMap(threadId: string, userPrompt?: string) {
 
     if (threads.length === 0) throw new Error('Thread not found');
 
-    const thread = threads[0];
-
-    const threadData = parseThreadData(thread.thread);
+    const threadData = parseThreadData(threads[0].thread);
     const messages = threadData?.messages ?? [];
 
-    const uploadedFiles = thread.uploadedFiles ?? [];
+    const uploadedFiles = threads[0].uploadedFiles ?? [];
 
     if (messages.length === 0) throw new Error('No messages found in thread');
 
@@ -102,7 +100,7 @@ You may remove or modify sections as you see fit based on relevance to the topic
         model: 'anthropic/claude-haiku-4.5',
         messages: messagesForAI,
         tools: Object.fromEntries(
-            Object.entries(modules).filter(([key]) => !excludeTools.includes(key))
+            Object.entries(modules).filter(([key]) => !config.contentGenerationExcludeTools.includes(key))
         ),
         stopWhen: stepCountIs(5),
         temperature: 0.7,

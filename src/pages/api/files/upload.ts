@@ -38,8 +38,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
 
         // Validate file size (max 10MB)
-        const maxSize = 10 * 1024 * 1024; // 10MB
-        if (file.size > maxSize) {
+        const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+        if (file.size > MAX_SIZE) {
             return new Response(
                 JSON.stringify({
                     status: 'error',

@@ -78,8 +78,7 @@ const themes = [
     }
 
     function focusItem(index: number) {
-        const count = menuItems.length;
-        menuItems[(index + count) % count]?.focus();
+        menuItems[(index + menuItems.length) % menuItems.length]?.focus();
     }
 
     themeSwitcher?.addEventListener('click', e => {

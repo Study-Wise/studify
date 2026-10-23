@@ -26,8 +26,9 @@ export async function checkThreadAccess(
     let threadOwner: string | null = null;
     let isPublicThread = false;
     let threadExists = false;
+    let isUserAdminFlag = false;
 
-    const userEmail = (user ?? (isDev() ? await getDevUser() : null))?.email || null;
+    const userEmail = (user ?? (isDev() ? await getDevUser() : null))?.email;
 
     if (userEmail) {
         try {

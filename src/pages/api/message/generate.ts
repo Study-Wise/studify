@@ -38,6 +38,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         else console.warn(`⚠️ [${requestId}] No category/mode specified, using default mode`);
 
         let current_thread_id: string | undefined = thread_id;
+        let isNewThread = false;
 
         if (!locals.user) {
             console.error(`❌ [${requestId}] Authentication required but not provided`);
@@ -106,6 +107,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
                     isDev: (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development'
                 });
                 current_thread_id = newThreadId;
+                isNewThread = true;
             } catch (error) {
                 console.error(`❌ [${requestId}] Error generating thread:`, error);
                 return new Response(
@@ -165,7 +167,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                         'messages' in userData.thread &&
                         Array.isArray(userData.thread.messages)
                     ) {
-                        convoHistory = [systemObj, ...parseThreadData(userData.thread).messages];
+                        convoHistory = [objPlace, ...parseThreadData(userData.thread).messages];
                     }
                     else {
                         console.warn(`⚠️ [${requestId}] No valid conversation history found in thread data, keeping system message only`);
@@ -315,7 +317,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
 
                 return new Response(
                     JSON.stringify({
-                        generatedText: htmlText,
+                        generatedText: await marked.parse(welcomeMessage),
                         generatedTitle: true,
                         id: current_thread_id,
                     }),
@@ -428,7 +430,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                             const textDelta = streamPart.text || '';
                             streamedText += textDelta;
                             let html: string | undefined;
-                            if (Date.now() - lastHtmlAt >= STREAM_HTML_INTERVAL) {
+                            if (Date.now() - lastHtmlAt >= config.streamHtmlInterval) {
                                 lastHtmlAt = Date.now();
                                 // Leave out a formula that is still being written, so half a formula never shows
                                 let open: RegExpMatchArray | undefined;
@@ -450,7 +452,9 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                             try {
                                 const raw = streamPart.output;
                                 const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
-                                if (typeof parsed === 'object' && parsed !== null && 'status' in parsed && parsed.status === 'error') status = 'error';
+                                if (typeof parsed === 'object' && parsed !== null && 'status' in parsed && parsed.status === 'error') {
+                                console.warn(`⚠️ [${requestId}] Tool returned an error status:`, parsed);
+                            }
                             } catch {
                                 // JSON parse error ignored, status remains as initial value
                             }
@@ -463,8 +467,6 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                     const [fullText, steps] = await Promise.all([streamResult.text, streamResult.steps]);
                     const { clientToolCalls, toolCallLog } = extractToolData(steps);
 
-                    const htmlText = await marked.parse(fullText);
-
                     const assistantMessage: Message = { id: nanoid(), role: 'assistant', content: fullText };
                     if (toolCallLog.length > 0) assistantMessage.toolCallLog = toolCallLog;
                     convoHistory.push(assistantMessage);
@@ -476,7 +478,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                     controller.enqueue(sendEvent({
                         type: 'done',
                         id: current_thread_id,
-                        generatedText: htmlText,
+                        generatedText: await marked.parse(fullText),
                         toolCallLog: toolCallLog.length > 0 ? toolCallLog : undefined,
                         clientToolCalls: clientToolCalls.length > 0 ? clientToolCalls : undefined,
                     }));

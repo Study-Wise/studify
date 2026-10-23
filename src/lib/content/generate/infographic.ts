@@ -4,10 +4,10 @@ import { generateText } from '@/lib/ai-service';
 import config from '@/lib/ai.config';
 import { buildContentSystemPrompt } from '@/lib/content';
 import { generateImage } from '@/lib/genai-image';
-import { parseThreadData, type UploadedFile } from '@/lib/threads';
+import { parseThreadData } from '@/lib/threads';
 import { VendorError } from '@/lib/user-errors';
 import { saveContent } from '@/lib/content/latest';
-import { buildUploadedFilesContext } from '@/lib/content/generate/uploaded-files-context';
+import { buildUploadedFilesContext } from '@/lib/content/uploaded-files-context';
 
 import { eq } from 'drizzle-orm';
 
@@ -24,12 +24,10 @@ export async function generateInfographic(
 
     if (threads.length === 0) throw new Error('Thread not found');
 
-    const thread = threads[0];
-
-    const threadData = parseThreadData(thread.thread);
+    const threadData = parseThreadData(threads[0].thread);
     const messages = threadData?.messages ?? [];
 
-    const uploadedFiles = thread.uploadedFiles ?? [];
+    const uploadedFiles = threads[0].uploadedFiles ?? [];
 
     if (messages.length === 0) throw new Error('No messages found in thread');
 
@@ -86,10 +84,10 @@ Style: Clean, modern, professional educational infographic. Use a white backgrou
     }
 
     const infographic = {
-        imageUrl: imageUrl,
+        imageUrl: imageResult.imageUrl,
         description: descriptionResult.text,
         generatedAt: new Date().toISOString(),
-        fileKey: fileKey
+        fileKey: imageResult.uploadResult.data.key
     };
 
     await saveContent(threadId, 'infographic', infographic);

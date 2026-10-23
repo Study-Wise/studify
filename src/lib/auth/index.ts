@@ -3,7 +3,7 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { magicLink } from 'better-auth/plugins';
 import { user, session, account, verification } from '@/db/auth-schema';
 import { db } from '@/db/initialize';
-import type { UserRole, SocialProviderConfig } from '@/lib/auth/types';
+import type { SocialProviderConfig } from '@/lib/auth/types';
 
 const ADMIN_EMAILS = [
     'adarshravikumar2@gmail.com',
@@ -26,30 +26,26 @@ function getEnvVar(key: string): string | undefined {
     return undefined;
 }
 
-function buildSocialProviders(): SocialProviderConfig {
-    const providers: SocialProviderConfig = {};
+const socialProviders: SocialProviderConfig = {};
 
-    // Google OAuth
-    const googleClientId = getEnvVar('GOOGLE_CLIENT_ID');
-    const googleClientSecret = getEnvVar('GOOGLE_CLIENT_SECRET');
-    if (googleClientId && googleClientSecret) {
-        providers.google = {
-            clientId: googleClientId,
-            clientSecret: googleClientSecret,
-        };
-    }
+// Google OAuth
+const googleClientId = getEnvVar('GOOGLE_CLIENT_ID');
+const googleClientSecret = getEnvVar('GOOGLE_CLIENT_SECRET');
+if (googleClientId && googleClientSecret) {
+    socialProviders.google = {
+        clientId: googleClientId,
+        clientSecret: googleClientSecret,
+    };
+}
 
-    // GitHub OAuth
-    const githubClientId = getEnvVar('GITHUB_CLIENT_ID');
-    const githubClientSecret = getEnvVar('GITHUB_CLIENT_SECRET');
-    if (githubClientId && githubClientSecret) {
-        providers.github = {
-            clientId: githubClientId,
-            clientSecret: githubClientSecret,
-        };
-    }
-
-    return providers;
+// GitHub OAuth
+const githubClientId = getEnvVar('GITHUB_CLIENT_ID');
+const githubClientSecret = getEnvVar('GITHUB_CLIENT_SECRET');
+if (githubClientId && githubClientSecret) {
+    socialProviders.github = {
+        clientId: githubClientId,
+        clientSecret: githubClientSecret,
+    };
 }
 
 const baseURL = getEnvVar('BETTER_AUTH_URL') || 'http://localhost:4321';
@@ -92,11 +88,12 @@ export const auth = betterAuth({
             create: {
                 before: async user => {
                     // Auto-promote user based on email/domain whitelist
-                    const role = determineUserRole(user.email);
                     return {
                         data: {
                             ...user,
-                            role,
+                            role: ADMIN_EMAILS.map(e => e.toLowerCase()).includes(user.email.toLowerCase()) || ADMIN_DOMAINS.some(domain => user.email.toLowerCase().endsWith(domain))
+                                ? 'admin'
+                                : (MODERATOR_DOMAINS.some(domain => user.email.toLowerCase().endsWith(domain)) ? 'moderator' : 'user'),
                         },
                     };
                 },

@@ -12,21 +12,17 @@ export function isDev(): boolean {
     return (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development';
 }
 
-function getDevAccessToken(): string | null {
-    if (!isDev()) return null;
-    return import.meta.env.USER_ACCESS_TOKEN || process.env.USER_ACCESS_TOKEN || null;
-}
+const DEV_ACCESS_TOKEN = import.meta.env.USER_ACCESS_TOKEN || process.env.USER_ACCESS_TOKEN || null;
 
 export async function getDevUserId(): Promise<string | null> {
     if (!isDev()) return null;
-    const accessToken = getDevAccessToken();
-    if (!accessToken) return null;
+    if (!DEV_ACCESS_TOKEN) return null;
 
     try {
         return (await db
             .select({ userId: account.userId })
             .from(account)
-            .where(eq(account.accessToken, accessToken))
+            .where(eq(account.accessToken, DEV_ACCESS_TOKEN))
             .limit(1))[0]?.userId || null;
     } catch (error) {
         console.error('Error fetching dev user ID from account:', error);
@@ -63,8 +59,8 @@ export async function getDevUser(): Promise<User | null> {
     }
 }
 
-export async function getDevUserRole(): Promise<UserRole | null> {
-    return (await getDevUser())?.role || null;
+export async function getDevUserRole(): Promise<UserRole | ''> {
+    return (await getDevUser())?.role || '';
 }
 
 export async function isDevUserAdmin(): Promise<boolean> {

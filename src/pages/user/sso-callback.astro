@@ -18,19 +18,14 @@ if (Astro.locals.user) return Astro.redirect(getSafeReturnBackUrl(Astro.url.sear
 </Layout>
 
 <script is:inline define:vars={{ getSafeReturnBackUrl }}>
-    async function completeOAuth() {
-        const redirectUrl = getSafeReturnBackUrl(new URLSearchParams(window.location.search).get('returnBackUrl'));
+    const redirectUrl = getSafeReturnBackUrl(new URLSearchParams(window.location.search).get('returnBackUrl'));
 
-        try {
-            // Better Auth automatically handles the OAuth callback
-            // Just redirect to the intended destination
-            // The session is already established via cookies
-            window.location.replace(redirectUrl);
-        } catch (error) {
-            console.error('OAuth callback error:', error);
-            setTimeout(() => window.location.replace(redirectUrl), 500);
-        }
+    try {
+        // window.location.replace can throw when navigation is blocked, for example in restricted browser contexts.
+        // On failure the catch retries the redirect once after a short delay.
+        window.location.replace(redirectUrl);
+    } catch (error) {
+        console.error('OAuth callback error:', error);
+        setTimeout(() => window.location.replace(redirectUrl), 500);
     }
-
-    completeOAuth();
 </script>

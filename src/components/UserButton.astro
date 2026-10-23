@@ -3,11 +3,11 @@ import '@/styles/components/user-button.scss';
 import SignOutScript from '@/scripts/auth/sign-out.astro';
 ---
 
-{user ? (
+{Astro.locals.user ? (
     <div class="user-button-container">
         <button type="button" class="user-button nav-btn" id="user-menu-trigger" aria-label="User menu">
             <span class="material-symbols-outlined" aria-hidden="true">account_circle</span>
-            <span class="user-name">{user.name || user.email}</span>
+            <span class="user-name">{Astro.locals.user.name || Astro.locals.user.email}</span>
         </button>
         <div class="user-menu" id="user-menu" hidden>
             <a href="/user/profile" class="user-menu-item">Profile</a>

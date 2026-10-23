@@ -41,21 +41,18 @@ function toCamelCase(str: string): string {
 }
 
 // Mapping between content type IDs (kebab-case) and their status keys (camelCase)
-function typeToKey(type: string): keyof ThreadContentStatus {
-    const keys: Record<string, keyof ThreadContentStatus> = {
-        'reference-sheet': 'hasReferenceSheet',
-        'study-guide': 'hasStudyGuide',
-        infographic: 'hasInfographic',
-        webpage: 'hasWebpage',
-        'mind-map': 'hasMindMap',
-        'additional-resources': 'hasAdditionalResources',
-        flashcards: 'hasFlashcards',
-        'practice-questions': 'hasPracticeQuestions',
-        slideshow: 'hasSlideshow',
-        summary: 'hasSummary',
-    };
-    return keys[type] ?? 'hasSummary';
-}
+const CONTENT_TYPE_KEYS: Record<string, keyof ThreadContentStatus> = {
+    'reference-sheet': 'hasReferenceSheet',
+    'study-guide': 'hasStudyGuide',
+    infographic: 'hasInfographic',
+    webpage: 'hasWebpage',
+    'mind-map': 'hasMindMap',
+    'additional-resources': 'hasAdditionalResources',
+    flashcards: 'hasFlashcards',
+    'practice-questions': 'hasPracticeQuestions',
+    slideshow: 'hasSlideshow',
+    summary: 'hasSummary',
+};
 
 export async function getThreadContentStatus(
     threadId: string,
@@ -76,7 +73,7 @@ export async function getThreadContentStatus(
         hasSummary: false,
     };
 
-    if (!isNewChat && (isAuthorized || isPublic) && threadId) {
+    if (threadId !== 'new' && (isAuthorized || isPublic) && threadId) {
         try {
             const threads = await db.select({ content: threadsTable.content }).from(threadsTable).where(eq(threadsTable.id, threadId));
 
@@ -85,7 +82,7 @@ export async function getThreadContentStatus(
                 const contentTypes = getContentTypesList();
 
                 contentTypes.forEach(type => {
-                    const statusKey = typeToKey(type);
+                    const statusKey = CONTENT_TYPE_KEYS[type] ?? 'hasSummary';
                     const contentKey = toCamelCase(type);
 
                     // Check if content exists for this type in the JSON column

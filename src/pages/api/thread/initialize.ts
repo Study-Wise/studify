@@ -23,11 +23,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        const user_email = locals.user.email;
-
-        if (!(await isUserAdmin(user_email))) {
+        if (!(await isUserAdmin(locals.user.email))) {
             if (
-                (await db.select().from(threadsTable).where(eq(threadsTable.email, user_email))).length
+                (await db.select().from(threadsTable).where(eq(threadsTable.email, locals.user.email))).length
                 >= config.maxThreadsPerUser
             ) {
                 return new Response(
@@ -51,7 +49,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             id: newThreadId,
             title: '',
             thread: { messages: [] },
-            email: user_email,
+            email: locals.user.email,
             category: category || config.defaultCategory,
             mode: mode || config.defaultMode,
             model: initialModel,

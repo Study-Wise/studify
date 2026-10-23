@@ -3,9 +3,9 @@ import { threadsTable } from '@/db/schema';
 import { generateText } from '@/lib/ai-service';
 import config from '@/lib/ai.config';
 import { buildContentSystemPrompt } from '@/lib/content';
-import { parseThreadData, type UploadedFile } from '@/lib/threads';
+import { parseThreadData } from '@/lib/threads';
 import { saveContent } from '@/lib/content/latest';
-import { buildUploadedFilesContext } from '@/lib/content/generate/uploaded-files-context';
+import { buildUploadedFilesContext } from '@/lib/content/uploaded-files-context';
 
 import { eq } from 'drizzle-orm';
 
@@ -14,15 +14,10 @@ export async function generateReferenceSheet(threadId: string, userPrompt?: stri
 
     if (threads.length === 0) throw new Error('Thread not found');
 
-    const thread = threads[0];
-    // Always use default model for content generation (more reliable)
-    const userModel = config.model;
-    const provider = config.provider;
-
-    const threadData = parseThreadData(thread.thread);
+    const threadData = parseThreadData(threads[0].thread);
     const messages = threadData?.messages ?? [];
 
-    const uploadedFiles = thread.uploadedFiles ?? [];
+    const uploadedFiles = threads[0].uploadedFiles ?? [];
 
     if (messages.length === 0) throw new Error('No messages found in thread');
 
@@ -51,8 +46,8 @@ Math formatting: use \`$…$\` for displaying math formulas/equations inline and
         referenceSheetPrompt,
         'Now generate the reference sheet based on the above conversation. Output ONLY the reference sheet content in markdown format. Do not include any explanations, commentary, or conversation - just the reference sheet.',
         messages,
-        userModel,
-        provider,
+        config.model,
+        config.provider,
         {},
         config.contentGenerationExcludeTools,
     );

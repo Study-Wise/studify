@@ -25,7 +25,7 @@ export default function getAllSitePages() {
             return {
                 name: finalPageTitle,
                 path: route,
-                hiddenFromNav: hiddenFromNav || isHidden
+                hiddenFromNav: mod?.inNav === 'hide' || isHidden
             };
         })
         .filter((page): page is { name: string; path: string; hiddenFromNav: boolean } => !!page)

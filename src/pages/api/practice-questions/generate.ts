@@ -38,10 +38,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        const user_email = locals.user.email;
-
-        if (!isValidEmail(user_email)) {
-            console.error(`❌ [${requestId}] Invalid email format:`, user_email);
+        if (!isValidEmail(locals.user.email)) {
+            console.error(`❌ [${requestId}] Invalid email format:`, locals.user.email);
             return new Response(
                 JSON.stringify({ status: 'error', error: 'Invalid email' }),
                 {
@@ -64,7 +62,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        if (threads[0].email !== user_email && !threads[0].isPublic) {
+        if (threads[0].email !== locals.user.email && !threads[0].isPublic) {
             console.error(`❌ [${requestId}] Unauthorized access to thread:`, threadId);
             return new Response(
                 JSON.stringify({ status: 'error', error: 'Unauthorized' }),

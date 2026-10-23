@@ -31,17 +31,15 @@ export async function extractTextFromImage(file: File): Promise<string | null> {
 }
 
 export async function extractTextFromFile(file: File): Promise<string | null> {
-    const fileType = file.type;
-
-    if (fileType === 'text/plain' || fileType === 'text/csv' ||
-        fileType === 'text/html' || fileType === 'text/markdown') {
+    if (file.type === 'text/plain' || file.type === 'text/csv' ||
+        file.type === 'text/html' || file.type === 'text/markdown') {
         return await extractTextFromPlainText(file);
     }
 
-    if (fileType === 'application/pdf') return await extractTextFromPDF(file);
+    if (file.type === 'application/pdf') return await extractTextFromPDF(file);
 
-    if (fileType.startsWith('image/')) return await extractTextFromImage(file);
+    if (file.type.startsWith('image/')) return await extractTextFromImage(file);
 
     // For other file types, return metadata only
-    return `[File: ${file.name}, Type: ${fileType}, Size: ${(file.size / 1024).toFixed(1)} KB]`;
+    return `[File: ${file.name}, Type: ${file.type}, Size: ${(file.size / 1024).toFixed(1)} KB]`;
 }

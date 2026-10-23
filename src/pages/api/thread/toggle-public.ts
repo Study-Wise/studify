@@ -47,10 +47,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        const user_email = locals.user.email;
-
-        if (!isValidEmail(user_email)) {
-            console.error(`❌ [${requestId}] Invalid email format:`, user_email);
+        if (!isValidEmail(locals.user.email)) {
+            console.error(`❌ [${requestId}] Invalid email format:`, locals.user.email);
             return new Response(
                 JSON.stringify({ status: 'error', error: 'Invalid email' }),
                 {
@@ -74,7 +72,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
 
         // Check if user owns the thread - only owner can toggle public status
-        if (_threads[0].email !== user_email) {
+        if (_threads[0].email !== locals.user.email) {
             console.error(`❌ [${requestId}] Unauthorized: User does not own this thread`);
             return new Response(
                 JSON.stringify({ status: 'error', error: 'Only the thread owner can change sharing settings' }),

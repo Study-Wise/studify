@@ -17,7 +17,7 @@ export async function getLatestSlideshow(threadId: string): Promise<SlideshowRes
         if (content.content) {
             return {
                 content: content.content,
-                html
+                html: 'html' in content && typeof content.html === 'string' ? content.html : null
             };
         }
     }

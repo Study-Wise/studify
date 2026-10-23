@@ -71,21 +71,16 @@ import '@/styles/accessibility/touch-gestures.scss';
             this.endX = e.touches[0].clientX;
             this.endY = e.touches[0].clientY;
 
-            const deltaY = this.endY - this.startY;
-
-            if (deltaY > 0) {
+            if (this.endY - this.startY > 0) {
                 e.preventDefault();
-                const progress = Math.min(deltaY / this.pullThreshold, 1);
-                this.updateRefreshIndicator(progress);
+                this.updateRefreshIndicator(Math.min((this.endY - this.startY) / this.pullThreshold, 1));
             }
         }
 
         handleTouchEnd() {
             if (!this.isPulling) return;
 
-            const deltaY = this.endY - this.startY;
-
-            if (deltaY >= this.pullThreshold) this.triggerRefresh();
+            if (this.endY - this.startY >= this.pullThreshold) this.triggerRefresh();
             else this.hideRefreshIndicator();
 
             this.isPulling = false;
@@ -94,8 +89,7 @@ import '@/styles/accessibility/touch-gestures.scss';
         updateRefreshIndicator(progress: number) {
             if (!this.refreshIndicator) return;
 
-            const translateY = (progress * 60) - 60;
-            this.refreshIndicator.style.translate = `0 ${translateY}px`;
+            this.refreshIndicator.style.translate = `0 ${(progress * 60) - 60}px`;
             this.refreshIndicator.style.opacity = progress.toString();
 
             if (progress >= 1) {

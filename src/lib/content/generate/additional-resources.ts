@@ -44,12 +44,10 @@ export async function generateResources(threadId: string, userPrompt?: string): 
 
     if (threads.length === 0) throw new Error('Thread not found');
 
-    const thread = threads[0];
-
-    const threadData = parseThreadData(thread.thread);
+    const threadData = parseThreadData(threads[0].thread);
     const messages = threadData?.messages ?? [];
 
-    const uploadedFiles = thread.uploadedFiles ?? [];
+    const uploadedFiles = threads[0].uploadedFiles ?? [];
 
     if (messages.length === 0) throw new Error('No messages found in thread');
 
@@ -68,7 +66,7 @@ export async function generateResources(threadId: string, userPrompt?: string): 
     if (userPrompt) topicSummary += ` ${userPrompt}`;
 
     const resourceCollection: ResourceCollection = {
-        topic: thread.title || 'Study Resources',
+        topic: threads[0].title || 'Study Resources',
         simulations: [],
         videos: [],
         articles: [],
@@ -79,7 +77,7 @@ export async function generateResources(threadId: string, userPrompt?: string): 
 
     try {
         // Science threads also get interactive PhET simulations
-        if (SIMULATION_CATEGORIES.includes(thread.category) && !SIMULATION_EXCLUDED_MODES.includes(thread.mode)) {
+        if (SIMULATION_CATEGORIES.includes(threads[0].category) && !SIMULATION_EXCLUDED_MODES.includes(threads[0].mode)) {
             const simulations = await findSimulations(topicSummary);
             resourceCollection.simulations = simulations.map<Resource>(simulation => ({
                 title: simulation.title,

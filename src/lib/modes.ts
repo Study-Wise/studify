@@ -399,20 +399,12 @@ const categories: Record<string, Category> = {
 
 // Generate prompts programmatically for each mode
 for (const topicKey of Object.keys(categories)) {
-    const topicKeyTyped = topicKey;
-    const topic = categories[topicKeyTyped];
-    const modes = topic.modes;
+    for (const modeKey of Object.keys(categories[topicKey].modes)) {
+        Object.assign(categories[topicKey].modes[modeKey], characters[topicKey]?.[modeKey]);
 
-    for (const modeKey of Object.keys(modes)) {
-        const mode = modes[modeKey];
+        if (!categories[topicKey].modes[modeKey].prompt) categories[topicKey].modes[modeKey].prompt = Promise.resolve(generateModePrompt(categories[topicKey].modes[modeKey], topicKey));
 
-        Object.assign(mode, characters[topicKey]?.[modeKey]);
-
-        if (!mode.prompt) mode.prompt = Promise.resolve(generateModePrompt(mode, topicKey));
-
-        if (!mode.tools) mode.tools = modules;
-
-        modes[modeKey] = mode;
+        if (!categories[topicKey].modes[modeKey].tools) categories[topicKey].modes[modeKey].tools = modules;
     }
 }
 

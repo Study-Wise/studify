@@ -4,9 +4,9 @@ import { generateText } from '@/lib/ai-service';
 import config from '@/lib/ai.config';
 import { buildContentSystemPrompt } from '@/lib/content';
 import categories from '@/lib/modes';
-import { parseThreadData, type UploadedFile } from '@/lib/threads';
+import { parseThreadData } from '@/lib/threads';
 import { saveContent } from '@/lib/content/latest';
-import { buildUploadedFilesContext } from '@/lib/content/generate/uploaded-files-context';
+import { buildUploadedFilesContext } from '@/lib/content/uploaded-files-context';
 import desmosSection from '@/lib/prompt-templates/desmos';
 
 import { eq } from 'drizzle-orm';
@@ -16,26 +16,17 @@ export async function generateStudyGuide(threadId: string, userPrompt?: string) 
 
     if (threads.length === 0) throw new Error('Thread not found');
 
-    const thread = threads[0];
-    const category = thread.category;
-    const mode = thread.mode;
-    // Always use default model for content generation (more reliable)
-    const userModel = config.model;
-    const provider = config.provider;
-
-    const threadData = parseThreadData(thread.thread);
+    const threadData = parseThreadData(threads[0].thread);
     const messages = threadData?.messages ?? [];
 
-    const uploadedFiles = thread.uploadedFiles ?? [];
+    const uploadedFiles = threads[0].uploadedFiles ?? [];
 
     if (messages.length === 0) throw new Error('No messages found in thread');
 
     const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
 
     // Only include Desmos section for modes with desmos: true
-    const modeConfig = categories[category]?.modes?.[mode];
-    const includeDesmos = modeConfig?.desmos === true;
-    const desmosContent = includeDesmos ? `\n${desmosSection}\n` : '';
+    const desmosContent = categories[threads[0].category]?.modes?.[threads[0].mode]?.desmos === true ? `\n${desmosSection}\n` : '';
 
     const studyGuidePrompt =
 `${buildContentSystemPrompt('Study Guide', uploadedFilesContext)}
@@ -86,8 +77,8 @@ REMEMBER: Output ONLY the Study Guide. No quizzes, no practice questions, no fla
         studyGuidePrompt,
         'Now generate the study guide based on the above conversation. Output ONLY the study guide content in markdown format. Do not include any explanations, commentary, or conversation - just the study guide.',
         messages,
-        userModel,
-        provider,
+        config.model,
+        config.provider,
         {},
         config.contentGenerationExcludeTools,
     );

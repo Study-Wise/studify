@@ -19,19 +19,19 @@ const { providers, defaultProvider, defaultTier } = Astro.props;
 
         document.querySelectorAll('.provider-button').forEach(btn => {
             const providerKey = btn.dataset.provider;
-            if (providerKey === currentProvider) btn.classList.add('active');
+            if (providerKey === (userSettings.provider || defaultProvider)) btn.classList.add('active');
             else btn.classList.remove('active');
         });
 
         document.querySelectorAll('.tier-group').forEach(group => {
             group.style.display = 'none';
         });
-        const currentTierGroup = document.getElementById(`tiers-${currentProvider}`);
+        const currentTierGroup = document.getElementById(`tiers-${userSettings.provider || defaultProvider}`);
         if (currentTierGroup) currentTierGroup.style.display = 'flex';
 
         document.querySelectorAll('.tier-button').forEach(btn => {
             const tierKey = btn.dataset.tier;
-            if (tierKey === currentTier) btn.classList.add('active');
+            if (tierKey === (userSettings.tier || defaultTier)) btn.classList.add('active');
             else btn.classList.remove('active');
         });
     }

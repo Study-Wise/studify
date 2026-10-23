@@ -67,16 +67,14 @@ async function getMessages(id: string, isAuthorized?: boolean | null) {
         if (!isAuthorized) return []
 
         // Handle case where thread data is stored as string instead of object
-        let threadData: ThreadData;
-        const rawThread = thread?.thread;
+        const rawThread = dbResponse[0]?.thread;
         if (typeof rawThread === 'string') {
             // Remove trailing commas before ] or } (invalid JSON but sometimes stored)
             const cleanedJson = rawThread.replace(/,\s*([\]}])/g, '$1');
-            threadData = parseThreadData(cleanedJson);
-            await db.update(threadsTable).set({ thread: threadData }).where(eq(threadsTable.id, id));
+            await db.update(threadsTable).set({ thread: parseThreadData(cleanedJson) }).where(eq(threadsTable.id, id));
+            return parseThreadData(cleanedJson)?.messages ?? [];
         }
-        else threadData = parseThreadData(rawThread);
-        return threadData?.messages ?? [];
+        return parseThreadData(rawThread)?.messages ?? [];
     } catch (error) {
         console.error(error);
         return [];
@@ -90,16 +88,14 @@ async function getMessagesLength(id: string) {
         if (dbResponse.length === 0) return 0;
 
         // Handle case where thread data is stored as string instead of object
-        let threadData: ThreadData;
-        const rawThread = thread?.thread;
+        const rawThread = dbResponse[0]?.thread;
         if (typeof rawThread === 'string') {
             // Remove trailing commas before ] or } (invalid JSON but sometimes stored)
             const cleanedJson = rawThread.replace(/,\s*([\]}])/g, '$1');
-            threadData = parseThreadData(cleanedJson);
-            await db.update(threadsTable).set({ thread: threadData }).where(eq(threadsTable.id, id));
+            await db.update(threadsTable).set({ thread: parseThreadData(cleanedJson) }).where(eq(threadsTable.id, id));
+            return parseThreadData(cleanedJson)?.messages?.length ?? 0;
         }
-        else threadData = parseThreadData(rawThread);
-        return threadData?.messages?.length ?? 0;
+        return parseThreadData(rawThread)?.messages?.length ?? 0;
     } catch (error) {
         console.error(error);
         return 0;
@@ -114,7 +110,7 @@ async function getThreadByToken(id: string, isAuthorized?: boolean | null) {
 
         if (!isAuthorized) return null;
 
-        return thread;
+        return dbResponse[0];
     } catch (error) {
         console.error(error);
         return null;
