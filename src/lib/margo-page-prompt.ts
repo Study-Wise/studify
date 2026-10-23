@@ -14,11 +14,10 @@ const basePrompt = (cutoff === -1 ? noFrnt : noFrnt.slice(0, cutoff)).trim();
 
 const subjects = Object.entries(modeDefinitions)
     .map(([categoryKey, category]) => {
-        const shownModes = Object.entries(category.modes).filter(([, mode]) => mode.show);
+        const shownModes = Object.entries(category.modes).filter(([, mode]) => mode.show !== false);
         if (shownModes.length === 0) return null;
 
-        const modes = shownModes.map(([modeKey, mode]) => `${mode.name} (/${categoryKey}/${modeKey})`);
-        return `- ${category.name}: ${category.description}\n    Modes: ${modes.join(', ')}`;
+        return `- ${category.name}: ${category.description}\n    Modes: ${shownModes.map(([modeKey, mode]) => `${mode.name} (/${categoryKey}/${modeKey})`).join(', ')}`;
     })
     .filter((section): section is string => section !== null)
     .join('\n');
