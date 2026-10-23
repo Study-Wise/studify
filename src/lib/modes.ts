@@ -391,7 +391,7 @@ const categories: Record<string, Category> = {
                 name: 'Margo Page',
                 description: 'Chat with Margo Page from the Studify support team about the app, issues, and feedback',
                 icon: '🎧',
-                prompt: Promise.resolve(margoPagePrompt),
+                prompt: margoPagePrompt,
             },
         },
     },
