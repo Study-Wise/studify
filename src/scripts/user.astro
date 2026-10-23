@@ -2,7 +2,6 @@
     import { authClient } from '@/lib/auth/client';
 
     const socialButtonsContainer = document.querySelector('.social-buttons');
-    const callbackURL = socialButtonsContainer instanceof window.HTMLElement ? socialButtonsContainer.dataset.callbackUrl || '/user/sso-callback' : '/user/sso-callback';
 
     // Social sign-in click handlers
     document.querySelectorAll('.social-button[data-provider]').forEach(button => {

@@ -6,7 +6,6 @@ import type { Message, ToolCallLogEntry } from '@/lib/threads';
 import type { ToolContext, ToolRecord } from '@/lib/tools';
 import { VendorError } from '@/lib/user-errors';
 import 'dotenv/config';
-import type { JSONValue } from 'ai';
 import { nanoid } from 'nanoid';
 import type { ZodSchema } from 'zod';
 

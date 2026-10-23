@@ -96,7 +96,7 @@ REMEMBER: Output ONLY the markdown content. No quizzes, no practice questions, n
         if (token.type === 'heading' || pages.length === 0) pages.push({ tokens: [] });
         if (firstHeading.text === undefined) {
             const t: MarkedToken[] & { links: Record<string, JSONValue> } = Object.assign([token], { links: {} });
-            firstHeading.text = cheerio.load(marked.parser(t)).text();
+            firstHeading.text = cheerio.load(marked.parser(t)).root().text();
         }
         pages[pages.length - 1].tokens!.push(token);
     });
