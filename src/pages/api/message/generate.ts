@@ -378,44 +378,6 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
         // The title as stored when this request started; generated titles only replace this value
         const storedTitle = userData?.title ?? 'Untitled Conversation';
 
-        async function saveConvo(messages: Message[]) {
-            if (current_thread_id && userData) {
-                // Leave the title out: the user may have renamed the chat while this response streamed
-                await db.update(threadsTable)
-                    .set({ thread: { messages }, updatedAt: new Date(), isDev })
-                    .where(eq(threadsTable.id, current_thread_id!));
-            }
-            else if (current_thread_id) {
-                await db.insert(threadsTable).values({
-                    id: current_thread_id,
-                    title: storedTitle,
-                    thread: { messages },
-                    email: user_email,
-                    category: category || config.defaultCategory,
-                    mode: mode || config.defaultMode,
-                    model: userModel,
-                    provider: selectedProvider,
-                    isPublic: isPublic,
-                    isDev,
-                }).onConflictDoUpdate({
-                    target: threadsTable.id,
-                    set: { thread: { messages }, updatedAt: new Date(), isDev },
-                });
-            }
-        }
-
-        async function generateAndSaveTitle() {
-            try {
-                const title = await generateTitle({ convoHistory, userModel, provider: selectedProvider });
-                await db.update(threadsTable)
-                    .set({ title, updatedAt: new Date() })
-                    // Skip if the chat was renamed while the title was generated
-                    .where(and(eq(threadsTable.id, current_thread_id!), eq(threadsTable.title, storedTitle)));
-            } catch (error) {
-                console.error(`❌ [${requestId}] Title generation failed:`, error);
-            }
-        }
-
         const responseStream = new ReadableStream({
             async start(controller) {
                 try {
@@ -445,7 +407,6 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                         else if (streamPart.type === 'tool-call') {
                             const toolCallId = streamPart.toolCallId || '';
                             const toolName = streamPart.toolName || '';
-                            pendingCalls.set(toolCallId, toolName);
                             controller.enqueue(sendEvent({ type: 'tool-call', toolCallId, toolName }));
                         }
                         else if (streamPart.type === 'tool-result') {
@@ -470,10 +431,42 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                     const assistantMessage: Message = { id: nanoid(), role: 'assistant', content: fullText };
                     if (toolCallLog.length > 0) assistantMessage.toolCallLog = toolCallLog;
                     convoHistory.push(assistantMessage);
-                    const convoHistoryWithoutSystem = convoHistory.filter(msg => msg.role !== 'system');
-                    await saveConvo(convoHistoryWithoutSystem);
+                    const messages = convoHistory.filter(msg => msg.role !== 'system');
+                    if (current_thread_id && userData) {
+                        // Leave the title out: the user may have renamed the chat while this response streamed
+                        await db.update(threadsTable)
+                            .set({ thread: { messages }, updatedAt: new Date(), isDev })
+                            .where(eq(threadsTable.id, current_thread_id!));
+                    }
+                    else if (current_thread_id) {
+                        await db.insert(threadsTable).values({
+                            id: current_thread_id,
+                            title: storedTitle,
+                            thread: { messages },
+                            email: user_email,
+                            category: category || config.defaultCategory,
+                            mode: mode || config.defaultMode,
+                            model: userModel,
+                            provider: selectedProvider,
+                            isPublic: isPublic,
+                            isDev,
+                        }).onConflictDoUpdate({
+                            target: threadsTable.id,
+                            set: { thread: { messages }, updatedAt: new Date(), isDev },
+                        });
+                    }
 
-                    if (!userData?.title) void generateAndSaveTitle();
+                    if (!userData?.title) {
+                        try {
+                            const title = await generateTitle({ convoHistory, userModel, provider: selectedProvider });
+                            await db.update(threadsTable)
+                                .set({ title, updatedAt: new Date() })
+                                // Skip if the chat was renamed while the title was generated
+                                .where(and(eq(threadsTable.id, current_thread_id!), eq(threadsTable.title, storedTitle)));
+                        } catch (error) {
+                            console.error(`❌ [${requestId}] Title generation failed:`, error);
+                        }
+                    }
 
                     controller.enqueue(sendEvent({
                         type: 'done',

@@ -36,8 +36,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
     try {
         // Use the authenticated session user, never a client-supplied email
-        const email = locals.user?.email;
-        if (!email) {
+        if (!locals.user?.email) {
             return new Response(
                 JSON.stringify({ status: 'error', error: 'Authentication required' }),
                 { status: 401 }
@@ -57,7 +56,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
 
         const upload = chunkedUploads.get(uploadId);
-        if (!upload || upload.email !== email) {
+        if (!upload || upload.email !== locals.user?.email) {
             return new Response(
                 JSON.stringify({ status: 'error', error: 'Upload not found or expired' }),
                 { status: 404 }
