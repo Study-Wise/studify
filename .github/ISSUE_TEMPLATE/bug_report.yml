@@ -1,7 +1,8 @@
 name: Bug report
 description: Report something that is broken in Studify
 title: "[Bug]: "
-labels: ["bug"]
+labels: ["Bug"]
+type: "Bug"
 body:
     - type: markdown
       attributes:
