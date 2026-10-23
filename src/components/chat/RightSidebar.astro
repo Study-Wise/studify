@@ -10,7 +10,8 @@ const {
     category,
     mode,
     isAuthorized,
-    isPublic
+    isPublic,
+    chatSections = {}
 } = Astro.props;
 
 const {
@@ -43,126 +44,130 @@ const summaryUrl = `/${category}/${mode}/summary/${threadId}`;
             <span class="material-symbols-outlined" aria-hidden="true">close</span>
             <span class="sr-only">Close study materials</span>
         </label>
-        <SidebarSection
-            title="Chat Summary"
-            icon="summarize"
-            hasContent={hasSummary}
-            threadId={threadId}
-            viewUrl={summaryUrl}
-            viewButtonText="View Summary"
-            emptyMessage="No summary generated yet."
-            id="summary"
-            isAuthorized={isAuthorized}
-        />
+        {chatSections.studyMaterials && (
+            <>
+                <SidebarSection
+                    title="Chat Summary"
+                    icon="summarize"
+                    hasContent={hasSummary}
+                    threadId={threadId}
+                    viewUrl={summaryUrl}
+                    viewButtonText="View Summary"
+                    emptyMessage="No summary generated yet."
+                    id="summary"
+                    isAuthorized={isAuthorized}
+                />
 
-        <SidebarSection
-            title="Study Guide"
-            icon="menu_book"
-            hasContent={hasStudyGuide}
-            threadId={threadId}
-            viewUrl={studyGuideUrl}
-            viewButtonText="View Full Study Guide"
-            emptyMessage="No study guide generated yet."
-            id="study-guide"
-            isAuthorized={isAuthorized}
-        />
+                <SidebarSection
+                    title="Study Guide"
+                    icon="menu_book"
+                    hasContent={hasStudyGuide}
+                    threadId={threadId}
+                    viewUrl={studyGuideUrl}
+                    viewButtonText="View Full Study Guide"
+                    emptyMessage="No study guide generated yet."
+                    id="study-guide"
+                    isAuthorized={isAuthorized}
+                />
 
-        <SidebarSection
-            title="Reference Sheet"
-            icon="description"
-            hasContent={hasReferenceSheet}
-            threadId={threadId}
-            viewUrl={referenceSheetUrl}
-            viewButtonText="View Full Reference Sheet"
-            emptyMessage="No reference sheet generated yet."
-            id="reference-sheet"
-            isAuthorized={isAuthorized}
-        />
+                <SidebarSection
+                    title="Reference Sheet"
+                    icon="description"
+                    hasContent={hasReferenceSheet}
+                    threadId={threadId}
+                    viewUrl={referenceSheetUrl}
+                    viewButtonText="View Full Reference Sheet"
+                    emptyMessage="No reference sheet generated yet."
+                    id="reference-sheet"
+                    isAuthorized={isAuthorized}
+                />
 
-        <SidebarSection
-            title="Infographic"
-            icon="image"
-            hasContent={hasInfographic}
-            threadId={threadId}
-            viewUrl={infographicUrl}
-            viewButtonText="View Infographic"
-            emptyMessage="No infographic generated yet."
-            id="infographic"
-            isAuthorized={isAuthorized}
-        />
+                <SidebarSection
+                    title="Infographic"
+                    icon="image"
+                    hasContent={hasInfographic}
+                    threadId={threadId}
+                    viewUrl={infographicUrl}
+                    viewButtonText="View Infographic"
+                    emptyMessage="No infographic generated yet."
+                    id="infographic"
+                    isAuthorized={isAuthorized}
+                />
 
-        <SidebarSection
-            title="Flashcards"
-            icon="style"
-            hasContent={hasFlashcards}
-            threadId={threadId}
-            viewUrl={flashcardUrl}
-            viewButtonText="View Flashcards"
-            emptyMessage="No flashcards generated yet."
-            id="flashcards"
-            isAuthorized={isAuthorized}
-        />
+                <SidebarSection
+                    title="Flashcards"
+                    icon="style"
+                    hasContent={hasFlashcards}
+                    threadId={threadId}
+                    viewUrl={flashcardUrl}
+                    viewButtonText="View Flashcards"
+                    emptyMessage="No flashcards generated yet."
+                    id="flashcards"
+                    isAuthorized={isAuthorized}
+                />
 
-        <SidebarSection
-            title="Practice Questions"
-            icon="quiz"
-            hasContent={hasPracticeQuestions}
-            threadId={threadId}
-            viewUrl={practiceQuestionsUrl}
-            viewButtonText="View Practice Questions"
-            emptyMessage="No practice questions generated yet."
-            id="practice-questions"
-            isAuthorized={isAuthorized}
-        />
+                <SidebarSection
+                    title="Practice Questions"
+                    icon="quiz"
+                    hasContent={hasPracticeQuestions}
+                    threadId={threadId}
+                    viewUrl={practiceQuestionsUrl}
+                    viewButtonText="View Practice Questions"
+                    emptyMessage="No practice questions generated yet."
+                    id="practice-questions"
+                    isAuthorized={isAuthorized}
+                />
 
-        <SidebarSection
-            title="Webpage"
-            icon="web"
-            hasContent={hasWebpage}
-            threadId={threadId}
-            viewUrl={webpageUrl}
-            viewButtonText="View Webpage"
-            emptyMessage="No webpage generated yet."
-            id="webpage"
-            isAuthorized={isAuthorized}
-        />
+                <SidebarSection
+                    title="Webpage"
+                    icon="web"
+                    hasContent={hasWebpage}
+                    threadId={threadId}
+                    viewUrl={webpageUrl}
+                    viewButtonText="View Webpage"
+                    emptyMessage="No webpage generated yet."
+                    id="webpage"
+                    isAuthorized={isAuthorized}
+                />
 
-        <SidebarSection
-            title="Mind Map"
-            icon="hub"
-            hasContent={hasMindMap}
-            threadId={threadId}
-            viewUrl={mindMapUrl}
-            viewButtonText="View Mind Map"
-            emptyMessage="No mind map generated yet."
-            id="mind-map"
-            isAuthorized={isAuthorized}
-        />
+                <SidebarSection
+                    title="Mind Map"
+                    icon="hub"
+                    hasContent={hasMindMap}
+                    threadId={threadId}
+                    viewUrl={mindMapUrl}
+                    viewButtonText="View Mind Map"
+                    emptyMessage="No mind map generated yet."
+                    id="mind-map"
+                    isAuthorized={isAuthorized}
+                />
 
-        <SidebarSection
-            title="Additional Resources"
-            icon="travel_explore"
-            hasContent={hasAdditionalResources}
-            threadId={threadId}
-            viewUrl={additionalResourcesUrl}
-            viewButtonText="View Resources"
-            emptyMessage="No resources found yet."
-            id="additional-resources"
-            generateVerb="Find"
-            regenerateVerb="Find New"
-            isAuthorized={isAuthorized}
-        />
+                <SidebarSection
+                    title="Additional Resources"
+                    icon="travel_explore"
+                    hasContent={hasAdditionalResources}
+                    threadId={threadId}
+                    viewUrl={additionalResourcesUrl}
+                    viewButtonText="View Resources"
+                    emptyMessage="No resources found yet."
+                    id="additional-resources"
+                    generateVerb="Find"
+                    regenerateVerb="Find New"
+                    isAuthorized={isAuthorized}
+                />
 
-        <SidebarSection
-            title="Slideshow"
-            icon="slideshow"
-            hasContent={hasSlideshow}
-            threadId={threadId}
-            viewUrl={slideshowUrl}
-            viewButtonText="View Slideshow"
-            emptyMessage="No slideshow generated yet."
-            id="slideshow"
-            isAuthorized={isAuthorized}
-        />
+                <SidebarSection
+                    title="Slideshow"
+                    icon="slideshow"
+                    hasContent={hasSlideshow}
+                    threadId={threadId}
+                    viewUrl={slideshowUrl}
+                    viewButtonText="View Slideshow"
+                    emptyMessage="No slideshow generated yet."
+                    id="slideshow"
+                    isAuthorized={isAuthorized}
+                />
+            </>
+        )}
     </div>
 </aside>

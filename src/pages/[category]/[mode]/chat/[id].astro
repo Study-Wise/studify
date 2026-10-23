@@ -130,6 +130,7 @@ export const inNav = 'hide';
             email={user_email || ''}
             category={category || ''}
             mode={mode || ''}
+            chatSections={modeObj.chatSections}
         />
         <section class="chat-section">
             <div class="chat-messages">
@@ -188,6 +189,7 @@ export const inNav = 'hide';
             mode={mode || ''}
             isAuthorized={isAuthorized}
             isPublic={isPublic}
+            chatSections={modeObj.chatSections}
         />
     </section>
     <script is:inline>

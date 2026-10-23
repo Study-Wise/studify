@@ -12,7 +12,8 @@ const {
     uploadedFiles = [],
     email = '',
     category = '',
-    mode = ''
+    mode = '',
+    chatSections = {}
 } = Astro.props;
 
 const hasSavedThread = Boolean(threadId) && threadId !== 'new';
@@ -24,7 +25,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
             <span class="material-symbols-outlined" aria-hidden="true">close</span>
             <span class="sr-only">Close files and sharing</span>
         </label>
-        {isAuthorized && (
+        {isAuthorized && chatSections.shareSettings && (
             <div class="sidebar-section">
                 <div class="section-header">
                     <div class="section-title">
@@ -78,70 +79,72 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                 </div>
             </div>
         )}
-        <SidebarSection
-            title="Uploaded Files"
-            icon="folder"
-            hasContent={uploadedFiles.length > 0}
-            threadId={threadId}
-            id="files"
-            canRegenerate={false}
-        >
-            <Fragment slot="content">
-                {isAuthorized && (
-                    <>
-                        <label class="upload-button" for="file-upload">
-                            <span class="material-symbols-outlined" aria-hidden="true">upload</span>
-                            <span>Upload Files</span>
-                            <input
-                                type="file"
-                                id="file-upload"
-                                accept=".jpg,.jpe,.jpeg,.png,.gif,.webp,.svg,.bmp,.tif,.tiff,.apng,.pdf,.doc,.docx,.docm,.ppt,.pptx,.pptm,.xls,.xlsx,.xlsm,.vsd,.vsdx,.pub,.eml,.txt,.csv,.html,.md"
-                                multiple
-                                aria-describedby="upload-limits"
-                                style="display: none;"
-                            />
-                        </label>
-                        <p class="upload-limits" id="upload-limits">
-                            Images, PDF, Word, PowerPoint, Excel and text files. Max 10 MB per file.
-                        </p>
-                    </>
-                )}
-                <div class="file-list" id="file-list">
-                    {uploadedFiles.length === 0 ? (
-                        <p class="empty-message">No files uploaded yet. Upload files to see them here.</p>
-                    ) : (
-                        uploadedFiles.map((file: UploadedFile) => (
-                        <div class="file-item" data-file-key={file.key}>
-                            <div class="file-icon">
-                                {file.type.startsWith('image/') ? (
-                                    <span class="material-symbols-outlined" aria-hidden="true">image</span>
-                                ) : file.type === 'application/pdf' ? (
-                                    <span class="material-symbols-outlined" aria-hidden="true">picture_as_pdf</span>
-                                ) : file.type.includes('spreadsheet') || file.type.includes('excel') ? (
-                                    <span class="material-symbols-outlined" aria-hidden="true">table_chart</span>
-                                ) : file.type.includes('presentation') || file.type.includes('powerpoint') ? (
-                                    <span class="material-symbols-outlined" aria-hidden="true">slideshow</span>
-                                ) : file.type.includes('word') ? (
-                                    <span class="material-symbols-outlined" aria-hidden="true">description</span>
-                                ) : (
-                                    <span class="material-symbols-outlined" aria-hidden="true">insert_drive_file</span>
+        {chatSections.uploadedFiles && (
+            <SidebarSection
+                title="Uploaded Files"
+                icon="folder"
+                hasContent={uploadedFiles.length > 0}
+                threadId={threadId}
+                id="files"
+                canRegenerate={false}
+            >
+                <Fragment slot="content">
+                    {isAuthorized && (
+                        <>
+                            <label class="upload-button" for="file-upload">
+                                <span class="material-symbols-outlined" aria-hidden="true">upload</span>
+                                <span>Upload Files</span>
+                                <input
+                                    type="file"
+                                    id="file-upload"
+                                    accept=".jpg,.jpe,.jpeg,.png,.gif,.webp,.svg,.bmp,.tif,.tiff,.apng,.pdf,.doc,.docx,.docm,.ppt,.pptx,.pptm,.xls,.xlsx,.xlsm,.vsd,.vsdx,.pub,.eml,.txt,.csv,.html,.md"
+                                    multiple
+                                    aria-describedby="upload-limits"
+                                    style="display: none;"
+                                />
+                            </label>
+                            <p class="upload-limits" id="upload-limits">
+                                Images, PDF, Word, PowerPoint, Excel and text files. Max 10 MB per file.
+                            </p>
+                        </>
+                    )}
+                    <div class="file-list" id="file-list">
+                        {uploadedFiles.length === 0 ? (
+                            <p class="empty-message">No files uploaded yet. Upload files to see them here.</p>
+                        ) : (
+                            uploadedFiles.map((file: UploadedFile) => (
+                            <div class="file-item" data-file-key={file.key}>
+                                <div class="file-icon">
+                                    {file.type.startsWith('image/') ? (
+                                        <span class="material-symbols-outlined" aria-hidden="true">image</span>
+                                    ) : file.type === 'application/pdf' ? (
+                                        <span class="material-symbols-outlined" aria-hidden="true">picture_as_pdf</span>
+                                    ) : file.type.includes('spreadsheet') || file.type.includes('excel') ? (
+                                        <span class="material-symbols-outlined" aria-hidden="true">table_chart</span>
+                                    ) : file.type.includes('presentation') || file.type.includes('powerpoint') ? (
+                                        <span class="material-symbols-outlined" aria-hidden="true">slideshow</span>
+                                    ) : file.type.includes('word') ? (
+                                        <span class="material-symbols-outlined" aria-hidden="true">description</span>
+                                    ) : (
+                                        <span class="material-symbols-outlined" aria-hidden="true">insert_drive_file</span>
+                                    )}
+                                </div>
+                                <div class="file-info">
+                                    <div class="file-name">{file.name}</div>
+                                    <div class="file-size">{(file.size / 1024).toFixed(1)} KB</div>
+                                </div>
+                                {isAuthorized && (
+                                    <button type="button" class="file-delete" data-file-key={file.key} title="Delete file" aria-label="Delete file">
+                                        <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+                                    </button>
                                 )}
                             </div>
-                            <div class="file-info">
-                                <div class="file-name">{file.name}</div>
-                                <div class="file-size">{(file.size / 1024).toFixed(1)} KB</div>
-                            </div>
-                            {isAuthorized && (
-                                <button type="button" class="file-delete" data-file-key={file.key} title="Delete file" aria-label="Delete file">
-                                    <span class="material-symbols-outlined" aria-hidden="true">delete</span>
-                                </button>
-                            )}
-                        </div>
-                        ))
-                    )}
-                </div>
-            </Fragment>
-        </SidebarSection>
+                            ))
+                        )}
+                    </div>
+                </Fragment>
+            </SidebarSection>
+        )}
     </div>
 </section>
 

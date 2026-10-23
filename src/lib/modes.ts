@@ -16,6 +16,12 @@ export interface Mode {
     tools?: ToolRecord;
     show?: boolean;
     desmos?: boolean;
+    // Portions of the chat page that are shown for this mode; anything left out is shown
+    chatSections?: {
+        shareSettings?: boolean;
+        uploadedFiles?: boolean;
+        studyMaterials?: boolean;
+    };
 }
 
 export interface Category {
@@ -393,6 +399,7 @@ const categories: Record<string, Category> = {
                 description: 'Chat with Margo Page from the Studify support team about the app, issues, and feedback',
                 icon: '🎧',
                 prompt: margoPagePrompt,
+                chatSections: { studyMaterials: false },
                 tools: Object.fromEntries(Object.entries(modules).filter(([key]) => !config.contentGenerationExcludeTools.includes(key))),
             },
         },
@@ -407,6 +414,13 @@ for (const topicKey of Object.keys(categories)) {
         if (!categories[topicKey].modes[modeKey].prompt) categories[topicKey].modes[modeKey].prompt = Promise.resolve(generateModePrompt(categories[topicKey].modes[modeKey], topicKey));
 
         if (!categories[topicKey].modes[modeKey].tools) categories[topicKey].modes[modeKey].tools = modules;
+
+        categories[topicKey].modes[modeKey].chatSections = {
+            shareSettings: true,
+            uploadedFiles: true,
+            studyMaterials: true,
+            ...categories[topicKey].modes[modeKey].chatSections
+        };
     }
 }
 
