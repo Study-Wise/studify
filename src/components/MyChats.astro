@@ -31,7 +31,7 @@ const threadsByCategory = threads.reduce<Record<string, Record<string, typeof th
                         <optgroup label={categories[categoryKey].name}>
                             <option value={categoryKey}>All {categories[categoryKey].name}</option>
                             {Object.keys(threadsByMode).map((modeKey) => (
-                                <option value={`${categoryKey}/${modeKey}`}>{categories[categoryKey].modes[modeKey]?.modeName ?? modeKey}</option>
+                                <option value={`${categoryKey}/${modeKey}`}>{categories[categoryKey].modes[modeKey]?.name ?? modeKey}</option>
                             ))}
                         </optgroup>
                     ))}
@@ -61,10 +61,10 @@ const threadsByCategory = threads.reduce<Record<string, Record<string, typeof th
 
                             return (
                                 <div class="mode-section">
-                                    <h3 class="mode-title">{mode ? mode.modeName : modeKey}</h3>
+                                    <h3 class="mode-title">{mode ? mode.name : modeKey}</h3>
                                     <div class="threads-list">
                                         {modeThreads.map((thread) => {
-                                            const displayTitle = thread.title.trim() || (mode ? mode.modeName : thread.mode);
+                                            const displayTitle = thread.title.trim() || (mode ? mode.name : thread.mode);
                                             const chatUrl = `/${categoryKey}/${thread.mode}/chat/${thread.id}`;
 
                                             return (
@@ -76,7 +76,7 @@ const threadsByCategory = threads.reduce<Record<string, Record<string, typeof th
                                                                 <div class="thread-text">
                                                                     <h3 class="thread-title">{displayTitle}</h3>
                                                                     <p class="thread-mode">
-                                                                        {mode ? mode.modeName : thread.mode}
+                                                                        {mode ? mode.name : thread.mode}
                                                                     </p>
                                                                 </div>
                                                             </div>

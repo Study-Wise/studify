@@ -115,10 +115,10 @@ const visibleCategories = Object.entries(categories).filter(([_, category]) =>
                                     <a
                                         href={href}
                                         class="mode-card"
-                                        data-search={`${mode.modeName} ${mode.description} ${category.name}`.toLowerCase()}
+                                        data-search={`${mode.name} ${mode.description} ${category.name}`.toLowerCase()}
                                     >
                                         <div class="mode-icon">{mode.icon}</div>
-                                        <h4>{mode.modeName}</h4>
+                                        <h4>{mode.name}</h4>
                                         <p>{mode.description}</p>
                                     </a>
                                 )

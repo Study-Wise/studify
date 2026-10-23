@@ -10,9 +10,9 @@ import config from '@/lib/ai.config';
 import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
 import { getValidModelAndProvider, providers } from '@/lib/models';
 import categories from '@/lib/modes';
-import type { Mode } from '@/lib/modes';
 import generateModePrompt from '@/lib/prompt-generator';
 import { parseThreadData, type Message } from '@/lib/threads';
+import { modules } from '@/lib/tools';
 import type { ToolContext } from '@/lib/tools';
 import { VendorError, getUserErrorMessage } from '@/lib/user-errors';
 import isValidEmail from '@/lib/validation';
@@ -33,9 +33,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     try {
         const { text: userPrompt, id: thread_id, provider, tier, isPublic = false, category, mode } = await request.json();
 
-        let modeObj: Mode = {modeName: '', description: ''};
-        if (category && mode) modeObj = categories[category]?.modes?.[mode];
-        else console.warn(`⚠️ [${requestId}] No category/mode specified, using default mode`);
+        const modeObj = categories[category || config.defaultCategory]?.modes?.[mode || config.defaultMode];
 
         let current_thread_id: string | undefined = thread_id;
         let isNewThread = false;
@@ -246,7 +244,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
             try {
                 convoHistory.push({ id: nanoid(), role: 'user', content: userPrompt });
 
-                const tools = modeObj.tools || {};
+                const tools = Object.fromEntries(Object.entries(modules).filter(([key]) => !modeObj.excludedTools?.includes(key)));
                 const welcomeMessage = await generateWelcomeMessage({
                     systemPrompt,
                     convoHistory,
@@ -345,7 +343,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
         // Add the user message to the history that gets saved. streamText works on a filtered copy, so a user message it appends never reaches this array
         convoHistory.push({ id: nanoid(), role: 'user', content: userPrompt });
 
-        const tools = modeObj.tools || {};
+        const tools = Object.fromEntries(Object.entries(modules).filter(([key]) => !modeObj.excludedTools?.includes(key)));
         let streamResult: Awaited<ReturnType<typeof streamText>>;
         try {
             streamResult = await streamText(

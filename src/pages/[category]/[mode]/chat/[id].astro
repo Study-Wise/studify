@@ -25,7 +25,7 @@ const modeObj = categoryObj?.modes?.[mode || ''];
 if (!categoryObj || !modeObj) return Astro.redirect('/404');
 
 const categoryName = categoryObj?.name || category;
-const modeName = modeObj?.modeName || mode;
+const modeName = modeObj?.name || mode;
 
 const examplePrompts = [
     `Explain the basics of ${modeName}`,

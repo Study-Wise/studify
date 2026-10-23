@@ -17,7 +17,7 @@ const subjects = Object.entries(modeDefinitions)
         const shownModes = Object.entries(category.modes).filter(([, mode]) => mode.show);
         if (shownModes.length === 0) return null;
 
-        const modes = shownModes.map(([modeKey, mode]) => `${mode.modeName} (/${categoryKey}/${modeKey})`);
+        const modes = shownModes.map(([modeKey, mode]) => `${mode.name} (/${categoryKey}/${modeKey})`);
         return `- ${category.name}: ${category.description}\n    Modes: ${modes.join(', ')}`;
     })
     .filter((section): section is string => section !== null)

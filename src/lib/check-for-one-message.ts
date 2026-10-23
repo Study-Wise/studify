@@ -5,6 +5,7 @@ import config from '@/lib/ai.config';
 import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
 import categories from '@/lib/modes';
 import type { Message } from '@/lib/threads';
+import { modules } from '@/lib/tools';
 
 import { eq } from 'drizzle-orm';
 
@@ -44,7 +45,7 @@ export async function checkForOneMessage({
                     convoHistory: [...convoHistory],
                     userModel: threads[0].model || config.model,
                     provider: threads[0].provider || 'openai',
-                    tools: categories[category || '']?.modes?.[mode || '']?.tools || {},
+                    tools: Object.fromEntries(Object.entries(modules).filter(([key]) => !categories[category || '']?.modes?.[mode || '']?.excludedTools?.includes(key))),
                     requestId: `page-load-${threadId}`
                 });
 
