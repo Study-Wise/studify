@@ -13,7 +13,7 @@ const {
     email = '',
     category = '',
     mode = '',
-    chatSections = {}
+    sidebarSections = {}
 } = Astro.props;
 
 const hasSavedThread = Boolean(threadId) && threadId !== 'new';
@@ -25,7 +25,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
             <span class="material-symbols-outlined" aria-hidden="true">close</span>
             <span class="sr-only">Close files and sharing</span>
         </label>
-        {isAuthorized && chatSections.shareSettings && (
+        {isAuthorized && sidebarSections.shareSettings && (
             <div class="sidebar-section">
                 <div class="section-header">
                     <div class="section-title">
@@ -79,7 +79,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                 </div>
             </div>
         )}
-        {chatSections.uploadedFiles && (
+        {sidebarSections.uploadedFiles && (
             <SidebarSection
                 title="Uploaded Files"
                 icon="folder"

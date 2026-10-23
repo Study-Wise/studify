@@ -11,7 +11,7 @@ const {
     mode,
     isAuthorized,
     isPublic,
-    chatSections = {}
+    sidebarSections = {}
 } = Astro.props;
 
 const {
@@ -44,7 +44,7 @@ const summaryUrl = `/${category}/${mode}/summary/${threadId}`;
             <span class="material-symbols-outlined" aria-hidden="true">close</span>
             <span class="sr-only">Close study materials</span>
         </label>
-        {chatSections.studyMaterials && (
+        {sidebarSections.studyMaterials && (
             <>
                 <SidebarSection
                     title="Chat Summary"
