@@ -1,21 +1,8 @@
-# Issues created by margo-page in this session
+# Issues created by Margo
 
-These are the "Needs testing" issues that `margo-page` created in this session. They are listed with their original numbers, title, label and full text so they can be checked against the repo and recreated if they are gone.
-
-The 60 issues from the code audit (#503 to #562) are not listed here. They are tracked in `AUDIT.md`.
+These are the "Needs testing" issues that Margo wrote carefully after each of her PRs merged, with a full checklist for every one. They are listed with their original numbers, title, label and full text so they can be checked against the repo and recreated if they are gone.
 
 All of them used the `Testing Needed` label (originally `testing`). Each one was created after its PR merged.
-
-| Issue | Title | PR |
-| --- | --- | --- |
-| #419 | Needs testing: Answer-dump sites excluded from Additional Resources | #417 (for #126) |
-| #420 | Needs testing: Retry wrong ones on step-by-step quizzes | #418 (for #265) |
-| #434 | Needs testing: Generated materials are study material, not homework help | #430 (for #75) |
-| #435 | Needs testing: Quiz answers, score and retry done in CSS | #431 (for #263 and #264) |
-| #436 | Needs testing: Tutor guides instead of showing the steps | #429 (for #83) |
-| #438 | Needs testing: Links to individual messages in a chat | #433 (for #428) |
-| #443 | Needs testing: Elapsed timer on generator buttons | #442 (for #287) |
-| #444 | Needs testing: Markdown and math render while a chat reply streams | #441 (for #349) |
 
 ---
 
