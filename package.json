@@ -76,6 +76,9 @@
     "overrides": {
         "@vercel/nft": "1.11.0",
         "bufferutil": "4.1.0",
+        "transformers": {
+            "uglify-js": "2.8.29"
+        },
         "utf-8-validate": "6.0.6"
     }
 }
