@@ -33,42 +33,37 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
         window.addEventListener('load', async () => {
             if (isProd) {
                 try {
-                    await swRegistration();
+                    const registration = await window.navigator.serviceWorker.register('/sw.js');
 
+                    registration.addEventListener('updatefound', () => {
+                        const newWorker = registration.installing;
+                        if (newWorker) {
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && window.navigator.serviceWorker.controller) {
+                                    // New version available
+                                    const updateIndicator = document.getElementById('update-available');
+                                    const updateButton = document.getElementById('update-button');
+
+                                    if (updateIndicator) updateIndicator.style.display = 'flex';
+
+                                    if (updateButton) {
+                                        updateButton.addEventListener('click', () => {
+                                            newWorker.postMessage({ action: 'skipWaiting' });
+                                            window.location.reload();
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    });
+
+                    window.navigator.serviceWorker.addEventListener('message', e => {
+                        if (e.data && e.data.action === 'reload') window.location.reload();
+                    });
                 } catch (error) {
                     console.error('Service Worker registration failed:', error);
                 }
             }
-        });
-    }
-
-    async function swRegistration() {
-        const registration = await window.navigator.serviceWorker.register('/sw.js');
-
-        registration.addEventListener('updatefound', () => {
-            const newWorker = registration.installing;
-            if (newWorker) {
-                newWorker.addEventListener('statechange', () => {
-                    if (newWorker.state === 'installed' && window.navigator.serviceWorker.controller) {
-                        // New version available
-                        const updateIndicator = document.getElementById('update-available');
-                        const updateButton = document.getElementById('update-button');
-
-                        if (updateIndicator) updateIndicator.style.display = 'flex';
-
-                        if (updateButton) {
-                            updateButton.addEventListener('click', () => {
-                                newWorker.postMessage({ action: 'skipWaiting' });
-                                window.location.reload();
-                            });
-                        }
-                    }
-                });
-            }
-        });
-
-        window.navigator.serviceWorker.addEventListener('message', e => {
-            if (e.data && e.data.action === 'reload') window.location.reload();
         });
     }
 

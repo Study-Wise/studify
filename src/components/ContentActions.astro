@@ -47,96 +47,6 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, (c: stri
     // Content types that use images
     const imageTypes = ['infographic'];
 
-    async function loadMarked() {
-        if (window.marked) return window.marked;
-        return new Promise((resolve, reject) => {
-            const script = document.createElement('script');
-            script.src = 'https://cdn.jsdelivr.net/npm/marked/marked.min.js';
-            script.addEventListener('load', () => resolve(window.marked));
-            script.addEventListener('error', reject);
-            document.head.appendChild(script);
-        });
-    }
-
-    async function updatePageContent(content) {
-        const page = document.querySelector(`.${contentType}-page, .${contentType.replace(/-/g, '')}-page`);
-        if (!page) return;
-
-        const emptyState = page.querySelector('.empty-state');
-
-        if (markdownTypes.includes(contentType)) {
-            const marked = await loadMarked();
-            const parsedContent = marked.parse(content);
-
-            let contentContainer = page.querySelector('.content-container');
-            let contentDiv = page.querySelector(`.${contentClassName}`);
-
-            if (emptyState && !contentContainer) {
-                contentContainer = document.createElement('div');
-                contentContainer.className = 'content-container';
-                contentDiv = document.createElement('div');
-                contentDiv.className = contentClassName;
-                contentContainer.appendChild(contentDiv);
-                emptyState.replaceWith(contentContainer);
-            }
-
-            if (contentDiv) {
-                window.MathJax?.typesetClear?.([contentDiv]);
-                // Reset equation numbers and labels
-                window.MathJax?.texReset?.();
-                contentDiv.innerHTML = parsedContent;
-
-                if (window.MathJax?.typesetPromise) {
-                    try {
-                        await window.MathJax.startup?.promise;
-                        await window.MathJax.typesetPromise([contentDiv]);
-                    } catch (error) {
-                        console.error('MathJax typesetting error:', error);
-                    }
-                }
-            }
-
-            // Render any Desmos graphs in the new content
-            window.activateDesmos?.();
-            window.initializeStepByStep?.();
-        }
-        else if (iframeTypes.includes(contentType)) {
-            let container = page.querySelector(`.${contentType}-container`);
-            let iframe = page.querySelector('iframe');
-
-            if (emptyState && !container) {
-                container = document.createElement('div');
-                container.className = `${contentType}-container`;
-                iframe = document.createElement('iframe');
-                iframe.title = contentTypeName;
-                iframe.className = `${contentType}-iframe`;
-                iframe.sandbox = 'allow-scripts';
-                container.appendChild(iframe);
-                emptyState.replaceWith(container);
-            }
-
-            if (iframe) iframe.srcdoc = content;
-        }
-        else if (imageTypes.includes(contentType)) {
-            // For infographic, content is an object with imageUrl
-            const imageUrl = typeof content === 'object' ? content.imageUrl : content;
-            let contentContainer = page.querySelector('.content-container');
-            let img = page.querySelector('.infographic-image');
-
-            if (emptyState && !contentContainer) {
-                contentContainer = document.createElement('div');
-                contentContainer.className = 'content-container';
-                img = document.createElement('img');
-                img.className = 'infographic-image';
-                img.alt = 'Generated Infographic';
-                contentContainer.appendChild(img);
-                emptyState.replaceWith(contentContainer);
-            }
-
-            if (img) img.src = imageUrl;
-        }
-    }
-
     if (actionBtn) {
         actionBtn.addEventListener('click', async () => {
             const currentHasContent = actionBtn.getAttribute('data-has-content') === 'true';
@@ -177,7 +87,88 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, (c: stri
 
                 if (data.status === 'success') {
                     const content = data.content || data.infographic;
-                    if (content) await updatePageContent(content);
+                    const page = content ? document.querySelector(`.${contentType}-page, .${contentType.replace(/-/g, '')}-page`) : null;
+                    if (page) {
+                        const emptyState = page.querySelector('.empty-state');
+
+                        if (markdownTypes.includes(contentType)) {
+                            const marked = window.marked || await new Promise((resolve, reject) => {
+                                const script = document.createElement('script');
+                                script.src = 'https://cdn.jsdelivr.net/npm/marked/marked.min.js';
+                                script.addEventListener('load', () => resolve(window.marked));
+                                script.addEventListener('error', reject);
+                                document.head.appendChild(script);
+                            });
+                            const parsedContent = marked.parse(content);
+
+                            let contentContainer = page.querySelector('.content-container');
+                            let contentDiv = page.querySelector(`.${contentClassName}`);
+
+                            if (emptyState && !contentContainer) {
+                                contentContainer = document.createElement('div');
+                                contentContainer.className = 'content-container';
+                                contentDiv = document.createElement('div');
+                                contentDiv.className = contentClassName;
+                                contentContainer.appendChild(contentDiv);
+                                emptyState.replaceWith(contentContainer);
+                            }
+
+                            if (contentDiv) {
+                                window.MathJax?.typesetClear?.([contentDiv]);
+                                // Reset equation numbers and labels
+                                window.MathJax?.texReset?.();
+                                contentDiv.innerHTML = parsedContent;
+
+                                if (window.MathJax?.typesetPromise) {
+                                    try {
+                                        await window.MathJax.startup?.promise;
+                                        await window.MathJax.typesetPromise([contentDiv]);
+                                    } catch (error) {
+                                        console.error('MathJax typesetting error:', error);
+                                    }
+                                }
+                            }
+
+                            // Render any Desmos graphs in the new content
+                            window.activateDesmos?.();
+                            window.initializeStepByStep?.();
+                        }
+                        else if (iframeTypes.includes(contentType)) {
+                            let container = page.querySelector(`.${contentType}-container`);
+                            let iframe = page.querySelector('iframe');
+
+                            if (emptyState && !container) {
+                                container = document.createElement('div');
+                                container.className = `${contentType}-container`;
+                                iframe = document.createElement('iframe');
+                                iframe.title = contentTypeName;
+                                iframe.className = `${contentType}-iframe`;
+                                iframe.sandbox = 'allow-scripts';
+                                container.appendChild(iframe);
+                                emptyState.replaceWith(container);
+                            }
+
+                            if (iframe) iframe.srcdoc = content;
+                        }
+                        else if (imageTypes.includes(contentType)) {
+                            // For infographic, content is an object with imageUrl
+                            const imageUrl = typeof content === 'object' ? content.imageUrl : content;
+                            let contentContainer = page.querySelector('.content-container');
+                            let img = page.querySelector('.infographic-image');
+
+                            if (emptyState && !contentContainer) {
+                                contentContainer = document.createElement('div');
+                                contentContainer.className = 'content-container';
+                                img = document.createElement('img');
+                                img.className = 'infographic-image';
+                                img.alt = 'Generated Infographic';
+                                contentContainer.appendChild(img);
+                                emptyState.replaceWith(contentContainer);
+                            }
+
+                            if (img) img.src = imageUrl;
+                        }
+                    }
 
                     actionBtn.setAttribute('data-has-content', 'true');
                     actionBtn.innerHTML = `<span class="material-symbols-outlined" aria-hidden="true">refresh</span><span>${regenerateVerb} ${contentTypeName}</span>`;

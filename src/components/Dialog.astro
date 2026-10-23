@@ -178,7 +178,15 @@ import '@/styles/components/modal.scss';
         modal ??= createModal({
             title: '',
             message: '',
-            onClose: showNextDialog,
+            onClose: () => {
+                current = null;
+                const next = pendingErrors.shift() ?? pendingNotice;
+                if (next === pendingNotice) pendingNotice = null;
+                if (next) renderDialog(next);
+                else {
+                    pendingToasts.splice(0).forEach(message => showToast(message, { title: 'Success', type: 'success' }));
+                }
+            },
         });
         return modal;
     }
@@ -196,16 +204,6 @@ import '@/styles/components/modal.scss';
         const appModal = getModal();
         appModal.setContent(toModalContent(entry));
         appModal.open();
-    }
-
-    function showNextDialog() {
-        current = null;
-        const next = pendingErrors.shift() ?? pendingNotice;
-        if (next === pendingNotice) pendingNotice = null;
-        if (next) renderDialog(next);
-        else {
-            pendingToasts.splice(0).forEach(message => showToast(message, { title: 'Success', type: 'success' }));
-        }
     }
 
     function showDialog(message: string, options: { title?: string; icon?: string; type?: ModalType } = {}) {
@@ -253,14 +251,14 @@ import '@/styles/components/modal.scss';
     const pendingSuccessKey = 'pending-success-toast';
 
     // Show a success toast on the next page the user lands on, for actions that navigate away right after succeeding (e.g. deleting a chat)
-    function showSuccessAfterNavigation(message: string) {
+    window.showSuccessAfterNavigation = (message: string) => {
         try {
             sessionStorage.setItem(pendingSuccessKey, message);
         } catch {
             // Storage unavailable (e.g. blocked site data), so show it now instead
             showSuccessToast(message);
         }
-    }
+    };
 
     try {
         const pendingSuccess = sessionStorage.getItem(pendingSuccessKey);
@@ -272,22 +270,22 @@ import '@/styles/components/modal.scss';
         // Storage unavailable, so nothing can be waiting
     }
 
-    function showError(message: string, title?: string) {
+    window.showError = (message: string, title?: string) => {
         showDialog(message, { title: `Error${title ? `: ${title}` : ''}`, type: 'error' });
-    }
+    };
 
-    function showWarning(message: string, title?: string) {
+    window.showWarning = (message: string, title?: string) => {
         showDialog(message, { title: `Warning${title ? `: ${title}` : ''}`, type: 'warning' });
-    }
+    };
 
-    function showInfo(message: string, title?: string) {
+    window.showInfo = (message: string, title?: string) => {
         showDialog(message, { title: `Information${title ? `: ${title}` : ''}`, type: 'info' });
-    }
+    };
 
-    function showConfirm(
+    window.showConfirm = (
         message: string,
         options: { title?: string; confirmLabel?: string; cancelLabel?: string; icon?: string; type?: ModalType } = {},
-    ): Promise<boolean> {
+    ): Promise<boolean> => {
         const { title = 'Are you sure?', confirmLabel = 'Confirm', cancelLabel = 'Cancel', icon, type = 'warning' } = options;
 
         return new Promise(resolve => {
@@ -308,9 +306,9 @@ import '@/styles/components/modal.scss';
             });
             confirmModal.open();
         });
-    }
+    };
 
-    function showPrompt(
+    window.showPrompt = (
         message: string,
         options: {
             title?: string;
@@ -322,7 +320,7 @@ import '@/styles/components/modal.scss';
             placeholder?: string;
             maxLength?: number;
         } = {},
-    ): Promise<string | null> {
+    ): Promise<string | null> => {
         const { title = 'Are you sure?', confirmLabel = 'Confirm', cancelLabel = 'Cancel', icon, type = 'warning', inputLabel = 'Details (optional)', placeholder, maxLength } = options;
 
         return new Promise(resolve => {
@@ -361,16 +359,10 @@ import '@/styles/components/modal.scss';
             promptModal.open();
             input.focus();
         });
-    }
+    };
 
     // Make functions available globally, including to is:inline scripts
     window.showDialog = showDialog;
     window.showToast = showToast;
-    window.showError = showError;
-    window.showWarning = showWarning;
     window.showSuccess = showSuccessToast;
-    window.showSuccessAfterNavigation = showSuccessAfterNavigation;
-    window.showInfo = showInfo;
-    window.showConfirm = showConfirm;
-    window.showPrompt = showPrompt;
 </script>

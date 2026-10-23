@@ -318,173 +318,6 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
     const fileUpload = document.getElementById('file-upload');
     const fileList = document.getElementById('file-list');
 
-    async function ensureThreadExists() {
-        if (currentThreadId === 'new') {
-            // Use the provider and tier saved on /settings, like the chat script does
-            let settings;
-            try {
-                settings = JSON.parse(localStorage.getItem('settings') || '{}') || {};
-            } catch {
-                settings = {};
-            }
-            const provider = settings.provider || 'openai';
-            const tier = settings.tier || 'default';
-
-            window.showInfo?.('Creating new chat...');
-
-            try {
-                const response = await fetch('/api/thread/initialize', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ category, mode, provider, tier, isPublic: publicToggle?.checked === true })
-                });
-
-                const data = await response.json();
-
-                if (data.status === 'success' && data.id) {
-                    currentThreadId = data.id;
-                    updateShareLink();
-
-                    // Let the chat script use this thread instead of creating another one
-                    window.dispatchEvent(new CustomEvent('thread-created', {
-                        detail: { id: data.id, source: 'sidebar' }
-                    }));
-
-                    const newUrl = `/${category}/${mode}/chat/${data.id}`;
-                    window.history.replaceState({}, '', newUrl);
-                }
-                else throw new Error(data.error || 'Failed to create thread');
-            } catch (error) {
-                console.error('Error creating thread:', error);
-                window.showError?.(
-                    error instanceof Error ? error.message : 'Failed to create chat. Please try again.'
-                );
-                return null;
-            }
-        }
-
-        return currentThreadId || null;
-    }
-
-    async function processUploadQueue() {
-        if (isUploading || uploadQueue.length === 0) return;
-
-        isUploading = true;
-
-        const activeThreadId = await ensureThreadExists();
-
-        if (!activeThreadId || !email || !fileList) {
-            isUploading = false;
-            uploadQueue = [];
-            return;
-        }
-
-        while (uploadQueue.length > 0) {
-            const file = uploadQueue.shift();
-            const remainingCount = uploadQueue.length;
-
-            try {
-                const progressMsg = remainingCount > 0
-                    ? `Uploading ${file.name}... (${remainingCount} remaining)`
-                    : `Uploading ${file.name}...`;
-                window.showInfo?.(progressMsg);
-
-                const CHUNK_THRESHOLD = 3.5 * 1024 * 1024; // 3.5MB - under Vercel's 4.5MB limit with overhead
-                let data;
-
-                if (file.size <= CHUNK_THRESHOLD) {
-                    const formData = new window.FormData();
-                    formData.append('file', file);
-                    formData.append('threadId', activeThreadId);
-
-                    const response = await fetch('/api/files/upload', {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    const responseText = await response.text();
-                    try {
-                        data = JSON.parse(responseText);
-                    } catch (error) {
-                        throw new Error(`Server error (${response.status}): ${responseText.substring(0, 200)}`, { cause: error });
-                    }
-                }
-                else {
-                    const CHUNK_SIZE = 3 * 1024 * 1024; // 3MB chunks
-                    const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
-                    const uploadId = crypto.randomUUID();
-
-                    for (let i = 0; i < totalChunks; i++) {
-                        const start = i * CHUNK_SIZE;
-                        const end = Math.min(start + CHUNK_SIZE, file.size);
-                        const chunk = file.slice(start, end);
-
-                        window.showInfo?.(`Uploading ${file.name}... chunk ${i + 1}/${totalChunks}`);
-
-                        const chunkForm = new window.FormData();
-                        chunkForm.append('chunk', chunk);
-                        chunkForm.append('uploadId', uploadId);
-                        chunkForm.append('chunkIndex', String(i));
-                        chunkForm.append('totalChunks', String(totalChunks));
-                        chunkForm.append('fileName', file.name);
-                        chunkForm.append('fileType', file.type);
-                        chunkForm.append('fileSize', String(file.size));
-                        chunkForm.append('threadId', activeThreadId);
-
-                        const chunkRes = await fetch('/api/files/upload-chunk', {
-                            method: 'POST',
-                            body: chunkForm
-                        });
-
-                        const chunkText = await chunkRes.text();
-                        let chunkData;
-                        try {
-                            chunkData = JSON.parse(chunkText);
-                        } catch (error) {
-                            throw new Error(`Server error (${chunkRes.status}): ${chunkText.substring(0, 200)}`, { cause: error });
-                        }
-
-                        if (chunkData.status !== 'success') throw new Error(chunkData.error || 'Chunk upload failed');
-                    }
-
-                    window.showInfo?.(`Processing ${file.name}...`);
-                    const completeRes = await fetch('/api/files/upload-complete', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ uploadId })
-                    });
-
-                    const completeText = await completeRes.text();
-                    try {
-                        data = JSON.parse(completeText);
-                    } catch (error) {
-                        throw new Error(`Server error (${completeRes.status}): ${completeText.substring(0, 200)}`, { cause: error });
-                    }
-                }
-
-                if (data.status === 'success') {
-                    const emptyMessage = fileList.querySelector('.empty-message');
-                    if (emptyMessage) emptyMessage.remove();
-
-                    const fileItem = createFileElement(data.file);
-                    fileList.appendChild(fileItem);
-
-                    if (remainingCount === 0) window.showSuccess?.(`${file.name} uploaded successfully`);
-                }
-                else throw new Error(data.error || 'Upload failed');
-            } catch (error) {
-                console.error('File upload error:', error);
-                window.showError?.(
-                    `Failed to upload ${file.name}: ${error instanceof Error ? error.message : 'Unknown error'}`
-                );
-            }
-        }
-
-        isUploading = false;
-
-        if (fileUpload) fileUpload.value = '';
-    }
-
     if (fileUpload && fileList) {
         fileUpload.addEventListener('change', async e => {
             const target = e.target;
@@ -498,7 +331,188 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
             const totalFiles = uploadQueue.length;
             if (totalFiles > 1) window.showInfo?.(`Queued ${totalFiles} files for upload...`);
 
-            processUploadQueue();
+            if (isUploading || uploadQueue.length === 0) return;
+
+            isUploading = true;
+
+            let activeThreadId = currentThreadId === 'new' ? null : currentThreadId || null;
+
+            if (currentThreadId === 'new') {
+                // Use the provider and tier saved on /settings, like the chat script does
+                let settings;
+                try {
+                    settings = JSON.parse(localStorage.getItem('settings') || '{}') || {};
+                } catch {
+                    settings = {};
+                }
+                const provider = settings.provider || 'openai';
+                const tier = settings.tier || 'default';
+
+                window.showInfo?.('Creating new chat...');
+
+                try {
+                    const response = await fetch('/api/thread/initialize', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ category, mode, provider, tier, isPublic: publicToggle?.checked === true })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.status === 'success' && data.id) {
+                        currentThreadId = data.id;
+                        activeThreadId = data.id;
+                        updateShareLink();
+
+                        // Let the chat script use this thread instead of creating another one
+                        window.dispatchEvent(new CustomEvent('thread-created', {
+                            detail: { id: data.id, source: 'sidebar' }
+                        }));
+
+                        const newUrl = `/${category}/${mode}/chat/${data.id}`;
+                        window.history.replaceState({}, '', newUrl);
+                    }
+                    else throw new Error(data.error || 'Failed to create thread');
+                } catch (error) {
+                    console.error('Error creating thread:', error);
+                    window.showError?.(
+                        error instanceof Error ? error.message : 'Failed to create chat. Please try again.'
+                    );
+                }
+            }
+
+            if (!activeThreadId || !email || !fileList) {
+                isUploading = false;
+                uploadQueue = [];
+                return;
+            }
+
+            while (uploadQueue.length > 0) {
+                const file = uploadQueue.shift();
+                const remainingCount = uploadQueue.length;
+
+                try {
+                    const progressMsg = remainingCount > 0
+                        ? `Uploading ${file.name}... (${remainingCount} remaining)`
+                        : `Uploading ${file.name}...`;
+                    window.showInfo?.(progressMsg);
+
+                    const CHUNK_THRESHOLD = 3.5 * 1024 * 1024; // 3.5MB - under Vercel's 4.5MB limit with overhead
+                    let data;
+
+                    if (file.size <= CHUNK_THRESHOLD) {
+                        const formData = new window.FormData();
+                        formData.append('file', file);
+                        formData.append('threadId', activeThreadId);
+
+                        const response = await fetch('/api/files/upload', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        const responseText = await response.text();
+                        try {
+                            data = JSON.parse(responseText);
+                        } catch (error) {
+                            throw new Error(`Server error (${response.status}): ${responseText.substring(0, 200)}`, { cause: error });
+                        }
+                    }
+                    else {
+                        const CHUNK_SIZE = 3 * 1024 * 1024; // 3MB chunks
+                        const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
+                        const uploadId = crypto.randomUUID();
+
+                        for (let i = 0; i < totalChunks; i++) {
+                            const start = i * CHUNK_SIZE;
+                            const end = Math.min(start + CHUNK_SIZE, file.size);
+                            const chunk = file.slice(start, end);
+
+                            window.showInfo?.(`Uploading ${file.name}... chunk ${i + 1}/${totalChunks}`);
+
+                            const chunkForm = new window.FormData();
+                            chunkForm.append('chunk', chunk);
+                            chunkForm.append('uploadId', uploadId);
+                            chunkForm.append('chunkIndex', String(i));
+                            chunkForm.append('totalChunks', String(totalChunks));
+                            chunkForm.append('fileName', file.name);
+                            chunkForm.append('fileType', file.type);
+                            chunkForm.append('fileSize', String(file.size));
+                            chunkForm.append('threadId', activeThreadId);
+
+                            const chunkRes = await fetch('/api/files/upload-chunk', {
+                                method: 'POST',
+                                body: chunkForm
+                            });
+
+                            const chunkText = await chunkRes.text();
+                            let chunkData;
+                            try {
+                                chunkData = JSON.parse(chunkText);
+                            } catch (error) {
+                                throw new Error(`Server error (${chunkRes.status}): ${chunkText.substring(0, 200)}`, { cause: error });
+                            }
+
+                            if (chunkData.status !== 'success') throw new Error(chunkData.error || 'Chunk upload failed');
+                        }
+
+                        window.showInfo?.(`Processing ${file.name}...`);
+                        const completeRes = await fetch('/api/files/upload-complete', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ uploadId })
+                        });
+
+                        const completeText = await completeRes.text();
+                        try {
+                            data = JSON.parse(completeText);
+                        } catch (error) {
+                            throw new Error(`Server error (${completeRes.status}): ${completeText.substring(0, 200)}`, { cause: error });
+                        }
+                    }
+
+                    if (data.status === 'success') {
+                        const emptyMessage = fileList.querySelector('.empty-message');
+                        if (emptyMessage) emptyMessage.remove();
+
+                        const fileItem = document.createElement('div');
+                        fileItem.className = 'file-item';
+                        fileItem.setAttribute('data-file-key', data.file.key);
+
+                        let iconName = 'insert_drive_file';
+                        if (data.file.type.startsWith('image/')) iconName = 'image';
+                        else if (data.file.type === 'application/pdf') iconName = 'picture_as_pdf';
+                        else if (data.file.type.includes('spreadsheet') || data.file.type.includes('excel')) iconName = 'table_chart';
+                        else if (data.file.type.includes('presentation') || data.file.type.includes('powerpoint')) iconName = 'slideshow';
+                        else if (data.file.type.includes('word')) iconName = 'description';
+
+                        fileItem.innerHTML = `
+                            <div class="file-icon">
+                                <span class="material-symbols-outlined" aria-hidden="true">${iconName}</span>
+                            </div>
+                            <div class="file-info">
+                                <div class="file-name">${data.file.name}</div>
+                                <div class="file-size">${(data.file.size / 1024).toFixed(1)} KB</div>
+                            </div>
+                            <button type="button" class="file-delete" data-file-key="${data.file.key}" title="Delete file" aria-label="Delete file">
+                                <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+                            </button>
+                        `;
+                        fileList.appendChild(fileItem);
+
+                        if (remainingCount === 0) window.showSuccess?.(`${file.name} uploaded successfully`);
+                    }
+                    else throw new Error(data.error || 'Upload failed');
+                } catch (error) {
+                    console.error('File upload error:', error);
+                    window.showError?.(
+                        `Failed to upload ${file.name}: ${error instanceof Error ? error.message : 'Unknown error'}`
+                    );
+                }
+            }
+
+            isUploading = false;
+
+            if (fileUpload) fileUpload.value = '';
         });
     }
 
@@ -558,31 +572,4 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
         }
     });
 
-    function createFileElement(file) {
-        const fileItem = document.createElement('div');
-        fileItem.className = 'file-item';
-        fileItem.setAttribute('data-file-key', file.key);
-
-        let iconName = 'insert_drive_file';
-        if (file.type.startsWith('image/')) iconName = 'image';
-        else if (file.type === 'application/pdf') iconName = 'picture_as_pdf';
-        else if (file.type.includes('spreadsheet') || file.type.includes('excel')) iconName = 'table_chart';
-        else if (file.type.includes('presentation') || file.type.includes('powerpoint')) iconName = 'slideshow';
-        else if (file.type.includes('word')) iconName = 'description';
-
-        fileItem.innerHTML = `
-            <div class="file-icon">
-                <span class="material-symbols-outlined" aria-hidden="true">${iconName}</span>
-            </div>
-            <div class="file-info">
-                <div class="file-name">${file.name}</div>
-                <div class="file-size">${(file.size / 1024).toFixed(1)} KB</div>
-            </div>
-            <button type="button" class="file-delete" data-file-key="${file.key}" title="Delete file" aria-label="Delete file">
-                <span class="material-symbols-outlined" aria-hidden="true">delete</span>
-            </button>
-        `;
-
-        return fileItem;
-    }
 </script>

@@ -62,43 +62,6 @@ const regenerateButtonId = `regenerate-${id}-btn`;
     const generateBtn = document.getElementById(generateButtonId);
     let regenerateBtn = document.getElementById(regenerateButtonId);
 
-    function updateSectionToShowContent() {
-        const section = generateBtn?.closest('.sidebar-section') || regenerateBtn?.closest('.sidebar-section');
-        if (!section) return;
-
-        const sectionBody = section.querySelector('.section-body');
-        const sectionHeader = section.querySelector('.section-header');
-
-        if (sectionBody) {
-            sectionBody.innerHTML = `
-                <a href="${viewUrl}" class="view-full-btn" target="_blank">
-                    <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
-                    <span>${viewButtonText}</span>
-                </a>
-            `;
-        }
-
-        if (canRegenerate && sectionHeader && !section.querySelector('.regenerate-btn')) {
-            const newRegenerateBtn = document.createElement('button');
-            newRegenerateBtn.type = 'button';
-            newRegenerateBtn.className = 'regenerate-btn';
-            newRegenerateBtn.id = regenerateButtonId;
-            newRegenerateBtn.title = `Regenerate ${title}`;
-            newRegenerateBtn.setAttribute('aria-label', `Regenerate ${title}`);
-            newRegenerateBtn.setAttribute('data-thread-id', threadId);
-            newRegenerateBtn.innerHTML = '<span class="material-symbols-outlined" aria-hidden="true">refresh</span>';
-            sectionHeader.appendChild(newRegenerateBtn);
-
-            newRegenerateBtn.addEventListener('click', async () => {
-                const confirmMessage = `Are you sure you want to ${regenerateVerb.toLowerCase()} the ${title.toLowerCase()}? This will replace the existing one.`;
-                const userPrompt = await window.showPrompt(confirmMessage, { title: `${regenerateVerb} ${title}?`, confirmLabel: regenerateVerb, icon: 'refresh', inputLabel: 'What should change? (optional)', placeholder: 'For example: make it shorter, or add more examples', maxLength: 500 });
-                if (userPrompt !== null) generateContent(threadId, true, newRegenerateBtn, userPrompt);
-            });
-
-            regenerateBtn = newRegenerateBtn;
-        }
-    }
-
     async function generateContent(tid, isRegenerate = false, btnOverride = null, userPrompt = '') {
         const btn = btnOverride || (isRegenerate ? regenerateBtn : generateBtn);
         if (!btn) return;
@@ -134,7 +97,39 @@ const regenerateButtonId = `regenerate-${id}-btn`;
             const data = await response.json();
 
             if (data.status === 'success') {
-                updateSectionToShowContent();
+                if (generateBtn?.closest('.sidebar-section') || regenerateBtn?.closest('.sidebar-section')) {
+                    const sectionBody = generateBtn?.closest('.sidebar-section') || regenerateBtn?.closest('.sidebar-section').querySelector('.section-body');
+                    const sectionHeader = generateBtn?.closest('.sidebar-section') || regenerateBtn?.closest('.sidebar-section').querySelector('.section-header');
+
+                    if (sectionBody) {
+                        sectionBody.innerHTML = `
+                            <a href="${viewUrl}" class="view-full-btn" target="_blank">
+                                <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
+                                <span>${viewButtonText}</span>
+                            </a>
+                        `;
+                    }
+
+                    if (canRegenerate && sectionHeader && !generateBtn?.closest('.sidebar-section') || regenerateBtn?.closest('.sidebar-section').querySelector('.regenerate-btn')) {
+                        const newRegenerateBtn = document.createElement('button');
+                        newRegenerateBtn.type = 'button';
+                        newRegenerateBtn.className = 'regenerate-btn';
+                        newRegenerateBtn.id = regenerateButtonId;
+                        newRegenerateBtn.title = `Regenerate ${title}`;
+                        newRegenerateBtn.setAttribute('aria-label', `Regenerate ${title}`);
+                        newRegenerateBtn.setAttribute('data-thread-id', threadId);
+                        newRegenerateBtn.innerHTML = '<span class="material-symbols-outlined" aria-hidden="true">refresh</span>';
+                        sectionHeader.appendChild(newRegenerateBtn);
+
+                        newRegenerateBtn.addEventListener('click', async () => {
+                            const confirmMessage = `Are you sure you want to ${regenerateVerb.toLowerCase()} the ${title.toLowerCase()}? This will replace the existing one.`;
+                            const userPrompt = await window.showPrompt(confirmMessage, { title: `${regenerateVerb} ${title}?`, confirmLabel: regenerateVerb, icon: 'refresh', inputLabel: 'What should change? (optional)', placeholder: 'For example: make it shorter, or add more examples', maxLength: 500 });
+                            if (userPrompt !== null) generateContent(threadId, true, newRegenerateBtn, userPrompt);
+                        });
+
+                        regenerateBtn = newRegenerateBtn;
+                    }
+                }
 
                 // If regenerating, restore the button state
                 if (isRegenerate && btn) {

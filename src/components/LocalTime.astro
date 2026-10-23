@@ -15,17 +15,13 @@ const fallback = new Date(iso).toLocaleString(locale, { ...options, timeZone: 'U
 >{fallback}</time>
 
 <script>
-    function formatLocalTimes() {
-        document.querySelectorAll('time[data-local-time]').forEach(element => {
-            if (!(element instanceof window.HTMLTimeElement)) return;
+    document.querySelectorAll('time[data-local-time]').forEach(element => {
+        if (!(element instanceof window.HTMLTimeElement)) return;
 
-            const date = new Date(element.dateTime);
-            if (Number.isNaN(date.getTime())) return;
+        const date = new Date(element.dateTime);
+        if (Number.isNaN(date.getTime())) return;
 
-            const options: Intl.DateTimeFormatOptions = JSON.parse(element.dataset.options || '{}');
-            element.textContent = date.toLocaleString(element.dataset.locale || undefined, options);
-        });
-    }
-
-    formatLocalTimes();
+        const options: Intl.DateTimeFormatOptions = JSON.parse(element.dataset.options || '{}');
+        element.textContent = date.toLocaleString(element.dataset.locale || undefined, options);
+    });
 </script>
