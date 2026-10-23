@@ -11,9 +11,8 @@ const ADMIN_EMAILS = [
     'admin@studywise.onl'
 ];
 
-const ADMIN_DOMAINS: string[] = ['@studywise.onl'];
+const ADMIN_DOMAINS: string[] = [];
 
-// Moderator domain whitelist (optional)
 const MODERATOR_DOMAINS: string[] = [];
 
 // Helper to get environment variable with fallback between import.meta.env and process.env
