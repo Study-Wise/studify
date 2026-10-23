@@ -7,13 +7,13 @@ Commands run from the repo root:
 | Check | Result |
 | --- | --- |
 | `npx astro build` | ✅ Succeeds (SSR output built) |
-| `npx astro check` | ❌ **10 errors**, 3 hints |
-| `npx eslint . --max-warnings 0` | ❌ **47 errors** |
+| `npx astro check` | ✅ 0 errors |
+| `npx eslint . --max-warnings 0` | ✅ Clean |
 | `npx stylelint "./**/*.scss"` | ✅ Clean |
-| `npm audit --omit=dev` | ❌ **94 vulnerabilities**: 11 critical, 45 high, 32 moderate, 6 low |
-| `npm run check` (CI) | ❌ Fails (eslint + astro check) |
+| `npm audit --omit=dev` | Not re-run. `npm install` reports 114 vulnerabilities: 11 critical, 57 high, 39 moderate, 7 low (dev dependencies included) |
+| `npm run check` (CI) | ✅ Passes |
 
-**Headline:** `main` cannot pass its own CI (`npm run check`). The production build works only because the broken `/about` code is never executed during an SSR build. There is one critical security issue and several verified functional breakages.
+**Headline:** `main` passes its own CI (`npm run check`). The items below were checked against the current code and are still open. There is one critical security issue and several verified functional breakages.
 
 ## 2. Critical
 
@@ -32,21 +32,6 @@ Commands run from the repo root:
   Because content is stored in the thread and re-rendered on reload, a model reply containing `<img src=x onerror=...>` (reachable through prompt injection) becomes persistent same-origin script execution for every viewer.
 
 ## 3. High
-
-- [ ] **H1. `/about` is broken at runtime**
-
-  `src/pages/about.astro:19,52,55,56`
-
-  `TeamData`, `getRegularImage`, and `getHoverImage` are referenced but do not exist anywhere in the repo. `astro check` reports 4 errors; rendering `/about` throws `ReferenceError: getRegularImage is not defined`. Confirmed the identifiers are absent repo-wide (only in source and stale `.vercel/output`). `random` (line 16) is also dead.
-
-- [ ] **H2. CI is red: 10 type errors and 47 lint errors**
-
-  - [ ] `src/pages/about.astro` — missing types/functions, 3 implicit `any` params (lines 19, 52, 55, 56, 77, 86).
-  - [ ] `src/lib/genai-image.ts:17` — `TS2367`, `config.imageSize` is narrowed to `'1024x1536'`, so comparison with `'auto'` is impossible under `satisfies Config`.
-  - [ ] `src/lib/modes.ts:403` — `TS7053`, indexing `characters[topicKey]` with a `string`.
-  - [ ] `src/lib/content/generate/slideshow.ts:99` — `cheerio.load(...)` typed as `Root`, `.text()` missing (see H12/H13 dependency mismatch).
-  - [ ] Lint: `no-undef` for `user` in `src/components/TawkTo.astro:17-47`, and for the undefined names in `about.astro`; 40+ custom `custom/unused-standards` errors (one-use helper functions) in `messages.astro`, `LeftSidebar.astro`, `ContentActions.astro`, etc.
-  - [ ] CI `npm run check` runs exactly these commands (`.github/workflows/check.yml`), so every push/PR is failing.
 
 - [ ] **H3. Homepage search shows "No subjects match" when there ARE matches**
 
@@ -125,16 +110,8 @@ Commands run from the repo root:
 
   - 11 critical advisories, including direct dependencies `astro`, `better-auth`, and `slideshow-generator`.
   - `slideshow-generator` pulls ancient, vulnerable transitive packages into the server bundle: `cheerio@0.20`, `crypto-js@3.3`, `front-matter@2.3`, `highlight.js@9.18`, `jade@1.11`, `request`, `constantinople`, `uglify-js` — several with RCE/SSRF advisories.
-  - `cheerio`, `crypto-js`, `front-matter`, `highlight.js`, and `jade` are imported in `src/lib/content/generate/slideshow.ts` / required via `createRequire`, but are **not declared** in `package.json`. They only resolve because of hoisting from `slideshow-generator`; a different package manager or hoisting layout breaks the slideshow feature.
+  - `cheerio`, `crypto-js`, `highlight.js`, and `jade` are imported in `src/lib/content/generate/slideshow.ts` / required via `createRequire`, but are **not declared** in `package.json`. They only resolve because of hoisting from `slideshow-generator`; a different package manager or hoisting layout breaks the slideshow feature.
   - `@types/cheerio@0.22` is installed while the resolved `cheerio` is 0.20, which is the source of the slideshow type error.
-
-- [ ] **H13. Type/import breakages hidden by SSR**
-
-  - [ ] `src/lib/genai-image.ts:17` (see H2).
-  - [ ] `src/lib/modes.ts:403` (see H2).
-  - [ ] `src/pages/about.astro` (see H1).
-  - [ ] `src/lib/ai-service.ts:9` unused `JSONValue` import.
-  - [ ] `src/scripts/user.astro:5` computes `callbackURL` but never uses it (line 17 recomputes it); currently harmless dead code.
 
 - [ ] **H14. `modeObj` can be `undefined` in the message API**
 
@@ -204,7 +181,7 @@ Commands run from the repo root:
 
 - [ ] **M14. Thread creation accepts unvalidated category/mode** — `src/pages/api/thread/initialize.ts:14,53-54`: arbitrary strings are persisted; the resulting chat page then redirects to `/404` (`chat/[id].astro:25`). This route also skips the email-format check the other thread mutations use.
 
-- [ ] **M15. Raw internal errors leaked to clients** — `thread/delete.ts:102`, `thread/rename.ts:127`, `thread/toggle-public.ts:109`, `thread/initialize.ts:74`, `files/delete.ts:74`: `error.message` is returned directly, unlike content routes which use `getUserErrorMessage`. DB/driver details leak to callers.
+- [ ] **M15. Raw internal errors leaked to clients** — `thread/delete.ts:102`, `thread/rename.ts:127`, `thread/toggle-public.ts:109`, `files/delete.ts:74`: `error.message` is returned directly, unlike content routes which use `getUserErrorMessage`. DB/driver details leak to callers.
 
 - [ ] **M16. Sentry tunnel has no size/rate/origin controls** — `src/pages/api/sentry-tunnel.ts:10,35-44`: buffers the entire body, is unauthenticated in middleware, and forwards a client-supplied `X-Forwarded-For`. Anyone can burn the project's Sentry quota or spoof source IPs.
 
@@ -244,7 +221,7 @@ Commands run from the repo root:
 - [ ] `L4` `src/accessibility/TouchGestures.astro:96,116` animates `--spin`, which names no `@keyframes`; no `touchcancel` handler leaves `isPulling` stuck.
 - [ ] `L5` `src/components/UserButton.astro:8-36` lacks `aria-haspopup`, `aria-expanded`, Escape handling, and focus management.
 - [ ] `L6` `src/layouts/Layout.astro:131-138` calls `input.addEventListener` outside the null guard; `:190` injects parser error text into `innerHTML`.
-- [ ] `L7` `src/scripts/messages.astro:20-22,32-38` — `destroyIdIfEmptyConvo` does not delete anything, and `visibilitychange` sets `state = 'on'` instead of `'off'`, so the hidden branch can never run twice.
+- [ ] `L7` `src/scripts/messages.astro:20-22,32-38` — `visibilitychange` sets `state = 'on'` instead of `'off'`, so the hidden branch can never run twice.
 - [ ] `L8` `src/scripts/messages.astro:326-331` interpolates model-influenced `url`/`buttonText` into an `href` inside `innerHTML`.
 - [ ] `L9` `src/lib/tools/generate-content.ts:74-75` — existence check for non-object content is convoluted and treats any non-null value as present; `specialCases` only covers `additional-resources`.
 - [ ] `L10` `src/lib/phet.ts:12,43` builds `embedUrl` that is never used; the `Simulation` field is dead.
