@@ -16,7 +16,6 @@ export interface Mode {
     tools?: ToolRecord;
     show?: boolean;
     desmos?: boolean;
-    // Portions of the chat page that are shown for this mode; anything left out is shown
     sidebarSections?: {
         shareSettings?: boolean;
         uploadedFiles?: boolean;
