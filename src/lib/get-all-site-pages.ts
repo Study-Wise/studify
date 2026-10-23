@@ -1,4 +1,4 @@
-const pagesToHide = ['chat', 'settings', 'admin', '404'];
+import appConfig from '@/lib/app.config';
 
 export default function getAllSitePages() {
     const pages = Object.entries(import.meta.glob<{ inNav?: string; title?: string | string[] }>('/src/pages/*.astro', { eager: true }))
@@ -10,22 +10,15 @@ export default function getAllSitePages() {
 
             if (name.startsWith('_')) return null;
 
-            const route = `/${name === 'index' ? '' : name}`;
-
-            const isHidden = pagesToHide.includes(name);
-
             let pageTitle = mod?.title ? mod.title : `${name.charAt(0).toUpperCase()}${name.slice(1)}`
 
             if (name === 'index') pageTitle = 'Home';
 
             // Ensure pageTitle is a string before replacing
-            const pageTitleStr = Array.isArray(pageTitle) ? pageTitle.join(' ') : (pageTitle);
-            const finalPageTitle = pageTitleStr.replaceAll('-', ' ');
-
             return {
-                name: finalPageTitle,
-                path: route,
-                hiddenFromNav: mod?.inNav === 'hide' || isHidden
+                name: (Array.isArray(pageTitle) ? pageTitle.join(' ') : pageTitle).replaceAll('-', ' '),
+                path: `/${name === 'index' ? '' : name}`,
+                hiddenFromNav: mod?.inNav === 'hide' || appConfig.hiddenPages.includes(name)
             };
         })
         .filter((page): page is { name: string; path: string; hiddenFromNav: boolean } => !!page)

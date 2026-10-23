@@ -2,20 +2,30 @@
 import aiConfig from '@/lib/ai.config';
 import appConfig from '@/lib/app.config';
 import { contentTypes } from '@/lib/content';
+import modeDefinitions from '@/lib/mode-definitions';
 
 import margoAgentDefinition from '../../.claude/agents/margo-page.md?raw';
 
 const CODING_SECTIONS_HEADING = '## Where the real repo is';
-const HIDDEN_PAGES = ['chat', 'settings', 'admin', '404'];
 
 const noFrnt = margoAgentDefinition.replace(/^---\n[\s\S]*?\n---\n/, '');
 const cutoff = noFrnt.indexOf(CODING_SECTIONS_HEADING);
 const basePrompt = (cutoff === -1 ? noFrnt : noFrnt.slice(0, cutoff)).trim();
 
-// Every top-level page file is a page people can visit, so a new page shows up here without an edit
-const pageList = Object.keys(import.meta.glob('../pages/*.astro'))
+const subjects = Object.entries(modeDefinitions)
+    .map(([categoryKey, category]) => {
+        const shownModes = Object.entries(category.modes).filter(([, mode]) => mode.show);
+        if (shownModes.length === 0) return null;
+
+        const modes = shownModes.map(([modeKey, mode]) => `${mode.modeName} (/${categoryKey}/${modeKey})`);
+        return `- ${category.name}: ${category.description}\n    Modes: ${modes.join(', ')}`;
+    })
+    .filter((section): section is string => section !== null)
+    .join('\n');
+
+const pages = Object.keys(import.meta.glob('../pages/*.astro'))
     .map(path => path.replace('../pages/', '').replace('.astro', ''))
-    .filter(name => !name.startsWith('_') && !HIDDEN_PAGES.includes(name))
+    .filter(name => !name.startsWith('_') && !appConfig.hiddenPages.includes(name))
     .sort((a, b) => a === 'index' ? -1 : b === 'index' ? 1 : 0)
     .map(name => {
         if (name === 'index') return '- Home (/)';
@@ -24,21 +34,7 @@ const pageList = Object.keys(import.meta.glob('../pages/*.astro'))
     })
     .join('\n');
 
-// Imported lazily because modes.ts imports this file; the promise settles once the categories are fully built
-const prompt = import('@/lib/modes').then(({ default: categories }) => {
-    // Mirrors the home page: only modes marked as shown are listed, and categories with none are skipped
-    const subjects = Object.entries(categories)
-        .map(([categoryKey, category]) => {
-            const shownModes = Object.entries(category.modes).filter(([, mode]) => mode.show);
-            if (shownModes.length === 0) return null;
-
-            const modes = shownModes.map(([modeKey, mode]) => `${mode.name} (/${categoryKey}/${modeKey})`);
-            return `- ${category.name}: ${category.description}\n    Modes: ${modes.join(', ')}`;
-        })
-        .filter((section): section is string => section !== null)
-        .join('\n');
-
-    return `${basePrompt}
+const prompt = `${basePrompt}
 
 ## Live app details
 
@@ -62,12 +58,11 @@ ${contentTypes.map(type => `- ${type}`).join('\n')}
 
 ### Pages
 
-${pageList}
+${pages}
 - Profile (/user/profile)
 
 ### Limits
 
 Each person can have up to ${aiConfig.maxThreadsPerUser} chats at a time, and each chat allows ${aiConfig.maxMessagesPerThread} messages from them. After that, they need to delete a chat or start a new conversation.`;
-});
 
 export default prompt;

@@ -18,7 +18,7 @@ const modeObj = categoryObj?.modes?.[mode || ''];
 if (!categoryObj || !modeObj) return Astro.redirect('/404');
 
 const categoryName = categoryObj?.name || category;
-const modeName = modeObj?.name || mode;
+const modeName = modeObj?.modeName || mode;
 
 const user = Astro.locals.user;
 
