@@ -1,3 +1,4 @@
+import config from '@/lib/ai.config';
 import characters from '@/lib/characters';
 import margoPagePrompt from '@/lib/margo-page-prompt';
 import generateModePrompt from '@/lib/prompt-generator';
@@ -392,6 +393,7 @@ const categories: Record<string, Category> = {
                 description: 'Chat with Margo Page from the Studify support team about the app, issues, and feedback',
                 icon: '🎧',
                 prompt: margoPagePrompt,
+                tools: Object.fromEntries(Object.entries(modules).filter(([key]) => !config.contentGenerationExcludeTools.includes(key))),
             },
         },
     },
