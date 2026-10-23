@@ -2,6 +2,20 @@
 import '@/styles/pages/about.scss';
 import Layout from '@/layouts/Layout.astro';
 
+interface TeamData {
+    username: string;
+    name: string;
+    role: string;
+    blurb: string;
+    description: string;
+    links?: {
+        href: string;
+        text: string;
+        icon: string;
+    }[];
+    images?: { regular?: string; hover?: string };
+}
+
 const allTeamImagesObject: Record<string, Record<string, string[]>> = {};
 Object.keys(import.meta.glob('../../public/assets/people/*/*/*.jpeg')).sort().forEach(key => {
     const pathParts = key.split('/').slice(['..', '..', 'public'].length);
@@ -16,6 +30,7 @@ Object.keys(import.meta.glob('../../public/assets/people/*/*/*.jpeg')).sort().fo
 function random(array: string[]) {
     return array[Math.floor(Math.random() * array.length)]
 }
+
 const team: TeamData[] = [
     {
         username: 'adarsh',
@@ -52,8 +67,8 @@ const team: TeamData[] = [
 ].map((u: TeamData) => ({
     ...u,
     images: {
-        regular: u.images?.regular || getRegularImage(u.username),
-        hover: u.images?.hover || getHoverImage(u.username)
+        regular: u.images?.regular || random(allTeamImagesObject[u.username]?.regular ?? []),
+        hover: u.images?.hover || random(allTeamImagesObject[u.username]?.hover ?? [])
     }
 }));
 ---

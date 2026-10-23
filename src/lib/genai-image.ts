@@ -14,7 +14,7 @@ async function generateImageBuffer(prompt: string) {
             model: config.imageModel,
             prompt: prompt,
             n: 1,
-            size: config.imageSize === 'auto' ? '1024x1024' : config.imageSize,
+            size: config.imageSize,
             output_format: 'png'
         });
 

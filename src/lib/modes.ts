@@ -400,7 +400,7 @@ const categories: Record<string, Category> = {
 // Generate prompts programmatically for each mode
 for (const topicKey of Object.keys(categories)) {
     for (const modeKey of Object.keys(categories[topicKey].modes)) {
-        Object.assign(categories[topicKey].modes[modeKey], characters[topicKey]?.[modeKey]);
+        Object.assign(categories[topicKey].modes[modeKey], new Map(Object.entries(new Map(Object.entries(characters)).get(topicKey) ?? {})).get(modeKey));
 
         if (!categories[topicKey].modes[modeKey].prompt) categories[topicKey].modes[modeKey].prompt = Promise.resolve(generateModePrompt(categories[topicKey].modes[modeKey], topicKey));
 
