@@ -414,8 +414,6 @@ for (const topicKey of Object.keys(categories)) {
 
         modes[modeKey] = mode;
     }
-
-    categories[topicKeyTyped] = topic;
 }
 
 export type CategoryName = keyof typeof categories;

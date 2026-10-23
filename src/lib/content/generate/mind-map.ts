@@ -98,7 +98,6 @@ You may remove or modify sections as you see fit based on relevance to the topic
     ];
 
     // Generate the mind map with Claude Haiku via the AI Gateway, falling back to GPT-5.3 Codex
-    const excludeTools = config.contentGenerationExcludeTools;
     const result = await generateText({
         model: 'anthropic/claude-haiku-4.5',
         messages: messagesForAI,

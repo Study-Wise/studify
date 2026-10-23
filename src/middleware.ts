@@ -27,14 +27,6 @@ const authRoutes = [
     /^\/user\/sign-up.*/,
 ];
 
-function isProtectedRoute(pathname: string): boolean {
-    return protectedRoutes.some(route => route.test(pathname));
-}
-
-function isAuthRoute(pathname: string): boolean {
-    return authRoutes.some(route => route.test(pathname));
-}
-
 export const onRequest: MiddlewareHandler = async function onRequest(context, next) {
     const { request, locals, redirect } = context;
     const pathname = new URL(request.url).pathname;

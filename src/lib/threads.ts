@@ -64,8 +64,6 @@ async function getMessages(id: string, isAuthorized?: boolean | null) {
 
         if (dbResponse.length === 0) return [];
 
-        const thread = dbResponse[0];
-
         if (!isAuthorized) return []
 
         // Handle case where thread data is stored as string instead of object
@@ -91,8 +89,6 @@ async function getMessagesLength(id: string) {
 
         if (dbResponse.length === 0) return 0;
 
-        const thread = dbResponse[0];
-
         // Handle case where thread data is stored as string instead of object
         let threadData: ThreadData;
         const rawThread = thread?.thread;
@@ -115,8 +111,6 @@ async function getThreadByToken(id: string, isAuthorized?: boolean | null) {
         const dbResponse: Thread[] = await db.select().from(threadsTable).where(eq(threadsTable.id, id));
 
         if (dbResponse.length === 0) return null;
-
-        const thread = dbResponse[0];
 
         if (!isAuthorized) return null;
 

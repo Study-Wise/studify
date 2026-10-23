@@ -97,16 +97,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
 
         // Reassemble file from chunks
-        const totalSize = upload.chunks.reduce((sum, chunk) => sum + (chunk?.length || 0), 0);
-        const assembled = new Uint8Array(totalSize);
-        let offset = 0;
-        for (const chunk of upload.chunks) {
-            if (chunk) {
-                assembled.set(chunk, offset);
-                offset += chunk.length;
-            }
-        }
-
         chunkedUploads.delete(uploadId);
 
         const file = new File([assembled], upload.fileName, { type: upload.fileType });

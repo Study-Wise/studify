@@ -74,7 +74,6 @@ ONLY INCLUDE THE HTML CONTENT IN YOUR RESPONSE. DO NOT RESPOND WITH ANYTHING ELS
     ];
 
     // Generate the webpage with Claude Haiku via the AI Gateway, falling back to GPT-5.3 Codex
-    const excludeTools = config.contentGenerationExcludeTools;
     const result = await generateText({
         model: 'anthropic/claude-haiku-4.5',
         messages: messagesForAI,

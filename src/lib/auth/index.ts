@@ -16,18 +16,6 @@ const ADMIN_DOMAINS: string[] = ['@studywise.onl'];
 // Moderator domain whitelist (optional)
 const MODERATOR_DOMAINS: string[] = [];
 
-function determineUserRole(email: string): UserRole {
-    const emailLower = email.toLowerCase();
-
-    if (ADMIN_EMAILS.map(e => e.toLowerCase()).includes(emailLower)) return 'admin';
-
-    if (ADMIN_DOMAINS.some(domain => emailLower.endsWith(domain))) return 'admin';
-
-    if (MODERATOR_DOMAINS.some(domain => emailLower.endsWith(domain))) return 'moderator';
-
-    return 'user';
-}
-
 // Helper to get environment variable with fallback between import.meta.env and process.env
 // This ensures compatibility with both Vite/Astro and Node.js runtime environments
 function getEnvVar(key: string): string | undefined {
@@ -64,12 +52,7 @@ function buildSocialProviders(): SocialProviderConfig {
     return providers;
 }
 
-const socialProviders = buildSocialProviders();
 const baseURL = getEnvVar('BETTER_AUTH_URL') || 'http://localhost:4321';
-
-const vercelOrigins = [getEnvVar('VERCEL_URL'), getEnvVar('VERCEL_BRANCH_URL'), getEnvVar('VERCEL_PROJECT_PRODUCTION_URL')]
-    .filter(Boolean)
-    .map(host => `https://${host}`);
 
 export const auth = betterAuth({
     database: drizzleAdapter(db, {

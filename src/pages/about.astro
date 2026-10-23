@@ -16,28 +16,6 @@ Object.keys(import.meta.glob('../../public/assets/people/*/*/*.jpeg')).sort().fo
 function random(array: string[]) {
     return array[Math.floor(Math.random() * array.length)]
 }
-function getRegularImage(username: string) {
-    return random(allTeamImagesObject[username]['regular'])
-};
-function getHoverImage(username: string) {
-    const _hoverKey = random(Object.keys(allTeamImagesObject[username]).filter(key => key !== 'regular' && !key.startsWith('_')));
-    if (!_hoverKey) return undefined;
-    return random(allTeamImagesObject[username][_hoverKey])
-};
-
-interface TeamData {
-    username: string;
-    name: string;
-    role: string;
-    images?: {
-        regular?: string;
-        hover?: string;
-    };
-    blurb: string;
-    description: string;
-    links: { href: string; text: string; icon: string }[];
-}
-
 const team: TeamData[] = [
     {
         username: 'adarsh',

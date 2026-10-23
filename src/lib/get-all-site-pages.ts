@@ -12,7 +12,6 @@ export default function getAllSitePages() {
 
             const route = `/${name === 'index' ? '' : name}`;
 
-            const hiddenFromNav = mod?.inNav === 'hide';
             const isHidden = pagesToHide.includes(name);
 
             let pageTitle = mod?.title ? mod.title : `${name.charAt(0).toUpperCase()}${name.slice(1)}`

@@ -29,7 +29,6 @@ export async function checkThreadAccess(
 
     const userEmail = (user ?? (isDev() ? await getDevUser() : null))?.email || null;
 
-    let isUserAdminFlag = false;
     if (userEmail) {
         try {
             isUserAdminFlag = await checkIsUserAdmin(userEmail);

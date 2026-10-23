@@ -77,7 +77,6 @@ Your answer should be:
             5,
             requestId
         );
-        const answer = aiResult.text;
 
         const metadata = {
             generatedAt: new Date().toISOString(),

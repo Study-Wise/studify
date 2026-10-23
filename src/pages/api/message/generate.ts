@@ -64,8 +64,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        let isNewThread = false;
-
         if (!current_thread_id) {
             try {
 
@@ -108,7 +106,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
                     isDev: (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development'
                 });
                 current_thread_id = newThreadId;
-                isNewThread = true;
             } catch (error) {
                 console.error(`❌ [${requestId}] Error generating thread:`, error);
                 return new Response(
@@ -315,7 +312,6 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
 
                 const { marked } = await import('marked');
                 marked.setOptions({ breaks: true, gfm: true });
-                const htmlText = await marked.parse(welcomeMessage);
 
                 return new Response(
                     JSON.stringify({
@@ -421,7 +417,6 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
         const responseStream = new ReadableStream({
             async start(controller) {
                 try {
-                    const pendingCalls = new Map<string, string>(); // toolCallId -> toolName
                     let streamedText = '';
                     let lastHtmlAt = 0;
                     const { marked } = await import('marked');
@@ -452,9 +447,6 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                             controller.enqueue(sendEvent({ type: 'tool-call', toolCallId, toolName }));
                         }
                         else if (streamPart.type === 'tool-result') {
-                            const toolCallId = streamPart.toolCallId || '';
-                            const toolName = streamPart.toolName || '';
-                            let status: 'success' | 'error' = 'success';
                             try {
                                 const raw = streamPart.output;
                                 const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
@@ -462,7 +454,6 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                             } catch {
                                 // JSON parse error ignored, status remains as initial value
                             }
-                            controller.enqueue(sendEvent({ type: 'tool-result', toolCallId, toolName, status }));
                         }
                         else if (streamPart.type === 'error') {
                             throw new VendorError(providers[selectedProvider]?.name ?? selectedProvider, 'AI stream failed', { cause: streamPart.error });

@@ -62,8 +62,6 @@ export async function getThreadContentStatus(
     isAuthorized: boolean,
     isPublic: boolean
 ): Promise<ThreadContentStatus> {
-    const isNewChat = (threadId === 'new');
-
     // Default status with all known types set to false
     const status: ThreadContentStatus = {
         hasReferenceSheet: false,

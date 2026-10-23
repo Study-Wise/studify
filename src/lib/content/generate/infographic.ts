@@ -85,9 +85,6 @@ Style: Clean, modern, professional educational infographic. Use a white backgrou
         throw new VendorError('UploadThing', 'Failed to upload image - No data in upload result');
     }
 
-    const imageUrl = imageResult.imageUrl;
-    const fileKey = imageResult.uploadResult.data.key;
-
     const infographic = {
         imageUrl: imageUrl,
         description: descriptionResult.text,

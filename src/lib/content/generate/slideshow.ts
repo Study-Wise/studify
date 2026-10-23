@@ -27,49 +27,6 @@ const node_require = createRequire(import.meta.url);
 const marked = node_require('slideshow-generator/node_modules/marked');
 const jade = node_require('jade');
 
-function markdownToSlideshowHTML(markdown: string): string {
-    const content = fm(markdown);
-    const tokens: MarkedToken[] = marked.lexer(content.body, {
-        gfm: true, tables: true, breaks: true,
-        pedantic: true, sanitize: true, smartLists: true, smartypants: true
-    });
-
-    let title: string | undefined;
-    const pages: { tokens?: MarkedToken[]; html?: string }[] = [];
-
-    tokens.forEach((token: MarkedToken) => {
-        if (token.type === 'heading' || pages.length === 0) pages.push({ tokens: [] });
-        if (!title) {
-            const t: MarkedToken[] & { links: Record<string, JSONValue> } = Object.assign([token], { links: {} });
-            const h = marked.parser(t);
-            const $ = cheerio.load(h);
-            title = $('*').text();
-        }
-        pages[pages.length - 1].tokens!.push(token);
-    });
-
-    pages.forEach(page => {
-        const renderer = new marked.Renderer();
-        renderer.heading = function heading(text: string, level: number) {
-            return `<h${level}>${text}</h${level}>`;
-        };
-        const pt = Object.assign(lodash.cloneDeep(page.tokens ?? []), { links: {} });
-        page.html = marked.parser(pt, {
-            renderer,
-            highlight: (code: string) => highlight.highlightAuto(code).value
-        });
-        delete page.tokens;
-    });
-
-    const data = { attributes: content.attributes, title, pages };
-    const jadePath = join(dirname(node_require.resolve('slideshow-generator/package.json')), 'src', 'index.jade');
-    const fn = jade.compileFile(jadePath);
-    const jsonContent = JSON.stringify(data);
-    const encrypted = CryptoJS.AES.encrypt(jsonContent, '-').toString();
-
-    return fn({ data: encrypted, process });
-}
-
 export async function generateSlideshow(threadId: string, userPrompt?: string) {
     const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
 

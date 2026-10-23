@@ -57,16 +57,12 @@ import '@/styles/accessibility/keyboard-navigation.scss';
             const currentIndex = tabs.findIndex(element => element === document.activeElement);
 
             switch (e.key) {
-                case 'ArrowLeft': {
-                    const prevIndex = currentIndex > 0 ? currentIndex - 1 : tabs.length - 1;
-                    tabs[prevIndex]?.focus();
+                case 'ArrowLeft':
+                    tabs[currentIndex > 0 ? currentIndex - 1 : tabs.length - 1]?.focus();
                     break;
-                }
-                case 'ArrowRight': {
-                    const nextIndex = currentIndex < tabs.length - 1 ? currentIndex + 1 : 0;
-                    tabs[nextIndex]?.focus();
+                case 'ArrowRight':
+                    tabs[currentIndex < tabs.length - 1 ? currentIndex + 1 : 0]?.focus();
                     break;
-                }
                 case 'Home':
                     tabs[0]?.focus();
                     break;
