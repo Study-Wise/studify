@@ -74,6 +74,7 @@
         "zod": "^3.25.76"
     },
     "overrides": {
+        "@vercel/nft": "1.11.0",
         "bufferutil": "4.1.0",
         "utf-8-validate": "6.0.6"
     }
