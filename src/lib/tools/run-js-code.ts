@@ -50,6 +50,6 @@ const runJSCodeTool = tool({
 
 export default {
     ...runJSCodeTool,
-    ready: true,
+    ready: false,
     label: 'Running JS code',
 };
