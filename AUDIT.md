@@ -27,40 +27,40 @@ Commands run from the repo root:
 
 - [ ] **C1. Anyone can self-register as an admin**
 
-    `src/lib/auth/index.ts:14`, `:64-67`, `:86-101`
+  `src/lib/auth/index.ts:14`, `:64-67`, `:86-101`
 
-    - Email/password sign-up is enabled with no `requireEmailVerification`.
-    - The `user.create.before` hook grants `role: 'admin'` to **any** email ending in `@studywise.onl` (`ADMIN_DOMAINS`).
-    - No domain ownership is checked. Registering `anything@studywise.onl` therefore creates a working admin account.
-    - Admin bypasses the per-user thread limit (`src/pages/api/thread/initialize.ts:26`) and `checkThreadAccess` gives admins read access to every thread (`src/lib/auth/check-thread-access.ts:94-97`).
-    - Hardcoded personal admin emails also live in source (`src/lib/auth/index.ts:8-12`).
+  - Email/password sign-up is enabled with no `requireEmailVerification`.
+  - The `user.create.before` hook grants `role: 'admin'` to **any** email ending in `@studywise.onl` (`ADMIN_DOMAINS`).
+  - No domain ownership is checked. Registering `anything@studywise.onl` therefore creates a working admin account.
+  - Admin bypasses the per-user thread limit (`src/pages/api/thread/initialize.ts:26`) and `checkThreadAccess` gives admins read access to every thread (`src/lib/auth/check-thread-access.ts:94-97`).
+  - Hardcoded personal admin emails also live in source (`src/lib/auth/index.ts:8-12`).
 
 - [ ] **C2. Server-side arbitrary code execution through the `run-js-code` tool**
 
-    `src/lib/tools/run-js-code.ts:20-43`
+  `src/lib/tools/run-js-code.ts:20-43`
 
-    ```ts
-    const codeResult = await Function(joinedCode)();
-    ```
+  ```ts
+  const codeResult = await Function(joinedCode)();
+  ```
 
-    - Model/user-controlled JavaScript is executed in the server process with access to Node globals (`process`, `globalThis`, `fetch`, etc.). The only filtering is a line-based removal of `import` / `import(`.
-    - The tool is `ready: true`, so it is exposed to the chat model (`src/lib/tools.ts:32-39`).
-    - It is **also** left enabled during content generation: `config.contentGenerationExcludeTools` (`src/lib/ai.config.ts:31`) does not exclude `run-js-code`, and `src/lib/content/generate/webpage.ts:78-80` / `mind-map.ts:102-104` pass every remaining tool.
-    - Prompt injection (pasted homework, uploaded text, generated content) can therefore reach a remote-code-execution primitive. Any returned string is also fed back to the model/DB.
+  - Model/user-controlled JavaScript is executed in the server process with access to Node globals (`process`, `globalThis`, `fetch`, etc.). The only filtering is a line-based removal of `import` / `import(`.
+  - The tool is `ready: true`, so it is exposed to the chat model (`src/lib/tools.ts:32-39`).
+  - It is **also** left enabled during content generation: `config.contentGenerationExcludeTools` (`src/lib/ai.config.ts:31`) does not exclude `run-js-code`, and `src/lib/content/generate/webpage.ts:78-80` / `mind-map.ts:102-104` pass every remaining tool.
+  - Prompt injection (pasted homework, uploaded text, generated content) can therefore reach a remote-code-execution primitive. Any returned string is also fed back to the model/DB.
 
 - [ ] **C3. Stored XSS from AI-generated Markdown/HTML**
 
-    Verified: `marked` v15 passes raw HTML through unchanged (`marked.parse('<script>alert(1)</script>')` returns the script tag). No sanitizer or CSP is applied before `set:html`/`innerHTML`.
+  Verified: `marked` v15 passes raw HTML through unchanged (`marked.parse('<script>alert(1)</script>')` returns the script tag). No sanitizer or CSP is applied before `set:html`/`innerHTML`.
 
-    Sinks:
+  Sinks:
 
-    - [ ] `src/pages/[category]/[mode]/chat/[id].astro:88,163` — assistant messages parsed with `marked` and injected via `set:html`.
-    - [ ] `src/scripts/messages.astro:500,670` — `messageContent.innerHTML = data.generatedText`; also `:412`.
-    - [ ] `src/components/ContentActions.astro:87` — `contentDiv.innerHTML = parsedContent`.
-    - [ ] `src/pages/[category]/[mode]/study-guide/[id].astro:37,58`; same pattern in `summary`, `reference-sheet`, `practice-questions`, `flashcards` (`:79,91,95`) and `question/[id].astro:160`.
-    - [ ] `src/components/chat/LeftSidebar.astro:573-584` — uploaded `file.name`/`file.key` interpolated into `innerHTML` unescaped (self-XSS, and visible on public threads).
+  - [ ] `src/pages/[category]/[mode]/chat/[id].astro:88,163` — assistant messages parsed with `marked` and injected via `set:html`.
+  - [ ] `src/scripts/messages.astro:500,670` — `messageContent.innerHTML = data.generatedText`; also `:412`.
+  - [ ] `src/components/ContentActions.astro:87` — `contentDiv.innerHTML = parsedContent`.
+  - [ ] `src/pages/[category]/[mode]/study-guide/[id].astro:37,58`; same pattern in `summary`, `reference-sheet`, `practice-questions`, `flashcards` (`:79,91,95`) and `question/[id].astro:160`.
+  - [ ] `src/components/chat/LeftSidebar.astro:573-584` — uploaded `file.name`/`file.key` interpolated into `innerHTML` unescaped (self-XSS, and visible on public threads).
 
-    Because content is stored in the thread and re-rendered on reload, a model reply containing `<img src=x onerror=...>` (reachable through prompt injection) becomes persistent same-origin script execution for every viewer.
+  Because content is stored in the thread and re-rendered on reload, a model reply containing `<img src=x onerror=...>` (reachable through prompt injection) becomes persistent same-origin script execution for every viewer.
 
 ---
 
@@ -68,136 +68,136 @@ Commands run from the repo root:
 
 - [ ] **H1. `/about` is broken at runtime**
 
-    `src/pages/about.astro:19,52,55,56`
+  `src/pages/about.astro:19,52,55,56`
 
-    `TeamData`, `getRegularImage`, and `getHoverImage` are referenced but do not exist anywhere in the repo. `astro check` reports 4 errors; rendering `/about` throws `ReferenceError: getRegularImage is not defined`. Confirmed the identifiers are absent repo-wide (only in source and stale `.vercel/output`). `random` (line 16) is also dead.
+  `TeamData`, `getRegularImage`, and `getHoverImage` are referenced but do not exist anywhere in the repo. `astro check` reports 4 errors; rendering `/about` throws `ReferenceError: getRegularImage is not defined`. Confirmed the identifiers are absent repo-wide (only in source and stale `.vercel/output`). `random` (line 16) is also dead.
 
 - [ ] **H2. CI is red: 10 type errors and 47 lint errors**
 
-    - [ ] `src/pages/about.astro` — missing types/functions, 3 implicit `any` params (lines 19, 52, 55, 56, 77, 86).
-    - [ ] `src/lib/genai-image.ts:17` — `TS2367`, `config.imageSize` is narrowed to `'1024x1536'`, so comparison with `'auto'` is impossible under `satisfies Config`.
-    - [ ] `src/lib/modes.ts:403` — `TS7053`, indexing `characters[topicKey]` with a `string`.
-    - [ ] `src/lib/content/generate/slideshow.ts:99` — `cheerio.load(...)` typed as `Root`, `.text()` missing (see H12/H13 dependency mismatch).
-    - [ ] Lint: `no-undef` for `user` in `src/components/TawkTo.astro:17-47`, and for the undefined names in `about.astro`; 40+ custom `custom/unused-standards` errors (one-use helper functions) in `messages.astro`, `LeftSidebar.astro`, `ContentActions.astro`, etc.
-    - [ ] CI `npm run check` runs exactly these commands (`.github/workflows/check.yml`), so every push/PR is failing.
+  - [ ] `src/pages/about.astro` — missing types/functions, 3 implicit `any` params (lines 19, 52, 55, 56, 77, 86).
+  - [ ] `src/lib/genai-image.ts:17` — `TS2367`, `config.imageSize` is narrowed to `'1024x1536'`, so comparison with `'auto'` is impossible under `satisfies Config`.
+  - [ ] `src/lib/modes.ts:403` — `TS7053`, indexing `characters[topicKey]` with a `string`.
+  - [ ] `src/lib/content/generate/slideshow.ts:99` — `cheerio.load(...)` typed as `Root`, `.text()` missing (see H12/H13 dependency mismatch).
+  - [ ] Lint: `no-undef` for `user` in `src/components/TawkTo.astro:17-47`, and for the undefined names in `about.astro`; 40+ custom `custom/unused-standards` errors (one-use helper functions) in `messages.astro`, `LeftSidebar.astro`, `ContentActions.astro`, etc.
+  - [ ] CI `npm run check` runs exactly these commands (`.github/workflows/check.yml`), so every push/PR is failing.
 
 - [ ] **H3. Homepage search shows "No subjects match" when there ARE matches**
 
-    `src/pages/index.astro:147,157-158`
+  `src/pages/index.astro:147,157-158`
 
-    ```ts
-    card.hidden = visibleModes === 0;
-    if (empty && visibleModes > 0) empty.hidden = false;
-    ```
+  ```ts
+  card.hidden = visibleModes === 0;
+  if (empty && visibleModes > 0) empty.hidden = false;
+  ```
 
-    `empty.hidden` is set to `false` (visible) precisely when a card has matching modes. It is only hidden when still empty on entry, and never shown when zero matches. The empty-state logic is inverted.
+  `empty.hidden` is set to `false` (visible) precisely when a card has matching modes. It is only hidden when still empty on entry, and never shown when zero matches. The empty-state logic is inverted.
 
 - [ ] **H4. Regenerate does nothing for Summary and Additional Resources**
 
-    `src/components/ContentActions.astro:43-48,61-137`
+  `src/components/ContentActions.astro:43-48,61-137`
 
-    `markdownTypes` omits `summary`; `additional-resources` appears in no type list. `updatePageContent()` falls through every branch and returns without rendering. The API routes return success, and the button flips to "Regenerate …", but the page keeps showing "No Summary Found" / "No Resources Found" (or stale content).
+  `markdownTypes` omits `summary`; `additional-resources` appears in no type list. `updatePageContent()` falls through every branch and returns without rendering. The API routes return success, and the button flips to "Regenerate …", but the page keeps showing "No Summary Found" / "No Resources Found" (or stale content).
 
 - [ ] **H5. OAuth completion fallback is broken (`define:vars` cannot serialize a function)**
 
-    `src/pages/user/sso-callback.astro:20-21`
+  `src/pages/user/sso-callback.astro:20-21`
 
-    ```astro
-    <script is:inline define:vars={{ getSafeReturnBackUrl }}>
-      const redirectUrl = getSafeReturnBackUrl(...);
-    ```
+  ```astro
+  <script is:inline define:vars={{ getSafeReturnBackUrl }}>
+    const redirectUrl = getSafeReturnBackUrl(...);
+  ```
 
-    Astro serializes `define:vars` with `JSON.stringify`, which drops functions. The emitted variable is `undefined`, so the script throws `TypeError`. The `catch` retries the same failing call. The normal OAuth path usually survives because the server-side redirect at line 7 fires first when the session cookie is already present; any visit that relies on this page's script (or a timing/cookie edge case) hangs on "Completing authentication...".
+  Astro serializes `define:vars` with `JSON.stringify`, which drops functions. The emitted variable is `undefined`, so the script throws `TypeError`. The `catch` retries the same failing call. The normal OAuth path usually survives because the server-side redirect at line 7 fires first when the session cookie is already present; any visit that relies on this page's script (or a timing/cookie edge case) hangs on "Completing authentication...".
 
 - [ ] **H6. Per-user thread limit is bypassable**
 
-    `src/pages/api/message/generate.ts:68-108` vs `:264-298`
+  `src/pages/api/message/generate.ts:68-108` vs `:264-298`
 
-    The limit is checked only when no `id` is supplied. Supplying a fresh, non-existent `id` skips the check; the first-message branch then inserts a thread with that client-chosen ID (`onConflictDoUpdate`). Unlimited threads can be created this way, bypassing `maxThreadsPerUser` (5).
+  The limit is checked only when no `id` is supplied. Supplying a fresh, non-existent `id` skips the check; the first-message branch then inserts a thread with that client-chosen ID (`onConflictDoUpdate`). Unlimited threads can be created this way, bypassing `maxThreadsPerUser` (5).
 
 - [ ] **H7. `checkThreadAccess` fails open**
 
-    `src/lib/auth/check-thread-access.ts:49-97`
+  `src/lib/auth/check-thread-access.ts:49-97`
 
-    - DB errors are swallowed (line 89), leaving `threadOwner = null`; line 96 treats `!threadOwner` as authorized. A failed lookup therefore returns `isAuthorized: true`.
-    - The NULL-owner claim (`:80-82`) is an unconditional `UPDATE ... WHERE id`; two concurrent first visitors both become "owner". Any authenticated user can also claim an unowned thread through this path.
-    - `chat/[id].astro:58` only rejects when a second query also returns null, so a transient DB failure can expose a private thread.
+  - DB errors are swallowed (line 89), leaving `threadOwner = null`; line 96 treats `!threadOwner` as authorized. A failed lookup therefore returns `isAuthorized: true`.
+  - The NULL-owner claim (`:80-82`) is an unconditional `UPDATE ... WHERE id`; two concurrent first visitors both become "owner". Any authenticated user can also claim an unowned thread through this path.
+  - `chat/[id].astro:58` only rejects when a second query also returns null, so a transient DB failure can expose a private thread.
 
 - [ ] **H8. Arbitrary UploadThing file deletion**
 
-    `src/pages/api/files/delete.ts:19-48`
+  `src/pages/api/files/delete.ts:19-48`
 
-    The route verifies only that the caller owns `threadId`; it never verifies `fileKey` belongs to that thread's `uploadedFiles` before calling `deleteFiles(fileKey)`. File keys for public threads are rendered into markup (`src/components/chat/LeftSidebar.astro:113-114`), so any user can create a thread and delete another user's uploaded file. `fileKey` is not type-checked and `deleteFiles` also accepts arrays.
+  The route verifies only that the caller owns `threadId`; it never verifies `fileKey` belongs to that thread's `uploadedFiles` before calling `deleteFiles(fileKey)`. File keys for public threads are rendered into markup (`src/components/chat/LeftSidebar.astro:113-114`), so any user can create a thread and delete another user's uploaded file. `fileKey` is not type-checked and `deleteFiles` also accepts arrays.
 
 - [ ] **H9. Unauthenticated AI generation + database write**
 
-    `src/pages/api/question/generate.ts:14-19,36-46,55-79,99`
+  `src/pages/api/question/generate.ts:14-19,36-46,55-79,99`
 
-    - The route never reads `locals.user`; middleware does not protect `/api/*`.
-    - Anyone can spend AI credits, insert public rows, and run up cost with no rate limit or input length limit.
-    - `category`/`mode` are interpolated into the system prompt (prompt injection).
-    - `questionToId()` (`src/lib/question-utils.ts:1-8`) can return an empty string or collide; the check-then-insert races, causing 500s on the primary key.
+  - The route never reads `locals.user`; middleware does not protect `/api/*`.
+  - Anyone can spend AI credits, insert public rows, and run up cost with no rate limit or input length limit.
+  - `category`/`mode` are interpolated into the system prompt (prompt injection).
+  - `questionToId()` (`src/lib/question-utils.ts:1-8`) can return an empty string or collide; the check-then-insert races, causing 500s on the primary key.
 
 - [ ] **H10. Chunked uploads are broken on Vercel and can exhaust memory**
 
-    `src/lib/chunked-upload-store.ts:14`, `src/pages/api/files/upload-chunk.ts:50-101`, `src/pages/api/files/upload-complete.ts:58-107`
+  `src/lib/chunked-upload-store.ts:14`, `src/pages/api/files/upload-chunk.ts:50-101`, `src/pages/api/files/upload-complete.ts:58-107`
 
-    - Upload state is a module-level `Map`. On Vercel each request can hit a different lambda, so chunks from one upload land on different instances; `upload-complete` then returns "Missing chunks". Files over ~3.5 MB use this path (`LeftSidebar.astro:392-434`).
-    - `fileSize` is client-declared and is the only size check; actual chunk bytes are never measured. `totalChunks` is unbounded, `new Array(totalChunks)` is attacker-sized, and the assembled file is never re-checked against 10 MB.
-    - Stale entries are only cleaned in `upload-complete` (`:47`), so abandoned uploads accumulate forever in instances that never get a completion.
+  - Upload state is a module-level `Map`. On Vercel each request can hit a different lambda, so chunks from one upload land on different instances; `upload-complete` then returns "Missing chunks". Files over ~3.5 MB use this path (`LeftSidebar.astro:392-434`).
+  - `fileSize` is client-declared and is the only size check; actual chunk bytes are never measured. `totalChunks` is unbounded, `new Array(totalChunks)` is attacker-sized, and the assembled file is never re-checked against 10 MB.
+  - Stale entries are only cleaned in `upload-complete` (`:47`), so abandoned uploads accumulate forever in instances that never get a completion.
 
 - [ ] **H11. Any signed-in user can write study materials to someone else's public thread**
 
-    `src/pages/api/study-guide/generate.ts:65-74` and the same check in all ten routes (`flashcards:64`, `infographic:64`, `mind-map:65`, `practice-questions:65`, `reference-sheet:65`, `slideshow:64`, `summary:65`, `additional-resources:65`, `webpage:65`)
+  `src/pages/api/study-guide/generate.ts:65-74` and the same check in all ten routes (`flashcards:64`, `infographic:64`, `mind-map:65`, `practice-questions:65`, `reference-sheet:65`, `slideshow:64`, `summary:65`, `additional-resources:65`, `webpage:65`)
 
-    Condition: `thread.email !== user.email && !thread.isPublic`. Public is treated as **writable**, not just readable. A non-owner can trigger AI/image/UploadThing work and overwrite the owner's stored content via `saveContent()`. The UI hides the button from non-owners (`ContentActions.astro:23`), so API and UI authorization disagree.
+  Condition: `thread.email !== user.email && !thread.isPublic`. Public is treated as **writable**, not just readable. A non-owner can trigger AI/image/UploadThing work and overwrite the owner's stored content via `saveContent()`. The UI hides the button from non-owners (`ContentActions.astro:23`), so API and UI authorization disagree.
 
 - [ ] **H12. Direct dependency/supply-chain risk**
 
-    `package.json`, `npm audit`
+  `package.json`, `npm audit`
 
-    - 11 critical advisories, including direct dependencies `astro`, `better-auth`, and `slideshow-generator`.
-    - `slideshow-generator` pulls ancient, vulnerable transitive packages into the server bundle: `cheerio@0.20`, `crypto-js@3.3`, `front-matter@2.3`, `highlight.js@9.18`, `jade@1.11`, `request`, `constantinople`, `uglify-js` — several with RCE/SSRF advisories.
-    - `cheerio`, `crypto-js`, `front-matter`, `highlight.js`, and `jade` are imported in `src/lib/content/generate/slideshow.ts` / required via `createRequire`, but are **not declared** in `package.json`. They only resolve because of hoisting from `slideshow-generator`; a different package manager or hoisting layout breaks the slideshow feature.
-    - `@types/cheerio@0.22` is installed while the resolved `cheerio` is 0.20, which is the source of the slideshow type error.
+  - 11 critical advisories, including direct dependencies `astro`, `better-auth`, and `slideshow-generator`.
+  - `slideshow-generator` pulls ancient, vulnerable transitive packages into the server bundle: `cheerio@0.20`, `crypto-js@3.3`, `front-matter@2.3`, `highlight.js@9.18`, `jade@1.11`, `request`, `constantinople`, `uglify-js` — several with RCE/SSRF advisories.
+  - `cheerio`, `crypto-js`, `front-matter`, `highlight.js`, and `jade` are imported in `src/lib/content/generate/slideshow.ts` / required via `createRequire`, but are **not declared** in `package.json`. They only resolve because of hoisting from `slideshow-generator`; a different package manager or hoisting layout breaks the slideshow feature.
+  - `@types/cheerio@0.22` is installed while the resolved `cheerio` is 0.20, which is the source of the slideshow type error.
 
 - [ ] **H13. Type/import breakages hidden by SSR**
 
-    - [ ] `src/lib/genai-image.ts:17` (see H2).
-    - [ ] `src/lib/modes.ts:403` (see H2).
-    - [ ] `src/pages/about.astro` (see H1).
-    - [ ] `src/lib/ai-service.ts:9` unused `JSONValue` import.
-    - [ ] `src/scripts/user.astro:5` computes `callbackURL` but never uses it (line 17 recomputes it); currently harmless dead code.
+  - [ ] `src/lib/genai-image.ts:17` (see H2).
+  - [ ] `src/lib/modes.ts:403` (see H2).
+  - [ ] `src/pages/about.astro` (see H1).
+  - [ ] `src/lib/ai-service.ts:9` unused `JSONValue` import.
+  - [ ] `src/scripts/user.astro:5` computes `callbackURL` but never uses it (line 17 recomputes it); currently harmless dead code.
 
 - [ ] **H14. `modeObj` can be `undefined` in the message API**
 
-    `src/pages/api/message/generate.ts:36-37,123,249`
+  `src/pages/api/message/generate.ts:36-37,123,249`
 
-    ```ts
-    let modeObj: Mode = { name: '', description: '' };
-    if (category && mode) modeObj = categories[category]?.modes?.[mode];
-    ```
+  ```ts
+  let modeObj: Mode = { name: '', description: '' };
+  if (category && mode) modeObj = categories[category]?.modes?.[mode];
+  ```
 
-    The optional chain can produce `undefined`, which is assigned over the typed default. Later `modeObj.prompt` (line 123) throws a `TypeError`, turning an invalid category/mode into a generic 400. There is no validation that `category`/`mode` exist in `src/lib/modes.ts`.
+  The optional chain can produce `undefined`, which is assigned over the typed default. Later `modeObj.prompt` (line 123) throws a `TypeError`, turning an invalid category/mode into a generic 400. There is no validation that `category`/`mode` exist in `src/lib/modes.ts`.
 
 - [ ] **H15. Concurrent messages lose data**
 
-    `src/pages/api/message/generate.ts:143-170,434-439`; `src/lib/check-for-one-message.ts:31-64`
+  `src/pages/api/message/generate.ts:143-170,434-439`; `src/lib/check-for-one-message.ts:31-64`
 
-    The route reads the whole `thread` JSONB array, appends in memory, and writes the whole value back. Two concurrent requests each write their own snapshot, silently losing one message/reply pair. `checkForOneMessage` does the same during a **GET page render** and can clobber a message POST that lands between its read and write. It also performs an AI call on page load (cost + retryability).
+  The route reads the whole `thread` JSONB array, appends in memory, and writes the whole value back. Two concurrent requests each write their own snapshot, silently losing one message/reply pair. `checkForOneMessage` does the same during a **GET page render** and can clobber a message POST that lands between its read and write. It also performs an AI call on page load (cost + retryability).
 
 - [ ] **H16. Model/provider allowlist bypass**
 
-    `src/lib/models.ts:38-44,56-64`
+  `src/lib/models.ts:38-44,56-64`
 
-    - `vercel` (v0 models) and arbitrary tiers are only hidden in the UI (`selectableInUI`, `getSelectableProviders`); the API accepts `provider: 'vercel'` directly.
-    - An invalid provider returns the raw `providerKey` while falling back to `config.model`, producing a nonsensical `invalid/gemini-...` pair and a failed AI call.
+  - `vercel` (v0 models) and arbitrary tiers are only hidden in the UI (`selectableInUI`, `getSelectableProviders`); the API accepts `provider: 'vercel'` directly.
+  - An invalid provider returns the raw `providerKey` while falling back to `config.model`, producing a nonsensical `invalid/gemini-...` pair and a failed AI call.
 
 - [ ] **H17. `additional-resources` page trusts unvalidated JSON shape**
 
-    `src/pages/[category]/[mode]/additional-resources/[id].astro:35-42,69-197`
+  `src/pages/[category]/[mode]/additional-resources/[id].astro:35-42,69-197`
 
-    `JSON.parse` is wrapped in try/catch, but the result is used as `resourcesData.simulations.map(...)` with no array checks. Malformed or partially generated AI/Exa output crashes the page with a `TypeError`.
+  `JSON.parse` is wrapped in try/catch, but the result is used as `resourcesData.simulations.map(...)` with no array checks. Malformed or partially generated AI/Exa output crashes the page with a `TypeError`.
 
 ---
 
@@ -219,13 +219,13 @@ Commands run from the repo root:
 
 - [ ] **M8. `getContentTypesList()` includes `index`**
 
-    `src/lib/content/get-types.ts:2-6` — the glob `./latest/**.ts` matches `index.ts`, and the filter only removes `null`. Consequences:
+  `src/lib/content/get-types.ts:2-6` — the glob `./latest/**.ts` matches `index.ts`, and the filter only removes `null`. Consequences:
 
-    - `getContentTypes()` (the `get-content-types` tool) reports `index` as a content type.
-    - `getThreadContentStatus()` (`latest/index.ts:82-86`) processes it, with fallback `statusKey = 'hasSummary'`.
-    - `open-content`'s enum (`src/lib/tools/open-content.ts:7-9`) includes `index`.
+  - `getContentTypes()` (the `get-content-types` tool) reports `index` as a content type.
+  - `getThreadContentStatus()` (`latest/index.ts:82-86`) processes it, with fallback `statusKey = 'hasSummary'`.
+  - `open-content`'s enum (`src/lib/tools/open-content.ts:7-9`) includes `index`.
 
-    The middleware defensively filters it (`middleware.ts:12`), but the other consumers do not.
+  The middleware defensively filters it (`middleware.ts:12`), but the other consumers do not.
 
 - [ ] **M9. `viewCount` is `text`, increments are non-atomic** — `src/db/schema.ts:31`; `src/pages/[category]/[mode]/question/[id].astro:33-39`: stored as a string, read/parse/increment/write, so concurrent views lose increments and SQL aggregation/sorting is impossible.
 
@@ -259,9 +259,9 @@ Commands run from the repo root:
 
 - [ ] **M24. Broken/stale navigation**
 
-    - [ ] `src/components/MyChats.astro:10` redirects to `/user/my-chats`, which has no page (only middleware rules).
-    - [ ] `src/scripts/messages.astro:708` builds `/chat/${id}` (missing category/mode); currently dead code.
-    - [ ] `src/components/Nav.astro:18` + `Header.astro:23` never pass `pTitle`, so no nav item is ever marked active.
+  - [ ] `src/components/MyChats.astro:10` redirects to `/user/my-chats`, which has no page (only middleware rules).
+  - [ ] `src/scripts/messages.astro:708` builds `/chat/${id}` (missing category/mode); currently dead code.
+  - [ ] `src/components/Nav.astro:18` + `Header.astro:23` never pass `pTitle`, so no nav item is ever marked active.
 
 - [ ] **M25. Dead offline fallback** — `src/components/OfflineSupport.astro:118-126`: returns `window.offlineCache.getCachedStudyMaterials()` from the catch path, but `cacheStudyMaterials()` is never called, so the fallback always throws.
 
