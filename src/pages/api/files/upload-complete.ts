@@ -98,7 +98,13 @@ export const POST: APIRoute = async ({ request, locals }) => {
         // Reassemble file from chunks
         chunkedUploads.delete(uploadId);
 
-        const file = new File([assembled], upload.fileName, { type: upload.fileType });
+        const file = new File(
+            upload.chunks
+                .filter((chunk): chunk is Uint8Array => chunk !== undefined)
+                .map(chunk => new Uint8Array(chunk)),
+            upload.fileName,
+            { type: upload.fileType }
+        );
 
         const extractedText = await extractTextFromFile(file);
 
