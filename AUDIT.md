@@ -1,10 +1,4 @@
-# Codebase Audit — studywise (Studify)
-
-**Date:** 2026-10-22
-**Scope:** entire repository (`src/`, configs, dependencies, tests, CI)
-**Mode:** read-only audit. **No source files were changed.** This report is the only file created.
-
----
+# Codebase Audit — Studify
 
 ## 1. Verification snapshot
 
@@ -19,34 +13,9 @@ Commands run from the repo root:
 | `npm audit --omit=dev` | ❌ **94 vulnerabilities**: 11 critical, 45 high, 32 moderate, 6 low |
 | `npm run check` (CI) | ❌ Fails (eslint + astro check) |
 
-**Headline:** `main` cannot pass its own CI (`npm run check`). The production build works only because the broken `/about` code is never executed during an SSR build. There are three critical security issues and several verified functional breakages.
-
----
+**Headline:** `main` cannot pass its own CI (`npm run check`). The production build works only because the broken `/about` code is never executed during an SSR build. There is one critical security issue and several verified functional breakages.
 
 ## 2. Critical
-
-- [ ] **C1. Anyone can self-register as an admin**
-
-  `src/lib/auth/index.ts:14`, `:64-67`, `:86-101`
-
-  - Email/password sign-up is enabled with no `requireEmailVerification`.
-  - The `user.create.before` hook grants `role: 'admin'` to **any** email ending in `@studywise.onl` (`ADMIN_DOMAINS`).
-  - No domain ownership is checked. Registering `anything@studywise.onl` therefore creates a working admin account.
-  - Admin bypasses the per-user thread limit (`src/pages/api/thread/initialize.ts:26`) and `checkThreadAccess` gives admins read access to every thread (`src/lib/auth/check-thread-access.ts:94-97`).
-  - Hardcoded personal admin emails also live in source (`src/lib/auth/index.ts:8-12`).
-
-- [ ] **C2. Server-side arbitrary code execution through the `run-js-code` tool**
-
-  `src/lib/tools/run-js-code.ts:20-43`
-
-  ```ts
-  const codeResult = await Function(joinedCode)();
-  ```
-
-  - Model/user-controlled JavaScript is executed in the server process with access to Node globals (`process`, `globalThis`, `fetch`, etc.). The only filtering is a line-based removal of `import` / `import(`.
-  - The tool is `ready: true`, so it is exposed to the chat model (`src/lib/tools.ts:32-39`).
-  - It is **also** left enabled during content generation: `config.contentGenerationExcludeTools` (`src/lib/ai.config.ts:31`) does not exclude `run-js-code`, and `src/lib/content/generate/webpage.ts:78-80` / `mind-map.ts:102-104` pass every remaining tool.
-  - Prompt injection (pasted homework, uploaded text, generated content) can therefore reach a remote-code-execution primitive. Any returned string is also fed back to the model/DB.
 
 - [ ] **C3. Stored XSS from AI-generated Markdown/HTML**
 
@@ -61,8 +30,6 @@ Commands run from the repo root:
   - [ ] `src/components/chat/LeftSidebar.astro:573-584` — uploaded `file.name`/`file.key` interpolated into `innerHTML` unescaped (self-XSS, and visible on public threads).
 
   Because content is stored in the thread and re-rendered on reload, a model reply containing `<img src=x onerror=...>` (reachable through prompt injection) becomes persistent same-origin script execution for every viewer.
-
----
 
 ## 3. High
 
@@ -199,8 +166,6 @@ Commands run from the repo root:
 
   `JSON.parse` is wrapped in try/catch, but the result is used as `resourcesData.simulations.map(...)` with no array checks. Malformed or partially generated AI/Exa output crashes the page with a `TypeError`.
 
----
-
 ## 4. Medium
 
 - [ ] **M1. `checkThreadAccess` side effects on every page view** — `src/lib/auth/check-thread-access.ts:80-82`: an authorization check performs a DB write (claiming ownership). Called from every chat/material page render (`chat/[id].astro:47`, all content pages). Concurrent views race.
@@ -271,8 +236,6 @@ Commands run from the repo root:
 
 - [ ] **M28. `parseThreadData` repairs invalid JSON with a lossy regex** — `src/lib/threads.ts:31-47`: `replace(/,\s*([\]}])/g, '$1')` rewrites any `,` before a closing brace/bracket, including inside string values. It also throws on any malformed message, and every caller catches and silently returns empty (`getMessages`), so corrupt threads render blank.
 
----
-
 ## 5. Low
 
 - [ ] `L1` `src/components/TawkTo.astro:8-11` mutates `Astro.locals.user` in place and `createHmac().update(null)` would throw if a provider returns no email; `hash`/`emailHash` are also serialized to the browser (intended, but worth documenting).
@@ -293,20 +256,14 @@ Commands run from the repo root:
 - [ ] `L16` `src/lib/ai-service.ts:119-183` scans `result.steps` twice for the same `open-content` payload, duplicating client tool calls. It adds duplicates if both paths match.
 - [ ] `L17` `src/pages/api/files/upload.ts` and `upload-complete.ts` hardcode allowed MIME types that include `image/svg+xml`; if these are ever served inline from the same origin, SVG is an XSS vector.
 
----
-
 ## 6. Suggested remediation order (not applied)
 
-- [ ] 1. **C1** — require email verification or remove the domain-based admin grant; move admin emails to env.
-- [ ] 2. **C2** — remove `run-js-code` from the tool registry (or replace with a real sandbox), and add it to `contentGenerationExcludeTools`.
-- [ ] 3. **C3** — sanitize all Markdown/HTML before `set:html`/`innerHTML` (DOMPurify or a markdown sanitizer), including stored content.
-- [ ] 4. **H1/H2** — restore the missing `/about` helpers/types and make `npm run check` green; this unblocks CI.
-- [ ] 5. **H4/H6/H7/H8/H9** — authorization and input-validation fixes at the API boundary (zod schemas, ownership checks, signed upload flows).
-- [ ] 6. **H10** — replace the in-memory chunk store with UploadThing's direct multipart flow or a durable store.
-- [ ] 7. **H3/H5** — small, isolated UI fixes.
-- [ ] 8. **H12** — declare direct deps; upgrade `astro`/`better-auth`.
-- [ ] 9. Medium items, starting with DB indexes/env var and the concurrency/lost-update issues.
+- [ ] 1. **C3** — sanitize all Markdown/HTML before `set:html`/`innerHTML` (DOMPurify or a markdown sanitizer), including stored content.
+- [ ] 2. **H1/H2** — restore the missing `/about` helpers/types and make `npm run check` green; this unblocks CI.
+- [ ] 3. **H4/H6/H7/H8/H9** — authorization and input-validation fixes at the API boundary (zod schemas, ownership checks, signed upload flows).
+- [ ] 4. **H10** — replace the in-memory chunk store with UploadThing's direct multipart flow or a durable store.
+- [ ] 5. **H3/H5** — small, isolated UI fixes.
+- [ ] 6. **H12** — declare direct deps; upgrade `astro`/`better-auth`.
+- [ ] 7. Medium items, starting with DB indexes/env var and the concurrency/lost-update issues.
 
 ---
-
-*No fixes were implemented. This file is the audit deliverable.*
