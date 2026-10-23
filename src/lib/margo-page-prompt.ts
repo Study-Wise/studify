@@ -32,8 +32,8 @@ const prompt = import('@/lib/modes').then(({ default: categories }) => {
             const shownModes = Object.entries(category.modes).filter(([, mode]) => mode.show);
             if (shownModes.length === 0) return null;
 
-            const modes = shownModes.map(([modeKey, mode]) => `    - ${mode.name} (/${categoryKey}/${modeKey}): ${mode.description}`);
-            return `- ${category.name}: ${category.description}\n${modes.join('\n')}`;
+            const modes = shownModes.map(([modeKey, mode]) => `${mode.name} (/${categoryKey}/${modeKey})`);
+            return `- ${category.name}: ${category.description}\n    Modes: ${modes.join(', ')}`;
         })
         .filter((section): section is string => section !== null)
         .join('\n');
@@ -50,7 +50,7 @@ Our app is called ${appConfig.name} (it used to be called ${appConfig.formerName
 
 ### Subjects and modes
 
-Each subject has modes, and each mode is its own tutor with its own page. Use these when someone asks what we cover or where to find something:
+Each subject has modes, and each mode is its own tutor with its own page. Use these when someone asks what we cover or where to find something. Only mention the subject or two that fit their question instead of reading the whole list out:
 
 ${subjects}
 
