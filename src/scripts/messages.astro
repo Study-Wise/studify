@@ -9,18 +9,6 @@ const { page, category, mode, id } = Astro.props;
 
     let messageInput, sendButton, spinner;
 
-    function loadUserSettings() {
-        try {
-            userSettings = JSON.parse(localStorage?.getItem('settings') || '{}') || {};
-        } catch {
-            userSettings = {};
-        }
-    }
-
-    async function destroyIdIfEmptyConvo(id = threadId) {
-        if (id) threadId = null;
-    }
-
     function getProviderAndTier() {
         const settings = JSON.parse(localStorage.getItem('settings') || '{}');
         return {
@@ -32,7 +20,7 @@ const { page, category, mode, id } = Astro.props;
     let state = 'off';
     document.addEventListener('visibilitychange', async () => {
         if (document.visibilityState === 'hidden' && state === 'on') {
-            if (threadId) await destroyIdIfEmptyConvo(threadId);
+            if (threadId) threadId = null;
             state = 'on';
         }
     });
@@ -68,6 +56,8 @@ const { page, category, mode, id } = Astro.props;
             if (!isGenerating && !sendButton.disabled) window.generateOutput();
         }
     }
+
+    let streamRendering = false;
 
     window.generateOutput = async function generateOutput() {
         if (isRedirecting) return;
@@ -106,7 +96,34 @@ const { page, category, mode, id } = Astro.props;
         }
 
         setLoadingState(true);
-        if (page === 'chat') showTypingIndicator();
+        if (page === 'chat') {
+            // "Studify is thinking…" bubble shown in the message list where the reply will appear
+            const chatMessages = document.querySelector('.chat-messages');
+            if (chatMessages && !document.getElementById('typing-indicator')) {
+                const indicator = document.createElement('div');
+                indicator.id = 'typing-indicator';
+                indicator.className = 'message assistant typing';
+                indicator.setAttribute('role', 'status');
+
+                const content = document.createElement('div');
+                content.className = 'message-content';
+
+                const dots = document.createElement('div');
+                dots.className = 'typing-dots';
+                dots.setAttribute('aria-hidden', 'true');
+                for (let i = 0; i < 3; i++) dots.appendChild(document.createElement('span'));
+
+                const label = document.createElement('span');
+                label.className = 'typing-label';
+                label.textContent = 'Studify is thinking…';
+
+                content.appendChild(dots);
+                content.appendChild(label);
+                indicator.appendChild(content);
+                chatMessages.appendChild(indicator);
+                chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
+            }
+        }
         try {
             // Visibility chosen in the sidebar, used when this message creates the thread
             const publicToggle = document.getElementById('public-toggle');
@@ -145,7 +162,172 @@ const { page, category, mode, id } = Astro.props;
             }
 
             const contentType = response.headers.get('Content-Type') || '';
-            if (contentType.includes('text/event-stream')) await readStream(response);
+            if (contentType.includes('text/event-stream')) {
+                if (page === 'home') {
+                    // Landing page: wait for the reply to be saved, then open the new chat
+                    const reader = response.body.getReader();
+                    const decoder = new window.TextDecoder();
+                    let buffer = '';
+
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) break;
+
+                        buffer += decoder.decode(value, { stream: true });
+                        const events = buffer.split('\n\n');
+                        buffer = events.pop() || '';
+
+                        for (const e of events) {
+                            if (!e.startsWith('data: ')) continue;
+                            let data;
+                            try {
+                                data = JSON.parse(e.slice(6));
+                            } catch (error) {
+                                console.error('Error parsing stream event:', error, e);
+                                continue;
+                            }
+
+                            if (data.type === 'error') throw new Error(data.error);
+                            if (data.type === 'done') {
+                                if (!data.id || !category || !mode) throw new Error('Failed to redirect to chat page.');
+                                redirectToChat(data.id);
+                                return;
+                            }
+                        }
+                    }
+
+                    throw new Error('The response ended before the chat was created. Please try again.');
+                }
+
+                const chatMessages = document.querySelector('.chat-messages');
+                if (chatMessages) {
+                    const reader = response.body.getReader();
+                    const decoder = new window.TextDecoder();
+                    let buffer = '';
+                    let messageDiv = null;
+                    let messageContent = null;
+                    let toolCallLogDiv = null;
+                    let doneData = null;
+                    const toolCallMap = new Map();
+
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) break;
+
+                        buffer += decoder.decode(value, { stream: true });
+                        const events = buffer.split('\n\n');
+                        buffer = events.pop() || '';
+
+                        for (const e of events) {
+                            if (!e.startsWith('data: ')) continue;
+                            try {
+                                const data = JSON.parse(e.slice(6));
+
+                                if (data.type === 'text') {
+                                    if (!messageDiv) {
+                                        removeTypingIndicator();
+                                        messageDiv = document.createElement('div');
+                                        messageDiv.className = 'message assistant';
+                                        messageContent = document.createElement('div');
+                                        messageContent.className = 'message-content';
+                                        messageDiv.appendChild(messageContent);
+                                        chatMessages.appendChild(messageDiv);
+                                    }
+                                    if (data.html && !streamRendering) {
+                                        // Typeset the reply so far off screen, then swap it in, so raw LaTeX never shows
+                                        (async () => {
+                                            streamRendering = true;
+                                            const staging = document.createElement('div');
+                                            staging.className = 'message-content stream-staging';
+                                            staging.innerHTML = data.html;
+                                            messageContent.after(staging);
+                                            try {
+                                                await typesetMathJax([staging]);
+                                                if (messageContent.dataset.final === undefined) messageContent.innerHTML = staging.innerHTML;
+                                            } finally {
+                                                staging.remove();
+                                                streamRendering = false;
+                                            }
+                                        })();
+                                    }
+                                    chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
+
+                                }
+                                else if (data.type === 'tool-call') {
+                                    if (!toolCallLogDiv) {
+                                        toolCallLogDiv = document.createElement('div');
+                                        toolCallLogDiv.className = 'tool-call-log';
+                                        // Keep the typing indicator below the tool calls until the reply text arrives
+                                        chatMessages.insertBefore(toolCallLogDiv, messageDiv || document.getElementById('typing-indicator'));
+                                    }
+                                    const entry = document.createElement('div');
+                                    entry.className = 'tool-call-entry';
+                                    const icon = document.createElement('span');
+                                    icon.className = 'material-symbols-outlined';
+                                    icon.setAttribute('aria-hidden', 'true');
+                                    icon.dataset.state = 'pending';
+                                    icon.textContent = 'schedule';
+                                    const label = document.createElement('span');
+                                    label.className = 'tool-name';
+                                    label.textContent = labels[data.toolName] || data.toolName;
+                                    entry.appendChild(icon);
+                                    entry.appendChild(label);
+                                    toolCallLogDiv.appendChild(entry);
+                                    toolCallMap.set(data.toolCallId, { icon, toolName: data.toolName });
+                                    chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
+
+                                }
+                                else if (data.type === 'tool-result') {
+                                    const call = toolCallMap.get(data.toolCallId);
+                                    if (call) {
+                                        call.icon.dataset.state = data.status;
+                                        call.icon.textContent = data.status === 'success' ? 'check_circle' : 'error';
+                                    }
+
+                                }
+                                else if (data.type === 'done') {
+                                    doneData = data;
+                                    if (messageContent && data.generatedText) {
+                                        messageContent.dataset.final = '';
+                                        messageContent.innerHTML = data.generatedText;
+                                    }
+
+                                }
+                                else if (data.type === 'error') throw new Error(data.error);
+                            } catch (error) {
+                                console.error('Error parsing stream event:', error, e);
+                            }
+                        }
+                    }
+
+                    if (messageContent) {
+                        await typesetMathJax([messageContent]);
+                        if (typeof window.activateDesmos === 'function') {
+                            try { window.activateDesmos(); } catch (error) { console.warn('Desmos error:', error); }
+                        }
+                        if (typeof window.initializeStepByStep === 'function') {
+                            try { window.initializeStepByStep(); } catch (error) { console.warn('Step-by-step error:', error); }
+                        }
+                    }
+
+                    if (doneData) {
+                        if (doneData.clientToolCalls) await executeClientToolCalls(doneData.clientToolCalls);
+
+                        const isNewChat = id === 'new';
+                        if (doneData.id && !threadId) {
+                            window.dispatchEvent(new CustomEvent('thread-created', {
+                                detail: { id: doneData.id, source: 'messages' }
+                            }));
+                        }
+                        if (isNewChat && doneData.id && category && mode) {
+                            window.location.href = `/${category}/${mode}/chat/${doneData.id}`;
+                        }
+                        else if (doneData.id) threadId = doneData.id;
+                    }
+
+                    chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
+                }
+            }
             else {
                 const data = await response.json();
                 if (!data?.generatedText && !data?.id) {
@@ -153,9 +335,39 @@ const { page, category, mode, id } = Astro.props;
                     throw new Error('Invalid/empty response from AI.');
                 }
                 removeTypingIndicator();
-                await displayResults(data);
+
+                if (!data || typeof data !== 'object') displayError('Invalid AI response received.');
+                else {
+                    if (data.clientToolCalls) await executeClientToolCalls(data.clientToolCalls);
+
+                    if (page === 'home' && data.id && category && mode) redirectToChat(data.id);
+                    else if (page === 'chat') {
+                        const isNewChat = (id === 'new');
+
+                        if (isNewChat && data.id && category && mode) {
+                            window.location.href = `/${category}/${mode}/chat/${data.id}`;
+                        }
+                        else await addMessage('assistant', data);
+                    }
+                    else if (page === 'home') displayError('Failed to redirect to chat page.');
+                }
+
                 if (page === 'home') {
-                    await showOpenInChatBtn(data.id);
+                    const chatButtonContainer = document.querySelector('.chat-button-container');
+                    if (chatButtonContainer) {
+                        const btn = document.createElement('a');
+                        btn.href = `/chat/${data.id}`;
+
+                        const icon = document.createElement('span');
+                        icon.classList.add('material-symbols-outlined');
+                        icon.setAttribute('aria-hidden', 'true');
+                        icon.textContent = 'chat';
+                        btn.appendChild(icon);
+
+                        btn.appendChild(document.createTextNode(' Open in Chat'));
+                        btn.classList.add('btn', 'bg-primary', 'chat-button');
+                        chatButtonContainer.appendChild(btn);
+                    }
                     threadId = data.id;
                 }
             }
@@ -166,35 +378,6 @@ const { page, category, mode, id } = Astro.props;
             removeTypingIndicator();
             if (!isRedirecting) setLoadingState(false);
         }
-    }
-
-    // "Studify is thinking…" bubble shown in the message list where the reply will appear
-    function showTypingIndicator() {
-        const chatMessages = document.querySelector('.chat-messages');
-        if (!chatMessages || document.getElementById('typing-indicator')) return;
-
-        const indicator = document.createElement('div');
-        indicator.id = 'typing-indicator';
-        indicator.className = 'message assistant typing';
-        indicator.setAttribute('role', 'status');
-
-        const content = document.createElement('div');
-        content.className = 'message-content';
-
-        const dots = document.createElement('div');
-        dots.className = 'typing-dots';
-        dots.setAttribute('aria-hidden', 'true');
-        for (let i = 0; i < 3; i++) dots.appendChild(document.createElement('span'));
-
-        const label = document.createElement('span');
-        label.className = 'typing-label';
-        label.textContent = 'Studify is thinking…';
-
-        content.appendChild(dots);
-        content.appendChild(label);
-        indicator.appendChild(content);
-        chatMessages.appendChild(indicator);
-        chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
     }
 
     function removeTypingIndicator() {
@@ -254,19 +437,6 @@ const { page, category, mode, id } = Astro.props;
     const mathDelimiterPattern = /\$|\\\(|\\\[/;
     const mathJaxTimeout = 10000;
 
-    // Reject if the promise hasn't settled within ms
-    async function withTimeout(promise, ms, message) {
-        let timer;
-        const timeout = new Promise((_, reject) => {
-            timer = setTimeout(() => reject(new Error(message)), ms);
-        });
-        try {
-            return await Promise.race([promise, timeout]);
-        } finally {
-            clearTimeout(timer);
-        }
-    }
-
     async function typesetMathJax(elements) {
         const validElements = (Array.isArray(elements) || elements instanceof NodeList || elements ? [...elements] : []).filter(element => element != null);
         if (validElements.length === 0) return;
@@ -276,72 +446,36 @@ const { page, category, mode, id } = Astro.props;
             .filter(element => mathDelimiterPattern.test(element.textContent || ''))
             .forEach(element => element.classList.add('mathjax-pending'));
 
+        let timer;
         try {
             // Loading, startup and typesetting can each stall on a hung request, so limit the whole wait
-            await withTimeout((async () => {
-                // MathJax loads async, so wait for its script if it hasn't run yet
-                if (!window.MathJax?.startup?.promise) {
-                    const script = document.getElementById('MathJax-script');
-                    if (!script) throw new Error('MathJax script not found.');
-                    // The error event may have fired before these listeners were attached
-                    if (script.dataset.failed === 'true') throw new Error('MathJax failed to load.');
-                    await new Promise((resolve, reject) => {
-                        script.addEventListener('load', resolve, { once: true });
-                        script.addEventListener('error', () => reject(new Error('MathJax failed to load.')), { once: true });
-                    });
-                }
+            await Promise.race([
+                (async () => {
+                    // MathJax loads async, so wait for its script if it hasn't run yet
+                    if (!window.MathJax?.startup?.promise) {
+                        const script = document.getElementById('MathJax-script');
+                        if (!script) throw new Error('MathJax script not found.');
+                        // The error event may have fired before these listeners were attached
+                        if (script.dataset.failed === 'true') throw new Error('MathJax failed to load.');
+                        await new Promise((resolve, reject) => {
+                            script.addEventListener('load', resolve, { once: true });
+                            script.addEventListener('error', () => reject(new Error('MathJax failed to load.')), { once: true });
+                        });
+                    }
 
-                // Wait for startup (including the initial page typeset). It rejects for good if that typeset fails, but later typesets can still succeed, so only wait for it to finish
-                await window.MathJax.startup.promise.catch(error => console.error('MathJax startup error:', error));
-                await window.MathJax.typesetPromise(validElements);
-            })(), mathJaxTimeout, 'MathJax took too long to typeset.');
+                    // Wait for startup (including the initial page typeset). It rejects for good if that typeset fails, but later typesets can still succeed, so only wait for it to finish
+                    await window.MathJax.startup.promise.catch(error => console.error('MathJax startup error:', error));
+                    await window.MathJax.typesetPromise(validElements);
+                })(),
+                new Promise((_, reject) => {
+                    timer = setTimeout(() => reject(new Error('MathJax took too long to typeset.')), mathJaxTimeout);
+                }),
+            ]);
         } catch (error) {
             console.error('MathJax typesetting error:', error);
         } finally {
+            clearTimeout(timer);
             validElements.forEach(element => element.classList.remove('mathjax-pending'));
-        }
-    }
-
-    function updateSidebarSection(contentType, url) {
-        const section = document.querySelector(`#generate-${contentType}-btn`)?.closest('.sidebar-section');
-        if (!section) return;
-
-        const sectionBody = section.querySelector('.section-body');
-        if (!sectionBody) return;
-
-        const viewButtonTexts = {
-            'study-guide': 'View Full Study Guide',
-            'reference-sheet': 'View Full Reference Sheet',
-            'infographic': 'View Infographic',
-            'flashcards': 'View Flashcards',
-            'practice-questions': 'View Practice Questions',
-            'webpage': 'View Webpage',
-            'mind-map': 'View Mind Map',
-            'additional-resources': 'View Resources',
-            'summary': 'View Summary',
-        };
-
-        const buttonText = viewButtonTexts[contentType] || `View ${contentType}`;
-
-        sectionBody.innerHTML = `
-            <a href="${url}" class="view-full-btn" target="_blank">
-                <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
-                <span>${buttonText}</span>
-            </a>
-        `;
-
-        const sectionHeader = section.querySelector('.section-header');
-        if (sectionHeader && !section.querySelector('.regenerate-btn')) {
-            const threadIdAttr = document.querySelector(`[data-thread-id]`)?.getAttribute('data-thread-id') || '';
-            const regenerateBtn = document.createElement('button');
-            regenerateBtn.type = 'button';
-            regenerateBtn.className = 'regenerate-btn';
-            regenerateBtn.id = `regenerate-${contentType}-btn`;
-            regenerateBtn.title = `Regenerate`;
-            regenerateBtn.setAttribute('aria-label', `Regenerate`);
-            regenerateBtn.setAttribute('data-thread-id', threadIdAttr);
-            regenerateBtn.innerHTML = '<span class="material-symbols-outlined" aria-hidden="true">refresh</span>';
-            sectionHeader.appendChild(regenerateBtn);
         }
     }
 
@@ -354,7 +488,46 @@ const { page, category, mode, id } = Astro.props;
                 const url = providedUrl || (type && tid && cat && m ? `/${cat}/${m}/${type}/${tid}` : null);
 
                 if (url && type) {
-                    updateSidebarSection(type, url);
+                    const section = document.querySelector(`#generate-${type}-btn`)?.closest('.sidebar-section');
+                    const sectionBody = section?.querySelector('.section-body');
+
+                    if (sectionBody) {
+                        const viewButtonTexts = {
+                            'study-guide': 'View Full Study Guide',
+                            'reference-sheet': 'View Full Reference Sheet',
+                            'infographic': 'View Infographic',
+                            'flashcards': 'View Flashcards',
+                            'practice-questions': 'View Practice Questions',
+                            'webpage': 'View Webpage',
+                            'mind-map': 'View Mind Map',
+                            'additional-resources': 'View Resources',
+                            'summary': 'View Summary',
+                        };
+
+                        const buttonText = viewButtonTexts[type] || `View ${type}`;
+
+                        sectionBody.innerHTML = `
+                            <a href="${url}" class="view-full-btn" target="_blank">
+                                <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
+                                <span>${buttonText}</span>
+                            </a>
+                        `;
+
+                        const sectionHeader = section.querySelector('.section-header');
+                        if (sectionHeader && !section.querySelector('.regenerate-btn')) {
+                            const threadIdAttr = document.querySelector(`[data-thread-id]`)?.getAttribute('data-thread-id') || '';
+                            const regenerateBtn = document.createElement('button');
+                            regenerateBtn.type = 'button';
+                            regenerateBtn.className = 'regenerate-btn';
+                            regenerateBtn.id = `regenerate-${type}-btn`;
+                            regenerateBtn.title = `Regenerate`;
+                            regenerateBtn.setAttribute('aria-label', `Regenerate`);
+                            regenerateBtn.setAttribute('data-thread-id', threadIdAttr);
+                            regenerateBtn.innerHTML = '<span class="material-symbols-outlined" aria-hidden="true">refresh</span>';
+                            sectionHeader.appendChild(regenerateBtn);
+                        }
+                    }
+
                     // Open in new tab; if popup blocked, sidebar is already updated
                     window.open(url, '_blank');
                 }
@@ -362,379 +535,151 @@ const { page, category, mode, id } = Astro.props;
         }
     }
 
-    // Landing page: wait for the reply to be saved, then open the new chat
-    async function readHomeStream(response) {
-        const reader = response.body.getReader();
-        const decoder = new window.TextDecoder();
-        let buffer = '';
-
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-
-            buffer += decoder.decode(value, { stream: true });
-            const events = buffer.split('\n\n');
-            buffer = events.pop() || '';
-
-            for (const e of events) {
-                if (!e.startsWith('data: ')) continue;
-                let data;
-                try {
-                    data = JSON.parse(e.slice(6));
-                } catch (error) {
-                    console.error('Error parsing stream event:', error, e);
-                    continue;
-                }
-
-                if (data.type === 'error') throw new Error(data.error);
-                if (data.type === 'done') {
-                    if (!data.id || !category || !mode) throw new Error('Failed to redirect to chat page.');
-                    redirectToChat(data.id);
-                    return;
-                }
-            }
-        }
-
-        throw new Error('The response ended before the chat was created. Please try again.');
-    }
-
-    let streamRendering = false;
-
-    // Typeset the reply so far off screen, then swap it in, so raw LaTeX never shows
-    async function renderStreamedHtml(target, html) {
-        streamRendering = true;
-        const staging = document.createElement('div');
-        staging.className = 'message-content stream-staging';
-        staging.innerHTML = html;
-        target.after(staging);
-        try {
-            await typesetMathJax([staging]);
-            if (target.dataset.final === undefined) target.innerHTML = staging.innerHTML;
-        } finally {
-            staging.remove();
-            streamRendering = false;
-        }
-    }
-
-    async function readStream(response) {
-        if (page === 'home') {
-            await readHomeStream(response);
-            return;
-        }
-
-        const chatMessages = document.querySelector('.chat-messages');
-        if (!chatMessages) return;
-
-        const reader = response.body.getReader();
-        const decoder = new window.TextDecoder();
-        let buffer = '';
-        let messageDiv = null;
-        let messageContent = null;
-        let toolCallLogDiv = null;
-        let doneData = null;
-        const toolCallMap = new Map();
-
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-
-            buffer += decoder.decode(value, { stream: true });
-            const events = buffer.split('\n\n');
-            buffer = events.pop() || '';
-
-            for (const e of events) {
-                if (!e.startsWith('data: ')) continue;
-                try {
-                    const data = JSON.parse(e.slice(6));
-
-                    if (data.type === 'text') {
-                        if (!messageDiv) {
-                            removeTypingIndicator();
-                            messageDiv = document.createElement('div');
-                            messageDiv.className = 'message assistant';
-                            messageContent = document.createElement('div');
-                            messageContent.className = 'message-content';
-                            messageDiv.appendChild(messageContent);
-                            chatMessages.appendChild(messageDiv);
-                        }
-                        if (data.html && !streamRendering) renderStreamedHtml(messageContent, data.html);
-                        chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
-
-                    }
-                    else if (data.type === 'tool-call') {
-                        if (!toolCallLogDiv) {
-                            toolCallLogDiv = document.createElement('div');
-                            toolCallLogDiv.className = 'tool-call-log';
-                            // Keep the typing indicator below the tool calls until the reply text arrives
-                            chatMessages.insertBefore(toolCallLogDiv, messageDiv || document.getElementById('typing-indicator'));
-                        }
-                        const entry = document.createElement('div');
-                        entry.className = 'tool-call-entry';
-                        const icon = document.createElement('span');
-                        icon.className = 'material-symbols-outlined';
-                        icon.setAttribute('aria-hidden', 'true');
-                        icon.dataset.state = 'pending';
-                        icon.textContent = 'schedule';
-                        const label = document.createElement('span');
-                        label.className = 'tool-name';
-                        label.textContent = labels[data.toolName] || data.toolName;
-                        entry.appendChild(icon);
-                        entry.appendChild(label);
-                        toolCallLogDiv.appendChild(entry);
-                        toolCallMap.set(data.toolCallId, { icon, toolName: data.toolName });
-                        chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
-
-                    }
-                    else if (data.type === 'tool-result') {
-                        const call = toolCallMap.get(data.toolCallId);
-                        if (call) {
-                            call.icon.dataset.state = data.status;
-                            call.icon.textContent = data.status === 'success' ? 'check_circle' : 'error';
-                        }
-
-                    }
-                    else if (data.type === 'done') {
-                        doneData = data;
-                        if (messageContent && data.generatedText) {
-                            messageContent.dataset.final = '';
-                            messageContent.innerHTML = data.generatedText;
-                        }
-
-                    }
-                    else if (data.type === 'error') throw new Error(data.error);
-                } catch (error) {
-                    console.error('Error parsing stream event:', error, e);
-                }
-            }
-        }
-
-        if (messageContent) {
-            await typesetMathJax([messageContent]);
-            if (typeof window.activateDesmos === 'function') {
-                try { window.activateDesmos(); } catch (error) { console.warn('Desmos error:', error); }
-            }
-            if (typeof window.initializeStepByStep === 'function') {
-                try { window.initializeStepByStep(); } catch (error) { console.warn('Step-by-step error:', error); }
-            }
-        }
-
-        if (doneData) {
-            if (doneData.clientToolCalls) await executeClientToolCalls(doneData.clientToolCalls);
-
-            const isNewChat = id === 'new';
-            if (doneData.id && !threadId) {
-                window.dispatchEvent(new CustomEvent('thread-created', {
-                    detail: { id: doneData.id, source: 'messages' }
-                }));
-            }
-            if (isNewChat && doneData.id && category && mode) {
-                window.location.href = `/${category}/${mode}/chat/${doneData.id}`;
-            }
-            else if (doneData.id) threadId = doneData.id;
-        }
-
-        chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
-    }
-
-    async function displayResults(data) {
-        if (!data || typeof data !== 'object') {
-            displayError('Invalid AI response received.');
-            return;
-        }
-
-        if (data.clientToolCalls) await executeClientToolCalls(data.clientToolCalls);
-
-        if (page === 'home' && data.id && category && mode) redirectToChat(data.id);
-        else if (page === 'chat') {
-            const isNewChat = (id === 'new');
-
-            if (isNewChat && data.id && category && mode) {
-                window.location.href = `/${category}/${mode}/chat/${data.id}`;
-            }
-            else await addMessage('assistant', data);
-        }
-        else if (page === 'home') displayError('Failed to redirect to chat page.');
-    }
-
     async function addMessage(role, data) {
-        if (role === 'assistant') await addAssistantMessage(data);
-        else if (role === 'user') createPlainMessage(role, data);
-    }
-
-    async function createPlainMessage(role, content) {
-        const chatMessages = document.querySelector('.chat-messages');
-        if (!chatMessages) {
-            console.error('Chat messages container not found');
-            return;
-        }
-
-        try {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${role}`;
-
-            const messageContent = document.createElement('div');
-            messageContent.className = `message-content ${role === 'user' ? 'bg-primary' : ''}`;
-
-            messageContent.innerHTML = new window.marked.Marked({ breaks: true, gfm: true, renderer: { html: ({ text }) => text.replace(/</g, '&lt;') } }).parse(content);
-
-            messageDiv.appendChild(messageContent);
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
-
-            await typesetMathJax([messageContent]);
-
-            if (typeof window.activateDesmos === 'function') {
-                try {
-                    window.activateDesmos();
-                } catch (error) {
-                    console.warn('Error activating Desmos:', error);
-                }
-            }
-
-            if (typeof window.initializeStepByStep === 'function') {
-                try {
-                    window.initializeStepByStep();
-                } catch (error) {
-                    console.warn('Error initializing step-by-step:', error);
-                }
-            }
-
-            chatMessages.scrollTo({
-                top: chatMessages.scrollHeight,
-                behavior: 'smooth'
-            });
-
-        } catch (error) {
-            console.error('ERROR in createPlainMessage:', error);
-            displayError(`Failed to render message. ${error.message}`);
-        }
-    }
-
-    function renderToolCallLog(toolCallLog, container) {
-        if (!toolCallLog || toolCallLog.length === 0) return;
-
-        const logDiv = document.createElement('div');
-        logDiv.className = 'tool-call-log';
-
-        for (const entry of toolCallLog) {
-            const entryDiv = document.createElement('div');
-            entryDiv.className = 'tool-call-entry';
-
-            const icon = document.createElement('span');
-            icon.className = 'material-symbols-outlined';
-            icon.setAttribute('aria-hidden', 'true');
-            icon.dataset.state = entry.status;
-            icon.textContent = entry.status === 'success' ? 'check_circle' : 'error';
-
-            const label = document.createElement('span');
-            label.className = 'tool-name';
-            label.textContent = labels[entry.toolName] || entry.toolName;
-
-            entryDiv.appendChild(icon);
-            entryDiv.appendChild(label);
-            logDiv.appendChild(entryDiv);
-        }
-
-        container.appendChild(logDiv);
-    }
-
-    async function addAssistantMessage(data) {
-        if (!data || typeof data !== 'object') {
-            displayError('Invalid AI response received.');
-            return;
-        }
-
-        const chatMessages = document.querySelector('.chat-messages');
-        if (!chatMessages) {
-            console.error('Chat messages container not found');
-            return;
-        }
-
-        try {
-            if (data.toolCallLog && data.toolCallLog.length > 0) {
-                renderToolCallLog(data.toolCallLog, chatMessages);
-            }
-
-            // Skip empty assistant messages (e.g. those that only made tool calls)
-            if (!data.generatedText || !data.generatedText.trim()) {
-                chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
+        if (role === 'assistant') {
+            if (!data || typeof data !== 'object') {
+                displayError('Invalid AI response received.');
                 return;
             }
 
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'message assistant';
-
-            const messageContent = document.createElement('div');
-            messageContent.className = 'message-content';
-
-            messageContent.innerHTML = data.generatedText;
-
-            messageDiv.appendChild(messageContent);
-            chatMessages.appendChild(messageDiv);
-
-            await typesetMathJax([messageContent]);
-
-            if (typeof window.activateDesmos === 'function') {
-                try {
-                    window.activateDesmos();
-                } catch (error) {
-                    console.warn('Error activating Desmos:', error);
-                }
+            const chatMessages = document.querySelector('.chat-messages');
+            if (!chatMessages) {
+                console.error('Chat messages container not found');
+                return;
             }
 
-            if (typeof window.initializeStepByStep === 'function') {
-                try {
-                    window.initializeStepByStep();
-                } catch (error) {
-                    console.warn('Error initializing step-by-step:', error);
+            try {
+                if (data.toolCallLog && data.toolCallLog.length > 0) {
+                    const logDiv = document.createElement('div');
+                    logDiv.className = 'tool-call-log';
+
+                    for (const entry of data.toolCallLog) {
+                        const entryDiv = document.createElement('div');
+                        entryDiv.className = 'tool-call-entry';
+
+                        const icon = document.createElement('span');
+                        icon.className = 'material-symbols-outlined';
+                        icon.setAttribute('aria-hidden', 'true');
+                        icon.dataset.state = entry.status;
+                        icon.textContent = entry.status === 'success' ? 'check_circle' : 'error';
+
+                        const label = document.createElement('span');
+                        label.className = 'tool-name';
+                        label.textContent = labels[entry.toolName] || entry.toolName;
+
+                        entryDiv.appendChild(icon);
+                        entryDiv.appendChild(label);
+                        logDiv.appendChild(entryDiv);
+                    }
+
+                    chatMessages.appendChild(logDiv);
                 }
+
+                // Skip empty assistant messages (e.g. those that only made tool calls)
+                if (!data.generatedText || !data.generatedText.trim()) {
+                    chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
+                    return;
+                }
+
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message assistant';
+
+                const messageContent = document.createElement('div');
+                messageContent.className = 'message-content';
+
+                messageContent.innerHTML = data.generatedText;
+
+                messageDiv.appendChild(messageContent);
+                chatMessages.appendChild(messageDiv);
+
+                await typesetMathJax([messageContent]);
+
+                if (typeof window.activateDesmos === 'function') {
+                    try {
+                        window.activateDesmos();
+                    } catch (error) {
+                        console.warn('Error activating Desmos:', error);
+                    }
+                }
+
+                if (typeof window.initializeStepByStep === 'function') {
+                    try {
+                        window.initializeStepByStep();
+                    } catch (error) {
+                        console.warn('Error initializing step-by-step:', error);
+                    }
+                }
+
+                chatMessages.scrollTo({
+                    top: chatMessages.scrollHeight,
+                    behavior: 'smooth'
+                });
+
+            } catch (error) {
+                console.error('ERROR in addAssistantMessage:', error);
+                displayError(`Failed to render message. ${error.message}`);
             }
-
-            chatMessages.scrollTo({
-                top: chatMessages.scrollHeight,
-                behavior: 'smooth'
-            });
-
-        } catch (error) {
-            console.error('ERROR in addAssistantMessage:', error);
-            displayError(`Failed to render message. ${error.message}`);
         }
-    }
+        else if (role === 'user') {
+            const chatMessages = document.querySelector('.chat-messages');
+            if (!chatMessages) {
+                console.error('Chat messages container not found');
+                return;
+            }
 
-    async function showOpenInChatBtn(id) {
-        const chatButtonContainer = document.querySelector('.chat-button-container');
-        if (chatButtonContainer) {
-            const btn = document.createElement('a');
-            btn.href = `/chat/${id}`;
+            try {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${role}`;
 
-            const icon = document.createElement('span');
-            icon.classList.add('material-symbols-outlined');
-            icon.setAttribute('aria-hidden', 'true');
-            icon.textContent = 'chat';
-            btn.appendChild(icon);
+                const messageContent = document.createElement('div');
+                messageContent.className = `message-content ${role === 'user' ? 'bg-primary' : ''}`;
 
-            btn.appendChild(document.createTextNode(' Open in Chat'));
-            btn.classList.add('btn', 'bg-primary', 'chat-button');
-            chatButtonContainer.appendChild(btn);
+                messageContent.innerHTML = new window.marked.Marked({ breaks: true, gfm: true, renderer: { html: ({ text }) => text.replace(/</g, '&lt;') } }).parse(data);
+
+                messageDiv.appendChild(messageContent);
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
+
+                await typesetMathJax([messageContent]);
+
+                if (typeof window.activateDesmos === 'function') {
+                    try {
+                        window.activateDesmos();
+                    } catch (error) {
+                        console.warn('Error activating Desmos:', error);
+                    }
+                }
+
+                if (typeof window.initializeStepByStep === 'function') {
+                    try {
+                        window.initializeStepByStep();
+                    } catch (error) {
+                        console.warn('Error initializing step-by-step:', error);
+                    }
+                }
+
+                chatMessages.scrollTo({
+                    top: chatMessages.scrollHeight,
+                    behavior: 'smooth'
+                });
+
+            } catch (error) {
+                console.error('ERROR in createPlainMessage:', error);
+                displayError(`Failed to render message. ${error.message}`);
+            }
         }
     }
 
     function initializeCommon() {
-        loadUserSettings();
+        try {
+            userSettings = JSON.parse(localStorage?.getItem('settings') || '{}') || {};
+        } catch {
+            userSettings = {};
+        }
 
         if (typeof window.generateOutput !== 'function') {
             displayError('Error: Core function generateOutput failed to initialize.');
         }
-    }
-
-    function onDomLoadHome() {
-        initializeCommon();
-
-        messageInput = document.querySelector('.text-paste');
-        sendButton = document.querySelector('.generate-button');
-        spinner = sendButton?.querySelector('.spinner');
-
-        if (messageInput && sendButton) messageInput.addEventListener('keydown', handleEnterKey);
     }
 
     // Extract thread id from the chat page URL; null for "new" so the API creates a thread
@@ -744,32 +689,6 @@ const { page, category, mode, id } = Astro.props;
         const idFromUrl = pathSegments.split('/').pop();
         if (idFromUrl && idFromUrl !== 'chat' && idFromUrl !== 'new') return idFromUrl;
         return null;
-    }
-
-    function onDomLoadChat() {
-        initializeCommon();
-
-        const idFromUrl = getThreadIdFromUrl();
-        if (idFromUrl) threadId = idFromUrl;
-
-        sendButton = document.querySelector('.send-button');
-        messageInput = document.querySelector('#message-input');
-
-        if (messageInput) {
-            messageInput.addEventListener('keydown', handleEnterKey);
-            messageInput.addEventListener('input', () => {
-                sendButton.disabled = !messageInput.value.trim();
-            });
-        }
-
-        if (sendButton && messageInput) {
-            sendButton.addEventListener('click', () => {
-                if (!isGenerating) {
-                    window.generateOutput();
-                    messageInput.focus();
-                }
-            });
-        }
     }
 
     function scrollToHashMessage() {
@@ -782,9 +701,39 @@ const { page, category, mode, id } = Astro.props;
     }
 
     async function initializePage() {
-        if (page === 'home') onDomLoadHome();
+        if (page === 'home') {
+            initializeCommon();
+
+            messageInput = document.querySelector('.text-paste');
+            sendButton = document.querySelector('.generate-button');
+            spinner = sendButton?.querySelector('.spinner');
+
+            if (messageInput && sendButton) messageInput.addEventListener('keydown', handleEnterKey);
+        }
         else if (page === 'chat') {
-            onDomLoadChat();
+            initializeCommon();
+
+            const idFromUrl = getThreadIdFromUrl();
+            if (idFromUrl) threadId = idFromUrl;
+
+            sendButton = document.querySelector('.send-button');
+            messageInput = document.querySelector('#message-input');
+
+            if (messageInput) {
+                messageInput.addEventListener('keydown', handleEnterKey);
+                messageInput.addEventListener('input', () => {
+                    sendButton.disabled = !messageInput.value.trim();
+                });
+            }
+
+            if (sendButton && messageInput) {
+                sendButton.addEventListener('click', () => {
+                    if (!isGenerating) {
+                        window.generateOutput();
+                        messageInput.focus();
+                    }
+                });
+            }
 
             const elementsToTypeset = document.querySelectorAll('.chat-messages .message-content');
             await typesetMathJax(elementsToTypeset);
