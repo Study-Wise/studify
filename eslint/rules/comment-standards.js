@@ -36,9 +36,7 @@ export default {
                     while (lines.length > 0 && lines[0] === '') lines.shift();
                     while (lines.length > 0 && lines[lines.length - 1] === '') lines.pop();
 
-                    const cleanedLines = lines.map(line => {
-                        return line.replace(/^\*\s?/, '').trim();
-                    });
+                    const cleanedLines = lines.map(line => line.replace(/^\*\s?/, '').trim());
 
                     if (cleanedLines.filter(line => line.length > 0).length > 1) return;
 
@@ -72,6 +70,7 @@ export default {
                 for (let i = 0; i < comments.length - 1; i++) {
                     if (comments[i].type !== 'Line' || comments[i + 1].type !== 'Line') continue;
                     if (comments[i + 1].loc.start.line !== comments[i].loc.start.line + 1) continue;
+                    if ([comments[i], comments[i + 1]].some(c => context.sourceCode.lines[c.loc.start.line - 1].slice(0, c.loc.start.column).trim() !== '')) continue;
 
                     if (CODE_LIKE.test(comments[i].value.trim()) || CODE_LIKE.test(comments[i + 1].value.trim())) continue;
                     if (TERMINATOR.test(comments[i].value.trim())) continue;

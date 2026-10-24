@@ -147,6 +147,29 @@ export default {
             },
             WhileStatement(node) {
                 checkSingleDeclarationBlock(node, node.body, context);
+            },
+            ArrowFunctionExpression(node) {
+                if (!node.body || node.body.type !== 'BlockStatement' || node.body.body.length !== 1) return;
+                if (node.body.loc?.start?.line === node.body.loc?.end?.line) return;
+                if (context.sourceCode.getCommentsInside(node.body).length > 0) return;
+                if (!node.body.body[0].loc || node.body.body[0].loc.start.line !== node.body.body[0].loc.end.line) return;
+
+                let replacement;
+                if (node.body.body[0].type === 'ExpressionStatement') {
+                    replacement = context.sourceCode.getText(node.body.body[0].expression);
+                }
+                else if (node.body.body[0].type === 'ReturnStatement' && node.body.body[0].argument) {
+                    replacement = context.sourceCode.getText(node.body.body[0].argument);
+                }
+                else return;
+
+                context.report({
+                    node,
+                    message: 'Single statement in block should be condensed onto one line with no block',
+                    fix(fixer) {
+                        return fixer.replaceTextRange([node.body.range[0], node.body.range[1]], replacement);
+                    }
+                });
             }
         };
     }

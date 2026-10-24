@@ -7,9 +7,7 @@ const COMPLEX_TYPES = new Set([
     'ArrowFunctionExpression',
     'FunctionExpression',
     'ClassExpression',
-    'TaggedTemplateExpression',
-    'ArrayExpression',
-    'ObjectExpression'
+    'TaggedTemplateExpression'
 ]);
 
 // Checks whether an expression at any depth contains a deliberately computed construct
@@ -138,7 +136,7 @@ export default {
                         if (variable.defs[0].type === 'FunctionName' && reads !== 1) return;
                         if (variable.defs[0].type !== 'FunctionName' && reads !== 1 && reads !== 2) return;
 
-                        // A deliberately computed initializer (call, await, function, collection, long expression) earns its variable even at low use
+                        // A deliberately computed initializer (call, await, function, long expression) earns its variable even at low use
                         if (isComplexExpression(variable.defs[0].node.init)) return;
                         if (variable.defs[0].node.init && context.sourceCode.getText(variable.defs[0].node.init).length >= 80) return;
                         // Pulling named fields out of a struct is deliberate even at low use
