@@ -19,25 +19,15 @@ export function createUploadThingUtils(envVar: string, appId: string) {
             return result;
         },
 
-        uploadFiles: async (files: File[], options?: UploadOptions & { concurrency?: number }) => {
-            return await utapi.uploadFiles(files, options);
-        },
+        uploadFiles: async (files: File[], options?: UploadOptions & { concurrency?: number }) => await utapi.uploadFiles(files, options),
 
-        uploadFileFromUrl: async (url: string, options?: UploadOptions) => {
-            return await utapi.uploadFilesFromUrl(url, options);
-        },
+        uploadFileFromUrl: async (url: string, options?: UploadOptions) => await utapi.uploadFilesFromUrl(url, options),
 
-        uploadImageByUrl: async (url: string, options?: UploadOptions) => {
-            return await utapi.uploadFilesFromUrl(url, options);
-        },
+        uploadImageByUrl: async (url: string, options?: UploadOptions) => await utapi.uploadFilesFromUrl(url, options),
 
-        uploadFilesFromUrls: async (urls: string[], options?: UploadOptions & { concurrency?: number }) => {
-            return await utapi.uploadFilesFromUrl(urls, options);
-        },
+        uploadFilesFromUrls: async (urls: string[], options?: UploadOptions & { concurrency?: number }) => await utapi.uploadFilesFromUrl(urls, options),
 
-        deleteFiles: async (fileKeys: string | string[]) => {
-            return await utapi.deleteFiles(fileKeys);
-        },
+        deleteFiles: async (fileKeys: string | string[]) => await utapi.deleteFiles(fileKeys),
 
         listFiles: async (options?: { limit?: number; offset?: number }) => {
             const result = await utapi.listFiles(options);
@@ -49,9 +39,7 @@ export function createUploadThingUtils(envVar: string, appId: string) {
             }));
         },
 
-        getFileUrl: (fileKey: string) => {
-            return `https://utfs.io/f/${fileKey}`;
-        }
+        getFileUrl: (fileKey: string) => `https://utfs.io/f/${fileKey}`
     };
 }
 

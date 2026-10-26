@@ -467,9 +467,7 @@ const { page, category, mode, id } = Astro.props;
                     await window.MathJax.startup.promise.catch(error => console.error('MathJax startup error:', error));
                     await window.MathJax.typesetPromise(validElements);
                 })(),
-                new Promise((_, reject) => {
-                    timer = setTimeout(() => reject(new Error('MathJax took too long to typeset.')), mathJaxTimeout);
-                }),
+                new Promise((_, reject) => timer = setTimeout(() => reject(new Error('MathJax took too long to typeset.')), mathJaxTimeout)),
             ]);
         } catch (error) {
             console.error('MathJax typesetting error:', error);
@@ -721,9 +719,7 @@ const { page, category, mode, id } = Astro.props;
 
             if (messageInput) {
                 messageInput.addEventListener('keydown', handleEnterKey);
-                messageInput.addEventListener('input', () => {
-                    sendButton.disabled = !messageInput.value.trim();
-                });
+                messageInput.addEventListener('input', () => sendButton.disabled = !messageInput.value.trim());
             }
 
             if (sendButton && messageInput) {

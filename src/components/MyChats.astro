@@ -126,9 +126,7 @@ const threadsByCategory = threads.reduce<Record<string, Record<string, typeof th
         });
 
         // Hide the mode and category sections that have no matching chats left
-        document.querySelectorAll('.mode-section, .category-section').forEach(section => {
-            section.classList.toggle('is-hidden', !section.querySelector('.thread-row:not(.is-hidden)'));
-        });
+        document.querySelectorAll('.mode-section, .category-section').forEach(section => section.classList.toggle('is-hidden', !section.querySelector('.thread-row:not(.is-hidden)')));
 
         document.getElementById('no-results').classList.toggle('is-hidden', Boolean(document.querySelector('.thread-row:not(.is-hidden)')));
     }

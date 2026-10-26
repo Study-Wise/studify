@@ -174,11 +174,7 @@ const hasContent = !!(flashcardData !== null ? (typeof flashcardData !== 'string
 
         flipBtn?.addEventListener('click', flipCurrent);
 
-        flashcards.forEach(card => {
-            card.addEventListener('click', () => {
-                card.dataset.flipped = card.dataset.flipped === 'true' ? 'false' : 'true';
-            });
-        });
+        flashcards.forEach(card => card.addEventListener('click', () => card.dataset.flipped = card.dataset.flipped === 'true' ? 'false' : 'true'));
 
         // Keyboard navigation
         document.addEventListener('keydown', e => {

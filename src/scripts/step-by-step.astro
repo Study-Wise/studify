@@ -12,11 +12,7 @@
             retryButton.textContent = 'Retry wrong ones';
             section.append(retryButton);
 
-            retryButton.addEventListener('click', () => {
-                section.querySelectorAll('.step-question-choice:not([data-type="correct"]) .step-question-radio:checked').forEach(radio => {
-                    radio.checked = false;
-                });
-            });
+            retryButton.addEventListener('click', () => section.querySelectorAll('.step-question-choice:not([data-type="correct"]) .step-question-radio:checked').forEach(radio => radio.checked = false));
         });
     }
 

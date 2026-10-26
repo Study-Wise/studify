@@ -99,9 +99,7 @@ import '@/styles/accessibility/keyboard-navigation.scss';
                 }
             }
 
-            element.addEventListener('invalid', () => {
-                element.setAttribute('aria-invalid', 'true');
-            });
+            element.addEventListener('invalid', () => element.setAttribute('aria-invalid', 'true'));
 
             element.addEventListener('input', () => {
                 if (

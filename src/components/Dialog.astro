@@ -270,17 +270,11 @@ import '@/styles/components/modal.scss';
         // Storage unavailable, so nothing can be waiting
     }
 
-    window.showError = (message: string, title?: string) => {
-        showDialog(message, { title: `Error${title ? `: ${title}` : ''}`, type: 'error' });
-    };
+    window.showError = (message: string, title?: string) => showDialog(message, { title: `Error${title ? `: ${title}` : ''}`, type: 'error' });
 
-    window.showWarning = (message: string, title?: string) => {
-        showDialog(message, { title: `Warning${title ? `: ${title}` : ''}`, type: 'warning' });
-    };
+    window.showWarning = (message: string, title?: string) => showDialog(message, { title: `Warning${title ? `: ${title}` : ''}`, type: 'warning' });
 
-    window.showInfo = (message: string, title?: string) => {
-        showDialog(message, { title: `Information${title ? `: ${title}` : ''}`, type: 'info' });
-    };
+    window.showInfo = (message: string, title?: string) => showDialog(message, { title: `Information${title ? `: ${title}` : ''}`, type: 'info' });
 
     window.showConfirm = (
         message: string,

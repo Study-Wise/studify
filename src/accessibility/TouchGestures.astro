@@ -119,13 +119,9 @@ import '@/styles/accessibility/touch-gestures.scss';
             `;
 
             // Simulate refresh
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000);
+            setTimeout(() => window.location.reload(), 1000);
         }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        new TouchGestures();
-    });
+    document.addEventListener('DOMContentLoaded', () => new TouchGestures());
 </script>
