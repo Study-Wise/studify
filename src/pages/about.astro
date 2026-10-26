@@ -20,7 +20,7 @@ const allTeamImagesObject: Record<string, Record<string, string[]>> = {};
 Object.keys(import.meta.glob('../../public/assets/people/*/*/*.jpeg')).sort().forEach(key => {
     const pathParts = key.split('/').slice(['..', '..', 'public'].length);
     const username = pathParts[pathParts.length - 3];
-    const type = pathParts[pathParts.length - 2];
+    const type = pathParts[pathParts.length - 2] === 'regular' ? 'regular' : 'hover';
 
     if (!allTeamImagesObject[username]) allTeamImagesObject[username] = {};
     if (!allTeamImagesObject[username][type]) allTeamImagesObject[username][type] = [];
