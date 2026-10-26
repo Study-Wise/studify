@@ -36,9 +36,7 @@ import SignOutScript from '@/scripts/auth/sign-out.astro';
     });
 
     // Prevent menu from closing when clicking inside it
-    menu?.addEventListener('click', e => {
-        e.stopPropagation();
-    });
+    menu?.addEventListener('click', e => e.stopPropagation());
 </script>
 
 <SignOutScript />
