@@ -22,8 +22,6 @@
         .message-content {
             $brdr: 15px;
 
-            @include colors.accent-gradient($angle: $gradient-angle);
-
             position: relative;
             padding: $spacing-extra-large;
             box-shadow: 0 0 30px var(--card-shadow);
@@ -31,6 +29,8 @@
             border-radius: $brdr;
             isolation: isolate;
             text-align: center;
+
+            @include colors.accent-gradient($angle: $gradient-angle);
 
             &::before {
                 $space: 10px;

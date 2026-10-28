@@ -17,20 +17,18 @@ $pad: $spacing-medium;
 
     box-sizing: border-box;
     background-color: var(--card-bg);
-
-    @include steps-border;
-
     display: flex;
     flex-direction: column;
     gap: $pad;
+    counter-reset: --quiz-total 0 --quiz-correct 0;
+
+    @include steps-border;
 
     .divider {
         height: 1px;
         background-color: var(--bor);
         border: none;
     }
-
-    counter-reset: --quiz-total 0 --quiz-correct 0;
 
     &::after {
         content: 'Score: ' counter(--quiz-correct) ' / ' counter(--quiz-total);
@@ -66,16 +64,15 @@ $pad: $spacing-medium;
 
     .step {
         counter-increment: --quiz-total;
-
-        &:has(.step-question-choice[data-type="correct"] .step-question-radio:checked) {
-            counter-increment: --quiz-total --quiz-correct;
-        }
-
         box-sizing: border-box;
         background-color: var(--card-bg);
         display: flex;
         flex-direction: column;
         gap: $pad;
+
+        &:has(.step-question-choice[data-type="correct"] .step-question-radio:checked) {
+            counter-increment: --quiz-total --quiz-correct;
+        }
 
         .step-question-choices {
             display: flex;

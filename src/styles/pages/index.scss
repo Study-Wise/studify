@@ -109,6 +109,8 @@
         overflow: hidden;
         display: flex;
 
+        @include interactive-lift;
+
         &::before {
             content: '';
             position: absolute;
@@ -121,8 +123,6 @@
             opacity: 1;
             z-index: -1;
         }
-
-        @include interactive-lift;
 
         &[hidden] {
             display: none;
@@ -165,10 +165,6 @@
             gap: $spacing-medium;
 
             .mode-card {
-                &[hidden] {
-                    display: none;
-                }
-
                 padding: $spacing-medium;
                 color: inherit;
                 background-color: var(--card-bg);
@@ -180,6 +176,10 @@
                     scale $transition-base $ease-out,
                     box-shadow $transition-base $ease-out,
                     translate $transition-base $ease-out;
+
+                &[hidden] {
+                    display: none;
+                }
 
                 &:hover {
                     box-shadow: $box-shadow-large;
@@ -230,8 +230,6 @@
     }
 
     .subject-search-toggle {
-        @include flex-center;
-
         position: relative;
         padding: 0;
         width: 2rem;
@@ -243,6 +241,8 @@
         border-radius: $border-radius-full;
         transition: $transition-colors, box-shadow $transition-base $ease-out;
         cursor: pointer;
+
+        @include flex-center;
 
         &:hover,
         &[aria-expanded="true"] {
