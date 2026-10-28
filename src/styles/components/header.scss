@@ -5,9 +5,6 @@
 
 header {
     min-height: 80px;
-
-    @include colors.accent-gradient($angle: $gradient-angle);
-
     color: $header-text;
     padding: $spacing-small $spacing-medium;
     box-shadow: $box-shadow-small;
@@ -15,6 +12,8 @@ header {
     align-items: center;
     justify-content: space-between;
     gap: $spacing-medium;
+
+    @include colors.accent-gradient($angle: $gradient-angle);
 
     h1 {
         margin: 0 0 $spacing-tiny;

@@ -27,9 +27,6 @@
     box-sizing: content-box;
     padding: $spacing-extra-small;
     aspect-ratio: 1;
-
-    @include colors.accent-gradient($angle: var(--g-angle));
-
     color: var(--body-bg);
     border: none;
     border-radius: 50%;
@@ -43,6 +40,8 @@
                 rotate $transition-base $ease-out,
                 box-shadow $transition-base $ease-out;
     user-select: none;
+
+    @include colors.accent-gradient($angle: var(--g-angle));
 
     &:hover {
         --g-angle: 60deg;

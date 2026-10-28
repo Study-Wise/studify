@@ -16,9 +16,6 @@ $border-radius: $button-border-radius;
 
     position: relative;
     box-sizing: border-box;
-
-    @include flex-center;
-
     gap: 0.5rem;
     background-color: inherit;
     border: none;
@@ -28,6 +25,8 @@ $border-radius: $button-border-radius;
     isolation: isolate;
     transition: color $ease-in-out $transition-duration;
     transition-timing-function: $ease-out;
+
+    @include flex-center;
 
     &:disabled {
         color: #adb5bd;
@@ -133,10 +132,9 @@ $border-radius: $button-border-radius;
         min-width: 44px;
         min-height: 44px;
         border-radius: 50%;
+        transition: all 250ms $ease-out;
 
         @include flex-center;
-
-        transition: all 250ms $ease-out;
 
         &:hover:not(:disabled) {
             rotate: 5deg;

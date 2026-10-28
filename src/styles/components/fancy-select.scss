@@ -27,10 +27,9 @@ select.fancy-select {
     gap: calc($spacing-extra-small + #{$border-size * 2});
     margin-block: $spacing-extra-small;
     border-radius: $border-radius-medium;
+    cursor: default;
 
     @include colors.accent-gradient($angle: 30deg);
-
-    cursor: default
 }
 
 select.fancy-select {

@@ -11,14 +11,13 @@ $radius: $border-radius-huge;
 $padding: $spacing-medium;
 
 .chat-toolbar {
+    --bd: blur(8px);
+
     position: sticky;
     display: flex;
     flex-direction: column;
     gap: $spacing-medium;
     background: linear-gradient(to top, var(--body-bg) 0%, rgb(from var(--body-bg) r g b / 98%) 100%);
-
-    --bd: blur(8px);
-
     -webkit-backdrop-filter: var(--bd);
     backdrop-filter: var(--bd);
     box-shadow: 0 0 20px rgb(from var(--card-shadow) r g b / 0%);

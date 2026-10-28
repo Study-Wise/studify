@@ -40,9 +40,6 @@
                 position: absolute;
                 inset-inline-start: 0;
                 inset-block-start: 0;
-
-                @include flex-center;
-
                 width: 2.5rem;
                 height: 2.5rem;
                 background: linear-gradient(135deg,
@@ -55,6 +52,8 @@
                 font-size: $font-size-large;
                 box-shadow: $box-shadow-medium;
                 transition: scale $transition-base $ease-spring;
+
+                @include flex-center;
             }
 
             &:not(:last-child)::after {
