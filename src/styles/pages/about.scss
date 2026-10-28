@@ -1,5 +1,6 @@
 @use '../variables/globals' as *;
 @use '../variables/tokens' as *;
+@use '../variables/colors/globals' as *;
 
 .card:has(> .about-section:first-child:last-child) {
     container-type: inline-size;
