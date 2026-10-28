@@ -65,7 +65,7 @@
             transition: var(--transition);
         }
 
-        &:has(:is(.profile-picture, .about-name):hover) {
+        &:has(:is(.profile-picture, .about-name, .about-role):hover) {
             &::before, * {
                 scale: $hover-scale;
 
@@ -73,10 +73,12 @@
                     animation: --hover-swivel 0.5s ease-in-out;
                 }
             }
-        }
 
-        &[data-hover="true"] .profile-picture:hover {
-            opacity: 0;
+            .profile-picture {
+                @media not (prefers-reduced-motion: reduce) {
+                    opacity: 0;
+                }
+            }
         }
 
         @keyframes --hover-swivel {
