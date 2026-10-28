@@ -1,0 +1,57 @@
+@use './accent/colors.scss' as colors;
+@use 'sass:color';
+@use 'sass:list';
+@use 'sass:map';
+
+// Header
+$header-text: #fff;
+$header-tagline: #e0f7ff;
+
+// Card
+$card-bg-light: #fff;
+$card-bg-dark: #222;
+$card-text: #000;
+$card-shadow-light: rgb(0 0 0 / 7%);
+$card-shadow-dark: rgb(255 255 255 / 15%);
+$card-border-light: #e0e0e0;
+$card-border-dark: #555;
+
+// Border
+$border-color-light: #e5e7eb;
+$border-color-dark: #555;
+$border-subtle-light: #eee;
+$border-subtle-dark: #3a3a3a;
+$border-hover-light: #d1d5db;
+$border-hover-dark: #777;
+
+// Section
+$section-title-light: color.adjust(list.nth(map.get(colors.$accent-colors, 'primary'), 2), $lightness: -15%);
+$section-title-dark: color.adjust($section-title-light, $lightness: 25%);
+$section-title-border: #dee2e6;
+
+// Footer
+$footer-bg: #f1f3f5;
+$footer-text: #6c757d;
+
+// Body
+$body-bg-light: #f8f9fa;
+$body-bg-dark: #444;
+$body-text: #444;
+
+// Message
+$message-bg-light: #ebeef1;
+$message-bg-dark: color.adjust($message-bg-light, $lightness: -50%);
+$chat-message-shadow: rgb(0 0 0 / 50%);
+
+// Input
+$input-border: #ccc;
+
+// Profile
+$profile-border: #eee;
+$profile-shadow: rgb(0 0 0 / 10%);
+
+// About
+$about-link: #007bff;
+
+// Misc
+$accent-colors: colors.$accent-colors;
