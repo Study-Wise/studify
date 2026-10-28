@@ -76,6 +76,7 @@ input, textarea, select, button {
     --card-shadow: light-dark(#{$card-shadow-light}, #{$card-shadow-dark});
     --card-border: light-dark(#{$card-border-light}, #{$card-border-dark});
     --section-title: light-dark(#{$section-title-light}, #{$section-title-dark});
+    --section-title-soft: light-dark(#{$section-title-soft-light}, #{$section-title-soft-dark});
     --message-bg: light-dark(#{$message-bg-light}, #{$message-bg-dark});
     --border-color: light-dark(#{$border-color-light}, #{$border-color-dark});
     --border-subtle: light-dark(#{$border-subtle-light}, #{$border-subtle-dark});
@@ -137,6 +138,11 @@ input, textarea, select, button {
             style(--theme: 'light'): #{$section-title-light};
             style(--theme: 'dark'): #{$section-title-dark};
             else: light-dark(#{$section-title-light}, #{$section-title-dark})
+        );
+        --section-title-soft: if(
+            style(--theme: 'light'): #{$section-title-soft-light};
+            style(--theme: 'dark'): #{$section-title-soft-dark};
+            else: light-dark(#{$section-title-soft-light}, #{$section-title-soft-dark})
         );
         --message-bg: if(
             style(--theme: 'light'): #{$message-bg-light};

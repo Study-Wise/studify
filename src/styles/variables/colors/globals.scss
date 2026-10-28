@@ -27,6 +27,8 @@ $border-hover-dark: #777;
 // Section
 $section-title-light: color.adjust(list.nth(map.get(colors.$accent-colors, 'primary'), 2), $lightness: -15%);
 $section-title-dark: color.adjust($section-title-light, $lightness: 25%);
+$section-title-soft-light: color.adjust($section-title-light, $lightness: 20%);
+$section-title-soft-dark: color.adjust($section-title-dark, $lightness: -20%);
 $section-title-border: #dee2e6;
 
 // Footer
