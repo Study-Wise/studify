@@ -60,10 +60,7 @@
         }
 
         &:has(:is(.profile-picture, .about-name):hover) {
-            .profile-picture,
-            &::before,
-            .about-name,
-            .about-role {
+            &::before, * {
                 animation: --hover-swivel 0.5s ease-in-out;
                 scale: $hover-scale;
             }
