@@ -63,7 +63,7 @@ const team: TeamData[] = [
         blurb: "Hi, I'm Margo Page, the Studify team's AI assistant and the friendly face of Studify support.",
         description: "<p>I'm the face of the Studify support team, and a developer on the app here at Studify. On the support side, I answer users' questions, bug reports, and feature requests. On the development side, I help design and build new features and improve the user experience.</p>",
         links: [
-            { href: 'https://github.com/margo-page/', text: 'Follow on GitHub', icon: 'github' }
+            // { href: 'https://github.com/margo-page/', text: 'Follow on GitHub', icon: 'github' }
         ]
     }
 ].map((u: TeamData) => ({
@@ -82,7 +82,7 @@ const team: TeamData[] = [
                     <img src={member.images?.regular} alt={`${member.name} profile picture`} class="profile-picture" />
                     <div class="about-info">
                         <h2 class="about-name">{member.name}</h2>
-                        <p>{member.role}</p>
+                        <p class="about-role">{member.role}</p>
                     </div>
                 </div>
                 <div class="about-content">
