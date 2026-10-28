@@ -118,31 +118,31 @@
                 .resource-title {
                     --lc: 2;
 
+                    margin-block-end: 0.75rem;
+                    color: var(--body-text);
                     font-size: 1.125rem;
                     font-weight: 600;
-                    color: var(--body-text);
-                    margin-block-end: 0.75rem;
                     line-height: 1.4;
-                    display: -webkit-box;
                     -webkit-line-clamp: var(--lc);
                     line-clamp: var(--lc);
-                    -webkit-box-orient: vertical;
                     overflow: hidden;
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
                 }
 
                 .resource-snippet {
                     --lc: 3;
 
-                    font-size: 0.875rem;
-                    color: rgb(from var(--body-text) r g b / 70%);
-                    line-height: 1.5;
+                    flex: 1;
                     margin-block-end: 1rem;
-                    display: -webkit-box;
+                    color: rgb(from var(--body-text) r g b / 70%);
+                    font-size: 0.875rem;
+                    line-height: 1.5;
                     -webkit-line-clamp: var(--lc);
                     line-clamp: var(--lc);
-                    -webkit-box-orient: vertical;
                     overflow: hidden;
-                    flex: 1;
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
                 }
 
                 .resource-footer {

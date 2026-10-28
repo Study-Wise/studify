@@ -156,14 +156,14 @@ footer, .chat-toolbar {
     --bd: blur(10px);
 
     position: relative;
-    z-index: $z-index-sticky;
     box-sizing: border-box;
-    flex-wrap: wrap;
     padding: $spacing-medium + 0.25rem $spacing-large;
-    border-block-end: 1px solid rgb(from var(--section-title) r g b / 10%);
+    box-shadow: 0 0 20px rgb(from var(--card-shadow) r g b / 10%);
     -webkit-backdrop-filter: var(--bd);
     backdrop-filter: var(--bd);
-    box-shadow: 0 0 20px rgb(from var(--card-shadow) r g b / 10%);
+    border-block-end: 1px solid rgb(from var(--section-title) r g b / 10%);
+    flex-wrap: wrap;
+    z-index: $z-index-sticky;
 
     @include colors.accent-gradient($angle: $gradient-angle);
 

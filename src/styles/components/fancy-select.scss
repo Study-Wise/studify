@@ -22,12 +22,12 @@ select.fancy-select {
 }
 
 ::picker(select) {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: calc($spacing-extra-small + #{$border-size * 2});
     margin-block: $spacing-extra-small;
     border-radius: $border-radius-medium;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: calc($spacing-extra-small + #{$border-size * 2});
     cursor: default;
+    display: grid;
 
     @include colors.accent-gradient($angle: 30deg);
 }

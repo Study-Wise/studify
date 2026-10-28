@@ -31,10 +31,10 @@
         }
 
         .error-title {
+            margin-bottom: $spacing-small;
             font-size: 6rem;
             font-weight: $font-weight-bold;
             line-height: 1;
-            margin-bottom: $spacing-small;
             animation: --slide-in-down 0.6s $ease-out forwards;
 
             @include colors.accent-text-gradient;

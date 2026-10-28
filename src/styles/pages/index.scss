@@ -38,19 +38,19 @@
             &::before {
                 content: counter(--step-counter);
                 position: absolute;
-                inset-inline-start: 0;
                 inset-block-start: 0;
+                inset-inline-start: 0;
                 width: 2.5rem;
                 height: 2.5rem;
+                color: $header-text;
                 background: linear-gradient(135deg,
                     list.nth(map.get($accent-colors, primary), 1),
                     list.nth(map.get($accent-colors, primary), 2)
                 );
-                color: $header-text;
-                border-radius: 50%;
-                font-weight: $font-weight-bold;
-                font-size: $font-size-large;
                 box-shadow: $box-shadow-medium;
+                border-radius: 50%;
+                font-size: $font-size-large;
+                font-weight: $font-weight-bold;
                 transition: scale $transition-base $ease-spring;
 
                 @include flex-center;

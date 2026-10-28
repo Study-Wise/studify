@@ -14,16 +14,16 @@ $padding: $spacing-medium;
     --bd: blur(8px);
 
     position: sticky;
-    display: flex;
-    flex-direction: column;
-    gap: $spacing-medium;
     background: linear-gradient(to top, var(--body-bg) 0%, rgb(from var(--body-bg) r g b / 98%) 100%);
+    box-shadow: 0 0 20px rgb(from var(--card-shadow) r g b / 0%);
     -webkit-backdrop-filter: var(--bd);
     backdrop-filter: var(--bd);
-    box-shadow: 0 0 20px rgb(from var(--card-shadow) r g b / 0%);
-    transition: box-shadow $transition-slow $ease-in-out;
     border-top: 1px solid rgb(from var(--card-border) r g b / 20%);
     border-top-color: rgb(from var(--card-border) r g b / 40%);
+    flex-direction: column;
+    gap: $spacing-medium;
+    transition: box-shadow $transition-slow $ease-in-out;
+    display: flex;
 
     .chat-input-container {
         margin: 0 auto;

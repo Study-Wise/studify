@@ -16,15 +16,15 @@ $border-radius: $button-border-radius;
 
     position: relative;
     box-sizing: border-box;
-    gap: 0.5rem;
     background-color: inherit;
     border: none;
     border-color: transparent;
-    cursor: pointer;
-    text-decoration: none;
     isolation: isolate;
+    gap: 0.5rem;
+    text-decoration: none;
     transition: color $ease-in-out $transition-duration;
     transition-timing-function: $ease-out;
+    cursor: pointer;
 
     @include flex-center;
 
@@ -127,10 +127,10 @@ $border-radius: $button-border-radius;
     }
 
     &.icon {
-        aspect-ratio: 1;
         padding: 0.75rem;
         min-width: 44px;
         min-height: 44px;
+        aspect-ratio: 1;
         border-radius: 50%;
         transition: all 250ms $ease-out;
 

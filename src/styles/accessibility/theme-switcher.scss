@@ -28,18 +28,18 @@
     padding: $spacing-extra-small;
     aspect-ratio: 1;
     color: var(--body-bg);
+    box-shadow: 0 0 10px hsl(from var(--body-text) h s l / 50%);
     border: none;
     border-radius: 50%;
-    display: none;
-    display: if(style(--nothing: 'here'): grid; else: grid);
     place-items: center;
     font-size: $font-size-small;
-    box-shadow: 0 0 10px hsl(from var(--body-text) h s l / 50%);
-    cursor: pointer;
     transition: scale $transition-base $ease-out,
                 rotate $transition-base $ease-out,
                 box-shadow $transition-base $ease-out;
+    cursor: pointer;
     user-select: none;
+    display: none;
+    display: if(style(--nothing: 'here'): grid; else: grid);
 
     @include colors.accent-gradient($angle: var(--g-angle));
 

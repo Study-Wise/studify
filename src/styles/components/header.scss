@@ -4,14 +4,14 @@
 @use '../variables/colors/accent/colors' as colors;
 
 header {
+    padding: $spacing-small $spacing-medium;
     min-height: 80px;
     color: $header-text;
-    padding: $spacing-small $spacing-medium;
     box-shadow: $box-shadow-small;
-    display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
     gap: $spacing-medium;
+    display: flex;
 
     @include colors.accent-gradient($angle: $gradient-angle);
 
