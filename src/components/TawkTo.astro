@@ -61,5 +61,12 @@ if (Astro.locals.user && secretKey) {
         };
         s0.parentNode.insertBefore(s1, s0);
     })();
+
+    window.Tawk_API = Tawk_API;
+
+    window.togglechatpane = function() {
+        if (window.Tawk_API && typeof window.Tawk_API.maximize === 'function') window.Tawk_API.toggle();
+        else console.warn('Tawk.to API not ready yet; cannot toggle chat pane');
+    };
 </script>
 <!--End of Tawk.to Script-->
