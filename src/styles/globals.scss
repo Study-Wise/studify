@@ -78,7 +78,7 @@ input, textarea, select, button {
     --border-color: light-dark(#{$border-color-light}, #{$border-color-dark});
     --border-subtle: light-dark(#{$border-subtle-light}, #{$border-subtle-dark});
     --border-hover: light-dark(#{$border-hover-light}, #{$border-hover-dark});
-    
+
     color-scheme: light dark;
     scroll-behavior: smooth;
     scroll-padding-top: 20px;
