@@ -67,8 +67,11 @@
 
         &:has(:is(.profile-picture, .about-name):hover) {
             &::before, * {
-                animation: --hover-swivel 0.5s ease-in-out;
                 scale: $hover-scale;
+
+                @media not (prefers-reduced-motion: reduce) {
+                    animation: --hover-swivel 0.5s ease-in-out;
+                }
             }
         }
 
