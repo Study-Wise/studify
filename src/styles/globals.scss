@@ -7,6 +7,7 @@
 @use './variables/globals' as *;
 @use './variables/mixins' as *;
 @use './variables/tokens' as *;
+@use './variables/colors/globals' as *;
 @use './variables/colors/accent/colors' as colors;
 @use 'sass:color';
 @use 'sass:list';
