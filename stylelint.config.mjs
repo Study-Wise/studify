@@ -1,5 +1,9 @@
+import propertyOrder from './src/styles/property-order.json' with { type: 'json' };
+
+/** @type {import('stylelint').Config} */
 export default {
     extends: "stylelint-config-standard-scss",
+    plugins: ['stylelint-order'],
     rules: {
         "keyframes-name-pattern": ["^--[a-z][a-z0-9]*(-[a-z0-9]+)*$", {
             message: "Expected keyframe name \"%s\" to be kebab-case and prefixed with \"--\" to match the rule for all user-defined things in css."
@@ -18,7 +22,16 @@ export default {
         }],
         "property-no-vendor-prefix": [true, {
             ignoreProperties: ["-webkit-backdrop-filter"]
-        }]
+        }],
+        "declaration-block-no-redundant-longhand-properties": [true, {
+            "ignoreShorthands": ["flex-flow"]
+        }],
+        "scss/operator-no-unspaced": null,
+        'font-family-name-quotes': null,
+        'declaration-property-value-disallowed-list': {
+            flex: ['row', 'column', 'row-reverse', 'column-reverse'],
+        },
+        'order/properties-order': Object.values(propertyOrder).flat().filter(p => !p.startsWith('//')),
     },
     overrides: [
         {
@@ -29,4 +42,4 @@ export default {
             }
         }
     ]
-}
+};
