@@ -67,6 +67,12 @@
             opacity: 0;
         }
 
+        .about-name {
+            background-color: var(--section-title);
+            background-clip: text;
+            color: transparent;
+        }
+
         @keyframes --hover-swivel {
              0% { rotate: #{ 0 * $hover-rotation} }
             25% { rotate: #{-1 * $hover-rotation} }
