@@ -31,7 +31,8 @@ export default {
         'declaration-property-value-disallowed-list': {
             flex: ['row', 'column', 'row-reverse', 'column-reverse'],
         },
-        'order/properties-order': Object.values(propertyOrder).flat().filter(p => !p.startsWith('//')),
+        'order/properties-order': Object.values(propertyOrder).flat().filter(p => !p.startsWith('//') && !p.startsWith('@')),
+        'order/order': ['declarations', { type: 'at-rule', name: propertyOrder.Includes[0].slice(1) }, 'rules'],
     },
     overrides: [
         {
