@@ -27,40 +27,40 @@ $padding: $spacing-medium;
     border-top-color: rgb(from var(--card-border) r g b / 40%);
 
     .chat-input-container {
+        margin: 0 auto;
         padding: $padding;
         min-width: min(1000px, 100%);
-        margin: 0 auto;
         max-width: 100%;
     }
 
     .input-wrapper {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        align-items: center;
-        gap: $spacing-small;
-        background-color: var(--card-bg);
-        border: 2px solid rgb(from var(--card-border) r g b / 40%);
-        border-radius: $radius;
         padding: $spacing-medium;
-        transition: all $transition-slow $ease-in-out;
+        background-color: var(--card-bg);
         box-shadow:
             0 2px 8px rgb(from var(--card-shadow) r g b / 6%),
             inset 0 1px 2px rgb(from #{$header-text} r g b / 2%);
+        border: 2px solid rgb(from var(--card-border) r g b / 40%);
+        border-radius: $radius;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: $spacing-small;
+        transition: all $transition-slow $ease-in-out;
+        display: grid;
 
         &:has(:focus-visible) {
-            border-color: $color;
+            background-color: rgb(from var(--card-bg) r g b / 100%);
             box-shadow:
                 0 4px 16px rgba(from $color r g b / 12%),
                 0 0 0 4px rgba(from $color r g b / 8%),
                 inset 0 1px 2px rgb(from #{$header-text} r g b / 2%);
-            background-color: rgb(from var(--card-bg) r g b / 100%);
+            border-color: $color;
         }
 
         &:hover:not(:has(:focus-visible)) {
-            border-color: rgb(from var(--card-border) r g b / 60%);
             box-shadow:
                 0 4px 12px rgb(from var(--card-shadow) r g b / 8%),
                 inset 0 1px 2px rgb(from #{$header-text} r g b / 2%);
+            border-color: rgb(from var(--card-border) r g b / 60%);
         }
 
         &:has(textarea:user-valid) {
@@ -68,34 +68,34 @@ $padding: $spacing-medium;
         }
 
         &:has(textarea:user-invalid) {
-            border-color: $color-error;
             box-shadow:
                 0 2px 8px rgba(from $color-error r g b / 10%),
                 0 0 0 2px rgba(from $color-error r g b / 10%);
+            border-color: $color-error;
         }
 
         &:has(textarea:disabled) {
+            background-color: rgb(from var(--card-bg) r g b / 50%);
+            border-color: rgb(from var(--card-border) r g b / 30%);
             opacity: 0.7;
             pointer-events: none;
-            border-color: rgb(from var(--card-border) r g b / 30%);
-            background-color: rgb(from var(--card-bg) r g b / 50%);
         }
     }
 
     .message-input {
         flex: 1;
-        border: none;
-        background-color: transparent;
         resize: none;
+        min-height: 2lh;
+        max-height: 6lh;
+        color: var(--card-text);
+        background-color: transparent;
+        border: none;
         outline: none;
         font-family: inherit;
         font-size: 0.9375rem;
         line-height: $line-height-normal * $font-size-base;
-        min-height: 2lh;
-        max-height: 6lh;
-        overflow-y: auto;
-        color: var(--card-text);
         transition: opacity $transition-slow $ease-in-out;
+        overflow-y: auto;
 
         @supports (field-sizing: content) {
             field-sizing: content;
@@ -122,26 +122,26 @@ $padding: $spacing-medium;
     }
 
     .send-button {
+        position: relative;
         box-sizing: border-box;
         padding: $spacing-extra-small;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        aspect-ratio: 1;
         height: calc(2lh + 2px * 2 + 1px * 2);
-        background: linear-gradient(135deg, $color, color.adjust($color, $hue: 15deg));
+        aspect-ratio: 1;
         color: white;
-        border: none;
-        border-radius: $radius - $padding;
-        cursor: pointer;
-        transition: all $transition-slow $ease-in-out;
-        flex-shrink: 0;
+        background: linear-gradient(135deg, $color, color.adjust($color, $hue: 15deg));
         box-shadow:
             0 2px 8px rgba(from $color r g b / 30%),
             0 4px 16px rgba(from $color r g b / 20%),
             inset 0 1px 0 rgb(from white r g b / 20%);
-        position: relative;
+        border: none;
+        border-radius: $radius - $padding;
+        flex-shrink: 0;
+        justify-content: center;
+        align-items: center;
+        transition: all $transition-slow $ease-in-out;
+        cursor: pointer;
         overflow: hidden;
+        display: flex;
 
         &::before {
             content: '';
@@ -156,11 +156,11 @@ $padding: $spacing-medium;
             background: linear-gradient(135deg,
                 color.adjust($color, $lightness: 5%),
                 color.adjust($color, $hue: 15deg, $lightness: 5%));
-            translate: 0 -1px;
             box-shadow:
                 0 4px 12px rgba(from $color r g b / 35%),
                 0 8px 24px rgba(from $color r g b / 25%),
                 inset 0 1px 0 rgb(from white r g b / 20%);
+            translate: 0 -1px;
 
             &::before {
                 opacity: 1;
@@ -168,26 +168,26 @@ $padding: $spacing-medium;
         }
 
         &:active:not(:disabled) {
-            translate: 0 0;
             box-shadow:
                 0 2px 8px rgba(from $color r g b / 30%),
                 0 4px 16px rgba(from $color r g b / 20%),
                 inset 0 1px 0 rgb(from white r g b / 20%);
+            translate: 0 0;
         }
 
         &:disabled {
             background-color: rgb(from var(--card-text) r g b / 20%);
-            cursor: not-allowed;
             box-shadow: none;
             opacity: $opacity-disabled;
+            cursor: not-allowed;
         }
 
         svg {
+            position: relative;
             height: 70%;
             aspect-ratio: 1;
-            position: relative;
-            z-index: 1;
             filter: drop-shadow(0 1px 2px rgb(from black r g b / 10%));
+            z-index: 1;
         }
     }
 }

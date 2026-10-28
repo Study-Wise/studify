@@ -9,11 +9,11 @@
 
     .quizlet-flashcards {
         .flashcard-intro {
-            text-align: center;
             margin-block-end: 2rem;
             padding-block-end: 1.5rem;
-            border-bottom: 1px solid var(--card-border);
             color: var(--body-text);
+            border-bottom: 1px solid var(--card-border);
+            text-align: center;
             opacity: 0.9;
 
             p {
@@ -23,15 +23,15 @@
         }
 
         .flashcard-deck {
-            max-width: 700px;
             margin: 0 auto;
+            max-width: 700px;
         }
 
         .flashcard-progress {
-            text-align: center;
             margin-block-end: 1rem;
-            font-size: 0.9rem;
             color: var(--body-text);
+            font-size: 0.9rem;
+            text-align: center;
             opacity: 0.7;
 
             .current {
@@ -40,8 +40,8 @@
         }
 
         .flashcard-container {
-            perspective: 1000px;
             min-height: 300px;
+            perspective: 1000px;
         }
 
         .flashcard {
@@ -69,16 +69,16 @@
             .flashcard-front,
             .flashcard-back {
                 position: absolute;
+                padding: 2rem;
                 width: 100%;
                 height: 100%;
-                backface-visibility: hidden;
-                border-radius: 1rem;
-                padding: 2rem;
-                display: flex;
-                flex-direction: column;
                 box-shadow: 0 0 20px var(--card-shadow);
                 border: 1px solid var(--card-border);
+                border-radius: 1rem;
+                flex-direction: column;
+                backface-visibility: hidden;
                 overflow: auto;
+                display: flex;
             }
 
             .flashcard-front {
@@ -91,21 +91,21 @@
             }
 
             .card-label {
-                font-size: 0.75rem;
-                text-transform: uppercase;
-                letter-spacing: 0.1em;
-                opacity: 0.6;
                 margin-block-end: 1rem;
+                font-size: 0.75rem;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                opacity: 0.6;
             }
 
             .card-content {
                 flex: 1;
-                display: flex;
-                align-items: center;
                 justify-content: center;
+                align-items: center;
                 font-size: 1.2rem;
                 line-height: 1.6;
                 text-align: center;
+                display: flex;
 
                 p {
                     margin: 0;
@@ -114,28 +114,28 @@
         }
 
         .flashcard-controls {
-            display: flex;
+            margin-block-start: 1.5rem;
             justify-content: center;
             align-items: center;
             gap: 1rem;
-            margin-block-start: 1.5rem;
+            display: flex;
 
             .control-btn {
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
                 padding: 0.75rem 1.25rem;
+                color: var(--body-text);
+                background-color: var(--card-bg);
                 border: 1px solid var(--card-border);
                 border-radius: 0.5rem;
-                background-color: var(--card-bg);
-                color: var(--body-text);
-                cursor: pointer;
+                align-items: center;
+                gap: 0.5rem;
                 transition: all 0.2s $ease;
+                cursor: pointer;
+                display: flex;
 
                 &:hover:not(:disabled) {
                     background-color: hsl(from var(--card-bg) h s calc(l - 5%));
-                    translate: 0 -2px;
                     box-shadow: 0 0 12px var(--card-shadow);
+                    translate: 0 -2px;
                 }
 
                 &:disabled {
@@ -149,8 +149,8 @@
             }
 
             .flip {
-                background-color: list.nth(map.get($accent-colors, primary), 1);
                 color: white;
+                background-color: list.nth(map.get($accent-colors, primary), 1);
                 border-color: list.nth(map.get($accent-colors, primary), 1);
 
                 &:hover {

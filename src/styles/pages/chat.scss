@@ -9,28 +9,28 @@
 @use 'sass:math';
 
 .unauthorized-message {
-    display: flex;
+    padding: $spacing-extra-large;
+    height: 100%;
     justify-content: center;
     align-items: center;
-    height: 100%;
-    padding: $spacing-extra-large;
+    display: flex;
 
     .message.assistant {
-        max-width: 500px;
         width: 100%;
+        max-width: 500px;
 
         .message-content {
             $brdr: 15px;
 
             @include colors.accent-gradient($angle: $gradient-angle);
 
-            border-radius: $brdr;
+            position: relative;
             padding: $spacing-extra-large;
-            text-align: center;
             box-shadow: 0 0 30px var(--card-shadow);
             border: 1px solid var(--card-border);
+            border-radius: $brdr;
             isolation: isolate;
-            position: relative;
+            text-align: center;
 
             &::before {
                 $space: 10px;
@@ -39,38 +39,38 @@
                 position: absolute;
                 inset: $space;
                 background-color: var(--card-bg);
+                border-radius: #{$brdr - $space};
                 opacity: 1;
                 z-index: -1;
-                border-radius: #{$brdr - $space};
             }
 
             .unauthorized-content {
                 h3 {
-                    color: var(--section-title);
                     margin-block-end: $spacing-medium;
+                    color: var(--section-title);
                     font-size: $font-size-2x-large;
                 }
 
                 p {
-                    color: var(--body-text);
                     margin-block-end: $spacing-large;
+                    color: var(--body-text);
                     line-height: $line-height-relaxed;
                 }
 
                 .btn.primary {
-                    display: inline-block;
-                    background-color: var(--card-bg);
-                    color: var(--body-text);
                     padding: $spacing-small $spacing-large;
+                    color: var(--body-text);
+                    background-color: var(--card-bg);
+                    border: 1px solid var(--card-border);
                     border-radius: $border-radius-medium;
                     text-decoration: none;
-                    border: 1px solid var(--card-border);
                     transition: $transition-all;
+                    display: inline-block;
 
                     &:hover {
                         background-color: hsl(from var(--card-bg) h s calc(l - 5%));
-                        translate: 0 -2px;
                         box-shadow: 0 0 15px var(--card-shadow);
+                        translate: 0 -2px;
                     }
                 }
             }
@@ -79,16 +79,16 @@
 }
 
 .chat-empty-state {
-    display: flex;
+    box-sizing: border-box;
+    margin: auto;
+    padding: $spacing-large;
+    width: 100%;
+    max-width: 640px;
     flex-direction: column;
     align-items: center;
     gap: $spacing-medium;
-    margin: auto;
-    max-width: 640px;
-    width: 100%;
     text-align: center;
-    padding: $spacing-large;
-    box-sizing: border-box;
+    display: flex;
 
     .empty-state-icon {
         font-size: $font-size-5x-large;
@@ -115,19 +115,19 @@
 
         .example-prompt {
             padding: $spacing-small $spacing-medium;
-            background-color: var(--card-bg);
             color: var(--body-text);
+            background-color: var(--card-bg);
             border: 1px solid var(--card-border);
             border-radius: $border-radius-medium;
-            cursor: pointer;
             font-size: $font-size-small;
             transition: border-color $transition-base $ease-out,
                         color $transition-base $ease-out;
+            cursor: pointer;
 
             &:hover,
             &:focus-visible {
-                border-color: list.nth(map.get($accent-colors, primary), 1);
                 color: list.nth(map.get($accent-colors, primary), 1);
+                border-color: list.nth(map.get($accent-colors, primary), 1);
             }
         }
     }
@@ -146,10 +146,10 @@ footer, .chat-toolbar {
 }
 
 .chat-page {
-    height: 100dvh;
-    display: flex;
-    flex-direction: column;
     position: relative;
+    height: 100dvh;
+    flex-direction: column;
+    display: flex;
 }
 
 .chat-header {
@@ -169,32 +169,32 @@ footer, .chat-toolbar {
     box-shadow: 0 0 20px rgb(from var(--card-shadow) r g b / 10%);
 
     .chat-title-container {
-        display: flex;
+        min-width: 0;
         align-items: center;
         gap: $spacing-medium;
-        min-width: 0;
+        display: flex;
     }
 
     h2 {
-        background-color: rgba(from $card-bg-light r g b / 95%);
-        color: $section-title-light;
-        width: fit-content;
+        margin: 0;
         padding: $spacing-small + 0.25rem $spacing-large;
-        border-radius: $border-radius-large;
+        width: fit-content;
+        min-width: 0;
+        max-width: 100%;
+        color: $section-title-light;
+        background-color: rgba(from $card-bg-light r g b / 95%);
         box-shadow:
             0 8px 24px rgb(from var(--card-shadow) r g b / 12%),
             0 2px 8px rgb(from var(--card-shadow) r g b / 8%);
         border: 1px solid rgb(from var(--card-border) r g b / 60%);
-        margin: 0;
-        display: flex;
+        border-radius: $border-radius-large;
         align-items: center;
         gap: $spacing-extra-small;
         font-size: $font-size-large;
         font-weight: $font-weight-semibold;
         letter-spacing: -0.01em;
         transition: all $transition-base $ease-in-out;
-        max-width: 100%;
-        min-width: 0;
+        display: flex;
 
         &:hover {
             box-shadow:
@@ -204,8 +204,8 @@ footer, .chat-toolbar {
         }
 
         .material-symbols-outlined {
-            font-size: $font-size-1x-large;
             flex-shrink: 0;
+            font-size: $font-size-1x-large;
         }
     }
 
@@ -216,19 +216,19 @@ footer, .chat-toolbar {
             list-style: none;
             margin: 0;
             padding: $spacing-extra-small $spacing-medium;
-            display: flex;
-            align-items: center;
-            gap: $spacing-extra-small;
-            background-color: rgba(from $card-bg-light r g b / 95%);
             color: $section-title-light;
-            border: 1px solid rgb(from var(--card-border) r g b / 60%);
-            border-radius: 999px;
-            font-size: $font-size-small;
-            font-weight: $font-weight-medium;
-            white-space: nowrap;
+            background-color: rgba(from $card-bg-light r g b / 95%);
             box-shadow:
                 0 4px 12px rgb(from var(--card-shadow) r g b / 8%),
                 0 2px 6px rgb(from var(--card-shadow) r g b / 5%);
+            border: 1px solid rgb(from var(--card-border) r g b / 60%);
+            border-radius: 999px;
+            align-items: center;
+            gap: $spacing-extra-small;
+            font-size: $font-size-small;
+            font-weight: $font-weight-medium;
+            white-space: nowrap;
+            display: flex;
         }
 
         li {
@@ -257,43 +257,43 @@ footer, .chat-toolbar {
 
     .share-button {
         padding: $spacing-extra-small + 0.25rem $spacing-medium;
-        background-color: rgba(from $card-bg-light r g b / 95%);
         color: $section-title-light;
+        background-color: rgba(from $card-bg-light r g b / 95%);
+        box-shadow:
+            0 4px 12px rgb(from var(--card-shadow) r g b / 8%),
+            0 2px 6px rgb(from var(--card-shadow) r g b / 5%);
         border: 1px solid rgb(from var(--card-border) r g b / 60%);
         border-radius: $spacing-extra-small + 0.25rem;
-        display: flex;
         align-items: center;
         gap: $spacing-extra-small;
         font-size: $font-size-small;
         font-weight: $font-weight-medium;
-        box-shadow:
-            0 4px 12px rgb(from var(--card-shadow) r g b / 8%),
-            0 2px 6px rgb(from var(--card-shadow) r g b / 5%);
-        cursor: pointer;
         transition: all $transition-base $ease-in-out;
+        cursor: pointer;
+        display: flex;
 
         &:hover {
             background-color: rgba(from $card-bg-light r g b / 100%);
-            translate: 0 -2px;
             box-shadow:
                 0 8px 20px rgb(from var(--card-shadow) r g b / 12%),
                 0 4px 8px rgb(from var(--card-shadow) r g b / 8%);
+            translate: 0 -2px;
         }
 
         &:active {
-            translate: 0 0;
             box-shadow:
                 0 4px 12px rgb(from var(--card-shadow) r g b / 8%),
                 0 2px 6px rgb(from var(--card-shadow) r g b / 5%);
+            translate: 0 0;
         }
 
         &.active {
-            background: linear-gradient(120deg, color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: 10%), color.adjust(list.nth(map.get($accent-colors, primary), 2), $lightness: 10%));
             color: $header-text;
-            border-color: transparent;
+            background: linear-gradient(120deg, color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: 10%), color.adjust(list.nth(map.get($accent-colors, primary), 2), $lightness: 10%));
             box-shadow:
                 0 6px 16px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 30%),
                 0 2px 8px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 20%);
+            border-color: transparent;
         }
 
         .material-symbols-outlined {
@@ -312,11 +312,11 @@ footer, .chat-toolbar {
 
 .chat-container {
     flex: 1;
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    max-height: 100%;
-    overflow: hidden;
     position: relative;
+    max-height: 100%;
+    grid-template-columns: auto 1fr auto;
+    overflow: hidden;
+    display: grid;
 
     @media (width <= $breakpoint-huge) {
         grid-template-columns: auto 1fr;
@@ -336,9 +336,9 @@ footer, .chat-toolbar {
 }
 
 .chat-section {
-    display: grid;
-    grid-template-rows: 1fr auto;
     min-height: 0;
+    grid-template-rows: 1fr auto;
+    display: grid;
 
     @media (width <= $breakpoint-medium) {
         padding: $spacing-large + 0.25rem;
@@ -346,17 +346,17 @@ footer, .chat-toolbar {
 }
 
 .chat-messages {
-    overflow-y: auto;
-    min-height: 0;
+    position: relative;
     box-sizing: border-box;
     padding: $spacing-extra-large;
-    display: flex;
-    flex-direction: column;
-    gap: $spacing-medium + 0.25rem;
-    position: relative;
+    min-height: 0;
     background-image:
         radial-gradient(circle at 20% 50%, rgb(from var(--section-title) r g b / 1.5%) 0%, transparent 50%),
         radial-gradient(circle at 80% 80%, rgb(from var(--section-title) r g b / 1.5%) 0%, transparent 50%);
+    flex-direction: column;
+    gap: $spacing-medium + 0.25rem;
+    overflow-y: auto;
+    display: flex;
 
     @supports (scrollbar-gutter: stable) {
         scrollbar-gutter: stable;
@@ -367,15 +367,15 @@ footer, .chat-toolbar {
     }
 
     &::-webkit-scrollbar-track {
-        background-color: transparent;
         margin: $spacing-extra-small 0;
+        background-color: transparent;
     }
 
     &::-webkit-scrollbar-thumb {
         background-color: rgb(from var(--section-title) r g b / 15%);
-        border-radius: 9999px;
-        border: 2px solid transparent;
         background-clip: padding-box;
+        border: 2px solid transparent;
+        border-radius: 9999px;
         transition: background-color $transition-fast $ease;
 
         &:hover {
@@ -387,36 +387,36 @@ footer, .chat-toolbar {
     .message {
         $message-space: $spacing-medium + 0.25rem;
 
-        display: flex;
+        position: relative;
+        width: fit-content;
+        max-width: min(calc(600px + 4 * $message-space), 100%);
+        border-radius: $message-space;
         flex-direction: column;
         gap: math.div($message-space, 2);
-        width: fit-content;
-        border-radius: $message-space;
-        max-width: min(calc(600px + 4 * $message-space), 100%);
-        position: relative;
         animation: --slide-in-from-left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        display: flex;
 
         &-content {
+            position: relative;
             box-sizing: border-box;
             padding: $message-space $spacing-large;
             background-color: var(--message-bg);
-            border-radius: inherit;
-            border: 1px solid rgb(from var(--card-border) r g b / 30%);
-            position: relative;
-            overflow: hidden;
             box-shadow:
                 0 1px 3px rgb(from var(--card-shadow) r g b / 8%),
                 0 4px 12px rgb(from var(--card-shadow) r g b / 6%),
                 inset 0 1px 0 rgb(from #{$header-text} r g b / 2%);
+            border: 1px solid rgb(from var(--card-border) r g b / 30%);
+            border-radius: inherit;
+            overflow: hidden;
 
             &::before {
                 content: '';
                 position: absolute;
                 inset: 0;
                 background: linear-gradient(135deg, rgb(from #{$header-text} r g b / 2%) 0%, transparent 50%);
-                pointer-events: none;
                 opacity: 0;
                 transition: opacity $transition-base $ease;
+                pointer-events: none;
             }
 
             &:hover::before {
@@ -429,22 +429,22 @@ footer, .chat-toolbar {
 
             pre,
             code {
-                background-color: rgb(from var(--card-text) r g b / 8%);
                 padding: $spacing-tiny $spacing-extra-small;
+                background-color: rgb(from var(--card-text) r g b / 8%);
                 border-radius: $border-radius-extra-small;
                 font-family: Consolas, Monaco, 'Courier New', monospace;
                 font-size: 0.9em;
             }
 
             pre {
-                padding: $spacing-small;
                 margin: $spacing-extra-small 0;
-                overflow-x: auto;
+                padding: $spacing-small;
                 border-inline-start: 3px solid rgb(from var(--section-title) r g b / 30%);
+                overflow-x: auto;
 
                 code {
-                    background-color: transparent;
                     padding: 0;
+                    background-color: transparent;
                 }
             }
 
@@ -473,10 +473,10 @@ footer, .chat-toolbar {
         }
 
         &-timestamp {
-            align-self: end;
             padding: 0 math.div($message-space, 2);
-            opacity: $opacity-subtle;
+            align-self: end;
             font-size: $font-size-1x-small;
+            opacity: $opacity-subtle;
             transition: opacity $transition-base $ease-out;
 
             &:hover {
@@ -489,15 +489,15 @@ footer, .chat-toolbar {
             animation: --slide-in-from-right 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 
             .message-content {
+                color: $header-text;
                 background: linear-gradient(135deg,
                     color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: 10%),
                     color.adjust(list.nth(map.get($accent-colors, primary), 2), $lightness: 10%));
-                color: $header-text;
-                border-color: rgb(from #{$header-text} r g b / 15%);
                 box-shadow:
                     0 2px 8px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 25%),
                     0 8px 24px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 15%),
                     inset 0 1px 0 rgb(from #{$header-text} r g b / 15%);
+                border-color: rgb(from #{$header-text} r g b / 15%);
 
                 &::before {
                     background: linear-gradient(135deg,
@@ -520,22 +520,22 @@ footer, .chat-toolbar {
     }
 
     .tool-call-log {
-        display: flex;
+        max-width: min(calc(600px + 4 * ($spacing-medium + 0.25rem)), 100%);
         flex-direction: column;
         gap: $spacing-tiny;
-        max-width: min(calc(600px + 4 * ($spacing-medium + 0.25rem)), 100%);
+        display: flex;
 
         .tool-call-entry {
-            display: flex;
-            align-items: center;
-            gap: $spacing-extra-small;
             padding: $spacing-tiny $spacing-small;
-            border-radius: $border-radius-extra-small;
+            width: fit-content;
+            color: rgb(from var(--body-text) r g b / 70%);
             background-color: rgb(from var(--card-border) r g b / 20%);
             border: 1px solid rgb(from var(--card-border) r g b / 40%);
+            border-radius: $border-radius-extra-small;
+            align-items: center;
+            gap: $spacing-extra-small;
             font-size: $font-size-1x-small;
-            color: rgb(from var(--body-text) r g b / 70%);
-            width: fit-content;
+            display: flex;
 
             .material-symbols-outlined {
                 font-size: 0.9rem;
@@ -561,10 +561,10 @@ footer, .chat-toolbar {
 
     .message.typing {
         .message-content {
-            display: flex;
+            padding: $spacing-medium $spacing-large;
             align-items: center;
             gap: $spacing-extra-small;
-            padding: $spacing-medium $spacing-large;
+            display: flex;
         }
 
         .typing-dots {
@@ -594,8 +594,8 @@ footer, .chat-toolbar {
         }
 
         .typing-label {
-            font-size: $font-size-small;
             color: rgb(from var(--body-text) r g b / 70%);
+            font-size: $font-size-small;
         }
     }
 }

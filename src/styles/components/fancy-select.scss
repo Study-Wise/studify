@@ -8,11 +8,11 @@ $border-size: 2px;
 
 select.fancy-select,
 ::picker(select) {
-    appearance: base-select;
-    width: clamp(250px, 18%, 500px);
     box-sizing: border-box;
-    max-height: 100%;
     padding: $spacing-extra-small;
+    width: clamp(250px, 18%, 500px);
+    max-height: 100%;
+    appearance: base-select;
 }
 
 select.fancy-select {
@@ -40,14 +40,14 @@ select.fancy-select {
     option {
         box-sizing: border-box;
         padding: $spacing-extra-small;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: $spacing-extra-small;
-        outline: $border-size solid hsl(from var(--body-bg) h s l / 25%);
         background-color: hsl(from var(--body-bg) h s l / 50%);
         border-radius: $border-radius-extra-small;
+        outline: $border-size solid hsl(from var(--body-bg) h s l / 25%);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: $spacing-extra-small;
+        display: flex;
 
         &::checkmark {
             content: unset;
@@ -67,9 +67,9 @@ select.fancy-select {
 
         .model-name {
             max-width: 100%;
-            overflow-wrap: break-word;
-            text-align: center;
             line-height: $line-height-none;
+            text-align: center;
+            overflow-wrap: break-word;
 
             @supports (text-wrap: wrap) {
                 text-wrap: wrap;
@@ -78,7 +78,7 @@ select.fancy-select {
     }
 
     img {
-        aspect-ratio: 1;
         height: 0.8lh;
+        aspect-ratio: 1;
     }
 }

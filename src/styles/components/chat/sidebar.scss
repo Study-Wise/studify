@@ -35,12 +35,12 @@
 }
 
 .chat-sidebar-content {
+    padding: $spacing-medium;
     height: 100%;
-    display: flex;
     flex-direction: column;
     gap: $spacing-medium;
-    padding: $spacing-medium;
     overflow-y: auto;
+    display: flex;
 
     &::-webkit-scrollbar {
         width: 8px;
@@ -62,19 +62,19 @@
 }
 
 .sidebar-section {
-    display: flex;
-    flex-direction: column;
     background-color: rgb(from var(--card-bg) h s calc(l + 2%));
     border: 1px solid rgb(from var(--card-border) r g b / 30%);
     border-radius: $border-radius-large;
+    flex-direction: column;
+    display: flex;
 
     .section-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
         padding: $spacing-medium $spacing-medium + 0.25rem;
-        border-bottom: 1px solid rgb(from var(--card-border) r g b / 20%);
         background-color: rgb(from var(--card-bg) h s calc(l - 1%));
+        border-bottom: 1px solid rgb(from var(--card-border) r g b / 20%);
+        justify-content: space-between;
+        align-items: center;
+        display: flex;
 
         .section-title {
             display: flex;
@@ -82,38 +82,38 @@
             gap: $spacing-extra-small;
 
             .material-symbols-outlined {
-                font-size: $font-size-1x-large;
                 color: list.nth(map.get($accent-colors, primary), 1);
+                font-size: $font-size-1x-large;
             }
 
             h3 {
                 margin: 0;
+                color: var(--section-title);
                 font-size: $font-size-base;
                 font-weight: $font-weight-semibold;
-                color: var(--section-title);
             }
         }
 
         .regenerate-btn {
             padding: $spacing-extra-small;
+            color: var(--card-text);
             background-color: transparent;
             border: 1px solid rgb(from var(--card-border) r g b / 60%);
             border-radius: $border-radius-medium;
-            color: var(--card-text);
+            justify-content: center;
+            align-items: center;
+            transition: all $transition-slow $ease-in-out;
             cursor: pointer;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all $transition-slow $ease-in-out;
 
             .material-symbols-outlined {
                 font-size: $font-size-large;
             }
 
             &:hover {
+                color: list.nth(map.get($accent-colors, primary), 1);
                 background-color: rgb(from var(--card-text) r g b / 5%);
                 border-color: list.nth(map.get($accent-colors, primary), 1);
-                color: list.nth(map.get($accent-colors, primary), 1);
             }
 
             &:active {
@@ -126,38 +126,38 @@
         padding: $spacing-medium + 0.25rem;
 
         .empty-message {
-            color: var(--card-text);
-            opacity: $opacity-subtle;
-            text-align: center;
-            font-size: $font-size-small;
             margin: 0;
+            color: var(--card-text);
+            font-size: $font-size-small;
+            text-align: center;
+            opacity: $opacity-subtle;
         }
 
         .view-full-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: $spacing-extra-small;
             padding: 0.875rem $spacing-medium + 0.25rem;
-            background-color: var(--card-bg);
             color: var(--body-text);
-            text-decoration: none;
+            background-color: var(--card-bg);
             border: 1px solid var(--card-border);
             border-radius: $border-radius-medium;
+            justify-content: center;
+            align-items: center;
+            gap: $spacing-extra-small;
             font-size: $font-size-small;
             font-weight: $font-weight-medium;
+            text-decoration: none;
             transition: all $transition-slow $ease-in-out;
+            display: flex;
 
             .material-symbols-outlined {
                 font-size: $font-size-large;
             }
 
             &:hover {
-                background-color: hsl(from var(--card-bg) h s calc(l - 5%));
-                border-color: list.nth(map.get($accent-colors, primary), 1);
                 color: list.nth(map.get($accent-colors, primary), 1);
-                translate: 0 -2px;
+                background-color: hsl(from var(--card-bg) h s calc(l - 5%));
                 box-shadow: $box-shadow-medium;
+                border-color: list.nth(map.get($accent-colors, primary), 1);
+                translate: 0 -2px;
             }
 
             &:active {
@@ -176,40 +176,40 @@
         }
 
         .generate-btn {
-            display: flex;
-            align-items: center;
-            gap: $spacing-extra-small;
+            margin-block-start: $spacing-extra-small;
             padding: $spacing-small $spacing-medium;
-            background-color: list.nth(map.get($accent-colors, primary), 1);
+            width: 100%;
             color: white;
+            background-color: list.nth(map.get($accent-colors, primary), 1);
             border: 1px solid transparent;
             border-radius: $border-radius-medium;
-            cursor: pointer;
+            justify-content: center;
+            align-items: center;
+            gap: $spacing-extra-small;
             font-size: 0.9rem;
             font-weight: $font-weight-medium;
             transition: background-color $transition-fast $ease;
-            margin-block-start: $spacing-extra-small;
-            width: 100%;
-            justify-content: center;
+            cursor: pointer;
+            display: flex;
 
             &:hover:not([disabled]) {
                 background-color: list.nth(map.get($accent-colors, primary), 2);
             }
 
             &:disabled {
-                background-color: hsl(from var(--card-bg) h s calc(l - 8%));
                 color: var(--card-text);
-                border-color: var(--card-border);
+                background-color: hsl(from var(--card-bg) h s calc(l - 8%));
                 border-style: dashed;
+                border-color: var(--card-border);
                 opacity: $opacity-disabled;
                 cursor: not-allowed;
             }
 
             &:disabled:has(.spinning) {
-                background-color: list.nth(map.get($accent-colors, primary), 1);
                 color: white;
-                border-color: transparent;
+                background-color: list.nth(map.get($accent-colors, primary), 1);
                 border-style: solid;
+                border-color: transparent;
                 opacity: $opacity-subtle;
             }
 
@@ -224,10 +224,10 @@
             gap: $spacing-small;
 
             .share-status {
-                display: flex;
-                align-items: center;
                 justify-content: space-between;
+                align-items: center;
                 gap: 1rem;
+                display: flex;
 
                 .status-info {
                     display: flex;
@@ -235,15 +235,15 @@
                     gap: 0.25rem;
 
                     .status-label {
-                        font-size: $font-size-small;
                         color: var(--card-text);
-                        opacity: 0.7;
+                        font-size: $font-size-small;
                         font-weight: $font-weight-medium;
+                        opacity: 0.7;
                     }
 
                     .status-value {
-                        font-size: $font-size-small;
                         color: var(--card-text);
+                        font-size: $font-size-small;
                         font-weight: $font-weight-semibold;
                     }
                 }
@@ -256,9 +256,9 @@
                     flex-shrink: 0;
 
                     input {
-                        opacity: 0;
                         width: 0;
                         height: 0;
+                        opacity: 0;
 
                         &:checked + .toggle-slider {
                             background-color: list.nth(map.get($accent-colors, primary), 1);
@@ -276,23 +276,23 @@
 
                     .toggle-slider {
                         position: absolute;
-                        cursor: pointer;
                         inset: 0;
                         background-color: rgb(from var(--card-text) r g b / 20%);
-                        transition: all $transition-slow $ease-in-out;
                         border-radius: 26px;
+                        transition: all $transition-slow $ease-in-out;
+                        cursor: pointer;
 
                         &::before {
-                            position: absolute;
                             content: "";
-                            height: 20px;
-                            width: 20px;
-                            inset-inline-start: 3px;
+                            position: absolute;
                             inset-block-end: 3px;
+                            inset-inline-start: 3px;
+                            width: 20px;
+                            height: 20px;
                             background-color: white;
-                            transition: transform $transition-slow $ease-in-out;
-                            border-radius: 50%;
                             box-shadow: 0 0 4px rgb(0 0 0 / 20%);
+                            border-radius: 50%;
+                            transition: transform $transition-slow $ease-in-out;
                         }
                     }
                 }
@@ -300,10 +300,10 @@
 
             .share-description {
                 margin: 0;
-                font-size: 0.8125rem;
                 color: var(--card-text);
-                opacity: 0.6;
+                font-size: 0.8125rem;
                 line-height: 1.5;
+                opacity: 0.6;
             }
 
             .share-link {
@@ -316,30 +316,30 @@
 
                 .share-link-input {
                     flex: 1;
-                    min-width: 0;
                     padding: $spacing-extra-small $spacing-small;
-                    font-size: $font-size-small;
+                    min-width: 0;
                     color: var(--card-text);
                     background-color: var(--card-bg);
                     border: 1px solid var(--card-border);
                     border-radius: $border-radius-small;
+                    font-size: $font-size-small;
                     text-overflow: ellipsis;
                 }
 
                 .share-link-copy {
-                    display: flex;
-                    align-items: center;
-                    gap: $spacing-extra-small;
-                    flex-shrink: 0;
                     padding: $spacing-extra-small $spacing-small;
-                    background-color: list.nth(map.get($accent-colors, primary), 1);
                     color: white;
+                    background-color: list.nth(map.get($accent-colors, primary), 1);
                     border: none;
                     border-radius: $border-radius-small;
-                    cursor: pointer;
+                    flex-shrink: 0;
+                    align-items: center;
+                    gap: $spacing-extra-small;
                     font-size: $font-size-small;
                     font-weight: $font-weight-medium;
                     transition: background-color $transition-fast $ease;
+                    cursor: pointer;
+                    display: flex;
 
                     .material-symbols-outlined {
                         font-size: $font-size-large;
@@ -352,21 +352,21 @@
             }
 
             .delete-chat-button {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: $spacing-extra-small;
-                width: 100%;
-                padding: $spacing-small $spacing-medium;
                 margin-block-start: $spacing-small;
-                background-color: transparent;
+                padding: $spacing-small $spacing-medium;
+                width: 100%;
                 color: $color-error;
+                background-color: transparent;
                 border: 1px solid $color-error;
                 border-radius: $border-radius-medium;
-                cursor: pointer;
+                justify-content: center;
+                align-items: center;
+                gap: $spacing-extra-small;
                 font-size: 0.9rem;
                 font-weight: $font-weight-medium;
                 transition: background-color $transition-fast $ease;
+                cursor: pointer;
+                display: flex;
 
                 .material-symbols-outlined {
                     font-size: $font-size-large;
@@ -393,38 +393,38 @@
     display: none;
 
     @media (width <= $breakpoint-extra-large) {
-        display: flex;
-        gap: $spacing-extra-small;
         padding: $spacing-extra-small $spacing-medium;
         background-color: var(--card-bg);
         border-block-end: 1px solid rgb(from var(--card-border) r g b / 30%);
+        gap: $spacing-extra-small;
+        display: flex;
     }
 }
 
 .sidebar-drawer-toggle {
     flex: 1;
-    min-width: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: $spacing-extra-small;
     padding: $spacing-extra-small $spacing-small;
-    background-color: transparent;
+    min-width: 0;
     color: var(--card-text);
+    background-color: transparent;
     border: 1px solid rgb(from var(--card-border) r g b / 60%);
     border-radius: $border-radius-medium;
-    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    gap: $spacing-extra-small;
     font-size: $font-size-small;
     font-weight: $font-weight-medium;
     transition: all $transition-base $ease-in-out;
+    cursor: pointer;
+    display: flex;
 
     span:not(.material-symbols-outlined) {
         @include text-ellipsis;
     }
 
     .material-symbols-outlined {
-        font-size: $font-size-large;
         color: list.nth(map.get($accent-colors, primary), 1);
+        font-size: $font-size-large;
     }
 
     &:hover {
@@ -440,11 +440,11 @@ body:has(.sidebar-drawer-input.right:focus-visible) .sidebar-drawer-toggle.right
 }
 
 .sidebar-drawer-backdrop {
-    display: none;
     position: fixed;
     inset: 0;
-    z-index: $z-index-popover - 1;
     background-color: rgb(0 0 0 / 40%);
+    z-index: $z-index-popover - 1;
+    display: none;
 }
 
 .sidebar-drawer-close {
@@ -456,10 +456,10 @@ body:has(.sidebar-drawer-input.right:focus-visible) .sidebar-drawer-toggle.right
     .chat-sidebar.right {
         position: fixed;
         inset-block: 0;
-        z-index: $z-index-popover;
         width: min(350px, 85vw);
-        visibility: hidden;
         box-shadow: $box-shadow-large;
+        visibility: hidden;
+        z-index: $z-index-popover;
         transition:
             translate $transition-slow $ease-in-out,
             visibility 0s linear $transition-slow;
@@ -482,10 +482,10 @@ body:has(.sidebar-drawer-input.right:focus-visible) .sidebar-drawer-toggle.right
     body:has(.sidebar-drawer-input.left:checked) .chat-sidebar.left,
     body:has(.sidebar-drawer-input.right:checked) .chat-sidebar.right {
         visibility: visible;
-        translate: 0;
         transition:
             translate $transition-slow $ease-in-out,
             visibility 0s;
+        translate: 0;
 
         @media (prefers-reduced-motion: reduce) {
             transition: none;
@@ -503,18 +503,18 @@ body:has(.sidebar-drawer-input.right:focus-visible) .sidebar-drawer-toggle.right
     }
 
     .sidebar-drawer-close {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        align-self: end;
         width: 40px;
         height: 40px;
-        flex-shrink: 0;
-        background-color: transparent;
         color: var(--card-text);
+        background-color: transparent;
         border: 1px solid rgb(from var(--card-border) r g b / 60%);
         border-radius: $border-radius-medium;
+        flex-shrink: 0;
+        justify-content: center;
+        align-items: center;
+        align-self: end;
         cursor: pointer;
+        display: flex;
 
         &:hover {
             background-color: rgb(from var(--card-text) r g b / 5%);

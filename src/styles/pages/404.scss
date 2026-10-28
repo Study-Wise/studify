@@ -7,24 +7,24 @@
 @use 'sass:map';
 
 .error-404-container {
-    min-height: 80vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     padding: $spacing-extra-large $spacing-medium;
+    min-height: 80vh;
+    justify-content: center;
+    align-items: center;
+    display: flex;
 
     .error-content {
+        padding: $spacing-extra-large * 2;
         max-width: 600px;
         text-align: center;
-        padding: $spacing-extra-large * 2;
         animation: --fade-in 0.6s $ease-out forwards;
 
         .error-icon {
             margin-bottom: $spacing-large;
 
             .material-symbols-outlined {
-                font-size: 6rem;
                 color: list.nth(map.get($accent-colors, primary), 1);
+                font-size: 6rem;
                 opacity: 0.6;
                 animation: --float 3s ease-in-out infinite;
             }
@@ -42,68 +42,68 @@
         }
 
         .error-subtitle {
+            margin-bottom: $spacing-large;
+            color: var(--card-text);
             font-size: $font-size-2x-large;
             font-weight: $font-weight-semibold;
-            color: var(--card-text);
-            margin-bottom: $spacing-large;
             animation: --slide-in-up 0.6s $ease-out forwards;
         }
 
         .error-message {
-            font-size: $font-size-large;
-            color: var(--body-text);
             margin-bottom: $spacing-extra-large;
+            color: var(--body-text);
+            font-size: $font-size-large;
             line-height: $line-height-relaxed;
             animation: --fade-in 0.6s 0.2s $ease-out both;
         }
 
         .error-actions {
-            display: flex;
-            gap: $spacing-medium;
-            justify-content: center;
-            flex-wrap: wrap;
             margin-bottom: $spacing-extra-large;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: $spacing-medium;
             animation: --fade-in 0.6s 0.3s $ease-out both;
+            display: flex;
 
             a {
-                display: inline-flex;
+                padding: $spacing-small $spacing-large;
+                box-shadow: $box-shadow-medium;
+                border-radius: $border-radius-large;
                 align-items: center;
                 gap: $spacing-small;
-                padding: $spacing-small $spacing-large;
-                border-radius: $border-radius-large;
-                text-decoration: none;
-                font-weight: $font-weight-semibold;
                 font-size: $font-size-base;
-                box-shadow: $box-shadow-medium;
+                font-weight: $font-weight-semibold;
+                text-decoration: none;
                 transition:
                     scale $transition-base $ease-out,
                     box-shadow $transition-base $ease-out,
                     translate $transition-base $ease-out;
+                display: inline-flex;
 
                 .material-symbols-outlined {
                     font-size: 1.25rem;
                 }
 
                 &:hover {
-                    scale: 1.05;
-                    translate: 0 -2px;
                     box-shadow: $box-shadow-large;
+                    translate: 0 -2px;
+                    scale: 1.05;
                 }
 
                 &:active {
-                    scale: 1.02;
                     translate: 0 0;
+                    scale: 1.02;
                 }
             }
 
             .btn.primary {
-                background: $section-title-light;
                 color: $header-text;
+                background: $section-title-light;
             }
 
             .btn.secondary {
-                background-color: var(--card-bg);
                 color: var(--body-text);
+                background-color: var(--card-bg);
                 border: 2px solid var(--card-border);
 
                 &:hover {
@@ -119,10 +119,10 @@
             animation: --fade-in 0.6s 0.4s $ease-out both;
 
             h3 {
+                margin-bottom: $spacing-large;
+                color: var(--card-text);
                 font-size: $font-size-large;
                 font-weight: $font-weight-semibold;
-                color: var(--card-text);
-                margin-bottom: $spacing-large;
             }
 
             .suggestions-grid {
@@ -131,28 +131,28 @@
                 gap: $spacing-medium;
 
                 .suggestion-card {
-                    display: flex;
+                    padding: $spacing-medium;
+                    color: inherit;
+                    background-color: var(--card-bg);
+                    box-shadow: $box-shadow-small;
+                    border: 1px solid var(--card-border);
+                    border-radius: $border-radius-large;
                     flex-direction: column;
                     align-items: center;
                     gap: $spacing-small;
-                    padding: $spacing-medium;
-                    background-color: var(--card-bg);
-                    border: 1px solid var(--card-border);
-                    border-radius: $border-radius-large;
                     text-decoration: none;
-                    color: inherit;
-                    box-shadow: $box-shadow-small;
                     transition:
                         scale $transition-base $ease-out,
                         box-shadow $transition-base $ease-out,
                         translate $transition-base $ease-out,
                         border-color $transition-base $ease-out;
+                    display: flex;
 
                     &:hover {
-                        scale: 1.05;
-                        translate: 0 -4px;
                         box-shadow: $box-shadow-medium;
                         border-color: list.nth(map.get($accent-colors, primary), 1);
+                        translate: 0 -4px;
+                        scale: 1.05;
 
                         .suggestion-icon {
                             scale: 1.15;
@@ -160,8 +160,8 @@
                     }
 
                     &:active {
-                        scale: 1.02;
                         translate: 0 -2px;
+                        scale: 1.02;
                     }
 
                     .suggestion-icon {
@@ -170,9 +170,9 @@
                     }
 
                     .suggestion-text {
+                        color: var(--body-text);
                         font-size: $font-size-small;
                         font-weight: $font-weight-medium;
-                        color: var(--body-text);
                         text-align: center;
                     }
                 }

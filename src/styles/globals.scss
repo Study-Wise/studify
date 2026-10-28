@@ -14,18 +14,18 @@
 @use 'sass:map';
 
 .material-symbols-outlined {
-    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-    aspect-ratio: 1;
-    height: 1lh;
     width: 1lh;
+    height: 1lh;
+    aspect-ratio: 1;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 
     &:is(button) {
-        padding: 0;
         margin: 0;
-        border: none;
-        background-color: transparent;
-        cursor: pointer;
+        padding: 0;
         color: inherit;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
     }
 }
 
@@ -60,9 +60,9 @@ ul, ol {
 }
 
 input, textarea, select, button {
+    color: inherit;
     font-family: inherit;
     font-size: inherit;
-    color: inherit;
 }
 
 :root {
@@ -168,13 +168,13 @@ input, textarea, select, button {
 }
 
 body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    line-height: 1.6;
+    min-height: 100dvh;
     color: var(--body-text);
     background-color: var(--body-bg);
-    display: flex;
     flex-direction: column;
-    min-height: 100dvh;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    line-height: 1.6;
+    display: flex;
 }
 
 @media screen {
@@ -201,12 +201,12 @@ body {
 
 select.fancy-select,
 ::picker(select) {
-    appearance: base-select;
-    width: clamp(250px, 18%, 500px);
     box-sizing: border-box;
-    max-height: 100%;
     padding: 0.25rem;
+    width: clamp(250px, 18%, 500px);
+    max-height: 100%;
     gap: 0.5rem;
+    appearance: base-select;
 
 }
 
@@ -226,11 +226,11 @@ select.fancy-select {
         margin-block: 0.25rem;
         padding: 0.25rem 0.5rem;
         height: 1.25lh;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
         background-color: hsl(from var(--body-bg) h s l / 50%);
         border-radius: 0.25rem;
+        align-items: center;
+        gap: 0.5rem;
+        display: flex;
 
         &::checkmark {
             content: unset;
@@ -246,8 +246,8 @@ select.fancy-select {
     }
 
     img {
-        aspect-ratio: 1;
         height: 0.8lh;
+        aspect-ratio: 1;
     }
 }
 
@@ -272,8 +272,8 @@ main {
 
         &:not(.chat-header h2, .about-name) {
             margin-block-end: 25px;
-            border-block-end: 1px solid #{$section-title-border};
             padding-block-end: 12px;
+            border-block-end: 1px solid #{$section-title-border};
         }
 
         i {
@@ -284,18 +284,18 @@ main {
 }
 
 .model-selector {
-    place-content: end;
-    display: flex;
     align-items: center;
+    place-content: end;
     gap: 10px;
+    display: flex;
 }
 
 mjx-container {
-    display: inline-block !important;
+    max-width: 100%;
     line-height: normal !important;
     vertical-align: middle !important;
     text-align: left !important;
-    max-width: 100%;
+    display: inline-block !important;
 
     &[display="true"] {
         display: block !important;

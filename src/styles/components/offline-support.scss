@@ -3,15 +3,15 @@
     top: 0;
     left: 0;
     right: 0;
-    background: #f59e0b;
-    color: white;
     padding: 8px 16px;
-    display: flex;
+    color: white;
+    background: #f59e0b;
+    box-shadow: 0 0 4px rgb(0 0 0 / 10%);
     align-items: center;
     gap: 8px;
     font-size: 14px;
     z-index: 1000;
-    box-shadow: 0 0 4px rgb(0 0 0 / 10%);
+    display: flex;
 }
 
 .update-indicator {
@@ -19,26 +19,26 @@
     top: 0;
     left: 0;
     right: 0;
-    background: #10b981;
-    color: white;
     padding: 8px 16px;
-    display: flex;
+    color: white;
+    background: #10b981;
+    box-shadow: 0 0 4px rgb(0 0 0 / 10%);
     align-items: center;
     gap: 8px;
     font-size: 14px;
     z-index: 1000;
-    box-shadow: 0 0 4px rgb(0 0 0 / 10%);
+    display: flex;
 }
 
 .update-button {
+    margin-left: auto;
+    padding: 4px 12px;
+    color: white;
     background: rgb(255 255 255 / 20%);
     border: 1px solid rgb(255 255 255 / 30%);
-    color: white;
-    padding: 4px 12px;
     border-radius: 4px;
-    cursor: pointer;
     font-size: 12px;
-    margin-left: auto;
+    cursor: pointer;
 
     &:hover {
         background: rgb(255 255 255 / 30%);

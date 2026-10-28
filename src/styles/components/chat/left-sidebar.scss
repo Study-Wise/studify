@@ -14,21 +14,21 @@
 
     .chat-sidebar-content.left {
         .upload-button {
-            display: flex;
-            align-items: center;
-            gap: $spacing-extra-small;
+            margin-block-end: $spacing-small;
             padding: $spacing-small $spacing-medium;
-            background-color: list.nth(map.get($accent-colors, primary), 1);
+            width: 100%;
             color: white;
+            background-color: list.nth(map.get($accent-colors, primary), 1);
             border: none;
             border-radius: $border-radius-medium;
-            cursor: pointer;
+            justify-content: center;
+            align-items: center;
+            gap: $spacing-extra-small;
             font-size: 0.9rem;
             font-weight: $font-weight-medium;
             transition: background-color $transition-fast $ease;
-            margin-block-end: $spacing-small;
-            width: 100%;
-            justify-content: center;
+            cursor: pointer;
+            display: flex;
 
             &:hover {
                 background-color: list.nth(map.get($accent-colors, primary), 2);
@@ -38,9 +38,9 @@
         .upload-limits {
             margin-block: 0 $spacing-small;
             color: var(--card-text);
-            opacity: $opacity-subtle;
             font-size: $font-size-small;
             text-align: center;
+            opacity: $opacity-subtle;
         }
 
         .section-body {
@@ -50,22 +50,22 @@
                 gap: $spacing-extra-small;
 
                 .empty-message {
-                    color: var(--card-text);
-                    opacity: $opacity-subtle;
-                    text-align: center;
                     padding: $spacing-extra-large $spacing-medium;
+                    color: var(--card-text);
                     font-size: $font-size-small;
+                    text-align: center;
+                    opacity: $opacity-subtle;
                 }
 
                 .file-item {
-                    display: flex;
-                    align-items: center;
-                    gap: $spacing-small;
                     padding: $spacing-small;
                     background-color: var(--card-bg);
                     border: 1px solid var(--card-border);
                     border-radius: $border-radius-small;
+                    align-items: center;
+                    gap: $spacing-small;
                     transition: all $transition-base $ease-out;
+                    display: flex;
 
                     &:hover {
                         background-color: rgb(from var(--card-text) r g b / 5%);
@@ -73,18 +73,18 @@
                     }
 
                     .file-icon {
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
                         width: 40px;
                         height: 40px;
                         background-color: rgb(from #{list.nth(map.get($accent-colors, primary), 1)} r g b / 10%);
                         border-radius: $border-radius-small;
                         flex-shrink: 0;
+                        justify-content: center;
+                        align-items: center;
+                        display: flex;
 
                         .material-symbols-outlined {
-                            font-size: $font-size-1x-large;
                             color: list.nth(map.get($accent-colors, primary), 1);
+                            font-size: $font-size-1x-large;
                         }
                     }
 
@@ -96,43 +96,43 @@
                         gap: 2px;
 
                         .file-name {
+                            color: var(--card-text);
                             font-size: $font-size-small;
                             font-weight: $font-weight-medium;
-                            color: var(--card-text);
 
                             @include text-ellipsis;
                         }
 
                         .file-size {
-                            font-size: $font-size-1x-small;
                             color: var(--card-text);
+                            font-size: $font-size-1x-small;
                             opacity: $opacity-subtle;
                         }
                     }
 
                     .file-delete {
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
                         width: 40px;
                         height: 40px;
                         background-color: rgb(from #{$color-error} r g b / 8%);
                         border: none;
                         border-radius: $border-radius-small;
-                        cursor: pointer;
                         flex-shrink: 0;
-                        transition: all $transition-base $ease-out;
+                        justify-content: center;
+                        align-items: center;
                         opacity: $opacity-overlay;
+                        transition: all $transition-base $ease-out;
+                        cursor: pointer;
+                        display: flex;
 
                         .material-symbols-outlined {
-                            font-size: $font-size-1x-large;
                             color: $color-error;
+                            font-size: $font-size-1x-large;
                         }
 
                         &:hover,
                         &:focus-visible {
-                            opacity: 1;
                             background-color: rgb(from #{$color-error} r g b / 15%);
+                            opacity: 1;
                         }
 
                         &:disabled {

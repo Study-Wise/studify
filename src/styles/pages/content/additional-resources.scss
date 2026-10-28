@@ -12,15 +12,15 @@
         text-align: center;
 
         .resources-title {
+            margin-block-end: 0.5rem;
+            color: var(--body-text);
             font-size: 2rem;
             font-weight: 700;
-            color: var(--body-text);
-            margin-block-end: 0.5rem;
         }
 
         .resources-subtitle {
-            font-size: 1rem;
             color: rgb(from var(--body-text) r g b / 70%);
+            font-size: 1rem;
         }
     }
 
@@ -28,23 +28,23 @@
         margin-block-end: 3rem;
 
         .section-header {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
             margin-block-end: 1.5rem;
             padding-block-end: 0.75rem;
             border-block-end: 2px solid var(--border-color);
+            align-items: center;
+            gap: 0.75rem;
+            display: flex;
 
             .material-symbols-outlined {
-                font-size: 1.75rem;
                 color: list.nth(map.get($accent-colors, primary), 1);
+                font-size: 1.75rem;
             }
 
             h2 {
+                margin: 0;
+                color: var(--body-text);
                 font-size: 1.5rem;
                 font-weight: 600;
-                color: var(--body-text);
-                margin: 0;
             }
         }
 
@@ -55,21 +55,21 @@
         }
 
         .resource-card {
-            display: flex;
-            flex-direction: column;
+            height: 100%;
+            color: inherit;
             background-color: var(--message-bg);
             border: 1px solid var(--border-color);
             border-radius: 0.75rem;
-            overflow: hidden;
-            transition: all 0.2s $ease;
+            flex-direction: column;
             text-decoration: none;
-            color: inherit;
-            height: 100%;
+            transition: all 0.2s $ease;
+            overflow: hidden;
+            display: flex;
 
             &:hover {
-                translate: 0 -2px;
                 box-shadow: 0 0 12px rgb(0 0 0 / 10%);
                 border-color: list.nth(map.get($accent-colors, primary), 1);
+                translate: 0 -2px;
 
                 .resource-icon {
                     transform: scale(1.05);
@@ -77,15 +77,15 @@
             }
 
             .resource-icon {
-                display: flex;
-                align-items: center;
-                justify-content: center;
                 height: 80px;
+                justify-content: center;
+                align-items: center;
                 transition: transform 0.2s $ease;
+                display: flex;
 
                 .material-symbols-outlined {
-                    font-size: 2.5rem;
                     color: white;
+                    font-size: 2.5rem;
                 }
 
                 &.simulation {
@@ -110,10 +110,10 @@
             }
 
             .resource-content {
-                display: flex;
-                flex-direction: column;
                 flex: 1;
                 padding: 1.25rem;
+                flex-direction: column;
+                display: flex;
 
                 .resource-title {
                     font-size: 1.125rem;
@@ -148,21 +148,21 @@
                 }
 
                 .resource-footer {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
                     padding-block-start: 0.75rem;
                     border-block-start: 1px solid var(--border-color);
+                    justify-content: space-between;
+                    align-items: center;
+                    display: flex;
 
                     .resource-source {
-                        font-size: 0.75rem;
                         color: rgb(from var(--body-text) r g b / 50%);
+                        font-size: 0.75rem;
                         font-weight: 500;
                     }
 
                     .material-symbols-outlined {
-                        font-size: 1rem;
                         color: list.nth(map.get($accent-colors, primary), 1);
+                        font-size: 1rem;
                     }
                 }
             }

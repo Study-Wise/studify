@@ -8,20 +8,20 @@ $color: list.nth(map.get($accent-colors, primary), 1);
 
 .install-prompt {
     position: fixed;
-    inset-inline: $spacing-medium;
     bottom: $spacing-medium;
-    max-width: 40rem;
+    inset-inline: $spacing-medium;
     margin-inline: auto;
     padding: $spacing-small $spacing-medium;
-    background-color: var(--card-bg);
+    max-width: 40rem;
     color: var(--card-text);
+    background-color: var(--card-bg);
+    box-shadow: 0 0 $spacing-medium rgb(from var(--body-text) r g b / 25%);
     border: 1px solid var(--card-border);
     border-radius: $border-radius-large;
-    box-shadow: 0 0 $spacing-medium rgb(from var(--body-text) r g b / 25%);
-    display: flex;
     align-items: center;
     gap: $spacing-small;
     z-index: 1000;
+    display: flex;
 
     &[hidden] {
         display: none;
@@ -47,12 +47,12 @@ $color: list.nth(map.get($accent-colors, primary), 1);
         border-radius: $border-radius-medium;
         font-size: $font-size-small;
         font-weight: 500;
-        cursor: pointer;
         transition: all $transition-base $ease;
+        cursor: pointer;
 
         &.primary {
-            background-color: $color;
             color: white;
+            background-color: $color;
             border: none;
 
             &:hover {
@@ -61,8 +61,8 @@ $color: list.nth(map.get($accent-colors, primary), 1);
         }
 
         &.secondary {
-            background-color: var(--body-bg);
             color: var(--card-text);
+            background-color: var(--body-bg);
             border: 1px solid var(--card-border);
 
             &:hover {

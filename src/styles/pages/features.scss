@@ -5,34 +5,34 @@
 @use 'sass:map';
 
 .features-content {
-    max-width: 800px;
     margin: 0 auto;
+    max-width: 800px;
 
     h1 {
+        margin-block-end: $spacing-medium;
         color: list.nth(map.get($accent-colors, primary), 1);
         font-size: 2.5rem;
-        margin-block-end: $spacing-medium;
         text-align: center;
     }
 
     h2 {
-        color: list.nth(map.get($accent-colors, primary), 1);
-        font-size: 1.8rem;
         margin-block: $spacing-extra-large $spacing-medium;
-        border-block-end: 2px solid list.nth(map.get($accent-colors, secondary), 1);
         padding-block-end: $spacing-extra-small;
+        color: list.nth(map.get($accent-colors, primary), 1);
+        border-block-end: 2px solid list.nth(map.get($accent-colors, secondary), 1);
+        font-size: 1.8rem;
     }
 
     h3 {
+        margin-block: $spacing-large $spacing-small + 0.05rem;
         color: var(--body-text);
         font-size: 1.3rem;
-        margin-block: $spacing-large $spacing-small + 0.05rem;
     }
 
     p {
+        margin-block-end: $spacing-medium;
         color: rgb(from var(--body-text) r g b / 70%);
         line-height: $line-height-relaxed + 0.075;
-        margin-block-end: $spacing-medium;
     }
 
     ul {
@@ -41,17 +41,17 @@
     }
 
     li {
-        color: rgb(from var(--body-text) r g b / 70%);
         margin-block-end: $spacing-extra-small;
+        color: rgb(from var(--body-text) r g b / 70%);
         line-height: $line-height-relaxed;
     }
 
     code {
-        background-color: var(--message-bg);
         padding: $spacing-tiny - 0.05rem $spacing-extra-small;
+        color: list.nth(map.get($accent-colors, secondary), 1);
+        background-color: var(--message-bg);
         border-radius: $border-radius-extra-small;
         font-family: 'JetBrains Mono', monospace;
-        color: list.nth(map.get($accent-colors, secondary), 1);
     }
 
     ol {
@@ -59,8 +59,8 @@
         padding-inline-start: $spacing-large;
 
         li {
-            color: rgb(from var(--body-text) r g b / 70%);
             margin-block-end: $spacing-extra-small;
+            color: rgb(from var(--body-text) r g b / 70%);
             line-height: $line-height-relaxed;
         }
     }

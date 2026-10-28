@@ -4,20 +4,20 @@
 @use 'sass:color';
 
 .header-nav {
-    display: flex;
-    gap: 15px;
     flex-wrap: wrap;
+    gap: 15px;
+    display: flex;
 
     .nav-btn {
-        display: flex;
-        align-items: center;
-        gap: 0.25em;
-        text-decoration: none;
         padding: 8px 12px;
         border-radius: $border-radius-medium;
+        align-items: center;
+        gap: 0.25em;
         font-weight: $font-weight-medium;
+        text-decoration: none;
         white-space: nowrap;
         transition: all $transition-fast $ease;
+        display: flex;
 
         &:hover, &:focus-visible, &.active {
             color: $header-text;
@@ -38,8 +38,8 @@
     }
 
     &:not(.lite) .nav-btn {
-        background-color: $section-title-light;
         color: $header-text;
+        background-color: $section-title-light;
     }
 
     &.lite .nav-btn {

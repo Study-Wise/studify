@@ -7,9 +7,9 @@
 
 // Single line text overflow with ellipsis
 @mixin text-ellipsis {
-    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    overflow: hidden;
 }
 
 // Multi-line text overflow
@@ -31,10 +31,10 @@
 
 // Content wrapper with max width and padding
 @mixin content-wrapper($max-width: $container-max-width, $padding: $container-padding) {
-    width: 100%;
-    max-width: $max-width;
     margin-inline: auto;
     padding: $padding;
+    width: 100%;
+    max-width: $max-width;
 }
 
 // INTERACTIVE EFFECTS
@@ -45,8 +45,8 @@
                 box-shadow $transition-base $ease-out;
 
     &:hover:not(:disabled) {
-        translate: 0 $lift;
         box-shadow: $shadow;
+        translate: 0 $lift;
     }
 
     &:active:not(:disabled) {
@@ -78,15 +78,15 @@
         inset: 0;
         background-color: $color;
         border-radius: inherit;
-        scale: 0;
         opacity: 0;
+        scale: 0;
     }
 
     &:active::after {
-        scale: 2;
         opacity: 1;
         transition: scale $transition-slower $ease-out,
                     opacity $transition-base;
+        scale: 2;
     }
 }
 
@@ -113,10 +113,10 @@
             transparent
         );
         border-radius: inherit;
-        pointer-events: none;
         opacity: 0;
-        transition: opacity $transition-base $ease-out;
         z-index: -1;
+        transition: opacity $transition-base $ease-out;
+        pointer-events: none;
     }
 
     &:hover::before {
@@ -167,16 +167,16 @@
 // Common empty state pattern used across content pages
 
 @mixin empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     padding: 4rem 2rem;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     text-align: center;
+    display: flex;
 
     .material-symbols-outlined {
-        font-size: 4rem;
         margin-block-end: 1rem;
+        font-size: 4rem;
         opacity: 0.5;
     }
 
@@ -186,24 +186,24 @@
     }
 
     p {
-        color: var(--body-text);
         margin-block-end: 1.5rem;
+        color: var(--body-text);
     }
 
     .btn.primary {
-        display: inline-block;
-        background-color: var(--card-bg);
-        color: var(--body-text);
         padding: 0.75rem 1.5rem;
+        color: var(--body-text);
+        background-color: var(--card-bg);
+        border: 1px solid var(--card-border);
         border-radius: 8px;
         text-decoration: none;
-        border: 1px solid var(--card-border);
         transition: all 0.3s $ease;
+        display: inline-block;
 
         &:hover {
             background-color: hsl(from var(--card-bg) h s calc(l - 5%));
-            translate: 0 -2px;
             box-shadow: 0 0 15px var(--card-shadow);
+            translate: 0 -2px;
         }
     }
 }

@@ -19,10 +19,10 @@
         }
 
         h2 {
+            margin: 0 0 0.5rem;
+            color: var(--body-text);
             font-size: 1.5rem;
             font-weight: 600;
-            color: var(--body-text);
-            margin: 0 0 0.5rem;
         }
 
         p {
@@ -31,8 +31,8 @@
         }
 
         .btn.primary {
-            background-color: $section-title-light;
             color: white;
+            background-color: $section-title-light;
             border: none;
             border-radius: 0.5rem;
             font-weight: 500;
@@ -40,9 +40,9 @@
 
             &:hover {
                 background-color: $section-title-light;
+                box-shadow: none;
                 filter: brightness(1.1);
                 translate: none;
-                box-shadow: none;
             }
         }
     }
@@ -56,8 +56,8 @@
         .mind-map-iframe {
             flex: 1;
             width: 100%;
-            border: none;
             background-color: white;
+            border: none;
         }
     }
 }

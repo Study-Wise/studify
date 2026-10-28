@@ -2,10 +2,10 @@
 @use '../variables/tokens' as *;
 
 .footer {
-    text-align: center;
     padding: $spacing-medium;
-    border-block-start: 1px solid #dee2e6;
     background-color: var(--body-bg);
+    border-block-start: 1px solid #dee2e6;
+    text-align: center;
 
     [data-hide-copyright="true"] & {
         margin-block-start: 0;

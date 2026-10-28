@@ -15,30 +15,30 @@ body:has(.webpage-page) {
     .empty-state {
         flex: 1;
         padding: $spacing-extra-large;
-        opacity: 1;
         color: var(--card-text);
+        opacity: 1;
 
         .material-symbols-outlined {
+            margin-block-end: $spacing-medium;
             color: rgb(from var(--card-text) r g b / 70%);
             opacity: 1;
-            margin-block-end: $spacing-medium;
         }
 
         h2 {
-            font-size: $font-size-1x-large;
             margin: 0 0 $spacing-small;
+            font-size: $font-size-1x-large;
         }
 
         p {
+            margin-block-end: $spacing-large;
             color: rgb(from var(--card-text) r g b / 70%);
             opacity: 1;
-            margin-block-end: $spacing-large;
         }
 
         .btn.primary {
             padding: $spacing-medium $spacing-large;
-            background-color: $section-title-light;
             color: white;
+            background-color: $section-title-light;
             border: none;
             border-radius: $border-radius-medium;
             font-weight: 500;
@@ -46,9 +46,9 @@ body:has(.webpage-page) {
 
             &:hover {
                 background-color: $section-title-light;
+                box-shadow: none;
                 filter: brightness(1.1);
                 translate: none;
-                box-shadow: none;
             }
         }
     }

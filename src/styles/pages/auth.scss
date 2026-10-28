@@ -8,12 +8,12 @@
 @use 'sass:map';
 
 .auth-page {
-    min-height: 100dvh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     padding: $spacing-large;
+    min-height: 100dvh;
     background: var(--body-bg);
+    justify-content: center;
+    align-items: center;
+    display: flex;
 
     @media (width <= $breakpoint-small) {
         padding: $spacing-medium;
@@ -21,17 +21,17 @@
 }
 
 .auth-container {
+    margin: 0 auto;
     width: 100%;
     max-width: 28rem;
-    margin: 0 auto;
 }
 
 .auth-card {
-    background: var(--card-bg);
-    border-radius: $border-radius-extra-large;
-    box-shadow: 0 0 16px var(--card-shadow);
     padding: $spacing-huge;
+    background: var(--card-bg);
+    box-shadow: 0 0 16px var(--card-shadow);
     border: 1px solid var(--card-border);
+    border-radius: $border-radius-extra-large;
     transition: $transition-all;
 
     @media (width <= $breakpoint-small) {
@@ -40,12 +40,12 @@
 }
 
 .auth-title {
-    font-size: $font-size-3x-large;
-    font-weight: $font-weight-bold;
-    text-align: center;
     margin: 0 0 $spacing-extra-small;
     color: var(--card-text);
+    font-size: $font-size-3x-large;
+    font-weight: $font-weight-bold;
     line-height: $line-height-tight;
+    text-align: center;
 
     @media (width <= $breakpoint-small) {
         font-size: $font-size-2x-large;
@@ -53,11 +53,11 @@
 }
 
 .auth-subtitle {
-    font-size: $font-size-base;
-    text-align: center;
     margin: 0 0 $spacing-extra-large;
     color: hsl(from var(--card-text) h s l / 60%);
+    font-size: $font-size-base;
     line-height: $line-height-normal;
+    text-align: center;
 
     @media (width <= $breakpoint-small) {
         font-size: $font-size-small;
@@ -77,32 +77,32 @@
 }
 
 .form-label {
+    margin: 0;
+    color: var(--card-text);
     font-size: $font-size-small;
     font-weight: $font-weight-medium;
-    color: var(--card-text);
-    margin: 0;
 }
 
 .form-input {
-    width: 100%;
     padding: $spacing-small $spacing-medium;
-    font-size: $font-size-base;
-    line-height: $line-height-normal;
+    width: 100%;
     color: var(--card-text);
     background: hsl(from var(--card-bg) h s calc(l + 2%));
     border: 1px solid #{$input-border};
     border-radius: $border-radius-medium;
+    outline: none;
+    font-size: $font-size-base;
+    line-height: $line-height-normal;
     transition: $transition-colors, border-color $transition-base $ease-out,
         box-shadow $transition-base $ease-out;
-    outline: none;
 
     &::placeholder {
         color: hsl(from var(--card-text) h s l / 40%);
     }
 
     &:focus {
-        border-color: list.nth(map.get(colors.$accent-colors, 'primary'), 1);
         box-shadow: 0 0 0 3px hsl(from #{list.nth(map.get(colors.$accent-colors, 'primary'), 1)} h s l / 15%);
+        border-color: list.nth(map.get(colors.$accent-colors, 'primary'), 1);
     }
 
     &:disabled {
@@ -112,33 +112,33 @@
 }
 
 .auth-button {
-    width: 100%;
     padding: $spacing-small $spacing-large;
-    font-size: $font-size-base;
-    font-weight: $font-weight-semibold;
+    width: 100%;
     color: #fff;
     background: linear-gradient(
         135deg,
         list.nth(map.get(colors.$accent-colors, 'primary'), 1),
         list.nth(map.get(colors.$accent-colors, 'primary'), 2)
     );
+    box-shadow: $box-shadow-small;
     border: none;
     border-radius: $border-radius-medium;
-    cursor: pointer;
+    outline: none;
+    font-size: $font-size-base;
+    font-weight: $font-weight-semibold;
     transition: $transition-transform, opacity $transition-base $ease-out,
         box-shadow $transition-base $ease-out;
-    box-shadow: $box-shadow-small;
-    outline: none;
+    cursor: pointer;
 
     &:hover {
+        box-shadow: $box-shadow-medium;
         opacity: $opacity-hover;
         translate: 0 -1px;
-        box-shadow: $box-shadow-medium;
     }
 
     &:active {
-        translate: 0 0;
         box-shadow: $box-shadow-extra-small;
+        translate: 0 0;
     }
 
     &:focus-visible {
@@ -148,18 +148,18 @@
 
     &:disabled {
         opacity: $opacity-disabled;
-        cursor: not-allowed;
         transform: none;
+        cursor: not-allowed;
     }
 }
 
 .auth-divider {
-    display: flex;
-    align-items: center;
-    text-align: center;
     margin: $spacing-large 0;
     color: hsl(from var(--card-text) h s l / 50%);
+    align-items: center;
     font-size: $font-size-small;
+    text-align: center;
+    display: flex;
 
     &::before,
     &::after {
@@ -180,24 +180,24 @@
 }
 
 .social-button {
-    width: 100%;
     padding: $spacing-small $spacing-large;
-    font-size: $font-size-base;
-    font-weight: $font-weight-medium;
+    width: 100%;
     color: var(--card-text);
     background: hsl(from var(--card-bg) h s calc(l + 2%));
+    box-shadow: $box-shadow-extra-small;
     border: 1px solid var(--card-border);
     border-radius: $border-radius-medium;
-    cursor: pointer;
+    outline: none;
+    justify-content: center;
+    align-items: center;
+    gap: $spacing-small;
+    font-size: $font-size-base;
+    font-weight: $font-weight-medium;
+    text-decoration: none;
     transition: $transition-colors, border-color $transition-base $ease-out,
         box-shadow $transition-base $ease-out, transform $transition-base $ease-out;
-    box-shadow: $box-shadow-extra-small;
-    outline: none;
-    text-decoration: none;
+    cursor: pointer;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: $spacing-small;
 
     svg {
         width: 18px;
@@ -207,14 +207,14 @@
 
     &:hover {
         background: hsl(from var(--card-bg) h s calc(l - 2%));
-        border-color: hsl(from var(--card-border) h s calc(l - 10%));
         box-shadow: $box-shadow-small;
+        border-color: hsl(from var(--card-border) h s calc(l - 10%));
         translate: 0 -1px;
     }
 
     &:active {
-        translate: 0 0;
         box-shadow: $box-shadow-extra-small;
+        translate: 0 0;
     }
 
     &:focus-visible {
@@ -224,8 +224,8 @@
 
     &:disabled {
         opacity: $opacity-disabled;
-        cursor: not-allowed;
         transform: none;
+        cursor: not-allowed;
     }
 }
 
@@ -235,8 +235,8 @@
 
     p {
         margin: 0;
-        font-size: $font-size-small;
         color: hsl(from var(--card-text) h s l / 60%);
+        font-size: $font-size-small;
         line-height: $line-height-normal;
     }
 }
@@ -255,16 +255,16 @@
     }
 
     &:focus-visible {
+        border-radius: $border-radius-extra-small;
         outline: 2px solid list.nth(map.get(colors.$accent-colors, 'primary'), 1);
         outline-offset: 2px;
-        border-radius: $border-radius-extra-small;
     }
 }
 
 .loading-spinner {
+    margin: $spacing-extra-large auto;
     width: 40px;
     height: 40px;
-    margin: $spacing-extra-large auto;
     border: 4px solid hsl(from var(--card-border) h s l / 30%);
     border-top: 4px solid list.nth(map.get(colors.$accent-colors, 'primary'), 1);
     border-radius: $border-radius-full;

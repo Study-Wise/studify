@@ -4,11 +4,11 @@ main.support-page {
 }
 
 .support-section {
-    position: relative;
     flex: 1;
-    display: flex;
-    flex-direction: column;
+    position: relative;
     width: 100%;
+    flex-direction: column;
+    display: flex;
 
     .support-embed {
         position: absolute;

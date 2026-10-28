@@ -47,9 +47,9 @@
     &:hover {
         --g-angle: 60deg;
 
-        scale: 1.1;
-        rotate: 10deg;
         box-shadow: 0 0 15px hsl(from var(--body-text) h s l / 70%);
+        rotate: 10deg;
+        scale: 1.1;
     }
 
     &:focus-visible {
@@ -71,21 +71,21 @@
         position: absolute;
         bottom: calc(100% + $spacing-extra-small);
         left: 50%;
-        translate: -50% 0;
-        scale: 0.8;
         padding: $spacing-extra-small $spacing-small;
-        background-color: var(--card-bg);
         color: var(--card-text);
+        background-color: var(--card-bg);
+        box-shadow: 0 0 8px hsl(from var(--body-text) h s l / 20%);
         border-radius: $border-radius-medium;
         font-size: $font-size-1x-small;
         white-space: nowrap;
         opacity: 0;
-        pointer-events: none;
+        z-index: 1;
         transition: opacity $transition-base $ease-out,
                     translate $transition-base $ease-out,
                     scale $transition-base $ease-out;
-        box-shadow: 0 0 8px hsl(from var(--body-text) h s l / 20%);
-        z-index: 1;
+        translate: -50% 0;
+        scale: 0.8;
+        pointer-events: none;
     }
 
     &:hover::before,
@@ -100,8 +100,8 @@
     }
 
     .material-symbols-outlined {
-        font-size: $font-size-1x-large;
         aspect-ratio: 1;
+        font-size: $font-size-1x-large;
         transition: scale $transition-slower $ease-spring;
     }
 
@@ -122,9 +122,9 @@
     padding: $spacing-extra-small 0;
     min-width: 160px;
     background: var(--card-bg);
+    box-shadow: 0 0 8px hsl(from var(--body-text) h s l / 20%);
     border: 1px solid var(--card-border);
     border-radius: $border-radius-medium;
-    box-shadow: 0 0 8px hsl(from var(--body-text) h s l / 20%);
 
     &[hidden] {
         display: none;
@@ -132,19 +132,19 @@
 }
 
 .theme-menu-item {
-    display: flex;
-    align-items: center;
-    gap: $spacing-small;
-    width: 100%;
     padding: $spacing-small $spacing-medium;
-    text-align: left;
+    width: 100%;
     color: var(--card-text);
     background: none;
     border: none;
-    cursor: pointer;
+    align-items: center;
+    gap: $spacing-small;
     font: inherit;
     font-size: $font-size-small;
+    text-align: left;
     transition: background-color $transition-base $ease-out;
+    cursor: pointer;
+    display: flex;
 
     &:hover,
     &:focus-visible {

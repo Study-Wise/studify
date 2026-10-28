@@ -7,13 +7,13 @@
 
     .practice-questions-content {
         h1, h2, h3, h4, h5, h6 {
-            color: var(--section-title);
             margin-block: 1.5rem 1rem;
+            color: var(--section-title);
         }
 
         h1 {
-            font-size: 2rem;
             margin-block-start: 0;
+            font-size: 2rem;
         }
 
         h2 {
@@ -25,14 +25,14 @@
         }
 
         p {
+            margin-block-end: 1rem;
             color: var(--body-text);
             line-height: 1.6;
-            margin-block-end: 1rem;
         }
 
         ul, ol {
-            margin-inline-start: 1.5rem;
             margin-block-end: 1rem;
+            margin-inline-start: 1.5rem;
             color: var(--body-text);
 
             li {
@@ -42,49 +42,49 @@
         }
 
         code {
-            background-color: var(--message-bg);
             padding: 0.2rem 0.4rem;
+            background-color: var(--message-bg);
             border-radius: 4px;
             font-family: 'Courier New', monospace;
             font-size: 0.9em;
         }
 
         pre {
-            background-color: var(--message-bg);
+            margin-block-end: 1rem;
             padding: 1rem;
+            background-color: var(--message-bg);
             border-radius: 8px;
             overflow-x: auto;
-            margin-block-end: 1rem;
 
             code {
-                background-color: transparent;
                 padding: 0;
+                background-color: transparent;
             }
         }
 
         blockquote {
-            border-inline-start: 4px solid var(--card-border);
-            padding-inline-start: 1rem;
-            margin-inline-start: 0;
             margin-block-end: 1rem;
+            margin-inline-start: 0;
+            padding-inline-start: 1rem;
             color: var(--body-text);
+            border-inline-start: 4px solid var(--card-border);
             opacity: 0.9;
         }
 
         table {
+            margin-block-end: 1rem;
             width: 100%;
             border-collapse: collapse;
-            margin-block-end: 1rem;
 
             th, td {
                 padding: 0.75rem;
-                text-align: start;
                 border: 1px solid var(--card-border);
+                text-align: start;
             }
 
             th {
-                background-color: var(--message-bg);
                 color: var(--section-title);
+                background-color: var(--message-bg);
                 font-weight: 600;
             }
 

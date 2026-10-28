@@ -2,20 +2,20 @@
 @use '../variables/colors/statuses' as *;
 
 .legal-content {
-    max-width: 800px;
     margin-inline: auto;
+    max-width: 800px;
 
     h1 {
-        color: var(--card-text);
         margin-block-end: $spacing-extra-small;
+        color: var(--card-text);
         font-size: 2.5rem;
         font-weight: $font-weight-bold;
     }
 
     .last-updated {
+        margin-block-end: $spacing-extra-large;
         color: rgb(from var(--card-text) r g b / 60%);
         font-size: 0.9rem;
-        margin-block-end: $spacing-extra-large;
         font-style: italic;
     }
 
@@ -24,25 +24,25 @@
     }
 
     h2 {
-        color: var(--card-text);
-        font-size: 1.75rem;
-        font-weight: $font-weight-semibold;
         margin-block: $spacing-extra-large $spacing-medium;
         padding-block-end: $spacing-extra-small;
+        color: var(--card-text);
         border-block-end: 2px solid var(--card-border);
+        font-size: 1.75rem;
+        font-weight: $font-weight-semibold;
     }
 
     h3 {
+        margin-block: $spacing-large $spacing-small;
         color: var(--card-text);
         font-size: $font-size-1x-large;
         font-weight: $font-weight-semibold;
-        margin-block: $spacing-large $spacing-small;
     }
 
     p {
+        margin-block-end: $spacing-medium;
         color: rgb(from var(--card-text) r g b / 85%);
         line-height: $line-height-relaxed + 0.075;
-        margin-block-end: $spacing-medium;
     }
 
     ul {
@@ -63,8 +63,8 @@
 
     a {
         color: $color-link;
-        text-decoration: none;
         border-bottom: 1px solid transparent;
+        text-decoration: none;
         transition: border-color $transition-fast $ease;
 
         &:hover {
@@ -73,19 +73,19 @@
     }
 
     .acknowledgment {
-        background-color: rgb(from var(--card-border) r g b / 10%);
-        padding: $spacing-large;
-        border-radius: $border-radius-medium;
-        margin-top: $spacing-huge;
         position: relative;
+        margin-top: $spacing-huge;
+        padding: $spacing-large;
+        background-color: rgb(from var(--card-border) r g b / 10%);
+        border-radius: $border-radius-medium;
 
         &::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
-            height: 100%;
             width: 4px;
+            height: 100%;
             background-color: $color-link;
             border-radius: $border-radius-medium 0 0 $border-radius-medium;
         }

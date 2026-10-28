@@ -4,29 +4,29 @@
 @use 'sass:map';
 
 .summary-page {
-    max-width: 800px;
     margin: 0 auto;
     padding: 2rem 1rem;
+    max-width: 800px;
 }
 
 .summary-content {
-    background: var(--card-bg);
     padding: 2.5rem;
-    border-radius: 1rem;
+    background: var(--card-bg);
     border: 1px solid var(--border-subtle);
+    border-radius: 1rem;
     line-height: 1.6;
 
     h3 {
         margin-top: 0;
-        border-bottom: 2px solid list.nth(map.get($accent-colors, primary), 1);
-        padding-bottom: 0.5rem;
         margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid list.nth(map.get($accent-colors, primary), 1);
     }
 
     h4 {
-        color: list.nth(map.get($accent-colors, primary), 1);
         margin-top: 1.5rem;
         margin-bottom: 0.5rem;
+        color: list.nth(map.get($accent-colors, primary), 1);
     }
 
     ul, ol {

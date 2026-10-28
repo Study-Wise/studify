@@ -10,9 +10,9 @@
             position: static;
             width: auto;
             height: auto;
-            overflow: visible;
             clip-path: none;
             white-space: normal;
+            overflow: visible;
         }
     }
 }
@@ -24,8 +24,8 @@ input[type="submit"],
 input[type="reset"],
 .clickable,
 .interactive {
-    min-height: 1rem;
     min-width: 1rem;
+    min-height: 1rem;
 
     &:is(a:not([class])) {
         @supports (min-height: auto) {
@@ -53,13 +53,13 @@ input[type="reset"],
 
     &:not(:empty) {
         position: static;
+        margin-block: 1rem;
+        padding: 1rem;
         width: auto;
         height: auto;
-        overflow: visible;
-        padding: 1rem;
         background-color: var(--card-bg);
         border: 1px solid var(--card-border);
         border-radius: 0.5rem;
-        margin-block: 1rem;
+        overflow: visible;
     }
 }

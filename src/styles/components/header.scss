@@ -18,8 +18,8 @@ header {
 
     h1 {
         margin: 0 0 $spacing-tiny;
-        font-weight: $font-weight-semibold;
         font-size: 1.8rem;
+        font-weight: $font-weight-semibold;
         text-shadow: 1px 1px 2px rgb(0 0 0 / 10%);
         overflow-wrap: normal;
 
@@ -32,27 +32,27 @@ header {
     .tagline {
         margin: 0;
         margin-inline: auto;
-        font-size: $font-size-base;
-        font-style: normal;
-        font-weight: 300;
         color: $header-tagline;
+        font-size: $font-size-base;
+        font-weight: 300;
+        font-style: normal;
         overflow-wrap: normal;
     }
 }
 
 .header-logo-link {
-    text-decoration: none;
     border: none;
     line-height: 0;
+    text-decoration: none;
 
     &:focus {
         outline: none;
     }
 
     &:focus-visible {
+        border-radius: $border-radius-extra-small;
         outline: 2px solid white;
         outline-offset: 2px;
-        border-radius: $border-radius-extra-small;
     }
 
     .header-logo {
@@ -64,25 +64,25 @@ header {
 }
 
 .header-content-wrapper {
-    display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
     gap: $spacing-medium;
+    display: flex;
 
     &:not(.lite) {
-        margin-inline: auto;
         flex: 1;
+        margin-inline: auto;
     }
 
     &.lite {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        background-color: $card-bg-light;
-        border-radius: $border-radius-large;
         padding: $spacing-extra-small $spacing-medium;
+        width: fit-content;
+        background-color: $card-bg-light;
         box-shadow: $box-shadow-medium;
         border: 1px solid var(--card-border);
-        width: fit-content;
+        border-radius: $border-radius-large;
+        grid-template-columns: 1fr auto;
+        display: grid;
     }
 
     .header-text-container {

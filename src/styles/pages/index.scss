@@ -15,21 +15,21 @@
     }
 
     strong {
-        font-weight: $font-weight-semibold;
         color: var(--body-text);
+        font-weight: $font-weight-semibold;
     }
 
     .steps-list {
-        counter-reset: --step-counter;
         list-style: none;
-        padding-left: 0;
         margin: $spacing-large 0;
+        padding-left: 0;
+        counter-reset: --step-counter;
 
         > li {
-            counter-increment: --step-counter;
             position: relative;
-            padding-inline-start: 3.5rem;
             margin-block-end: $spacing-extra-large;
+            padding-inline-start: 3.5rem;
+            counter-increment: --step-counter;
 
             &:last-child {
                 margin-block-end: $spacing-medium;
@@ -60,8 +60,8 @@
             &:not(:last-child)::after {
                 content: '';
                 position: absolute;
-                inset-inline-start: 1.25rem;
                 inset-block-start: 2.5rem;
+                inset-inline-start: 1.25rem;
                 width: 2px;
                 height: calc(100% - 1.5rem);
                 background: linear-gradient(180deg,
@@ -98,17 +98,17 @@
     @include stagger-children(0.1s);
 
     .category-card {
-        background-color: var(--card-bg);
-        border-radius: $border-radius-extra-large;
+        position: relative;
         padding: $spacing-large;
-        display: flex;
-        flex-direction: column;
-        gap: $spacing-medium;
+        background-color: var(--card-bg);
         box-shadow: $box-shadow-medium;
         border: 1px solid var(--card-border);
-        position: relative;
+        border-radius: $border-radius-extra-large;
+        flex-direction: column;
         isolation: isolate;
+        gap: $spacing-medium;
         overflow: hidden;
+        display: flex;
 
         &::before {
             content: '';
@@ -130,11 +130,11 @@
         }
 
         .category-title {
-            line-height: $line-height-tight;
-            font-weight: $font-weight-semibold;
-            color: var(--section-title);
-            width: fit-content;
             position: relative;
+            width: fit-content;
+            color: var(--section-title);
+            font-weight: $font-weight-semibold;
+            line-height: $line-height-tight;
             display: inline-block;
 
             &::after {
@@ -170,22 +170,22 @@
                     display: none;
                 }
 
-                background-color: var(--card-bg);
                 padding: $spacing-medium;
-                border-radius: $border-radius-large;
+                color: inherit;
+                background-color: var(--card-bg);
                 box-shadow: $box-shadow-small;
                 border: 1px solid var(--card-border);
+                border-radius: $border-radius-large;
                 text-decoration: none;
-                color: inherit;
                 transition:
                     scale $transition-base $ease-out,
                     box-shadow $transition-base $ease-out,
                     translate $transition-base $ease-out;
 
                 &:hover {
-                    scale: 1.05;
-                    translate: 0 -4px;
                     box-shadow: $box-shadow-large;
+                    translate: 0 -4px;
+                    scale: 1.05;
 
                     .material-symbols-outlined {
                         scale: 1.15;
@@ -193,8 +193,8 @@
                 }
 
                 &:active {
-                    scale: 1.02;
                     translate: 0 -2px;
+                    scale: 1.02;
                 }
 
                 &:focus-visible {
@@ -225,25 +225,25 @@
 
     .subject-search {
         position: absolute;
+        inset-block-end: 0.75rem;
         inset-inline-end: 0;
         z-index: $z-index-popover;
-        inset-block-end: 0.75rem;
     }
 
     .subject-search-toggle {
         @include flex-center;
 
         position: relative;
+        padding: 0;
         width: 2rem;
         height: 2rem;
-        padding: 0;
+        color: var(--body-text);
+        background-color: var(--card-bg);
+        box-shadow: $box-shadow-small;
         border: 1px solid var(--card-border);
         border-radius: $border-radius-full;
-        background-color: var(--card-bg);
-        color: var(--body-text);
-        cursor: pointer;
-        box-shadow: $box-shadow-small;
         transition: $transition-colors, box-shadow $transition-base $ease-out;
+        cursor: pointer;
 
         &:hover,
         &[aria-expanded="true"] {
@@ -252,14 +252,14 @@
         }
 
         .subject-search-indicator {
-            display: none;
             position: absolute;
             inset-block-start: 0.125rem;
             inset-inline-end: 0.125rem;
             width: 0.5rem;
             height: 0.5rem;
-            border-radius: 50%;
             background: list.nth(map.get($accent-colors, primary), 1);
+            border-radius: 50%;
+            display: none;
         }
 
         .material-symbols-outlined {
@@ -273,32 +273,32 @@
 }
 
 .subject-search-panel {
-    display: flex;
-    flex-direction: column;
-    gap: $spacing-small;
-    width: min(26rem, 100%);
-    margin-inline-start: auto;
     margin-block-end: $spacing-large;
+    margin-inline-start: auto;
     padding: $spacing-medium;
+    width: min(26rem, 100%);
     background-color: var(--card-bg);
+    box-shadow: $box-shadow-small;
     border: 1px solid var(--card-border);
     border-radius: $border-radius-large;
-    box-shadow: $box-shadow-small;
+    flex-direction: column;
+    gap: $spacing-small;
     font-size: $font-size-base;
     font-weight: $font-weight-normal;
+    display: flex;
 
     &[hidden] {
         display: none;
     }
 
     .subject-search-field {
-        display: flex;
-        align-items: center;
-        gap: $spacing-extra-small;
         padding: $spacing-extra-small $spacing-small;
+        background-color: var(--body-bg);
         border: 1px solid var(--card-border);
         border-radius: $border-radius-medium;
-        background-color: var(--body-bg);
+        align-items: center;
+        gap: $spacing-extra-small;
+        display: flex;
 
         &:focus-within {
             border-color: list.nth(map.get($accent-colors, primary), 1);
@@ -311,10 +311,10 @@
         input {
             flex: 1;
             min-width: 0;
+            color: var(--body-text);
+            background: transparent;
             border: none;
             outline: none;
-            background: transparent;
-            color: var(--body-text);
             font: inherit;
         }
     }
@@ -327,26 +327,26 @@
 
     .subject-filter-chip {
         padding: $spacing-tiny $spacing-small;
+        color: var(--body-text);
+        background-color: var(--card-bg);
         border: 1px solid var(--card-border);
         border-radius: $border-radius-full;
-        background-color: var(--card-bg);
-        color: var(--body-text);
         font: inherit;
         font-size: $font-size-small;
-        cursor: pointer;
         transition: $transition-colors;
+        cursor: pointer;
 
         &:hover {
             background-color: var(--message-bg);
         }
 
         &[aria-pressed="true"] {
+            color: $header-text;
             background: linear-gradient(135deg,
                 list.nth(map.get($accent-colors, primary), 1),
                 list.nth(map.get($accent-colors, primary), 2)
             );
             border-color: transparent;
-            color: $header-text;
         }
     }
 }

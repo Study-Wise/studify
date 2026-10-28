@@ -3,11 +3,11 @@
 @use 'sass:math';
 
 .card {
-    background-color: var(--card-bg);
-    padding: clamp($spacing-large, 4vw, $spacing-extra-large);
     margin-block-end: $card-spacing;
-    border-radius: $border-radius-large;
+    padding: clamp($spacing-large, 4vw, $spacing-extra-large);
+    background-color: var(--card-bg);
     box-shadow: $box-shadow-medium;
+    border-radius: $border-radius-large;
 
     &:first-of-type {
         margin-block-start: 0;
@@ -30,13 +30,13 @@
     }
 
     &.interactive {
-        cursor: pointer;
         transition: translate $transition-base $ease-out,
                     box-shadow $transition-base $ease-out;
+        cursor: pointer;
 
         &:hover {
-            translate: 0 -4px;
             box-shadow: $box-shadow-large;
+            translate: 0 -4px;
         }
 
         &:active {

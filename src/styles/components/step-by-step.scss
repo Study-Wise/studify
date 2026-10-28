@@ -25,18 +25,18 @@ $pad: $spacing-medium;
     gap: $pad;
 
     .divider {
-        border: none;
         height: 1px;
         background-color: var(--bor);
+        border: none;
     }
 
     counter-reset: --quiz-total 0 --quiz-correct 0;
 
     &::after {
         content: 'Score: ' counter(--quiz-correct) ' / ' counter(--quiz-total);
-        display: none;
-        font-weight: $font-weight-semibold;
         color: var(--body-text);
+        font-weight: $font-weight-semibold;
+        display: none;
     }
 
     &:has(.step-question-radio:checked)::after {
@@ -44,15 +44,15 @@ $pad: $spacing-medium;
     }
 
     .retry-wrong {
-        display: none;
-        align-self: flex-start;
         padding: $spacing-small $spacing-medium;
-        font: inherit;
         color: var(--body-text);
         background-color: var(--card-bg);
         border: 1px solid var(--bor);
         border-radius: $border-radius-medium;
+        align-self: flex-start;
+        font: inherit;
         cursor: pointer;
+        display: none;
 
         &:hover,
         &:focus-visible {
@@ -87,9 +87,9 @@ $pad: $spacing-medium;
             .step-question-choice {
                 position: relative;
                 background-color: var(--card-bg);
-                cursor: pointer;
                 border-radius: math.div($bdr, 8);
                 transition: background-color $transition-fast $ease, scale 0.1s $ease;
+                cursor: pointer;
 
                 &:hover .step-question-choice-content {
                     background-color: rgb(from lightblue r g b / 30%);
@@ -100,14 +100,14 @@ $pad: $spacing-medium;
                 }
 
                 .step-question-choice-content {
-                    border-radius: math.div($bdr, 16);
                     padding: math.div($pad, 2) $pad;
+                    border-radius: math.div($bdr, 16);
                     transition: background-color $transition-fast $ease;
                 }
 
                 &[data-type="correct"]:has(.step-question-radio:checked) .step-question-choice-content {
-                    background-color: hsl(120deg 73% 75%);
                     color: $body-text;
+                    background-color: hsl(120deg 73% 75%);
                 }
 
                 &:not([data-type="correct"]):has(.step-question-radio:checked) .step-question-choice-content {
@@ -117,14 +117,14 @@ $pad: $spacing-medium;
                 .answer-explanation {
                     $bdr: math.div($bdr, 8);
 
-                    display: none;
+                    position: relative;
                     box-sizing: border-box;
                     margin-block-start: $pad;
                     padding: $pad;
                     background-color: rgb(from var(--card-bg) h s calc(l - 3%));
                     border-radius: $bdr;
-                    position: relative;
                     overflow: hidden;
+                    display: none;
 
                     &::before {
                         content: '';
@@ -141,18 +141,18 @@ $pad: $spacing-medium;
                 }
 
                 .step-question-radio {
-                    visibility: hidden;
                     position: absolute;
-                    width: 0;
-                    height: 0;
                     inset-block-start: -1px;
                     inset-inline-start: -1px;
+                    width: 0;
+                    height: 0;
+                    visibility: hidden;
                 }
             }
 
             &:has(.step-question-radio:checked) .step-question-choice[data-type="correct"]:not(:has(.step-question-radio:checked)) .step-question-choice-content {
-                background-color: hsl(120deg 73% 87%);
                 color: $body-text;
+                background-color: hsl(120deg 73% 87%);
             }
 
             .step-question-choice:has(.step-question-radio:checked) .answer-explanation,

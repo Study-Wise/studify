@@ -6,15 +6,15 @@
     left: 0;
     right: 0;
     height: 60px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    display: flex;
-    align-items: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     justify-content: center;
+    align-items: center;
+    opacity: 0;
     z-index: $z-index-dropdown;
     transition: translate 0.3s $ease, opacity 0.3s $ease;
     translate: 0 -100%;
-    opacity: 0;
+    display: flex;
 }
 
 .refresh-content {
@@ -40,7 +40,7 @@
     }
 
     button, .nav-btn, input, select, textarea {
-        min-height: 1rem;
         min-width: 1rem;
+        min-height: 1rem;
     }
 }

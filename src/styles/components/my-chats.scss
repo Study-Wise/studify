@@ -7,51 +7,51 @@
 @use 'sass:map';
 
 .my-chats-container {
-    max-width: 1200px;
     margin: 0 auto;
     padding: $spacing-extra-large $spacing-medium;
+    max-width: 1200px;
 
     .empty-state {
-        text-align: center;
-        padding: $spacing-extra-large * 2;
         margin: $spacing-extra-large auto;
+        padding: $spacing-extra-large * 2;
         max-width: 500px;
+        text-align: center;
 
         .empty-icon {
+            margin-bottom: $spacing-large;
             font-size: 4rem;
             opacity: 0.5;
-            margin-bottom: $spacing-large;
         }
 
         h2 {
+            margin-bottom: $spacing-medium;
             font-size: $font-size-1x-large;
             font-weight: $font-weight-semibold;
-            margin-bottom: $spacing-medium;
         }
 
         p {
-            opacity: 0.8;
             margin-bottom: $spacing-large;
             font-size: $font-size-base;
+            opacity: 0.8;
         }
 
         .btn.primary {
-            display: inline-block;
             padding: $spacing-small $spacing-large;
             background: linear-gradient(135deg,
                 list.nth(map.get($accent-colors, primary), 1),
                 list.nth(map.get($accent-colors, primary), 2)
             );
-            text-decoration: none;
+            box-shadow: $box-shadow-medium;
             border-radius: $border-radius-large;
             font-weight: $font-weight-semibold;
-            box-shadow: $box-shadow-medium;
+            text-decoration: none;
             transition: scale $transition-base $ease-out,
                         box-shadow $transition-base $ease-out;
+            display: inline-block;
 
             &:hover {
-                scale: 1.05;
                 box-shadow: $box-shadow-large;
+                scale: 1.05;
             }
 
             &:active {
@@ -61,19 +61,19 @@
     }
 
     .chat-search {
-        display: flex;
+        margin-bottom: $spacing-large;
         flex-wrap: wrap;
         gap: $spacing-small;
-        margin-bottom: $spacing-large;
+        display: flex;
 
         .chat-search-input,
         .chat-filter {
             padding: $spacing-small $spacing-medium;
-            font: inherit;
             color: var(--body-text);
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);
             border-radius: $border-radius-medium;
+            font: inherit;
         }
 
         .chat-search-input {
@@ -99,12 +99,12 @@
 
     .category-section {
         .category-title {
-            font-size: $font-size-1x-large;
-            font-weight: $font-weight-semibold;
+            position: relative;
             margin-bottom: $spacing-large;
             padding-bottom: $spacing-medium;
             border-bottom: 2px solid var(--card-border);
-            position: relative;
+            font-size: $font-size-1x-large;
+            font-weight: $font-weight-semibold;
             display: inline-block;
 
             &::after {
@@ -127,9 +127,9 @@
         }
 
         .mode-title {
+            margin-bottom: $spacing-medium;
             font-size: $font-size-large;
             font-weight: $font-weight-medium;
-            margin-bottom: $spacing-medium;
         }
 
         .threads-list {
@@ -149,19 +149,19 @@
             }
 
             .thread-delete {
-                display: flex;
-                align-items: center;
-                justify-content: center;
                 width: 40px;
                 height: 40px;
-                flex-shrink: 0;
                 background-color: transparent;
                 border: none;
                 border-radius: $border-radius-small;
-                cursor: pointer;
+                flex-shrink: 0;
+                justify-content: center;
+                align-items: center;
                 opacity: 0.6;
                 transition: opacity $transition-base $ease-out,
                             background-color $transition-base $ease-out;
+                cursor: pointer;
+                display: flex;
 
                 .material-symbols-outlined {
                     color: $color-error;
@@ -169,8 +169,8 @@
 
                 &:hover,
                 &:focus-visible {
-                    opacity: 1;
                     background-color: rgb(from #{$color-error} r g b / 10%);
+                    opacity: 1;
                 }
 
                 &:disabled {
@@ -185,13 +185,13 @@
         }
 
         .thread-card {
+            padding: $spacing-medium $spacing-large;
+            color: inherit;
             background-color: var(--card-bg);
+            box-shadow: $box-shadow-small;
             border: 1px solid var(--card-border);
             border-radius: $border-radius-large;
-            padding: $spacing-medium $spacing-large;
             text-decoration: none;
-            color: inherit;
-            box-shadow: $box-shadow-small;
             transition:
                 scale $transition-base $ease-out,
                 box-shadow $transition-base $ease-out,
@@ -199,10 +199,10 @@
                 border-color $transition-base $ease-out;
 
             &:hover {
-                scale: 1.01;
-                translate: 0 -2px;
                 box-shadow: $box-shadow-medium;
                 border-color: list.nth(map.get($accent-colors, primary), 1);
+                translate: 0 -2px;
+                scale: 1.01;
 
                 .mode-icon {
                     scale: 1.15;
@@ -210,8 +210,8 @@
             }
 
             &:active {
-                scale: 1;
                 translate: 0 0;
+                scale: 1;
             }
 
             .thread-header {
@@ -221,15 +221,15 @@
                 gap: $spacing-medium;
 
                 .thread-info {
-                    display: flex;
-                    align-items: center;
-                    gap: $spacing-medium;
                     flex: 1;
                     min-width: 0;
+                    align-items: center;
+                    gap: $spacing-medium;
+                    display: flex;
 
                     .mode-icon {
-                        font-size: 1.75rem;
                         flex-shrink: 0;
+                        font-size: 1.75rem;
                         transition: scale $transition-base $ease-spring;
                     }
 
@@ -238,33 +238,33 @@
                         min-width: 0;
 
                         .thread-title {
+                            margin: 0 0 $spacing-extra-small;
                             font-size: $font-size-base;
                             font-weight: $font-weight-semibold;
-                            margin: 0 0 $spacing-extra-small;
                             transition: color $transition-base $ease-out;
 
                             @include text-ellipsis;
                         }
 
                         .thread-mode {
+                            margin: 0;
                             font-size: $font-size-small;
                             opacity: 0.7;
-                            margin: 0;
                         }
                     }
                 }
 
                 .thread-meta {
-                    display: flex;
+                    flex-shrink: 0;
                     align-items: center;
                     gap: $spacing-small;
-                    flex-shrink: 0;
+                    display: flex;
 
                     .thread-date {
-                        font-size: $font-size-small;
                         color: var(--body-text);
-                        opacity: 0.6;
+                        font-size: $font-size-small;
                         white-space: nowrap;
+                        opacity: 0.6;
                     }
                 }
             }
@@ -297,9 +297,9 @@
                     }
 
                     .thread-meta {
+                        margin-top: $spacing-extra-small;
                         width: 100%;
                         justify-content: flex-start;
-                        margin-top: $spacing-extra-small;
                     }
                 }
             }

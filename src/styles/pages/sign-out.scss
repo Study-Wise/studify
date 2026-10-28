@@ -1,28 +1,28 @@
 @use '../variables/tokens' as *;
 
 .sign-out-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 60vh;
     padding: $spacing-extra-large $spacing-medium;
+    min-height: 60vh;
+    justify-content: center;
+    align-items: center;
+    display: flex;
 }
 
 .sign-out-card {
+    padding: $spacing-huge $spacing-extra-large;
+    width: 100%;
+    max-width: 400px;
     background-color: var(--card-bg);
+    box-shadow: 0 0 12px rgb(0 0 0 / 10%);
     border: 1px solid var(--card-border);
     border-radius: $border-radius-extra-large;
-    padding: $spacing-huge $spacing-extra-large;
-    max-width: 400px;
-    width: 100%;
     text-align: center;
-    box-shadow: 0 0 12px rgb(0 0 0 / 10%);
 }
 
 .sign-out-icon {
-    font-size: 4rem;
-    color: #ef4444;
     margin-block-end: $spacing-medium;
+    color: #ef4444;
+    font-size: 4rem;
 }
 
 h1 {
@@ -32,8 +32,8 @@ h1 {
 }
 
 p {
-    color: rgb(from var(--card-text) r g b / 70%);
     margin-block-end: $spacing-extra-large;
+    color: rgb(from var(--card-text) r g b / 70%);
     font-size: $font-size-base;
 }
 
@@ -44,29 +44,29 @@ p {
 }
 
 .btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: $spacing-extra-small;
     padding: $spacing-small $spacing-large;
+    border: none;
     border-radius: $border-radius-medium;
+    justify-content: center;
+    align-items: center;
+    gap: $spacing-extra-small;
+    font-family: inherit;
     font-size: $font-size-base;
     font-weight: $font-weight-medium;
-    cursor: pointer;
-    transition: all $transition-fast $ease;
     text-decoration: none;
-    border: none;
-    font-family: inherit;
+    transition: all $transition-fast $ease;
+    cursor: pointer;
+    display: flex;
 }
 
 .btn.primary {
-    background-color: #ef4444;
     color: white;
+    background-color: #ef4444;
 
     &:hover {
         background-color: #dc2626;
-        translate: 0 -1px;
         box-shadow: 0 0 8px rgb(239 68 68 / 30%);
+        translate: 0 -1px;
     }
 
     &:active {
@@ -75,8 +75,8 @@ p {
 }
 
 .btn.secondary {
-    background-color: var(--card-bg);
     color: var(--card-text);
+    background-color: var(--card-bg);
     border: 1px solid var(--card-border);
 
     &:hover {

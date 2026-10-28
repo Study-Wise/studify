@@ -4,15 +4,15 @@
 .modal {
     position: fixed;
     inset: 50%;
-    translate: -50% -50%;
     padding: 0;
     width: 90%;
     max-width: 500px;
-    background-color: var(--card-bg);
     color: var(--body-text);
+    background-color: var(--card-bg);
+    box-shadow: $box-shadow-huge;
     border: none;
     border-radius: $border-radius-large;
-    box-shadow: $box-shadow-huge;
+    translate: -50% -50%;
 
     &::backdrop {
         background-color: rgb(0 0 0 / 50%);
@@ -30,16 +30,16 @@
     &.modal-toast {
         position: static;
         inset: auto;
-        translate: none;
         margin: 0;
         width: 100%;
         max-width: none;
-        pointer-events: auto;
         box-shadow: $box-shadow-extra-large;
+        translate: none;
+        pointer-events: auto;
 
         .modal-content {
-            gap: $spacing-small;
             padding: $spacing-medium;
+            gap: $spacing-small;
         }
 
         .modal-header {
@@ -67,14 +67,14 @@
     @keyframes --modal-fade-in {
         from {
             opacity: 0;
-            scale: 0.95;
             translate: 0 -10px;
+            scale: 0.95;
         }
 
         to {
             opacity: 1;
-            scale: 1;
             translate: 0 0;
+            scale: 1;
         }
     }
 
@@ -88,19 +88,19 @@
     position: fixed;
     inset-block-end: $spacing-medium;
     inset-inline-end: $spacing-medium;
-    z-index: $z-index-notification;
-    display: flex;
+    width: min(380px, calc(100% - #{$spacing-medium * 2}));
     flex-direction: column-reverse;
     gap: $spacing-small;
-    width: min(380px, calc(100% - #{$spacing-medium * 2}));
+    z-index: $z-index-notification;
     pointer-events: none;
+    display: flex;
 }
 
 .modal-content {
-    display: flex;
+    padding: $spacing-large;
     flex-direction: column;
     gap: $spacing-large;
-    padding: $spacing-large;
+    display: flex;
 
     &.modal-error {
         .modal-icon {
@@ -165,11 +165,11 @@
 }
 
 .modal-header {
-    display: flex;
-    align-items: center;
-    gap: $spacing-small;
     padding-block-end: $spacing-extra-small;
     border-block-end: 1px solid var(--card-border);
+    align-items: center;
+    gap: $spacing-small;
+    display: flex;
 }
 
 .modal-icon {
@@ -178,10 +178,10 @@
 }
 
 .modal-title {
+    flex: 1;
     margin: 0;
     font-size: $font-size-1x-large;
     font-weight: $font-weight-semibold;
-    flex: 1;
 
     @media (width <= $breakpoint-small) {
         font-size: $font-size-large;
@@ -194,9 +194,9 @@
 
 .modal-message {
     margin: 0;
+    color: var(--body-text);
     font-size: $font-size-base;
     line-height: $line-height-relaxed;
-    color: var(--body-text);
 
     @media (width <= $breakpoint-small) {
         font-size: 0.9375rem;
@@ -204,30 +204,30 @@
 }
 
 .modal-input-label {
-    display: block;
     margin-block: $spacing-small $spacing-extra-small;
+    color: var(--body-text);
     font-size: $font-size-small;
     font-weight: $font-weight-medium;
-    color: var(--body-text);
+    display: block;
 }
 
 .modal-input {
-    width: 100%;
+    resize: vertical;
     padding: $spacing-extra-small $spacing-small;
-    font: inherit;
-    font-size: $font-size-small;
+    width: 100%;
     color: var(--body-text);
     background-color: var(--card-bg);
     border: 1px solid var(--card-border);
     border-radius: $border-radius-small;
-    resize: vertical;
+    font: inherit;
+    font-size: $font-size-small;
 }
 
 .modal-footer {
-    display: flex;
+    padding-block-start: $spacing-extra-small;
     justify-content: end;
     gap: $spacing-small;
-    padding-block-start: $spacing-extra-small;
+    display: flex;
 
     &[hidden] {
         display: none;
@@ -235,20 +235,20 @@
 }
 
 .modal-close {
-    display: flex;
     padding: $spacing-tiny;
+    color: var(--body-text);
     background: none;
     border: none;
     border-radius: $border-radius-small;
-    color: var(--body-text);
-    cursor: pointer;
     opacity: $opacity-subtle;
     transition: $transition-all;
+    cursor: pointer;
+    display: flex;
 
     &:hover,
     &:focus-visible {
-        opacity: 1;
         background-color: var(--card-border);
+        opacity: 1;
     }
 
     &:focus-visible {
@@ -261,11 +261,11 @@
     padding: 0.625rem $spacing-large;
     border: none;
     border-radius: $border-radius-small;
+    outline: none;
     font-size: 0.9375rem;
     font-weight: $font-weight-medium;
-    cursor: pointer;
     transition: $transition-all;
-    outline: none;
+    cursor: pointer;
 
     &:focus-visible {
         outline: 2px solid currentcolor;
@@ -278,8 +278,8 @@
 }
 
 .modal-button-primary {
-    background-color: $color-info;
     color: white;
+    background-color: $color-info;
 
     &:hover {
         background-color: $color-info-hover;
@@ -287,8 +287,8 @@
 }
 
 .modal-button-secondary {
-    background-color: transparent;
     color: var(--body-text);
+    background-color: transparent;
     border: 1px solid var(--card-border);
 
     &:hover {

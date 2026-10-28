@@ -81,10 +81,10 @@ $accent-colors: (
             color.adjust(list.nth(map.get($accent-colors, $color-key), 2), $alpha: -#{1 - $opacity})
         );
         border-radius: inherit;
-        pointer-events: none;
         opacity: 0;
-        transition: opacity 250ms $ease-out;
         z-index: -1;
+        transition: opacity 250ms $ease-out;
+        pointer-events: none;
     }
 
     &:hover::before {
@@ -117,11 +117,11 @@ $accent-colors: (
 
 // Text gradient (for headings or special text)
 @mixin accent-text-gradient($color-key: 'primary', $angle: 135deg) {
+    color: transparent;
     background: linear-gradient($angle,
         list.nth(map.get($accent-colors, $color-key), 1),
         list.nth(map.get($accent-colors, $color-key), 2)
     );
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    color: transparent;
 }

@@ -12,14 +12,14 @@ $color: list.nth(map.get($accent-colors, primary), 1);
     margin: $spacing-medium;
     padding: $spacing-medium;
     background-color: var(--card-bg);
+    box-shadow: 0 0 $spacing-medium rgb(from var(--body-text) r g b / 25%);
     border: 1px solid var(--card-border);
     border-radius: $border-radius-extra-large;
-    display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
     gap: $spacing-medium;
-    box-shadow: 0 0 $spacing-medium rgb(from var(--body-text) r g b / 25%);
     z-index: 10;
+    display: flex;
 
     &:is(.container &) {
         margin-top: 0;
@@ -27,25 +27,25 @@ $color: list.nth(map.get($accent-colors, primary), 1);
     }
 
     .action-btn {
-        display: inline-flex;
+        padding: $spacing-small $spacing-medium;
+        border: none;
+        border-radius: $border-radius-medium;
         align-items: center;
         gap: $spacing-small;
-        padding: $spacing-small $spacing-medium;
-        border-radius: $border-radius-medium;
         font-size: $font-size-small;
         font-weight: 500;
-        cursor: pointer;
-        transition: all $transition-base $ease;
         text-decoration: none;
-        border: none;
+        transition: all $transition-base $ease;
+        cursor: pointer;
+        display: inline-flex;
 
         .material-symbols-outlined {
             font-size: 1.125rem;
         }
 
         &.primary {
-            background-color: $color;
             color: white;
+            background-color: $color;
 
             &:hover:not(:disabled) {
                 filter: brightness(1.1);
@@ -58,8 +58,8 @@ $color: list.nth(map.get($accent-colors, primary), 1);
         }
 
         &.secondary {
-            background-color: var(--body-bg);
             color: var(--card-text);
+            background-color: var(--body-bg);
             border: 1px solid var(--card-border);
 
             &:hover {

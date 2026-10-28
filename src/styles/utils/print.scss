@@ -1,8 +1,8 @@
 @media print {
     body {
-        font-size: 10pt;
         color: #000 !important;
         background-color: #fff !important;
+        font-size: 10pt;
         line-height: 1.4;
     }
 
@@ -26,14 +26,14 @@
     }
 
     body, .main-content {
-        display: block !important;
-        visibility: visible !important;
-        box-shadow: none !important;
-        border: none !important;
         margin: 0 !important;
         padding: 0 !important;
         width: 100% !important;
         max-width: none !important;
+        box-shadow: none !important;
+        border: none !important;
+        visibility: visible !important;
+        display: block !important;
     }
 
     h2, h3, h4, pre {
@@ -63,8 +63,8 @@
     }
 
     .desmos-graph {
-        break-inside: avoid !important;
-        break-after: auto !important;
         break-before: auto !important;
+        break-after: auto !important;
+        break-inside: avoid !important;
     }
 }

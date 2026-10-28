@@ -18,20 +18,20 @@
     top: 0;
     left: $pos;
     padding: $spacing-small;
-    background-color: #000;
     color: #fff;
+    background-color: #000;
     border-radius: $border-radius-extra-small;
     font-size: $font-size-small;
-    text-decoration: none;
     line-height: $line-height-none;
+    text-decoration: none;
     z-index: $z-index-dropdown;
     transition: translate $transition-slow;
     translate: 0 -100%;
 
     &:focus-visible {
-        translate: 0 $pos;
         outline: 2px solid #fff;
         outline-offset: 2px;
+        translate: 0 $pos;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -59,8 +59,8 @@ button:focus-visible {
 }
 
 :not(.message-input):user-invalid {
-    border-color: $color-error;
     box-shadow: 0 0 0 1px $color-error;
+    border-color: $color-error;
 }
 
 @media (prefers-contrast: high) {
