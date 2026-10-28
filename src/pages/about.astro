@@ -11,7 +11,7 @@ interface TeamData {
     links?: {
         href: string;
         text: string;
-        icon: string;
+        icon: string | { provider: 'skillicons' | 'custom'; name: string };
         target?: string;
     }[];
     images?: { regular?: string; hover?: string };
@@ -34,7 +34,7 @@ function random(array: string[]) {
     return array[Math.floor(Math.random() * array.length)]
 }
 
-const team: TeamData[] = [
+const teamData: TeamData[] = [
     {
         username: 'adarsh',
         name: 'Adarsh R. Kumar',
@@ -64,11 +64,13 @@ const team: TeamData[] = [
         blurb: "Hi, I'm Margo Page, the Studify team's AI assistant and the friendly face of Studify support.",
         description: "<p>I'm the face of the Studify support team, and a developer on the app here at Studify. On the support side, I answer users' questions, bug reports, and feature requests. On the development side, I help design and build new features and improve the user experience.</p>",
         links: [
-            { href: 'javascript:window.togglechatpane();', text: 'Chat with Margo', icon: 'discord', target: '_self' },
+            { href: 'javascript:window.togglechatpane();', text: 'Chat with Margo', icon: { provider: 'custom', name: 'bubble-chat' }, target: '_self' },
             // { href: 'https://github.com/margo-page/', text: 'Follow on GitHub', icon: 'github' }
         ]
     }
-].map((u: TeamData) => ({
+];
+
+const team: TeamData[] = teamData.map((u: TeamData) => ({
     ...u,
     images: {
         regular: u.images?.regular || random(allTeamImagesObject[u.username]?.regular ?? []),
@@ -93,16 +95,20 @@ const team: TeamData[] = [
 
                     {member.links && member.links.length > 0 && (
                         <p class="about-links">
-                            {member.links.map(link => (
-                                <a href={link.href} target={link.target ?? '_blank'} rel="noopener noreferrer">
-                                    {link.icon === 'language' ? (
-                                        <span class="material-symbols-outlined" aria-hidden="true">{link.icon}</span>
-                                    ) : (
-                                        <img src={`https://skillicons.dev/icons?i=${link.icon}`} alt={link.text} class="social-icon" />
-                                    )}
-                                    <span class="text">{link.text}</span>
-                                </a>
-                            )).reduce((prev, curr) => [prev, ' | ', curr])}
+                            {member.links.map(link => {
+                                const icon = typeof link.icon === 'string' ? { provider: 'skillicons', name: link.icon } : link.icon;
+
+                                return (
+                                    <a href={link.href} target={link.target ?? '_blank'} rel="noopener noreferrer">
+                                        {link.icon === 'language' ? (
+                                            <span class="material-symbols-outlined" aria-hidden="true">{link.icon}</span>
+                                        ) : (
+                                            <img src={icon.provider === 'custom' ? `/assets/icons/${icon.name}.svg` : `https://skillicons.dev/icons?i=${icon.name}`} alt={link.text} class="social-icon" />
+                                        )}
+                                        <span class="text">{link.text}</span>
+                                    </a>
+                                )
+                            }).reduce((prev, curr) => [prev, ' | ', curr])}
                         </p>
                     )}
                 </div>
