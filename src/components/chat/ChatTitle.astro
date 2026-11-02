@@ -60,8 +60,9 @@ const { title, threadId, canRename } = Astro.props;
 
                     if (data.status === 'success') {
                         // Keep the " | mode | category" suffix of the tab title
-                        if (document.title.startsWith(currentTitle)) {
-                            document.title = data.title + document.title.slice(currentTitle.length);
+                        const currentTabTitle = currentTitle.replace(/\\[()[\]]|\$/g, '').replace(/\\([a-zA-Z]+)/g, '$1');
+                        if (document.title.startsWith(currentTabTitle)) {
+                            document.title = data.title.replace(/\\[()[\]]|\$/g, '').replace(/\\([a-zA-Z]+)/g, '$1') + document.title.slice(currentTabTitle.length);
                         }
                         currentTitle = data.title;
                         titleButton.textContent = data.title;
