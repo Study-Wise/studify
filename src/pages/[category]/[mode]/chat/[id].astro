@@ -61,7 +61,6 @@ if (id !== 'new' && isAuthorized && !thread) return Astro.redirect(`/${category}
 if ((id === 'new' && !user) || (!user && !isPublic)) return Astro.redirect(`/user/sign-in?returnBackUrl=${encodeURIComponent(`/${category}/${mode}/chat/${id}`)}`);
 
 const threadTitle = thread?.title || null;
-const tabTitle = threadTitle?.replace(/\\[()[\]]|\$/g, '').replace(/\\([a-zA-Z]+)/g, '$1');
 const uploadedFiles = thread?.uploadedFiles || [];
 
 let messages: Message[] = [];
@@ -96,7 +95,7 @@ const mathDelimiterPattern = /\$|\\\(|\\\[/;
 
 export const inNav = 'hide';
 ---
-<Layout title={`${tabTitle || (id === 'new' ? 'New Chat' : 'Chat')} | ${modeName} | ${categoryName}`} container={false} isChatArea={true} className="chat-page" hideCopyright={true} mathjax={true} desmos={modeObj.desmos === true}>
+<Layout title={`${threadTitle?.replace(/\\[()[\]]|\$/g, '').replace(/\\([a-zA-Z]+)/g, '$1') || (id === 'new' ? 'New Chat' : 'Chat')} | ${modeName} | ${categoryName}`} container={false} isChatArea={true} className="chat-page" hideCopyright={true} mathjax={true} desmos={modeObj.desmos === true}>
     <header class="chat-header">
         <div class="chat-title-container">
             <ChatTitle title={threadTitle || (id === 'new' ? 'New Chat' : 'Chat')} threadId={id || ''} canRename={isOwner} />
