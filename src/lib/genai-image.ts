@@ -37,7 +37,7 @@ function getImageFailureReason<T>(error: T): string | undefined {
     if (error instanceof OpenAI.APIConnectionError) return 'we couldn\'t reach OpenAI';
     if (!(error instanceof OpenAI.APIError)) return undefined;
 
-    if (error.code === 'insufficient_quota' || error.code === 'billing_hard_limit_reached') {
+    if (error.code === 'insufficient_quota' || error.code === 'billing_hard_limit_reached' || error.code === 'credit_balance_exhausted') {
         return 'our OpenAI account has run out of credits';
     }
     if (error.code === 'content_policy_violation' || error.code === 'moderation_blocked') {
