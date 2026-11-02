@@ -2,7 +2,6 @@
 
 declare var document: typeof document;
 
-// Not yet in TypeScript's DOM types
 interface BeforeInstallPromptEvent extends Event {
     prompt(): Promise<void>;
     readonly userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
@@ -12,7 +11,6 @@ interface WindowEventMap {
     beforeinstallprompt: BeforeInstallPromptEvent;
 }
 
-// Set by src/components/Dialog.astro
 interface Window {
     keyboardNavigation: object;
     showDialog: (message: string, options?: { title?: string; icon?: string; type?: import('./lib/modal').ModalType }) => void;

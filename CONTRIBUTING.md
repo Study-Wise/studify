@@ -36,7 +36,6 @@ Search existing issues first to avoid duplicates, then [open a new issue](https:
 
 ### TypeScript
 
-- Define all types and interfaces in `src/lib/types.ts` and import them from there.
 - Never use `any`. Use a proper type, or `unknown` with a type guard.
 - Fix the root cause of type errors instead of bypassing them.
 
