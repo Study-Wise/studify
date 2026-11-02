@@ -26,20 +26,30 @@ async function generateImageBuffer(prompt: string) {
 
         throw new Error('OpenAI API returned no images in response');
     } catch (error) {
-        let errorMessage = 'OpenAI image generation error';
+        const errorMessage = error instanceof Error ? `OpenAI API error: ${error.message}` : 'OpenAI image generation error';
 
-        if (error instanceof Error) errorMessage = `OpenAI API error: ${error.message}`;
-        else if (error && typeof error === 'object') {
-            if ('status' in error && error.status === 429) {
-                errorMessage = 'OpenAI API rate limit exceeded - Please wait a moment and try again.';
-            }
-            else if ('status' in error && (error.status === 401 || error.status === 403)) {
-                errorMessage = 'OpenAI API authentication failed - Please check your API key.';
-            }
-        }
-
-        throw new VendorError('OpenAI', errorMessage, { cause: error });
+        throw new VendorError('OpenAI', errorMessage, { cause: error, reason: getImageFailureReason(error) });
     }
+}
+
+// User-safe explanation of why the OpenAI image request failed, or undefined when the cause is unknown
+function getImageFailureReason<T>(error: T): string | undefined {
+    if (error instanceof OpenAI.APIConnectionError) return 'we couldn\'t reach OpenAI';
+    if (!(error instanceof OpenAI.APIError)) return undefined;
+
+    if (error.code === 'insufficient_quota' || error.code === 'billing_hard_limit_reached') {
+        return 'our OpenAI account has run out of credits';
+    }
+    if (error.code === 'content_policy_violation' || error.code === 'moderation_blocked') {
+        return 'OpenAI\'s safety system blocked the image';
+    }
+    if (error.status === 429) return 'OpenAI is getting too many requests right now';
+    if (error.status === 401) return 'our OpenAI API key isn\'t valid';
+    if (error.status === 403) return `our OpenAI account doesn't have access to the ${config.imageModel} image model`;
+    if (error.status === 404) return `OpenAI couldn't find the ${config.imageModel} image model`;
+    if (error.status !== undefined && error.status >= 500) return 'OpenAI\'s image service is having problems';
+
+    return undefined;
 }
 
 async function generateImage(prompt: string, filename: string = 'infographic.png') {
