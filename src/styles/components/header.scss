@@ -76,7 +76,8 @@ header {
     &.lite {
         padding: $spacing-extra-small $spacing-medium;
         width: fit-content;
-        background-color: $card-bg-light;
+        color: var(--card-text);
+        background-color: var(--card-bg);
         box-shadow: $box-shadow-medium;
         border: 1px solid var(--card-border);
         border-radius: $border-radius-large;

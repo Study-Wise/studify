@@ -44,7 +44,7 @@
 
     &.lite .nav-btn {
         &:not(:hover, :focus-visible, .active) {
-            color: $section-title-light;
+            color: var(--section-title);
         }
     }
 
