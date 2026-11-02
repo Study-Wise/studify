@@ -1,14 +1,7 @@
-interface VendorErrorOptions extends ErrorOptions {
-    reason?: string;
-}
-
 // A third-party failure. Users see the vendor name (for support requests), never the raw message
 export class VendorError extends Error {
-    public reason?: string;
-
-    constructor(public vendor: string, message: string, options?: VendorErrorOptions) {
+    constructor(public vendor: string, message: string, options?: ErrorOptions, public reason?: string) {
         super(message, options);
-        this.reason = options?.reason;
     }
 }
 

@@ -38,7 +38,7 @@ async function generateImageBuffer(prompt: string) {
             else if (error.status === 403) reason = 'OpenAI denied access to its image service';
         }
 
-        throw new VendorError('OpenAI', errorMessage, { cause: error, reason });
+        throw new VendorError('OpenAI', errorMessage, { cause: error }, reason);
     }
 }
 
