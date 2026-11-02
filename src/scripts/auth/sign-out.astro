@@ -28,7 +28,7 @@
                 window.location.href = '/';
             } catch (error) {
                 console.error('Sign out error:', error);
-                if (signoutBtn.id === 'signout-confirm-btn') alert('Sign out failed. Please try again.');
+                if (signoutBtn.id === 'signout-confirm-btn') window.showError('Sign out failed. Please try again.');
             }
         });
     }
