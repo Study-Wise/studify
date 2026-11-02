@@ -82,7 +82,7 @@ const team: TeamData[] = teamData.map((u: TeamData) => ({
     {team.map(member => (
         <section class="card">
             <div class="about-section">
-                <div class="image-intro" data-hover={!!member.images?.hover} style={member.images?.hover && { '--data-hover-src': member.images?.hover && `url('${member.images.hover}')` }}>
+                <div class="image-intro" data-hover={!!member.images?.hover ? true : undefined} style={member.images?.hover && { '--data-hover-src': member.images?.hover && `url('${member.images.hover}')` }}>
                     <img src={member.images?.regular} alt={`${member.name} profile picture`} class="profile-picture" />
                     <div class="about-info">
                         <h2 class="about-name">{member.name}</h2>
