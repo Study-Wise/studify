@@ -54,7 +54,6 @@ export default defineConfig({
             manifest,
             workbox: {
                 globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
-                // Pages are server-rendered, so there is no precached shell; the default route would also catch every navigation
                 navigateFallback: null,
                 runtimeCaching: [
                     {
@@ -69,14 +68,9 @@ export default defineConfig({
                                 maxEntries: 50,
                                 maxAgeSeconds: 60 * 60 * 24 * 30 // 30 days
                             },
-                            cacheableResponse: {
-                                statuses: [200]
-                            },
+                            cacheableResponse: { statuses: [200] },
                             plugins: [
-                                {
-                                    // Don't store the sign-in page under a study material URL
-                                    cacheWillUpdate: async ({ response }) => response.redirected ? null : response
-                                }
+                                { cacheWillUpdate: async ({ response }) => response.redirected ? null : response }
                             ]
                         }
                     },
@@ -89,9 +83,7 @@ export default defineConfig({
                                 maxEntries: 10,
                                 maxAgeSeconds: 60 * 60 * 24 * 365 // 1 year
                             },
-                            cacheableResponse: {
-                                statuses: [0, 200]
-                            }
+                            cacheableResponse: { statuses: [0, 200] }
                         }
                     },
                     {
