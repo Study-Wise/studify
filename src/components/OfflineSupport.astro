@@ -37,8 +37,8 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
 
                     registration.addEventListener('updatefound', () => {
                         if (registration.installing) {
-                            registration.installing.addEventListener('statechange', () => {
-                                if (registration.installing.state === 'installed' && window.navigator.serviceWorker.controller) {
+                            registration.installing.addEventListener('statechange', stateChange => {
+                                if (stateChange.target.state === 'installed' && window.navigator.serviceWorker.controller) {
                                     // New version available
                                     const updateIndicator = document.getElementById('update-available');
                                     const updateButton = document.getElementById('update-button');
@@ -47,7 +47,7 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
 
                                     if (updateButton) {
                                         updateButton.addEventListener('click', () => {
-                                            registration.installing.postMessage({ action: 'skipWaiting' });
+                                            stateChange.target.postMessage({ action: 'skipWaiting' });
                                             window.location.reload();
                                         });
                                     }
@@ -66,16 +66,18 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
         });
     }
 
-    window.fetch = async function(...args) {
-        try {
-            return await window.fetch.apply(this, args);
-        } catch (error) {
-            if (!window.navigator.onLine) {
-                console.warn('Network request failed - offline mode');
+    window.fetch = new Proxy(window.fetch, {
+        async apply(target, thisArg, args) {
+            try {
+                return await Reflect.apply(target, thisArg, args);
+            } catch (error) {
+                if (!window.navigator.onLine) {
+                    console.warn('Network request failed - offline mode');
 
-                throw new Error('Network request failed - you appear to be offline', { cause: error });
+                    throw new Error('Network request failed - you appear to be offline', { cause: error });
+                }
+                throw error;
             }
-            throw error;
         }
-    };
+    });
 </script>
