@@ -61,7 +61,6 @@ if (id !== 'new' && isAuthorized && !thread) return Astro.redirect(`/${category}
 if ((id === 'new' && !user) || (!user && !isPublic)) return Astro.redirect(`/user/sign-in?returnBackUrl=${encodeURIComponent(`/${category}/${mode}/chat/${id}`)}`);
 
 const threadTitle = thread?.title || null;
-// MathJax doesn't typeset the tab title, so strip the LaTeX delimiters and command backslashes from it
 const tabTitle = threadTitle?.replace(/\\[()[\]]|\$/g, '').replace(/\\([a-zA-Z]+)/g, '$1');
 const uploadedFiles = thread?.uploadedFiles || [];
 
