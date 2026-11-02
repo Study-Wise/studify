@@ -67,11 +67,11 @@
         }
 
         .about-subrole {
-            font-size: 0.9em;
             color: light-dark(
                 #{color.adjust($body-text, $lightness: 20%)},
                 #{color.adjust($body-bg-light, $lightness: -20%)}
             );
+            font-size: 0.9em;
         }
 
         &:has(:is(.profile-picture, .about-name, .about-role, .about-subrole):hover) {
