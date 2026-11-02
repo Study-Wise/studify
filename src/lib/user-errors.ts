@@ -1,9 +1,8 @@
 interface VendorErrorOptions extends ErrorOptions {
-    // User-safe phrase that follows "because", e.g. "our OpenAI account has run out of credits"
     reason?: string;
 }
 
-// A third-party failure. Users see the vendor name (for support requests) and the user-safe reason when one is known, never the raw message
+// A third-party failure. Users see the vendor name (for support requests), never the raw message
 export class VendorError extends Error {
     public reason?: string;
 
