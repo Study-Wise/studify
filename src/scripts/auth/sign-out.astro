@@ -1,7 +1,7 @@
 <script>
     import { authClient } from '@/lib/auth/client';
 
-    const USER_CACHES = ['study-materials-cache', 'images-cache', 'studywise-offline-v1'];
+    const USER_CACHES = ['study-materials-cache', 'images-cache'];
     const USER_STORAGE_KEYS = ['threadId', 'settings', 'model'];
 
     for (const signoutBtn of document.querySelectorAll<HTMLButtonElement>('#signout-btn, #signout-confirm-btn')) {

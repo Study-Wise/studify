@@ -36,10 +36,9 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
                     const registration = await window.navigator.serviceWorker.register('/sw.js');
 
                     registration.addEventListener('updatefound', () => {
-                        const newWorker = registration.installing;
-                        if (newWorker) {
-                            newWorker.addEventListener('statechange', () => {
-                                if (newWorker.state === 'installed' && window.navigator.serviceWorker.controller) {
+                        if (registration.installing) {
+                            registration.installing.addEventListener('statechange', () => {
+                                if (registration.installing.state === 'installed' && window.navigator.serviceWorker.controller) {
                                     // New version available
                                     const updateIndicator = document.getElementById('update-available');
                                     const updateButton = document.getElementById('update-button');
@@ -48,7 +47,7 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
 
                                     if (updateButton) {
                                         updateButton.addEventListener('click', () => {
-                                            newWorker.postMessage({ action: 'skipWaiting' });
+                                            registration.installing.postMessage({ action: 'skipWaiting' });
                                             window.location.reload();
                                         });
                                     }
@@ -67,58 +66,12 @@ const isProd = (import.meta.env.NODE_ENV === 'production' || import.meta.env.MOD
         });
     }
 
-    class OfflineCache {
-        constructor() {
-            this.cacheName = 'studywise-offline-v1';
-        }
-
-        async cacheStudyMaterials(data) {
-            if ('caches' in window) {
-                try {
-                    const cache = await window.caches.open(this.cacheName);
-                    const response = new Response(JSON.stringify(data), {
-                        headers: { 'Content-Type': 'application/json' }
-                    });
-                    await cache.put('/offline-study-materials', response);
-                } catch (error) {
-                    console.error('Failed to cache study materials:', error);
-                }
-            }
-        }
-
-        async getCachedStudyMaterials() {
-            if ('caches' in window) {
-                try {
-                    const cache = await window.caches.open(this.cacheName);
-                    const response = await cache.match('/offline-study-materials');
-                    if (response) return await response.json();
-                } catch (error) {
-                    console.error('Failed to retrieve cached study materials:', error);
-                }
-            }
-            return null;
-        }
-    }
-
-    window.offlineCache = new OfflineCache();
-
-    const originalFetch = window.fetch;
     window.fetch = async function(...args) {
         try {
-            return await originalFetch.apply(this, args);
+            return await window.fetch.apply(this, args);
         } catch (error) {
             if (!window.navigator.onLine) {
                 console.warn('Network request failed - offline mode');
-
-                if (args[0] && String(args[0]).includes('/api/message/generate')) {
-                    const cachedData = await window.offlineCache?.getCachedStudyMaterials();
-                    if (cachedData) {
-                        return new Response(JSON.stringify(cachedData), {
-                            status: 200,
-                            headers: { 'Content-Type': 'application/json' }
-                        });
-                    }
-                }
 
                 throw new Error('Network request failed - you appear to be offline', { cause: error });
             }
