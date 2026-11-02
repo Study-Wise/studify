@@ -1,8 +1,8 @@
 <script>
+    import runtimeCaching from '@/lib/cache.config';
     import { authClient } from '@/lib/auth/client';
 
-    const USER_CACHES = ['study-materials-cache', 'images-cache'];
-    const USER_STORAGE_KEYS = ['threadId', 'settings', 'model'];
+    const USER_STORAGE_KEYS = ['settings'];
 
     for (const signoutBtn of document.querySelectorAll<HTMLButtonElement>('#signout-btn, #signout-confirm-btn')) {
         signoutBtn.addEventListener('click', async () => {
@@ -15,7 +15,7 @@
 
                 try {
                     if ('caches' in window) {
-                        for (const result of await Promise.allSettled(USER_CACHES.map(name => window.caches.delete(name)))) {
+                        for (const result of await Promise.allSettled(runtimeCaching.map(cacheConfig => window.caches.delete(cacheConfig.options.cacheName)))) {
                             if (result.status === 'rejected') console.error('Failed to delete cache:', result.reason);
                         }
                     }

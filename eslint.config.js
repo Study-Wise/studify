@@ -67,6 +67,14 @@ export default [
         }
     },
     {
+        files: ['src/lib/cache.config.ts'],
+        languageOptions: {
+            globals: {
+                Request: 'readonly'
+            }
+        }
+    },
+    {
         files: ['src/**/*.astro'],
         languageOptions: {
             parser: parsers.astroParser,

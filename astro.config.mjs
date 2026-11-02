@@ -7,6 +7,7 @@ import vercel from '@astrojs/vercel';
 import { defineConfig } from 'astro/config';
 
 import appConfig from './src/lib/app.config.ts';
+import runtimeCaching from './src/lib/cache.config.ts';
 
 const contentTypes = fs.readdirSync('src/lib/content/latest')
     .filter(file => file.endsWith('.ts') && file !== 'index.ts')
@@ -55,49 +56,7 @@ export default defineConfig({
             workbox: {
                 globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
                 navigateFallback: null,
-                runtimeCaching: [
-                    {
-                        urlPattern: ({ request, url }) =>
-                            request.mode === 'navigate' &&
-                            /^\/[^/]+\/[^/]+\/(?:flashcards|study-guide|reference-sheet|summary|practice-questions|additional-resources|slideshow|mind-map)\/[^/]+\/?$/.test(url.pathname),
-                        handler: 'NetworkFirst',
-                        options: {
-                            cacheName: 'study-materials-cache',
-                            networkTimeoutSeconds: 5,
-                            expiration: {
-                                maxEntries: 50,
-                                maxAgeSeconds: 60 * 60 * 24 * 30 // 30 days
-                            },
-                            cacheableResponse: { statuses: [200] },
-                            plugins: [
-                                { cacheWillUpdate: async ({ response }) => response.redirected ? null : response }
-                            ]
-                        }
-                    },
-                    {
-                        urlPattern: /^https:\/\/fonts\.(?:googleapis|gstatic)\.com\/.*/i,
-                        handler: 'CacheFirst',
-                        options: {
-                            cacheName: 'google-fonts-cache',
-                            expiration: {
-                                maxEntries: 10,
-                                maxAgeSeconds: 60 * 60 * 24 * 365 // 1 year
-                            },
-                            cacheableResponse: { statuses: [0, 200] }
-                        }
-                    },
-                    {
-                        urlPattern: /^https:\/\/.*\.(?:png|jpg|jpeg|svg|gif|webp)$/,
-                        handler: 'CacheFirst',
-                        options: {
-                            cacheName: 'images-cache',
-                            expiration: {
-                                maxEntries: 100,
-                                maxAgeSeconds: 60 * 60 * 24 // 1 day
-                            }
-                        }
-                    }
-                ],
+                runtimeCaching,
                 skipWaiting: true,
                 clientsClaim: true
             },
