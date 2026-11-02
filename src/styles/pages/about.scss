@@ -1,6 +1,7 @@
 @use '../variables/globals' as *;
 @use '../variables/tokens' as *;
 @use '../variables/colors/globals' as *;
+@use 'sass:color' as color;
 
 .card:has(> .about-section:first-child:last-child) {
     container-type: inline-size;
@@ -65,7 +66,15 @@
             transition: var(--transition);
         }
 
-        &:has(:is(.profile-picture, .about-name, .about-role):hover) {
+        .about-subrole {
+            font-size: 0.9em;
+            color: light-dark(
+                #{color.adjust($body-text, $lightness: 20%)},
+                #{color.adjust($body-bg-light, $lightness: -20%)}
+            );
+        }
+
+        &:has(:is(.profile-picture, .about-name, .about-role, .about-subrole):hover) {
             &::before, * {
                 scale: $hover-scale;
 

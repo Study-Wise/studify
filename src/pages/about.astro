@@ -8,6 +8,7 @@ interface TeamData {
     username: string;
     name: string;
     role: string;
+    subrole?: string;
     blurb: string;
     description: string;
     links?: {
@@ -49,11 +50,12 @@ const team: TeamData[] = teamData.map((u: TeamData) => ({
         <section class="card">
             <div class="about-section">
                 <div class="image-intro" data-hover={!!member.images?.hover ? true : undefined} style={member.images?.hover && { '--data-hover-src': member.images?.hover && `url('${member.images.hover}')` }}>
-                    <img src={member.images?.regular} alt={`${member.name} profile picture`} class="profile-picture" />
-                    <div class="about-info">
-                        <h2 class="about-name">{member.name}</h2>
-                        <p class="about-role">{member.role}</p>
-                    </div>
+                    {member.images?.regular && <img src={member.images?.regular} alt={`${member.name} profile picture`} class="profile-picture" />}
+                    {(member.name || member.role || member.subrole) && <div class="about-info">
+                        {member.name && <h2 class="about-name">{member.name}</h2>}
+                        {member.role && <p class="about-role">{member.role}</p>}
+                        {member.subrole && <p class="about-subrole">{member.subrole}</p>}
+                    </div>}
                 </div>
                 <div class="about-content">
 
