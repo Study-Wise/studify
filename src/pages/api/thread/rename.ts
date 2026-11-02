@@ -1,6 +1,5 @@
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
-import { latexToPlainText } from '@/lib/latex-to-plain-text';
 import isValidEmail from '@/lib/validation';
 import 'dotenv/config';
 import { nanoid } from 'nanoid';
@@ -112,9 +111,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         return new Response(
             JSON.stringify({
                 status: 'success',
-                title: newTitle,
-                // For the browser tab title, which MathJax doesn't typeset
-                plainTitle: latexToPlainText(newTitle)
+                title: newTitle
             }),
             {
                 status: 200,

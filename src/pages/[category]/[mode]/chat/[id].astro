@@ -1,7 +1,6 @@
 ---
 import { marked, Marked } from 'marked';
 import { checkForOneMessage } from '@/lib/check-for-one-message';
-import { latexToPlainText } from '@/lib/latex-to-plain-text';
 import categories from '@/lib/modes';
 import { getMessages, getMessagesLength, getThreadByToken, type Message } from '@/lib/threads';
 import { labels } from '@/lib/tools';
@@ -62,9 +61,8 @@ if (id !== 'new' && isAuthorized && !thread) return Astro.redirect(`/${category}
 if ((id === 'new' && !user) || (!user && !isPublic)) return Astro.redirect(`/user/sign-in?returnBackUrl=${encodeURIComponent(`/${category}/${mode}/chat/${id}`)}`);
 
 const threadTitle = thread?.title || null;
-const displayTitle = threadTitle || (id === 'new' ? 'New Chat' : 'Chat');
-// The tab title isn't typeset by MathJax, so it gets the title's LaTeX as plain text
-const tabTitle = latexToPlainText(displayTitle);
+// MathJax doesn't typeset the tab title, so strip the LaTeX delimiters and command backslashes from it
+const tabTitle = threadTitle?.replace(/\\[()[\]]|\$/g, '').replace(/\\([a-zA-Z]+)/g, '$1');
 const uploadedFiles = thread?.uploadedFiles || [];
 
 let messages: Message[] = [];
@@ -99,10 +97,10 @@ const mathDelimiterPattern = /\$|\\\(|\\\[/;
 
 export const inNav = 'hide';
 ---
-<Layout title={`${tabTitle} | ${modeName} | ${categoryName}`} container={false} isChatArea={true} className="chat-page" hideCopyright={true} mathjax={true} desmos={modeObj.desmos === true}>
+<Layout title={`${tabTitle || (id === 'new' ? 'New Chat' : 'Chat')} | ${modeName} | ${categoryName}`} container={false} isChatArea={true} className="chat-page" hideCopyright={true} mathjax={true} desmos={modeObj.desmos === true}>
     <header class="chat-header">
         <div class="chat-title-container">
-            <ChatTitle title={displayTitle} tabTitle={tabTitle} threadId={id || ''} canRename={isOwner} />
+            <ChatTitle title={threadTitle || (id === 'new' ? 'New Chat' : 'Chat')} threadId={id || ''} canRename={isOwner} />
             <nav class="subject-breadcrumb" aria-label="Subject">
                 <ol>
                     <li>{categoryName}</li>
@@ -110,7 +108,7 @@ export const inNav = 'hide';
                 </ol>
             </nav>
         </div>
-        <Header pTitle={displayTitle} />
+        <Header pTitle={threadTitle || (id === 'new' ? 'New Chat' : 'Chat')} />
     </header>
     <input type="radio" name="sidebar-drawer" id="sidebar-drawer-closed" class="sidebar-drawer-input sr-only" checked />
     <div class="sidebar-drawer-toggles">

@@ -1,7 +1,7 @@
 ---
 import '@/styles/components/chat-title.scss';
 
-const { title, tabTitle, threadId, canRename } = Astro.props;
+const { title, threadId, canRename } = Astro.props;
 ---
 <h2 class="chat-title">
     <span class="material-symbols-outlined" aria-hidden="true">chat</span>&nbsp;{canRename ? (
@@ -15,14 +15,12 @@ const { title, tabTitle, threadId, canRename } = Astro.props;
 </h2>
 
 {canRename && (
-    <script is:inline define:vars={{ threadId, tabTitle }}>
+    <script is:inline define:vars={{ threadId }}>
         const titleButton = document.getElementById('chat-title-button');
         const titleInput = document.getElementById('chat-title-input');
 
         if (titleButton && titleInput) {
             let currentTitle = titleButton.textContent.trim();
-            // The tab title holds the title's LaTeX as plain text
-            let currentTabTitle = tabTitle;
             let isSaving = false;
 
             function showButton() {
@@ -62,11 +60,10 @@ const { title, tabTitle, threadId, canRename } = Astro.props;
 
                     if (data.status === 'success') {
                         // Keep the " | mode | category" suffix of the tab title
-                        if (document.title.startsWith(currentTabTitle)) {
-                            document.title = data.plainTitle + document.title.slice(currentTabTitle.length);
+                        if (document.title.startsWith(currentTitle)) {
+                            document.title = data.title + document.title.slice(currentTitle.length);
                         }
                         currentTitle = data.title;
-                        currentTabTitle = data.plainTitle;
                         titleButton.textContent = data.title;
                         titleButton.setAttribute('aria-label', `Rename chat: ${data.title}`);
                         window.showSuccess?.('Chat renamed');

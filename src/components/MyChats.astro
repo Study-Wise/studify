@@ -1,5 +1,4 @@
 ---
-import { latexToPlainText } from '@/lib/latex-to-plain-text';
 import categories from '@/lib/modes';
 import { getUserThreads } from '@/lib/threads';
 
@@ -65,8 +64,8 @@ const threadsByCategory = threads.reduce<Record<string, Record<string, typeof th
                                     <h3 class="mode-title">{mode ? mode.name : modeKey}</h3>
                                     <div class="threads-list">
                                         {modeThreads.map((thread) => {
-                                            // The list, delete dialog and button label aren't typeset by MathJax, so they get the title's LaTeX as plain text
-                                            const displayTitle = latexToPlainText(thread.title) || (mode ? mode.name : thread.mode);
+                                            // MathJax doesn't typeset this page, so strip the LaTeX delimiters and command backslashes from the title
+                                            const displayTitle = thread.title.replace(/\\[()[\]]|\$/g, '').replace(/\\([a-zA-Z]+)/g, '$1').trim() || (mode ? mode.name : thread.mode);
                                             const chatUrl = `/${categoryKey}/${thread.mode}/chat/${thread.id}`;
 
                                             return (
