@@ -45,7 +45,7 @@ function getImageFailureReason<T>(error: T): string | undefined {
     }
     if (error.status === 429) return 'OpenAI is getting too many requests right now';
     if (error.status === 401) return 'our OpenAI API key isn\'t valid';
-    if (error.status === 403) return `our OpenAI account doesn't have access to the ${config.imageModel} image model`;
+    if (error.status === 403) return 'OpenAI denied access to its image service';
     if (error.status === 404) return `OpenAI couldn't find the ${config.imageModel} image model`;
     if (error.status !== undefined && error.status >= 500) return 'OpenAI\'s image service is having problems';
 
