@@ -118,8 +118,8 @@
             "Bash(nvm use)",
             "Bash(npm run check)",
             "Bash(ls:*)",
-            "Edit(*)",
-            "Write(*)"
+            "Edit",
+            "Write"
         ],
         "deny": [
             "Bash(* git add *)",

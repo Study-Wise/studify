@@ -27,10 +27,10 @@ env:
     BROWSER_TEST_PATH: ${{ github.event.inputs.browser_test_path || '/' }}
 
 jobs:
-    test-chrome:
-        name: Chrome
+    test-browsers:
+        name: All Browsers
         runs-on: ubuntu-latest
-        timeout-minutes: 10
+        timeout-minutes: 20
         steps:
             - uses: actions/checkout@v4
             - uses: actions/setup-node@v4
@@ -38,69 +38,17 @@ jobs:
                   node-version: '20'
                   cache: 'npm'
             - run: npm ci
-            - run: npx playwright install --with-deps chromium
+            - run: npx playwright install --with-deps chromium firefox webkit
             - name: Start dev server
               run: npm run dev &
             - name: Wait for server
               run: |
                   npx wait-on tcp:4321 --timeout 60000
                   sleep 5
-            - run: npm run test:nopause:chrome
+            - run: npx playwright test tests/browser.test.nopause.ts --browser=all
             - uses: actions/upload-artifact@v4
               if: failure()
               with:
-                  name: playwright-report-chrome
-                  path: playwright-report/
-                  retention-days: 7
-
-    test-firefox:
-        name: Firefox
-        runs-on: ubuntu-latest
-        timeout-minutes: 10
-        steps:
-            - uses: actions/checkout@v4
-            - uses: actions/setup-node@v4
-              with:
-                  node-version: '20'
-                  cache: 'npm'
-            - run: npm ci
-            - run: npx playwright install --with-deps firefox
-            - name: Start dev server
-              run: npm run dev &
-            - name: Wait for server
-              run: |
-                  npx wait-on tcp:4321 --timeout 60000
-                  sleep 5
-            - run: npm run test:nopause:firefox
-            - uses: actions/upload-artifact@v4
-              if: failure()
-              with:
-                  name: playwright-report-firefox
-                  path: playwright-report/
-                  retention-days: 7
-
-    test-safari:
-        name: Safari
-        runs-on: ubuntu-latest
-        timeout-minutes: 10
-        steps:
-            - uses: actions/checkout@v4
-            - uses: actions/setup-node@v4
-              with:
-                  node-version: '20'
-                  cache: 'npm'
-            - run: npm ci
-            - run: npx playwright install --with-deps webkit
-            - name: Start dev server
-              run: npm run dev &
-            - name: Wait for server
-              run: |
-                  npx wait-on tcp:4321 --timeout 60000
-                  sleep 5
-            - run: npm run test:nopause:safari
-            - uses: actions/upload-artifact@v4
-              if: failure()
-              with:
-                  name: playwright-report-safari
+                  name: playwright-report
                   path: playwright-report/
                   retention-days: 7
