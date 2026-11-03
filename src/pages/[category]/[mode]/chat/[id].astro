@@ -95,7 +95,7 @@ const mathDelimiterPattern = /\$|\\\(|\\\[/;
 
 export const inNav = 'hide';
 ---
-<Layout title={`${threadTitle || (id === 'new' ? 'New Chat' : 'Chat')} | ${modeName} | ${categoryName}`} container={false} isChatArea={true} className="chat-page" hideCopyright={true} mathjax={true} desmos={modeObj.desmos === true}>
+<Layout title={`${threadTitle?.replace(/\\[()[\]]|(?<!\\)\$/g, '').replace(/\\([a-zA-Z]+|[{}$])/g, '$1') || (id === 'new' ? 'New Chat' : 'Chat')} | ${modeName} | ${categoryName}`} container={false} isChatArea={true} className="chat-page" hideCopyright={true} mathjax={true} desmos={modeObj.desmos === true}>
     <header class="chat-header">
         <div class="chat-title-container">
             <ChatTitle title={threadTitle || (id === 'new' ? 'New Chat' : 'Chat')} threadId={id || ''} canRename={isOwner} />
