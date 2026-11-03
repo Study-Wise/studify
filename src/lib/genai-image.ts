@@ -29,13 +29,12 @@ async function generateImageBuffer(prompt: string) {
         let errorMessage = 'OpenAI image generation error';
 
         if (error instanceof Error) errorMessage = `OpenAI API error: ${error.message}`;
-        else if (error && typeof error === 'object') {
-            if ('status' in error && error.status === 429) {
-                errorMessage = 'OpenAI API rate limit exceeded - Please wait a moment and try again.';
-            }
-            else if ('status' in error && (error.status === 401 || error.status === 403)) {
-                errorMessage = 'OpenAI API authentication failed - Please check your API key.';
-            }
+
+        if (error instanceof OpenAI.APIError) {
+            if (error.code === 'insufficient_quota' || error.code === 'credit_balance_exhausted') throw new VendorError('OpenAI', errorMessage, { cause: error }, 'our OpenAI account has run out of credits');
+            if (error.status === 429) throw new VendorError('OpenAI', errorMessage, { cause: error }, 'OpenAI is getting too many requests right now');
+            if (error.status === 401) throw new VendorError('OpenAI', errorMessage, { cause: error }, 'our OpenAI API key isn\'t valid');
+            if (error.status === 403) throw new VendorError('OpenAI', errorMessage, { cause: error }, 'OpenAI denied access to its image service');
         }
 
         throw new VendorError('OpenAI', errorMessage, { cause: error });
