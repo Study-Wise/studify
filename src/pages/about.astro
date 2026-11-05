@@ -10,7 +10,7 @@ interface TeamData {
     role: string;
     subrole?: string;
     blurb: string;
-    description: string;
+    description: string[];
     links?: {
         href: string;
         text: string;
@@ -59,7 +59,9 @@ const team: TeamData[] = teamData.map((u: TeamData) => ({
                 </div>
                 <div class="about-content">
 
-                    <div class="about-text" set:html={member.description}></div>
+                    <div class="about-text">
+                        {member.description.map(p => <p  set:html={p} />)}
+                    </div>
 
                     {member.links && member.links.length > 0 && (
                         <p class="about-links">
