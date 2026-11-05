@@ -1,6 +1,8 @@
 ---
 import { createHmac } from 'node:crypto';
 
+import '@/styles/components/tawk-to.scss';
+
 const secretKey = import.meta.env.TAWK_SECRET_KEY || process.env.TAWK_SECRET_KEY;
 
 // Tawk.to's login API expects a hex encoded HMAC-SHA256 of the user ID.

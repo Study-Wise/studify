@@ -1,0 +1,12 @@
+body > div:last-child:has(> #min-widget, > #max-widget, > #branding-widget, > #message-preview, > #chat-bubble) {
+    #max-widget iframe {
+        transition-behavior: allow-discrete !important;
+        opacity: 0 !important;
+        transition: opacity 0.4s ease, display 0.4s ease allow-discrete !important;
+
+        &.open {
+            display: block !important;
+            opacity: 1 !important;
+        }
+    }
+}
