@@ -23,8 +23,22 @@ export default {
     },
     create(context) {
         return {
+            Program() {
+                if (!context.filename.endsWith('.astro')) return;
+
+                // Check 1: Unnecessary parentheses around a single arrow parameter across the whole file, covering frontmatter, scripts and markup in one pass
+                for (const match of context.sourceCode.getText().matchAll(/\(\s*[\w$]+\s*\)\s*=>/g)) {
+                    context.report({
+                        loc: context.sourceCode.getLocFromIndex(match.index),
+                        message: 'Unnecessary parentheses around single arrow function parameter',
+                        fix(fixer) {
+                            return fixer.replaceTextRange([match.index, match.index + match[0].length], match[0].replace(/\(\s*([\w$]+)\s*\)/, '$1'));
+                        }
+                    });
+                }
+            },
             ArrowFunctionExpression(node) {
-                // Check 1: Arrow function definitions
+                // Check 2: Arrow function definitions
                 if ((!node.parent || !(node.parent.type === 'CallExpression' || node.parent.type === 'NewExpression') || !Array.isArray(node.parent.arguments) || !node.parent.arguments.includes(node)) && (!node.parent || node.parent.type !== 'CallExpression' || node.parent.callee !== node) && (!context.filename.includes('/pages/api/') || !node.parent || node.parent.type !== 'VariableDeclarator' || !['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'].includes(node.parent.id?.name)) && (!node.parent || node.parent.type !== 'Property' || node.parent.key.type !== 'Identifier' || node.parent.key.name !== 'execute') && (!node.parent || node.parent.type !== 'Property') && (!node.parent || node.parent.type !== 'AssignmentExpression' || node.parent.right !== node || node.parent.left.type !== 'MemberExpression' || node.parent.left.object.type !== 'Identifier' || node.parent.left.object.name !== 'window')) {
                     context.report({
                         node,
@@ -45,7 +59,7 @@ export default {
                 }
             },
             ConditionalExpression(node) {
-                // Check 2: Unnecessary parentheses around ternary condition test
+                // Check 3: Unnecessary parentheses around ternary condition test
                 if (!node.test) return;
 
                 const tokenBeforeTest = context.sourceCode.getTokenBefore(node.test);

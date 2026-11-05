@@ -124,7 +124,7 @@ export default [
             ...tsPlugin.configs.recommended.rules,
             '@typescript-eslint/no-explicit-any': 'error',
             '@typescript-eslint/no-unused-vars': 'off',
-            'arrow-parens': ['error', 'as-needed'],
+            'arrow-parens': 'off',
             'no-multiple-empty-lines': [
                 'error',
                 {
