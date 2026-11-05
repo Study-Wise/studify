@@ -66,11 +66,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
             </div>
         )}
         {sidebarSections.uploadedFiles && (
-            <SidebarSection title="Uploaded Files" icon="folder" hasContent={uploadedFiles.length> 0}
-                threadId={threadId}
-                id="files"
-                canRegenerate={false}
-            >
+            <SidebarSection title="Uploaded Files" icon="folder" hasContent={uploadedFiles.length > 0} threadId={threadId} id="files" canRegenerate={false}>
                 <Fragment slot="content">
                     {isAuthorized && (
                         <>
