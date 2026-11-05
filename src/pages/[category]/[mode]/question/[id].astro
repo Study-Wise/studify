@@ -71,27 +71,21 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <Fragment slot="head">
         <meta name="description" content={pageDescription} />
         <meta name="keywords" content={`${modeName}, ${categoryName}, questions, ${displayQuestion}, education, learning, study help`} />
-
         <meta property="og:type" content="article" />
         <meta property="og:url" content={canonicalURL} />
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDescription} />
-
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content={canonicalURL} />
         <meta property="twitter:title" content={pageTitle} />
         <meta property="twitter:description" content={pageDescription} />
-
-        <link rel="canonical" href={canonicalURL} />
-
-        <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
-
         <meta name="robots" content="index, follow" />
         <meta name="author" content={appConfig.name} />
         <meta name="category" content={categoryName} />
         <meta name="topic" content={modeName} />
+        <link rel="canonical" href={canonicalURL} />
+        <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
     </Fragment>
-
     <div class="question-page">
         {!questionData ? (
             <article class="question-empty">
@@ -106,7 +100,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
                         </ol>
                     </nav>
                 </header>
-
                 <div class="empty-state">
                     <span class="material-symbols-outlined" aria-hidden="true">help_outline</span>
                     <h2>Answer Not Found</h2>
@@ -119,7 +112,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
             <article class="question-content" itemscope itemtype="https://schema.org/Question">
                 <header>
                     <h1 class="question-question" itemprop="name">{displayQuestion}</h1>
-
                     <nav class="question-breadcrumb" aria-label="Breadcrumb">
                         <ol itemscope itemtype="https://schema.org/BreadcrumbList">
                             <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
@@ -146,7 +138,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
                             </li>
                         </ol>
                     </nav>
-
                     <div class="question-meta">
                         <span class="question-category">{categoryName}</span>
                         <span class="question-separator">•</span>
@@ -155,11 +146,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
                         <span class="question-views">{parseInt(questionData.viewCount) + 1} views</span>
                     </div>
                 </header>
-
                 <div class="question-answer" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
                     <div itemprop="text" set:html={displayAnswer} />
                 </div>
-
                 <footer class="question-footer">
                     <div class="question-helpful">
                         <p>Was this answer helpful?</p>
@@ -168,7 +157,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
                             <a href={`/${category}/${mode}/chat/new`} class="btn primary">Start a Chat</a>
                         </div>
                     </div>
-
                     <div class="question-related">
                         <h2>Need More Help?</h2>
                         <p>Get personalized tutoring and detailed explanations in our interactive chat.</p>
@@ -177,7 +165,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
                         </a>
                     </div>
                 </footer>
-
                 <meta itemprop="dateCreated" content={questionData.createdAt.toISOString()} />
                 <meta itemprop="dateModified" content={questionData.updatedAt.toISOString()} />
             </article>

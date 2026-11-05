@@ -11,14 +11,9 @@ const currentUrl = Astro.request.url;
             <div class="error-icon">
                 <span class="material-symbols-outlined" aria-hidden="true">search_off</span>
             </div>
-
             <h1 class="error-title">404</h1>
             <h2 class="error-subtitle">Page Not Found</h2>
-
-            <p class="error-message">
-                Oops! The page you're looking for doesn't exist or has been moved.
-            </p>
-
+            <p class="error-message">Oops! The page you're looking for doesn't exist or has been moved.</p>
             <div class="error-actions">
                 <a href="/" class="btn primary">
                     <span class="material-symbols-outlined" aria-hidden="true">home</span>
@@ -29,37 +24,12 @@ const currentUrl = Astro.request.url;
                     Go Back
                 </a>
             </div>
-
-            {/*<div class="suggestions">
-                <h3>Popular Pages</h3>
-                <div class="suggestions-grid">
-                    <a href="/science/physics" class="suggestion-card">
-                        <span class="suggestion-icon">⚛️</span>
-                        <span class="suggestion-text">Physics</span>
-                    </a>
-                    <a href="/math/algebra" class="suggestion-card">
-                        <span class="suggestion-icon">🔢</span>
-                        <span class="suggestion-text">Algebra</span>
-                    </a>
-                    <a href="/science/computer-science" class="suggestion-card">
-                        <span class="suggestion-icon">💻</span>
-                        <span class="suggestion-text">Computer Science</span>
-                    </a>
-                    <a href="/math/calculus" class="suggestion-card">
-                        <span class="suggestion-icon">∫</span>
-                        <span class="suggestion-text">Calculus</span>
-                    </a>
-                </div>
-            </div>*/}
         </div>
     </div>
-
     <script is:inline define:vars={{ currentUrl }}>
-        // Track 404s in Sentry using breadcrumbs instead of throwing errors
         // This avoids unnecessary noise from legitimate 404s (bots, mistyped URLs)
         if (typeof window !== 'undefined' && window.Sentry) {
             const referrer = document.referrer;
-            // Check if referrer is from the same origin (more precise than domain matching)
             const isInternalReferrer = referrer && referrer.startsWith(window.location.origin);
 
             window.Sentry.addBreadcrumb({
@@ -69,13 +39,12 @@ const currentUrl = Astro.request.url;
                 data: {
                     url: currentUrl,
                     referrer: referrer || 'none',
-                    isInternalReferrer: isInternalReferrer
+                    isInternalReferrer: referrer && referrer.startsWith(window.location.origin)
                 }
             });
 
-            // Only capture as a message (not an error) if it's from an internal link
             // This helps identify broken internal links without noise from external 404s
-            if (isInternalReferrer) {
+            if (referrer && referrer.startsWith(window.location.origin)) {
                 window.Sentry.captureMessage(
                     `Potential broken internal link: ${currentUrl}`,
                     'warning'

@@ -15,7 +15,6 @@ if (!(await isUserAdmin(user.email))) return Astro.redirect('/');
 <Layout title="Admin Dashboard" className="admin-page">
     <div class="admin-container">
         <h1>Admin Dashboard</h1>
-
         <div class="user-info">
             <h2>Your Account</h2>
             <p><strong>User ID:</strong> {user.id}</p>
@@ -23,7 +22,6 @@ if (!(await isUserAdmin(user.email))) return Astro.redirect('/');
             <p><strong>Role:</strong> Admin</p>
             <p><strong>Member Since:</strong> <LocalTime date={user.createdAt} options={{ year: 'numeric', month: 'numeric', day: 'numeric' }} /></p>
         </div>
-
         <div class="admin-features">
             <h2>Admin Features</h2>
             <div class="feature-grid">
@@ -32,19 +30,16 @@ if (!(await isUserAdmin(user.email))) return Astro.redirect('/');
                     <p>Manage all users in the system</p>
                     <button type="button" class="btn">Manage Users</button>
                 </div>
-
                 <div class="feature-card">
                     <h3>Analytics</h3>
                     <p>View system analytics and reports</p>
                     <button type="button" class="btn">View Analytics</button>
                 </div>
-
                 <div class="feature-card">
                     <h3>System Settings</h3>
                     <p>Configure system-wide settings</p>
                     <button type="button" class="btn">Settings</button>
                 </div>
-
                 <div class="feature-card">
                     <h3>Content Management</h3>
                     <p>Manage quizzes and educational content</p>

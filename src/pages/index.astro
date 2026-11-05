@@ -79,7 +79,6 @@ const visibleCategories = Object.entries(categories).filter(([_, category]) =>
                 </button>
             </div>
         </div>
-
         <div class="subject-search-panel" id="subject-search-panel" role="search" hidden>
             <label class="subject-search-field">
                 <span class="material-symbols-outlined" aria-hidden="true">search</span>
@@ -100,7 +99,6 @@ const visibleCategories = Object.entries(categories).filter(([_, category]) =>
                 ))}
             </div>
         </div>
-
         <div class="categories-grid">
             {visibleCategories.map(([categoryKey, category]) => (
                 <div class="category-card" data-category={categoryKey}>

@@ -58,12 +58,10 @@ const team: TeamData[] = teamData.map((u: TeamData) => ({
                     </div>}
                 </div>
                 <div class="about-content">
-
                     <div class="about-text">
                         {member.blurb && <p set:html={member.blurb} />}
                         {member.description && member.description.length > 0 && member.description.map(p => <p  set:html={p} />)}
                     </div>
-
                     {member.links && member.links.length > 0 && (
                         <p class="about-links">
                             {member.links.map(link => {

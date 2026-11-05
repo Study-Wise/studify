@@ -70,6 +70,7 @@ if (container) classList.push('container');
                 }
             </script>
         )}
+
         {/* MathJax Config & Loader */}
         {mathjax && (
             <>
@@ -120,13 +121,10 @@ if (container) classList.push('container');
         <Dialog />
         {!Astro.routePattern.startsWith('/[category]/[mode]') && <TawkTo />}
         {!isChatArea ? <Header /> : ''}
-
         <main class:list={['main-content', ...classList]} id="main-content">
             <slot />
         </main>
-
         {!isChatArea ? <Footer hideCopyright={hideCopyright} /> : ''}
-
         <script is:inline>
             window.activateLocalStorageInput = function(name) {
                 const input = document.querySelector(`:is(input, select, textarea)[name="${name}"]`);
