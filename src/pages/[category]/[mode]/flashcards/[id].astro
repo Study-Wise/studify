@@ -66,13 +66,7 @@ const hasContent = !!(flashcardData !== null ? (typeof flashcardData !== 'string
         </div>
     ) : (
         <>
-            <ContentActions
-                contentType="flashcards"
-                threadId={id || ''}
-                hasContent={hasContent}
-                isAuthorized={isAuthorized}
-                chatUrl={chatUrl}
-            />
+            <ContentActions contentType="flashcards" threadId={id || ''} hasContent={hasContent} isAuthorized={isAuthorized} chatUrl={chatUrl} />
             {typeof flashcardData !== 'string' && flashcardData && flashcardData.questions.length > 0 ? (
                 <div class="content-container quizlet-flashcards">
                     {flashcardData.text && (

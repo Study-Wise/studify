@@ -9,28 +9,12 @@ const themes = [
 ---
 
 <div class="theme-switcher-container">
-    <button
-        type="button"
-        id="theme-switcher"
-        class="theme-switcher"
-        aria-label="Theme: System"
-        aria-haspopup="menu"
-        aria-expanded="false"
-        aria-controls="theme-menu"
-    >
+    <button type="button" id="theme-switcher" class="theme-switcher" aria-label="Theme: System" aria-haspopup="menu" aria-expanded="false" aria-controls="theme-menu">
         <span class="material-symbols-outlined" aria-hidden="true">contrast</span>
     </button>
     <div class="theme-menu" id="theme-menu" role="menu" aria-label="Theme" hidden>
-        {themes.map((theme) => (
-            <button
-                type="button"
-                class="theme-menu-item"
-                role="menuitemradio"
-                aria-checked="false"
-                tabindex="-1"
-                data-theme-value={theme.value}
-                data-theme-icon={theme.icon}
-            >
+        {themes.map(theme => (
+            <button type="button" class="theme-menu-item" role="menuitemradio" aria-checked="false" tabindex="-1" data-theme-value={theme.value} data-theme-icon={theme.icon}>
                 <span class="material-symbols-outlined" aria-hidden="true">{theme.icon}</span>
                 <span class="theme-menu-label">{theme.label}</span>
                 <span class="material-symbols-outlined theme-menu-check" aria-hidden="true">check</span>

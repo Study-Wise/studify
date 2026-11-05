@@ -75,15 +75,7 @@ const modeName = modeObj?.name || mode;
             </label>
         </h2>
         <div id="text-input" class="input-area active-input">
-            <textarea
-                id="text-paste"
-                class="text-paste"
-                placeholder={`Paste your ${modeName} problems here...
-Please note that the AI will not provide the answer for your immediate question`}
-                rows="12"
-                aria-describedby="upload-note"
-                aria-label={`Paste ${modeName} problems here`}
-            ></textarea>
+            <textarea id="text-paste" class="text-paste" placeholder={`Paste your ${modeName} problems here... Please note that the AI will not provide the answer for your immediate question`} rows="12" aria-describedby="upload-note" aria-label={`Paste ${modeName} problems here`}></textarea>
         </div>
         <p class="upload-note" id="upload-note">
             <span class="material-symbols-outlined" aria-hidden="true">upload_file</span>

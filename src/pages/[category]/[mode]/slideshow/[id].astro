@@ -43,13 +43,7 @@ const { html: slideshowHtml } = (isAuthorized || isPublic)
         </div>
     ) : (
         <>
-            <ContentActions
-                contentType="slideshow"
-                threadId={id || ''}
-                hasContent={!!slideshowHtml}
-                isAuthorized={isAuthorized}
-                chatUrl={chatUrl}
-            />
+            <ContentActions contentType="slideshow" threadId={id || ''} hasContent={!!slideshowHtml} isAuthorized={isAuthorized} chatUrl={chatUrl} />
             {slideshowHtml ? (
                 <div class="slideshow-container">
                     <iframe srcdoc={slideshowHtml} title="Generated Slideshow" sandbox="allow-scripts" />

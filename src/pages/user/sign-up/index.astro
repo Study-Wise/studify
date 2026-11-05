@@ -21,36 +21,15 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
             <form id="signup-form" class="auth-form">
                 <div class="form-group">
                     <label for="name" class="form-label">Name (optional)</label>
-                    <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        class="form-input"
-                        autocomplete="name"
-                    />
+                    <input type="text" id="name" name="name" class="form-input" autocomplete="name" />
                 </div>
                 <div class="form-group">
                     <label for="email" class="form-label">Email</label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        class="form-input"
-                        required
-                        autocomplete="email"
-                    />
+                    <input type="email" id="email" name="email" class="form-input" required autocomplete="email" />
                 </div>
                 <div class="form-group">
                     <label for="password" class="form-label">Password</label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        class="form-input"
-                        required
-                        autocomplete="new-password"
-                        minlength="8"
-                    />
+                    <input type="password" id="password" name="password" class="form-input" required autocomplete="new-password" minlength="8" />
                 </div>
                 <button type="submit" class="auth-button">Sign Up</button>
             </form>

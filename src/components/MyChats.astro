@@ -30,7 +30,7 @@ const threadsByCategory = threads.reduce<Record<string, Record<string, typeof th
                     {Object.entries(threadsByCategory).map(([categoryKey, threadsByMode]) => categories[categoryKey] && (
                         <optgroup label={categories[categoryKey].name}>
                             <option value={categoryKey}>All {categories[categoryKey].name}</option>
-                            {Object.keys(threadsByMode).map((modeKey) => (
+                            {Object.keys(threadsByMode).map(modeKey => (
                                 <option value={`${categoryKey}/${modeKey}`}>{categories[categoryKey].modes[modeKey]?.name ?? modeKey}</option>
                             ))}
                         </optgroup>
@@ -63,7 +63,7 @@ const threadsByCategory = threads.reduce<Record<string, Record<string, typeof th
                                 <div class="mode-section">
                                     <h3 class="mode-title">{mode ? mode.name : modeKey}</h3>
                                     <div class="threads-list">
-                                        {modeThreads.map((thread) => {
+                                        {modeThreads.map(thread => {
                                             const displayTitle = thread.title.replace(/\\[()[\]]|(?<!\\)\$/g, '').replace(/\\([a-zA-Z]+|[{}$])/g, '$1').trim() || (mode ? mode.name : thread.mode);
                                             const chatUrl = `/${categoryKey}/${thread.mode}/chat/${thread.id}`;
 
@@ -87,14 +87,7 @@ const threadsByCategory = threads.reduce<Record<string, Record<string, typeof th
                                                             </div>
                                                         </div>
                                                     </a>
-                                                    <button
-                                                        type="button"
-                                                        class="thread-delete"
-                                                        data-thread-id={thread.id}
-                                                        data-thread-title={displayTitle}
-                                                        title="Delete chat"
-                                                        aria-label={`Delete chat: ${displayTitle}`}
-                                                    >
+                                                    <button type="button" class="thread-delete" data-thread-id={thread.id} data-thread-title={displayTitle} title="Delete chat" aria-label={`Delete chat: ${displayTitle}`}>
                                                         <span class="material-symbols-outlined" aria-hidden="true">delete</span>
                                                     </button>
                                                 </div>

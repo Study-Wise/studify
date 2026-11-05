@@ -41,14 +41,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                                 <span class="status-value" id="share-status-text">{isPublic ? 'Public' : 'Private'}</span>
                             </div>
                             <label class="toggle-switch">
-                                <input
-                                    type="checkbox"
-                                    id="public-toggle"
-                                    role="switch"
-                                    aria-labelledby="public-toggle-label"
-                                    aria-describedby="public-toggle-description"
-                                    checked={isPublic}
-                                />
+                                <input type="checkbox" id="public-toggle" role="switch" aria-labelledby="public-toggle-label" aria-describedby="public-toggle-description" checked={isPublic} />
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
@@ -58,14 +51,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                                 : 'This thread is private and only visible to you.'}
                         </p>
                         <div class="share-link" id="share-link" hidden={!(isPublic && hasSavedThread)}>
-                            <input
-                                type="text"
-                                id="share-link-input"
-                                class="share-link-input"
-                                aria-label="Share link"
-                                value={shareUrl}
-                                readonly
-                            />
+                            <input type="text" id="share-link-input" class="share-link-input" aria-label="Share link" value={shareUrl} readonly />
                             <button type="button" class="share-link-copy" id="share-link-copy">
                                 <span class="material-symbols-outlined" aria-hidden="true">content_copy</span>
                                 <span class="share-link-copy-text">Copy</span>
@@ -80,10 +66,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
             </div>
         )}
         {sidebarSections.uploadedFiles && (
-            <SidebarSection
-                title="Uploaded Files"
-                icon="folder"
-                hasContent={uploadedFiles.length > 0}
+            <SidebarSection title="Uploaded Files" icon="folder" hasContent={uploadedFiles.length> 0}
                 threadId={threadId}
                 id="files"
                 canRegenerate={false}
@@ -94,14 +77,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                             <label class="upload-button" for="file-upload">
                                 <span class="material-symbols-outlined" aria-hidden="true">upload</span>
                                 <span>Upload Files</span>
-                                <input
-                                    type="file"
-                                    id="file-upload"
-                                    accept=".jpg,.jpe,.jpeg,.png,.gif,.webp,.svg,.bmp,.tif,.tiff,.apng,.pdf,.doc,.docx,.docm,.ppt,.pptx,.pptm,.xls,.xlsx,.xlsm,.vsd,.vsdx,.pub,.eml,.txt,.csv,.html,.md"
-                                    multiple
-                                    aria-describedby="upload-limits"
-                                    style="display: none;"
-                                />
+                                <input type="file" id="file-upload" accept=".jpg,.jpe,.jpeg,.png,.gif,.webp,.svg,.bmp,.tif,.tiff,.apng,.pdf,.doc,.docx,.docm,.ppt,.pptx,.pptm,.xls,.xlsx,.xlsm,.vsd,.vsdx,.pub,.eml,.txt,.csv,.html,.md" multiple aria-describedby="upload-limits" style="display: none;" />
                             </label>
                             <p class="upload-limits" id="upload-limits">
                                 Images, PDF, Word, PowerPoint, Excel and text files. Max 10 MB per file.

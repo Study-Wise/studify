@@ -48,21 +48,10 @@ if (latestMindMap) {
         </div>
     ) : (
         <>
-            <ContentActions
-                contentType="mind-map"
-                threadId={id || ''}
-                hasContent={!!latestMindMap}
-                isAuthorized={isAuthorized}
-                chatUrl={chatUrl}
-            />
+            <ContentActions contentType="mind-map" threadId={id || ''} hasContent={!!latestMindMap} isAuthorized={isAuthorized} chatUrl={chatUrl} />
             {mindMapDataUrl ? (
                 <div class="content-container mind-map-container">
-                    <iframe
-                        src={mindMapDataUrl}
-                        title="Mind Map"
-                        class="mind-map-iframe"
-                        sandbox="allow-scripts"
-                    />
+                    <iframe src={mindMapDataUrl} title="Mind Map" class="mind-map-iframe" sandbox="allow-scripts" />
                 </div>
             ) : (
                 <div class="empty-state">

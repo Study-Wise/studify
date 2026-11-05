@@ -66,14 +66,7 @@ const visibleCategories = Object.entries(categories).filter(([_, category]) =>
                 <span class="material-symbols-outlined" aria-hidden="true">school</span>&nbsp;Choose Your Subject
             </h2>
             <div class="subject-search">
-                <button
-                    type="button"
-                    class="subject-search-toggle"
-                    id="subject-search-toggle"
-                    aria-label="Search and filter subjects"
-                    aria-expanded="false"
-                    aria-controls="subject-search-panel"
-                >
+                <button type="button" class="subject-search-toggle" id="subject-search-toggle" aria-label="Search and filter subjects" aria-expanded="false" aria-controls="subject-search-panel">
                     <span class="material-symbols-outlined" aria-hidden="true">search</span>
                     <span class="subject-search-indicator" aria-hidden="true"></span>
                 </button>
@@ -82,13 +75,7 @@ const visibleCategories = Object.entries(categories).filter(([_, category]) =>
         <div class="subject-search-panel" id="subject-search-panel" role="search" hidden>
             <label class="subject-search-field">
                 <span class="material-symbols-outlined" aria-hidden="true">search</span>
-                <input
-                    type="search"
-                    id="subject-search-input"
-                    placeholder="Search subjects"
-                    aria-label="Search subjects"
-                    autocomplete="off"
-                />
+                <input type="search" id="subject-search-input" placeholder="Search subjects" aria-label="Search subjects" autocomplete="off" />
             </label>
             <div class="subject-filter-chips" role="group" aria-label="Filter by group">
                 <button type="button" class="subject-filter-chip" data-filter="" aria-pressed="true">All</button>
@@ -110,11 +97,7 @@ const visibleCategories = Object.entries(categories).filter(([_, category]) =>
                                 const chatUrl = `/${categoryKey}/${modeKey}/chat/new`;
                                 const href = isLoggedIn ? chatUrl : `/user/sign-in?returnBackUrl=${encodeURIComponent(chatUrl)}`;
                                 return (
-                                    <a
-                                        href={href}
-                                        class="mode-card"
-                                        data-search={`${mode.name} ${mode.description} ${category.name}`.toLowerCase()}
-                                    >
+                                    <a href={href} class="mode-card" data-search={`${mode.name} ${mode.description} ${category.name}`.toLowerCase()}>
                                         <div class="mode-icon">{mode.icon}</div>
                                         <h4>{mode.name}</h4>
                                         <p>{mode.description}</p>

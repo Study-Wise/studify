@@ -47,13 +47,7 @@ const parsedContent = latestStudyGuide ? await marked.parse(latestStudyGuide) : 
         </div>
     ) : (
         <>
-            <ContentActions
-                contentType="study-guide"
-                threadId={id || ''}
-                hasContent={!!parsedContent}
-                isAuthorized={isAuthorized}
-                chatUrl={chatUrl}
-            />
+            <ContentActions contentType="study-guide" threadId={id || ''} hasContent={!!parsedContent} isAuthorized={isAuthorized} chatUrl={chatUrl} />
             {parsedContent ? (
                 <div class="content-container study-guide-content" set:html={parsedContent} />
             ) : (

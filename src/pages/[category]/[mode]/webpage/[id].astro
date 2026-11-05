@@ -49,13 +49,7 @@ if (latestWebpage) {
         </div>
     ) : (
         <>
-            <ContentActions
-                contentType="webpage"
-                threadId={id || ''}
-                hasContent={!!latestWebpage}
-                isAuthorized={isAuthorized}
-                chatUrl={chatUrl}
-            />
+            <ContentActions contentType="webpage" threadId={id || ''} hasContent={!!latestWebpage} isAuthorized={isAuthorized} chatUrl={chatUrl} />
             {webpageDataUrl ? (
                 <div class="content-container webpage-container">
                     <iframe src={webpageDataUrl} title="Generated Webpage" sandbox="allow-scripts" />
