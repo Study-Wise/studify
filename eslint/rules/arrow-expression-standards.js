@@ -46,9 +46,7 @@ export default {
                             const params = context.sourceCode.getText().slice(node.range[0], context.sourceCode.getTokenBefore(node.body, { filter: token => token.value === '=>' }).range[0]).trim().replace(/^async\s+/, '');
                             const definition = `${node.async ? 'async ' : ''}function ${params.startsWith('(') ? params : `(${params})`} ${node.body.type === 'BlockStatement' ? context.sourceCode.getText(node.body) : `{ return ${context.sourceCode.getText(node.body)} }`}`;
 
-                            if (node.parent.type === 'VariableDeclarator' && node.parent.id.type === 'Identifier' && !node.parent.id.typeAnnotation && node.parent.parent.declarations.length === 1) {
-                                return fixer.replaceText(node.parent.parent, definition.replace('function ', `function ${node.parent.id.name}`));
-                            }
+                            if (node.parent.type === 'VariableDeclarator' && node.parent.id.type === 'Identifier' && !node.parent.id.typeAnnotation && node.parent.parent.declarations.length === 1) return fixer.replaceText(node.parent.parent, definition.replace('function ', `function ${node.parent.id.name}`));
 
                             return fixer.replaceText(node, definition);
                         },

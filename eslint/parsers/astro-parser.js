@@ -5,16 +5,10 @@ export default function parse(code) {
     const parsedCode = code.split('').map(char => char === '\n' || char === '\r' ? char : ' ');
     const frontmatter = code.match(/^---\r?\n([\s\S]*?)\r?\n---/);
 
-    if (frontmatter) {
-        for (let index = 0; index < frontmatter[1].length; index++) {
-            parsedCode[frontmatter[0].indexOf(frontmatter[1]) + index] = frontmatter[1][index];
-        }
-    }
+    if (frontmatter) for (let index = 0; index < frontmatter[1].length; index++) parsedCode[frontmatter[0].indexOf(frontmatter[1]) + index] = frontmatter[1][index];
 
     for (const match of code.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script\s*>/gi)) {
-        for (let index = 0; index < match[1].length; index++) {
-            parsedCode[match.index + match[0].indexOf(match[1]) + index] = match[1][index];
-        }
+        for (let index = 0; index < match[1].length; index++) parsedCode[match.index + match[0].indexOf(match[1]) + index] = match[1][index];
     }
 
     try {

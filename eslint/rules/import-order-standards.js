@@ -10,22 +10,16 @@ function getImportGroup(source) {
         return 2;
     }
 
-    if (source === 'astro' || source.startsWith('astro/') || source === '@astrojs' || source.startsWith('@astrojs/')) {
-        return 3;
-    }
+    if (source === 'astro' || source.startsWith('astro/') || source === '@astrojs' || source.startsWith('@astrojs/')) return 3;
 
     const frameworks = ['astro', 'svelte', 'react', 'vue', 'solid', 'preact'];
     const styles = ['css', 'scss', 'sass', 'less', 'styl', 'stylus'];
-    if (frameworks.find(f => source.toLowerCase().endsWith(`.${f}`)) || styles.find(s => source.toLowerCase().endsWith(`.${s}`))) {
-        return 8;
-    }
+    if (frameworks.find(f => source.toLowerCase().endsWith(`.${f}`)) || styles.find(s => source.toLowerCase().endsWith(`.${s}`))) return 8;
 
     if (!source.startsWith('.')) {
         if (path.extname(source.toLowerCase()).slice(1).length === 0 || path.extname(source.toLowerCase()).slice(1) === 'config') return 1;
 
-        if (['js', 'ts'].some(prefix => path.extname(source.toLowerCase()).slice(1).startsWith(prefix) || path.extname(source.toLowerCase()).slice(1).endsWith(prefix))) {
-            return 6;
-        }
+        if (['js', 'ts'].some(prefix => path.extname(source.toLowerCase()).slice(1).startsWith(prefix) || path.extname(source.toLowerCase()).slice(1).endsWith(prefix))) return 6;
 
         return 7;
     }
@@ -54,9 +48,7 @@ function getImportModulePath(source, currentDir) {
         if (dirStat && dirStat.isDirectory()) {
             for (const entry of fs.readdirSync(path.resolve(currentDir, source.split('/').slice(0, -1).join('/')))) {
                 const stat = fs.statSync(path.join(path.resolve(currentDir, source.split('/').slice(0, -1).join('/')), entry), { throwIfNoEntry: false });
-                if (stat && stat.isFile() && path.parse(entry).name === source.split('/')[source.split('/').length - 1]) {
-                    return path.resolve(currentDir, source.split('/').slice(0, -1).join('/'));
-                }
+                if (stat && stat.isFile() && path.parse(entry).name === source.split('/')[source.split('/').length - 1]) return path.resolve(currentDir, source.split('/').slice(0, -1).join('/'));
             }
         }
     } catch {
@@ -95,9 +87,7 @@ function compareImportSources(firstSource, secondSource) {
 
     if (a.up !== b.up) return b.up - a.up;
 
-    for (let i = 0; i < Math.min(a.dirs.length, b.dirs.length); i++) {
-        if (a.dirs[i] !== b.dirs[i]) return a.dirs[i] < b.dirs[i] ? -1 : 1;
-    }
+    for (let i = 0; i < Math.min(a.dirs.length, b.dirs.length); i++) if (a.dirs[i] !== b.dirs[i]) return a.dirs[i] < b.dirs[i] ? -1 : 1;
 
     if (a.dirs.length !== b.dirs.length) return a.dirs.length - b.dirs.length;
 

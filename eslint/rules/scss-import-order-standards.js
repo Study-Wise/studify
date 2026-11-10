@@ -27,9 +27,7 @@ function compareUses(a, b) {
     if (a.group !== b.group) return a.group - b.group;
     if (a.up !== b.up) return b.up - a.up;
 
-    for (let i = 0; i < Math.min(a.dirs.length, b.dirs.length); i++) {
-        if (a.dirs[i] !== b.dirs[i]) return a.dirs[i] < b.dirs[i] ? -1 : 1;
-    }
+    for (let i = 0; i < Math.min(a.dirs.length, b.dirs.length); i++) if (a.dirs[i] !== b.dirs[i]) return a.dirs[i] < b.dirs[i] ? -1 : 1;
 
     if (a.dirs.length !== b.dirs.length) return a.dirs.length - b.dirs.length;
 

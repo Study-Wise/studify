@@ -81,9 +81,7 @@ export default {
 
                 // Check 3: Single statement in if/else should be on one line
                 checkSingleDeclarationBlock(node, node.consequent, context);
-                if (node.alternate && node.alternate.type !== 'IfStatement') {
-                    checkSingleDeclarationBlock(node.alternate, node.alternate, context);
-                }
+                if (node.alternate && node.alternate.type !== 'IfStatement') checkSingleDeclarationBlock(node.alternate, node.alternate, context);
             },
             TryStatement(node) {
                 // Check 2: Try/catch/finally must stay on same line
@@ -150,12 +148,8 @@ export default {
                 if (!node.body.body[0].loc || node.body.body[0].loc.start.line !== node.body.body[0].loc.end.line) return;
 
                 let replacement;
-                if (node.body.body[0].type === 'ExpressionStatement') {
-                    replacement = context.sourceCode.getText(node.body.body[0].expression);
-                }
-                else if (node.body.body[0].type === 'ReturnStatement' && node.body.body[0].argument) {
-                    replacement = context.sourceCode.getText(node.body.body[0].argument);
-                }
+                if (node.body.body[0].type === 'ExpressionStatement') replacement = context.sourceCode.getText(node.body.body[0].expression);
+                else if (node.body.body[0].type === 'ReturnStatement' && node.body.body[0].argument) replacement = context.sourceCode.getText(node.body.body[0].argument);
                 else return;
 
                 context.report({

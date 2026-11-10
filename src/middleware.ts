@@ -59,9 +59,7 @@ export const onRequest: MiddlewareHandler = async function onRequest(context, ne
             user.role = role;
         }
 
-        if (user.role === 'banned') {
-            return new Response(`Access Denied: Your account has been ${user.role}.`, { status: 403 });
-        }
+        if (user.role === 'banned') return new Response(`Access Denied: Your account has been ${user.role}.`, { status: 403 });
 
         locals.user = session.user;
         locals.session = session.session;
@@ -84,9 +82,7 @@ export const onRequest: MiddlewareHandler = async function onRequest(context, ne
     }
 
     // Redirect authenticated users away from auth pages, to where they were headed
-    if (locals.user && authRoutes.some(route => route.test(pathname))) {
-        return redirect(getSafeReturnBackUrl(new URL(request.url).searchParams.get('returnBackUrl')));
-    }
+    if (locals.user && authRoutes.some(route => route.test(pathname))) return redirect(getSafeReturnBackUrl(new URL(request.url).searchParams.get('returnBackUrl')));
 
     // Protect routes requiring authentication
     if (protectedRoutes.some(route => route.test(pathname)) && !locals.user) {
