@@ -134,13 +134,10 @@ export default {
                         if (variable.defs[0].type === 'FunctionName' && reads !== 1) return;
                         if (variable.defs[0].type !== 'FunctionName' && reads !== 1 && reads !== 2) return;
 
-                        // A deliberately computed initializer (call, await, function, collection, long expression) earns its variable even at low use
-                        if (isComplexExpression(variable.defs[0].node.init)) return;
-                        if (variable.defs[0].node.init && context.sourceCode.getText(variable.defs[0].node.init).length >= 80) return;
-                        // Pulling named fields out of a struct is deliberate even at low use
-                        if (variable.defs[0].node.id.type === 'ObjectPattern') return;
-                        // A type annotation (not a cast) on the variable, a parameter or the return type is deliberate even at low use
-                        if (variable.defs[0].node.id?.typeAnnotation || variable.defs[0].node.returnType || variable.defs[0].node.params?.some(param => param.typeAnnotation || param.left?.typeAnnotation)) return;
+                        // A variable read exactly once is always flagged. Reading it twice is allowed for a deliberately computed initializer (call, await, function, collection, long expression) and for a type annotation (not a cast) on the variable, a parameter or the return type
+                        if (reads !== 1 && isComplexExpression(variable.defs[0].node.init)) return;
+                        if (reads !== 1 && variable.defs[0].node.init && context.sourceCode.getText(variable.defs[0].node.init).length >= 80) return;
+                        if (reads !== 1 && (variable.defs[0].node.id?.typeAnnotation || variable.defs[0].node.returnType || variable.defs[0].node.params?.some(param => param.typeAnnotation || param.left?.typeAnnotation))) return;
 
                         context.report({
                             node: variable.defs[0].node,
