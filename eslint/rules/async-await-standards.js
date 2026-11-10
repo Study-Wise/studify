@@ -16,8 +16,7 @@ export default {
                 // Check if this is a .then, .catch, or .finally call
                 if (node.callee.type !== 'MemberExpression') return;
 
-                const methodName = node.callee.property?.name;
-                if (!['then', 'catch', 'finally'].includes(methodName)) return;
+                if (!['then', 'catch', 'finally'].includes(node.callee.property?.name)) return;
 
                 // Check if the object being called on is itself a .then, .catch, or .finally call
                 let current = node.callee.object;
@@ -25,8 +24,7 @@ export default {
                 // Count consecutive chained promise methods
                 let chainCount = 1;
                 while (current && current.type === 'CallExpression' && current.callee?.type === 'MemberExpression') {
-                    const parentMethodName = current.callee.property?.name;
-                    if (['then', 'catch', 'finally'].includes(parentMethodName)) {
+                    if (['then', 'catch', 'finally'].includes(current.callee.property?.name)) {
                         chainCount++;
                         current = current.callee.object;
                     }

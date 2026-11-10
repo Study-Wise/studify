@@ -8,9 +8,7 @@ export default {
         schema: []
     },
     create(context) {
-        const allComments = context.sourceCode.getAllComments?.() || context.sourceCode.getComments?.() || [];
-
-        allComments.forEach(comment => {
+        (context.sourceCode.getAllComments?.() || context.sourceCode.getComments?.() || []).forEach(comment => {
             if (/@ts-(ignore|nocheck|expect-error)/.test(comment.value)) {
                 context.report({
                     node: { type: 'Program' },
@@ -49,10 +47,6 @@ export default {
                 });
             },
             TSUnknownKeyword(node) {
-                // Check for standalone unknown type usage (but allow in function parameters for now if needed)
-                // Skip if it's part of a union or intersection that might be necessary
-
-                // Allow unknown only in very specific contexts if needed, otherwise flag all uses
                 context.report({
                     node,
                     message: 'The "unknown" type found.'

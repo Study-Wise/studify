@@ -11,10 +11,8 @@ export default {
     create(context) {
         return {
             Program(node) {
-                const code = context.sourceCode.getText();
-
                 // Check 1: 4-space indentation (disallow tabs and 2-space indents)
-                code.split(/\r?\n/).forEach((line, i) => {
+                context.sourceCode.getText().split(/\r?\n/).forEach((line, i) => {
                     if (line && line.match(/^\s/)) {
                         const match = line.match(/^(\s+)/);
                         if (match) {
@@ -49,15 +47,14 @@ export default {
                             },
                             message: 'Trailing whitespace found.',
                             fix(fixer) {
-                                const fixedCode = code.replace(/[ \t]+$/gm, '');
-                                return fixer.replaceText(node, fixedCode);
+                                return fixer.replaceText(node, context.sourceCode.getText().replace(/[ \t]+$/gm, ''));
                             }
                         });
                     }
                 });
 
                 // Check 2: Excessive newlines (3 or more consecutive)
-                const codeAfterFrontmatter = code.replace(/(?:\r\n|\r|\n)+$/, '').split(/\r\n|\r|\n/).slice(3).join('\n');
+                const codeAfterFrontmatter = context.sourceCode.getText().replace(/(?:\r\n|\r|\n)+$/, '').split(/\r\n|\r|\n/).slice(3).join('\n');
 
                 if (/(?:\n){3,}/g.test(codeAfterFrontmatter)) {
                     context.report({
@@ -67,7 +64,7 @@ export default {
                         },
                         message: '3 or more consecutive newlines found. The limit is at most 1 blank line (2 consecutive newlines).',
                         fix(fixer) {
-                            return fixer.replaceText(node, code.replace(/(?:\r\n|\r|\n){3,}/g, '\n\n'));
+                            return fixer.replaceText(node, context.sourceCode.getText().replace(/(?:\r\n|\r|\n){3,}/g, '\n\n'));
                         }
                     });
                 }
