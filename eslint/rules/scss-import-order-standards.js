@@ -85,7 +85,7 @@ export default {
                                 start: context.sourceCode.getLocFromIndex(match.index),
                                 end: context.sourceCode.getLocFromIndex(match.index + match[0].length)
                             },
-                            message: `@use '${match[2]}" must come before "${highestSource}". Sort @use rules as: external packages, then "../" paths (farthest first), then "./" paths, then "sass:" modules. Within each, a folder's files come before its subfolders, alphabetically.`
+                            message: `@use "${match[2]}" after "${highestSource}" out of the order of external packages, then "../" paths (farthest first), then "./" paths, then "sass:" modules, with a folder's files before its subfolders, alphabetically found.`
                         };
 
                         if (sortedLines && sortedLines.some((line, index) => line !== block.lines[index])) {

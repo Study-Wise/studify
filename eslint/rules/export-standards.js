@@ -14,14 +14,14 @@ export default {
                 if (node.source) {
                     context.report({
                         node,
-                        message: `Direct re-export not allowed. Import from "${node.source.value}" directly in files that need it, don't re-export.`
+                        message: `Direct re-export from "${node.source.value}" found.`
                     });
                 }
             },
             ExportAllDeclaration(node) {
                 context.report({
                     node,
-                    message: `Direct re-export with \`export *\` not allowed. Import from "${node.source.value}" directly in files that need it.`
+                    message: `Direct re-export with \`export *\` from "${node.source.value}" found.`
                 });
             }
         };

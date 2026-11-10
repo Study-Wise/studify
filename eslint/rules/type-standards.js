@@ -15,7 +15,7 @@ export default {
                 context.report({
                     node: { type: 'Program' },
                     loc: comment.loc,
-                    message: '@ts-ignore, @ts-nocheck, and @ts-expect-error comments are not allowed. Fix the type issues instead.'
+                    message: '@ts-ignore, @ts-nocheck, and @ts-expect-error comments found.'
                 });
             }
         });
@@ -33,19 +33,19 @@ export default {
 
                 context.report({
                     node,
-                    message: 'Type casts (as expressions) are not allowed. Use proper typing or type annotations instead.'
+                    message: 'Type casts (as expressions) found.'
                 });
             },
             TSTypeAssertion(node) {
                 context.report({
                     node,
-                    message: 'Type casts (angle bracket assertions) are not allowed. Use proper typing or type annotations instead.'
+                    message: 'Type casts (angle bracket assertions) found.'
                 });
             },
             TSAnyKeyword(node) {
                 context.report({
                     node,
-                    message: 'The "any" type is not allowed. Use a precise, concrete type instead.'
+                    message: 'The "any" type found.'
                 });
             },
             TSUnknownKeyword(node) {
@@ -55,7 +55,7 @@ export default {
                 // Allow unknown only in very specific contexts if needed, otherwise flag all uses
                 context.report({
                     node,
-                    message: 'The "unknown" type is not allowed. Use a concrete, precise type instead.'
+                    message: 'The "unknown" type found.'
                 });
             },
             CallExpression(node) {
@@ -68,7 +68,7 @@ export default {
                 ) {
                     context.report({
                         node,
-                        message: `z.${node.callee.property.name}() is not allowed. Use a precise Zod type or z.custom<T>() instead.`
+                        message: `z.${node.callee.property.name}() found.`
                     });
                 }
             }

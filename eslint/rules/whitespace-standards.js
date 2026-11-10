@@ -24,7 +24,7 @@ export default {
                                         line: i + 1,
                                         column: 1
                                     },
-                                    message: 'Indentation must use 4 spaces, not tabs'
+                                    message: 'Tab in indentation found'
                                 });
                                 return;
                             }
@@ -35,7 +35,7 @@ export default {
                                         line: i + 1,
                                         column: 1
                                     },
-                                    message: `Indentation must use 4-space increments, not 2-space. Found ${match[1].length} spaces.`
+                                    message: `2-space indentation (${match[1].length} spaces) found. Indentation must use 4-space increments.`
                                 });
                                 return;
                             }
@@ -47,7 +47,7 @@ export default {
                                 line: i + 1,
                                 column: line.length - line.trimEnd().length + 1
                             },
-                            message: 'Found trailing whitespace. Remove spaces or tabs at the end of lines.',
+                            message: 'Trailing whitespace found.',
                             fix(fixer) {
                                 const fixedCode = code.replace(/[ \t]+$/gm, '');
                                 return fixer.replaceText(node, fixedCode);
@@ -65,7 +65,7 @@ export default {
                             line: 3 + codeAfterFrontmatter.substring(0, codeAfterFrontmatter.search(/(?:\n){3,}/)).split('\n').length,
                             column: 0
                         },
-                        message: 'Found 3+ consecutive newlines. Use at most 1 blank line (2 consecutive newlines).',
+                        message: '3 or more consecutive newlines found. The limit is at most 1 blank line (2 consecutive newlines).',
                         fix(fixer) {
                             return fixer.replaceText(node, code.replace(/(?:\r\n|\r|\n){3,}/g, '\n\n'));
                         }

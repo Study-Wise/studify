@@ -30,7 +30,7 @@ export default {
                 for (const match of context.sourceCode.getText().matchAll(/\(\s*[\w$]+\s*\)\s*=>/g)) {
                     context.report({
                         loc: context.sourceCode.getLocFromIndex(match.index),
-                        message: 'Unnecessary parentheses around single arrow function parameter',
+                        message: 'Parentheses around a single arrow function parameter found',
                         fix(fixer) {
                             return fixer.replaceTextRange([match.index, match.index + match[0].length], match[0].replace(/\(\s*([\w$]+)\s*\)/, '$1'));
                         }
@@ -54,7 +54,7 @@ export default {
 
                             return fixer.replaceText(node, definition);
                         },
-                        message: `Arrow function definition '${!node.parent ? 'anonymous' : node.parent.type === 'VariableDeclarator' && node.parent.id.type === 'Identifier' ? node.parent.id.name : node.parent.type === 'AssignmentExpression' && node.parent.left.type === 'Identifier' ? node.parent.left.name : node.parent.type === 'Property' && node.parent.key.type === 'Identifier' ? node.parent.key.name : 'anonymous'}' is not allowed. Use a regular function declaration instead.`,
+                        message: `Arrow function definition '${!node.parent ? 'anonymous' : node.parent.type === 'VariableDeclarator' && node.parent.id.type === 'Identifier' ? node.parent.id.name : node.parent.type === 'AssignmentExpression' && node.parent.left.type === 'Identifier' ? node.parent.left.name : node.parent.type === 'Property' && node.parent.key.type === 'Identifier' ? node.parent.key.name : 'anonymous'}' found.`,
                     });
                 }
             },
@@ -76,7 +76,7 @@ export default {
                     if (!hasAwaitOrAsync(node.test) && !(node.test.type !== 'Identifier' && node.test.type !== 'Literal' && node.test.type !== 'TemplateLiteral' && node.test.type !== 'MemberExpression')) {
                         context.report({
                             node,
-                            message: 'Unnecessary parentheses around simple ternary condition',
+                            message: 'Parentheses around a simple ternary condition found',
                             fix(fixer) {
                                 return fixer.replaceTextRange(
                                     [tokenBeforeTest.range[0], tokenAfterTest.range[1]],

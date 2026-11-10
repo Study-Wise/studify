@@ -14,7 +14,7 @@ function checkSingleDeclarationBlock(node, blockNode, context) {
 
     context.report({
         node,
-        message: 'Single statement in block should be on the same line as its condition with no curly braces (e.g. "if (x) return y;',
+        message: 'Single statement in a block found',
         fix(fixer) {
             const beforeBrace = context.sourceCode.text[context.sourceCode.getFirstToken(blockNode).range[0] - 1];
             return fixer.replaceTextRange(
@@ -55,7 +55,7 @@ export default {
                             start: context.sourceCode.getLocFromIndex(match.index),
                             end: context.sourceCode.getLocFromIndex(match.index + match[0].length)
                         },
-                        message: 'Single-statement if block should not use curly braces',
+                        message: 'Curly braces around a single-statement if block found',
                         fix(fixer) {
                             return fixer.replaceTextRange(
                                 [match.index, match.index + match[0].length],
@@ -73,7 +73,7 @@ export default {
                     if (elseToken && elseToken.value === 'else' && context.sourceCode.getLastToken(node.consequent).loc.end.line === elseToken.loc.start.line) {
                         context.report({
                             node: elseToken,
-                            message: 'Closing curly brace appears on the same line as the subsequent if else block',
+                            message: 'Closing curly brace on the same line as the subsequent else block found',
                             fix(fixer) {
                                 return fixer.replaceTextRange(
                                     [context.sourceCode.getLastToken(node.consequent).range[1], elseToken.range[0]],
@@ -98,7 +98,7 @@ export default {
                     if (catchToken && catchToken.value === 'catch' && context.sourceCode.getLastToken(node.block).loc.end.line !== catchToken.loc.start.line) {
                         context.report({
                             node: catchToken,
-                            message: 'catch block must be on the same line as closing brace: } catch',
+                            message: 'Catch block on a different line from the closing brace found',
                             fix(fixer) {
                                 return fixer.replaceTextRange(
                                     [context.sourceCode.getLastToken(node.block).range[1], catchToken.range[0]],
@@ -114,7 +114,7 @@ export default {
                         if (finallyToken && finallyToken.value === 'finally' && context.sourceCode.getLastToken(node.handler.body).loc.end.line !== finallyToken.loc.start.line) {
                             context.report({
                                 node: finallyToken,
-                                message: 'finally block must be on the same line as closing brace: } finally',
+                                message: 'Finally block on a different line from the closing brace found',
                                 fix(fixer) {
                                     return fixer.replaceTextRange(
                                         [context.sourceCode.getLastToken(node.handler.body).range[1], finallyToken.range[0]],
@@ -131,7 +131,7 @@ export default {
                     if (finallyToken && finallyToken.value === 'finally' && context.sourceCode.getLastToken(node.block).loc.end.line !== finallyToken.loc.start.line) {
                         context.report({
                             node: finallyToken,
-                            message: 'finally block must be on the same line as closing brace: } finally',
+                            message: 'Finally block on a different line from the closing brace found',
                             fix(fixer) {
                                 return fixer.replaceTextRange(
                                     [context.sourceCode.getLastToken(node.block).range[1], finallyToken.range[0]],
@@ -165,7 +165,7 @@ export default {
 
                 context.report({
                     node,
-                    message: 'Single statement in block should be condensed onto one line with no block',
+                    message: 'Block around a single statement found',
                     fix(fixer) {
                         return fixer.replaceTextRange([node.body.range[0], node.body.range[1]], replacement);
                     }

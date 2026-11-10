@@ -19,7 +19,7 @@ export default {
                             start: context.sourceCode.getLocFromIndex(match.index),
                             end: context.sourceCode.getLocFromIndex(match.index + match[0].length)
                         },
-                        message: 'Inline stylelint-disable and stylelint-enable comments are not allowed. Add the exception to the overrides in .stylelintrc.json instead.'
+                        message: 'Inline stylelint-disable and stylelint-enable comments found. Exceptions can be added to the overrides in .stylelintrc.json.'
                     });
                 }
             }

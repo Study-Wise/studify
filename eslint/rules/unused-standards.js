@@ -59,7 +59,7 @@ export default {
                             if (variable.defs.length > 0 && variable.references.length === 0 && !variable.name.startsWith('_')) {
                                 context.report({
                                     loc: variable.defs[0].node.loc,
-                                    message: `Variable '${variable.name}' is defined but never used. Prefix with '_' to ignore.`
+                                    message: `Variable '${variable.name}' defined without being used found. Prefix with '_' to ignore.`
                                 });
                             }
                         });
@@ -72,7 +72,7 @@ export default {
                             if (!new RegExp(`\\b${importName.split(/\s+as\s+/)[0].trim()}\\b`).test(context.sourceCode.getText().replace(/import\s+type\s+\{([^}]+)\}\s+from/g, ''))) {
                                 context.report({
                                     loc: { line: context.sourceCode.getText().substring(0, match.index).split('\n').length, column: 1 },
-                                    message: `Type '${importName.split(/\s+as\s+/)[0].trim()}' is imported but never used. Prefix with '_' to ignore or remove the import.`
+                                    message: `Type '${importName.split(/\s+as\s+/)[0].trim()}' imported without being used found. Prefix with '_' to ignore.`
                                 });
                             }
                         });
@@ -131,7 +131,7 @@ export default {
                         ) {
                             context.report({
                                 node: variable.defs[0].node,
-                                message: `Variable '${variable.name}' is a needless alias of '${context.sourceCode.getText(variable.defs[0].node.init)}'.`
+                                message: `Variable '${variable.name}' is a needless alias of '${context.sourceCode.getText(variable.defs[0].node.init)}' found.`
                             });
                             return;
                         }
@@ -150,7 +150,7 @@ export default {
 
                         context.report({
                             node: variable.defs[0].node,
-                            message: `Variable '${variable.name}' is only used ${reads} time${reads === 1 ? '' : 's'}.`
+                            message: `Variable '${variable.name}' used only ${reads} time${reads === 1 ? '' : 's'} found.`
                         });
                     });
                 });

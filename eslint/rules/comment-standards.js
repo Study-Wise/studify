@@ -20,7 +20,7 @@ export default {
                         context.report({
                             node: node,
                             loc: comment.loc,
-                            message: 'eslint comments are not allowed. Follow the code standards instead.'
+                            message: 'eslint comment found.'
                         });
                         return;
                     }
@@ -43,7 +43,7 @@ export default {
                     context.report({
                         node: node,
                         loc: comment.loc,
-                        message: 'Multi-line block comments should use single-line comment syntax (//) instead',
+                        message: 'Multi-line block comment found',
                         fix(fixer) {
                             return fixer.replaceText(comment, `// ${cleanedLines.join(' ').trim()}`);
                         }
@@ -57,7 +57,7 @@ export default {
                             context.report({
                                 node: node,
                                 loc: comments[i + 1].loc,
-                                message: 'Duplicate consecutive comment. Remove the redundant comment.',
+                                message: 'Duplicate consecutive comment found.',
                             });
                         }
                     }
@@ -79,7 +79,7 @@ export default {
                     context.report({
                         node: node,
                         loc: comments[i + 1].loc,
-                        message: 'Hard line breaks are not allowed in single-line comments.',
+                        message: 'Hard line break in single-line comment found.',
                         fix(fixer) {
                             return fixer.replaceTextRange([comments[i].range[0], comments[i + 1].range[1]], `// ${comments[i].value.trim()} ${comments[i + 1].value.trim()}`);
                         }

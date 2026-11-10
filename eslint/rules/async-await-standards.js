@@ -37,7 +37,7 @@ export default {
                 if (chainCount >= 2) {
                     context.report({
                         node,
-                        message: `Promise method chains (.then().catch().finally()) are not allowed in server-side code. Use async/await instead for better readability and error handling.`
+                        message: `Promise method chains (.then().catch().finally()) in server-side code found.`
                     });
                 }
             }

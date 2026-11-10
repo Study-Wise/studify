@@ -141,7 +141,7 @@ export default {
                     if (group < maxSeenGroup) {
                         context.report({
                             node: importNode,
-                            message: 'Import order must be: external non-astro/drizzle, then drizzle/db, then astro, then lib imports, then remaining ts/tsx/cjs/mjs imports, then remaining non-(ts/js*/astro/scss) files, then astro/scss files.',
+                            message: 'Import order other than external non-astro/drizzle, then drizzle/db, then astro, then lib imports, then remaining ts/tsx/cjs/mjs imports, then remaining non-(ts/js*/astro/scss) files, then astro/scss files found.',
                         });
                     }
 
@@ -150,7 +150,7 @@ export default {
                     if (previousNode && previousGroup !== null && ((previousGroup !== group && (importNode.loc.start.line || 0) - (previousNode.loc.end.line || 0) < 2) || (previousGroup === group && (importNode.loc.start.line || 0) - (previousNode.loc.end.line || 0) >= 2))) {
                         context.report({
                             node: importNode,
-                            message: previousGroup !== group ? `Add a blank line between import groups. Previous: "${previousNode.source.value}" (group ${previousGroup}), Current: "${importNode.source.value}" (group ${group})` : `Remove blank line between same import group (group ${previousGroup}).`,
+                            message: `Blank line spacing between imports found. Previous: "${previousNode.source.value}" (group ${previousGroup}), Current: "${importNode.source.value}" (group ${group})`,
                             fix: fixer => context.sourceCode.text.slice(previousNode.range[1], importNode.range[0]).trim() === ''
                                 ? fixer.replaceTextRange([previousNode.range[1], importNode.range[0]], previousGroup !== group ? '\n\n' : '\n')
                                 : null,
@@ -204,7 +204,7 @@ export default {
                                 if (foundOtherImports) {
                                     context.report({
                                         node: libImports[i],
-                                        message: `Imports from lib "${libPath}" must be grouped together. Group all "${libPath}" imports consecutively.`,
+                                        message: `Imports from lib "${libPath}" split apart found.`,
                                     });
                                 }
                             }
@@ -245,7 +245,7 @@ export default {
                         if (compareImportSources(highestImport.source.value, importNode.source.value) > 0) {
                             const reportObj = {
                                 node: importNode,
-                                message: `Import "${importNode.source.value}" must come before "${highestImport.source.value}". Sort imports in each group alphabetically, with a folder's own files before its subfolders.`
+                                message: `Import "${importNode.source.value}" after "${highestImport.source.value}" found.`
                             };
 
                             if (sortedRun.some((sortedImport, index) => sortedImport !== run[index])) {

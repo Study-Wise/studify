@@ -35,7 +35,7 @@ export default {
                     if (hasMixedImports && fullLine.length > (context.options[0]?.lineLength || 100)) {
                         context.report({
                             node: importNode,
-                            message: `Long import line (${fullLine.length} chars) with mixed type and value imports. Separate them into two statements: \`import type { ... } from "..."\` and \`import { ... } from "..."\`.`
+                            message: `Mixed type and value imports on a long import line (${fullLine.length} chars) found.`
                         });
                     }
                 }
