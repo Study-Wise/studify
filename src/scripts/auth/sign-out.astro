@@ -14,11 +14,7 @@
                 }
 
                 try {
-                    if ('caches' in window) {
-                        for (const result of await Promise.allSettled(runtimeCaching.map(cacheConfig => window.caches.delete(cacheConfig.options.cacheName)))) {
-                            if (result.status === 'rejected') console.error('Failed to delete cache:', result.reason);
-                        }
-                    }
+                    if ('caches' in window) for (const result of await Promise.allSettled(runtimeCaching.map(cacheConfig => window.caches.delete(cacheConfig.options.cacheName)))) if (result.status === 'rejected') console.error('Failed to delete cache:', result.reason);
                 } catch (error) {
                     console.error('Cache Storage is unavailable:', error);
                 }

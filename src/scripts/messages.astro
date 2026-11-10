@@ -303,10 +303,18 @@ const { page, category, mode, id } = Astro.props;
                     if (messageContent) {
                         await typesetMathJax([messageContent]);
                         if (typeof window.activateDesmos === 'function') {
-                            try { window.activateDesmos(); } catch (error) { console.warn('Desmos error:', error); }
+                            try {
+                                window.activateDesmos();
+                            } catch (error) {
+                                console.warn('Desmos error:', error);
+                            }
                         }
                         if (typeof window.initializeStepByStep === 'function') {
-                            try { window.initializeStepByStep(); } catch (error) { console.warn('Step-by-step error:', error); }
+                            try {
+                                window.initializeStepByStep();
+                            } catch (error) {
+                                console.warn('Step-by-step error:', error);
+                            }
                         }
                     }
 
@@ -319,9 +327,7 @@ const { page, category, mode, id } = Astro.props;
                                 detail: { id: doneData.id, source: 'messages' }
                             }));
                         }
-                        if (isNewChat && doneData.id && category && mode) {
-                            window.location.href = `/${category}/${mode}/chat/${doneData.id}`;
-                        }
+                        if (isNewChat && doneData.id && category && mode) window.location.href = `/${category}/${mode}/chat/${doneData.id}`;
                         else if (doneData.id) threadId = doneData.id;
                     }
 
@@ -344,9 +350,7 @@ const { page, category, mode, id } = Astro.props;
                     else if (page === 'chat') {
                         const isNewChat = (id === 'new');
 
-                        if (isNewChat && data.id && category && mode) {
-                            window.location.href = `/${category}/${mode}/chat/${data.id}`;
-                        }
+                        if (isNewChat && data.id && category && mode) window.location.href = `/${category}/${mode}/chat/${data.id}`;
                         else await addMessage('assistant', data);
                     }
                     else if (page === 'home') displayError('Failed to redirect to chat page.');
@@ -391,9 +395,7 @@ const { page, category, mode, id } = Astro.props;
                 if (spinner) spinner.style.display = 'inline-block';
                 if (sendButton) sendButton.disabled = true;
                 if (messageInput) {
-                    if (messageInput.dataset.defaultPlaceholder === undefined) {
-                        messageInput.dataset.defaultPlaceholder = messageInput.placeholder;
-                    }
+                    if (messageInput.dataset.defaultPlaceholder === undefined) messageInput.dataset.defaultPlaceholder = messageInput.placeholder;
                     messageInput.placeholder = 'Waiting for response...';
                 }
                 const icon = sendButton?.querySelector('i.material-symbols-outlined');
@@ -675,9 +677,7 @@ const { page, category, mode, id } = Astro.props;
             userSettings = {};
         }
 
-        if (typeof window.generateOutput !== 'function') {
-            displayError('Error: Core function generateOutput failed to initialize.');
-        }
+        if (typeof window.generateOutput !== 'function') displayError('Error: Core function generateOutput failed to initialize.');
     }
 
     // Extract thread id from the chat page URL; null for "new" so the API creates a thread
