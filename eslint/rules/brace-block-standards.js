@@ -15,9 +15,10 @@ function checkSingleDeclarationBlock(node, blockNode, context) {
         node,
         message: 'Single statement in a block found',
         fix(fixer) {
+            const beforeBrace = context.sourceCode.text[context.sourceCode.getFirstToken(blockNode).range[0] - 1];
             return fixer.replaceTextRange(
                 [context.sourceCode.getFirstToken(blockNode).range[0], context.sourceCode.getLastToken(blockNode).range[1]],
-                `${context.sourceCode.text[context.sourceCode.getFirstToken(blockNode).range[0] - 1] !== ' ' && context.sourceCode.text[context.sourceCode.getFirstToken(blockNode).range[0] - 1] !== '\t' && context.sourceCode.text[context.sourceCode.getFirstToken(blockNode).range[0] - 1] !== '\n' ? ' ' : ''}${context.sourceCode.getText(blockNode.body[0]).trim()}`
+                `${beforeBrace !== ' ' && beforeBrace !== '\t' && beforeBrace !== '\n' ? ' ' : ''}${context.sourceCode.getText(blockNode.body[0]).trim()}`
             );
         }
     });
@@ -66,13 +67,15 @@ export default {
             IfStatement(node) {
                 // Check 1: If/else brace placement
                 if (node.alternate) {
-                    if (context.sourceCode.getTokenAfter(context.sourceCode.getLastToken(node.consequent))?.value === 'else' && context.sourceCode.getLastToken(node.consequent).loc.end.line === context.sourceCode.getTokenAfter(context.sourceCode.getLastToken(node.consequent)).loc.start.line) {
+                    const elseToken = context.sourceCode.getTokenAfter(context.sourceCode.getLastToken(node.consequent));
+
+                    if (elseToken && elseToken.value === 'else' && context.sourceCode.getLastToken(node.consequent).loc.end.line === elseToken.loc.start.line) {
                         context.report({
-                            node: context.sourceCode.getTokenAfter(context.sourceCode.getLastToken(node.consequent)),
+                            node: elseToken,
                             message: 'Closing curly brace on the same line as the subsequent else block found',
                             fix(fixer) {
                                 return fixer.replaceTextRange(
-                                    [context.sourceCode.getLastToken(node.consequent).range[1], context.sourceCode.getTokenAfter(context.sourceCode.getLastToken(node.consequent)).range[0]],
+                                    [context.sourceCode.getLastToken(node.consequent).range[1], elseToken.range[0]],
                                     '\n'
                                 );
                             }
@@ -89,13 +92,15 @@ export default {
             TryStatement(node) {
                 // Check 2: Try/catch/finally must stay on same line
                 if (node.handler) {
-                    if (context.sourceCode.getTokenAfter(context.sourceCode.getLastToken(node.block))?.value === 'catch' && context.sourceCode.getLastToken(node.block).loc.end.line !== context.sourceCode.getTokenAfter(context.sourceCode.getLastToken(node.block)).loc.start.line) {
+                    const catchToken = context.sourceCode.getTokenAfter(context.sourceCode.getLastToken(node.block));
+
+                    if (catchToken && catchToken.value === 'catch' && context.sourceCode.getLastToken(node.block).loc.end.line !== catchToken.loc.start.line) {
                         context.report({
-                            node: context.sourceCode.getTokenAfter(context.sourceCode.getLastToken(node.block)),
+                            node: catchToken,
                             message: 'Catch block on a different line from the closing brace found',
                             fix(fixer) {
                                 return fixer.replaceTextRange(
-                                    [context.sourceCode.getLastToken(node.block).range[1], context.sourceCode.getTokenAfter(context.sourceCode.getLastToken(node.block)).range[0]],
+                                    [context.sourceCode.getLastToken(node.block).range[1], catchToken.range[0]],
                                     ' '
                                 );
                             }
@@ -103,13 +108,15 @@ export default {
                     }
 
                     if (node.finalizer) {
-                        if (context.sourceCode.getTokenAfter(context.sourceCode.getLastToken(node.handler.body))?.value === 'finally' && context.sourceCode.getLastToken(node.handler.body).loc.end.line !== context.sourceCode.getTokenAfter(context.sourceCode.getLastToken(node.handler.body)).loc.start.line) {
+                        const finallyToken = context.sourceCode.getTokenAfter(context.sourceCode.getLastToken(node.handler.body));
+
+                        if (finallyToken && finallyToken.value === 'finally' && context.sourceCode.getLastToken(node.handler.body).loc.end.line !== finallyToken.loc.start.line) {
                             context.report({
-                                node: context.sourceCode.getTokenAfter(context.sourceCode.getLastToken(node.handler.body)),
+                                node: finallyToken,
                                 message: 'Finally block on a different line from the closing brace found',
                                 fix(fixer) {
                                     return fixer.replaceTextRange(
-                                        [context.sourceCode.getLastToken(node.handler.body).range[1], context.sourceCode.getTokenAfter(context.sourceCode.getLastToken(node.handler.body)).range[0]],
+                                        [context.sourceCode.getLastToken(node.handler.body).range[1], finallyToken.range[0]],
                                         ' '
                                     );
                                 }
@@ -118,13 +125,15 @@ export default {
                     }
                 }
                 else if (node.finalizer) {
-                    if (context.sourceCode.getTokenAfter(context.sourceCode.getLastToken(node.block))?.value === 'finally' && context.sourceCode.getLastToken(node.block).loc.end.line !== context.sourceCode.getTokenAfter(context.sourceCode.getLastToken(node.block)).loc.start.line) {
+                    const finallyToken = context.sourceCode.getTokenAfter(context.sourceCode.getLastToken(node.block));
+
+                    if (finallyToken && finallyToken.value === 'finally' && context.sourceCode.getLastToken(node.block).loc.end.line !== finallyToken.loc.start.line) {
                         context.report({
-                            node: context.sourceCode.getTokenAfter(context.sourceCode.getLastToken(node.block)),
+                            node: finallyToken,
                             message: 'Finally block on a different line from the closing brace found',
                             fix(fixer) {
                                 return fixer.replaceTextRange(
-                                    [context.sourceCode.getLastToken(node.block).range[1], context.sourceCode.getTokenAfter(context.sourceCode.getLastToken(node.block)).range[0]],
+                                    [context.sourceCode.getLastToken(node.block).range[1], finallyToken.range[0]],
                                     ' '
                                 );
                             }
