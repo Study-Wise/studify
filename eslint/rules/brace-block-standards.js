@@ -1,15 +1,11 @@
 function checkSingleDeclarationBlock(node, blockNode, context) {
     if (!blockNode || blockNode.type !== 'BlockStatement' || blockNode.body.length !== 1) return;
 
-    if (!blockNode.body[0].loc?.start?.line || !blockNode.body[0].loc?.end?.line || blockNode.body[0].loc?.start?.line !== blockNode.body[0].loc?.end?.line) {
-        return;
-    }
+    if (!blockNode.body[0].loc?.start?.line || !blockNode.body[0].loc?.end?.line || blockNode.body[0].loc?.start?.line !== blockNode.body[0].loc?.end?.line) return;
 
-    if (!node.loc?.start?.line || !blockNode.loc?.start?.line || node.loc?.start?.line !== blockNode.loc?.start?.line) {
-        return;
-    }
+    if (!node.loc?.start?.line || !blockNode.loc?.start?.line || node.loc?.start?.line !== blockNode.loc?.start?.line) return;
 
-    if (`${node === blockNode ? 'else' : context.sourceCode.text.slice(node.range[0], blockNode.range[0]).trim()} ${context.sourceCode.getText(blockNode.body[0]).trim()}`.length >= 100) return;
+    if (['ClassDeclaration', 'FunctionDeclaration'].includes(blockNode.body[0].type) || (blockNode.body[0].type === 'VariableDeclaration' && blockNode.body[0].kind !== 'var') || context.sourceCode.getCommentsInside(blockNode).length > 0 || (node.type === 'IfStatement' && node.consequent === blockNode && node.alternate && blockNode.body[0].type === 'IfStatement' && !blockNode.body[0].alternate)) return;
 
     context.report({
         node,

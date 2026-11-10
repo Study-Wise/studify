@@ -151,9 +151,12 @@ export default {
                         context.report({
                             node: importNode,
                             message: `Blank line spacing between imports found. Previous: "${previousNode.source.value}" (group ${previousGroup}), Current: "${importNode.source.value}" (group ${group})`,
-                            fix: fixer => context.sourceCode.text.slice(previousNode.range[1], importNode.range[0]).trim() === ''
-                                ? fixer.replaceTextRange([previousNode.range[1], importNode.range[0]], previousGroup !== group ? '\n\n' : '\n')
-                                : null,
+                            fix: fixer => fixer.replaceTextRange(
+                                [previousNode.range[1], importNode.range[0]],
+                                previousGroup !== group
+                                    ? context.sourceCode.text.slice(previousNode.range[1], importNode.range[0]).replace(/\r?\n/, '\n\n')
+                                    : context.sourceCode.text.slice(previousNode.range[1], importNode.range[0]).replace(/(\r?\n)([ \t]*\r?\n)+/g, '$1')
+                            ),
                         });
                     }
 
@@ -243,21 +246,14 @@ export default {
 
                     for (const importNode of run.slice(1)) {
                         if (compareImportSources(highestImport.source.value, importNode.source.value) > 0) {
-                            const reportObj = {
+                            context.report({
                                 node: importNode,
-                                message: `Import "${importNode.source.value}" after "${highestImport.source.value}" found.`
-                            };
-
-                            if (sortedRun.some((sortedImport, index) => sortedImport !== run[index])) {
-                                reportObj.fix = function(fixer) {
-                                    return fixer.replaceTextRange(
-                                        [run[0].range[0], run[run.length - 1].range[1]],
-                                        sortedRun.map(sortedImport => context.sourceCode.text.slice(sortedImport.range[0], sortedImport.range[1])).join(context.sourceCode.text.slice(run[0].range[1], run[1].range[0]))
-                                    );
-                                };
-                            }
-
-                            context.report(reportObj);
+                                message: `Import "${importNode.source.value}" after "${highestImport.source.value}" found.`,
+                                fix: fixer => fixer.replaceTextRange(
+                                    [run[0].range[0], run[run.length - 1].range[1]],
+                                    sortedRun.map(sortedImport => context.sourceCode.text.slice(sortedImport.range[0], sortedImport.range[1])).join(context.sourceCode.text.slice(run[0].range[1], run[1].range[0]))
+                                )
+                            });
                         }
                         else highestImport = importNode;
                     }

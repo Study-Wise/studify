@@ -39,12 +39,10 @@ export default {
             },
             ArrowFunctionExpression(node) {
                 // Check 2: Arrow function definitions
-                if ((!node.parent || !(node.parent.type === 'CallExpression' || node.parent.type === 'NewExpression') || !Array.isArray(node.parent.arguments) || !node.parent.arguments.includes(node)) && (!node.parent || node.parent.type !== 'CallExpression' || node.parent.callee !== node) && (!context.filename.includes('/pages/api/') || !node.parent || node.parent.type !== 'VariableDeclarator' || !['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'].includes(node.parent.id?.name)) && (!node.parent || node.parent.type !== 'Property' || node.parent.key.type !== 'Identifier' || node.parent.key.name !== 'execute') && (!node.parent || node.parent.type !== 'Property') && (!node.parent || node.parent.type !== 'AssignmentExpression' || node.parent.right !== node || node.parent.left.type !== 'MemberExpression' || node.parent.left.object.type !== 'Identifier' || node.parent.left.object.name !== 'window')) {
+                if ((!node.parent || !(node.parent.type === 'CallExpression' || node.parent.type === 'NewExpression') || !Array.isArray(node.parent.arguments) || !node.parent.arguments.includes(node)) && (!node.parent || node.parent.type !== 'CallExpression' || node.parent.callee !== node) && (!context.filename.includes('/pages/api/') || !node.parent || node.parent.type !== 'VariableDeclarator' || !['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'].includes(node.parent.id?.name)) && (!node.parent || node.parent.type !== 'Property' || node.parent.key.type !== 'Identifier' || node.parent.key.name !== 'execute') && (!node.parent || node.parent.type !== 'Property') && (!node.parent || node.parent.type !== 'AssignmentExpression' || node.parent.right !== node || node.parent.left.type !== 'MemberExpression' || node.parent.left.object.type !== 'Identifier' || node.parent.left.object.name !== 'window') && !/\b(this|arguments|super)\b/.test(context.sourceCode.getText(node))) {
                     context.report({
                         node,
                         fix(fixer) {
-                            if (!node.parent || node.loc.start.line !== node.loc.end.line || /\b(this|arguments|super)\b/.test(context.sourceCode.getText(node))) return null;
-
                             const params = context.sourceCode.getText().slice(node.range[0], context.sourceCode.getTokenBefore(node.body, { filter: token => token.value === '=>' }).range[0]).trim().replace(/^async\s+/, '');
                             const definition = `${node.async ? 'async ' : ''}function ${params.startsWith('(') ? params : `(${params})`} ${node.body.type === 'BlockStatement' ? context.sourceCode.getText(node.body) : `{ return ${context.sourceCode.getText(node.body)} }`}`;
 
@@ -62,16 +60,16 @@ export default {
                 // Check 3: Unnecessary parentheses around ternary condition test
                 if (!node.test) return;
 
-                const tokenBeforeTest = context.sourceCode.getTokenBefore(node.test);
-                const tokenAfterTest = context.sourceCode.getTokenAfter(node.test);
+                const tokenBeforeTestStart = context.sourceCode.getTokenBefore(node.test)?.range[0];
+                const tokenBeforeTestEnd = context.sourceCode.getTokenBefore(node.test)?.range[1];
+                const tokenAfterTestStart = context.sourceCode.getTokenAfter(node.test)?.range[0];
+                const tokenAfterTestEnd = context.sourceCode.getTokenAfter(node.test)?.range[1];
 
                 if (
-                    tokenBeforeTest
-                    && tokenAfterTest
-                    && tokenBeforeTest.value === '('
-                    && tokenAfterTest.value === ')'
-                    && tokenBeforeTest.range[1] === node.test.range[0]
-                    && tokenAfterTest.range[0] === node.test.range[1]
+                    context.sourceCode.text.slice(tokenBeforeTestStart, tokenBeforeTestEnd) === '('
+                    && context.sourceCode.text.slice(tokenAfterTestStart, tokenAfterTestEnd) === ')'
+                    && tokenBeforeTestEnd === node.test.range[0]
+                    && tokenAfterTestStart === node.test.range[1]
                 ) {
                     if (!hasAwaitOrAsync(node.test) && !(node.test.type !== 'Identifier' && node.test.type !== 'Literal' && node.test.type !== 'TemplateLiteral' && node.test.type !== 'MemberExpression')) {
                         context.report({
@@ -79,7 +77,7 @@ export default {
                             message: 'Parentheses around a simple ternary condition found',
                             fix(fixer) {
                                 return fixer.replaceTextRange(
-                                    [tokenBeforeTest.range[0], tokenAfterTest.range[1]],
+                                    [tokenBeforeTestStart, tokenAfterTestEnd],
                                     context.sourceCode.getText(node.test)
                                 );
                             }
