@@ -3,12 +3,10 @@ import path from 'path';
 
 function getImportGroup(source) {
     if (
-        source === 'drizzle-orm'
-        || source.startsWith('drizzle-orm/')
-        || (source.startsWith('.') && /(^|\/)db(\/|$)/.test(source.replaceAll('\\', '/')))
-    ) {
-        return 2;
-    }
+        source === 'drizzle-orm' ||
+        source.startsWith('drizzle-orm/') ||
+        (source.startsWith('.') && /(^|\/)db(\/|$)/.test(source.replaceAll('\\', '/')))
+    ) return 2;
 
     if (source === 'astro' || source.startsWith('astro/') || source === '@astrojs' || source.startsWith('@astrojs/')) return 3;
 
@@ -109,11 +107,13 @@ export default {
             Program(node) {
                 if (!node.body) return;
 
-                if (node.body.filter(statement =>
-                    statement &&
-                    statement.type === 'ImportDeclaration' &&
-                    !isAstroScriptImport(statement, context.sourceCode, context.filename)
-                ).length === 0) return;
+                if (
+                    node.body.filter(statement =>
+                        statement &&
+                        statement.type === 'ImportDeclaration' &&
+                        !isAstroScriptImport(statement, context.sourceCode, context.filename)
+                    ).length === 0
+                ) return;
 
                 let maxSeenGroup = 0;
                 let previousNode = null;

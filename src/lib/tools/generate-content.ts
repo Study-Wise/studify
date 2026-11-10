@@ -13,7 +13,6 @@ const validTypes: [string, ...string[]] = [
     'practice-questions'
 ];
 
-// Special cases that don't follow the standard naming convention
 const specialCases: Record<string, { latestFn?: string; generateFn?: string }> = {
     'additional-resources': {
         latestFn: 'getLatestResources',
@@ -69,7 +68,8 @@ const getContentTool = tool({
                 const existingContent = await getLatestFn(threadId);
 
                 // Check if content exists (handle different return types)
-                if (typeof existingContent === 'object' &&
+                if (
+                    typeof existingContent === 'object' &&
                     existingContent !== null
                         ? 'content' in existingContent ? existingContent.content !== null : 'imageUrl' in existingContent
                         : existingContent !== null

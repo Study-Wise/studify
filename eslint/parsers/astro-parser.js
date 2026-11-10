@@ -7,9 +7,7 @@ export default function parse(code) {
 
     if (frontmatter) for (let index = 0; index < frontmatter[1].length; index++) parsedCode[frontmatter[0].indexOf(frontmatter[1]) + index] = frontmatter[1][index];
 
-    for (const match of code.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script\s*>/gi)) {
-        for (let index = 0; index < match[1].length; index++) parsedCode[match.index + match[0].indexOf(match[1]) + index] = match[1][index];
-    }
+    for (const match of code.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script\s*>/gi)) for (let index = 0; index < match[1].length; index++) parsedCode[match.index + match[0].indexOf(match[1]) + index] = match[1][index];
 
     try {
         const result = tsParser.parseForESLint(parsedCode.join(''), {

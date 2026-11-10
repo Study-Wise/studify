@@ -31,14 +31,14 @@ export const POST: APIRoute = async ({ request, locals }) => {
         const fileSize = typeof fileSizeValue === 'string' ? Number.parseInt(fileSizeValue, 10) : Number.NaN;
 
         if (
-            !(chunk instanceof File)
-            || typeof uploadId !== 'string'
-            || Number.isNaN(chunkIndex)
-            || Number.isNaN(totalChunks)
-            || typeof fileName !== 'string'
-            || typeof fileType !== 'string'
-            || Number.isNaN(fileSize)
-            || typeof threadId !== 'string'
+            !(chunk instanceof File) ||
+            typeof uploadId !== 'string' ||
+            Number.isNaN(chunkIndex) ||
+            Number.isNaN(totalChunks) ||
+            typeof fileName !== 'string' ||
+            typeof fileType !== 'string' ||
+            Number.isNaN(fileSize) ||
+            typeof threadId !== 'string'
         ) {
             return new Response(
                 JSON.stringify({ status: 'error', error: 'Missing required fields' }),

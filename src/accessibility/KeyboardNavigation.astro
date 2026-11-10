@@ -105,9 +105,7 @@ import '@/styles/accessibility/keyboard-navigation.scss';
                 if (
                     (element instanceof window.HTMLInputElement || element instanceof window.HTMLSelectElement || element instanceof window.HTMLTextAreaElement) &&
                     element.checkValidity()
-                ) {
-                    element.removeAttribute('aria-invalid');
-                }
+                ) element.removeAttribute('aria-invalid');
             });
         });
     });

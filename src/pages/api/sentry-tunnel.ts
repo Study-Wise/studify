@@ -20,11 +20,9 @@ export const POST: APIRoute = async ({ request }) => {
         const dsn = new URL(header.dsn);
 
         if (
-            dsn.hostname !== allowedDsn.hostname
-            || dsn.pathname.replace(/^\//, '') !== allowedProjectId
-        ) {
-            return new Response('Invalid DSN', { status: 403 });
-        }
+            dsn.hostname !== allowedDsn.hostname ||
+            dsn.pathname.replace(/^\//, '') !== allowedProjectId
+        ) return new Response('Invalid DSN', { status: 403 });
     } catch (error) {
         console.error('❌ Invalid Sentry envelope:', error);
         return new Response('Invalid envelope', { status: 400 });

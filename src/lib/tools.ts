@@ -20,9 +20,7 @@ export function getToolContext<T>(options: { experimental_context?: T }): ToolCo
         experimental_context && typeof experimental_context === 'object' &&
         'threadId' in experimental_context && typeof experimental_context.threadId === 'string' && experimental_context.threadId &&
         'email' in experimental_context && typeof experimental_context.email === 'string' && experimental_context.email
-    ) {
-        return { threadId: experimental_context.threadId, email: experimental_context.email };
-    }
+    ) return { threadId: experimental_context.threadId, email: experimental_context.email };
     return null;
 }
 

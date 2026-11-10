@@ -1,23 +1,13 @@
-function checkSingleDeclarationBlock(node, blockNode, context) {
-    if (!blockNode || blockNode.type !== 'BlockStatement' || blockNode.body.length !== 1) return;
+function canOmitBlock(node, blockNode, context) {
+    if (blockNode?.type !== 'BlockStatement' || blockNode.body.length !== 1) return false;
+    if (!blockNode.body[0].loc?.start?.line || blockNode.body[0].loc.start.line !== blockNode.body[0].loc.end.line) return false;
+    if (context.sourceCode.getTokenBefore(blockNode).loc.end.line !== blockNode.loc.start.line) return false;
+    if (['ClassDeclaration', 'FunctionDeclaration', 'TryStatement'].includes(blockNode.body[0].type)) return false;
+    if (blockNode.body[0].type === 'VariableDeclaration' && blockNode.body[0].kind !== 'var') return false;
+    if (context.sourceCode.getCommentsInside(blockNode).length > 0) return false;
+    if (node.type === 'IfStatement' && node.consequent === blockNode && node.alternate && blockNode.body[0].type === 'IfStatement' && !blockNode.body[0].alternate) return false;
 
-    if (!blockNode.body[0].loc?.start?.line || !blockNode.body[0].loc?.end?.line || blockNode.body[0].loc?.start?.line !== blockNode.body[0].loc?.end?.line) return;
-
-    if (!node.loc?.start?.line || !blockNode.loc?.start?.line || node.loc?.start?.line !== blockNode.loc?.start?.line) return;
-
-    if (['ClassDeclaration', 'FunctionDeclaration'].includes(blockNode.body[0].type) || (blockNode.body[0].type === 'VariableDeclaration' && blockNode.body[0].kind !== 'var') || context.sourceCode.getCommentsInside(blockNode).length > 0 || (node.type === 'IfStatement' && node.consequent === blockNode && node.alternate && blockNode.body[0].type === 'IfStatement' && !blockNode.body[0].alternate)) return;
-
-    context.report({
-        node,
-        message: 'Single statement in a block found',
-        fix(fixer) {
-            const beforeBrace = context.sourceCode.text[context.sourceCode.getFirstToken(blockNode).range[0] - 1];
-            return fixer.replaceTextRange(
-                [context.sourceCode.getFirstToken(blockNode).range[0], context.sourceCode.getLastToken(blockNode).range[1]],
-                `${beforeBrace !== ' ' && beforeBrace !== '\t' && beforeBrace !== '\n' ? ' ' : ''}${context.sourceCode.getText(blockNode.body[0]).trim()}`
-            );
-        }
-    });
+    return true;
 }
 
 export default {
@@ -78,10 +68,49 @@ export default {
                         });
                     }
                 }
+            },
+            'IfStatement, WhileStatement'(node) {
+                // Check 5: A condition spanning several lines starts on its own line after "(" and closes on its own line before ")"
+                if (node.test.loc.start.line === node.test.loc.end.line) return;
 
-                // Check 3: Single statement in if/else should be on one line
-                checkSingleDeclarationBlock(node, node.consequent, context);
-                if (node.alternate && node.alternate.type !== 'IfStatement') checkSingleDeclarationBlock(node.alternate, node.alternate, context);
+                const openParenEnd = context.sourceCode.getTokenBefore(node.test).range[1];
+                const closeParenStart = context.sourceCode.getTokenAfter(node.test).range[0];
+
+                if (context.sourceCode.getTokenBefore(node.test).loc.end.line !== node.test.loc.start.line && context.sourceCode.getTokenAfter(node.test).loc.start.line !== node.test.loc.end.line) return;
+
+                context.report({
+                    node,
+                    message: 'Multi-line condition not on its own lines inside the parentheses found',
+                    fix(fixer) {
+                        const indentation = context.sourceCode.lines[node.loc.start.line - 1].match(/^\s*/)[0];
+                        const lines = context.sourceCode.text.slice(openParenEnd, closeParenStart).trim().split(/\r?\n/).filter(line => line.trim());
+
+                        return fixer.replaceTextRange(
+                            [openParenEnd, closeParenStart],
+                            `\n${indentation}    ${lines[0].trim()}${lines.slice(1).map(line => `\n${indentation}    ${' '.repeat(line.match(/^\s*/)[0].length - Math.min(...lines.slice(1).map(entry => entry.match(/^\s*/)[0].length)))}${line.trim()}`).join('')}\n${indentation}`
+                        );
+                    }
+                });
+            },
+            'IfStatement, ForStatement, ForInStatement, ForOfStatement, WhileStatement'(node) {
+                // Check 3: Single statement blocks and multi-line conditions in if/else and loops
+                for (const [owner, body] of [[node, node.consequent ?? node.body], [node.alternate, node.alternate]]) {
+                    if (!body || (owner !== node && body.type === 'IfStatement')) continue;
+
+                    if (!canOmitBlock(owner, body, context)) continue;
+
+                    context.report({
+                        node: owner,
+                        message: 'Single statement in a block found',
+                        fix(fixer) {
+                            const beforeBrace = context.sourceCode.text[context.sourceCode.getFirstToken(body).range[0] - 1];
+                            return fixer.replaceTextRange(
+                                [context.sourceCode.getFirstToken(body).range[0], context.sourceCode.getLastToken(body).range[1]],
+                                `${beforeBrace !== ' ' && beforeBrace !== '\t' && beforeBrace !== '\n' ? ' ' : ''}${context.sourceCode.getText(body.body[0]).trim()}`
+                            );
+                        }
+                    });
+                }
             },
             TryStatement(node) {
                 // Check 2: Try/catch/finally must stay on same line
@@ -135,11 +164,24 @@ export default {
                     }
                 }
             },
-            ForStatement(node) {
-                checkSingleDeclarationBlock(node, node.body, context);
-            },
-            WhileStatement(node) {
-                checkSingleDeclarationBlock(node, node.body, context);
+            BlockStatement(node) {
+                // Check 4: Blocks that need their braces must not sit on a single line
+                if (node.body.length === 0 || node.loc.start.line !== node.loc.end.line || context.sourceCode.getCommentsInside(node).length > 0) return;
+                if (['IfStatement', 'ForStatement', 'ForInStatement', 'ForOfStatement', 'WhileStatement'].includes(node.parent.type) && canOmitBlock(node.parent.type === 'IfStatement' && node.parent.alternate === node ? node : node.parent, node, context)) return;
+                if (node.parent.type === 'ArrowFunctionExpression' && node.body.length === 1 && (node.body[0].type === 'ExpressionStatement' || (node.body[0].type === 'ReturnStatement' && node.body[0].argument))) return;
+
+                context.report({
+                    node,
+                    message: 'Single-line block with required braces found',
+                    fix(fixer) {
+                        const indentation = context.sourceCode.lines[node.loc.start.line - 1].match(/^\s*/)[0];
+
+                        return fixer.replaceTextRange(
+                            [node.range[0] + 1, node.range[1] - 1],
+                            `\n${indentation}    ${node.body.map(statement => context.sourceCode.getText(statement)).join(`\n${indentation}    `)}\n${indentation}`
+                        );
+                    }
+                });
             },
             ArrowFunctionExpression(node) {
                 if (!node.body || node.body.type !== 'BlockStatement' || node.body.body.length !== 1) return;

@@ -31,10 +31,10 @@ export async function extractTextFromImage(file: File): Promise<string | null> {
 }
 
 export async function extractTextFromFile(file: File): Promise<string | null> {
-    if (file.type === 'text/plain' || file.type === 'text/csv' ||
-        file.type === 'text/html' || file.type === 'text/markdown') {
-        return await extractTextFromPlainText(file);
-    }
+    if (
+        file.type === 'text/plain' || file.type === 'text/csv' ||
+        file.type === 'text/html' || file.type === 'text/markdown'
+    ) return await extractTextFromPlainText(file);
 
     if (file.type === 'application/pdf') return await extractTextFromPDF(file);
 

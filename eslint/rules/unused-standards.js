@@ -44,13 +44,7 @@ export default {
             Program(node) {
                 // Collect names re-exported through a separate `export { ... }` list, whose usage lives in other files
                 const exportNames = new Set();
-                for (const statement of node.body) {
-                    if (statement.type === 'ExportNamedDeclaration') {
-                        for (const specifier of statement.specifiers) {
-                            if (specifier.local) exportNames.add(specifier.local.name);
-                        }
-                    }
-                }
+                for (const statement of node.body) if (statement.type === 'ExportNamedDeclaration') for (const specifier of statement.specifiers) if (specifier.local) exportNames.add(specifier.local.name);
 
                 // Check for unused variables and imports (Astro files only)
                 if (context.filename.endsWith('.astro')) {

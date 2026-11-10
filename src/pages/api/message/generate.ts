@@ -156,9 +156,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                         typeof userData.thread === 'object' &&
                         'messages' in userData.thread &&
                         Array.isArray(userData.thread.messages)
-                    ) {
-                        convoHistory = [{ role: 'system', content: systemPrompt }, ...parseThreadData(userData.thread).messages];
-                    }
+                    ) convoHistory = [{ role: 'system', content: systemPrompt }, ...parseThreadData(userData.thread).messages];
                     else console.warn(`⚠️ [${requestId}] No valid conversation history found in thread data, keeping system message only`);
                 }
                 else console.warn(`⚠️ [${requestId}] Thread not found in database, using system message only:`, current_thread_id);

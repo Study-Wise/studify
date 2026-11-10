@@ -64,10 +64,10 @@ export default {
                 const tokenAfterTestEnd = context.sourceCode.getTokenAfter(node.test)?.range[1];
 
                 if (
-                    context.sourceCode.text.slice(tokenBeforeTestStart, tokenBeforeTestEnd) === '('
-                    && context.sourceCode.text.slice(tokenAfterTestStart, tokenAfterTestEnd) === ')'
-                    && tokenBeforeTestEnd === node.test.range[0]
-                    && tokenAfterTestStart === node.test.range[1]
+                    context.sourceCode.text.slice(tokenBeforeTestStart, tokenBeforeTestEnd) === '(' &&
+                    context.sourceCode.text.slice(tokenAfterTestStart, tokenAfterTestEnd) === ')' &&
+                    tokenBeforeTestEnd === node.test.range[0] &&
+                    tokenAfterTestStart === node.test.range[1]
                 ) {
                     if (!hasAwaitOrAsync(node.test) && !(node.test.type !== 'Identifier' && node.test.type !== 'Literal' && node.test.type !== 'TemplateLiteral' && node.test.type !== 'MemberExpression')) {
                         context.report({
