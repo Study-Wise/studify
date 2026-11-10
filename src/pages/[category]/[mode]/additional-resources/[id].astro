@@ -52,7 +52,13 @@ if (latestResourcesJSON) {
         </div>
     ) : (
         <>
-            <ContentActions contentType="additional-resources" threadId={id || ''} hasContent={!!resourcesData} isAuthorized={isAuthorized} chatUrl={chatUrl} />
+            <ContentActions
+                contentType="additional-resources"
+                threadId={id || ''}
+                hasContent={!!resourcesData}
+                isAuthorized={isAuthorized}
+                chatUrl={chatUrl}
+            />
             {resourcesData ? (
                 <div class="content-container">
                     <div class="resources-header">

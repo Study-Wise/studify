@@ -47,7 +47,13 @@ const parsedContent = latestReferenceSheet ? await marked.parse(latestReferenceS
         </div>
     ) : (
         <>
-            <ContentActions contentType="reference-sheet" threadId={id || ''} hasContent={!!parsedContent} isAuthorized={isAuthorized} chatUrl={chatUrl} />
+            <ContentActions
+                contentType="reference-sheet"
+                threadId={id || ''}
+                hasContent={!!parsedContent}
+                isAuthorized={isAuthorized}
+                chatUrl={chatUrl}
+            />
             {parsedContent ? (
                 <div class="content-container reference-sheet-content" set:html={parsedContent} />
             ) : (

@@ -46,7 +46,13 @@ const parsedContent = latestPracticeQuestions ? await marked.parse(latestPractic
         </div>
     ) : (
         <>
-            <ContentActions contentType="practice-questions" threadId={id || ''} hasContent={!!parsedContent} isAuthorized={isAuthorized} chatUrl={chatUrl} />
+            <ContentActions
+                contentType="practice-questions"
+                threadId={id || ''}
+                hasContent={!!parsedContent}
+                isAuthorized={isAuthorized}
+                chatUrl={chatUrl}
+            />
             {parsedContent ? (
                 <div class="content-container practice-questions-content" set:html={parsedContent} />
             ) : (

@@ -47,7 +47,13 @@ const parsedContent = latestSummary ? await marked.parse(latestSummary) : null;
         </div>
     ) : (
         <>
-            <ContentActions contentType="summary" threadId={id || ''} hasContent={!!parsedContent} isAuthorized={isAuthorized} chatUrl={chatUrl} />
+            <ContentActions
+                contentType="summary"
+                threadId={id || ''}
+                hasContent={!!parsedContent}
+                isAuthorized={isAuthorized}
+                chatUrl={chatUrl}
+            />
             {parsedContent ? (
                 <div class="content-container summary-content" set:html={parsedContent} />
             ) : (

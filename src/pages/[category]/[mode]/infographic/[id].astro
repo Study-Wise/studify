@@ -44,7 +44,13 @@ const infographicUrl = infographic?.imageUrl || null;
         </div>
     ) : (
         <>
-            <ContentActions contentType="infographic" threadId={id || ''} hasContent={!!infographicUrl} isAuthorized={isAuthorized} chatUrl={chatUrl} />
+            <ContentActions
+                contentType="infographic"
+                threadId={id || ''}
+                hasContent={!!infographicUrl}
+                isAuthorized={isAuthorized}
+                chatUrl={chatUrl}
+            />
             {infographicUrl ? (
                 <div class="content-container">
                     <img src={infographicUrl} alt="Generated Infographic" class="infographic-image" />
