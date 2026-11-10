@@ -79,9 +79,7 @@ const callbackURL = `/user/sso-callback?returnBackUrl=${encodeURIComponent(redir
             });
 
             if (error) window.showError(error.message || 'Sign in failed. Please check your credentials.');
-            else {
-                window.location.href = getClientSafeReturnBackUrl(new URLSearchParams(window.location.search).get('returnBackUrl'));
-            }
+            else window.location.href = getClientSafeReturnBackUrl(new URLSearchParams(window.location.search).get('returnBackUrl'));
         } catch (error) {
             console.error('Sign in error:', error);
             window.showError('Sign in failed. Please check your credentials.');

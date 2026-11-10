@@ -137,9 +137,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
         if (!shareLink || !shareLinkInput) return;
 
         const hasSavedThread = Boolean(currentThreadId) && currentThreadId !== 'new';
-        if (hasSavedThread) {
-            shareLinkInput.value = `${window.location.origin}/${category}/${mode}/chat/${currentThreadId}`;
-        }
+        if (hasSavedThread) shareLinkInput.value = `${window.location.origin}/${category}/${mode}/chat/${currentThreadId}`;
         shareLink.hidden = !(hasSavedThread && publicToggle?.checked);
     }
 

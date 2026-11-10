@@ -52,9 +52,7 @@ Math formatting: use \`$…$\` for displaying math formulas/equations inline and
         config.contentGenerationExcludeTools,
     );
 
-    if (!result.text || result.text.length === 0) {
-        throw new Error('Generated reference sheet is empty');
-    }
+    if (!result.text || result.text.length === 0) throw new Error('Generated reference sheet is empty');
 
     await saveContent(threadId, 'reference-sheet', result.text);
 

@@ -65,9 +65,7 @@ Math formatting: use $â€¦$ for displaying math formulas/equations inline and $$â
         flashcardSchema,
     );
 
-    if (!generated.questions || generated.questions.length === 0) {
-        throw new Error('Generated flashcards are empty');
-    }
+    if (!generated.questions || generated.questions.length === 0) throw new Error('Generated flashcards are empty');
 
     const flashcardData: FlashcardData = {
         text: generated.text,

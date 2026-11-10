@@ -92,12 +92,8 @@ import '@/styles/accessibility/touch-gestures.scss';
             this.refreshIndicator.style.translate = `0 ${(progress * 60) - 60}px`;
             this.refreshIndicator.style.opacity = progress.toString();
 
-            if (progress >= 1) {
-                this.refreshIndicator.querySelector<HTMLElement>('.material-symbols-outlined')?.style.setProperty('animation', '--spin 1s linear infinite');
-            }
-            else {
-                this.refreshIndicator.querySelector<HTMLElement>('.material-symbols-outlined')?.style.setProperty('animation', 'none');
-            }
+            if (progress >= 1) this.refreshIndicator.querySelector<HTMLElement>('.material-symbols-outlined')?.style.setProperty('animation', '--spin 1s linear infinite');
+            else this.refreshIndicator.querySelector<HTMLElement>('.material-symbols-outlined')?.style.setProperty('animation', 'none');
         }
 
         hideRefreshIndicator() {

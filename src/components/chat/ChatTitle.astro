@@ -60,9 +60,7 @@ const { title, threadId, canRename } = Astro.props;
 
                     if (data.status === 'success') {
                         // Keep the " | mode | category" suffix of the tab title
-                        if (document.title.startsWith(currentTitle.replace(/\\[()[\]]|(?<!\\)\$/g, '').replace(/\\([a-zA-Z]+|[{}$])/g, '$1').replace(/\s+/g, ' ').trim())) {
-                            document.title = data.title.replace(/\\[()[\]]|(?<!\\)\$/g, '').replace(/\\([a-zA-Z]+|[{}$])/g, '$1') + document.title.slice(currentTitle.replace(/\\[()[\]]|(?<!\\)\$/g, '').replace(/\\([a-zA-Z]+|[{}$])/g, '$1').replace(/\s+/g, ' ').trim().length);
-                        }
+                        if (document.title.startsWith(currentTitle.replace(/\\[()[\]]|(?<!\\)\$/g, '').replace(/\\([a-zA-Z]+|[{}$])/g, '$1').replace(/\s+/g, ' ').trim())) document.title = data.title.replace(/\\[()[\]]|(?<!\\)\$/g, '').replace(/\\([a-zA-Z]+|[{}$])/g, '$1') + document.title.slice(currentTitle.replace(/\\[()[\]]|(?<!\\)\$/g, '').replace(/\\([a-zA-Z]+|[{}$])/g, '$1').replace(/\s+/g, ' ').trim().length);
                         currentTitle = data.title;
                         titleButton.textContent = data.title;
                         titleButton.setAttribute('aria-label', `Rename chat: ${data.title}`);

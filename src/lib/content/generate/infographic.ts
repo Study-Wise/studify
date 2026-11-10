@@ -67,21 +67,13 @@ Style: Clean, modern, professional educational infographic. Use a white backgrou
 
     const imageResult = await generateImage(imagePrompt, `${threadId}-infographic.png`);
 
-    if (!imageResult) {
-        throw new Error('Failed to generate image - No result from image generation API');
-    }
+    if (!imageResult) throw new Error('Failed to generate image - No result from image generation API');
 
-    if (!imageResult.imageUrl) {
-        throw new Error('Failed to generate image - No image URL returned from image generation API');
-    }
+    if (!imageResult.imageUrl) throw new Error('Failed to generate image - No image URL returned from image generation API');
 
-    if (!imageResult.uploadResult) {
-        throw new VendorError('UploadThing', 'Failed to upload image - No upload result');
-    }
+    if (!imageResult.uploadResult) throw new VendorError('UploadThing', 'Failed to upload image - No upload result');
 
-    if (!imageResult.uploadResult.data) {
-        throw new VendorError('UploadThing', 'Failed to upload image - No data in upload result');
-    }
+    if (!imageResult.uploadResult.data) throw new VendorError('UploadThing', 'Failed to upload image - No data in upload result');
 
     const infographic = {
         imageUrl: imageResult.imageUrl,

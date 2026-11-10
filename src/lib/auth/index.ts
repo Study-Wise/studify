@@ -18,9 +18,7 @@ const MODERATOR_DOMAINS: string[] = [];
 // Helper to get environment variable with fallback between import.meta.env and process.env
 // This ensures compatibility with both Vite/Astro and Node.js runtime environments
 function getEnvVar(key: string): string | undefined {
-    if (typeof import.meta !== 'undefined' && import.meta.env) {
-        if (import.meta.env[key]) return import.meta.env[key];
-    }
+    if (typeof import.meta !== 'undefined' && import.meta.env) if (import.meta.env[key]) return import.meta.env[key];
     if (typeof process !== 'undefined' && process.env) return process.env[key];
     return undefined;
 }

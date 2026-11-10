@@ -172,9 +172,7 @@ const visibleCategories = Object.entries(categories).filter(([_, category]) =>
     for (const chip of chips) {
         chip.addEventListener('click', () => {
             activeCategory = chip.dataset.filter ?? '';
-            for (const other of chips) {
-                other.setAttribute('aria-pressed', String(other === chip));
-            }
+            for (const other of chips) other.setAttribute('aria-pressed', String(other === chip));
             applyFilters();
         });
     }

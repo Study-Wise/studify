@@ -31,16 +31,10 @@ export interface ThreadData {
 export function parseThreadData(value: ThreadData | string): ThreadData {
     const raw = typeof value === 'string' ? value.replace(/,\s*([\]}])/g, '$1') : value;
     const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
-    if (typeof parsed !== 'object' || parsed === null || !('messages' in parsed) || !Array.isArray(parsed.messages)) {
-        throw new Error('Invalid thread data');
-    }
+    if (typeof parsed !== 'object' || parsed === null || !('messages' in parsed) || !Array.isArray(parsed.messages)) throw new Error('Invalid thread data');
     const messages: Message[] = parsed.messages.map((message: Message) => {
-        if (typeof message !== 'object' || message === null || Array.isArray(message) || !('role' in message) || !('content' in message)) {
-            throw new Error('Invalid thread message');
-        }
-        if ((message.role !== 'system' && message.role !== 'user' && message.role !== 'assistant') || typeof message.content !== 'string') {
-            throw new Error('Invalid thread message');
-        }
+        if (typeof message !== 'object' || message === null || Array.isArray(message) || !('role' in message) || !('content' in message)) throw new Error('Invalid thread message');
+        if ((message.role !== 'system' && message.role !== 'user' && message.role !== 'assistant') || typeof message.content !== 'string') throw new Error('Invalid thread message');
         return message;
     });
     return { messages };

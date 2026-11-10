@@ -90,15 +90,9 @@ export async function getThreadContentStatus(
                     if (contentValue) {
                         // For special types like infographic or flashcards that might be objects
                         if (typeof contentValue === 'object' && contentValue !== null) {
-                            if (type === 'infographic') {
-                                status[statusKey] = 'imageUrl' in contentValue && typeof contentValue.imageUrl === 'string' && !!contentValue.imageUrl;
-                            }
-                            else if (type === 'flashcards') {
-                                status[statusKey] = 'questions' in contentValue && Array.isArray(contentValue.questions) && contentValue.questions.length > 0;
-                            }
-                            else if (type === 'slideshow') {
-                                status[statusKey] = 'content' in contentValue && typeof contentValue.content === 'string' && !!contentValue.content;
-                            }
+                            if (type === 'infographic') status[statusKey] = 'imageUrl' in contentValue && typeof contentValue.imageUrl === 'string' && !!contentValue.imageUrl;
+                            else if (type === 'flashcards') status[statusKey] = 'questions' in contentValue && Array.isArray(contentValue.questions) && contentValue.questions.length > 0;
+                            else if (type === 'slideshow') status[statusKey] = 'content' in contentValue && typeof contentValue.content === 'string' && !!contentValue.content;
                             else status[statusKey] = Object.keys(contentValue).length > 0;
                         }
                         else status[statusKey] = !!contentValue;

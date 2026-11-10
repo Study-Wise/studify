@@ -26,9 +26,7 @@ export async function getLatestFlashcards(threadId: string): Promise<FlashcardRe
                 content: {
                     text: content.text,
                     questions: content.questions.flatMap(question => {
-                        if (typeof question === 'object' && question !== null && !Array.isArray(question) && 'front' in question && typeof question.front === 'string' && 'back' in question && typeof question.back === 'string') {
-                            return [{ front: question.front, back: question.back }];
-                        }
+                        if (typeof question === 'object' && question !== null && !Array.isArray(question) && 'front' in question && typeof question.front === 'string' && 'back' in question && typeof question.back === 'string') return [{ front: question.front, back: question.back }];
                         return [];
                     })
                 }

@@ -122,9 +122,7 @@ You may remove or modify sections as you see fit based on relevance to the topic
         config.contentGenerationExcludeTools,
     );
 
-    if (!result.text || result.text.length === 0) {
-        throw new Error('Generated practice questions are empty');
-    }
+    if (!result.text || result.text.length === 0) throw new Error('Generated practice questions are empty');
 
     await saveContent(threadId, 'practice-questions', result.text);
 

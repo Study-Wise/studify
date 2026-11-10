@@ -159,13 +159,9 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                     ) {
                         convoHistory = [{ role: 'system', content: systemPrompt }, ...parseThreadData(userData.thread).messages];
                     }
-                    else {
-                        console.warn(`⚠️ [${requestId}] No valid conversation history found in thread data, keeping system message only`);
-                    }
+                    else console.warn(`⚠️ [${requestId}] No valid conversation history found in thread data, keeping system message only`);
                 }
-                else {
-                    console.warn(`⚠️ [${requestId}] Thread not found in database, using system message only:`, current_thread_id);
-                }
+                else console.warn(`⚠️ [${requestId}] Thread not found in database, using system message only:`, current_thread_id);
             } catch (error) {
                 console.error(`❌ [${requestId}] Error fetching conversation history:`, error);
                 return new Response(
@@ -385,9 +381,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                             controller.enqueue(sendEvent({ type: 'text', text: streamPart.text || '', html: htmlThrottle.html }));
                             htmlThrottle.html = undefined;
                         }
-                        else if (streamPart.type === 'tool-call') {
-                            controller.enqueue(sendEvent({ type: 'tool-call', toolCallId: streamPart.toolCallId || '', toolName: streamPart.toolName || '' }));
-                        }
+                        else if (streamPart.type === 'tool-call') controller.enqueue(sendEvent({ type: 'tool-call', toolCallId: streamPart.toolCallId || '', toolName: streamPart.toolName || '' }));
                         else if (streamPart.type === 'tool-result') {
                             try {
                                 const parsed = typeof streamPart.output === 'string' ? JSON.parse(streamPart.output) : streamPart.output;
@@ -402,9 +396,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                                 controller.enqueue(sendEvent({ type: 'tool-result', toolCallId: streamPart.toolCallId || '', toolName: streamPart.toolName || '', status: 'success' }));
                             }
                         }
-                        else if (streamPart.type === 'error') {
-                            throw new VendorError(providers[selectedProvider]?.name ?? selectedProvider, 'AI stream failed', { cause: streamPart.error });
-                        }
+                        else if (streamPart.type === 'error') throw new VendorError(providers[selectedProvider]?.name ?? selectedProvider, 'AI stream failed', { cause: streamPart.error });
                     }
 
                     const [fullText, steps] = await Promise.all([streamResult.text, streamResult.steps]);

@@ -115,9 +115,7 @@ import '@/styles/components/modal.scss';
         }
         function startDismissTimer() {
             stopDismissTimer();
-            if (isToast && duration > 0 && element.open && !element.matches(':hover, :focus-within')) {
-                dismissTimer = setTimeout(() => element.close(), duration);
-            }
+            if (isToast && duration > 0 && element.open && !element.matches(':hover, :focus-within')) dismissTimer = setTimeout(() => element.close(), duration);
         }
 
         if (isToast) {
@@ -183,9 +181,7 @@ import '@/styles/components/modal.scss';
                 const next = pendingErrors.shift() ?? pendingNotice;
                 if (next === pendingNotice) pendingNotice = null;
                 if (next) renderDialog(next);
-                else {
-                    pendingToasts.splice(0).forEach(message => showToast(message, { title: 'Success', type: 'success' }));
-                }
+                else pendingToasts.splice(0).forEach(message => showToast(message, { title: 'Success', type: 'success' }));
             },
         });
         return modal;

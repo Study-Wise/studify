@@ -219,13 +219,9 @@ export async function streamText(
 
     convoHistory = convoHistory.filter(msg => msg.role !== 'system' && msg.content !== '');
 
-    if (convoHistory[0]?.role !== 'system') {
-        convoHistory.unshift({ role: 'system', content: systemPrompt });
-    }
+    if (convoHistory[0]?.role !== 'system') convoHistory.unshift({ role: 'system', content: systemPrompt });
 
-    if (convoHistory[convoHistory.length - 1]?.role !== 'user' || convoHistory[convoHistory.length - 1]?.content !== userPrompt) {
-        convoHistory.push({ role: 'user', content: userPrompt });
-    }
+    if (convoHistory[convoHistory.length - 1]?.role !== 'user' || convoHistory[convoHistory.length - 1]?.content !== userPrompt) convoHistory.push({ role: 'user', content: userPrompt });
 
     const aiModel = `${provider}/${userModel}`;
     console.log(`[${requestId}] AI stream request: model=${aiModel}, messages=${convoHistory.length}, tools=${Object.keys(resolvedTools).length}`);
