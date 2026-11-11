@@ -1,11 +1,7 @@
 import { nanoid } from 'nanoid';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
-import {
-    streamText,
-    extractToolData,
-    generateTitle,
-} from '@/lib/ai-service';
+import { streamText, extractToolData, generateTitle } from '@/lib/ai-service';
 import config from '@/lib/ai.config';
 import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
 import { getValidModelAndProvider, providers } from '@/lib/models';
