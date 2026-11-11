@@ -22,8 +22,6 @@ import { and, eq, type InferSelectModel } from 'drizzle-orm';
 
 import type { APIRoute } from 'astro';
 
-type Thread = InferSelectModel<typeof threadsTable>;
-
 const MATH_CLOSERS: Record<string, string> = { '$$': '$$', '$': '$', '\\(': '\\)', '\\[': '\\]' };
 
 export const POST: APIRoute = async ({ request, locals }) => {
@@ -129,7 +127,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
 
         let convoHistory: Message[] = [{ role: 'system', content: systemPrompt }];
 
-        let userData: Thread | undefined = undefined;
+        let userData: InferSelectModel<typeof threadsTable> | undefined = undefined;
         if (current_thread_id) {
             try {
                 const threads = await db.select().from(threadsTable).where(eq(threadsTable.id, current_thread_id));
