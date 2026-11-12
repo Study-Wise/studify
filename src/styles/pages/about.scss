@@ -8,6 +8,9 @@
 }
 
 .about-section {
+    $hover-scale: 1.05;
+    $hover-rotation: 1deg;
+
     grid-template-columns: 2fr 9fr;
     justify-content: start;
     align-items: start;
@@ -17,9 +20,6 @@
     @media (width <= $breakpoint-medium) {
         grid-template-columns: 1fr;
     }
-
-    $hover-scale: 1.05;
-    $hover-rotation: 1deg;
 
     &__image-intro {
         position: relative;
