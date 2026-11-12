@@ -1,0 +1,296 @@
+@use '../variables/tokens' as *;
+@use '../variables/colors/statuses' as *;
+
+.dialog {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    padding: 0;
+    width: 90%;
+    max-width: 500px;
+    color: var(--body-text);
+    background-color: var(--card-bg);
+    box-shadow: $box-shadow-huge;
+    border: none;
+    border-radius: $border-radius-large;
+
+    &::backdrop {
+        background-color: rgb(0 0 0 / 50%);
+
+        --bd: blur(4px);
+
+        -webkit-backdrop-filter: var(--bd);
+        backdrop-filter: var(--bd);
+    }
+
+    &[open] {
+        animation: --dialog-fade-in $transition-fast $ease-out;
+    }
+
+    &[data-display="toast"] {
+        position: static;
+        inset: auto;
+        margin: 0;
+        width: 100%;
+        max-width: none;
+        box-shadow: $box-shadow-extra-large;
+        pointer-events: auto;
+
+        .dialog__content {
+            padding: $spacing-medium;
+            gap: $spacing-small;
+        }
+
+        .dialog__header {
+            padding-block-end: 0;
+            border-block-end: none;
+        }
+
+        .dialog__icon {
+            font-size: 24px;
+        }
+
+        .dialog__title {
+            font-size: $font-size-base;
+        }
+
+        .dialog__body {
+            padding: 0;
+        }
+
+        .dialog__message {
+            font-size: $font-size-small;
+        }
+    }
+
+    @keyframes --dialog-fade-in {
+        from {
+            opacity: 0;
+            translate: 0 -10px;
+            scale: 0.95;
+        }
+
+        to {
+            opacity: 1;
+            translate: 0 0;
+            scale: 1;
+        }
+    }
+
+    @media (width <= $breakpoint-small) {
+        width: 95%;
+        max-width: none;
+    }
+
+    &__content {
+        padding: $spacing-large;
+        flex-direction: column;
+        gap: $spacing-large;
+        display: flex;
+
+        &[data-type="error"] {
+            .dialog__icon {
+                color: $color-error;
+            }
+
+            .dialog__button[data-variant="primary"] {
+                background-color: $color-error;
+
+                &:hover {
+                    background-color: $color-error-hover;
+                }
+            }
+        }
+
+        &[data-type="warning"] {
+            .dialog__icon {
+                color: $color-warning;
+            }
+
+            .dialog__button[data-variant="primary"] {
+                background-color: $color-warning;
+
+                &:hover {
+                    background-color: $color-warning-hover;
+                }
+            }
+        }
+
+        &[data-type="success"] {
+            .dialog__icon {
+                color: $color-success;
+            }
+
+            .dialog__button[data-variant="primary"] {
+                background-color: $color-success;
+
+                &:hover {
+                    background-color: $color-success-hover;
+                }
+            }
+        }
+
+        &[data-type="info"] {
+            .dialog__icon {
+                color: $color-info;
+            }
+
+            .dialog__button[data-variant="primary"] {
+                background-color: $color-info;
+
+                &:hover {
+                    background-color: $color-info-hover;
+                }
+            }
+        }
+
+        @media (width <= $breakpoint-small) {
+            padding: $spacing-medium + 0.25rem;
+            gap: $spacing-medium + 0.25rem;
+        }
+    }
+
+    &__header {
+        padding-block-end: $spacing-extra-small;
+        border-block-end: 1px solid var(--card-border);
+        align-items: center;
+        gap: $spacing-small;
+        display: flex;
+    }
+
+    &__icon {
+        font-size: 28px;
+        font-weight: 500;
+    }
+
+    &__title {
+        flex: 1;
+        margin: 0;
+        font-size: $font-size-1x-large;
+        font-weight: $font-weight-semibold;
+
+        @media (width <= $breakpoint-small) {
+            font-size: $font-size-large;
+        }
+    }
+
+    &__body {
+        padding: $spacing-extra-small 0;
+    }
+
+    &__message {
+        margin: 0;
+        color: var(--body-text);
+        font-size: $font-size-base;
+        line-height: $line-height-relaxed;
+
+        @media (width <= $breakpoint-small) {
+            font-size: 0.9375rem;
+        }
+    }
+
+    &__input-label {
+        margin-block: $spacing-small $spacing-extra-small;
+        color: var(--body-text);
+        font-size: $font-size-small;
+        font-weight: $font-weight-medium;
+        display: block;
+    }
+
+    &__input {
+        resize: vertical;
+        padding: $spacing-extra-small $spacing-small;
+        width: 100%;
+        color: var(--body-text);
+        background-color: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: $border-radius-small;
+        font: inherit;
+        font-size: $font-size-small;
+    }
+
+    &__footer {
+        padding-block-start: $spacing-extra-small;
+        justify-content: end;
+        gap: $spacing-small;
+        display: flex;
+
+        &[hidden] {
+            display: none;
+        }
+    }
+
+    &__close {
+        padding: $spacing-tiny;
+        color: var(--body-text);
+        background: none;
+        border: none;
+        border-radius: $border-radius-small;
+        opacity: $opacity-subtle;
+        transition: $transition-all;
+        cursor: pointer;
+        display: flex;
+
+        &:hover,
+        &:focus-visible {
+            background-color: var(--card-border);
+            opacity: 1;
+        }
+
+        &:focus-visible {
+            outline: 2px solid currentcolor;
+            outline-offset: 2px;
+        }
+    }
+
+    &__button {
+        padding: 0.625rem $spacing-large;
+        border: none;
+        border-radius: $border-radius-small;
+        outline: none;
+        font-size: 0.9375rem;
+        font-weight: $font-weight-medium;
+        transition: $transition-all;
+        cursor: pointer;
+
+        &:focus-visible {
+            outline: 2px solid currentcolor;
+            outline-offset: 2px;
+        }
+
+        &:active {
+            scale: 0.98;
+        }
+
+        &[data-variant="primary"] {
+            color: white;
+            background-color: $color-info;
+
+            &:hover {
+                background-color: $color-info-hover;
+            }
+        }
+
+        &[data-variant="secondary"] {
+            color: var(--body-text);
+            background-color: transparent;
+            border: 1px solid var(--card-border);
+
+            &:hover {
+                background-color: var(--card-border);
+            }
+        }
+    }
+}
+
+.toast-region {
+    position: fixed;
+    inset-block-end: $spacing-medium;
+    inset-inline-end: $spacing-medium;
+    width: min(380px, calc(100% - #{$spacing-medium * 2}));
+    flex-direction: column-reverse;
+    gap: $spacing-small;
+    z-index: $z-index-notification;
+    pointer-events: none;
+    display: flex;
+}

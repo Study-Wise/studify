@@ -3,13 +3,13 @@
 @use '../variables/tokens' as *;
 
 .chat-title {
-    .chat-title-text {
+    &__text {
         min-width: 0;
 
         @include text-ellipsis;
     }
 
-    .chat-title-button {
+    &__button {
         padding: 0;
         color: inherit;
         background: none;
@@ -31,7 +31,7 @@
         }
     }
 
-    .chat-title-input {
+    &__input {
         padding: 0;
         width: min(40ch, 60vw);
         min-width: 0;

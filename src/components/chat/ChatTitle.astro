@@ -6,11 +6,11 @@ const { title, threadId, canRename } = Astro.props;
 <h2 class="chat-title">
     <span class="material-symbols-outlined" aria-hidden="true">chat</span>&nbsp;{canRename ? (
         <Fragment>
-            <button type="button" id="chat-title-button" class="chat-title-text chat-title-button" title="Click to rename" aria-label={`Rename chat: ${title}`}>{title}</button>
-            <input type="text" id="chat-title-input" class="chat-title-input" maxlength="255" value={title} aria-label="Chat title" hidden />
+            <button type="button" id="chat-title-button" class="chat-title__text chat-title__button" title="Click to rename" aria-label={`Rename chat: ${title}`}>{title}</button>
+            <input type="text" id="chat-title-input" class="chat-title__input" maxlength="255" value={title} aria-label="Chat title" hidden />
         </Fragment>
     ) : (
-        <span class="chat-title-text">{title}</span>
+        <span class="chat-title__text">{title}</span>
     )}
 </h2>
 

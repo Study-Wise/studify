@@ -13,10 +13,10 @@ interface WindowEventMap {
 
 interface Window {
     keyboardNavigation: object;
-    showDialog: (message: string, options?: { title?: string; icon?: string; type?: import('./lib/modal').ModalType }) => void;
-    showToast: (message: string, options?: { title?: string; icon?: string; type?: import('./lib/modal').ModalType }) => void;
-    showConfirm: (message: string, options?: { title?: string; confirmLabel?: string; cancelLabel?: string; icon?: string; type?: import('./lib/modal').ModalType }) => Promise<boolean>;
-    showPrompt: (message: string, options?: { title?: string; confirmLabel?: string; cancelLabel?: string; icon?: string; type?: import('./lib/modal').ModalType; inputLabel?: string; placeholder?: string; maxLength?: number }) => Promise<string | null>;
+    showDialog: (message: string, options?: { title?: string; icon?: string }) => void;
+    showToast: (message: string, options?: { title?: string; icon?: string }) => void;
+    showConfirm: (message: string, options?: { title?: string; confirmLabel?: string; cancelLabel?: string; icon?: string }) => Promise<boolean>;
+    showPrompt: (message: string, options?: { title?: string; confirmLabel?: string; cancelLabel?: string; icon?: string; inputLabel?: string; placeholder?: string; maxLength?: number }) => Promise<string | null>;
     showError: (message: string, title?: string) => void;
     showWarning: (message: string, title?: string) => void;
     showSuccess: (message: string) => void;

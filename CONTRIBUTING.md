@@ -77,9 +77,9 @@ The mind map and webpage generators are near copies of each other and are kept i
 
 ## Adding categories and modes
 
-1. Edit `src/lib/modes.ts`.
-2. Add the category to the `categories` object, with its modes.
-3. Give each mode a `show`, `name`, `description` and `icon`.
+1. Edit `src/lib/modes/definitions.ts`.
+2. Add the category to the `modeDefinitions` object, with its modes.
+3. Give each mode a `name`, `description` and `icon`, plus a `character` with a `name`, `personality`, `interests` and `svg`. `show` defaults to `true`.
 4. The mode prompt is generated automatically, and tools default to the global tools.
 
 No new pages or API routes are needed. `src/pages/[category]/[mode]/` is a dynamic route, so every mode is served automatically.

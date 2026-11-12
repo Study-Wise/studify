@@ -4,14 +4,14 @@ import SignOutScript from '@/scripts/auth/sign-out.astro';
 ---
 
 {Astro.locals.user ? (
-    <div class="user-button-container">
-        <button type="button" class="user-button nav-btn" id="user-menu-trigger" aria-label="User menu">
+    <div class="user-button">
+        <button type="button" class="user-button__trigger nav-btn" id="user-menu-trigger" aria-label="User menu">
             <span class="material-symbols-outlined" aria-hidden="true">account_circle</span>
-            <span class="user-name">{Astro.locals.user.name || Astro.locals.user.email}</span>
+            <span class="user-button__name">{Astro.locals.user.name || Astro.locals.user.email}</span>
         </button>
-        <div class="user-menu" id="user-menu" hidden>
-            <a href="/user/profile" class="user-menu-item">Profile</a>
-            <button type="button" id="signout-btn" class="user-menu-item signout">Sign Out</button>
+        <div class="user-button__menu" id="user-menu" hidden>
+            <a href="/user/profile" class="user-button__item">Profile</a>
+            <button type="button" id="signout-btn" class="user-button__item" data-action="signout">Sign Out</button>
         </div>
     </div>
 ) : (

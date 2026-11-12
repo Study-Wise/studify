@@ -137,15 +137,15 @@ export const inNav = 'hide';
                 {isAuthorized && processedMessages.length === 0 ? (
                     <div class="empty-state">
                         {modeObj.character && (modeObj.character.pfp
-                            ? <img src={modeObj.character.pfp} alt={`${modeObj.character.name} profile picture`} class="empty-state-pfp" />
+                            ? <img src={modeObj.character.pfp} alt={`${modeObj.character.name} profile picture`} class="empty-state__pfp" />
                             : <Fragment set:html={modeObj.character.svg} />
                         )}
-                        {modeObj.icon && <div class="empty-state-icon" aria-hidden="true">{modeObj.icon}</div>}
+                        {modeObj.icon && <div class="empty-state__icon" aria-hidden="true">{modeObj.icon}</div>}
                         <h3>Let's study {modeName}!</h3>
                         <p>{modeObj.description}. Ask a question below to get started.</p>
-                        <div class="example-prompts">
+                        <div class="empty-state__prompts">
                             {examplePrompts.map(prompt => (
-                                <button type="button" class="example-prompt">{prompt}</button>
+                                <button type="button" class="empty-state__prompt">{prompt}</button>
                             ))}
                         </div>
                     </div>
@@ -217,7 +217,7 @@ export const inNav = 'hide';
             });
         }, 1000);
 
-        document.querySelectorAll('.example-prompt').forEach(button => {
+        document.querySelectorAll('.empty-state__prompt').forEach(button => {
             button.addEventListener('click', () => {
                 const messageInput = document.getElementById('message-input');
                 messageInput.value = button.textContent;

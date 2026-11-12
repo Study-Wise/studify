@@ -1,41 +1,41 @@
 ---
-import '@/styles/components/modal.scss';
+import '@/styles/components/dialog.scss';
 ---
-
 <script>
-    type ModalType = 'info' | 'error' | 'warning' | 'success';
+    type DialogType = 'info' | 'error' | 'warning' | 'success';
 
-    type ModalContent = {
+    type DialogContent = {
         title: string;
         message: string;
-        type?: ModalType;
+        type?: DialogType;
         icon?: string;
         buttons?: { label: string; variant?: 'primary' | 'secondary'; onClick?: () => void | boolean }[];
     };
 
-    type Modal = {
+    type Dialog = {
         element: HTMLDialogElement;
         open(): void;
         close(): void;
-        setContent(content: ModalContent): void;
+        setContent(content: DialogContent): void;
     };
 
-    const defaultIcons: Record<ModalType, string> = {
+    const defaultIcons: Record<DialogType, string> = {
         info: 'info',
         error: 'error',
         warning: 'warning',
         success: 'check_circle',
     };
 
-    const defaultButtons: ModalContent['buttons'] = [{ label: 'OK', variant: 'primary' }];
-    let modalCount = 0;
+    const defaultButtons: DialogContent['buttons'] = [{ label: 'OK', variant: 'primary' }];
+    let dialogCount = 0;
 
-    function createModal(options: ModalContent & { display?: 'modal' | 'toast'; duration?: number; onClose?: () => void }): Modal {
-        const { display = 'modal', duration = 5000 } = options;
+    function createDialog(options: DialogContent & { display?: 'dialog' | 'toast'; duration?: number; onClose?: () => void }): Dialog {
+        const { display = 'dialog', duration = 5000 } = options;
         const isToast = display === 'toast';
-        const titleId = `modal-title-${++modalCount}`;
+        const titleId = `dialog-title-${++dialogCount}`;
         const element = document.createElement('dialog');
-        element.className = isToast ? 'modal modal-toast' : 'modal';
+        element.className = 'dialog';
+        element.dataset.display = display;
         element.setAttribute('aria-labelledby', titleId);
         if (isToast) {
             element.setAttribute('role', 'status');
@@ -44,19 +44,19 @@ import '@/styles/components/modal.scss';
 
         const content = document.createElement('div');
         const header = document.createElement('div');
-        header.className = 'modal-header';
+        header.className = 'dialog__header';
         const icon = document.createElement('span');
-        icon.className = 'material-symbols-outlined modal-icon';
+        icon.className = 'material-symbols-outlined dialog__icon';
         icon.setAttribute('aria-hidden', 'true');
         const title = document.createElement('h2');
-        title.className = 'modal-title';
+        title.className = 'dialog__title';
         title.id = titleId;
         header.append(icon, title);
 
         if (isToast) {
             const closeButton = document.createElement('button');
             closeButton.type = 'button';
-            closeButton.className = 'modal-close';
+            closeButton.className = 'dialog__close';
             closeButton.setAttribute('aria-label', 'Dismiss');
             const closeIcon = document.createElement('span');
             closeIcon.className = 'material-symbols-outlined';
@@ -68,12 +68,13 @@ import '@/styles/components/modal.scss';
         }
 
         const body = document.createElement('div');
-        body.className = 'modal-body';
+        body.className = 'dialog__body';
         const message = document.createElement('p');
-        message.className = 'modal-message';
+        message.className = 'dialog__message';
         body.append(message);
         const footer = document.createElement('div');
-        footer.className = 'modal-footer';
+        footer.className = 'dialog__footer';
+        content.className = 'dialog__content';
         content.append(header, body, footer);
         element.append(content);
 
@@ -86,18 +87,19 @@ import '@/styles/components/modal.scss';
         (isToast ? toastRegion! : document.body).append(element);
 
         function focusPrimaryButton() {
-            footer.querySelector<HTMLButtonElement>('.modal-button-primary')?.focus();
+            footer.querySelector<HTMLButtonElement>('.dialog__button[data-variant="primary"]')?.focus();
         }
 
-        function setContent({ title: titleText, message: messageText, type = 'info', icon: iconName, buttons = (isToast ? [] : defaultButtons ?? []) }: ModalContent) {
-            content.className = `modal-content modal-${type}`;
+        function setContent({ title: titleText, message: messageText, type = 'info', icon: iconName, buttons = (isToast ? [] : defaultButtons ?? []) }: DialogContent) {
+            content.dataset.type = type;
             icon.textContent = iconName ?? defaultIcons[type];
             title.textContent = titleText;
             message.textContent = messageText;
             footer.replaceChildren(...buttons.map(({ label, variant = 'primary', onClick }) => {
                 const button = document.createElement('button');
                 button.type = 'button';
-                button.className = `modal-button modal-button-${variant}`;
+                button.className = 'dialog__button';
+                button.dataset.variant = variant;
                 button.textContent = label;
                 button.addEventListener('click', () => {
                     if (onClick?.() !== false) element.close();
@@ -162,7 +164,7 @@ import '@/styles/components/modal.scss';
         message: string;
         title: string;
         icon?: string;
-        type: ModalType;
+        type: DialogType;
     }
 
     const pendingErrors: DialogEntry[] = [];
@@ -170,10 +172,10 @@ import '@/styles/components/modal.scss';
     // Success messages waiting for the error on screen to be dismissed, since a toast would be hidden under the error dialog's backdrop
     const pendingToasts: string[] = [];
     let current: DialogEntry | null = null;
-    let modal: Modal | null = null;
+    let dialog: Dialog | null = null;
 
-    function getModal() {
-        modal ??= createModal({
+    function getDialog() {
+        dialog ??= createDialog({
             title: '',
             message: '',
             onClose: () => {
@@ -184,10 +186,10 @@ import '@/styles/components/modal.scss';
                 else pendingToasts.splice(0).forEach(message => showToast(message, { title: 'Success', type: 'success' }));
             },
         });
-        return modal;
+        return dialog;
     }
 
-    function toModalContent(entry: DialogEntry): ModalContent {
+    function toDialogContent(entry: DialogEntry): DialogContent {
         const waiting = pendingErrors.length + (pendingNotice ? 1 : 0);
         return {
             ...entry,
@@ -197,12 +199,12 @@ import '@/styles/components/modal.scss';
 
     function renderDialog(entry: DialogEntry) {
         current = entry;
-        const appModal = getModal();
-        appModal.setContent(toModalContent(entry));
-        appModal.open();
+        const appDialog = getDialog();
+        appDialog.setContent(toDialogContent(entry));
+        appDialog.open();
     }
 
-    function showDialog(message: string, options: { title?: string; icon?: string; type?: ModalType } = {}) {
+    function showDialog(message: string, options: { title?: string; icon?: string; type?: DialogType } = {}) {
         const { title = 'Alert', icon, type = 'info' } = options;
         const entry: DialogEntry = { message, title, icon, type };
 
@@ -210,16 +212,16 @@ import '@/styles/components/modal.scss';
         if (current?.type === 'error') {
             if (type === 'error') pendingErrors.push(entry);
             else pendingNotice = entry;
-            getModal().setContent(toModalContent(current));
+            getDialog().setContent(toDialogContent(current));
             return;
         }
 
         renderDialog(entry);
     }
 
-    function showToast(message: string, options: { title?: string; icon?: string; type?: ModalType } = {}) {
+    function showToast(message: string, options: { title?: string; icon?: string; type?: DialogType } = {}) {
         const { title = 'Notice', icon, type = 'info' } = options;
-        const toast = createModal({
+        const toast = createDialog({
             display: 'toast',
             title,
             message,
@@ -233,9 +235,9 @@ import '@/styles/components/modal.scss';
     function showSuccessToast(message: string) {
         // A success message ends whatever was in progress, so a status update on screen or waiting (e.g. "Uploading...") is no longer needed. Errors are kept.
         pendingNotice = null;
-        if (current && current.type !== 'error') getModal().close();
+        if (current && current.type !== 'error') getDialog().close();
         else if (current) {
-            getModal().setContent(toModalContent(current));
+            getDialog().setContent(toDialogContent(current));
             pendingToasts.push(message);
             return;
         }
@@ -274,13 +276,13 @@ import '@/styles/components/modal.scss';
 
     window.showConfirm = (
         message: string,
-        options: { title?: string; confirmLabel?: string; cancelLabel?: string; icon?: string; type?: ModalType } = {},
+        options: { title?: string; confirmLabel?: string; cancelLabel?: string; icon?: string; type?: DialogType } = {},
     ): Promise<boolean> => {
         const { title = 'Are you sure?', confirmLabel = 'Confirm', cancelLabel = 'Cancel', icon, type = 'warning' } = options;
 
         return new Promise(resolve => {
             let confirmed = false;
-            const confirmModal = createModal({
+            const confirmDialog = createDialog({
                 title,
                 message,
                 icon,
@@ -290,11 +292,11 @@ import '@/styles/components/modal.scss';
                     { label: confirmLabel, onClick: () => confirmed = true },
                 ],
                 onClose: () => {
-                    confirmModal.element.remove();
+                    confirmDialog.element.remove();
                     resolve(confirmed);
                 },
             });
-            confirmModal.open();
+            confirmDialog.open();
         });
     };
 
@@ -305,7 +307,7 @@ import '@/styles/components/modal.scss';
             confirmLabel?: string;
             cancelLabel?: string;
             icon?: string;
-            type?: ModalType;
+            type?: DialogType;
             inputLabel?: string;
             placeholder?: string;
             maxLength?: number;
@@ -316,7 +318,7 @@ import '@/styles/components/modal.scss';
         return new Promise(resolve => {
             let answer: string | null = null;
             const input = document.createElement('textarea');
-            const promptModal = createModal({
+            const promptDialog = createDialog({
                 title,
                 message,
                 icon,
@@ -329,24 +331,24 @@ import '@/styles/components/modal.scss';
                     },
                 ],
                 onClose: () => {
-                    promptModal.element.remove();
+                    promptDialog.element.remove();
                     resolve(answer);
                 },
             });
 
-            const inputId = `${promptModal.element.getAttribute('aria-labelledby')}-input`;
+            const inputId = `${promptDialog.element.getAttribute('aria-labelledby')}-input`;
             const label = document.createElement('label');
-            label.className = 'modal-input-label';
+            label.className = 'dialog__input-label';
             label.htmlFor = inputId;
             label.textContent = inputLabel;
             input.id = inputId;
-            input.className = 'modal-input';
+            input.className = 'dialog__input';
             input.rows = 3;
             if (placeholder) input.placeholder = placeholder;
             if (maxLength) input.maxLength = maxLength;
-            promptModal.element.querySelector('.modal-body')?.append(label, input);
+            promptDialog.element.querySelector('.dialog__body')?.append(label, input);
 
-            promptModal.open();
+            promptDialog.open();
             input.focus();
         });
     };
