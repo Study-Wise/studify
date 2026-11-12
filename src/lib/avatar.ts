@@ -1,17 +1,32 @@
-export default function generateAvatar(
-    gender: 'female' | 'male',
-    skin: string,
-    hairColor: string,
-    background: string,
-    foreground: string,
-    clothing: 'tee' | 'collar' | 'hoodie' | 'blazer' | 'turtleneck',
-    faceShape: 'round' | 'oval' | 'square' | 'heart',
-    eyes: string,
-    nose: 'small' | 'button' | 'pointed' | 'wide',
-    mouth: 'smile' | 'grin' | 'neutral' | 'open',
-    faceSize: number,
-    accessory: 'none' | 'glasses' | 'beret' | 'hardhat' = 'none',
-): string {
+export interface AvatarOptions {
+    gender: 'female' | 'male';
+    skin: string;
+    hairColor: string;
+    background: string;
+    foreground: string;
+    clothing: 'tee' | 'collar' | 'hoodie' | 'blazer' | 'turtleneck';
+    faceShape: 'round' | 'oval' | 'square' | 'heart';
+    eyes: string;
+    nose: 'small' | 'button' | 'pointed' | 'wide';
+    mouth: 'smile' | 'grin' | 'neutral' | 'open';
+    faceSize: number;
+    accessory?: 'none' | 'glasses' | 'beret' | 'hardhat';
+}
+
+export function generateAvatar({
+    gender,
+    skin,
+    hairColor,
+    background,
+    foreground,
+    clothing,
+    faceShape,
+    eyes,
+    nose,
+    mouth,
+    faceSize,
+    accessory = 'none',
+}: AvatarOptions): string {
     const cy = 10.4;
     const r = 5.2 * faceSize;
     const left = 12 - r;
@@ -132,13 +147,25 @@ export default function generateAvatar(
 
     const body = `<path d="M${bodyLeft} 24V21.2C${bodyLeft} 18.8 8.4 17.8 12 17.8S${bodyRight} 18.8 ${bodyRight} 21.2V24z" fill="${foreground}"/>`;
 
-    const clothingMarkup = {
-        tee: `<path d="M9.8 17.9Q12 20.4 14.2 17.9" fill="${skin}"/>`,
-        collar: `<path d="M9.6 17.7L12 20.2 10.2 21.2zM14.4 17.7L12 20.2 13.8 21.2z" fill="#fff"/>`,
-        hoodie: `<path d="M8.6 18.6Q12 22 15.4 18.6" fill="none" stroke="rgba(0,0,0,0.25)" stroke-width="1.1" stroke-linecap="round"/><path d="M11 20.4v2.4M13 20.4v2.4" stroke="#fff" stroke-width="0.35" stroke-linecap="round"/>`,
-        blazer: `<path d="M12 18.2L9.6 24h4.8z" fill="#fff"/><path d="M12 18.2L9.2 22.4M12 18.2l2.8 4.2" stroke="rgba(0,0,0,0.3)" stroke-width="0.4" stroke-linecap="round"/>`,
-        turtleneck: `<rect x="10.1" y="15.8" width="3.8" height="3.1" rx="1.1" fill="${foreground}"/>`,
-    }[clothing];
+    let clothingMarkup = '';
+
+    switch (clothing) {
+        case 'tee':
+            clothingMarkup = `<path d="M9.8 17.9Q12 20.4 14.2 17.9" fill="${skin}"/>`;
+            break;
+        case 'collar':
+            clothingMarkup = `<path d="M9.6 17.7L12 20.2 10.2 21.2zM14.4 17.7L12 20.2 13.8 21.2z" fill="#fff"/>`;
+            break;
+        case 'hoodie':
+            clothingMarkup = `<path d="M8.6 18.6Q12 22 15.4 18.6" fill="none" stroke="rgba(0,0,0,0.25)" stroke-width="1.1" stroke-linecap="round"/><path d="M11 20.4v2.4M13 20.4v2.4" stroke="#fff" stroke-width="0.35" stroke-linecap="round"/>`;
+            break;
+        case 'blazer':
+            clothingMarkup = `<path d="M12 18.2L9.6 24h4.8z" fill="#fff"/><path d="M12 18.2L9.2 22.4M12 18.2l2.8 4.2" stroke="rgba(0,0,0,0.3)" stroke-width="0.4" stroke-linecap="round"/>`;
+            break;
+        case 'turtleneck':
+            clothingMarkup = `<rect x="10.1" y="15.8" width="3.8" height="3.1" rx="1.1" fill="${foreground}"/>`;
+            break;
+    }
 
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><clipPath id="avatar-clip"><circle cx="12" cy="12" r="12"/></clipPath></defs><g clip-path="url(#avatar-clip)"><rect width="24" height="24" fill="${background}"/>${hairBack}<rect x="10.5" y="14" width="3" height="4.4" fill="${skin}"/>${body}${clothingMarkup}${face}${noseMarkup}${eyeMarkup}${mouthMarkup}${hairFront}${accessoryMarkup}</g></svg>`;
 }

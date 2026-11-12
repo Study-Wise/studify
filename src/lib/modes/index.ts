@@ -1,3 +1,4 @@
+import type { AvatarOptions } from '@/lib/avatar';
 import generateModePrompt from '@/lib/prompt-generator';
 import modeDefinitions from '@/lib/modes/definitions';
 
@@ -12,7 +13,7 @@ export interface Mode {
             background: string;
             foreground: string;
         };
-        svg: string;
+        appearance: Omit<AvatarOptions, 'background' | 'foreground'>;
         pfp?: string;
     };
     icon?: string;
