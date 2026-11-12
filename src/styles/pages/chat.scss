@@ -192,7 +192,7 @@ footer, .chat-toolbar {
         }
     }
 
-    .share-button {
+    &__share-button {
         padding: $spacing-extra-small + 0.25rem $spacing-medium;
         color: $section-title-light;
         background-color: rgba(from $card-bg-light r g b / 95%);
@@ -224,7 +224,7 @@ footer, .chat-toolbar {
             translate: 0 0;
         }
 
-        &.active {
+        &[data-active] {
             color: $header-text;
             background: linear-gradient(120deg, color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: 10%), color.adjust(list.nth(map.get($accent-colors, primary), 2), $lightness: 10%));
             box-shadow:
@@ -236,10 +236,10 @@ footer, .chat-toolbar {
         .material-symbols-outlined {
             font-size: $font-size-large;
         }
+    }
 
-        .share-text {
-            font-weight: $font-weight-medium;
-        }
+    &__share-text {
+        font-weight: $font-weight-medium;
     }
 
     .header__text {
@@ -456,7 +456,7 @@ footer, .chat-toolbar {
         max-width: 100%;
     }
 
-    &__content.mathjax-pending {
+    &__content[data-mathjax-pending] {
         visibility: hidden;
     }
 

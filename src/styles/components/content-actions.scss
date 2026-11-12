@@ -69,6 +69,10 @@ $color: list.nth(map.get($accent-colors, primary), 1);
         }
     }
 
+    &__spinner {
+        animation: --spin 1s linear infinite;
+    }
+
     @media (width <= $breakpoint-small) {
         flex-direction: column;
         gap: $spacing-small;
@@ -78,8 +82,4 @@ $color: list.nth(map.get($accent-colors, primary), 1);
             justify-content: center;
         }
     }
-}
-
-.spinning {
-    animation: --spin 1s linear infinite;
 }

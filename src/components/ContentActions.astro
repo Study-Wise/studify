@@ -29,7 +29,12 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, (c: stri
 <script is:inline define:vars={{ contentType, contentTypeName, threadId, hasContent, generateVerb, regenerateVerb }}>
     const actionBtn = document.getElementById(`${contentType}-action-btn`);
     const apiEndpoint = `/api/${contentType}/generate`;
-    const contentClassName = contentType.replace(/-/g, '-') + '-content';
+    const contentClassName = {
+        'study-guide': 'study-guide-content',
+        'reference-sheet': 'reference-sheet-content',
+        'flashcards': 'flashcards__content',
+        'practice-questions': 'practice-questions-page__content',
+    }[contentType];
 
     // Content types that use markdown
     const markdownTypes = ['study-guide', 'reference-sheet', 'flashcards', 'practice-questions'];
@@ -54,7 +59,7 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, (c: stri
             actionBtn.setAttribute('disabled', 'true');
             const originalContent = actionBtn.innerHTML;
             const loadingText = `${(isRegenerate ? regenerateVerb : generateVerb).replace(/^(\w+?)e?\b/, '$1ing')}…`;
-            actionBtn.innerHTML = `<span class="material-symbols-outlined spinning" aria-hidden="true">progress_activity</span><span>${loadingText}</span>`;
+            actionBtn.innerHTML = `<span class="material-symbols-outlined content-actions__spinner" aria-hidden="true">progress_activity</span><span>${loadingText}</span>`;
 
             const startedAt = Date.now();
             const timerLabel = actionBtn.lastElementChild;
@@ -123,15 +128,15 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, (c: stri
                             window.initializeStepByStep?.();
                         }
                         else if (iframeTypes.includes(contentType)) {
-                            let container = page.querySelector(`.${contentType}-container`);
+                            let container = page.querySelector(`.${contentType}-page__container`);
                             let iframe = page.querySelector('iframe');
 
                             if (emptyState && !container) {
                                 container = document.createElement('div');
-                                container.className = `${contentType}-container`;
+                                container.className = `${contentType}-page__container`;
                                 iframe = document.createElement('iframe');
                                 iframe.title = contentTypeName;
-                                iframe.className = `${contentType}-iframe`;
+                                iframe.className = `${contentType}-page__iframe`;
                                 iframe.sandbox = 'allow-scripts';
                                 container.appendChild(iframe);
                                 emptyState.replaceWith(container);
@@ -143,13 +148,13 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, (c: stri
                             // For infographic, content is an object with imageUrl
                             const imageUrl = typeof content === 'object' ? content.imageUrl : content;
                             let contentContainer = page.querySelector('.content-container');
-                            let img = page.querySelector('.infographic-image');
+                            let img = page.querySelector('.infographic-page__image');
 
                             if (emptyState && !contentContainer) {
                                 contentContainer = document.createElement('div');
                                 contentContainer.className = 'content-container';
                                 img = document.createElement('img');
-                                img.className = 'infographic-image';
+                                img.className = 'infographic-page__image';
                                 img.alt = 'Generated Infographic';
                                 contentContainer.appendChild(img);
                                 emptyState.replaceWith(contentContainer);

@@ -58,7 +58,7 @@
         visibility: visible !important;
     }
 
-    .mathjax-pending {
+    [data-mathjax-pending] {
         visibility: hidden !important;
     }
 

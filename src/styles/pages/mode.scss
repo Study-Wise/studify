@@ -56,9 +56,14 @@
 
 .chat-button {
     margin-inline-start: auto;
+
+    &__container {
+        display: flex;
+        place-content: end;
+    }
 }
 
-.spinner {
+.btn__spinner {
     margin-inline-start: $spacing-small - 0.125rem;
     width: 1.2em;
     height: 1.2em;
@@ -86,7 +91,7 @@
         background-color: $footer-bg;
     }
 
-    &.active {
+    &[data-active] {
         color: list.nth(map.get($accent-colors, primary), 1);
         background-color: var(--card-bg);
         border-bottom: 3px solid list.nth(map.get($accent-colors, primary), 1);
@@ -103,9 +108,4 @@
     background-color: transparent;
     border: none;
     cursor: pointer;
-}
-
-.chat-button-container {
-    display: flex;
-    place-content: end;
 }

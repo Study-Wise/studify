@@ -7,7 +7,7 @@ const { element = 'button', variant = 'primary', icon = '', className = '', mode
         <Element type={type} tabindex="0" class:list={['btn', `bg-${variant}`, { 'lite': mode === 'lite' }, className]} {...props}>
             {icon && <span class="material-symbols-outlined" aria-hidden="true">{icon}</span>}
             {mode === 'tab' ? <span class="text"><slot /></span> : <slot />}
-            <span class="spinner" style="display: none"></span>
+            <span class="btn__spinner" style="display: none"></span>
         </Element>
     );
 })()}
