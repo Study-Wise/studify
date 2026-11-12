@@ -49,21 +49,21 @@ const team: TeamData[] = teamData.map((u: TeamData) => ({
     {team.map(member => (
         <section class="card">
             <div class="about-section">
-                <div class="image-intro" data-hover={!!member.images?.hover ? true : undefined} style={member.images?.hover && { '--data-hover-src': member.images?.hover && `url('${member.images.hover}')` }}>
-                    {member.images?.regular && <img src={member.images?.regular} alt={`${member.name} profile picture`} class="profile-picture" />}
-                    {(member.name || member.role || member.subrole) && <div class="about-info">
-                        {member.name && <h2 class="about-name">{member.name}</h2>}
-                        {member.role && <p class="about-role">{member.role}</p>}
-                        {member.subrole && <p class="about-subrole">{member.subrole}</p>}
+                <div class="about-section__image-intro" data-hover={!!member.images?.hover ? true : undefined} style={member.images?.hover && { '--data-hover-src': member.images?.hover && `url('${member.images.hover}')` }}>
+                    {member.images?.regular && <img src={member.images?.regular} alt={`${member.name} profile picture`} class="about-section__profile-picture" />}
+                    {(member.name || member.role || member.subrole) && <div class="about-section__info">
+                        {member.name && <h2 class="about-section__name">{member.name}</h2>}
+                        {member.role && <p class="about-section__role">{member.role}</p>}
+                        {member.subrole && <p class="about-section__subrole">{member.subrole}</p>}
                     </div>}
                 </div>
-                <div class="about-content">
-                    <div class="about-text">
+                <div class="about-section__content">
+                    <div class="about-section__text">
                         {member.blurb && <p set:html={member.blurb} />}
                         {member.description && member.description.length > 0 && member.description.map(p => <p  set:html={p} />)}
                     </div>
                     {member.links && member.links.length > 0 && (
-                        <p class="about-links">
+                        <p class="about-section__links">
                             {member.links.map(link => {
                                 const icon = typeof link.icon === 'string' ? { provider: 'skillicons', name: link.icon } : link.icon;
 
@@ -72,9 +72,9 @@ const team: TeamData[] = teamData.map((u: TeamData) => ({
                                         {link.icon === 'language' ? (
                                             <span class="material-symbols-outlined" aria-hidden="true">{link.icon}</span>
                                         ) : (
-                                            <img src={icon.provider === 'custom' ? `/assets/icons/${icon.name}.svg` : `https://skillicons.dev/icons?i=${icon.name}`} alt={link.text} class="social-icon" />
+                                            <img src={icon.provider === 'custom' ? `/assets/icons/${icon.name}.svg` : `https://skillicons.dev/icons?i=${icon.name}`} alt={link.text} class="about-section__social-icon" />
                                         )}
-                                        <span class="text">{link.text}</span>
+                                        <span class="about-section__link-text">{link.text}</span>
                                     </a>
                                 )
                             }).reduce((prev, curr) => [prev, ' | ', curr])}

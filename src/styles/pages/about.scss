@@ -18,7 +18,10 @@
         grid-template-columns: 1fr;
     }
 
-    .image-intro {
+    $hover-scale: 1.05;
+    $hover-rotation: 1deg;
+
+    &__image-intro {
         position: relative;
         flex-direction: column;
         isolation: isolate;
@@ -30,83 +33,80 @@
         @media (width <= $breakpoint-extra-small) {
             flex-wrap: wrap;
         }
+    }
 
-        $hover-scale: 1.05;
-        $hover-rotation: 1deg;
+    &__profile-picture,
+    &__image-intro::before {
+        max-width: 125px;
+        aspect-ratio: 1;
+        object-fit: cover;
+        box-shadow: 0 0 5px #{$profile-shadow};
+        border: 3px solid #{$profile-border};
+        border-radius: 50%;
+        transition:
+            opacity $transition-base $ease-out,
+            var(--transition);
+    }
 
-        .profile-picture,
-        &::before {
-            max-width: 125px;
-            aspect-ratio: 1;
-            object-fit: cover;
-            box-shadow: 0 0 5px #{$profile-shadow};
-            border: 3px solid #{$profile-border};
-            border-radius: 50%;
-            transition:
-                opacity $transition-base $ease-out,
-                var(--transition);
-        }
+    &__image-intro::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        box-sizing: border-box;
+        width: 100%;
+        aspect-ratio: 1;
+        background-image: var(--data-hover-src);
+        background-size: cover;
+        background-position: center;
+        z-index: -1;
+    }
 
-        &::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            box-sizing: border-box;
-            width: 100%;
-            aspect-ratio: 1;
-            background-image: var(--data-hover-src);
-            background-size: cover;
-            background-position: center;
-            z-index: -1;
-        }
+    &__image-intro::before, &__image-intro * {
+        --transition: scale #{$transition-base} #{$ease-out};
 
+        transition: var(--transition);
+    }
+
+    &__image-intro &__subrole {
+        color: light-dark(
+            #{color.adjust($body-text, $lightness: 20%)},
+            #{color.adjust($body-bg-light, $lightness: -20%)}
+        );
+        font-size: 0.9em;
+    }
+
+    &__image-intro:has(:is(&__profile-picture, &__name, &__role, &__subrole):hover) {
         &::before, * {
-            --transition: scale #{$transition-base} #{$ease-out};
+            scale: $hover-scale;
 
-            transition: var(--transition);
-        }
-
-        .about-subrole {
-            color: light-dark(
-                #{color.adjust($body-text, $lightness: 20%)},
-                #{color.adjust($body-bg-light, $lightness: -20%)}
-            );
-            font-size: 0.9em;
-        }
-
-        &:has(:is(.profile-picture, .about-name, .about-role, .about-subrole):hover) {
-            &::before, * {
-                scale: $hover-scale;
-
-                @media not (prefers-reduced-motion: reduce) {
-                    animation: --hover-swivel 0.5s ease-in-out;
-                }
+            @media not (prefers-reduced-motion: reduce) {
+                animation: --hover-swivel 0.5s ease-in-out;
             }
-
-            &[data-hover] .profile-picture {
-                @media not (prefers-reduced-motion: reduce) {
-                    opacity: 0;
-                }
-            }
-        }
-
-        @keyframes --hover-swivel {
-             0% { rotate: #{ 0 * $hover-rotation} }
-            25% { rotate: #{-1 * $hover-rotation} }
-            50% { rotate: #{ 1 * $hover-rotation} }
-            75% { rotate: #{-1 * $hover-rotation} }
-           100% { rotate: #{ 0 * $hover-rotation} }
         }
     }
 
-    .about-content {
+    &__image-intro[data-hover]:has(:is(&__profile-picture, &__name, &__role, &__subrole):hover) &__profile-picture {
+        @media not (prefers-reduced-motion: reduce) {
+            opacity: 0;
+        }
+    }
+
+    @keyframes --hover-swivel {
+         0% { rotate: #{ 0 * $hover-rotation} }
+        25% { rotate: #{-1 * $hover-rotation} }
+        50% { rotate: #{ 1 * $hover-rotation} }
+        75% { rotate: #{-1 * $hover-rotation} }
+       100% { rotate: #{ 0 * $hover-rotation} }
+    }
+
+    &__content {
         flex: 1;
         display: flex;
         flex-direction: column;
         gap: $spacing-medium;
     }
 
-    .about-text {
+    &__text {
         flex-direction: column;
         flex-grow: 1;
         gap: $spacing-small;
@@ -114,10 +114,6 @@
     }
 
     p {
-        &:not(.image-intro p) {
-            font-size: 1.05em;
-        }
-
         a {
             color: $about-link;
             font-weight: $font-weight-medium;
@@ -128,7 +124,11 @@
         }
     }
 
-    .about-links {
+    p:not(&__image-intro p) {
+        font-size: 1.05em;
+    }
+
+    &__links {
         padding-block-start: $spacing-small;
         border-block-start: 1px solid #{$section-title-border};
         display: flex;
@@ -152,14 +152,14 @@
                 text-decoration: none;
             }
 
-            .social-icon {
-                width: auto;
-                height: 1em;
-            }
-
             .material-symbols-outlined {
                 font-size: 1.2em;
             }
         }
+    }
+
+    &__links > a &__social-icon {
+        width: auto;
+        height: 1em;
     }
 }
