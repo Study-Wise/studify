@@ -29,7 +29,7 @@ const modeName = modeObj?.name || mode;
         <p>
             Welcome to <b>{appConfig.name}</b>! Turn your {modeName} homework into powerful learning tools.
         </p>
-        <ol class="steps-list">
+        <ol class="introduction-section__steps-list">
             <li>
                 <strong>Paste Your Homework:</strong> Paste your {modeName} homework into the text box below, then click "Generate Study Materials" to start a chat.
             </li>
@@ -74,18 +74,18 @@ const modeName = modeObj?.name || mode;
                 <span class="material-symbols-outlined" aria-hidden="true">edit</span>&nbsp;Input Homework & Options
             </label>
         </h2>
-        <div id="text-input" class="input-area active-input">
-            <textarea id="text-paste" class="text-paste" placeholder={`Paste your ${modeName} problems here... Please note that the AI will not provide the answer for your immediate question`} rows="12" aria-describedby="upload-note" aria-label={`Paste ${modeName} problems here`}></textarea>
+        <div id="text-input" class="input-section__area" data-active>
+            <textarea id="text-paste" class="input-section__text" placeholder={`Paste your ${modeName} problems here... Please note that the AI will not provide the answer for your immediate question`} rows="12" aria-describedby="upload-note" aria-label={`Paste ${modeName} problems here`}></textarea>
         </div>
-        <p class="upload-note" id="upload-note">
+        <p class="input-section__upload-note" id="upload-note">
             <span class="material-symbols-outlined" aria-hidden="true">upload_file</span>
             <span>
                 Have your homework as a file? Once your chat starts, you can upload it from the <strong>Uploaded Files</strong> section in the chat sidebar (images, PDF, Word, PowerPoint, Excel and text files, up to 10 MB each).
             </span>
         </p>
-        <div class="toolbar" role="toolbar" aria-label="Generation controls">
+        <div class="input-section__toolbar" role="toolbar" aria-label="Generation controls">
             {/* <ModelSelector /> */}
-            <FancyButton className="generate-button" onclick="generateOutput()" variant="primary" icon="manufacturing">Generate Study Materials</FancyButton>
+            <FancyButton className="input-section__generate" onclick="generateOutput()" variant="primary" icon="manufacturing">Generate Study Materials</FancyButton>
         </div>
     </section>
     <MessagesScript page="home" category={category} mode={mode} />
