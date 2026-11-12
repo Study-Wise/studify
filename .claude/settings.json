@@ -51,7 +51,7 @@
                 "hooks": [
                     {
                         "type": "command",
-                        "command": "node ~/.claude/hooks/index.js",
+                        "command": "node ~/.claude/hooks/index.js --grep-mode=readonly",
                         "timeout": 20
                     }
                 ]
