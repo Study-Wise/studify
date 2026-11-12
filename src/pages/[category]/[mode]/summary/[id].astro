@@ -54,7 +54,7 @@ const parsedContent = latestSummary ? await marked.parse(latestSummary) : null;
                 chatUrl={chatUrl}
             />
             {parsedContent ? (
-                <div class="content-container summary-content" set:html={parsedContent} />
+                <div class="content-container summary-page__content" set:html={parsedContent} />
             ) : (
                 <div class="empty-state">
                     <span class="material-symbols-outlined" aria-hidden="true">summarize</span>

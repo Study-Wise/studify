@@ -55,8 +55,8 @@ if (latestMindMap) {
                 chatUrl={chatUrl}
             />
             {mindMapDataUrl ? (
-                <div class="content-container mind-map-container">
-                    <iframe src={mindMapDataUrl} title="Mind Map" class="mind-map-iframe" sandbox="allow-scripts" />
+                <div class="content-container mind-map-page__container">
+                    <iframe src={mindMapDataUrl} title="Mind Map" class="mind-map-page__iframe" sandbox="allow-scripts" />
                 </div>
             ) : (
                 <div class="empty-state">

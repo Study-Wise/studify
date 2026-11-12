@@ -60,27 +60,27 @@ if (latestResourcesJSON) {
             />
             {resourcesData ? (
                 <div class="content-container">
-                    <div class="resources-header">
-                        <h1 class="resources-title">{resourcesData.topic}</h1>
-                        <p class="resources-subtitle">Curated educational resources to enhance your learning</p>
+                    <div class="resources-page__header">
+                        <h1 class="resources-page__title">{resourcesData.topic}</h1>
+                        <p class="resources-page__subtitle">Curated educational resources to enhance your learning</p>
                     </div>
                     {resourcesData.simulations && resourcesData.simulations.length > 0 && (
-                        <section class="resource-section">
-                            <div class="section-header">
+                        <section class="resources-page__section">
+                            <div class="resources-page__section-header">
                                 <span class="material-symbols-outlined" aria-hidden="true">science</span>
                                 <h2>Interactive Simulations</h2>
                             </div>
-                            <div class="resource-grid">
+                            <div class="resources-page__grid">
                                 {resourcesData.simulations.map((resource: Resource) => (
-                                    <a href={resource.url} target="_blank" rel="noopener noreferrer" class="resource-card">
-                                        <div class="resource-icon simulation">
+                                    <a href={resource.url} target="_blank" rel="noopener noreferrer" class="resources-page__card">
+                                        <div class="resources-page__card-icon" data-type="simulation">
                                             <span class="material-symbols-outlined" aria-hidden="true">science</span>
                                         </div>
-                                        <div class="resource-content">
-                                            <h3 class="resource-title">{resource.title}</h3>
-                                            <p class="resource-snippet">{resource.snippet}</p>
-                                            <div class="resource-footer">
-                                                <span class="resource-source">{resource.source}</span>
+                                        <div class="resources-page__card-content">
+                                            <h3 class="resources-page__card-title">{resource.title}</h3>
+                                            <p class="resources-page__card-snippet">{resource.snippet}</p>
+                                            <div class="resources-page__card-footer">
+                                                <span class="resources-page__card-source">{resource.source}</span>
                                                 <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
                                             </div>
                                         </div>
@@ -91,22 +91,22 @@ if (latestResourcesJSON) {
                     )}
 
                     {resourcesData.videos && resourcesData.videos.length > 0 && (
-                        <section class="resource-section">
-                            <div class="section-header">
+                        <section class="resources-page__section">
+                            <div class="resources-page__section-header">
                                 <span class="material-symbols-outlined" aria-hidden="true">play_circle</span>
                                 <h2>Video Tutorials</h2>
                             </div>
-                            <div class="resource-grid">
+                            <div class="resources-page__grid">
                                 {resourcesData.videos.map((resource: Resource) => (
-                                    <a href={resource.url} target="_blank" rel="noopener noreferrer" class="resource-card">
-                                        <div class="resource-icon video">
+                                    <a href={resource.url} target="_blank" rel="noopener noreferrer" class="resources-page__card">
+                                        <div class="resources-page__card-icon" data-type="video">
                                             <span class="material-symbols-outlined" aria-hidden="true">play_circle</span>
                                         </div>
-                                        <div class="resource-content">
-                                            <h3 class="resource-title">{resource.title}</h3>
-                                            <p class="resource-snippet">{resource.snippet}</p>
-                                            <div class="resource-footer">
-                                                <span class="resource-source">{resource.source}</span>
+                                        <div class="resources-page__card-content">
+                                            <h3 class="resources-page__card-title">{resource.title}</h3>
+                                            <p class="resources-page__card-snippet">{resource.snippet}</p>
+                                            <div class="resources-page__card-footer">
+                                                <span class="resources-page__card-source">{resource.source}</span>
                                                 <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
                                             </div>
                                         </div>
@@ -117,22 +117,22 @@ if (latestResourcesJSON) {
                     )}
 
                     {resourcesData.articles && resourcesData.articles.length > 0 && (
-                        <section class="resource-section">
-                            <div class="section-header">
+                        <section class="resources-page__section">
+                            <div class="resources-page__section-header">
                                 <span class="material-symbols-outlined" aria-hidden="true">article</span>
                                 <h2>Articles & Guides</h2>
                             </div>
-                            <div class="resource-grid">
+                            <div class="resources-page__grid">
                                 {resourcesData.articles.map((resource: Resource) => (
-                                    <a href={resource.url} target="_blank" rel="noopener noreferrer" class="resource-card">
-                                        <div class="resource-icon article">
+                                    <a href={resource.url} target="_blank" rel="noopener noreferrer" class="resources-page__card">
+                                        <div class="resources-page__card-icon" data-type="article">
                                             <span class="material-symbols-outlined" aria-hidden="true">article</span>
                                         </div>
-                                        <div class="resource-content">
-                                            <h3 class="resource-title">{resource.title}</h3>
-                                            <p class="resource-snippet">{resource.snippet}</p>
-                                            <div class="resource-footer">
-                                                <span class="resource-source">{resource.source}</span>
+                                        <div class="resources-page__card-content">
+                                            <h3 class="resources-page__card-title">{resource.title}</h3>
+                                            <p class="resources-page__card-snippet">{resource.snippet}</p>
+                                            <div class="resources-page__card-footer">
+                                                <span class="resources-page__card-source">{resource.source}</span>
                                                 <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
                                             </div>
                                         </div>
@@ -143,22 +143,22 @@ if (latestResourcesJSON) {
                     )}
 
                     {resourcesData.tutorials && resourcesData.tutorials.length > 0 && (
-                        <section class="resource-section">
-                            <div class="section-header">
+                        <section class="resources-page__section">
+                            <div class="resources-page__section-header">
                                 <span class="material-symbols-outlined" aria-hidden="true">school</span>
                                 <h2>Step-by-Step Tutorials</h2>
                             </div>
-                            <div class="resource-grid">
+                            <div class="resources-page__grid">
                                 {resourcesData.tutorials.map((resource: Resource) => (
-                                    <a href={resource.url} target="_blank" rel="noopener noreferrer" class="resource-card">
-                                        <div class="resource-icon tutorial">
+                                    <a href={resource.url} target="_blank" rel="noopener noreferrer" class="resources-page__card">
+                                        <div class="resources-page__card-icon" data-type="tutorial">
                                             <span class="material-symbols-outlined" aria-hidden="true">school</span>
                                         </div>
-                                        <div class="resource-content">
-                                            <h3 class="resource-title">{resource.title}</h3>
-                                            <p class="resource-snippet">{resource.snippet}</p>
-                                            <div class="resource-footer">
-                                                <span class="resource-source">{resource.source}</span>
+                                        <div class="resources-page__card-content">
+                                            <h3 class="resources-page__card-title">{resource.title}</h3>
+                                            <p class="resources-page__card-snippet">{resource.snippet}</p>
+                                            <div class="resources-page__card-footer">
+                                                <span class="resources-page__card-source">{resource.source}</span>
                                                 <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
                                             </div>
                                         </div>
@@ -169,22 +169,22 @@ if (latestResourcesJSON) {
                     )}
 
                     {resourcesData.documentation && resourcesData.documentation.length > 0 && (
-                        <section class="resource-section">
-                            <div class="section-header">
+                        <section class="resources-page__section">
+                            <div class="resources-page__section-header">
                                 <span class="material-symbols-outlined" aria-hidden="true">menu_book</span>
                                 <h2>Documentation & References</h2>
                             </div>
-                            <div class="resource-grid">
+                            <div class="resources-page__grid">
                                 {resourcesData.documentation.map((resource: Resource) => (
-                                    <a href={resource.url} target="_blank" rel="noopener noreferrer" class="resource-card">
-                                        <div class="resource-icon documentation">
+                                    <a href={resource.url} target="_blank" rel="noopener noreferrer" class="resources-page__card">
+                                        <div class="resources-page__card-icon" data-type="documentation">
                                             <span class="material-symbols-outlined" aria-hidden="true">menu_book</span>
                                         </div>
-                                        <div class="resource-content">
-                                            <h3 class="resource-title">{resource.title}</h3>
-                                            <p class="resource-snippet">{resource.snippet}</p>
-                                            <div class="resource-footer">
-                                                <span class="resource-source">{resource.source}</span>
+                                        <div class="resources-page__card-content">
+                                            <h3 class="resources-page__card-title">{resource.title}</h3>
+                                            <p class="resources-page__card-snippet">{resource.snippet}</p>
+                                            <div class="resources-page__card-footer">
+                                                <span class="resources-page__card-source">{resource.source}</span>
                                                 <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
                                             </div>
                                         </div>

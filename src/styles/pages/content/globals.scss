@@ -16,8 +16,8 @@
         box-shadow: 0 0 12px var(--card-shadow);
         border-block: 1px solid var(--card-border);
 
-        &.mind-map-container,
-        &.webpage-container {
+        &.mind-map-page__container,
+        &.webpage-page__container {
             padding: 0;
             overflow: hidden;
         }

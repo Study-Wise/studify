@@ -7,8 +7,8 @@
 .flashcard-page {
     min-height: 60vh;
 
-    .quizlet-flashcards {
-        .flashcard-intro {
+    .flashcards {
+        &__intro {
             margin-block-end: 2rem;
             padding-block-end: 1.5rem;
             color: var(--body-text);
@@ -22,29 +22,29 @@
             }
         }
 
-        .flashcard-deck {
+        &__deck {
             margin: 0 auto;
             max-width: 700px;
         }
 
-        .flashcard-progress {
+        &__progress {
             margin-block-end: 1rem;
             color: var(--body-text);
             font-size: 0.9rem;
             text-align: center;
             opacity: 0.7;
-
-            .current {
-                font-weight: 600;
-            }
         }
 
-        .flashcard-container {
+        &__current {
+            font-weight: 600;
+        }
+
+        &__container {
             min-height: 300px;
             perspective: 1000px;
         }
 
-        .flashcard {
+        &__card {
             width: 100%;
             height: 300px;
             cursor: pointer;
@@ -53,109 +53,109 @@
             &[data-index="0"] {
                 display: block;
             }
+        }
 
-            .flashcard-inner {
-                position: relative;
-                width: 100%;
-                height: 100%;
-                transition: transform 0.6s $ease;
-                transform-style: preserve-3d;
-            }
+        &__card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s $ease;
+            transform-style: preserve-3d;
+        }
 
-            &[data-flipped="true"] .flashcard-inner {
-                transform: rotateY(180deg);
-            }
+        &__card[data-flipped="true"] &__card-inner {
+            transform: rotateY(180deg);
+        }
 
-            .flashcard-front,
-            .flashcard-back {
-                position: absolute;
-                padding: 2rem;
-                width: 100%;
-                height: 100%;
-                box-shadow: 0 0 20px var(--card-shadow);
-                border: 1px solid var(--card-border);
-                border-radius: 1rem;
-                flex-direction: column;
-                backface-visibility: hidden;
-                overflow: auto;
-                display: flex;
-            }
+        &__card-front,
+        &__card-back {
+            position: absolute;
+            padding: 2rem;
+            width: 100%;
+            height: 100%;
+            box-shadow: 0 0 20px var(--card-shadow);
+            border: 1px solid var(--card-border);
+            border-radius: 1rem;
+            flex-direction: column;
+            backface-visibility: hidden;
+            overflow: auto;
+            display: flex;
+        }
 
-            .flashcard-front {
-                background: linear-gradient(135deg, var(--card-bg) 0%, hsl(from var(--card-bg) h s calc(l - 3%)) 100%);
-            }
+        &__card-front {
+            background: linear-gradient(135deg, var(--card-bg) 0%, hsl(from var(--card-bg) h s calc(l - 3%)) 100%);
+        }
 
-            .flashcard-back {
-                background: linear-gradient(135deg, hsl(from #{list.nth(map.get($accent-colors, primary), 1)} h s calc(l + 35%)) 0%, hsl(from #{list.nth(map.get($accent-colors, primary), 1)} h s calc(l + 30%)) 100%);
-                transform: rotateY(180deg);
-            }
+        &__card-back {
+            background: linear-gradient(135deg, hsl(from #{list.nth(map.get($accent-colors, primary), 1)} h s calc(l + 35%)) 0%, hsl(from #{list.nth(map.get($accent-colors, primary), 1)} h s calc(l + 30%)) 100%);
+            transform: rotateY(180deg);
+        }
 
-            .card-label {
-                margin-block-end: 1rem;
-                font-size: 0.75rem;
-                letter-spacing: 0.1em;
-                text-transform: uppercase;
-                opacity: 0.6;
-            }
+        &__card-label {
+            margin-block-end: 1rem;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0.6;
+        }
 
-            .card-content {
-                flex: 1;
-                justify-content: center;
-                align-items: center;
-                font-size: 1.2rem;
-                line-height: 1.6;
-                text-align: center;
-                display: flex;
+        &__card-content {
+            flex: 1;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            text-align: center;
+            display: flex;
 
-                p {
-                    margin: 0;
-                }
+            p {
+                margin: 0;
             }
         }
 
-        .flashcard-controls {
+        &__controls {
             margin-block-start: 1.5rem;
             justify-content: center;
             align-items: center;
             gap: 1rem;
             display: flex;
+        }
 
-            .control-btn {
-                padding: 0.75rem 1.25rem;
-                color: var(--body-text);
-                background-color: var(--card-bg);
-                border: 1px solid var(--card-border);
-                border-radius: 0.5rem;
-                align-items: center;
-                gap: 0.5rem;
-                transition: all 0.2s $ease;
-                cursor: pointer;
-                display: flex;
+        &__control {
+            padding: 0.75rem 1.25rem;
+            color: var(--body-text);
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 0.5rem;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s $ease;
+            cursor: pointer;
+            display: flex;
 
-                &:hover:not(:disabled) {
-                    background-color: hsl(from var(--card-bg) h s calc(l - 5%));
-                    box-shadow: 0 0 12px var(--card-shadow);
-                    translate: 0 -2px;
-                }
-
-                &:disabled {
-                    opacity: 0.4;
-                    cursor: not-allowed;
-                }
-
-                .material-symbols-outlined {
-                    font-size: 1.25rem;
-                }
+            &:hover:not(:disabled) {
+                background-color: hsl(from var(--card-bg) h s calc(l - 5%));
+                box-shadow: 0 0 12px var(--card-shadow);
+                translate: 0 -2px;
             }
 
-            .flip {
-                color: white;
-                background-color: list.nth(map.get($accent-colors, primary), 1);
-                border-color: list.nth(map.get($accent-colors, primary), 1);
+            &:disabled {
+                opacity: 0.4;
+                cursor: not-allowed;
+            }
 
-                &:hover {
-                    background-color: hsl(from #{list.nth(map.get($accent-colors, primary), 1)} h s calc(l - 5%));
-                }
+            .material-symbols-outlined {
+                font-size: 1.25rem;
+            }
+        }
+
+        &__control[data-action="flip"] {
+            color: white;
+            background-color: list.nth(map.get($accent-colors, primary), 1);
+            border-color: list.nth(map.get($accent-colors, primary), 1);
+
+            &:hover {
+                background-color: hsl(from #{list.nth(map.get($accent-colors, primary), 1)} h s calc(l - 5%));
             }
         }
     }

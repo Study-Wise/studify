@@ -73,39 +73,39 @@ const hasContent = !!(flashcardData !== null ? (typeof flashcardData !== 'string
                 chatUrl={chatUrl}
             />
             {typeof flashcardData !== 'string' && flashcardData && flashcardData.questions.length > 0 ? (
-                <div class="content-container quizlet-flashcards">
+                <div class="content-container flashcards">
                     {flashcardData.text && (
-                        <div class="flashcard-intro" set:html={marked.parse(flashcardData.text)} />
+                        <div class="flashcards__intro" set:html={marked.parse(flashcardData.text)} />
                     )}
-                    <div class="flashcard-deck" data-current="0">
-                        <div class="flashcard-progress">
-                            <span class="current">1</span> / <span class="total">{flashcardData.questions.length}</span>
+                    <div class="flashcards__deck" data-current="0">
+                        <div class="flashcards__progress">
+                            <span class="flashcards__current">1</span> / <span class="flashcards__total">{flashcardData.questions.length}</span>
                         </div>
-                        <div class="flashcard-container">
+                        <div class="flashcards__container">
                             {flashcardData.questions.map((card, index) => (
-                                <div class="flashcard" data-index={index} data-flipped="false">
-                                    <div class="flashcard-inner">
-                                        <div class="flashcard-front">
-                                            <div class="card-label">Question</div>
-                                            <div class="card-content" set:html={marked.parse(card.front)} />
+                                <div class="flashcards__card" data-index={index} data-flipped="false">
+                                    <div class="flashcards__card-inner">
+                                        <div class="flashcards__card-front">
+                                            <div class="flashcards__card-label">Question</div>
+                                            <div class="flashcards__card-content" set:html={marked.parse(card.front)} />
                                         </div>
-                                        <div class="flashcard-back">
-                                            <div class="card-label">Answer</div>
-                                            <div class="card-content" set:html={marked.parse(card.back)} />
+                                        <div class="flashcards__card-back">
+                                            <div class="flashcards__card-label">Answer</div>
+                                            <div class="flashcards__card-content" set:html={marked.parse(card.back)} />
                                         </div>
                                     </div>
                                 </div>
                             ))}
                         </div>
-                        <div class="flashcard-controls">
-                            <button type="button" class="control-btn prev" aria-label="Previous card" disabled>
+                        <div class="flashcards__controls">
+                            <button type="button" class="flashcards__control" data-action="prev" aria-label="Previous card" disabled>
                                 <span class="material-symbols-outlined" aria-hidden="true">chevron_left</span>
                             </button>
-                            <button type="button" class="control-btn flip">
+                            <button type="button" class="flashcards__control" data-action="flip">
                                 <span class="material-symbols-outlined" aria-hidden="true">flip</span>
                                 Flip
                             </button>
-                            <button type="button" class="control-btn next" aria-label="Next card">
+                            <button type="button" class="flashcards__control" data-action="next" aria-label="Next card">
                                 <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
                             </button>
                         </div>
@@ -113,7 +113,7 @@ const hasContent = !!(flashcardData !== null ? (typeof flashcardData !== 'string
                 </div>
             ) : parsedContent ? (
                 <div class="content-container">
-                    <div class="flashcard-content" set:html={parsedContent} />
+                    <div class="flashcards__content" set:html={parsedContent} />
                 </div>
             ) : (
                 <div class="empty-state">
@@ -128,15 +128,15 @@ const hasContent = !!(flashcardData !== null ? (typeof flashcardData !== 'string
 
 <script>
     function initFlashcards() {
-        const deck = document.querySelector('.flashcard-deck');
+        const deck = document.querySelector('.flashcards__deck');
         if (!(deck instanceof window.HTMLElement)) return;
 
-        const flashcards = Array.from(deck.querySelectorAll('.flashcard')).filter((card): card is HTMLElement => card instanceof window.HTMLElement);
+        const flashcards = Array.from(deck.querySelectorAll('.flashcards__card')).filter((card): card is HTMLElement => card instanceof window.HTMLElement);
 
-        const prevBtn = deck.querySelector<HTMLButtonElement>('.prev');
-        const nextBtn = deck.querySelector<HTMLButtonElement>('.next');
-        const flipBtn = deck.querySelector<HTMLButtonElement>('.flip');
-        const currentSpan = deck.querySelector<HTMLElement>('.current');
+        const prevBtn = deck.querySelector<HTMLButtonElement>('[data-action="prev"]');
+        const nextBtn = deck.querySelector<HTMLButtonElement>('[data-action="next"]');
+        const flipBtn = deck.querySelector<HTMLButtonElement>('[data-action="flip"]');
+        const currentSpan = deck.querySelector<HTMLElement>('.flashcards__current');
 
         if (!(prevBtn instanceof window.HTMLButtonElement) || !(nextBtn instanceof window.HTMLButtonElement) || !(flipBtn instanceof window.HTMLButtonElement) || !(currentSpan instanceof window.HTMLElement)) return;
 

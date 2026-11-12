@@ -47,17 +47,17 @@
         }
     }
 
-    .mind-map-container {
+    &__container {
         flex: 1;
         width: 100%;
         display: flex;
         flex-direction: column;
+    }
 
-        .mind-map-iframe {
-            flex: 1;
-            width: 100%;
-            background-color: white;
-            border: none;
-        }
+    &__iframe {
+        flex: 1;
+        width: 100%;
+        background-color: white;
+        border: none;
     }
 }

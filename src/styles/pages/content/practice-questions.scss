@@ -5,7 +5,7 @@
 .practice-questions-page {
     min-height: 60vh;
 
-    .practice-questions-content {
+    &__content {
         h1, h2, h3, h4, h5, h6 {
             margin-block: 1.5rem 1rem;
             color: var(--section-title);

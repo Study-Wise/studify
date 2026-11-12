@@ -85,12 +85,12 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         <link rel="canonical" href={canonicalURL} />
         <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
     </Fragment>
-    <div class="question-page">
+    <div class="question">
         {!questionData ? (
-            <article class="question-empty">
+            <article class="question__empty">
                 <header>
-                    <h1 class="question-question">{displayQuestion}</h1>
-                    <nav class="question-breadcrumb" aria-label="Breadcrumb">
+                    <h1 class="question__question">{displayQuestion}</h1>
+                    <nav class="question__breadcrumb" aria-label="Breadcrumb">
                         <ol>
                             <li><a href="/">Home</a></li>
                             <li><a href={`/${category}`}>{categoryName}</a></li>
@@ -99,19 +99,19 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
                         </ol>
                     </nav>
                 </header>
-                <div class="empty-state">
+                <div class="question__empty-state">
                     <span class="material-symbols-outlined" aria-hidden="true">help_outline</span>
                     <h2>Answer Not Found</h2>
                     <p>This question hasn't been answered yet. Our AI is generating a response.</p>
                     <p>Please check back shortly, or ask your question in a new chat session.</p>
-                    <a href={`/${category}/${mode}`} class="btn primary">Ask in {modeName}</a>
+                    <a href={`/${category}/${mode}`} class="btn" data-variant="primary">Ask in {modeName}</a>
                 </div>
             </article>
         ) : (
-            <article class="question-content" itemscope itemtype="https://schema.org/Question">
+            <article class="question__content" itemscope itemtype="https://schema.org/Question">
                 <header>
-                    <h1 class="question-question" itemprop="name">{displayQuestion}</h1>
-                    <nav class="question-breadcrumb" aria-label="Breadcrumb">
+                    <h1 class="question__question" itemprop="name">{displayQuestion}</h1>
+                    <nav class="question__breadcrumb" aria-label="Breadcrumb">
                         <ol itemscope itemtype="https://schema.org/BreadcrumbList">
                             <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                                 <a itemprop="item" href="/">
@@ -137,29 +137,29 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
                             </li>
                         </ol>
                     </nav>
-                    <div class="question-meta">
-                        <span class="question-category">{categoryName}</span>
-                        <span class="question-separator">•</span>
-                        <span class="question-mode">{modeName}</span>
-                        <span class="question-separator">•</span>
-                        <span class="question-views">{parseInt(questionData.viewCount) + 1} views</span>
+                    <div class="question__meta">
+                        <span class="question__category">{categoryName}</span>
+                        <span class="question__separator">•</span>
+                        <span class="question__mode">{modeName}</span>
+                        <span class="question__separator">•</span>
+                        <span class="question__views">{parseInt(questionData.viewCount) + 1} views</span>
                     </div>
                 </header>
-                <div class="question-answer" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+                <div class="question__answer" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
                     <div itemprop="text" set:html={displayAnswer} />
                 </div>
-                <footer class="question-footer">
-                    <div class="question-helpful">
+                <footer class="question__footer">
+                    <div class="question__helpful">
                         <p>Was this answer helpful?</p>
-                        <div class="question-actions">
-                            <a href={`/${category}/${mode}`} class="btn secondary">Ask Another Question</a>
-                            <a href={`/${category}/${mode}/chat/new`} class="btn primary">Start a Chat</a>
+                        <div class="question__actions">
+                            <a href={`/${category}/${mode}`} class="btn" data-variant="secondary">Ask Another Question</a>
+                            <a href={`/${category}/${mode}/chat/new`} class="btn" data-variant="primary">Start a Chat</a>
                         </div>
                     </div>
-                    <div class="question-related">
+                    <div class="question__related">
                         <h2>Need More Help?</h2>
                         <p>Get personalized tutoring and detailed explanations in our interactive chat.</p>
-                        <a href={`/${category}/${mode}`} class="question-link">
+                        <a href={`/${category}/${mode}`} class="question__link">
                             Explore {modeName} <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
                         </a>
                     </div>
