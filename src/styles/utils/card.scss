@@ -29,7 +29,7 @@
         }
     }
 
-    &.interactive {
+    &[data-interactive] {
         transition: translate $transition-base $ease-out,
                     box-shadow $transition-base $ease-out;
         cursor: pointer;
@@ -44,16 +44,16 @@
         }
     }
 
-    &.compact {
+    &[data-compact] {
         padding: calc(#{$card-spacing} / 1.5);
         border-radius: $border-radius-medium;
     }
 
-    &.bordered {
+    &[data-bordered] {
         border: 1px solid var(--card-border);
     }
 
-    &.elevated {
+    &[data-elevated] {
         box-shadow: $box-shadow-large;
     }
 }

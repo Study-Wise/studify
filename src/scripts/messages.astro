@@ -372,7 +372,8 @@ const { page, category, mode, id } = Astro.props;
                         btn.appendChild(icon);
 
                         btn.appendChild(document.createTextNode(' Open in Chat'));
-                        btn.classList.add('btn', 'bg-primary', 'chat-button');
+                        btn.classList.add('btn', 'chat-button');
+                        btn.dataset.bg = 'primary';
                         chatButtonContainer.appendChild(btn);
                     }
                     threadId = data.id;
@@ -637,7 +638,8 @@ const { page, category, mode, id } = Astro.props;
                 messageDiv.dataset.role = role;
 
                 const messageContent = document.createElement('div');
-                messageContent.className = `message__content ${role === 'user' ? 'bg-primary' : ''}`;
+                messageContent.className = 'message__content';
+                if (role === 'user') messageContent.dataset.bg = 'primary';
 
                 messageContent.innerHTML = new window.marked.Marked({ breaks: true, gfm: true, renderer: { html: ({ text }) => text.replace(/</g, '&lt;') } }).parse(data);
 

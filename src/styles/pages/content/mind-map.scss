@@ -30,7 +30,7 @@
             opacity: 1;
         }
 
-        .btn.primary {
+        .btn[data-variant="primary"] {
             color: white;
             background-color: $section-title-light;
             border: none;

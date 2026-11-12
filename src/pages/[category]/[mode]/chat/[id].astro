@@ -165,7 +165,7 @@ export const inNav = 'hide';
                                 </div>
                             )}
                             <div id={message.id && `message-${message.id}`} class="message" data-role={message.role}>
-                                <div class:list={['message__content', { 'bg-primary': message.role === 'user' }]} data-mathjax-pending={mathDelimiterPattern.test(message.htmlContent) ? '' : undefined} set:html={message.htmlContent} />
+                                <div class="message__content" data-bg={message.role === 'user' ? 'primary' : undefined} data-mathjax-pending={mathDelimiterPattern.test(message.htmlContent) ? '' : undefined} set:html={message.htmlContent} />
                             </div>
                         </>
                     ))

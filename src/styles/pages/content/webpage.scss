@@ -35,7 +35,7 @@ body:has(.webpage-page) {
             opacity: 1;
         }
 
-        .btn.primary {
+        .btn[data-variant="primary"] {
             padding: $spacing-medium $spacing-large;
             color: white;
             background-color: $section-title-light;

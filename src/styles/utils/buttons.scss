@@ -38,7 +38,7 @@ $border-radius: $button-border-radius;
         scale: 0.98;
     }
 
-    &:not(.tab) {
+    &:not([data-mode="tab"]) {
         margin: #{$border-size * 3};
         margin-block: #{$border-size * 7};
         padding: 0.875rem 1rem;
@@ -89,23 +89,23 @@ $border-radius: $button-border-radius;
             cursor: not-allowed;
         }
 
-        &.lite {
+        &[data-mode="lite"] {
             padding: 0 0.25rem;
         }
     }
 
-    &.tab {
+    &[data-mode="tab"] {
         position: relative;
         padding: 0.5em 0.75em;
         border: solid $tab-border-size var(--card-text);
         font-size: 1rem;
 
-        .tabs > &.tab {
+        .tabs > & {
             margin-bottom: #{-1 * $tab-border-size};
         }
     }
 
-    &.simple {
+    &[data-appearance="simple"] {
         padding: 0.75rem 1.25rem;
         color: var(--card-text);
         background-color: var(--card-bg);
@@ -126,7 +126,7 @@ $border-radius: $button-border-radius;
         }
     }
 
-    &.icon {
+    &[data-appearance="icon"] {
         padding: 0.75rem;
         min-width: 44px;
         min-height: 44px;

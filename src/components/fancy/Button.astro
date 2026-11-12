@@ -4,9 +4,9 @@ const { element = 'button', variant = 'primary', icon = '', className = '', mode
 {(() => {
     const Element = element;
     return (
-        <Element type={type} tabindex="0" class:list={['btn', `bg-${variant}`, { 'lite': mode === 'lite' }, className]} {...props}>
+        <Element type={type} tabindex="0" class:list={['btn', className]} data-bg={variant} data-mode={mode} {...props}>
             {icon && <span class="material-symbols-outlined" aria-hidden="true">{icon}</span>}
-            {mode === 'tab' ? <span class="text"><slot /></span> : <slot />}
+            {mode === 'tab' ? <span class="btn__text"><slot /></span> : <slot />}
             <span class="btn__spinner" style="display: none"></span>
         </Element>
     );

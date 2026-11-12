@@ -7,8 +7,8 @@
 @use 'sass:map';
 
 @each $variant, $colors in $accent-colors {
-    .bg-#{$variant} {
-        &:not(.btn.tab) {
+    [data-bg="#{$variant}"] {
+        &:not(.btn[data-mode="tab"]) {
             --bg-clr-1: #{list.nth($colors, 1)};
             --bg-clr-2: #{list.nth($colors, 2)};
 
@@ -19,7 +19,7 @@
             }
         }
 
-        &.btn.tab {
+        &.btn[data-mode="tab"] {
             --bg-clr-1: #{list.nth($colors, 1)};
             --bg-clr-2: #{list.nth($colors, 2)};
 
@@ -31,7 +31,7 @@
         }
     }
 
-    .clr-#{$variant} {
+    [data-clr="#{$variant}"] {
         --text-clr-1: #{list.nth($colors, 3)};
         --text-clr-2: #{list.nth($colors, 4)};
 
@@ -42,7 +42,7 @@
         }
     }
 
-    .bs-#{$variant} {
+    [data-bs="#{$variant}"] {
         --box-shadow-clr-1: #{list.nth($colors, 1)};
         --box-shadow-clr-2: #{list.nth($colors, 2)};
 
@@ -53,7 +53,7 @@
         }
     }
 
-    .ts-#{$variant} {
+    [data-ts="#{$variant}"] {
         --text-shadow-clr-1: #{list.nth($colors, 3)};
         --text-shadow-clr-2: #{list.nth($colors, 4)};
 
