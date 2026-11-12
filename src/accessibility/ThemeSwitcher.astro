@@ -7,16 +7,16 @@ const themes = [
     { value: 'dark', icon: 'dark_mode', label: 'Dark' },
 ];
 ---
-<div class="theme-switcher-container">
-    <button type="button" id="theme-switcher" class="theme-switcher" aria-label="Theme: System" aria-haspopup="menu" aria-expanded="false" aria-controls="theme-menu">
+<div class="theme-switcher">
+    <button type="button" id="theme-switcher" class="theme-switcher__button" aria-label="Theme: System" aria-haspopup="menu" aria-expanded="false" aria-controls="theme-menu">
         <span class="material-symbols-outlined" aria-hidden="true">contrast</span>
     </button>
-    <div class="theme-menu" id="theme-menu" role="menu" aria-label="Theme" hidden>
+    <div class="theme-switcher__menu" id="theme-menu" role="menu" aria-label="Theme" hidden>
         {themes.map(theme => (
-            <button type="button" class="theme-menu-item" role="menuitemradio" aria-checked="false" tabindex="-1" data-theme-value={theme.value} data-theme-icon={theme.icon}>
+            <button type="button" class="theme-switcher__menu-item" role="menuitemradio" aria-checked="false" tabindex="-1" data-theme-value={theme.value} data-theme-icon={theme.icon}>
                 <span class="material-symbols-outlined" aria-hidden="true">{theme.icon}</span>
-                <span class="theme-menu-label">{theme.label}</span>
-                <span class="material-symbols-outlined theme-menu-check" aria-hidden="true">check</span>
+                <span class="theme-switcher__menu-label">{theme.label}</span>
+                <span class="material-symbols-outlined theme-switcher__menu-check" aria-hidden="true">check</span>
             </button>
         ))}
     </div>
@@ -26,7 +26,7 @@ const themes = [
     const themeSwitcher = document.getElementById('theme-switcher');
     const themeMenu = document.getElementById('theme-menu');
     const switcherIcon = themeSwitcher?.querySelector('.material-symbols-outlined');
-    const menuItems = Array.from(themeMenu?.querySelectorAll<HTMLButtonElement>('.theme-menu-item') ?? []);
+    const menuItems = Array.from(themeMenu?.querySelectorAll<HTMLButtonElement>('.theme-switcher__menu-item') ?? []);
 
     const storedTheme = localStorage.getItem('user-theme') ?? 'system';
 
@@ -38,7 +38,7 @@ const themes = [
 
         menuItems.forEach(item => item.setAttribute('aria-checked', String(item === selectedItem)));
 
-        const label = selectedItem.querySelector('.theme-menu-label')?.textContent ?? value;
+        const label = selectedItem.querySelector('.theme-switcher__menu-label')?.textContent ?? value;
         if (switcherIcon) switcherIcon.textContent = selectedItem.dataset.themeIcon ?? '';
         themeSwitcher?.setAttribute('aria-label', `Theme: ${label}`);
         document.documentElement.setAttribute('data-theme', value);

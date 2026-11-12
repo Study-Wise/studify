@@ -9,7 +9,7 @@
     inherits: false;
 }
 
-.theme-switcher-container {
+.theme-switcher {
     position: fixed;
     bottom: $spacing-medium;
     left: $spacing-medium;
@@ -18,160 +18,160 @@
     @media print {
         display: none !important;
     }
-}
 
-.theme-switcher {
-    --g-angle: 240deg;
+    &__button {
+        --g-angle: 240deg;
 
-    position: relative;
-    box-sizing: content-box;
-    padding: $spacing-extra-small;
-    aspect-ratio: 1;
-    color: var(--body-bg);
-    box-shadow: 0 0 10px hsl(from var(--body-text) h s l / 50%);
-    border: none;
-    border-radius: 50%;
-    place-items: center;
-    font-size: $font-size-small;
-    transition: scale $transition-base $ease-out,
-                rotate $transition-base $ease-out,
-                box-shadow $transition-base $ease-out;
-    cursor: pointer;
-    user-select: none;
-    display: none;
-    display: if(style(--nothing: 'here'): grid; else: grid);
+        position: relative;
+        box-sizing: content-box;
+        padding: $spacing-extra-small;
+        aspect-ratio: 1;
+        color: var(--body-bg);
+        box-shadow: 0 0 10px hsl(from var(--body-text) h s l / 50%);
+        border: none;
+        border-radius: 50%;
+        place-items: center;
+        font-size: $font-size-small;
+        transition: scale $transition-base $ease-out,
+                    rotate $transition-base $ease-out,
+                    box-shadow $transition-base $ease-out;
+        cursor: pointer;
+        user-select: none;
+        display: none;
+        display: if(style(--nothing: 'here'): grid; else: grid);
 
-    @include colors.accent-gradient($angle: var(--g-angle));
-
-    &:hover {
-        --g-angle: 60deg;
-
-        box-shadow: 0 0 15px hsl(from var(--body-text) h s l / 70%);
-        rotate: 10deg;
-        scale: 1.1;
-    }
-
-    &:focus-visible {
-        outline: 3px solid var(--section-title, #4F46E5);
-        outline-offset: 2px;
-    }
-
-    &:active {
-        background-color: var(--card-text);
-        scale: 0.95;
+        @include colors.accent-gradient($angle: var(--g-angle));
 
         &:hover {
+            --g-angle: 60deg;
+
+            box-shadow: 0 0 15px hsl(from var(--body-text) h s l / 70%);
+            rotate: 10deg;
+            scale: 1.1;
+        }
+
+        &:focus-visible {
+            outline: 3px solid var(--section-title, #4F46E5);
+            outline-offset: 2px;
+        }
+
+        &:active {
             background-color: var(--card-text);
+            scale: 0.95;
+
+            &:hover {
+                background-color: var(--card-text);
+            }
+        }
+
+        &::before {
+            content: attr(aria-label);
+            position: absolute;
+            bottom: calc(100% + $spacing-extra-small);
+            left: 50%;
+            padding: $spacing-extra-small $spacing-small;
+            color: var(--card-text);
+            background-color: var(--card-bg);
+            box-shadow: 0 0 8px hsl(from var(--body-text) h s l / 20%);
+            border-radius: $border-radius-medium;
+            font-size: $font-size-1x-small;
+            white-space: nowrap;
+            opacity: 0;
+            z-index: 1;
+            transition: opacity $transition-base $ease-out,
+                        translate $transition-base $ease-out,
+                        scale $transition-base $ease-out;
+            translate: -50% 0;
+            scale: 0.8;
+            pointer-events: none;
+        }
+
+        &:hover::before,
+        &:focus-visible::before {
+            opacity: 1;
+            translate: -50% 0;
+            scale: 1;
+        }
+
+        &[aria-expanded="true"]::before {
+            opacity: 0;
+        }
+
+        .material-symbols-outlined {
+            aspect-ratio: 1;
+            font-size: $font-size-1x-large;
+            transition: scale $transition-slower $ease-spring;
+        }
+
+        @media (width <= $breakpoint-medium) {
+            padding: $spacing-small $spacing-small;
+            font-size: $font-size-1x-small;
+
+            .material-symbols-outlined {
+                font-size: $font-size-large;
+            }
         }
     }
 
-    &::before {
-        content: attr(aria-label);
+    &__menu {
         position: absolute;
-        bottom: calc(100% + $spacing-extra-small);
-        left: 50%;
-        padding: $spacing-extra-small $spacing-small;
-        color: var(--card-text);
-        background-color: var(--card-bg);
+        bottom: calc(100% + $spacing-small);
+        left: 0;
+        padding: $spacing-extra-small 0;
+        min-width: 160px;
+        background: var(--card-bg);
         box-shadow: 0 0 8px hsl(from var(--body-text) h s l / 20%);
+        border: 1px solid var(--card-border);
         border-radius: $border-radius-medium;
-        font-size: $font-size-1x-small;
-        white-space: nowrap;
-        opacity: 0;
-        z-index: 1;
-        transition: opacity $transition-base $ease-out,
-                    translate $transition-base $ease-out,
-                    scale $transition-base $ease-out;
-        translate: -50% 0;
-        scale: 0.8;
-        pointer-events: none;
+
+        &[hidden] {
+            display: none;
+        }
     }
 
-    &:hover::before,
-    &:focus-visible::before {
-        opacity: 1;
-        translate: -50% 0;
-        scale: 1;
-    }
+    &__menu-item {
+        padding: $spacing-small $spacing-medium;
+        width: 100%;
+        color: var(--card-text);
+        background: none;
+        border: none;
+        align-items: center;
+        gap: $spacing-small;
+        font: inherit;
+        font-size: $font-size-small;
+        text-align: left;
+        transition: background-color $transition-base $ease-out;
+        cursor: pointer;
+        display: flex;
 
-    &[aria-expanded="true"]::before {
-        opacity: 0;
-    }
+        &:hover,
+        &:focus-visible {
+            background-color: var(--message-bg);
+        }
 
-    .material-symbols-outlined {
-        aspect-ratio: 1;
-        font-size: $font-size-1x-large;
-        transition: scale $transition-slower $ease-spring;
-    }
-
-    @media (width <= $breakpoint-medium) {
-        padding: $spacing-small $spacing-small;
-        font-size: $font-size-1x-small;
+        &:focus-visible {
+            outline: 2px solid var(--section-title, #4F46E5);
+            outline-offset: -2px;
+        }
 
         .material-symbols-outlined {
             font-size: $font-size-large;
         }
-    }
-}
 
-.theme-menu {
-    position: absolute;
-    bottom: calc(100% + $spacing-small);
-    left: 0;
-    padding: $spacing-extra-small 0;
-    min-width: 160px;
-    background: var(--card-bg);
-    box-shadow: 0 0 8px hsl(from var(--body-text) h s l / 20%);
-    border: 1px solid var(--card-border);
-    border-radius: $border-radius-medium;
-
-    &[hidden] {
-        display: none;
-    }
-}
-
-.theme-menu-item {
-    padding: $spacing-small $spacing-medium;
-    width: 100%;
-    color: var(--card-text);
-    background: none;
-    border: none;
-    align-items: center;
-    gap: $spacing-small;
-    font: inherit;
-    font-size: $font-size-small;
-    text-align: left;
-    transition: background-color $transition-base $ease-out;
-    cursor: pointer;
-    display: flex;
-
-    &:hover,
-    &:focus-visible {
-        background-color: var(--message-bg);
+        &[aria-checked="true"] {
+            font-weight: 600;
+        }
     }
 
-    &:focus-visible {
-        outline: 2px solid var(--section-title, #4F46E5);
-        outline-offset: -2px;
-    }
-
-    .material-symbols-outlined {
-        font-size: $font-size-large;
-    }
-
-    .theme-menu-label {
+    &__menu-item &__menu-label {
         flex: 1;
     }
 
-    .theme-menu-check {
+    &__menu-item &__menu-check {
         visibility: hidden;
     }
 
-    &[aria-checked="true"] {
-        font-weight: 600;
-
-        .theme-menu-check {
-            visibility: visible;
-        }
+    &__menu-item[aria-checked="true"] &__menu-check {
+        visibility: visible;
     }
 }
