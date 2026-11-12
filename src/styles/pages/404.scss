@@ -6,232 +6,223 @@
 @use 'sass:list';
 @use 'sass:map';
 
-.error-404-container {
+.error-404 {
     padding: $spacing-extra-large $spacing-medium;
     min-height: 80vh;
     justify-content: center;
     align-items: center;
     display: flex;
 
-    .error-content {
+    &__content {
         padding: $spacing-extra-large * 2;
         max-width: 600px;
         text-align: center;
         animation: --fade-in 0.6s $ease-out forwards;
+    }
 
-        .error-icon {
-            margin-bottom: $spacing-large;
+    &__icon {
+        margin-bottom: $spacing-large;
+    }
 
-            .material-symbols-outlined {
-                color: list.nth(map.get($accent-colors, primary), 1);
-                font-size: 6rem;
-                opacity: 0.6;
-                animation: --float 3s ease-in-out infinite;
-            }
+    &__icon .material-symbols-outlined {
+        color: list.nth(map.get($accent-colors, primary), 1);
+        font-size: 6rem;
+        opacity: 0.6;
+        animation: --float 3s ease-in-out infinite;
+    }
+
+    &__title {
+        margin-bottom: $spacing-small;
+        font-size: 6rem;
+        font-weight: $font-weight-bold;
+        line-height: 1;
+        animation: --slide-in-down 0.6s $ease-out forwards;
+
+        @include colors.accent-text-gradient;
+    }
+
+    &__subtitle {
+        margin-bottom: $spacing-large;
+        color: var(--card-text);
+        font-size: $font-size-2x-large;
+        font-weight: $font-weight-semibold;
+        animation: --slide-in-up 0.6s $ease-out forwards;
+    }
+
+    &__message {
+        margin-bottom: $spacing-extra-large;
+        color: var(--body-text);
+        font-size: $font-size-large;
+        line-height: $line-height-relaxed;
+        animation: --fade-in 0.6s 0.2s $ease-out both;
+    }
+
+    &__actions {
+        margin-bottom: $spacing-extra-large;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: $spacing-medium;
+        animation: --fade-in 0.6s 0.3s $ease-out both;
+        display: flex;
+    }
+
+    &__actions a {
+        padding: $spacing-small $spacing-large;
+        box-shadow: $box-shadow-medium;
+        border-radius: $border-radius-large;
+        align-items: center;
+        gap: $spacing-small;
+        font-size: $font-size-base;
+        font-weight: $font-weight-semibold;
+        text-decoration: none;
+        transition:
+            scale $transition-base $ease-out,
+            box-shadow $transition-base $ease-out,
+            translate $transition-base $ease-out;
+        display: inline-flex;
+
+        .material-symbols-outlined {
+            font-size: 1.25rem;
         }
 
-        .error-title {
-            margin-bottom: $spacing-small;
-            font-size: 6rem;
-            font-weight: $font-weight-bold;
-            line-height: 1;
-            animation: --slide-in-down 0.6s $ease-out forwards;
-
-            @include colors.accent-text-gradient;
+        &:hover {
+            box-shadow: $box-shadow-large;
+            translate: 0 -2px;
+            scale: 1.05;
         }
 
-        .error-subtitle {
+        &:active {
+            translate: 0 0;
+            scale: 1.02;
+        }
+    }
+
+    &__actions .btn[data-variant="primary"] {
+        color: $header-text;
+        background: $section-title-light;
+    }
+
+    &__actions .btn[data-variant="secondary"] {
+        color: var(--body-text);
+        background-color: var(--card-bg);
+        border: 2px solid var(--card-border);
+
+        &:hover {
+            border-color: list.nth(map.get($accent-colors, primary), 1);
+        }
+    }
+
+    &__suggestions {
+        margin-top: $spacing-extra-large;
+        padding-top: $spacing-extra-large;
+        border-top: 2px solid var(--card-border);
+        animation: --fade-in 0.6s 0.4s $ease-out both;
+
+        h3 {
             margin-bottom: $spacing-large;
             color: var(--card-text);
-            font-size: $font-size-2x-large;
-            font-weight: $font-weight-semibold;
-            animation: --slide-in-up 0.6s $ease-out forwards;
-        }
-
-        .error-message {
-            margin-bottom: $spacing-extra-large;
-            color: var(--body-text);
             font-size: $font-size-large;
-            line-height: $line-height-relaxed;
-            animation: --fade-in 0.6s 0.2s $ease-out both;
+            font-weight: $font-weight-semibold;
+        }
+    }
+
+    &__suggestions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: $spacing-medium;
+    }
+
+    &__suggestion-card {
+        padding: $spacing-medium;
+        color: inherit;
+        background-color: var(--card-bg);
+        box-shadow: $box-shadow-small;
+        border: 1px solid var(--card-border);
+        border-radius: $border-radius-large;
+        flex-direction: column;
+        align-items: center;
+        gap: $spacing-small;
+        text-decoration: none;
+        transition:
+            scale $transition-base $ease-out,
+            box-shadow $transition-base $ease-out,
+            translate $transition-base $ease-out,
+            border-color $transition-base $ease-out;
+        display: flex;
+
+        &:hover {
+            box-shadow: $box-shadow-medium;
+            border-color: list.nth(map.get($accent-colors, primary), 1);
+            translate: 0 -4px;
+            scale: 1.05;
         }
 
-        .error-actions {
-            margin-bottom: $spacing-extra-large;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: $spacing-medium;
-            animation: --fade-in 0.6s 0.3s $ease-out both;
-            display: flex;
-
-            a {
-                padding: $spacing-small $spacing-large;
-                box-shadow: $box-shadow-medium;
-                border-radius: $border-radius-large;
-                align-items: center;
-                gap: $spacing-small;
-                font-size: $font-size-base;
-                font-weight: $font-weight-semibold;
-                text-decoration: none;
-                transition:
-                    scale $transition-base $ease-out,
-                    box-shadow $transition-base $ease-out,
-                    translate $transition-base $ease-out;
-                display: inline-flex;
-
-                .material-symbols-outlined {
-                    font-size: 1.25rem;
-                }
-
-                &:hover {
-                    box-shadow: $box-shadow-large;
-                    translate: 0 -2px;
-                    scale: 1.05;
-                }
-
-                &:active {
-                    translate: 0 0;
-                    scale: 1.02;
-                }
-            }
-
-            .btn.primary {
-                color: $header-text;
-                background: $section-title-light;
-            }
-
-            .btn.secondary {
-                color: var(--body-text);
-                background-color: var(--card-bg);
-                border: 2px solid var(--card-border);
-
-                &:hover {
-                    border-color: list.nth(map.get($accent-colors, primary), 1);
-                }
-            }
+        &:active {
+            translate: 0 -2px;
+            scale: 1.02;
         }
+    }
 
-        .suggestions {
-            margin-top: $spacing-extra-large;
-            padding-top: $spacing-extra-large;
-            border-top: 2px solid var(--card-border);
-            animation: --fade-in 0.6s 0.4s $ease-out both;
+    &__suggestion-card:hover &__suggestion-icon {
+        scale: 1.15;
+    }
 
-            h3 {
-                margin-bottom: $spacing-large;
-                color: var(--card-text);
-                font-size: $font-size-large;
-                font-weight: $font-weight-semibold;
-            }
+    &__suggestion-icon {
+        font-size: 2rem;
+        transition: scale $transition-base $ease-spring;
+    }
 
-            .suggestions-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-                gap: $spacing-medium;
-
-                .suggestion-card {
-                    padding: $spacing-medium;
-                    color: inherit;
-                    background-color: var(--card-bg);
-                    box-shadow: $box-shadow-small;
-                    border: 1px solid var(--card-border);
-                    border-radius: $border-radius-large;
-                    flex-direction: column;
-                    align-items: center;
-                    gap: $spacing-small;
-                    text-decoration: none;
-                    transition:
-                        scale $transition-base $ease-out,
-                        box-shadow $transition-base $ease-out,
-                        translate $transition-base $ease-out,
-                        border-color $transition-base $ease-out;
-                    display: flex;
-
-                    &:hover {
-                        box-shadow: $box-shadow-medium;
-                        border-color: list.nth(map.get($accent-colors, primary), 1);
-                        translate: 0 -4px;
-                        scale: 1.05;
-
-                        .suggestion-icon {
-                            scale: 1.15;
-                        }
-                    }
-
-                    &:active {
-                        translate: 0 -2px;
-                        scale: 1.02;
-                    }
-
-                    .suggestion-icon {
-                        font-size: 2rem;
-                        transition: scale $transition-base $ease-spring;
-                    }
-
-                    .suggestion-text {
-                        color: var(--body-text);
-                        font-size: $font-size-small;
-                        font-weight: $font-weight-medium;
-                        text-align: center;
-                    }
-                }
-            }
-        }
+    &__suggestion-text {
+        color: var(--body-text);
+        font-size: $font-size-small;
+        font-weight: $font-weight-medium;
+        text-align: center;
     }
 
     @media (width <= $breakpoint-medium) {
         padding: $spacing-large $spacing-small;
 
-        .error-content {
+        &__content {
             padding: $spacing-extra-large;
+        }
 
-            .error-icon {
-                .material-symbols-outlined {
-                    font-size: 4rem;
-                }
-            }
+        &__icon .material-symbols-outlined {
+            font-size: 4rem;
+        }
 
-            .error-title {
-                font-size: 4rem;
-            }
+        &__title {
+            font-size: 4rem;
+        }
 
-            .error-subtitle {
-                font-size: $font-size-1x-large;
-            }
+        &__subtitle {
+            font-size: $font-size-1x-large;
+        }
 
-            .error-message {
-                font-size: $font-size-base;
-            }
+        &__message {
+            font-size: $font-size-base;
+        }
 
-            .error-actions {
-                flex-direction: column;
-                align-items: stretch;
+        &__actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
 
-                a {
-                    justify-content: center;
-                }
-            }
+        &__actions a {
+            justify-content: center;
+        }
 
-            .suggestions {
-                .suggestions-grid {
-                    grid-template-columns: repeat(2, 1fr);
-                }
-            }
+        &__suggestions-grid {
+            grid-template-columns: repeat(2, 1fr);
         }
     }
 
     @media (width <= $breakpoint-extra-small) {
-        .error-content {
-            .error-title {
-                font-size: 3rem;
-            }
+        &__title {
+            font-size: 3rem;
+        }
 
-            .suggestions {
-                .suggestions-grid {
-                    grid-template-columns: 1fr;
-                }
-            }
+        &__suggestions-grid {
+            grid-template-columns: 1fr;
         }
     }
 }
-
