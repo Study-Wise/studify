@@ -43,7 +43,7 @@ ul, ol {
 }
 
 .content-container,
-.message.assistant .message-content {
+.message[data-role="assistant"] .message__content {
     :not(.step-by-step, .step-by-step *, pre, code, a) {
         &, &::before, &::after {
             margin: revert;
@@ -264,12 +264,12 @@ main {
         font-size: clamp(1.4rem, 4vw, 1.6rem);
         font-weight: 600;
 
-        &:not(.about-name) {
+        &:not(.about-section__name) {
             display: flex;
             align-items: center;
         }
 
-        &:not(.chat-header h2, .about-name) {
+        &:not(.chat-header h2, .about-section__name) {
             margin-block-end: 25px;
             padding-block-end: 12px;
             border-block-end: 1px solid #{$section-title-border};

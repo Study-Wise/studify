@@ -586,7 +586,7 @@ footer, .chat-toolbar {
             line-height: $line-height-relaxed;
         }
 
-        .btn.primary {
+        .btn[data-variant="primary"] {
             padding: $spacing-small $spacing-large;
             color: var(--body-text);
             background-color: var(--card-bg);
