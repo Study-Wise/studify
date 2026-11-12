@@ -8,6 +8,10 @@ export interface Mode {
         name: string;
         personality: string;
         interests: string[];
+        colors: {
+            background: string;
+            foreground: string;
+        };
         svg: string;
         pfp?: string;
     };
