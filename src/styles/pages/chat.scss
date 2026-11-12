@@ -8,76 +8,6 @@
 @use 'sass:map';
 @use 'sass:math';
 
-.unauthorized-message {
-    padding: $spacing-extra-large;
-    height: 100%;
-    justify-content: center;
-    align-items: center;
-    display: flex;
-
-    .message.assistant {
-        width: 100%;
-        max-width: 500px;
-
-        .message-content {
-            $brdr: 15px;
-
-            position: relative;
-            padding: $spacing-extra-large;
-            box-shadow: 0 0 30px var(--card-shadow);
-            border: 1px solid var(--card-border);
-            border-radius: $brdr;
-            isolation: isolate;
-            text-align: center;
-
-            @include colors.accent-gradient($angle: $gradient-angle);
-
-            &::before {
-                $space: 10px;
-
-                content: '';
-                position: absolute;
-                inset: $space;
-                background-color: var(--card-bg);
-                border-radius: #{$brdr - $space};
-                opacity: 1;
-                z-index: -1;
-            }
-
-            .unauthorized-content {
-                h3 {
-                    margin-block-end: $spacing-medium;
-                    color: var(--section-title);
-                    font-size: $font-size-2x-large;
-                }
-
-                p {
-                    margin-block-end: $spacing-large;
-                    color: var(--body-text);
-                    line-height: $line-height-relaxed;
-                }
-
-                .btn.primary {
-                    padding: $spacing-small $spacing-large;
-                    color: var(--body-text);
-                    background-color: var(--card-bg);
-                    border: 1px solid var(--card-border);
-                    border-radius: $border-radius-medium;
-                    text-decoration: none;
-                    transition: $transition-all;
-                    display: inline-block;
-
-                    &:hover {
-                        background-color: hsl(from var(--card-bg) h s calc(l - 5%));
-                        box-shadow: 0 0 15px var(--card-shadow);
-                        translate: 0 -2px;
-                    }
-                }
-            }
-        }
-    }
-}
-
 .empty-state {
     box-sizing: border-box;
     margin: auto;
@@ -175,7 +105,7 @@ footer, .chat-toolbar {
 
     @include colors.accent-gradient($angle: $gradient-angle);
 
-    .chat-title-container {
+    &__title-container {
         min-width: 0;
         align-items: center;
         gap: $spacing-medium;
@@ -216,7 +146,7 @@ footer, .chat-toolbar {
         }
     }
 
-    .subject-breadcrumb {
+    &__breadcrumb {
         flex-shrink: 0;
 
         ol {
@@ -312,7 +242,7 @@ footer, .chat-toolbar {
         }
     }
 
-    .header-text-container {
+    .header__text {
         color: $section-title-light;
     }
 }
@@ -390,219 +320,287 @@ footer, .chat-toolbar {
             background-clip: padding-box;
         }
     }
+}
 
-    .message {
-        $message-space: $spacing-medium + 0.25rem;
+.message {
+    $message-space: $spacing-medium + 0.25rem;
 
+    position: relative;
+    width: fit-content;
+    max-width: min(calc(600px + 4 * $message-space), 100%);
+    border-radius: $message-space;
+    flex-direction: column;
+    gap: math.div($message-space, 2);
+    animation: --slide-in-from-left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: flex;
+
+    &__content {
         position: relative;
-        width: fit-content;
-        max-width: min(calc(600px + 4 * $message-space), 100%);
-        border-radius: $message-space;
-        flex-direction: column;
-        gap: math.div($message-space, 2);
-        animation: --slide-in-from-left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        display: flex;
+        box-sizing: border-box;
+        padding: $message-space $spacing-large;
+        background-color: var(--message-bg);
+        box-shadow:
+            0 1px 3px rgb(from var(--card-shadow) r g b / 8%),
+            0 4px 12px rgb(from var(--card-shadow) r g b / 6%),
+            inset 0 1px 0 rgb(from #{$header-text} r g b / 2%);
+        border: 1px solid rgb(from var(--card-border) r g b / 30%);
+        border-radius: inherit;
+        overflow: hidden;
 
-        &-content {
-            position: relative;
-            box-sizing: border-box;
-            padding: $message-space $spacing-large;
-            background-color: var(--message-bg);
-            box-shadow:
-                0 1px 3px rgb(from var(--card-shadow) r g b / 8%),
-                0 4px 12px rgb(from var(--card-shadow) r g b / 6%),
-                inset 0 1px 0 rgb(from #{$header-text} r g b / 2%);
-            border: 1px solid rgb(from var(--card-border) r g b / 30%);
-            border-radius: inherit;
-            overflow: hidden;
-
-            &::before {
-                content: '';
-                position: absolute;
-                inset: 0;
-                background: linear-gradient(135deg, rgb(from #{$header-text} r g b / 2%) 0%, transparent 50%);
-                opacity: 0;
-                transition: opacity $transition-base $ease;
-                pointer-events: none;
-            }
-
-            &:hover::before {
-                opacity: 1;
-            }
-
-            mjx-container {
-                width: fit-content;
-            }
-
-            pre,
-            code {
-                padding: $spacing-tiny $spacing-extra-small;
-                background-color: rgb(from var(--card-text) r g b / 8%);
-                border-radius: $border-radius-extra-small;
-                font-family: Consolas, Monaco, 'Courier New', monospace;
-                font-size: 0.9em;
-            }
-
-            pre {
-                margin: $spacing-extra-small 0;
-                padding: $spacing-small;
-                border-inline-start: 3px solid rgb(from var(--section-title) r g b / 30%);
-                overflow-x: auto;
-
-                code {
-                    padding: 0;
-                    background-color: transparent;
-                }
-            }
-
-            a {
-                color: list.nth(map.get($accent-colors, primary), 1);
-                text-decoration: underline;
-                transition: opacity $transition-base $ease-out;
-
-                &:hover {
-                    opacity: $opacity-hover;
-                }
-            }
-        }
-
-        &.highlighted .message-content {
-            outline: 2px solid list.nth(map.get($accent-colors, primary), 1);
-            outline-offset: 2px;
-        }
-
-        .stream-staging {
+        &::before {
+            content: '';
             position: absolute;
-            inset-block-start: 0;
-            inset-inline: 0;
-            visibility: hidden;
+            inset: 0;
+            background: linear-gradient(135deg, rgb(from #{$header-text} r g b / 2%) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity $transition-base $ease;
             pointer-events: none;
         }
 
-        &-timestamp {
-            padding: 0 math.div($message-space, 2);
-            align-self: end;
-            font-size: $font-size-1x-small;
-            opacity: $opacity-subtle;
+        &:hover::before {
+            opacity: 1;
+        }
+
+        mjx-container {
+            width: fit-content;
+        }
+
+        pre,
+        code {
+            padding: $spacing-tiny $spacing-extra-small;
+            background-color: rgb(from var(--card-text) r g b / 8%);
+            border-radius: $border-radius-extra-small;
+            font-family: Consolas, Monaco, 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            margin: $spacing-extra-small 0;
+            padding: $spacing-small;
+            border-inline-start: 3px solid rgb(from var(--section-title) r g b / 30%);
+            overflow-x: auto;
+
+            code {
+                padding: 0;
+                background-color: transparent;
+            }
+        }
+
+        a {
+            color: list.nth(map.get($accent-colors, primary), 1);
+            text-decoration: underline;
             transition: opacity $transition-base $ease-out;
 
             &:hover {
-                opacity: 1;
-            }
-        }
-
-        &.user {
-            align-self: end;
-            animation: --slide-in-from-right 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-
-            .message-content {
-                color: $header-text;
-                background: linear-gradient(135deg,
-                    color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: 10%),
-                    color.adjust(list.nth(map.get($accent-colors, primary), 2), $lightness: 10%));
-                box-shadow:
-                    0 2px 8px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 25%),
-                    0 8px 24px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 15%),
-                    inset 0 1px 0 rgb(from #{$header-text} r g b / 15%);
-                border-color: rgb(from #{$header-text} r g b / 15%);
-
-                &::before {
-                    background: linear-gradient(135deg,
-                        rgb(from #{$header-text} r g b / 15%) 0%,
-                        transparent 40%);
-                }
-
-                &:hover {
-                    box-shadow:
-                        0 4px 12px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 30%),
-                        0 12px 32px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 20%),
-                        inset 0 1px 0 rgb(from #{$header-text} r g b / 15%);
-                }
-            }
-        }
-
-        @media (width <= $breakpoint-medium) {
-            max-width: 100%;
-        }
-    }
-
-    .tool-call-log {
-        max-width: min(calc(600px + 4 * ($spacing-medium + 0.25rem)), 100%);
-        flex-direction: column;
-        gap: $spacing-tiny;
-        display: flex;
-
-        .tool-call-entry {
-            padding: $spacing-tiny $spacing-small;
-            width: fit-content;
-            color: rgb(from var(--body-text) r g b / 70%);
-            background-color: rgb(from var(--card-border) r g b / 20%);
-            border: 1px solid rgb(from var(--card-border) r g b / 40%);
-            border-radius: $border-radius-extra-small;
-            align-items: center;
-            gap: $spacing-extra-small;
-            font-size: $font-size-1x-small;
-            display: flex;
-
-            .material-symbols-outlined {
-                font-size: 0.9rem;
-
-                &[data-state="success"] {
-                    color: $color-success;
-                }
-
-                &[data-state="error"] {
-                    color: $color-error;
-                }
-            }
-
-            .tool-name {
-                font-weight: 500;
+                opacity: $opacity-hover;
             }
         }
     }
 
-    .message-content.mathjax-pending {
+    &[data-highlighted] &__content {
+        outline: 2px solid list.nth(map.get($accent-colors, primary), 1);
+        outline-offset: 2px;
+    }
+
+    &__staging {
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    &__timestamp {
+        padding: 0 math.div($message-space, 2);
+        align-self: end;
+        font-size: $font-size-1x-small;
+        opacity: $opacity-subtle;
+        transition: opacity $transition-base $ease-out;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+
+    &[data-role="user"] {
+        align-self: end;
+        animation: --slide-in-from-right 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    &[data-role="user"] &__content {
+        color: $header-text;
+        background: linear-gradient(135deg,
+            color.adjust(list.nth(map.get($accent-colors, primary), 1), $lightness: 10%),
+            color.adjust(list.nth(map.get($accent-colors, primary), 2), $lightness: 10%));
+        box-shadow:
+            0 2px 8px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 25%),
+            0 8px 24px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 15%),
+            inset 0 1px 0 rgb(from #{$header-text} r g b / 15%);
+        border-color: rgb(from #{$header-text} r g b / 15%);
+
+        &::before {
+            background: linear-gradient(135deg,
+                rgb(from #{$header-text} r g b / 15%) 0%,
+                transparent 40%);
+        }
+
+        &:hover {
+            box-shadow:
+                0 4px 12px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 30%),
+                0 12px 32px rgba(from list.nth(map.get($accent-colors, primary), 1) r g b / 20%),
+                inset 0 1px 0 rgb(from #{$header-text} r g b / 15%);
+        }
+    }
+
+    @media (width <= $breakpoint-medium) {
+        max-width: 100%;
+    }
+
+    &__content.mathjax-pending {
         visibility: hidden;
     }
 
-    .message.typing {
-        .message-content {
-            padding: $spacing-medium $spacing-large;
-            align-items: center;
-            gap: $spacing-extra-small;
-            display: flex;
-        }
+    &[data-state="typing"] &__content {
+        padding: $spacing-medium $spacing-large;
+        align-items: center;
+        gap: $spacing-extra-small;
+        display: flex;
+    }
 
-        .typing-dots {
-            display: flex;
-            gap: $spacing-tiny;
+    &__typing-dots {
+        display: flex;
+        gap: $spacing-tiny;
 
-            span {
-                width: 8px;
-                height: 8px;
-                background-color: var(--card-text);
-                border-radius: 50%;
-                opacity: 0.4;
-                animation: --typing-dot 1.4s infinite;
+        span {
+            width: 8px;
+            height: 8px;
+            background-color: var(--card-text);
+            border-radius: 50%;
+            opacity: 0.4;
+            animation: --typing-dot 1.4s infinite;
 
-                &:nth-child(2) {
-                    animation-delay: 0.2s;
-                }
+            &:nth-child(2) {
+                animation-delay: 0.2s;
+            }
 
-                &:nth-child(3) {
-                    animation-delay: 0.4s;
-                }
+            &:nth-child(3) {
+                animation-delay: 0.4s;
+            }
 
-                @media (prefers-reduced-motion: reduce) {
-                    animation: none;
-                }
+            @media (prefers-reduced-motion: reduce) {
+                animation: none;
             }
         }
+    }
 
-        .typing-label {
-            color: rgb(from var(--body-text) r g b / 70%);
-            font-size: $font-size-small;
+    &__typing-label {
+        color: rgb(from var(--body-text) r g b / 70%);
+        font-size: $font-size-small;
+    }
+}
+
+.tool-call-log {
+    max-width: min(calc(600px + 4 * ($spacing-medium + 0.25rem)), 100%);
+    flex-direction: column;
+    gap: $spacing-tiny;
+    display: flex;
+
+    &__entry {
+        padding: $spacing-tiny $spacing-small;
+        width: fit-content;
+        color: rgb(from var(--body-text) r g b / 70%);
+        background-color: rgb(from var(--card-border) r g b / 20%);
+        border: 1px solid rgb(from var(--card-border) r g b / 40%);
+        border-radius: $border-radius-extra-small;
+        align-items: center;
+        gap: $spacing-extra-small;
+        font-size: $font-size-1x-small;
+        display: flex;
+
+        .material-symbols-outlined {
+            font-size: 0.9rem;
+
+            &[data-state="success"] {
+                color: $color-success;
+            }
+
+            &[data-state="error"] {
+                color: $color-error;
+            }
+        }
+    }
+
+    &__name {
+        font-weight: 500;
+    }
+}
+
+.unauthorized-message {
+    padding: $spacing-extra-large;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+
+    &__message {
+        width: 100%;
+        max-width: 500px;
+    }
+
+    &__content {
+        $brdr: 15px;
+
+        position: relative;
+        padding: $spacing-extra-large;
+        box-shadow: 0 0 30px var(--card-shadow);
+        border: 1px solid var(--card-border);
+        border-radius: $brdr;
+        isolation: isolate;
+        text-align: center;
+
+        @include colors.accent-gradient($angle: $gradient-angle);
+
+        &::before {
+            $space: 10px;
+
+            content: '';
+            position: absolute;
+            inset: $space;
+            background-color: var(--card-bg);
+            border-radius: #{$brdr - $space};
+            opacity: 1;
+            z-index: -1;
+        }
+    }
+
+    &__body {
+        h3 {
+            margin-block-end: $spacing-medium;
+            color: var(--section-title);
+            font-size: $font-size-2x-large;
+        }
+
+        p {
+            margin-block-end: $spacing-large;
+            color: var(--body-text);
+            line-height: $line-height-relaxed;
+        }
+
+        .btn.primary {
+            padding: $spacing-small $spacing-large;
+            color: var(--body-text);
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: $border-radius-medium;
+            text-decoration: none;
+            transition: $transition-all;
+            display: inline-block;
+
+            &:hover {
+                background-color: hsl(from var(--card-bg) h s calc(l - 5%));
+                box-shadow: 0 0 15px var(--card-shadow);
+                translate: 0 -2px;
+            }
         }
     }
 }

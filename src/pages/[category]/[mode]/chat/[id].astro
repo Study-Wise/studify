@@ -97,9 +97,9 @@ export const inNav = 'hide';
 ---
 <Layout title={`${threadTitle?.replace(/\\[()[\]]|(?<!\\)\$/g, '').replace(/\\([a-zA-Z]+|[{}$])/g, '$1') || (id === 'new' ? 'New Chat' : 'Chat')} | ${modeName} | ${categoryName}`} container={false} isChatArea={true} className="chat-page" hideCopyright={true} mathjax={true} desmos={modeObj.desmos === true}>
     <header class="chat-header">
-        <div class="chat-title-container">
+        <div class="chat-header__title-container">
             <ChatTitle title={threadTitle || (id === 'new' ? 'New Chat' : 'Chat')} threadId={id || ''} canRename={isOwner} />
-            <nav class="subject-breadcrumb" aria-label="Subject">
+            <nav class="chat-header__breadcrumb" aria-label="Subject">
                 <ol>
                     <li>{categoryName}</li>
                     <li><a href={`/${category}/${mode}`}>{modeName}</a></li>
@@ -155,25 +155,25 @@ export const inNav = 'hide';
                             {message.toolCallLog.length > 0 && (
                                 <div class="tool-call-log">
                                     {message.toolCallLog.map(entry => (
-                                        <div class="tool-call-entry">
+                                        <div class="tool-call-log__entry">
                                             <span class="material-symbols-outlined" aria-hidden="true" data-state={entry.status}>
                                                 {entry.status === 'success' ? 'check_circle' : 'error'}
                                             </span>
-                                            <span class="tool-name">{labels[entry.toolName] ?? entry.toolName}</span>
+                                            <span class="tool-call-log__name">{labels[entry.toolName] ?? entry.toolName}</span>
                                         </div>
                                     ))}
                                 </div>
                             )}
-                            <div id={message.id && `message-${message.id}`} class:list={['message', message.role]}>
-                                <div class:list={['message-content', { 'bg-primary': message.role === 'user', 'mathjax-pending': mathDelimiterPattern.test(message.htmlContent) }]} set:html={message.htmlContent} />
+                            <div id={message.id && `message-${message.id}`} class="message" data-role={message.role}>
+                                <div class:list={['message__content', { 'bg-primary': message.role === 'user', 'mathjax-pending': mathDelimiterPattern.test(message.htmlContent) }]} set:html={message.htmlContent} />
                             </div>
                         </>
                     ))
                 ) : (
                     <div class="unauthorized-message">
-                        <div class="message assistant">
-                            <div class="message-content">
-                                <div class="unauthorized-content">
+                        <div class="message unauthorized-message__message" data-role="assistant">
+                            <div class="message__content unauthorized-message__content">
+                                <div class="unauthorized-message__body">
                                     <h3>Access Denied</h3>
                                     <p>You don't have permission to view this conversation.</p>
                                     <a href="/" class="btn primary">Go Home</a>
@@ -198,15 +198,13 @@ export const inNav = 'hide';
     </section>
     <script is:inline>
         const clientMessages = []
-        const classesToIgnore = ['message'];
         const messageEles = document.querySelectorAll('.chat-messages > .message');
         const outputTabs = ['study-guide', 'reference-sheet'];
 
         setTimeout(() => {
             messageEles.forEach(message => {
-                const classes = [...message.classList].filter(cls => !classesToIgnore.includes(cls));
-                const type = classes.join(',')
-                const content = message.querySelector('.message-content').innerHTML.trim();
+                const type = message.dataset.role;
+                const content = message.querySelector('.message__content').innerHTML.trim();
                 const tabShown = outputTabs[0]
 
                 clientMessages.push({
