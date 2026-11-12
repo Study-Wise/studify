@@ -5,7 +5,7 @@
 @use 'sass:map';
 
 .input-section {
-    .text-paste {
+    &__text {
         resize: vertical;
         margin-block-start: $spacing-small - 0.125rem;
         padding: $spacing-medium - 0.0625rem;
@@ -23,30 +23,30 @@
             outline: none;
         }
     }
-}
 
-.upload-note {
-    margin-block: $spacing-small;
-    color: var(--card-text);
-    align-items: flex-start;
-    gap: $spacing-small;
-    font-size: $font-size-small;
-    opacity: $opacity-subtle;
-    display: flex;
-}
+    &__upload-note {
+        margin-block: $spacing-small;
+        color: var(--card-text);
+        align-items: flex-start;
+        gap: $spacing-small;
+        font-size: $font-size-small;
+        opacity: $opacity-subtle;
+        display: flex;
+    }
 
-.toolbar {
-    margin-block-start: $spacing-extra-small;
-    justify-content: space-between;
-    align-items: center;
-    gap: $spacing-medium;
-    display: flex;
+    &__toolbar {
+        margin-block-start: $spacing-extra-small;
+        justify-content: space-between;
+        align-items: center;
+        gap: $spacing-medium;
+        display: flex;
+    }
 
-    .model-selector {
+    &__toolbar .model-selector {
         flex: 1;
     }
 
-    .btn.generate-button {
+    &__generate.btn {
         @media (width <= $breakpoint-small) {
             padding: 12px 15px;
             font-size: 1.05rem;

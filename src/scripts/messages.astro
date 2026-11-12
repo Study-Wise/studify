@@ -707,8 +707,8 @@ const { page, category, mode, id } = Astro.props;
         if (page === 'home') {
             initializeCommon();
 
-            messageInput = document.querySelector('.text-paste');
-            sendButton = document.querySelector('.generate-button');
+            messageInput = document.querySelector('.input-section__text');
+            sendButton = document.querySelector('.input-section__generate');
             spinner = sendButton?.querySelector('.spinner');
 
             if (messageInput && sendButton) messageInput.addEventListener('keydown', handleEnterKey);
