@@ -14,12 +14,12 @@ const {
 const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase());
 ---
 <div class="content-actions">
-    <a href={chatUrl} class="action-btn secondary">
+    <a href={chatUrl} class="content-actions__button" data-variant="secondary">
         <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
         <span>Back to Chat</span>
     </a>
     {isAuthorized && (
-        <button type="button" id={`${contentType}-action-btn`} class="action-btn primary" data-thread-id={threadId} data-content-type={contentType} data-has-content={hasContent.toString()}>
+        <button type="button" id={`${contentType}-action-btn`} class="content-actions__button" data-variant="primary" data-thread-id={threadId} data-content-type={contentType} data-has-content={hasContent.toString()}>
             <span class="material-symbols-outlined" aria-hidden="true">{hasContent ? 'refresh' : 'auto_awesome'}</span>
             <span>{hasContent ? `${regenerateVerb} ${contentTypeName}` : `${generateVerb} ${contentTypeName}`}</span>
         </button>

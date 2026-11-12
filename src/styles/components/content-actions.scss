@@ -26,7 +26,7 @@ $color: list.nth(map.get($accent-colors, primary), 1);
         margin-inline: #{-1 * $spacing-medium};
     }
 
-    .action-btn {
+    &__button {
         padding: $spacing-small $spacing-medium;
         border: none;
         border-radius: $border-radius-medium;
@@ -42,30 +42,30 @@ $color: list.nth(map.get($accent-colors, primary), 1);
         .material-symbols-outlined {
             font-size: 1.125rem;
         }
+    }
 
-        &.primary {
-            color: white;
-            background-color: $color;
+    &__button[data-variant="primary"] {
+        color: white;
+        background-color: $color;
 
-            &:hover:not(:disabled) {
-                filter: brightness(1.1);
-            }
-
-            &:disabled {
-                opacity: 0.6;
-                cursor: not-allowed;
-            }
+        &:hover:not(:disabled) {
+            filter: brightness(1.1);
         }
 
-        &.secondary {
-            color: var(--card-text);
-            background-color: var(--body-bg);
-            border: 1px solid var(--card-border);
+        &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    }
 
-            &:hover {
-                background-color: var(--card-bg);
-                border-color: var(--card-text);
-            }
+    &__button[data-variant="secondary"] {
+        color: var(--card-text);
+        background-color: var(--body-bg);
+        border: 1px solid var(--card-border);
+
+        &:hover {
+            background-color: var(--card-bg);
+            border-color: var(--card-text);
         }
     }
 
@@ -73,7 +73,7 @@ $color: list.nth(map.get($accent-colors, primary), 1);
         flex-direction: column;
         gap: $spacing-small;
 
-        .action-btn {
+        &__button {
             width: 100%;
             justify-content: center;
         }
