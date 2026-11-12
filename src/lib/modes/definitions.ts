@@ -19,7 +19,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#22c55e',
                         foreground: '#7c3aed',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#22c55e"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#7c3aed"/><g fill="none" stroke="#fff" stroke-width=".5"><ellipse cx="12" cy="18.3" rx="2.4" ry="1"/><ellipse cx="12" cy="18.3" rx="2.4" ry="1" transform="rotate(60 12 18.3)"/><ellipse cx="12" cy="18.3" rx="2.4" ry="1" transform="rotate(120 12 18.3)"/></g><circle cx="12" cy="18.3" r=".4" fill="#fff"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#4a3222"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#22c55e"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#7c3aed"/><g fill="none" stroke="#fff" stroke-width=".5"><ellipse cx="12" cy="18.3" rx="2.4" ry="1"/><ellipse cx="12" cy="18.3" rx="2.4" ry="1" transform="rotate(60 12 18.3)"/><ellipse cx="12" cy="18.3" rx="2.4" ry="1" transform="rotate(120 12 18.3)"/></g><circle cx="12" cy="18.3" r=".4" fill="#fff"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#4a3222"/></svg>',
                 },
             },
             chemistry: {
@@ -34,7 +34,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#22c55e',
                         foreground: '#15803d',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#22c55e"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#2b2b2b"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#15803d"/><path d="M11.1 16.6h1.8M11.4 16.6v1.5l-1 1.7a.5.5 0 0 0 .4.8h2.4a.5.5 0 0 0 .4-.8l-1-1.7v-1.5" fill="none" stroke="#fff" stroke-width=".5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#2b2b2b"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#22c55e"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#2b2b2b"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#15803d"/><path d="M11.1 16.6h1.8M11.4 16.6v1.5l-1 1.7a.5.5 0 0 0 .4.8h2.4a.5.5 0 0 0 .4-.8l-1-1.7v-1.5" fill="none" stroke="#fff" stroke-width=".5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#2b2b2b"/></svg>',
                 },
             },
             biology: {
@@ -49,7 +49,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#22c55e',
                         foreground: '#2563eb',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#22c55e"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#8b4513"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#2563eb"/><path d="M10.6 16.6c2 .8 2 2.2 0 3M13.4 16.6c-2 .8-2 2.2 0 3M10.9 17.4h2.2M10.9 18.9h2.2" fill="none" stroke="#fff" stroke-width=".5" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#ffdbac"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#8b4513"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#22c55e"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#8b4513"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#2563eb"/><path d="M10.6 16.6c2 .8 2 2.2 0 3M13.4 16.6c-2 .8-2 2.2 0 3M10.9 17.4h2.2M10.9 18.9h2.2" fill="none" stroke="#fff" stroke-width=".5" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#ffdbac"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#8b4513"/></svg>',
                 },
             },
             'computer-science': {
@@ -64,7 +64,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#22c55e',
                         foreground: '#1f2937',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#22c55e"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#1f2937"/><path d="M10.6 17.2l-1.2 1.1 1.2 1.1M13.4 17.2l1.2 1.1-1.2 1.1M12.6 16.8l-1.2 2.9" fill="none" stroke="#4ade80" stroke-width=".5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#3b2f2f"/><g fill="none" stroke="#111827" stroke-width=".35"><circle cx="10.6" cy="9.4" r="1"/><circle cx="13.4" cy="9.4" r="1"/><path d="M11.6 9.4h.8"/></g></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#22c55e"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#1f2937"/><path d="M10.6 17.2l-1.2 1.1 1.2 1.1M13.4 17.2l1.2 1.1-1.2 1.1M12.6 16.8l-1.2 2.9" fill="none" stroke="#4ade80" stroke-width=".5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#3b2f2f"/><g fill="none" stroke="#111827" stroke-width=".35"><circle cx="10.6" cy="9.4" r="1"/><circle cx="13.4" cy="9.4" r="1"/><path d="M11.6 9.4h.8"/></g></svg>',
                 },
             },
         },
@@ -86,7 +86,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#ef4444',
                         foreground: '#f59e0b',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ef4444"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#f59e0b"/><path d="M12 16.6v3.4M10.3 18.3h3.4" stroke="#fff" stroke-width=".6" stroke-linecap="round"/><circle cx="12" cy="5.1" r="1.6" fill="#3b2f2f"/><circle cx="12" cy="9.3" r="3.6" fill="#c68642"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#3b2f2f"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ef4444"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#f59e0b"/><path d="M12 16.6v3.4M10.3 18.3h3.4" stroke="#fff" stroke-width=".6" stroke-linecap="round"/><circle cx="12" cy="5.1" r="1.6" fill="#3b2f2f"/><circle cx="12" cy="9.3" r="3.6" fill="#c68642"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#3b2f2f"/></svg>',
                 },
             },
             algebra: {
@@ -102,7 +102,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#ef4444',
                         foreground: '#2563eb',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ef4444"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#2563eb"/><path d="M10.5 16.8l3 3M13.5 16.8l-3 3" stroke="#fff" stroke-width=".6" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#8d5524"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ef4444"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#2563eb"/><path d="M10.5 16.8l3 3M13.5 16.8l-3 3" stroke="#fff" stroke-width=".6" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#8d5524"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
             geometry: {
@@ -118,7 +118,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#ef4444',
                         foreground: '#eab308',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ef4444"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#1f2937"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#eab308"/><path d="M12 16.6l2 3.4h-4z" fill="none" stroke="#1f2937" stroke-width=".5" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ef4444"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#1f2937"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#eab308"/><path d="M12 16.6l2 3.4h-4z" fill="none" stroke="#1f2937" stroke-width=".5" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
             'pre-calculus': {
@@ -134,7 +134,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#ef4444',
                         foreground: '#0ea5e9',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ef4444"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#0ea5e9"/><path d="M9.4 18.3c.9-2 1.7-2 2.6 0s1.7 2 2.6 0" fill="none" stroke="#fff" stroke-width=".5" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#5b3a29"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ef4444"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#0ea5e9"/><path d="M9.4 18.3c.9-2 1.7-2 2.6 0s1.7 2 2.6 0" fill="none" stroke="#fff" stroke-width=".5" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#5b3a29"/></svg>',
                 },
             },
             calculus: {
@@ -150,7 +150,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#ef4444',
                         foreground: '#06b6d4',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ef4444"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#06b6d4"/><path d="M12.9 16.6c-.7-.5-1.1 0-1.1.7v2.2c0 .7-.4 1.2-1.1.7" fill="none" stroke="#fff" stroke-width=".5" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#d1d5db"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ef4444"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#06b6d4"/><path d="M12.9 16.6c-.7-.5-1.1 0-1.1.7v2.2c0 .7-.4 1.2-1.1.7" fill="none" stroke="#fff" stroke-width=".5" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#d1d5db"/></svg>',
                 },
             },
             'applied-math': {
@@ -166,7 +166,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#ef4444',
                         foreground: '#92400e',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ef4444"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#1f2937"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#92400e"/><path d="M9.8 17h4.4M9.8 18.3h4.4M9.8 19.6h4.4" stroke="#fde68a" stroke-width=".4"/><g fill="#fde68a"><circle cx="11" cy="17" r=".5"/><circle cx="13" cy="18.3" r=".5"/><circle cx="11.6" cy="19.6" r=".5"/></g><circle cx="12" cy="9.3" r="3.6" fill="#c68642"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ef4444"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#1f2937"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#92400e"/><path d="M9.8 17h4.4M9.8 18.3h4.4M9.8 19.6h4.4" stroke="#fde68a" stroke-width=".4"/><g fill="#fde68a"><circle cx="11" cy="17" r=".5"/><circle cx="13" cy="18.3" r=".5"/><circle cx="11.6" cy="19.6" r=".5"/></g><circle cx="12" cy="9.3" r="3.6" fill="#c68642"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
             'discrete-math': {
@@ -181,7 +181,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#ef4444',
                         foreground: '#2563eb',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ef4444"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#2563eb"/><path d="M12 16.5l2 2-2 2-2-2z" fill="#fff"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#6b7280"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ef4444"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#2563eb"/><path d="M12 16.5l2 2-2 2-2-2z" fill="#fff"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#6b7280"/></svg>',
                 },
             },
             statistics: {
@@ -197,7 +197,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#ef4444',
                         foreground: '#16a34a',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ef4444"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v3.2H7.9z" fill="#b45309"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#16a34a"/><path d="M9.4 19.8c1.6 0 1.8-3.2 2.6-3.2s1 3.2 2.6 3.2" fill="none" stroke="#fff" stroke-width=".5" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#ffdbac"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#b45309"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ef4444"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v3.2H7.9z" fill="#b45309"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#16a34a"/><path d="M9.4 19.8c1.6 0 1.8-3.2 2.6-3.2s1 3.2 2.6 3.2" fill="none" stroke="#fff" stroke-width=".5" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#ffdbac"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#b45309"/></svg>',
                 },
             },
         },
@@ -218,7 +218,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#facc15',
                         foreground: '#d6b98c',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#d6b98c"/><path d="M10.6 16.6h2.8v3.2h-2.8z" fill="none" stroke="#7c5a2b" stroke-width=".5"/><path d="M11.2 17.6h1.6M11.2 18.5h1.6" stroke="#7c5a2b" stroke-width=".4"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#5b3a29"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#d6b98c"/><path d="M10.6 16.6h2.8v3.2h-2.8z" fill="none" stroke="#7c5a2b" stroke-width=".5"/><path d="M11.2 17.6h1.6M11.2 18.5h1.6" stroke="#7c5a2b" stroke-width=".4"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#5b3a29"/></svg>',
                 },
             },
             'world-history': {
@@ -233,7 +233,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#facc15',
                         foreground: '#0284c7',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#1f2937"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#0284c7"/><circle cx="12" cy="18.3" r="1.7" fill="none" stroke="#fff" stroke-width=".5"/><path d="M10.3 18.3h3.4M12 16.6c-.9 1-.9 2.4 0 3.4M12 16.6c.9 1 .9 2.4 0 3.4" fill="none" stroke="#fff" stroke-width=".4"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#1f2937"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#0284c7"/><circle cx="12" cy="18.3" r="1.7" fill="none" stroke="#fff" stroke-width=".5"/><path d="M10.3 18.3h3.4M12 16.6c-.9 1-.9 2.4 0 3.4M12 16.6c.9 1 .9 2.4 0 3.4" fill="none" stroke="#fff" stroke-width=".4"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
             'us-history': {
@@ -248,7 +248,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#facc15',
                         foreground: '#1d4ed8',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><clipPath id="us-body"><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z"/></clipPath></defs><circle cx="12" cy="12" r="12" fill="#facc15"/><g clip-path="url(#us-body)"><rect x="0" y="15" width="24" height="9" fill="#fff"/><rect x="0" y="15.2" width="24" height="1.1" fill="#dc2626"/><rect x="0" y="17.4" width="24" height="1.1" fill="#dc2626"/><rect x="0" y="19.6" width="24" height="1.1" fill="#dc2626"/><rect x="0" y="21.8" width="24" height="1.1" fill="#dc2626"/><rect x="2" y="15" width="9" height="3.6" fill="#1d4ed8"/><path d="M6.5 15.9l.3.7.7.1-.5.5.1.7-.6-.3-.6.3.1-.7-.5-.5.7-.1z" fill="#fff"/></g><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#3b2f2f"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><clipPath id="us-body"><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z"/></clipPath></defs><circle cx="12" cy="12" r="12" fill="#facc15"/><g clip-path="url(#us-body)"><rect x="0" y="15" width="24" height="9" fill="#fff"/><rect x="0" y="15.2" width="24" height="1.1" fill="#dc2626"/><rect x="0" y="17.4" width="24" height="1.1" fill="#dc2626"/><rect x="0" y="19.6" width="24" height="1.1" fill="#dc2626"/><rect x="0" y="21.8" width="24" height="1.1" fill="#dc2626"/><rect x="2" y="15" width="9" height="3.6" fill="#1d4ed8"/><path d="M6.5 15.9l.3.7.7.1-.5.5.1.7-.6-.3-.6.3.1-.7-.5-.5.7-.1z" fill="#fff"/></g><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#3b2f2f"/></svg>',
                 },
             },
             'ancient-history': {
@@ -263,7 +263,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#facc15',
                         foreground: '#c2410c',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#1f2937"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#c2410c"/><path d="M9.8 20h4.4M10.6 17.8v2.2M12 17.8v2.2M13.4 17.8v2.2M9.8 17.8l2.2-1.2 2.2 1.2z" stroke="#fde68a" stroke-width=".45" fill="none" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#c68642"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#1f2937"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#c2410c"/><path d="M9.8 20h4.4M10.6 17.8v2.2M12 17.8v2.2M13.4 17.8v2.2M9.8 17.8l2.2-1.2 2.2 1.2z" stroke="#fde68a" stroke-width=".45" fill="none" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#c68642"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
             'medieval-history': {
@@ -278,7 +278,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#facc15',
                         foreground: '#6b7280',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#6b7280"/><path d="M10.5 16.8l3 3.2M13.5 16.8l-3 3.2" stroke="#fff" stroke-width=".6" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#5b3a29"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#6b7280"/><path d="M10.5 16.8l3 3.2M13.5 16.8l-3 3.2" stroke="#fff" stroke-width=".6" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#5b3a29"/></svg>',
                 },
             },
             'modern-history': {
@@ -293,7 +293,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#facc15',
                         foreground: '#374151',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#374151"/><path d="M10.4 17h3.2M10.4 18.2h3.2M10.4 19.4h2" stroke="#fff" stroke-width=".5" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#374151"/><path d="M10.4 17h3.2M10.4 18.2h3.2M10.4 19.4h2" stroke="#fff" stroke-width=".5" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
             'european-history': {
@@ -308,7 +308,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#facc15',
                         foreground: '#1e40af',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#d4a017"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#1e40af"/><g fill="#facc15"><circle cx="13.5" cy="18.4" r=".35"/><circle cx="13.06" cy="19.46" r=".35"/><circle cx="12" cy="19.9" r=".35"/><circle cx="10.94" cy="19.46" r=".35"/><circle cx="10.5" cy="18.4" r=".35"/><circle cx="10.94" cy="17.34" r=".35"/><circle cx="12" cy="16.9" r=".35"/><circle cx="13.06" cy="17.34" r=".35"/></g><circle cx="12" cy="9.3" r="3.6" fill="#ffdbac"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#d4a017"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#d4a017"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#1e40af"/><g fill="#facc15"><circle cx="13.5" cy="18.4" r=".35"/><circle cx="13.06" cy="19.46" r=".35"/><circle cx="12" cy="19.9" r=".35"/><circle cx="10.94" cy="19.46" r=".35"/><circle cx="10.5" cy="18.4" r=".35"/><circle cx="10.94" cy="17.34" r=".35"/><circle cx="12" cy="16.9" r=".35"/><circle cx="13.06" cy="17.34" r=".35"/></g><circle cx="12" cy="9.3" r="3.6" fill="#ffdbac"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#d4a017"/></svg>',
                 },
             },
             'asian-history': {
@@ -323,7 +323,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#facc15',
                         foreground: '#b91c1c',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#1f2937"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#b91c1c"/><path d="M9.6 17.4l2.4-1 2.4 1M10.2 18.8l1.8-.9 1.8.9M12 17.4v2.6M10.6 20h2.8" stroke="#fff" fill="none" stroke-width=".45" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#1f2937"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#b91c1c"/><path d="M9.6 17.4l2.4-1 2.4 1M10.2 18.8l1.8-.9 1.8.9M12 17.4v2.6M10.6 20h2.8" stroke="#fff" fill="none" stroke-width=".45" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
             'african-history': {
@@ -338,7 +338,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#facc15',
                         foreground: '#15803d',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#15803d"/><path d="M12 20v-3.2M12 16.8c-1.6-.1-2.6.6-2.8 1.4M12 16.8c1.6-.1 2.6.6 2.8 1.4M12 17.6c-1.2.2-1.8.9-1.9 1.6M12 17.6c1.2.2 1.8.9 1.9 1.6" stroke="#fff" fill="none" stroke-width=".45" stroke-linecap="round"/><circle cx="12" cy="5.1" r="1.6" fill="#1f2937"/><circle cx="12" cy="9.3" r="3.6" fill="#8d5524"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#15803d"/><path d="M12 20v-3.2M12 16.8c-1.6-.1-2.6.6-2.8 1.4M12 16.8c1.6-.1 2.6.6 2.8 1.4M12 17.6c-1.2.2-1.8.9-1.9 1.6M12 17.6c1.2.2 1.8.9 1.9 1.6" stroke="#fff" fill="none" stroke-width=".45" stroke-linecap="round"/><circle cx="12" cy="5.1" r="1.6" fill="#1f2937"/><circle cx="12" cy="9.3" r="3.6" fill="#8d5524"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
             geography: {
@@ -353,7 +353,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#facc15',
                         foreground: '#2563eb',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#5b3a29"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#2563eb"/><circle cx="12" cy="18.3" r="1.7" fill="none" stroke="#fff" stroke-width=".5"/><path d="M10.3 18.3h3.4M12 16.6c-.9 1-.9 2.4 0 3.4M12 16.6c.9 1 .9 2.4 0 3.4" fill="none" stroke="#fff" stroke-width=".4"/><circle cx="12" cy="9.3" r="3.6" fill="#c68642"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#5b3a29"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#5b3a29"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#2563eb"/><circle cx="12" cy="18.3" r="1.7" fill="none" stroke="#fff" stroke-width=".5"/><path d="M10.3 18.3h3.4M12 16.6c-.9 1-.9 2.4 0 3.4M12 16.6c.9 1 .9 2.4 0 3.4" fill="none" stroke="#fff" stroke-width=".4"/><circle cx="12" cy="9.3" r="3.6" fill="#c68642"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#5b3a29"/></svg>',
                 },
             },
             'american-civics': {
@@ -368,7 +368,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#facc15',
                         foreground: '#cbd5e1',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#cbd5e1"/><path d="M9.8 20h4.4M10.6 17.8v2.2M12 17.8v2.2M13.4 17.8v2.2M9.8 17.8l2.2-1.2 2.2 1.2z" stroke="#1e3a8a" stroke-width=".45" fill="none" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#3b2f2f"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#cbd5e1"/><path d="M9.8 20h4.4M10.6 17.8v2.2M12 17.8v2.2M13.4 17.8v2.2M9.8 17.8l2.2-1.2 2.2 1.2z" stroke="#1e3a8a" stroke-width=".45" fill="none" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#3b2f2f"/></svg>',
                 },
             },
             'world-civics': {
@@ -383,7 +383,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#facc15',
                         foreground: '#0ea5e9',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#1f2937"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#0ea5e9"/><circle cx="12" cy="18.3" r="1.7" fill="none" stroke="#fff" stroke-width=".5"/><path d="M10.3 18.3h3.4M12 16.6c-.9 1-.9 2.4 0 3.4M12 16.6c.9 1 .9 2.4 0 3.4" fill="none" stroke="#fff" stroke-width=".4"/><circle cx="12" cy="9.3" r="3.6" fill="#c68642"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#1f2937"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#0ea5e9"/><circle cx="12" cy="18.3" r="1.7" fill="none" stroke="#fff" stroke-width=".5"/><path d="M10.3 18.3h3.4M12 16.6c-.9 1-.9 2.4 0 3.4M12 16.6c.9 1 .9 2.4 0 3.4" fill="none" stroke="#fff" stroke-width=".4"/><circle cx="12" cy="9.3" r="3.6" fill="#c68642"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
         },
@@ -404,7 +404,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#14b8a6',
                         foreground: '#92400e',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#14b8a6"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#92400e"/><path d="M10 17.6h4v2.4h-4zM11.2 17.6v-.8h1.6v.8" fill="none" stroke="#fff" stroke-width=".5" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#2b2b2b"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#14b8a6"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#92400e"/><path d="M10 17.6h4v2.4h-4zM11.2 17.6v-.8h1.6v.8" fill="none" stroke="#fff" stroke-width=".5" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#2b2b2b"/></svg>',
                 },
             },
             economics: {
@@ -420,7 +420,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#14b8a6',
                         foreground: '#c8a165',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#14b8a6"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#c8a165"/><path d="M12.9 17.2c-.2-.5-.8-.6-1.2-.5-.9.2-.9 1.1-.1 1.4l.8.3c.8.3.8 1.2-.1 1.4-.5.1-1-.1-1.3-.5M12 16.4v.4M12 20v.4" stroke="#5b3a29" fill="none" stroke-width=".45" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#5b3a29"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#14b8a6"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#c8a165"/><path d="M12.9 17.2c-.2-.5-.8-.6-1.2-.5-.9.2-.9 1.1-.1 1.4l.8.3c.8.3.8 1.2-.1 1.4-.5.1-1-.1-1.3-.5M12 16.4v.4M12 20v.4" stroke="#5b3a29" fill="none" stroke-width=".45" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#5b3a29"/></svg>',
                 },
             },
             finance: {
@@ -436,7 +436,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#14b8a6',
                         foreground: '#15803d',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#14b8a6"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v3.2H7.9z" fill="#8b4513"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#15803d"/><path d="M9.6 19.8l1.8-1.8 1.2 1 2-2.4M13.2 16.6h1.4v1.4" stroke="#fff" fill="none" stroke-width=".5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#ffdbac"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#8b4513"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#14b8a6"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v3.2H7.9z" fill="#8b4513"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#15803d"/><path d="M9.6 19.8l1.8-1.8 1.2 1 2-2.4M13.2 16.6h1.4v1.4" stroke="#fff" fill="none" stroke-width=".5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#ffdbac"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#8b4513"/></svg>',
                 },
             },
         },
@@ -457,7 +457,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#9ca3af',
                         foreground: '#475569',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#9ca3af"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#475569"/><circle cx="12" cy="18.3" r="1" fill="none" stroke="#fff" stroke-width=".5"/><path d="M12 16.4v.8M12 19.4v.8M10.1 18.3h.8M13.1 18.3h.8M10.7 17l.6.6M12.7 19l.6.6M10.7 19.6l.6-.6M12.7 17.6l.6-.6" stroke="#fff" stroke-width=".5" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#c68642"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#9ca3af"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#475569"/><circle cx="12" cy="18.3" r="1" fill="none" stroke="#fff" stroke-width=".5"/><path d="M12 16.4v.8M12 19.4v.8M10.1 18.3h.8M13.1 18.3h.8M10.7 17l.6.6M12.7 19l.6.6M10.7 19.6l.6-.6M12.7 17.6l.6-.6" stroke="#fff" stroke-width=".5" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#c68642"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
             electrical: {
@@ -472,7 +472,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#9ca3af',
                         foreground: '#facc15',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#9ca3af"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#facc15"/><path d="M12.6 16.5l-2 2.5h1.6l-.6 1.8 2-2.6h-1.6z" fill="#1f2937"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#5b3a29"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#9ca3af"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#facc15"/><path d="M12.6 16.5l-2 2.5h1.6l-.6 1.8 2-2.6h-1.6z" fill="#1f2937"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#5b3a29"/></svg>',
                 },
             },
             civil: {
@@ -487,7 +487,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#9ca3af',
                         foreground: '#f97316',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#9ca3af"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#3b2f2f"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#f97316"/><path d="M9.4 19.6h5.2M10.2 19.6v-1M13.8 19.6v-1M9.6 18.6c1-2 4.8-2 5.6 0" stroke="#fff" fill="none" stroke-width=".5" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><path d="M8.2 8.6a3.8 3.8 0 0 1 7.6 0z" fill="#facc15"/><path d="M7.8 8.6h8.4" stroke="#facc15" stroke-width=".8" stroke-linecap="round"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#9ca3af"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#3b2f2f"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#f97316"/><path d="M9.4 19.6h5.2M10.2 19.6v-1M13.8 19.6v-1M9.6 18.6c1-2 4.8-2 5.6 0" stroke="#fff" fill="none" stroke-width=".5" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.2 8.6a3.8 3.8 0 0 1 7.6 0z" fill="#facc15"/><path d="M7.8 8.6h8.4" stroke="#facc15" stroke-width=".8" stroke-linecap="round"/></svg>',
                 },
             },
             chemical: {
@@ -502,7 +502,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#9ca3af',
                         foreground: '#0891b2',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#9ca3af"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#0891b2"/><path d="M11.1 16.6h1.8M11.4 16.6v1.5l-1 1.7a.5.5 0 0 0 .4.8h2.4a.5.5 0 0 0 .4-.8l-1-1.7v-1.5" fill="none" stroke="#fff" stroke-width=".5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#ffdbac"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#c2410c"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#9ca3af"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#0891b2"/><path d="M11.1 16.6h1.8M11.4 16.6v1.5l-1 1.7a.5.5 0 0 0 .4.8h2.4a.5.5 0 0 0 .4-.8l-1-1.7v-1.5" fill="none" stroke="#fff" stroke-width=".5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#ffdbac"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#c2410c"/></svg>',
                 },
             },
             computer: {
@@ -517,7 +517,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#9ca3af',
                         foreground: '#1d4ed8',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#9ca3af"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#1d4ed8"/><path d="M10.6 17.2h2.8v2.8h-2.8zM11.4 16.6v.6M12.6 16.6v.6M11.4 20v.6M12.6 20v.6M10 17.8h.6M10 19.4h.6M13.4 17.8h.6M13.4 19.4h.6" stroke="#fff" fill="none" stroke-width=".45" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#2b2b2b"/><g fill="none" stroke="#111827" stroke-width=".35"><circle cx="10.6" cy="9.4" r="1"/><circle cx="13.4" cy="9.4" r="1"/><path d="M11.6 9.4h.8"/></g></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#9ca3af"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#1d4ed8"/><path d="M10.6 17.2h2.8v2.8h-2.8zM11.4 16.6v.6M12.6 16.6v.6M11.4 20v.6M12.6 20v.6M10 17.8h.6M10 19.4h.6M13.4 17.8h.6M13.4 19.4h.6" stroke="#fff" fill="none" stroke-width=".45" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#2b2b2b"/><g fill="none" stroke="#111827" stroke-width=".35"><circle cx="10.6" cy="9.4" r="1"/><circle cx="13.4" cy="9.4" r="1"/><path d="M11.6 9.4h.8"/></g></svg>',
                 },
             },
             industrial: {
@@ -532,7 +532,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#9ca3af',
                         foreground: '#7c2d12',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#9ca3af"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#7c2d12"/><path d="M9.6 20v-2.2l1.6 1v-1l1.6 1v-1l1.6 1V20zM13.6 17.6v-1.2h.8v1.2" fill="#fff"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#5b3a29"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#9ca3af"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#7c2d12"/><path d="M9.6 20v-2.2l1.6 1v-1l1.6 1v-1l1.6 1V20zM13.6 17.6v-1.2h.8v1.2" fill="#fff"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#5b3a29"/></svg>',
                 },
             },
         },
@@ -553,7 +553,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#3b82f6',
                         foreground: '#fde68a',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#3b82f6"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#fde68a"/><path d="M10.2 19.8l.4-1.4 3-3 1 1-3 3z" fill="none" stroke="#92400e" stroke-width=".5" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#b45309"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#3b82f6"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#fde68a"/><path d="M10.2 19.8l.4-1.4 3-3 1 1-3 3z" fill="none" stroke="#92400e" stroke-width=".5" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#b45309"/></svg>',
                 },
             },
             literature: {
@@ -568,7 +568,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#3b82f6',
                         foreground: '#9f1239',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#3b82f6"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#3b2f2f"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#9f1239"/><path d="M9.6 17c1-.4 1.8-.2 2.4.4.6-.6 1.4-.8 2.4-.4v3c-1-.4-1.8-.2-2.4.4-.6-.6-1.4-.8-2.4-.4zM12 17.4v3" stroke="#fff" fill="none" stroke-width=".45" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#ffdbac"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#3b2f2f"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#3b82f6"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#3b2f2f"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#9f1239"/><path d="M9.6 17c1-.4 1.8-.2 2.4.4.6-.6 1.4-.8 2.4-.4v3c-1-.4-1.8-.2-2.4.4-.6-.6-1.4-.8-2.4-.4zM12 17.4v3" stroke="#fff" fill="none" stroke-width=".45" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#ffdbac"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#3b2f2f"/></svg>',
                 },
             },
             grammar: {
@@ -583,7 +583,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#3b82f6',
                         foreground: '#facc15',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#3b82f6"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#facc15"/><circle cx="12" cy="17.6" r=".7" fill="#1f2937"/><path d="M12 18.3c.2 1-.3 1.6-1 2" stroke="#1f2937" fill="none" stroke-width=".6" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#f3f4f6"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#3b82f6"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#facc15"/><circle cx="12" cy="17.6" r=".7" fill="#1f2937"/><path d="M12 18.3c.2 1-.3 1.6-1 2" stroke="#1f2937" fill="none" stroke-width=".6" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#f3f4f6"/></svg>',
                 },
             },
             vocabulary: {
@@ -598,7 +598,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#3b82f6',
                         foreground: '#fef3c7',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#3b82f6"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#fef3c7"/><path d="M9.6 20l1.2-3.4 1.2 3.4M10.1 19h1.4" stroke="#1f2937" fill="none" stroke-width=".5" stroke-linecap="round"/><circle cx="13.3" cy="19" r=".8" fill="none" stroke="#1f2937" stroke-width=".5"/><circle cx="12" cy="5.1" r="1.6" fill="#1f2937"/><circle cx="12" cy="9.3" r="3.6" fill="#c68642"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#3b82f6"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#fef3c7"/><path d="M9.6 20l1.2-3.4 1.2 3.4M10.1 19h1.4" stroke="#1f2937" fill="none" stroke-width=".5" stroke-linecap="round"/><circle cx="13.3" cy="19" r=".8" fill="none" stroke="#1f2937" stroke-width=".5"/><circle cx="12" cy="5.1" r="1.6" fill="#1f2937"/><circle cx="12" cy="9.3" r="3.6" fill="#c68642"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
             'reading-and-writing': {
@@ -613,7 +613,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#3b82f6',
                         foreground: '#1e293b',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#3b82f6"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v3.2H7.9z" fill="#5b3a29"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#1e293b"/><path d="M12 16.4l1.6 2.6-1.6 1.8-1.6-1.8zM12 18.2v1.2" stroke="#fff" fill="none" stroke-width=".5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#5b3a29"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#3b82f6"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v3.2H7.9z" fill="#5b3a29"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#1e293b"/><path d="M12 16.4l1.6 2.6-1.6 1.8-1.6-1.8zM12 18.2v1.2" stroke="#fff" fill="none" stroke-width=".5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#5b3a29"/></svg>',
                 },
             },
             'speaking-and-listening': {
@@ -628,7 +628,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#3b82f6',
                         foreground: '#dc2626',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#3b82f6"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#dc2626"/><path d="M11.4 16.6h1.2v2a.6.6 0 0 1-1.2 0zM10.4 18.4a1.6 1.6 0 0 0 3.2 0M12 20v.4" stroke="#fff" fill="none" stroke-width=".45" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#8d5524"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#3b82f6"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#dc2626"/><path d="M11.4 16.6h1.2v2a.6.6 0 0 1-1.2 0zM10.4 18.4a1.6 1.6 0 0 0 3.2 0M12 20v.4" stroke="#fff" fill="none" stroke-width=".45" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#8d5524"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
         },
@@ -649,7 +649,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#f97316',
                         foreground: '#dc2626',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><clipPath id="es-body"><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z"/></clipPath></defs><circle cx="12" cy="12" r="12" fill="#f97316"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#1f2937"/><g clip-path="url(#es-body)"><rect x="0" y="15" width="24" height="9" fill="#dc2626"/><rect x="0" y="17" width="24" height="4.5" fill="#facc15"/></g><circle cx="12" cy="9.3" r="3.6" fill="#c68642"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><clipPath id="es-body"><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z"/></clipPath></defs><circle cx="12" cy="12" r="12" fill="#f97316"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#1f2937"/><g clip-path="url(#es-body)"><rect x="0" y="15" width="24" height="9" fill="#dc2626"/><rect x="0" y="17" width="24" height="4.5" fill="#facc15"/></g><circle cx="12" cy="9.3" r="3.6" fill="#c68642"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
             french: {
@@ -664,7 +664,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#f97316',
                         foreground: '#1d4ed8',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><clipPath id="fr-body"><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z"/></clipPath></defs><circle cx="12" cy="12" r="12" fill="#f97316"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#5b3a29"/><g clip-path="url(#fr-body)"><rect x="0" y="15" width="8" height="9" fill="#1d4ed8"/><rect x="8" y="15" width="8" height="9" fill="#fff"/><rect x="16" y="15" width="8" height="9" fill="#dc2626"/></g><circle cx="12" cy="9.3" r="3.6" fill="#ffdbac"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#5b3a29"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><clipPath id="fr-body"><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z"/></clipPath></defs><circle cx="12" cy="12" r="12" fill="#f97316"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#5b3a29"/><g clip-path="url(#fr-body)"><rect x="0" y="15" width="8" height="9" fill="#1d4ed8"/><rect x="8" y="15" width="8" height="9" fill="#fff"/><rect x="16" y="15" width="8" height="9" fill="#dc2626"/></g><circle cx="12" cy="9.3" r="3.6" fill="#ffdbac"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#5b3a29"/></svg>',
                 },
             },
             german: {
@@ -679,7 +679,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#f97316',
                         foreground: '#dc2626',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><clipPath id="de-body"><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z"/></clipPath></defs><circle cx="12" cy="12" r="12" fill="#f97316"/><g clip-path="url(#de-body)"><rect x="0" y="15" width="24" height="2.4" fill="#1f2937"/><rect x="0" y="17.4" width="24" height="2.4" fill="#dc2626"/><rect x="0" y="19.8" width="24" height="4.2" fill="#facc15"/></g><circle cx="12" cy="9.3" r="3.6" fill="#ffdbac"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#d4a017"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><clipPath id="de-body"><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z"/></clipPath></defs><circle cx="12" cy="12" r="12" fill="#f97316"/><g clip-path="url(#de-body)"><rect x="0" y="15" width="24" height="2.4" fill="#1f2937"/><rect x="0" y="17.4" width="24" height="2.4" fill="#dc2626"/><rect x="0" y="19.8" width="24" height="4.2" fill="#facc15"/></g><circle cx="12" cy="9.3" r="3.6" fill="#ffdbac"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#d4a017"/></svg>',
                 },
             },
             italian: {
@@ -694,7 +694,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#f97316',
                         foreground: '#16a34a',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><clipPath id="it-body"><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z"/></clipPath></defs><circle cx="12" cy="12" r="12" fill="#f97316"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#1f2937"/><g clip-path="url(#it-body)"><rect x="0" y="15" width="8" height="9" fill="#16a34a"/><rect x="8" y="15" width="8" height="9" fill="#fff"/><rect x="16" y="15" width="8" height="9" fill="#dc2626"/></g><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><clipPath id="it-body"><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z"/></clipPath></defs><circle cx="12" cy="12" r="12" fill="#f97316"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#1f2937"/><g clip-path="url(#it-body)"><rect x="0" y="15" width="8" height="9" fill="#16a34a"/><rect x="8" y="15" width="8" height="9" fill="#fff"/><rect x="16" y="15" width="8" height="9" fill="#dc2626"/></g><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
         },
@@ -715,7 +715,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#a855f7',
                         foreground: '#f3f4f6',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#a855f7"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#f3f4f6"/><g><circle cx="9.6" cy="18" r=".8" fill="#ef4444"/><circle cx="13.2" cy="19.6" r=".9" fill="#3b82f6"/><circle cx="15.4" cy="17.6" r=".7" fill="#facc15"/><circle cx="11.2" cy="20.8" r=".6" fill="#22c55e"/></g><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#5b3a29"/><ellipse cx="12.6" cy="6.3" rx="4.2" ry="1.5" fill="#ef4444"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#a855f7"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#f3f4f6"/><g><circle cx="9.6" cy="18" r=".8" fill="#ef4444"/><circle cx="13.2" cy="19.6" r=".9" fill="#3b82f6"/><circle cx="15.4" cy="17.6" r=".7" fill="#facc15"/><circle cx="11.2" cy="20.8" r=".6" fill="#22c55e"/></g><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#5b3a29"/><ellipse cx="12.6" cy="6.3" rx="4.2" ry="1.5" fill="#ef4444"/></svg>',
                 },
             },
             music: {
@@ -730,7 +730,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#a855f7',
                         foreground: '#8b4513',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#a855f7"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#1f2937"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#8b4513"/><path d="M11 20v-3.4l2.6-.6v3.4M11 20a.8.7 0 1 1-1.6 0 .8.7 0 0 1 1.6 0zM13.6 19.4a.8.7 0 1 1-1.6 0 .8.7 0 0 1 1.6 0z" stroke="#111827" fill="none" stroke-width=".45"/><circle cx="12" cy="9.3" r="3.6" fill="#c68642"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#a855f7"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#1f2937"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#8b4513"/><path d="M11 20v-3.4l2.6-.6v3.4M11 20a.8.7 0 1 1-1.6 0 .8.7 0 0 1 1.6 0zM13.6 19.4a.8.7 0 1 1-1.6 0 .8.7 0 0 1 1.6 0z" stroke="#111827" fill="none" stroke-width=".45"/><circle cx="12" cy="9.3" r="3.6" fill="#c68642"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
         },
@@ -751,7 +751,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#ec4899',
                         foreground: '#ef4444',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ec4899"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#3b2f2f"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#ef4444"/><path d="M12 20.2s-2.2-1.4-2.2-3a1.1 1.1 0 0 1 2.2-.5 1.1 1.1 0 0 1 2.2.5c0 1.6-2.2 3-2.2 3z" fill="#fff"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#3b2f2f"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ec4899"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#3b2f2f"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#ef4444"/><path d="M12 20.2s-2.2-1.4-2.2-3a1.1 1.1 0 0 1 2.2-.5 1.1 1.1 0 0 1 2.2.5c0 1.6-2.2 3-2.2 3z" fill="#fff"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#3b2f2f"/></svg>',
                 },
             },
             'fitness-and-strength': {
@@ -766,7 +766,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#ec4899',
                         foreground: '#eab308',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ec4899"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#eab308"/><path d="M9.6 17.6v1.6M10.8 17v2.8M13.2 17v2.8M14.4 17.6v1.6M10.8 18.4h2.4" stroke="#1f2937" stroke-width=".5" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#c68642"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ec4899"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#eab308"/><path d="M9.6 17.6v1.6M10.8 17v2.8M13.2 17v2.8M14.4 17.6v1.6M10.8 18.4h2.4" stroke="#1f2937" stroke-width=".5" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#c68642"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
         },
@@ -787,7 +787,7 @@ const modeDefinitions: Record<string, Category> = {
                         background: '#ff8e1c',
                         foreground: '#92400e',
                     },
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ff8e1c"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#92400e"/><path d="M10.4 16.8h3.2v3.4h-3.2zM11.2 16.4h1.6v.8h-1.6zM11 18h2M11 19h2" stroke="#fff" fill="none" stroke-width=".4"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#3b2f2f"/></svg>',
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ff8e1c"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#92400e"/><path d="M10.4 16.8h3.2v3.4h-3.2zM11.2 16.4h1.6v.8h-1.6zM11 18h2M11 19h2" stroke="#fff" fill="none" stroke-width=".4"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><circle cx="10.6" cy="9.6" r=".45" fill="#111827"/><circle cx="13.4" cy="9.6" r=".45" fill="#111827"/><path d="M10.9 11c.7.7 1.5.7 2.2 0" stroke="#111827" fill="none" stroke-width=".35" stroke-linecap="round"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#3b2f2f"/></svg>',
                 },
             },
         },
