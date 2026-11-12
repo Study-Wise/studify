@@ -2,7 +2,7 @@
 import aiConfig from '@/lib/ai.config';
 import appConfig from '@/lib/app.config';
 import { contentTypes } from '@/lib/content';
-import modeDefinitions from '@/lib/mode-definitions';
+import modeDefinitions from '@/lib/modes/definitions';
 
 import margoAgentDefinition from '../../.claude/agents/margo-page.md?raw';
 

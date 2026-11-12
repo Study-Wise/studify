@@ -1,5 +1,5 @@
-import modeDefinitions from '@/lib/mode-definitions';
 import generateModePrompt from '@/lib/prompt-generator';
+import modeDefinitions from '@/lib/modes/definitions';
 
 export interface Mode {
     name: string;
@@ -8,6 +8,8 @@ export interface Mode {
         name: string;
         personality: string;
         interests: string[];
+        svg: string;
+        pfp?: string;
     };
     icon?: string;
     prompt?: Promise<string>;

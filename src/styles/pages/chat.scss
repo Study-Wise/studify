@@ -78,7 +78,7 @@
     }
 }
 
-.chat-empty-state {
+.empty-state {
     box-sizing: border-box;
     margin: auto;
     padding: $spacing-large;
@@ -90,7 +90,15 @@
     text-align: center;
     display: flex;
 
-    .empty-state-icon {
+    &-pfp,
+    > svg {
+        width: 96px;
+        aspect-ratio: 1;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    &-icon {
         font-size: $font-size-5x-large;
         line-height: 1;
     }
