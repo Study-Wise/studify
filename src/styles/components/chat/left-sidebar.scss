@@ -6,146 +6,144 @@
 @use 'sass:list';
 @use 'sass:map';
 
-.chat-sidebar.left {
+.chat-sidebar[data-side="left"] {
     border-right: 1px solid rgb(from var(--card-border) r g b / 30%);
     display: grid;
     grid-template-rows: 1fr;
     grid-template-columns: 1fr;
+}
 
-    .chat-sidebar-content.left {
-        .upload-button {
-            margin-block-end: $spacing-small;
-            padding: $spacing-small $spacing-medium;
-            width: 100%;
-            color: white;
-            background-color: list.nth(map.get($accent-colors, primary), 1);
-            border: none;
-            border-radius: $border-radius-medium;
-            justify-content: center;
-            align-items: center;
-            gap: $spacing-extra-small;
-            font-size: 0.9rem;
-            font-weight: $font-weight-medium;
-            transition: background-color $transition-fast $ease;
-            cursor: pointer;
-            display: flex;
+.upload {
+    &__button {
+        margin-block-end: $spacing-small;
+        padding: $spacing-small $spacing-medium;
+        width: 100%;
+        color: white;
+        background-color: list.nth(map.get($accent-colors, primary), 1);
+        border: none;
+        border-radius: $border-radius-medium;
+        justify-content: center;
+        align-items: center;
+        gap: $spacing-extra-small;
+        font-size: 0.9rem;
+        font-weight: $font-weight-medium;
+        transition: background-color $transition-fast $ease;
+        cursor: pointer;
+        display: flex;
 
-            &:hover {
-                background-color: list.nth(map.get($accent-colors, primary), 2);
-            }
+        &:hover {
+            background-color: list.nth(map.get($accent-colors, primary), 2);
+        }
+    }
+
+    &__limits {
+        margin-block: 0 $spacing-small;
+        color: var(--card-text);
+        font-size: $font-size-small;
+        text-align: center;
+        opacity: $opacity-subtle;
+    }
+}
+
+.file-list {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-extra-small;
+
+    &__empty {
+        padding: $spacing-extra-large $spacing-medium;
+        color: var(--card-text);
+        font-size: $font-size-small;
+        text-align: center;
+        opacity: $opacity-subtle;
+    }
+
+    &__item {
+        padding: $spacing-small;
+        background-color: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: $border-radius-small;
+        align-items: center;
+        gap: $spacing-small;
+        transition: all $transition-base $ease-out;
+        display: flex;
+
+        &:hover {
+            background-color: rgb(from var(--card-text) r g b / 5%);
+            border-color: list.nth(map.get($accent-colors, primary), 1);
+        }
+    }
+
+    &__icon {
+        width: 40px;
+        height: 40px;
+        background-color: rgb(from #{list.nth(map.get($accent-colors, primary), 1)} r g b / 10%);
+        border-radius: $border-radius-small;
+        flex-shrink: 0;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+
+        .material-symbols-outlined {
+            color: list.nth(map.get($accent-colors, primary), 1);
+            font-size: $font-size-1x-large;
+        }
+    }
+
+    &__info {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    &__name {
+        color: var(--card-text);
+        font-size: $font-size-small;
+        font-weight: $font-weight-medium;
+
+        @include text-ellipsis;
+    }
+
+    &__size {
+        color: var(--card-text);
+        font-size: $font-size-1x-small;
+        opacity: $opacity-subtle;
+    }
+
+    &__delete {
+        width: 40px;
+        height: 40px;
+        background-color: rgb(from #{$color-error} r g b / 8%);
+        border: none;
+        border-radius: $border-radius-small;
+        flex-shrink: 0;
+        justify-content: center;
+        align-items: center;
+        opacity: $opacity-overlay;
+        transition: all $transition-base $ease-out;
+        cursor: pointer;
+        display: flex;
+
+        .material-symbols-outlined {
+            color: $color-error;
+            font-size: $font-size-1x-large;
         }
 
-        .upload-limits {
-            margin-block: 0 $spacing-small;
-            color: var(--card-text);
-            font-size: $font-size-small;
-            text-align: center;
-            opacity: $opacity-subtle;
+        &:hover,
+        &:focus-visible {
+            background-color: rgb(from #{$color-error} r g b / 15%);
+            opacity: 1;
         }
 
-        .section-body {
-            .file-list {
-                display: flex;
-                flex-direction: column;
-                gap: $spacing-extra-small;
-
-                .empty-message {
-                    padding: $spacing-extra-large $spacing-medium;
-                    color: var(--card-text);
-                    font-size: $font-size-small;
-                    text-align: center;
-                    opacity: $opacity-subtle;
-                }
-
-                .file-item {
-                    padding: $spacing-small;
-                    background-color: var(--card-bg);
-                    border: 1px solid var(--card-border);
-                    border-radius: $border-radius-small;
-                    align-items: center;
-                    gap: $spacing-small;
-                    transition: all $transition-base $ease-out;
-                    display: flex;
-
-                    &:hover {
-                        background-color: rgb(from var(--card-text) r g b / 5%);
-                        border-color: list.nth(map.get($accent-colors, primary), 1);
-                    }
-
-                    .file-icon {
-                        width: 40px;
-                        height: 40px;
-                        background-color: rgb(from #{list.nth(map.get($accent-colors, primary), 1)} r g b / 10%);
-                        border-radius: $border-radius-small;
-                        flex-shrink: 0;
-                        justify-content: center;
-                        align-items: center;
-                        display: flex;
-
-                        .material-symbols-outlined {
-                            color: list.nth(map.get($accent-colors, primary), 1);
-                            font-size: $font-size-1x-large;
-                        }
-                    }
-
-                    .file-info {
-                        flex: 1;
-                        min-width: 0;
-                        display: flex;
-                        flex-direction: column;
-                        gap: 2px;
-
-                        .file-name {
-                            color: var(--card-text);
-                            font-size: $font-size-small;
-                            font-weight: $font-weight-medium;
-
-                            @include text-ellipsis;
-                        }
-
-                        .file-size {
-                            color: var(--card-text);
-                            font-size: $font-size-1x-small;
-                            opacity: $opacity-subtle;
-                        }
-                    }
-
-                    .file-delete {
-                        width: 40px;
-                        height: 40px;
-                        background-color: rgb(from #{$color-error} r g b / 8%);
-                        border: none;
-                        border-radius: $border-radius-small;
-                        flex-shrink: 0;
-                        justify-content: center;
-                        align-items: center;
-                        opacity: $opacity-overlay;
-                        transition: all $transition-base $ease-out;
-                        cursor: pointer;
-                        display: flex;
-
-                        .material-symbols-outlined {
-                            color: $color-error;
-                            font-size: $font-size-1x-large;
-                        }
-
-                        &:hover,
-                        &:focus-visible {
-                            background-color: rgb(from #{$color-error} r g b / 15%);
-                            opacity: 1;
-                        }
-
-                        &:disabled {
-                            opacity: $opacity-disabled;
-                            cursor: not-allowed;
-                        }
-
-                        .spinning {
-                            animation: --spin 1s linear infinite;
-                        }
-                    }
-                }
-            }
+        &:disabled {
+            opacity: $opacity-disabled;
+            cursor: not-allowed;
         }
+    }
+
+    &__spinner {
+        animation: --spin 1s linear infinite;
     }
 }

@@ -19,36 +19,36 @@ const regenerateButtonId = `regenerate-${id}-btn`;
 
 ---
 <div class="sidebar-section">
-    <div class="section-header">
-        <div class="section-title">
+    <div class="sidebar-section__header">
+        <div class="sidebar-section__title">
             <span class="material-symbols-outlined" aria-hidden="true">{icon}</span>
             <h3>{title}</h3>
         </div>
         {hasContent && isAuthorized && canRegenerate && (
-            <button type="button" class="regenerate-btn" id={regenerateButtonId} title={`Regenerate ${title}`} aria-label={`Regenerate ${title}`} data-thread-id={threadId}>
+            <button type="button" class="sidebar-section__regenerate" id={regenerateButtonId} title={`Regenerate ${title}`} aria-label={`Regenerate ${title}`} data-thread-id={threadId}>
                 <span class="material-symbols-outlined" aria-hidden="true">refresh</span>
             </button>
         )}
     </div>
-    <div class="section-body">
+    <div class="sidebar-section__body">
         {Astro.slots.has('content') ? (
             <slot name="content" />
         ) : hasContent ? (
-            <a href={viewUrl} class="view-full-btn" target="_blank">
+            <a href={viewUrl} class="sidebar-section__view" target="_blank">
                 <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
                 <span>{viewButtonText}</span>
             </a>
         ) : (
-            <div class="empty-state">
-                {emptyMessage && <p class="empty-message">{emptyMessage}</p>}
+            <div class="sidebar-section__empty">
+                {emptyMessage && <p class="sidebar-section__empty-message">{emptyMessage}</p>}
                 {isAuthorized && (
-                    <button type="button" class="generate-btn" id={generateButtonId} data-thread-id={threadId} disabled={threadId === 'new'}>
+                    <button type="button" class="sidebar-section__generate" id={generateButtonId} data-thread-id={threadId} disabled={threadId === 'new'}>
                         <span class="material-symbols-outlined" aria-hidden="true">{icon}</span>
                         <span>{`${generateVerb} ${title}`}</span>
                     </button>
                 )}
                 {isAuthorized && threadId === 'new' && (
-                    <p class="empty-message">Send a message first.</p>
+                    <p class="sidebar-section__empty-message">Send a message first.</p>
                 )}
             </div>
         )}
@@ -70,7 +70,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
         const originalContent = btn.innerHTML;
         const loadingText = `${(isRegenerate ? regenerateVerb : generateVerb).replace(/^(\w+?)e?\b/, '$1ing')}…`;
 
-        btn.innerHTML = `<span class="material-symbols-outlined spinning" aria-hidden="true">progress_activity</span><span>${loadingText}</span>`;
+        btn.innerHTML = `<span class="material-symbols-outlined sidebar-section__spinner" aria-hidden="true">progress_activity</span><span>${loadingText}</span>`;
 
         const startedAt = Date.now();
         const timerLabel = btn.lastElementChild;
@@ -98,22 +98,22 @@ const regenerateButtonId = `regenerate-${id}-btn`;
 
             if (data.status === 'success') {
                 if (generateBtn?.closest('.sidebar-section') || regenerateBtn?.closest('.sidebar-section')) {
-                    const sectionBody = generateBtn?.closest('.sidebar-section') || regenerateBtn?.closest('.sidebar-section').querySelector('.section-body');
-                    const sectionHeader = generateBtn?.closest('.sidebar-section') || regenerateBtn?.closest('.sidebar-section').querySelector('.section-header');
+                    const sectionBody = generateBtn?.closest('.sidebar-section') || regenerateBtn?.closest('.sidebar-section').querySelector('.sidebar-section__body');
+                    const sectionHeader = generateBtn?.closest('.sidebar-section') || regenerateBtn?.closest('.sidebar-section').querySelector('.sidebar-section__header');
 
                     if (sectionBody) {
                         sectionBody.innerHTML = `
-                            <a href="${viewUrl}" class="view-full-btn" target="_blank">
+                            <a href="${viewUrl}" class="sidebar-section__view" target="_blank">
                                 <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
                                 <span>${viewButtonText}</span>
                             </a>
                         `;
                     }
 
-                    if (canRegenerate && sectionHeader && !generateBtn?.closest('.sidebar-section') || regenerateBtn?.closest('.sidebar-section').querySelector('.regenerate-btn')) {
+                    if (canRegenerate && sectionHeader && !generateBtn?.closest('.sidebar-section') || regenerateBtn?.closest('.sidebar-section').querySelector('.sidebar-section__regenerate')) {
                         const newRegenerateBtn = document.createElement('button');
                         newRegenerateBtn.type = 'button';
-                        newRegenerateBtn.className = 'regenerate-btn';
+                        newRegenerateBtn.className = 'sidebar-section__regenerate';
                         newRegenerateBtn.id = regenerateButtonId;
                         newRegenerateBtn.title = `Regenerate ${title}`;
                         newRegenerateBtn.setAttribute('aria-label', `Regenerate ${title}`);

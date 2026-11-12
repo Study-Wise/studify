@@ -32,31 +32,31 @@
             background-color: rgb(from var(--section-title) r g b / 30%);
         }
     }
-}
 
-.chat-sidebar-content {
-    padding: $spacing-medium;
-    height: 100%;
-    flex-direction: column;
-    gap: $spacing-medium;
-    overflow-y: auto;
-    display: flex;
+    &__content {
+        padding: $spacing-medium;
+        height: 100%;
+        flex-direction: column;
+        gap: $spacing-medium;
+        overflow-y: auto;
+        display: flex;
 
-    &::-webkit-scrollbar {
-        width: 8px;
-    }
+        &::-webkit-scrollbar {
+            width: 8px;
+        }
 
-    &::-webkit-scrollbar-track {
-        background-color: transparent;
-    }
+        &::-webkit-scrollbar-track {
+            background-color: transparent;
+        }
 
-    &::-webkit-scrollbar-thumb {
-        background-color: rgb(from var(--section-title) r g b / 15%);
-        border-radius: $border-radius-full;
-        transition: background-color $transition-fast $ease;
+        &::-webkit-scrollbar-thumb {
+            background-color: rgb(from var(--section-title) r g b / 15%);
+            border-radius: $border-radius-full;
+            transition: background-color $transition-fast $ease;
 
-        &:hover {
-            background-color: rgb(from var(--section-title) r g b / 30%);
+            &:hover {
+                background-color: rgb(from var(--section-title) r g b / 30%);
+            }
         }
     }
 }
@@ -68,392 +68,394 @@
     flex-direction: column;
     display: flex;
 
-    .section-header {
+    &__header {
         padding: $spacing-medium $spacing-medium + 0.25rem;
         background-color: rgb(from var(--card-bg) h s calc(l - 1%));
         border-bottom: 1px solid rgb(from var(--card-border) r g b / 20%);
         justify-content: space-between;
         align-items: center;
         display: flex;
+    }
 
-        .section-title {
-            display: flex;
-            align-items: center;
-            gap: $spacing-extra-small;
+    &__title {
+        display: flex;
+        align-items: center;
+        gap: $spacing-extra-small;
 
-            .material-symbols-outlined {
-                color: list.nth(map.get($accent-colors, primary), 1);
-                font-size: $font-size-1x-large;
-            }
-
-            h3 {
-                margin: 0;
-                color: var(--section-title);
-                font-size: $font-size-base;
-                font-weight: $font-weight-semibold;
-            }
+        .material-symbols-outlined {
+            color: list.nth(map.get($accent-colors, primary), 1);
+            font-size: $font-size-1x-large;
         }
 
-        .regenerate-btn {
-            padding: $spacing-extra-small;
-            color: var(--card-text);
-            background-color: transparent;
-            border: 1px solid rgb(from var(--card-border) r g b / 60%);
-            border-radius: $border-radius-medium;
-            justify-content: center;
-            align-items: center;
-            transition: all $transition-slow $ease-in-out;
-            cursor: pointer;
-            display: flex;
-
-            .material-symbols-outlined {
-                font-size: $font-size-large;
-            }
-
-            &:hover {
-                color: list.nth(map.get($accent-colors, primary), 1);
-                background-color: rgb(from var(--card-text) r g b / 5%);
-                border-color: list.nth(map.get($accent-colors, primary), 1);
-            }
-
-            &:active {
-                scale: 0.95;
-            }
+        h3 {
+            margin: 0;
+            color: var(--section-title);
+            font-size: $font-size-base;
+            font-weight: $font-weight-semibold;
         }
     }
 
-    .section-body {
+    &__regenerate {
+        padding: $spacing-extra-small;
+        color: var(--card-text);
+        background-color: transparent;
+        border: 1px solid rgb(from var(--card-border) r g b / 60%);
+        border-radius: $border-radius-medium;
+        justify-content: center;
+        align-items: center;
+        transition: all $transition-slow $ease-in-out;
+        cursor: pointer;
+        display: flex;
+
+        .material-symbols-outlined {
+            font-size: $font-size-large;
+        }
+
+        &:hover {
+            color: list.nth(map.get($accent-colors, primary), 1);
+            background-color: rgb(from var(--card-text) r g b / 5%);
+            border-color: list.nth(map.get($accent-colors, primary), 1);
+        }
+
+        &:active {
+            scale: 0.95;
+        }
+    }
+
+    &__body {
         padding: $spacing-medium + 0.25rem;
+    }
 
-        .empty-message {
-            margin: 0;
+    &__empty-message {
+        margin: 0;
+        color: var(--card-text);
+        font-size: $font-size-small;
+        text-align: center;
+        opacity: $opacity-subtle;
+    }
+
+    &__view {
+        padding: 0.875rem $spacing-medium + 0.25rem;
+        color: var(--body-text);
+        background-color: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: $border-radius-medium;
+        justify-content: center;
+        align-items: center;
+        gap: $spacing-extra-small;
+        font-size: $font-size-small;
+        font-weight: $font-weight-medium;
+        text-decoration: none;
+        transition: all $transition-slow $ease-in-out;
+        display: flex;
+
+        .material-symbols-outlined {
+            font-size: $font-size-large;
+        }
+
+        &:hover {
+            color: list.nth(map.get($accent-colors, primary), 1);
+            background-color: hsl(from var(--card-bg) h s calc(l - 5%));
+            box-shadow: $box-shadow-medium;
+            border-color: list.nth(map.get($accent-colors, primary), 1);
+            translate: 0 -2px;
+        }
+
+        &:active {
+            translate: 0 0;
+        }
+    }
+
+    &__empty {
+        display: flex;
+        flex-direction: column;
+        gap: $spacing-extra-small;
+    }
+
+    &__empty &__empty-message {
+        opacity: $opacity-overlay;
+    }
+
+    &__generate {
+        margin-block-start: $spacing-extra-small;
+        padding: $spacing-small $spacing-medium;
+        width: 100%;
+        color: white;
+        background-color: list.nth(map.get($accent-colors, primary), 1);
+        border: 1px solid transparent;
+        border-radius: $border-radius-medium;
+        justify-content: center;
+        align-items: center;
+        gap: $spacing-extra-small;
+        font-size: 0.9rem;
+        font-weight: $font-weight-medium;
+        transition: background-color $transition-fast $ease;
+        cursor: pointer;
+        display: flex;
+
+        &:hover:not([disabled]) {
+            background-color: list.nth(map.get($accent-colors, primary), 2);
+        }
+
+        &:disabled {
             color: var(--card-text);
-            font-size: $font-size-small;
-            text-align: center;
-            opacity: $opacity-subtle;
+            background-color: hsl(from var(--card-bg) h s calc(l - 8%));
+            border-style: dashed;
+            border-color: var(--card-border);
+            opacity: $opacity-disabled;
+            cursor: not-allowed;
         }
 
-        .view-full-btn {
-            padding: 0.875rem $spacing-medium + 0.25rem;
-            color: var(--body-text);
-            background-color: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: $border-radius-medium;
-            justify-content: center;
-            align-items: center;
-            gap: $spacing-extra-small;
-            font-size: $font-size-small;
-            font-weight: $font-weight-medium;
-            text-decoration: none;
-            transition: all $transition-slow $ease-in-out;
-            display: flex;
-
-            .material-symbols-outlined {
-                font-size: $font-size-large;
-            }
-
-            &:hover {
-                color: list.nth(map.get($accent-colors, primary), 1);
-                background-color: hsl(from var(--card-bg) h s calc(l - 5%));
-                box-shadow: $box-shadow-medium;
-                border-color: list.nth(map.get($accent-colors, primary), 1);
-                translate: 0 -2px;
-            }
-
-            &:active {
-                translate: 0 0;
-            }
-        }
-
-        .empty-state {
-            display: flex;
-            flex-direction: column;
-            gap: $spacing-extra-small;
-
-            .empty-message {
-                opacity: $opacity-overlay;
-            }
-        }
-
-        .generate-btn {
-            margin-block-start: $spacing-extra-small;
-            padding: $spacing-small $spacing-medium;
-            width: 100%;
+        &:disabled:has(.sidebar-section__spinner) {
             color: white;
             background-color: list.nth(map.get($accent-colors, primary), 1);
-            border: 1px solid transparent;
-            border-radius: $border-radius-medium;
-            justify-content: center;
-            align-items: center;
-            gap: $spacing-extra-small;
-            font-size: 0.9rem;
-            font-weight: $font-weight-medium;
-            transition: background-color $transition-fast $ease;
-            cursor: pointer;
-            display: flex;
+            border-style: solid;
+            border-color: transparent;
+            opacity: $opacity-subtle;
+        }
+    }
 
-            &:hover:not([disabled]) {
-                background-color: list.nth(map.get($accent-colors, primary), 2);
+    &__spinner {
+        animation: --spin 1s linear infinite;
+    }
+}
+
+.share-settings {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-small;
+
+    &__status {
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        display: flex;
+    }
+
+    &__info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    &__label {
+        color: var(--card-text);
+        font-size: $font-size-small;
+        font-weight: $font-weight-medium;
+        opacity: 0.7;
+    }
+
+    &__value {
+        color: var(--card-text);
+        font-size: $font-size-small;
+        font-weight: $font-weight-semibold;
+    }
+
+    &__toggle {
+        position: relative;
+        display: inline-block;
+        width: 48px;
+        height: 26px;
+        flex-shrink: 0;
+
+        input {
+            width: 0;
+            height: 0;
+            opacity: 0;
+
+            &:checked + .share-settings__slider {
+                background-color: list.nth(map.get($accent-colors, primary), 1);
             }
 
-            &:disabled {
-                color: var(--card-text);
-                background-color: hsl(from var(--card-bg) h s calc(l - 8%));
-                border-style: dashed;
-                border-color: var(--card-border);
+            &:checked + .share-settings__slider::before {
+                transform: translateX(22px);
+            }
+
+            &:disabled + .share-settings__slider {
                 opacity: $opacity-disabled;
                 cursor: not-allowed;
             }
-
-            &:disabled:has(.spinning) {
-                color: white;
-                background-color: list.nth(map.get($accent-colors, primary), 1);
-                border-style: solid;
-                border-color: transparent;
-                opacity: $opacity-subtle;
-            }
-
-            .spinning {
-                animation: --spin 1s linear infinite;
-            }
-        }
-
-        .share-settings {
-            display: flex;
-            flex-direction: column;
-            gap: $spacing-small;
-
-            .share-status {
-                justify-content: space-between;
-                align-items: center;
-                gap: 1rem;
-                display: flex;
-
-                .status-info {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 0.25rem;
-
-                    .status-label {
-                        color: var(--card-text);
-                        font-size: $font-size-small;
-                        font-weight: $font-weight-medium;
-                        opacity: 0.7;
-                    }
-
-                    .status-value {
-                        color: var(--card-text);
-                        font-size: $font-size-small;
-                        font-weight: $font-weight-semibold;
-                    }
-                }
-
-                .toggle-switch {
-                    position: relative;
-                    display: inline-block;
-                    width: 48px;
-                    height: 26px;
-                    flex-shrink: 0;
-
-                    input {
-                        width: 0;
-                        height: 0;
-                        opacity: 0;
-
-                        &:checked + .toggle-slider {
-                            background-color: list.nth(map.get($accent-colors, primary), 1);
-                        }
-
-                        &:checked + .toggle-slider::before {
-                            transform: translateX(22px);
-                        }
-
-                        &:disabled + .toggle-slider {
-                            opacity: $opacity-disabled;
-                            cursor: not-allowed;
-                        }
-                    }
-
-                    .toggle-slider {
-                        position: absolute;
-                        inset: 0;
-                        background-color: rgb(from var(--card-text) r g b / 20%);
-                        border-radius: 26px;
-                        transition: all $transition-slow $ease-in-out;
-                        cursor: pointer;
-
-                        &::before {
-                            content: "";
-                            position: absolute;
-                            inset-block-end: 3px;
-                            inset-inline-start: 3px;
-                            width: 20px;
-                            height: 20px;
-                            background-color: white;
-                            box-shadow: 0 0 4px rgb(0 0 0 / 20%);
-                            border-radius: 50%;
-                            transition: transform $transition-slow $ease-in-out;
-                        }
-                    }
-                }
-            }
-
-            .share-description {
-                margin: 0;
-                color: var(--card-text);
-                font-size: 0.8125rem;
-                line-height: 1.5;
-                opacity: 0.6;
-            }
-
-            .share-link {
-                display: flex;
-                gap: $spacing-extra-small;
-
-                &[hidden] {
-                    display: none;
-                }
-
-                .share-link-input {
-                    flex: 1;
-                    padding: $spacing-extra-small $spacing-small;
-                    min-width: 0;
-                    color: var(--card-text);
-                    background-color: var(--card-bg);
-                    border: 1px solid var(--card-border);
-                    border-radius: $border-radius-small;
-                    font-size: $font-size-small;
-                    text-overflow: ellipsis;
-                }
-
-                .share-link-copy {
-                    padding: $spacing-extra-small $spacing-small;
-                    color: white;
-                    background-color: list.nth(map.get($accent-colors, primary), 1);
-                    border: none;
-                    border-radius: $border-radius-small;
-                    flex-shrink: 0;
-                    align-items: center;
-                    gap: $spacing-extra-small;
-                    font-size: $font-size-small;
-                    font-weight: $font-weight-medium;
-                    transition: background-color $transition-fast $ease;
-                    cursor: pointer;
-                    display: flex;
-
-                    .material-symbols-outlined {
-                        font-size: $font-size-large;
-                    }
-
-                    &:hover {
-                        background-color: list.nth(map.get($accent-colors, primary), 2);
-                    }
-                }
-            }
-
-            .delete-chat-button {
-                margin-block-start: $spacing-small;
-                padding: $spacing-small $spacing-medium;
-                width: 100%;
-                color: $color-error;
-                background-color: transparent;
-                border: 1px solid $color-error;
-                border-radius: $border-radius-medium;
-                justify-content: center;
-                align-items: center;
-                gap: $spacing-extra-small;
-                font-size: 0.9rem;
-                font-weight: $font-weight-medium;
-                transition: background-color $transition-fast $ease;
-                cursor: pointer;
-                display: flex;
-
-                .material-symbols-outlined {
-                    font-size: $font-size-large;
-                }
-
-                &:hover {
-                    background-color: rgb(from #{$color-error} r g b / 10%);
-                }
-
-                &:disabled {
-                    opacity: $opacity-disabled;
-                    cursor: not-allowed;
-                }
-
-                .spinning {
-                    animation: --spin 1s linear infinite;
-                }
-            }
         }
     }
-}
 
-.sidebar-drawer-toggles {
-    display: none;
+    &__slider {
+        position: absolute;
+        inset: 0;
+        background-color: rgb(from var(--card-text) r g b / 20%);
+        border-radius: 26px;
+        transition: all $transition-slow $ease-in-out;
+        cursor: pointer;
 
-    @media (width <= $breakpoint-extra-large) {
-        padding: $spacing-extra-small $spacing-medium;
-        background-color: var(--card-bg);
-        border-block-end: 1px solid rgb(from var(--card-border) r g b / 30%);
-        gap: $spacing-extra-small;
+        &::before {
+            content: "";
+            position: absolute;
+            inset-block-end: 3px;
+            inset-inline-start: 3px;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            box-shadow: 0 0 4px rgb(0 0 0 / 20%);
+            border-radius: 50%;
+            transition: transform $transition-slow $ease-in-out;
+        }
+    }
+
+    &__description {
+        margin: 0;
+        color: var(--card-text);
+        font-size: 0.8125rem;
+        line-height: 1.5;
+        opacity: 0.6;
+    }
+
+    &__link {
         display: flex;
+        gap: $spacing-extra-small;
+
+        &[hidden] {
+            display: none;
+        }
+    }
+
+    &__link-input {
+        flex: 1;
+        padding: $spacing-extra-small $spacing-small;
+        min-width: 0;
+        color: var(--card-text);
+        background-color: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: $border-radius-small;
+        font-size: $font-size-small;
+        text-overflow: ellipsis;
+    }
+
+    &__link-copy {
+        padding: $spacing-extra-small $spacing-small;
+        color: white;
+        background-color: list.nth(map.get($accent-colors, primary), 1);
+        border: none;
+        border-radius: $border-radius-small;
+        flex-shrink: 0;
+        align-items: center;
+        gap: $spacing-extra-small;
+        font-size: $font-size-small;
+        font-weight: $font-weight-medium;
+        transition: background-color $transition-fast $ease;
+        cursor: pointer;
+        display: flex;
+
+        .material-symbols-outlined {
+            font-size: $font-size-large;
+        }
+
+        &:hover {
+            background-color: list.nth(map.get($accent-colors, primary), 2);
+        }
+    }
+
+    &__delete {
+        margin-block-start: $spacing-small;
+        padding: $spacing-small $spacing-medium;
+        width: 100%;
+        color: $color-error;
+        background-color: transparent;
+        border: 1px solid $color-error;
+        border-radius: $border-radius-medium;
+        justify-content: center;
+        align-items: center;
+        gap: $spacing-extra-small;
+        font-size: 0.9rem;
+        font-weight: $font-weight-medium;
+        transition: background-color $transition-fast $ease;
+        cursor: pointer;
+        display: flex;
+
+        .material-symbols-outlined {
+            font-size: $font-size-large;
+        }
+
+        &:hover {
+            background-color: rgb(from #{$color-error} r g b / 10%);
+        }
+
+        &:disabled {
+            opacity: $opacity-disabled;
+            cursor: not-allowed;
+        }
+    }
+
+    &__spinner {
+        animation: --spin 1s linear infinite;
     }
 }
 
-.sidebar-drawer-toggle {
-    flex: 1;
-    padding: $spacing-extra-small $spacing-small;
-    min-width: 0;
-    color: var(--card-text);
-    background-color: transparent;
-    border: 1px solid rgb(from var(--card-border) r g b / 60%);
-    border-radius: $border-radius-medium;
-    justify-content: center;
-    align-items: center;
-    gap: $spacing-extra-small;
-    font-size: $font-size-small;
-    font-weight: $font-weight-medium;
-    transition: all $transition-base $ease-in-out;
-    cursor: pointer;
-    display: flex;
+.sidebar-drawer {
+    &__toggles {
+        display: none;
 
-    span:not(.material-symbols-outlined) {
-        @include text-ellipsis;
+        @media (width <= $breakpoint-extra-large) {
+            padding: $spacing-extra-small $spacing-medium;
+            background-color: var(--card-bg);
+            border-block-end: 1px solid rgb(from var(--card-border) r g b / 30%);
+            gap: $spacing-extra-small;
+            display: flex;
+        }
     }
 
-    .material-symbols-outlined {
-        color: list.nth(map.get($accent-colors, primary), 1);
-        font-size: $font-size-large;
+    &__toggle {
+        flex: 1;
+        padding: $spacing-extra-small $spacing-small;
+        min-width: 0;
+        color: var(--card-text);
+        background-color: transparent;
+        border: 1px solid rgb(from var(--card-border) r g b / 60%);
+        border-radius: $border-radius-medium;
+        justify-content: center;
+        align-items: center;
+        gap: $spacing-extra-small;
+        font-size: $font-size-small;
+        font-weight: $font-weight-medium;
+        transition: all $transition-base $ease-in-out;
+        cursor: pointer;
+        display: flex;
+
+        span:not(.material-symbols-outlined) {
+            @include text-ellipsis;
+        }
+
+        .material-symbols-outlined {
+            color: list.nth(map.get($accent-colors, primary), 1);
+            font-size: $font-size-large;
+        }
+
+        &:hover {
+            background-color: rgb(from var(--card-text) r g b / 5%);
+            border-color: list.nth(map.get($accent-colors, primary), 1);
+        }
     }
 
-    &:hover {
-        background-color: rgb(from var(--card-text) r g b / 5%);
-        border-color: list.nth(map.get($accent-colors, primary), 1);
+    &__backdrop {
+        position: fixed;
+        inset: 0;
+        background-color: rgb(0 0 0 / 40%);
+        z-index: $z-index-popover - 1;
+        display: none;
+    }
+
+    &__close {
+        display: none;
     }
 }
 
-body:has(.sidebar-drawer-input.left:focus-visible) .sidebar-drawer-toggle.left,
-body:has(.sidebar-drawer-input.right:focus-visible) .sidebar-drawer-toggle.right {
+body:has(.sidebar-drawer__input[data-side="left"]:focus-visible) .sidebar-drawer__toggle[data-side="left"],
+body:has(.sidebar-drawer__input[data-side="right"]:focus-visible) .sidebar-drawer__toggle[data-side="right"] {
     outline: 2px solid list.nth(map.get($accent-colors, primary), 1);
     outline-offset: 2px;
 }
 
-.sidebar-drawer-backdrop {
-    position: fixed;
-    inset: 0;
-    background-color: rgb(0 0 0 / 40%);
-    z-index: $z-index-popover - 1;
-    display: none;
-}
-
-.sidebar-drawer-close {
-    display: none;
-}
-
 @media (width <= $breakpoint-extra-large) {
-    .chat-sidebar.left,
-    .chat-sidebar.right {
+    .chat-sidebar[data-side="left"],
+    .chat-sidebar[data-side="right"] {
         position: fixed;
         inset-block: 0;
         width: min(350px, 85vw);
@@ -469,18 +471,18 @@ body:has(.sidebar-drawer-input.right:focus-visible) .sidebar-drawer-toggle.right
         }
     }
 
-    .chat-sidebar.left {
+    .chat-sidebar[data-side="left"] {
         inset-inline-start: 0;
         translate: -100% 0;
     }
 
-    .chat-sidebar.right {
+    .chat-sidebar[data-side="right"] {
         inset-inline-end: 0;
         translate: 100% 0;
     }
 
-    body:has(.sidebar-drawer-input.left:checked) .chat-sidebar.left,
-    body:has(.sidebar-drawer-input.right:checked) .chat-sidebar.right {
+    body:has(.sidebar-drawer__input[data-side="left"]:checked) .chat-sidebar[data-side="left"],
+    body:has(.sidebar-drawer__input[data-side="right"]:checked) .chat-sidebar[data-side="right"] {
         visibility: visible;
         transition:
             translate $transition-slow $ease-in-out,
@@ -492,17 +494,17 @@ body:has(.sidebar-drawer-input.right:focus-visible) .sidebar-drawer-toggle.right
         }
     }
 
-    body:has(.sidebar-drawer-input.left:checked, .sidebar-drawer-input.right:checked) .sidebar-drawer-backdrop {
+    body:has(.sidebar-drawer__input[data-side="left"]:checked, .sidebar-drawer__input[data-side="right"]:checked) .sidebar-drawer__backdrop {
         display: block;
     }
 
-    body:has(.sidebar-drawer-input.left:checked) .sidebar-drawer-toggle.left,
-    body:has(.sidebar-drawer-input.right:checked) .sidebar-drawer-toggle.right {
+    body:has(.sidebar-drawer__input[data-side="left"]:checked) .sidebar-drawer__toggle[data-side="left"],
+    body:has(.sidebar-drawer__input[data-side="right"]:checked) .sidebar-drawer__toggle[data-side="right"] {
         background-color: rgb(from var(--card-text) r g b / 5%);
         border-color: list.nth(map.get($accent-colors, primary), 1);
     }
 
-    .sidebar-drawer-close {
+    .sidebar-drawer__close {
         width: 40px;
         height: 40px;
         color: var(--card-text);

@@ -489,7 +489,7 @@ const { page, category, mode, id } = Astro.props;
 
                 if (url && type) {
                     const section = document.querySelector(`#generate-${type}-btn`)?.closest('.sidebar-section');
-                    const sectionBody = section?.querySelector('.section-body');
+                    const sectionBody = section?.querySelector('.sidebar-section__body');
 
                     if (sectionBody) {
                         const viewButtonTexts = {
@@ -507,18 +507,18 @@ const { page, category, mode, id } = Astro.props;
                         const buttonText = viewButtonTexts[type] || `View ${type}`;
 
                         sectionBody.innerHTML = `
-                            <a href="${url}" class="view-full-btn" target="_blank">
+                            <a href="${url}" class="sidebar-section__view" target="_blank">
                                 <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
                                 <span>${buttonText}</span>
                             </a>
                         `;
 
-                        const sectionHeader = section.querySelector('.section-header');
-                        if (sectionHeader && !section.querySelector('.regenerate-btn')) {
+                        const sectionHeader = section.querySelector('.sidebar-section__header');
+                        if (sectionHeader && !section.querySelector('.sidebar-section__regenerate')) {
                             const threadIdAttr = document.querySelector(`[data-thread-id]`)?.getAttribute('data-thread-id') || '';
                             const regenerateBtn = document.createElement('button');
                             regenerateBtn.type = 'button';
-                            regenerateBtn.className = 'regenerate-btn';
+                            regenerateBtn.className = 'sidebar-section__regenerate';
                             regenerateBtn.id = `regenerate-${type}-btn`;
                             regenerateBtn.title = `Regenerate`;
                             regenerateBtn.setAttribute('aria-label', `Regenerate`);
