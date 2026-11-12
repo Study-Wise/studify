@@ -14,6 +14,9 @@ export default {
         "container-name-pattern": ["^--[a-z][a-z0-9]*(-[a-z0-9]+)*$", {
             message: "Expected container name \"%s\" to be kebab-case and prefixed with \"--\" to match the rule for all user-defined things in css."
         }],
+        "selector-class-pattern": ["^[a-z][a-z0-9]*(-[a-z0-9]+)*(__[a-z][a-z0-9]*(-[a-z0-9]+)*)?$", {
+            message: "Expected class selector \"%s\" to be BEM: block or block__element, with each part kebab-case. Modifier classes (--) are not allowed."
+        }],
         "declaration-property-value-allowed-list": [{
             "/^counter-(reset|increment|set)$/": ["/^(none|--[a-z][a-z0-9]*(-[a-z0-9]+)*(\\s+-?\\d+)?(\\s+--[a-z][a-z0-9]*(-[a-z0-9]+)*(\\s+-?\\d+)?)*)$/"],
             "view-transition-name": ["/^(none|root|match-element|--[a-z][a-z0-9]*(-[a-z0-9]+)*)$/"]
