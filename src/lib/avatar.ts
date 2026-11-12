@@ -1,32 +1,17 @@
-export interface AvatarOptions {
-    background: string;
-    foreground: string;
-    gender: 'female' | 'male';
-    clothing: 'tee' | 'collar' | 'hoodie' | 'blazer' | 'turtleneck';
-    faceShape: 'round' | 'oval' | 'square' | 'heart';
-    faceSize: number;
-    skin: string;
-    eyes: string;
-    mouth: 'smile' | 'grin' | 'neutral' | 'open';
-    nose: 'small' | 'button' | 'pointed' | 'wide';
-    hairColor: string;
-    accessory?: 'none' | 'glasses' | 'beret' | 'hardhat';
-}
-
-export default function generateAvatar({
-    background,
-    foreground,
-    gender,
-    clothing,
-    faceShape,
-    faceSize,
-    skin,
-    eyes,
-    mouth,
-    nose,
-    hairColor,
-    accessory = 'none',
-}: AvatarOptions): string {
+export default function generateAvatar(
+    gender: 'female' | 'male',
+    skin: string,
+    hairColor: string,
+    background: string,
+    foreground: string,
+    clothing: 'tee' | 'collar' | 'hoodie' | 'blazer' | 'turtleneck',
+    faceShape: 'round' | 'oval' | 'square' | 'heart',
+    eyes: string,
+    nose: 'small' | 'button' | 'pointed' | 'wide',
+    mouth: 'smile' | 'grin' | 'neutral' | 'open',
+    faceSize: number,
+    accessory: 'none' | 'glasses' | 'beret' | 'hardhat' = 'none',
+): string {
     const cy = 10.4;
     const r = 5.2 * faceSize;
     const left = 12 - r;
