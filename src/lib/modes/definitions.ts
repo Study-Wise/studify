@@ -607,7 +607,7 @@ const modeDefinitions: Record<string, Category> = {
             margo: {
                 show: false,
                 name: 'Margo Page',
-                description: 'Chat with Margo Page from the Studify support team about the app, issues, and feedback',
+                description: 'Chat with Margo Page, our Support Lead, about the app, issues, and feedback',
                 icon: '🎧',
                 sidebarSections: { studyMaterials: false },
                 excludedTools: config.contentGenerationExcludeTools,
