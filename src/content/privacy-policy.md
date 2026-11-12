@@ -1,6 +1,6 @@
 # Privacy Policy
 
-<p class="last-updated">Last Updated: October 13, 2026</p>
+<p class="legal-content__last-updated">Last Updated: October 13, 2026</p>
 
 ## 1. Introduction
 
@@ -210,4 +210,4 @@ Under the General Data Protection Regulation, you have additional rights includi
 - Right to object to processing
 - Right to lodge a complaint with a supervisory authority
 
-<section class="acknowledgment">By using our app, you acknowledge that you have read and understood this Privacy Policy and agree to its terms.</section>
+<section class="legal-content__acknowledgment">By using our app, you acknowledge that you have read and understood this Privacy Policy and agree to its terms.</section>
