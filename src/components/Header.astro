@@ -11,13 +11,13 @@ const imgAriaLabel = `${appConfig.name} Homepage`;
 const imgAlt= `${appConfig.name} Logo`;
 ---
 <header class="header" role="banner">
-    <a href="/" title="Go to Homepage" class="header-logo-link" aria-label={imgAriaLabel}>
-        <img src="/assets/logos/logo.png" alt={imgAlt} class="header-logo" />
+    <a href="/" title="Go to Homepage" class="header__logo-link" aria-label={imgAriaLabel}>
+        <img src="/assets/logos/logo.png" alt={imgAlt} class="header__logo" />
     </a>
-    <div class="header-content-wrapper">
-        <div class="header-text-container">
+    <div class="header__content">
+        <div class="header__text">
             <h1><span class="material-symbols-outlined" aria-hidden="true">school</span> {appConfig.name}</h1>
-            <p class="tagline">{appConfig.tagline} - By {appConfig.creators}</p>
+            <p class="header__tagline">{appConfig.tagline} - By {appConfig.creators}</p>
         </div>
         <Nav pages={pages} />
     </div>

@@ -6,7 +6,7 @@
     outline-offset: 2px;
 }
 
-.nav-btn:focus-visible,
+.nav__button:focus-visible,
 .fancy-button:focus-visible {
     box-shadow: 0 0 0 2px $color-focus, 0 0 0 4px rgb(from $color-focus r g b / 20%);
 }
@@ -43,7 +43,7 @@
     outline: none;
 }
 
-.nav-btn:focus-visible,
+.nav__button:focus-visible,
 .fancy-button:focus-visible,
 button:focus-visible {
     box-shadow: 0 0 0 2px $color-focus, 0 0 0 4px rgb(from $color-focus r g b / 20%);
@@ -58,7 +58,7 @@ button:focus-visible {
     }
 }
 
-:not(.message-input):user-invalid {
+:not(.chat-toolbar__input):user-invalid {
     box-shadow: 0 0 0 1px $color-error;
     border-color: $color-error;
 }

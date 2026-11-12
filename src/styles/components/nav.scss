@@ -3,12 +3,12 @@
 @use '../variables/colors/globals' as *;
 @use 'sass:color';
 
-.header-nav {
+.nav {
     flex-wrap: wrap;
     gap: 15px;
     display: flex;
 
-    .nav-btn {
+    &__button {
         padding: 8px 12px;
         border-radius: $border-radius-medium;
         align-items: center;
@@ -19,7 +19,7 @@
         transition: all $transition-fast $ease;
         display: flex;
 
-        &:hover, &:focus-visible, &.active {
+        &:hover, &:focus-visible, &[aria-current="page"] {
             color: $header-text;
         }
 
@@ -27,7 +27,7 @@
             background-color: color.adjust($section-title-light, $lightness: -10%);
         }
 
-        &.active {
+        &[aria-current="page"] {
             background-color: color.adjust($section-title-light, $lightness: 10%);
             font-weight: $font-weight-semibold;
 
@@ -37,13 +37,13 @@
         }
     }
 
-    &:not(.lite) .nav-btn {
+    &:not([data-mode="lite"]) &__button {
         color: $header-text;
         background-color: $section-title-light;
     }
 
-    &.lite .nav-btn {
-        &:not(:hover, :focus-visible, .active) {
+    &[data-mode="lite"] &__button {
+        &:not(:hover, :focus-visible, [aria-current="page"]) {
             color: var(--section-title);
         }
     }
@@ -51,7 +51,7 @@
     @media (width <= $breakpoint-medium) {
         gap: 10px;
 
-        .nav-btn {
+        &__button {
             padding: 6px 10px;
             font-size: 0.95rem;
         }

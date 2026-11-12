@@ -29,7 +29,7 @@
 }
 
 @media (hover: none) and (pointer: coarse) {
-    button, .nav-btn, .fancy-button {
+    button, .nav__button, .fancy-button {
         -webkit-tap-highlight-color: rgb(0 0 0 / 10%);
         transition: background-color 0.1s $ease;
 
@@ -39,7 +39,7 @@
         }
     }
 
-    button, .nav-btn, input, select, textarea {
+    button, .nav__button, input, select, textarea {
         min-width: 1rem;
         min-height: 1rem;
     }

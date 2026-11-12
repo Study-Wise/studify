@@ -27,8 +27,10 @@ header {
             vertical-align: baseline;
         }
     }
+}
 
-    .tagline {
+.header {
+    &__tagline {
         margin: 0;
         margin-inline: auto;
         color: $header-tagline;
@@ -37,43 +39,43 @@ header {
         font-style: normal;
         overflow-wrap: normal;
     }
-}
 
-.header-logo-link {
-    border: none;
-    line-height: 0;
-    text-decoration: none;
+    &__logo-link {
+        border: none;
+        line-height: 0;
+        text-decoration: none;
 
-    &:focus {
-        outline: none;
+        &:focus {
+            outline: none;
+        }
+
+        &:focus-visible {
+            border-radius: $border-radius-extra-small;
+            outline: 2px solid white;
+            outline-offset: 2px;
+        }
     }
 
-    &:focus-visible {
-        border-radius: $border-radius-extra-small;
-        outline: 2px solid white;
-        outline-offset: 2px;
-    }
-
-    .header-logo {
+    &__logo-link &__logo {
         height: 70px;
         aspect-ratio: 1;
         object-fit: contain;
         display: block;
     }
-}
 
-.header-content-wrapper {
-    justify-content: space-between;
-    align-items: center;
-    gap: $spacing-medium;
-    display: flex;
+    &__content {
+        justify-content: space-between;
+        align-items: center;
+        gap: $spacing-medium;
+        display: flex;
+    }
 
-    &:not(.lite) {
+    &__content:not([data-mode="lite"]) {
         flex: 1;
         margin-inline: auto;
     }
 
-    &.lite {
+    &__content[data-mode="lite"] {
         padding: $spacing-extra-small $spacing-medium;
         width: fit-content;
         color: var(--card-text);
@@ -85,7 +87,7 @@ header {
         display: grid;
     }
 
-    .header-text-container {
+    &__content &__text {
         text-align: left;
 
         h1 {
@@ -95,27 +97,29 @@ header {
 }
 
 @media (width <= $breakpoint-medium) {
-    .header-nav {
+    .nav {
         gap: $spacing-tiny;
+    }
 
-        .nav-btn {
-            padding: $spacing-tiny $spacing-extra-small;
-            font-size: 0.9rem;
-        }
+    .nav .nav__button {
+        padding: $spacing-tiny $spacing-extra-small;
+        font-size: 0.9rem;
     }
 }
 
 @media (width <= $breakpoint-small) {
-    .header-content-wrapper {
-        flex-direction: column;
-        gap: $spacing-extra-small;
+    .header {
+        &__content {
+            flex-direction: column;
+            gap: $spacing-extra-small;
+        }
 
-        .header-text-container {
+        &__content &__text {
             text-align: center;
         }
     }
 
-    .header-nav {
+    .nav {
         justify-content: center;
     }
 }

@@ -5,7 +5,7 @@ import '@/styles/components/nav.scss';
 import UserButton from '@/components/UserButton.astro';
 const { pages, pTitle, mode } = Astro.props;
 ---
-<nav class:list={['header-nav', mode]} role="navigation" aria-label="Main navigation" id="main-navigation">
+<nav class="nav" data-mode={mode} role="navigation" aria-label="Main navigation" id="main-navigation">
     {pages.filter((page: { name: string; path: string; hiddenFromNav: boolean }) => !page.hiddenFromNav).map((page: { name: string; path: string; hiddenFromNav: boolean }) => {
         const hasAnIcon = hasIcon(page.name.toLowerCase().replace(/\s+/g, '_'));
         let icon = '';
@@ -13,9 +13,9 @@ const { pages, pTitle, mode } = Astro.props;
             icon = <span class="material-symbols-outlined" aria-hidden="true">{getIcon(page.name.toLowerCase().replace(/\s+/g, '_'))}</span>;
         }
         else if (hasAnIcon === 'custom') {
-            icon = <img src={`/assets/icons/${getIcon(page.name.toLowerCase().replace(/\s+/g, '_'))}.svg`} alt={page.name} class="nav-icon" aria-hidden="true" />;
+            icon = <img src={`/assets/icons/${getIcon(page.name.toLowerCase().replace(/\s+/g, '_'))}.svg`} alt={page.name} class="nav__icon" aria-hidden="true" />;
         }
-        return <a href={page.path} class:list={['nav-btn', { 'active': pTitle === page.name }]} aria-current={pTitle === page.name ? 'page' : undefined}>
+        return <a href={page.path} class="nav__button" aria-current={pTitle === page.name ? 'page' : undefined}>
             {icon}
             {page.name}
         </a>
