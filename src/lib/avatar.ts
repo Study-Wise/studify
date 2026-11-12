@@ -157,7 +157,7 @@ export function generateAvatar({
             clothingMarkup = `<path d="M9.6 17.7L12 20.2 10.2 21.2zM14.4 17.7L12 20.2 13.8 21.2z" fill="#fff"/>`;
             break;
         case 'hoodie':
-            clothingMarkup = `<path d="M8.6 18.6Q12 22 15.4 18.6" fill="none" stroke="rgba(0,0,0,0.25)" stroke-width="1.1" stroke-linecap="round"/><path d="M11 20.4v2.4M13 20.4v2.4" stroke="#fff" stroke-width="0.35" stroke-linecap="round"/>`;
+            clothingMarkup = `<path d="M6.6 19C7 16 9.2 14.4 12 14.4s5 1.6 5.4 4.6Q12 22.4 6.6 19z" fill="${foreground}" stroke="rgba(0,0,0,0.35)" stroke-width="0.5" stroke-linejoin="round"/><path d="M8.6 18.4Q12 21.4 15.4 18.4" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="0.6" stroke-linecap="round"/><path d="M11 20.4v2.4M13 20.4v2.4" stroke="#fff" stroke-width="0.35" stroke-linecap="round"/>`;
             break;
         case 'blazer':
             clothingMarkup = `<path d="M12 18.2L9.6 24h4.8z" fill="#fff"/><path d="M12 18.2L9.2 22.4M12 18.2l2.8 4.2" stroke="rgba(0,0,0,0.3)" stroke-width="0.4" stroke-linecap="round"/>`;
