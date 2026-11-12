@@ -25,14 +25,14 @@ $padding: $spacing-medium;
     transition: box-shadow $transition-slow $ease-in-out;
     display: flex;
 
-    .chat-input-container {
+    &__container {
         margin: 0 auto;
         padding: $padding;
         min-width: min(1000px, 100%);
         max-width: 100%;
     }
 
-    .input-wrapper {
+    &__field {
         padding: $spacing-medium;
         background-color: var(--card-bg);
         box-shadow:
@@ -81,7 +81,7 @@ $padding: $spacing-medium;
         }
     }
 
-    .message-input {
+    &__input {
         flex: 1;
         resize: none;
         min-height: 2lh;
@@ -120,7 +120,7 @@ $padding: $spacing-medium;
         }
     }
 
-    .send-button {
+    &__send {
         position: relative;
         box-sizing: border-box;
         padding: $spacing-extra-small;

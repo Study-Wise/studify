@@ -6,22 +6,20 @@
 @use 'sass:list';
 @use 'sass:map';
 
-.my-chats-container {
+.my-chats {
     margin: 0 auto;
     padding: $spacing-extra-large $spacing-medium;
     max-width: 1200px;
 
-    .empty-state {
+    [hidden] {
+        display: none !important;
+    }
+
+    &__empty {
         margin: $spacing-extra-large auto;
         padding: $spacing-extra-large * 2;
         max-width: 500px;
         text-align: center;
-
-        .empty-icon {
-            margin-bottom: $spacing-large;
-            font-size: 4rem;
-            opacity: 0.5;
-        }
 
         h2 {
             margin-bottom: $spacing-medium;
@@ -34,275 +32,268 @@
             font-size: $font-size-base;
             opacity: 0.8;
         }
+    }
 
-        .btn.primary {
-            padding: $spacing-small $spacing-large;
-            background: linear-gradient(135deg,
-                list.nth(map.get($accent-colors, primary), 1),
-                list.nth(map.get($accent-colors, primary), 2)
-            );
-            box-shadow: $box-shadow-medium;
-            border-radius: $border-radius-large;
-            font-weight: $font-weight-semibold;
-            text-decoration: none;
-            transition: scale $transition-base $ease-out,
-                        box-shadow $transition-base $ease-out;
-            display: inline-block;
+    &__empty-icon {
+        margin-bottom: $spacing-large;
+        font-size: 4rem;
+        opacity: 0.5;
+    }
 
-            &:hover {
-                box-shadow: $box-shadow-large;
-                scale: 1.05;
-            }
+    &__empty-action {
+        padding: $spacing-small $spacing-large;
+        background: linear-gradient(135deg,
+            list.nth(map.get($accent-colors, primary), 1),
+            list.nth(map.get($accent-colors, primary), 2)
+        );
+        box-shadow: $box-shadow-medium;
+        border-radius: $border-radius-large;
+        font-weight: $font-weight-semibold;
+        text-decoration: none;
+        transition: scale $transition-base $ease-out,
+                    box-shadow $transition-base $ease-out;
+        display: inline-block;
 
-            &:active {
-                scale: 1.02;
-            }
+        &:hover {
+            box-shadow: $box-shadow-large;
+            scale: 1.05;
+        }
+
+        &:active {
+            scale: 1.02;
         }
     }
 
-    .chat-search {
+    &__search {
         margin-bottom: $spacing-large;
         flex-wrap: wrap;
         gap: $spacing-small;
         display: flex;
-
-        .chat-search-input,
-        .chat-filter {
-            padding: $spacing-small $spacing-medium;
-            color: var(--body-text);
-            background-color: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: $border-radius-medium;
-            font: inherit;
-        }
-
-        .chat-search-input {
-            flex: 1;
-            min-width: 200px;
-        }
     }
 
-    .no-results {
+    &__search-input,
+    &__filter {
+        padding: $spacing-small $spacing-medium;
+        color: var(--body-text);
+        background-color: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: $border-radius-medium;
+        font: inherit;
+    }
+
+    &__search-input {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    &__no-results {
         text-align: center;
         opacity: 0.8;
     }
 
-    .is-hidden {
-        display: none !important;
-    }
-
-    .threads-container {
+    &__categories {
         display: flex;
         flex-direction: column;
         gap: $spacing-extra-large;
     }
 
-    .category-section {
-        .category-title {
-            position: relative;
-            margin-bottom: $spacing-large;
-            padding-bottom: $spacing-medium;
-            border-bottom: 2px solid var(--card-border);
-            font-size: $font-size-1x-large;
-            font-weight: $font-weight-semibold;
-            display: inline-block;
+    &__category-title {
+        position: relative;
+        margin-bottom: $spacing-large;
+        padding-bottom: $spacing-medium;
+        border-bottom: 2px solid var(--card-border);
+        font-size: $font-size-1x-large;
+        font-weight: $font-weight-semibold;
+        display: inline-block;
 
-            &::after {
-                content: '';
-                position: absolute;
-                bottom: -2px;
-                left: 0;
-                width: 100%;
-                height: 2px;
-                background: linear-gradient(90deg,
-                    list.nth(map.get($accent-colors, primary), 1),
-                    list.nth(map.get($accent-colors, primary), 2)
-                );
-                border-radius: $border-radius-full;
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg,
+                list.nth(map.get($accent-colors, primary), 1),
+                list.nth(map.get($accent-colors, primary), 2)
+            );
+            border-radius: $border-radius-full;
+        }
+    }
+
+    &__mode + &__mode {
+        margin-top: $spacing-large;
+    }
+
+    &__mode-title {
+        margin-bottom: $spacing-medium;
+        font-size: $font-size-large;
+        font-weight: $font-weight-medium;
+    }
+
+    &__threads {
+        display: flex;
+        flex-direction: column;
+        gap: $spacing-medium;
+    }
+
+    &__thread {
+        display: flex;
+        align-items: center;
+        gap: $spacing-small;
+    }
+
+    &__thread-card {
+        flex: 1;
+        padding: $spacing-medium $spacing-large;
+        min-width: 0;
+        color: inherit;
+        background-color: var(--card-bg);
+        box-shadow: $box-shadow-small;
+        border: 1px solid var(--card-border);
+        border-radius: $border-radius-large;
+        text-decoration: none;
+        transition:
+            scale $transition-base $ease-out,
+            box-shadow $transition-base $ease-out,
+            translate $transition-base $ease-out,
+            border-color $transition-base $ease-out;
+
+        &:hover {
+            box-shadow: $box-shadow-medium;
+            border-color: list.nth(map.get($accent-colors, primary), 1);
+            translate: 0 -2px;
+            scale: 1.01;
+
+            .my-chats__thread-icon {
+                scale: 1.15;
             }
         }
 
-        .mode-section + .mode-section {
-            margin-top: $spacing-large;
+        &:active {
+            translate: 0 0;
+            scale: 1;
+        }
+    }
+
+    &__thread-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: $spacing-medium;
+    }
+
+    &__thread-info {
+        flex: 1;
+        min-width: 0;
+        align-items: center;
+        gap: $spacing-medium;
+        display: flex;
+    }
+
+    &__thread-icon {
+        flex-shrink: 0;
+        font-size: 1.75rem;
+        transition: scale $transition-base $ease-spring;
+    }
+
+    &__thread-text {
+        flex: 1;
+        min-width: 0;
+    }
+
+    &__thread-title {
+        margin: 0 0 $spacing-extra-small;
+        font-size: $font-size-base;
+        font-weight: $font-weight-semibold;
+        transition: color $transition-base $ease-out;
+
+        @include text-ellipsis;
+    }
+
+    &__thread-mode {
+        margin: 0;
+        font-size: $font-size-small;
+        opacity: 0.7;
+    }
+
+    &__thread-meta {
+        flex-shrink: 0;
+        align-items: center;
+        gap: $spacing-small;
+        display: flex;
+    }
+
+    &__thread-date {
+        color: var(--body-text);
+        font-size: $font-size-small;
+        white-space: nowrap;
+        opacity: 0.6;
+    }
+
+    &__thread-delete {
+        width: 40px;
+        height: 40px;
+        background-color: transparent;
+        border: none;
+        border-radius: $border-radius-small;
+        flex-shrink: 0;
+        justify-content: center;
+        align-items: center;
+        opacity: 0.6;
+        transition: opacity $transition-base $ease-out,
+                    background-color $transition-base $ease-out;
+        cursor: pointer;
+        display: flex;
+
+        .material-symbols-outlined {
+            color: $color-error;
         }
 
-        .mode-title {
-            margin-bottom: $spacing-medium;
-            font-size: $font-size-large;
-            font-weight: $font-weight-medium;
+        &:hover,
+        &:focus-visible {
+            background-color: rgb(from #{$color-error} r g b / 10%);
+            opacity: 1;
         }
 
-        .threads-list {
-            display: flex;
-            flex-direction: column;
-            gap: $spacing-medium;
+        &:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
         }
+    }
 
-        .thread-row {
-            display: flex;
-            align-items: center;
-            gap: $spacing-small;
-
-            .thread-card {
-                flex: 1;
-                min-width: 0;
-            }
-
-            .thread-delete {
-                width: 40px;
-                height: 40px;
-                background-color: transparent;
-                border: none;
-                border-radius: $border-radius-small;
-                flex-shrink: 0;
-                justify-content: center;
-                align-items: center;
-                opacity: 0.6;
-                transition: opacity $transition-base $ease-out,
-                            background-color $transition-base $ease-out;
-                cursor: pointer;
-                display: flex;
-
-                .material-symbols-outlined {
-                    color: $color-error;
-                }
-
-                &:hover,
-                &:focus-visible {
-                    background-color: rgb(from #{$color-error} r g b / 10%);
-                    opacity: 1;
-                }
-
-                &:disabled {
-                    opacity: 0.3;
-                    cursor: not-allowed;
-                }
-
-                .spinning {
-                    animation: --spin 1s linear infinite;
-                }
-            }
-        }
-
-        .thread-card {
-            padding: $spacing-medium $spacing-large;
-            color: inherit;
-            background-color: var(--card-bg);
-            box-shadow: $box-shadow-small;
-            border: 1px solid var(--card-border);
-            border-radius: $border-radius-large;
-            text-decoration: none;
-            transition:
-                scale $transition-base $ease-out,
-                box-shadow $transition-base $ease-out,
-                translate $transition-base $ease-out,
-                border-color $transition-base $ease-out;
-
-            &:hover {
-                box-shadow: $box-shadow-medium;
-                border-color: list.nth(map.get($accent-colors, primary), 1);
-                translate: 0 -2px;
-                scale: 1.01;
-
-                .mode-icon {
-                    scale: 1.15;
-                }
-            }
-
-            &:active {
-                translate: 0 0;
-                scale: 1;
-            }
-
-            .thread-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                gap: $spacing-medium;
-
-                .thread-info {
-                    flex: 1;
-                    min-width: 0;
-                    align-items: center;
-                    gap: $spacing-medium;
-                    display: flex;
-
-                    .mode-icon {
-                        flex-shrink: 0;
-                        font-size: 1.75rem;
-                        transition: scale $transition-base $ease-spring;
-                    }
-
-                    .thread-text {
-                        flex: 1;
-                        min-width: 0;
-
-                        .thread-title {
-                            margin: 0 0 $spacing-extra-small;
-                            font-size: $font-size-base;
-                            font-weight: $font-weight-semibold;
-                            transition: color $transition-base $ease-out;
-
-                            @include text-ellipsis;
-                        }
-
-                        .thread-mode {
-                            margin: 0;
-                            font-size: $font-size-small;
-                            opacity: 0.7;
-                        }
-                    }
-                }
-
-                .thread-meta {
-                    flex-shrink: 0;
-                    align-items: center;
-                    gap: $spacing-small;
-                    display: flex;
-
-                    .thread-date {
-                        color: var(--body-text);
-                        font-size: $font-size-small;
-                        white-space: nowrap;
-                        opacity: 0.6;
-                    }
-                }
-            }
-        }
+    &__spinner {
+        animation: --spin 1s linear infinite;
     }
 
     @media (width <= $breakpoint-medium) {
         padding: $spacing-large $spacing-small;
 
-        .page-header {
-            h1 {
-                font-size: $font-size-1x-large;
-            }
-
-            .subtitle {
-                font-size: $font-size-base;
-            }
+        &__page-header h1 {
+            font-size: $font-size-1x-large;
         }
 
-        .category-section {
-            .thread-card {
-                padding: $spacing-small $spacing-medium;
+        &__subtitle {
+            font-size: $font-size-base;
+        }
 
-                .thread-header {
-                    flex-direction: column;
-                    align-items: flex-start;
+        &__thread-card {
+            padding: $spacing-small $spacing-medium;
+        }
 
-                    .thread-info {
-                        width: 100%;
-                    }
+        &__thread-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
 
-                    .thread-meta {
-                        margin-top: $spacing-extra-small;
-                        width: 100%;
-                        justify-content: flex-start;
-                    }
-                }
-            }
+        &__thread-info {
+            width: 100%;
+        }
+
+        &__thread-meta {
+            margin-top: $spacing-extra-small;
+            width: 100%;
+            justify-content: flex-start;
         }
     }
 }

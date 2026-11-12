@@ -4,11 +4,11 @@ import '@/styles/components/chat/toolbar.scss';
 const { className = '' } = Astro.props;
 ---
 <div class:list={['chat-toolbar', className]}>
-    <div class="chat-input-container">
-        <div id="chat-form" class="chat-form">
-            <div class="input-wrapper">
-                <textarea id="message-input" name="message" placeholder="Type your message here..." rows="1" class="message-input" />
-                <button type="button" class="send-button" aria-label="Send message" disabled>
+    <div class="chat-toolbar__container">
+        <div id="chat-form" class="chat-toolbar__form">
+            <div class="chat-toolbar__field">
+                <textarea id="message-input" name="message" placeholder="Type your message here..." rows="1" class="chat-toolbar__input" />
+                <button type="button" class="chat-toolbar__send" aria-label="Send message" disabled>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
                     </svg>

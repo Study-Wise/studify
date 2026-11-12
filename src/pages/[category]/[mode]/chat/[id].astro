@@ -222,7 +222,7 @@ export const inNav = 'hide';
                 const messageInput = document.getElementById('message-input');
                 messageInput.value = button.textContent;
                 messageInput.dispatchEvent(new Event('input'));
-                document.querySelector('.send-button').click();
+                document.querySelector('.chat-toolbar__send').click();
             });
         });
 

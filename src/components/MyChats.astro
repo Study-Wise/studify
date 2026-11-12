@@ -19,12 +19,12 @@ const threadsByCategory = threads.reduce<Record<string, Record<string, typeof th
     return acc;
 }, {});
 ---
-<div class="my-chats-container">
+<div class="my-chats">
     {threads.length > 0 && (
         <>
-            <div class="chat-search">
-                <input type="search" id="chat-search-input" class="chat-search-input" placeholder="Search your chats" aria-label="Search your chats" autocomplete="off" />
-                <select id="chat-filter" class="chat-filter" aria-label="Filter chats by subject">
+            <div class="my-chats__search">
+                <input type="search" id="chat-search-input" class="my-chats__search-input" placeholder="Search your chats" aria-label="Search your chats" autocomplete="off" />
+                <select id="chat-filter" class="my-chats__filter" aria-label="Filter chats by subject">
                     <option value="">All subjects</option>
                     {Object.entries(threadsByCategory).map(([categoryKey, threadsByMode]) => categories[categoryKey] && (
                         <optgroup label={categories[categoryKey].name}>
@@ -36,57 +36,57 @@ const threadsByCategory = threads.reduce<Record<string, Record<string, typeof th
                     ))}
                 </select>
             </div>
-            <p class="no-results is-hidden" id="no-results">No chats match your search.</p>
+            <p class="my-chats__no-results" id="no-results" hidden>No chats match your search.</p>
         </>
     )}
     {threads.length === 0 ? (
-        <div class="empty-state card">
-            <span class="material-symbols-outlined empty-icon" aria-hidden="true">chat_bubble_outline</span>
+        <div class="my-chats__empty card">
+            <span class="material-symbols-outlined my-chats__empty-icon" aria-hidden="true">chat_bubble_outline</span>
             <h2>No chats yet</h2>
             <p>Start a conversation in any subject to see it here!</p>
-            <a href="/" class="btn primary">Browse Subjects</a>
+            <a href="/" class="btn primary my-chats__empty-action">Browse Subjects</a>
         </div>
     ) : (
-        <div class="threads-container">
+        <div class="my-chats__categories">
             {Object.entries(threadsByCategory).map(([categoryKey, threadsByMode]) => {
                 const category = categories[categoryKey];
                 if (!category) return null;
 
                 return (
-                    <section class="category-section card">
-                        <h2 class="category-title">{category.name}</h2>
+                    <section class="my-chats__category card">
+                        <h2 class="my-chats__category-title">{category.name}</h2>
                         {Object.entries(threadsByMode).map(([modeKey, modeThreads]) => {
                             const mode = category.modes[modeKey];
 
                             return (
-                                <div class="mode-section">
-                                    <h3 class="mode-title">{mode ? mode.name : modeKey}</h3>
-                                    <div class="threads-list">
+                                <div class="my-chats__mode">
+                                    <h3 class="my-chats__mode-title">{mode ? mode.name : modeKey}</h3>
+                                    <div class="my-chats__threads">
                                         {modeThreads.map(thread => {
                                             const displayTitle = thread.title.replace(/\\[()[\]]|(?<!\\)\$/g, '').replace(/\\([a-zA-Z]+|[{}$])/g, '$1').trim() || (mode ? mode.name : thread.mode);
                                             const chatUrl = `/${categoryKey}/${thread.mode}/chat/${thread.id}`;
 
                                             return (
-                                                <div class="thread-row" data-thread-id={thread.id} data-category={categoryKey} data-mode={thread.mode}>
-                                                    <a href={chatUrl} class="thread-card">
-                                                        <div class="thread-header">
-                                                            <div class="thread-info">
-                                                                {mode && <span class="mode-icon">{mode.icon}</span>}
-                                                                <div class="thread-text">
-                                                                    <h3 class="thread-title">{displayTitle}</h3>
-                                                                    <p class="thread-mode">
+                                                <div class="my-chats__thread" data-thread-id={thread.id} data-category={categoryKey} data-mode={thread.mode}>
+                                                    <a href={chatUrl} class="my-chats__thread-card">
+                                                        <div class="my-chats__thread-header">
+                                                            <div class="my-chats__thread-info">
+                                                                {mode && <span class="my-chats__thread-icon">{mode.icon}</span>}
+                                                                <div class="my-chats__thread-text">
+                                                                    <h3 class="my-chats__thread-title">{displayTitle}</h3>
+                                                                    <p class="my-chats__thread-mode">
                                                                         {mode ? mode.name : thread.mode}
                                                                     </p>
                                                                 </div>
                                                             </div>
-                                                            <div class="thread-meta">
-                                                                <span class="thread-date">
+                                                            <div class="my-chats__thread-meta">
+                                                                <span class="my-chats__thread-date">
                                                                     <LocalTime date={thread.updatedAt} locale="en-US" options={{ dateStyle: 'medium', timeStyle: 'short' }} />
                                                                 </span>
                                                             </div>
                                                         </div>
                                                     </a>
-                                                    <button type="button" class="thread-delete" data-thread-id={thread.id} data-thread-title={displayTitle} title="Delete chat" aria-label={`Delete chat: ${displayTitle}`}>
+                                                    <button type="button" class="my-chats__thread-delete" data-thread-id={thread.id} data-thread-title={displayTitle} title="Delete chat" aria-label={`Delete chat: ${displayTitle}`}>
                                                         <span class="material-symbols-outlined" aria-hidden="true">delete</span>
                                                     </button>
                                                 </div>
@@ -111,23 +111,23 @@ const threadsByCategory = threads.reduce<Record<string, Record<string, typeof th
         const query = searchInput.value.trim().toLowerCase();
         const subject = filterSelect.value;
 
-        document.querySelectorAll('.thread-row').forEach(row => {
-            const title = row.querySelector('.thread-title').textContent.toLowerCase();
+        document.querySelectorAll('.my-chats__thread').forEach(row => {
+            const title = row.querySelector('.my-chats__thread-title').textContent.toLowerCase();
             const matchesSubject = !subject || subject === row.dataset.category || subject === `${row.dataset.category}/${row.dataset.mode}`;
-            row.classList.toggle('is-hidden', !(title.includes(query) && matchesSubject));
+            row.hidden = !(title.includes(query) && matchesSubject);
         });
 
         // Hide the mode and category sections that have no matching chats left
-        document.querySelectorAll('.mode-section, .category-section').forEach(section => section.classList.toggle('is-hidden', !section.querySelector('.thread-row:not(.is-hidden)')));
+        document.querySelectorAll('.my-chats__mode, .my-chats__category').forEach(section => section.hidden = !section.querySelector('.my-chats__thread:not([hidden])'));
 
-        document.getElementById('no-results').classList.toggle('is-hidden', Boolean(document.querySelector('.thread-row:not(.is-hidden)')));
+        document.getElementById('no-results').hidden = Boolean(document.querySelector('.my-chats__thread:not([hidden])'));
     }
 
     searchInput?.addEventListener('input', applyFilters);
     filterSelect?.addEventListener('change', applyFilters);
 
-    document.querySelector('.my-chats-container')?.addEventListener('click', async e => {
-        const deleteButton = e.target.closest('.thread-delete');
+    document.querySelector('.my-chats')?.addEventListener('click', async e => {
+        const deleteButton = e.target.closest('.my-chats__thread-delete');
         if (!deleteButton) return;
 
         const threadId = deleteButton.getAttribute('data-thread-id');
@@ -142,7 +142,7 @@ const threadsByCategory = threads.reduce<Record<string, Record<string, typeof th
 
         deleteButton.disabled = true;
         const originalContent = deleteButton.innerHTML;
-        deleteButton.innerHTML = '<span class="material-symbols-outlined spinning" aria-hidden="true">progress_activity</span>';
+        deleteButton.innerHTML = '<span class="material-symbols-outlined my-chats__spinner" aria-hidden="true">progress_activity</span>';
 
         try {
             const response = await fetch('/api/thread/delete', {
@@ -155,17 +155,17 @@ const threadsByCategory = threads.reduce<Record<string, Record<string, typeof th
 
             if (data.status !== 'success') throw new Error(data.error || 'Failed to delete chat');
 
-            const row = deleteButton.closest('.thread-row');
-            const modeSection = row?.closest('.mode-section');
-            const section = row?.closest('.category-section');
+            const row = deleteButton.closest('.my-chats__thread');
+            const modeSection = row?.closest('.my-chats__mode');
+            const section = row?.closest('.my-chats__category');
             row?.remove();
 
             // Remove the mode and category sections if they have no chats left
-            if (modeSection && !modeSection.querySelector('.thread-row')) modeSection.remove();
-            if (section && !section.querySelector('.thread-row')) section.remove();
+            if (modeSection && !modeSection.querySelector('.my-chats__thread')) modeSection.remove();
+            if (section && !section.querySelector('.my-chats__thread')) section.remove();
 
             // Reload to show the empty state when no chats remain
-            if (!document.querySelector('.my-chats-container .thread-row')) {
+            if (!document.querySelector('.my-chats .my-chats__thread')) {
                 window.showSuccessAfterNavigation?.('Chat deleted');
                 window.location.reload();
                 return;

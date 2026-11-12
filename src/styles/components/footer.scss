@@ -10,13 +10,13 @@
     [data-hide-copyright="true"] & {
         margin-block-start: 0;
     }
-}
 
-.footer-content {
-    color: var(--body-text);
-    font-size: $font-size-small + 0.025rem;
+    &__content {
+        color: var(--body-text);
+        font-size: $font-size-small + 0.025rem;
 
-    p {
-        margin-block-end: 5px;
+        p {
+            margin-block-end: 5px;
+        }
     }
 }

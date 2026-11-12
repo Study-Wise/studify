@@ -714,7 +714,7 @@ const { page, category, mode, id } = Astro.props;
             const idFromUrl = getThreadIdFromUrl();
             if (idFromUrl) threadId = idFromUrl;
 
-            sendButton = document.querySelector('.send-button');
+            sendButton = document.querySelector('.chat-toolbar__send');
             messageInput = document.querySelector('#message-input');
 
             if (messageInput) {
