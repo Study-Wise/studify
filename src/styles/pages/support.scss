@@ -10,7 +10,7 @@ main.support-page {
     flex-direction: column;
     display: flex;
 
-    .support-embed {
+    &__embed {
         position: absolute;
         inset: 0;
         width: 100%;
