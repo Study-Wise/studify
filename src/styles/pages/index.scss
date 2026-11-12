@@ -19,7 +19,7 @@
         font-weight: $font-weight-semibold;
     }
 
-    .steps-list {
+    &__steps-list {
         list-style: none;
         margin: $spacing-large 0;
         padding-left: 0;
@@ -96,119 +96,7 @@
 
     @include stagger-children(0.1s);
 
-    .category-card {
-        position: relative;
-        padding: $spacing-large;
-        background-color: var(--card-bg);
-        box-shadow: $box-shadow-medium;
-        border: 1px solid var(--card-border);
-        border-radius: $border-radius-extra-large;
-        flex-direction: column;
-        isolation: isolate;
-        gap: $spacing-medium;
-        overflow: hidden;
-        display: flex;
-
-        @include interactive-lift;
-
-        &::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg,
-                rgba(list.nth(map.get($accent-colors, primary), 1), 0.03),
-                rgba(list.nth(map.get($accent-colors, primary), 2), 0.01)
-            );
-            border-radius: inherit;
-            opacity: 1;
-            z-index: -1;
-        }
-
-        &[hidden] {
-            display: none;
-        }
-
-        .category-title {
-            position: relative;
-            width: fit-content;
-            color: var(--section-title);
-            font-weight: $font-weight-semibold;
-            line-height: $line-height-tight;
-            display: inline-block;
-
-            &::after {
-                $height: 3px;
-
-                content: '';
-                position: absolute;
-                inset-block-end: calc(#{-1 * math.div($spacing-extra-small, 2)} - math.div($height, 2));
-                inset-inline-start: 0;
-                width: 100%;
-                height: $height;
-                background: linear-gradient(90deg,
-                    list.nth(map.get($accent-colors, primary), 1),
-                    list.nth(map.get($accent-colors, primary), 2)
-                );
-                border-radius: $border-radius-full;
-            }
-        }
-
-        .category-description {
-            color: var(--body-text);
-            line-height: $line-height-relaxed;
-            opacity: 0.9;
-        }
-
-        .modes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr));
-            gap: $spacing-medium;
-
-            .mode-card {
-                padding: $spacing-medium;
-                color: inherit;
-                background-color: var(--card-bg);
-                box-shadow: $box-shadow-small;
-                border: 1px solid var(--card-border);
-                border-radius: $border-radius-large;
-                text-decoration: none;
-                transition:
-                    scale $transition-base $ease-out,
-                    box-shadow $transition-base $ease-out,
-                    translate $transition-base $ease-out;
-
-                &[hidden] {
-                    display: none;
-                }
-
-                &:hover {
-                    box-shadow: $box-shadow-large;
-                    translate: 0 -4px;
-                    scale: 1.05;
-
-                    .material-symbols-outlined {
-                        scale: 1.15;
-                    }
-                }
-
-                &:active {
-                    translate: 0 -2px;
-                    scale: 1.02;
-                }
-
-                &:focus-visible {
-                    outline: 2px solid $color-focus;
-                    outline-offset: -2px;
-                }
-
-                .material-symbols-outlined {
-                    transition: scale $transition-slow $ease-spring;
-                }
-            }
-        }
-    }
-
-    .subjects-empty {
+    &__empty {
         grid-column: 1 / -1;
         text-align: center;
         opacity: $opacity-subtle;
@@ -219,17 +107,129 @@
     }
 }
 
+.category-card {
+    position: relative;
+    padding: $spacing-large;
+    background-color: var(--card-bg);
+    box-shadow: $box-shadow-medium;
+    border: 1px solid var(--card-border);
+    border-radius: $border-radius-extra-large;
+    flex-direction: column;
+    isolation: isolate;
+    gap: $spacing-medium;
+    overflow: hidden;
+    display: flex;
+
+    @include interactive-lift;
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg,
+            rgba(list.nth(map.get($accent-colors, primary), 1), 0.03),
+            rgba(list.nth(map.get($accent-colors, primary), 2), 0.01)
+        );
+        border-radius: inherit;
+        opacity: 1;
+        z-index: -1;
+    }
+
+    &[hidden] {
+        display: none;
+    }
+
+    &__title {
+        position: relative;
+        width: fit-content;
+        color: var(--section-title);
+        font-weight: $font-weight-semibold;
+        line-height: $line-height-tight;
+        display: inline-block;
+
+        &::after {
+            $height: 3px;
+
+            content: '';
+            position: absolute;
+            inset-block-end: calc(#{-1 * math.div($spacing-extra-small, 2)} - math.div($height, 2));
+            inset-inline-start: 0;
+            width: 100%;
+            height: $height;
+            background: linear-gradient(90deg,
+                list.nth(map.get($accent-colors, primary), 1),
+                list.nth(map.get($accent-colors, primary), 2)
+            );
+            border-radius: $border-radius-full;
+        }
+    }
+
+    &__description {
+        color: var(--body-text);
+        line-height: $line-height-relaxed;
+        opacity: 0.9;
+    }
+
+    &__modes {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr));
+        gap: $spacing-medium;
+    }
+}
+
+.mode-card {
+    padding: $spacing-medium;
+    color: inherit;
+    background-color: var(--card-bg);
+    box-shadow: $box-shadow-small;
+    border: 1px solid var(--card-border);
+    border-radius: $border-radius-large;
+    text-decoration: none;
+    transition:
+        scale $transition-base $ease-out,
+        box-shadow $transition-base $ease-out,
+        translate $transition-base $ease-out;
+
+    &[hidden] {
+        display: none;
+    }
+
+    &:hover {
+        box-shadow: $box-shadow-large;
+        translate: 0 -4px;
+        scale: 1.05;
+
+        .material-symbols-outlined {
+            scale: 1.15;
+        }
+    }
+
+    &:active {
+        translate: 0 -2px;
+        scale: 1.02;
+    }
+
+    &:focus-visible {
+        outline: 2px solid $color-focus;
+        outline-offset: -2px;
+    }
+
+    .material-symbols-outlined {
+        transition: scale $transition-slow $ease-spring;
+    }
+}
+
 .categories-header {
     position: relative;
 
-    .subject-search {
+    &__search {
         position: absolute;
         inset-block-end: 0.75rem;
         inset-inline-end: 0;
         z-index: $z-index-popover;
     }
 
-    .subject-search-toggle {
+    &__toggle {
         position: relative;
         padding: 0;
         width: 2rem;
@@ -250,24 +250,24 @@
             box-shadow: $box-shadow-medium;
         }
 
-        .subject-search-indicator {
-            position: absolute;
-            inset-block-start: 0.125rem;
-            inset-inline-end: 0.125rem;
-            width: 0.5rem;
-            height: 0.5rem;
-            background: list.nth(map.get($accent-colors, primary), 1);
-            border-radius: 50%;
-            display: none;
-        }
-
         .material-symbols-outlined {
             font-size: $font-size-1x-large;
         }
+    }
 
-        &.is-filtering .subject-search-indicator {
-            display: block;
-        }
+    &__indicator {
+        position: absolute;
+        inset-block-start: 0.125rem;
+        inset-inline-end: 0.125rem;
+        width: 0.5rem;
+        height: 0.5rem;
+        background: list.nth(map.get($accent-colors, primary), 1);
+        border-radius: 50%;
+        display: none;
+    }
+
+    &__toggle[data-filtering] &__indicator {
+        display: block;
     }
 }
 
@@ -290,7 +290,7 @@
         display: none;
     }
 
-    .subject-search-field {
+    &__field {
         padding: $spacing-extra-small $spacing-small;
         background-color: var(--body-bg);
         border: 1px solid var(--card-border);
@@ -318,13 +318,13 @@
         }
     }
 
-    .subject-filter-chips {
+    &__chips {
         display: flex;
         flex-wrap: wrap;
         gap: $spacing-extra-small;
     }
 
-    .subject-filter-chip {
+    &__chip {
         padding: $spacing-tiny $spacing-small;
         color: var(--body-text);
         background-color: var(--card-bg);

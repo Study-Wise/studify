@@ -21,7 +21,7 @@ const visibleCategories = Object.entries(categories).filter(([_, category]) =>
         <p>
             Welcome to <b>{appConfig.name}</b>! Turn your homework into powerful learning tools.
         </p>
-        <ol class="steps-list">
+        <ol class="introduction-section__steps-list">
             <li>
                 <strong>Paste Your Homework:</strong> First select a mode below to open a chat, then paste your homework into the message box and send it.
             </li>
@@ -65,22 +65,22 @@ const visibleCategories = Object.entries(categories).filter(([_, category]) =>
             <h2>
                 <span class="material-symbols-outlined" aria-hidden="true">school</span>&nbsp;Choose Your Subject
             </h2>
-            <div class="subject-search">
-                <button type="button" class="subject-search-toggle" id="subject-search-toggle" aria-label="Search and filter subjects" aria-expanded="false" aria-controls="subject-search-panel">
+            <div class="categories-header__search">
+                <button type="button" class="categories-header__toggle" id="subject-search-toggle" aria-label="Search and filter subjects" aria-expanded="false" aria-controls="subject-search-panel">
                     <span class="material-symbols-outlined" aria-hidden="true">search</span>
-                    <span class="subject-search-indicator" aria-hidden="true"></span>
+                    <span class="categories-header__indicator" aria-hidden="true"></span>
                 </button>
             </div>
         </div>
         <div class="subject-search-panel" id="subject-search-panel" role="search" hidden>
-            <label class="subject-search-field">
+            <label class="subject-search-panel__field">
                 <span class="material-symbols-outlined" aria-hidden="true">search</span>
                 <input type="search" id="subject-search-input" placeholder="Search subjects" aria-label="Search subjects" autocomplete="off" />
             </label>
-            <div class="subject-filter-chips" role="group" aria-label="Filter by group">
-                <button type="button" class="subject-filter-chip" data-filter="" aria-pressed="true">All</button>
+            <div class="subject-search-panel__chips" role="group" aria-label="Filter by group">
+                <button type="button" class="subject-search-panel__chip" data-filter="" aria-pressed="true">All</button>
                 {visibleCategories.map(([categoryKey, category]) => (
-                    <button type="button" class="subject-filter-chip" data-filter={categoryKey} aria-pressed="false">
+                    <button type="button" class="subject-search-panel__chip" data-filter={categoryKey} aria-pressed="false">
                         {category.name}
                     </button>
                 ))}
@@ -89,16 +89,16 @@ const visibleCategories = Object.entries(categories).filter(([_, category]) =>
         <div class="categories-grid">
             {visibleCategories.map(([categoryKey, category]) => (
                 <div class="category-card" data-category={categoryKey}>
-                    <h3 class="category-title">{category.name}</h3>
-                    <p class="category-description">{category.description}</p>
-                    <div class="modes-grid">
+                    <h3 class="category-card__title">{category.name}</h3>
+                    <p class="category-card__description">{category.description}</p>
+                    <div class="category-card__modes">
                         {Object.entries(category.modes).map(([modeKey, mode]) => {
                             if (mode.show) {
                                 const chatUrl = `/${categoryKey}/${modeKey}/chat/new`;
                                 const href = isLoggedIn ? chatUrl : `/user/sign-in?returnBackUrl=${encodeURIComponent(chatUrl)}`;
                                 return (
                                     <a href={href} class="mode-card" data-search={`${mode.name} ${mode.description} ${category.name}`.toLowerCase()}>
-                                        <div class="mode-icon">{mode.icon}</div>
+                                        <div class="mode-card__icon">{mode.icon}</div>
                                         <h4>{mode.name}</h4>
                                         <p>{mode.description}</p>
                                     </a>
@@ -108,7 +108,7 @@ const visibleCategories = Object.entries(categories).filter(([_, category]) =>
                     </div>
                 </div>
             ))}
-            <p class="subjects-empty" id="subjects-empty" hidden>No subjects match your search.</p>
+            <p class="categories-grid__empty" id="subjects-empty" hidden>No subjects match your search.</p>
         </div>
     </section>
 </Layout>
@@ -118,7 +118,7 @@ const visibleCategories = Object.entries(categories).filter(([_, category]) =>
     const panel = document.getElementById('subject-search-panel');
     const input = document.getElementById('subject-search-input');
     const empty = document.getElementById('subjects-empty');
-    const chips = Array.from(document.querySelectorAll<HTMLButtonElement>('.subject-filter-chip'));
+    const chips = Array.from(document.querySelectorAll<HTMLButtonElement>('.subject-search-panel__chip'));
 
     let activeCategory = '';
 
@@ -139,7 +139,7 @@ const visibleCategories = Object.entries(categories).filter(([_, category]) =>
             if (empty && visibleModes > 0) empty.hidden = false;
         }
 
-        toggle?.classList.toggle('is-filtering', terms.length > 0 || activeCategory !== '');
+        toggle?.toggleAttribute('data-filtering', terms.length > 0 || activeCategory !== '');
     }
 
     function setOpen(open: boolean) {
