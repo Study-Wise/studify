@@ -7,7 +7,6 @@ const copyrightEnd = new Date().getFullYear();
 
 const { hideCopyright = false } = Astro.props;
 ---
-
 <footer class="footer" role="contentinfo">
     <div class="footer-content">
         {hideCopyright ? '' : <p>© {copyrightEnd === appConfig.copyrightStart ? copyrightEnd : `${appConfig.copyrightStart}-${copyrightEnd}`} {appConfig.name} (formerly {appConfig.formerName}). Powered by AI.</p>}

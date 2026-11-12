@@ -38,7 +38,6 @@ if (latestWebpage) {
     webpageDataUrl = `data:text/html;base64,${base64}`;
 }
 ---
-
 <Layout title={`Webpage | ${modeName} | ${categoryName}`} className="webpage-page content-page" container={false}>
     {!isAuthorized && !isPublic ? (
         <div class="empty-state">

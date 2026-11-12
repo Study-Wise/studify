@@ -66,7 +66,6 @@ const pageDescription = questionData?.answer
     : `Find answers to questions about ${modeName} in ${categoryName}. Get expert help with ${displayQuestion}`;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
-
 <Layout title={pageTitle} mathjax={true}>
     <Fragment slot="head">
         <meta name="description" content={pageDescription} />

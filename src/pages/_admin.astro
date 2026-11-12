@@ -11,7 +11,6 @@ if (!user) return Astro.redirect('/user/sign-in');
 
 if (!(await isUserAdmin(user.email))) return Astro.redirect('/');
 ---
-
 <Layout title="Admin Dashboard" className="admin-page">
     <div class="admin-container">
         <h1>Admin Dashboard</h1>

@@ -19,7 +19,6 @@ const threadsByCategory = threads.reduce<Record<string, Record<string, typeof th
     return acc;
 }, {});
 ---
-
 <div class="my-chats-container">
     {threads.length > 0 && (
         <>

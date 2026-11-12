@@ -37,7 +37,6 @@ if (latestMindMap) {
     mindMapDataUrl = `data:text/html;base64,${base64}`;
 }
 ---
-
 <Layout title={`Mind Map | ${modeName} | ${categoryName}`} className="mind-map-page content-page" container={false}>
     {!isAuthorized && !isPublic ? (
         <div class="empty-state">

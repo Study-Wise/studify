@@ -35,7 +35,6 @@ const { content: latestPracticeQuestions } = (isAuthorized || isPublic)
 
 const parsedContent = latestPracticeQuestions ? await marked.parse(latestPracticeQuestions) : null;
 ---
-
 <Layout title={`Practice Questions | ${modeName} | ${categoryName}`} className="practice-questions-page content-page" mathjax={true}>
     {!isAuthorized && !isPublic ? (
         <div class="empty-state">

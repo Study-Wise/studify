@@ -6,7 +6,6 @@ import '@/styles/pages/auth.scss';
 
 if (Astro.locals.user) return Astro.redirect(getSafeReturnBackUrl(Astro.url.searchParams.get('returnBackUrl')));
 ---
-
 <Layout title="Completing Sign In" className="auth-page">
     <div class="auth-container">
         <div class="auth-card">

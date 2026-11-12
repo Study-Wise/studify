@@ -55,7 +55,6 @@ const parsedContent = (typeof flashcardData === 'string')
 
 const hasContent = !!(flashcardData !== null ? (typeof flashcardData !== 'string' && flashcardData.questions.length > 0) : parsedContent);
 ---
-
 <Layout title={`Flashcards | ${modeName} | ${categoryName}`} className="flashcard-page content-page" mathjax={true}>
     {!isAuthorized && !isPublic ? (
         <div class="empty-state">

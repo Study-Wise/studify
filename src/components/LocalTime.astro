@@ -6,7 +6,6 @@ const iso = new Date(date).toISOString();
 // Server fallback for visitors without JavaScript; the script below reformats it in the viewer's time zone
 const fallback = new Date(iso).toLocaleString(locale, { ...options, timeZone: 'UTC' });
 ---
-
 <time datetime={iso} data-local-time data-locale={locale} data-options={JSON.stringify(options)}>{fallback}</time>
 
 <script>
