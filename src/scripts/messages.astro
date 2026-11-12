@@ -102,19 +102,21 @@ const { page, category, mode, id } = Astro.props;
             if (chatMessages && !document.getElementById('typing-indicator')) {
                 const indicator = document.createElement('div');
                 indicator.id = 'typing-indicator';
-                indicator.className = 'message assistant typing';
+                indicator.className = 'message';
+                indicator.dataset.role = 'assistant';
+                indicator.dataset.state = 'typing';
                 indicator.setAttribute('role', 'status');
 
                 const content = document.createElement('div');
-                content.className = 'message-content';
+                content.className = 'message__content';
 
                 const dots = document.createElement('div');
-                dots.className = 'typing-dots';
+                dots.className = 'message__typing-dots';
                 dots.setAttribute('aria-hidden', 'true');
                 for (let i = 0; i < 3; i++) dots.appendChild(document.createElement('span'));
 
                 const label = document.createElement('span');
-                label.className = 'typing-label';
+                label.className = 'message__typing-label';
                 label.textContent = 'Studify is thinking…';
 
                 content.appendChild(dots);
@@ -227,9 +229,10 @@ const { page, category, mode, id } = Astro.props;
                                     if (!messageDiv) {
                                         removeTypingIndicator();
                                         messageDiv = document.createElement('div');
-                                        messageDiv.className = 'message assistant';
+                                        messageDiv.className = 'message';
+                                        messageDiv.dataset.role = 'assistant';
                                         messageContent = document.createElement('div');
-                                        messageContent.className = 'message-content';
+                                        messageContent.className = 'message__content';
                                         messageDiv.appendChild(messageContent);
                                         chatMessages.appendChild(messageDiv);
                                     }
@@ -238,7 +241,7 @@ const { page, category, mode, id } = Astro.props;
                                         (async () => {
                                             streamRendering = true;
                                             const staging = document.createElement('div');
-                                            staging.className = 'message-content stream-staging';
+                                            staging.className = 'message__content message__staging';
                                             staging.innerHTML = data.html;
                                             messageContent.after(staging);
                                             try {
@@ -261,14 +264,14 @@ const { page, category, mode, id } = Astro.props;
                                         chatMessages.insertBefore(toolCallLogDiv, messageDiv || document.getElementById('typing-indicator'));
                                     }
                                     const entry = document.createElement('div');
-                                    entry.className = 'tool-call-entry';
+                                    entry.className = 'tool-call-log__entry';
                                     const icon = document.createElement('span');
                                     icon.className = 'material-symbols-outlined';
                                     icon.setAttribute('aria-hidden', 'true');
                                     icon.dataset.state = 'pending';
                                     icon.textContent = 'schedule';
                                     const label = document.createElement('span');
-                                    label.className = 'tool-name';
+                                    label.className = 'tool-call-log__name';
                                     label.textContent = labels[data.toolName] || data.toolName;
                                     entry.appendChild(icon);
                                     entry.appendChild(label);
@@ -555,7 +558,7 @@ const { page, category, mode, id } = Astro.props;
 
                     for (const entry of data.toolCallLog) {
                         const entryDiv = document.createElement('div');
-                        entryDiv.className = 'tool-call-entry';
+                        entryDiv.className = 'tool-call-log__entry';
 
                         const icon = document.createElement('span');
                         icon.className = 'material-symbols-outlined';
@@ -564,7 +567,7 @@ const { page, category, mode, id } = Astro.props;
                         icon.textContent = entry.status === 'success' ? 'check_circle' : 'error';
 
                         const label = document.createElement('span');
-                        label.className = 'tool-name';
+                        label.className = 'tool-call-log__name';
                         label.textContent = labels[entry.toolName] || entry.toolName;
 
                         entryDiv.appendChild(icon);
@@ -582,10 +585,11 @@ const { page, category, mode, id } = Astro.props;
                 }
 
                 const messageDiv = document.createElement('div');
-                messageDiv.className = 'message assistant';
+                messageDiv.className = 'message';
+                messageDiv.dataset.role = 'assistant';
 
                 const messageContent = document.createElement('div');
-                messageContent.className = 'message-content';
+                messageContent.className = 'message__content';
 
                 messageContent.innerHTML = data.generatedText;
 
@@ -629,10 +633,11 @@ const { page, category, mode, id } = Astro.props;
 
             try {
                 const messageDiv = document.createElement('div');
-                messageDiv.className = `message ${role}`;
+                messageDiv.className = 'message';
+                messageDiv.dataset.role = role;
 
                 const messageContent = document.createElement('div');
-                messageContent.className = `message-content ${role === 'user' ? 'bg-primary' : ''}`;
+                messageContent.className = `message__content ${role === 'user' ? 'bg-primary' : ''}`;
 
                 messageContent.innerHTML = new window.marked.Marked({ breaks: true, gfm: true, renderer: { html: ({ text }) => text.replace(/</g, '&lt;') } }).parse(data);
 
@@ -694,8 +699,8 @@ const { page, category, mode, id } = Astro.props;
         if (!target?.classList.contains('message')) return;
 
         target.scrollIntoView({ block: 'center' });
-        target.classList.add('highlighted');
-        setTimeout(() => target.classList.remove('highlighted'), 3000);
+        target.setAttribute('data-highlighted', '');
+        setTimeout(() => target.removeAttribute('data-highlighted'), 3000);
     }
 
     async function initializePage() {
@@ -731,7 +736,7 @@ const { page, category, mode, id } = Astro.props;
                 });
             }
 
-            const elementsToTypeset = document.querySelectorAll('.chat-messages .message-content');
+            const elementsToTypeset = document.querySelectorAll('.chat-messages .message__content');
             await typesetMathJax(elementsToTypeset);
             window.activateDesmos();
             const chatMessages = document.querySelector('.chat-messages');

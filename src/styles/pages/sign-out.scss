@@ -1,28 +1,34 @@
 @use '../variables/tokens' as *;
 
-.sign-out-container {
+.sign-out {
     padding: $spacing-extra-large $spacing-medium;
     min-height: 60vh;
     justify-content: center;
     align-items: center;
     display: flex;
-}
 
-.sign-out-card {
-    padding: $spacing-huge $spacing-extra-large;
-    width: 100%;
-    max-width: 400px;
-    background-color: var(--card-bg);
-    box-shadow: 0 0 12px rgb(0 0 0 / 10%);
-    border: 1px solid var(--card-border);
-    border-radius: $border-radius-extra-large;
-    text-align: center;
-}
+    &__card {
+        padding: $spacing-huge $spacing-extra-large;
+        width: 100%;
+        max-width: 400px;
+        background-color: var(--card-bg);
+        box-shadow: 0 0 12px rgb(0 0 0 / 10%);
+        border: 1px solid var(--card-border);
+        border-radius: $border-radius-extra-large;
+        text-align: center;
+    }
 
-.sign-out-icon {
-    margin-block-end: $spacing-medium;
-    color: #ef4444;
-    font-size: 4rem;
+    &__icon {
+        margin-block-end: $spacing-medium;
+        color: #ef4444;
+        font-size: 4rem;
+    }
+
+    &__button-group {
+        display: flex;
+        flex-direction: column;
+        gap: $spacing-small;
+    }
 }
 
 h1 {
@@ -35,12 +41,6 @@ p {
     margin-block-end: $spacing-extra-large;
     color: rgb(from var(--card-text) r g b / 70%);
     font-size: $font-size-base;
-}
-
-.button-group {
-    display: flex;
-    flex-direction: column;
-    gap: $spacing-small;
 }
 
 .btn {
@@ -59,7 +59,7 @@ p {
     display: flex;
 }
 
-.btn.primary {
+.btn[data-variant="primary"] {
     color: white;
     background-color: #ef4444;
 
@@ -74,7 +74,7 @@ p {
     }
 }
 
-.btn.secondary {
+.btn[data-variant="secondary"] {
     color: var(--card-text);
     background-color: var(--card-bg);
     border: 1px solid var(--card-border);

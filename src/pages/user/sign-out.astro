@@ -6,17 +6,17 @@ import '@/styles/pages/sign-out.scss';
 if (!Astro.locals.user) return Astro.redirect('/');
 ---
 <Layout title="Sign Out">
-    <div class="sign-out-container">
-        <div class="sign-out-card">
-            <span class="material-symbols-outlined sign-out-icon" aria-hidden="true">logout</span>
+    <div class="sign-out">
+        <div class="sign-out__card">
+            <span class="material-symbols-outlined sign-out__icon" aria-hidden="true">logout</span>
             <h1>Sign Out</h1>
             <p>Are you sure you want to sign out?</p>
-            <div class="button-group">
-                <button type="button" id="signout-confirm-btn" class="btn primary">
+            <div class="sign-out__button-group">
+                <button type="button" id="signout-confirm-btn" class="btn" data-variant="primary">
                     <span class="material-symbols-outlined" aria-hidden="true">logout</span>
                     Yes, Sign Out
                 </button>
-                <a href="/" class="btn secondary">
+                <a href="/" class="btn" data-variant="secondary">
                     <span class="material-symbols-outlined" aria-hidden="true">close</span>
                     Cancel
                 </a>

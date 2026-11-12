@@ -1,10 +1,10 @@
 <script>
     import { authClient } from '@/lib/auth/client';
 
-    const socialButtonsContainer = document.querySelector('.social-buttons');
+    const socialButtonsContainer = document.querySelector('.auth-page__social-buttons');
 
     // Social sign-in click handlers
-    document.querySelectorAll('.social-button[data-provider]').forEach(button => {
+    document.querySelectorAll('.auth-page__social-button[data-provider]').forEach(button => {
         button.addEventListener('click', async e => {
             e.preventDefault();
             if (!(button instanceof window.HTMLElement)) return;

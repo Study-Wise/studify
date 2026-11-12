@@ -7,11 +7,11 @@ import '@/styles/pages/auth.scss';
 if (Astro.locals.user) return Astro.redirect(getSafeReturnBackUrl(Astro.url.searchParams.get('returnBackUrl')));
 ---
 <Layout title="Completing Sign In" className="auth-page">
-    <div class="auth-container">
-        <div class="auth-card">
-            <h1 class="auth-title">Completing authentication...</h1>
-            <p class="auth-subtitle">Please wait while we sign you in</p>
-            <div class="loading-spinner"></div>
+    <div class="auth-page__container">
+        <div class="auth-page__card">
+            <h1 class="auth-page__title">Completing authentication...</h1>
+            <p class="auth-page__subtitle">Please wait while we sign you in</p>
+            <div class="auth-page__spinner"></div>
         </div>
     </div>
 </Layout>
