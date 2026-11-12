@@ -1,39 +1,39 @@
 @use '../variables/tokens' as *;
 
-.admin-container {
+.admin {
     margin: 0 auto;
     padding: $spacing-extra-large;
     max-width: 1200px;
-}
 
-.user-info {
-    margin-block-end: $spacing-extra-large;
-    padding: $spacing-large;
-    background-color: #f8f9fa;
-    border-radius: $border-radius-medium;
-}
+    &__user-info {
+        margin-block-end: $spacing-extra-large;
+        padding: $spacing-large;
+        background-color: #f8f9fa;
+        border-radius: $border-radius-medium;
+    }
 
-.admin-features {
-    margin-block-end: $spacing-extra-large;
-}
+    &__features {
+        margin-block-end: $spacing-extra-large;
+    }
 
-.feature-grid {
-    margin-block-start: $spacing-medium;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: $spacing-large;
-    display: grid;
-}
+    &__feature-grid {
+        margin-block-start: $spacing-medium;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: $spacing-large;
+        display: grid;
+    }
 
-.feature-card {
-    padding: $spacing-large;
-    background-color: white;
-    box-shadow: 0 0 4px rgb(0 0 0 / 10%);
-    border: 1px solid #e9ecef;
-    border-radius: $border-radius-medium;
+    &__feature-card {
+        padding: $spacing-large;
+        background-color: white;
+        box-shadow: 0 0 4px rgb(0 0 0 / 10%);
+        border: 1px solid #e9ecef;
+        border-radius: $border-radius-medium;
 
-    h3 {
-        margin-block-start: 0;
-        color: #495057;
+        h3 {
+            margin-block-start: 0;
+            color: #495057;
+        }
     }
 }
 
