@@ -42,7 +42,7 @@ import '@/styles/accessibility/touch-gestures.scss';
             this.refreshIndicator = document.createElement('div');
             this.refreshIndicator.className = 'pull-to-refresh-indicator';
             this.refreshIndicator.innerHTML = `
-                <div class="refresh-content">
+                <div class="pull-to-refresh-indicator__content">
                     <span class="material-symbols-outlined" aria-hidden="true">refresh</span>
                     <span>Pull to refresh</span>
                 </div>
@@ -107,7 +107,7 @@ import '@/styles/accessibility/touch-gestures.scss';
             if (!this.refreshIndicator) return;
 
             this.refreshIndicator.innerHTML = `
-                <div class="refresh-content">
+                <div class="pull-to-refresh-indicator__content">
                     <span class="material-symbols-outlined" aria-hidden="true" style="animation: --spin 1s linear infinite;">refresh</span>
                     <span>Refreshing...</span>
                 </div>

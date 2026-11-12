@@ -15,16 +15,16 @@
     transition: translate 0.3s $ease, opacity 0.3s $ease;
     translate: 0 -100%;
     display: flex;
-}
 
-.refresh-content {
-    display: flex;
-    align-items: center;
-    gap: $spacing-extra-small;
-    font-size: $font-size-small;
+    &__content {
+        display: flex;
+        align-items: center;
+        gap: $spacing-extra-small;
+        font-size: $font-size-small;
 
-    .material-symbols-outlined {
-        font-size: $font-size-1x-large;
+        .material-symbols-outlined {
+            font-size: $font-size-1x-large;
+        }
     }
 }
 
