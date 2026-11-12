@@ -15,7 +15,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Newt Maxwell',
                     personality: 'curious and energetic, sees physics in everything from skateboards to sunsets',
                     interests: ['rollercoasters', 'stargazing', 'taking apart old gadgets'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#2563eb"/><g fill="none" stroke="#fff" stroke-width="1.4"><ellipse cx="12" cy="12" rx="7.5" ry="3"/><ellipse cx="12" cy="12" rx="7.5" ry="3" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="7.5" ry="3" transform="rotate(120 12 12)"/></g><circle cx="12" cy="12" r="1.5" fill="#fff"/></svg>',
+                    colors: {
+                        background: '#22c55e',
+                        foreground: '#7c3aed',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#22c55e"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#7c3aed"/><g fill="none" stroke="#fff" stroke-width=".5"><ellipse cx="12" cy="18.3" rx="2.4" ry="1"/><ellipse cx="12" cy="18.3" rx="2.4" ry="1" transform="rotate(60 12 18.3)"/><ellipse cx="12" cy="18.3" rx="2.4" ry="1" transform="rotate(120 12 18.3)"/></g><circle cx="12" cy="18.3" r=".4" fill="#fff"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#4a3222"/></svg>',
                 },
             },
             chemistry: {
@@ -26,7 +30,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Ivy Pauling',
                     personality: 'bubbly and precise, gets excited when things react',
                     interests: ['baking experiments', 'candle making', 'colorful tea blends'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#7c3aed"/><g fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 5h4M10.5 5v5L6.5 18a1 1 0 0 0 1 1.5h9a1 1 0 0 0 1-1.5L13.5 10V5M8.8 14.5h6.4"/></g></svg>',
+                    colors: {
+                        background: '#22c55e',
+                        foreground: '#15803d',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#22c55e"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#2b2b2b"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#15803d"/><path d="M11.1 16.6h1.8M11.4 16.6v1.5l-1 1.7a.5.5 0 0 0 .4.8h2.4a.5.5 0 0 0 .4-.8l-1-1.7v-1.5" fill="none" stroke="#fff" stroke-width=".5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#2b2b2b"/></svg>',
                 },
             },
             biology: {
@@ -37,7 +45,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Fern Bloom',
                     personality: 'warm and observant, patient like someone who watches plants grow',
                     interests: ['birdwatching', 'terrariums', 'weekend nature walks'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#16a34a"/><g fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18C6 10 10 6 18 6c0 8-4 12-12 12zM6 18l7-7"/></g></svg>',
+                    colors: {
+                        background: '#22c55e',
+                        foreground: '#2563eb',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#22c55e"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#8b4513"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#2563eb"/><path d="M10.6 16.6c2 .8 2 2.2 0 3M13.4 16.6c-2 .8-2 2.2 0 3M10.9 17.4h2.2M10.9 18.9h2.2" fill="none" stroke="#fff" stroke-width=".5" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#ffdbac"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#8b4513"/></svg>',
                 },
             },
             'computer-science': {
@@ -48,7 +60,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Byte Hopper',
                     personality: 'laid-back and logical, loves a clean solution and a good bug story',
                     interests: ['side projects', 'mechanical keyboards', 'retro games'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#0f766e"/><g fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 8l-4 4 4 4M15 8l4 4-4 4"/></g></svg>',
+                    colors: {
+                        background: '#22c55e',
+                        foreground: '#1f2937',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#22c55e"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#1f2937"/><path d="M10.6 17.2l-1.2 1.1 1.2 1.1M13.4 17.2l1.2 1.1-1.2 1.1M12.6 16.8l-1.2 2.9" fill="none" stroke="#4ade80" stroke-width=".5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#3b2f2f"/><g fill="none" stroke="#111827" stroke-width=".35"><circle cx="10.6" cy="9.4" r="1"/><circle cx="13.4" cy="9.4" r="1"/><path d="M11.6 9.4h.8"/></g></svg>',
                 },
             },
         },
@@ -66,7 +82,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Penny Sumner',
                     personality: 'upbeat and reassuring, makes numbers feel friendly',
                     interests: ['puzzle books', 'board games', 'budgeting spreadsheets'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#9333ea"/><g fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6v12M6 12h12"/></g></svg>',
+                    colors: {
+                        background: '#ef4444',
+                        foreground: '#f59e0b',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ef4444"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#f59e0b"/><path d="M12 16.6v3.4M10.3 18.3h3.4" stroke="#fff" stroke-width=".6" stroke-linecap="round"/><circle cx="12" cy="5.1" r="1.6" fill="#3b2f2f"/><circle cx="12" cy="9.3" r="3.6" fill="#c68642"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#3b2f2f"/></svg>',
                 },
             },
             algebra: {
@@ -78,7 +98,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Xavier Pell',
                     personality: 'easygoing and patient, loves solving for the unknown',
                     interests: ['mystery novels', 'escape rooms', 'crosswords'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#c026d3"/><g fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M8 8l8 8M16 8l-8 8"/></g></svg>',
+                    colors: {
+                        background: '#ef4444',
+                        foreground: '#2563eb',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ef4444"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#2563eb"/><path d="M10.5 16.8l3 3M13.5 16.8l-3 3" stroke="#fff" stroke-width=".6" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#8d5524"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
             geometry: {
@@ -90,7 +114,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Angie Lane',
                     personality: 'creative and visual, always sketching a diagram',
                     interests: ['origami', 'architecture photos', 'tiling patterns'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#6d28d9"/><g fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6l7 12H5z"/></g></svg>',
+                    colors: {
+                        background: '#ef4444',
+                        foreground: '#eab308',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ef4444"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#1f2937"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#eab308"/><path d="M12 16.6l2 3.4h-4z" fill="none" stroke="#1f2937" stroke-width=".5" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
             'pre-calculus': {
@@ -102,7 +130,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Sine Cosgrove',
                     personality: 'calm and steady, good at connecting the dots between topics',
                     interests: ['surfing videos', 'music production', 'long bike rides'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#4f46e5"/><g fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12c2.5-7 5.5-7 8 0s5.5 7 8 0"/></g></svg>',
+                    colors: {
+                        background: '#ef4444',
+                        foreground: '#0ea5e9',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ef4444"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#0ea5e9"/><path d="M9.4 18.3c.9-2 1.7-2 2.6 0s1.7 2 2.6 0" fill="none" stroke="#fff" stroke-width=".5" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#5b3a29"/></svg>',
                 },
             },
             calculus: {
@@ -114,7 +146,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Leo Newton',
                     personality: 'thoughtful and encouraging, never rushes you toward the answer',
                     interests: ['chess', 'astronomy podcasts', 'strong coffee'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#4338ca"/><g fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 6.5c-1.3-1-2.5-.3-2.5 1.5v8c0 1.8-1.2 2.5-2.5 1.5"/></g></svg>',
+                    colors: {
+                        background: '#ef4444',
+                        foreground: '#06b6d4',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ef4444"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#06b6d4"/><path d="M12.9 16.6c-.7-.5-1.1 0-1.1.7v2.2c0 .7-.4 1.2-1.1.7" fill="none" stroke="#fff" stroke-width=".5" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#d1d5db"/></svg>',
                 },
             },
             'applied-math': {
@@ -126,7 +162,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Maya Kovac',
                     personality: 'practical and curious, always asks where the math shows up in real life',
                     interests: ['weather maps', 'city transit', 'sports stats'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#7e22ce"/><g fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6v12h12M8.5 15l3-4 2.5 2 3.5-5"/></g></svg>',
+                    colors: {
+                        background: '#ef4444',
+                        foreground: '#92400e',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ef4444"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#1f2937"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#92400e"/><path d="M9.8 17h4.4M9.8 18.3h4.4M9.8 19.6h4.4" stroke="#fde68a" stroke-width=".4"/><g fill="#fde68a"><circle cx="11" cy="17" r=".5"/><circle cx="13" cy="18.3" r=".5"/><circle cx="11.6" cy="19.6" r=".5"/></g><circle cx="12" cy="9.3" r="3.6" fill="#c68642"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
             'discrete-math': {
@@ -137,7 +177,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Gray Euler',
                     personality: 'sharp and playful, loves a neat proof and a clever counting trick',
                     interests: ['card games', 'logic puzzles', 'building with blocks'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#5b21b6"/><g stroke="#fff" stroke-width="1.4" stroke-linecap="round"><path d="M8 8l8 3M8 8l3 9M16 11l-5 6"/></g><g fill="#fff"><circle cx="8" cy="8" r="2"/><circle cx="16" cy="11" r="2"/><circle cx="11" cy="17" r="2"/></g></svg>',
+                    colors: {
+                        background: '#ef4444',
+                        foreground: '#2563eb',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ef4444"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#2563eb"/><path d="M12 16.5l2 2-2 2-2-2z" fill="#fff"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#6b7280"/></svg>',
                 },
             },
             statistics: {
@@ -149,7 +193,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Stella Fisher',
                     personality: 'grounded and funny, skeptical of a number until she sees where it came from',
                     interests: ['survey quirks', 'true crime podcasts', 'baseball'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#8b5cf6"/><g fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17c3 0 4-10 8-10s5 10 8 10"/></g></svg>',
+                    colors: {
+                        background: '#ef4444',
+                        foreground: '#16a34a',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ef4444"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v3.2H7.9z" fill="#b45309"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#16a34a"/><path d="M9.4 19.8c1.6 0 1.8-3.2 2.6-3.2s1 3.2 2.6 3.2" fill="none" stroke="#fff" stroke-width=".5" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#ffdbac"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#b45309"/></svg>',
                 },
             },
         },
@@ -166,7 +214,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Atlas Mercer',
                     personality: 'friendly and well-traveled, connects past and present',
                     interests: ['maps', 'trivia nights', 'documentaries'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#b45309"/><g fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5h8M8 19h8M8 5c0 4 8 4 8 7s-8 3-8 7"/></g></svg>',
+                    colors: {
+                        background: '#facc15',
+                        foreground: '#d6b98c',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#d6b98c"/><path d="M10.6 16.6h2.8v3.2h-2.8z" fill="none" stroke="#7c5a2b" stroke-width=".5"/><path d="M11.2 17.6h1.6M11.2 18.5h1.6" stroke="#7c5a2b" stroke-width=".4"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#5b3a29"/></svg>',
                 },
             },
             'world-history': {
@@ -177,7 +229,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Dara Nakamura',
                     personality: 'enthusiastic storyteller who likes seeing how cultures connect',
                     interests: ['street food', 'museums', 'language apps'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#c2410c"/><g fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="7"/><path d="M5 12h14M12 5c-3 3-3 11 0 14M12 5c3 3 3 11 0 14"/></g></svg>',
+                    colors: {
+                        background: '#facc15',
+                        foreground: '#0284c7',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#1f2937"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#0284c7"/><circle cx="12" cy="18.3" r="1.7" fill="none" stroke="#fff" stroke-width=".5"/><path d="M10.3 18.3h3.4M12 16.6c-.9 1-.9 2.4 0 3.4M12 16.6c.9 1 .9 2.4 0 3.4" fill="none" stroke="#fff" stroke-width=".4"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
             'us-history': {
@@ -188,7 +244,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Sam Hamilton',
                     personality: 'down-to-earth and thoughtful, likes hearing every side of a story',
                     interests: ['road trips', 'historic sites', 'diner pie'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#1d4ed8"/><path fill="#fff" d="M12 5l2.1 4.6 5 .6-3.7 3.4 1 5-4.4-2.4-4.4 2.4 1-5-3.7-3.4 5-.6z"/></svg>',
+                    colors: {
+                        background: '#facc15',
+                        foreground: '#1d4ed8',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><clipPath id="us-body"><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z"/></clipPath></defs><circle cx="12" cy="12" r="12" fill="#facc15"/><g clip-path="url(#us-body)"><rect x="0" y="15" width="24" height="9" fill="#fff"/><rect x="0" y="15.2" width="24" height="1.1" fill="#dc2626"/><rect x="0" y="17.4" width="24" height="1.1" fill="#dc2626"/><rect x="0" y="19.6" width="24" height="1.1" fill="#dc2626"/><rect x="0" y="21.8" width="24" height="1.1" fill="#dc2626"/><rect x="2" y="15" width="9" height="3.6" fill="#1d4ed8"/><path d="M6.5 15.9l.3.7.7.1-.5.5.1.7-.6-.3-.6.3.1-.7-.5-.5.7-.1z" fill="#fff"/></g><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#3b2f2f"/></svg>',
                 },
             },
             'ancient-history': {
@@ -199,7 +259,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Cleo Ramsey',
                     personality: 'dramatic in a fun way, brings old civilizations to life',
                     interests: ['pottery', 'mythology', 'archaeology dig videos'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#a16207"/><g fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18h12M8 9v9M12 9v9M16 9v9M12 5l6 4H6z"/></g></svg>',
+                    colors: {
+                        background: '#facc15',
+                        foreground: '#c2410c',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#1f2937"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#c2410c"/><path d="M9.8 20h4.4M10.6 17.8v2.2M12 17.8v2.2M13.4 17.8v2.2M9.8 17.8l2.2-1.2 2.2 1.2z" stroke="#fde68a" stroke-width=".45" fill="none" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#c68642"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
             'medieval-history': {
@@ -210,7 +274,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Rowan Knight',
                     personality: 'cozy and wry, loves castles and the stories behind them',
                     interests: ['fantasy novels', 'calligraphy', 'renaissance fairs'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#9f1239"/><g fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5l2 3v8h-4V8zM8.5 16h7M12 16v3"/></g></svg>',
+                    colors: {
+                        background: '#facc15',
+                        foreground: '#6b7280',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#6b7280"/><path d="M10.5 16.8l3 3.2M13.5 16.8l-3 3.2" stroke="#fff" stroke-width=".6" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#5b3a29"/></svg>',
                 },
             },
             'modern-history': {
@@ -221,7 +289,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Nova Sinclair',
                     personality: 'sharp and current, links today\'s headlines to their roots',
                     interests: ['podcasts', 'vintage posters', 'record collecting'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#be123c"/><g fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6h12v12H6zM8.5 9h7M8.5 12h7M8.5 15h4"/></g></svg>',
+                    colors: {
+                        background: '#facc15',
+                        foreground: '#374151',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#374151"/><path d="M10.4 17h3.2M10.4 18.2h3.2M10.4 19.4h2" stroke="#fff" stroke-width=".5" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
             'european-history': {
@@ -232,7 +304,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Elise Marchand',
                     personality: 'polished and kind, with a soft spot for old cities',
                     interests: ['train travel', 'cafes', 'classical music'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#1e40af"/><g fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5l-4 14M12 5l4 14M9.5 13h5M8 19h8"/></g></svg>',
+                    colors: {
+                        background: '#facc15',
+                        foreground: '#1e40af',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#d4a017"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#1e40af"/><g fill="#facc15"><circle cx="13.5" cy="18.4" r=".35"/><circle cx="13.06" cy="19.46" r=".35"/><circle cx="12" cy="19.9" r=".35"/><circle cx="10.94" cy="19.46" r=".35"/><circle cx="10.5" cy="18.4" r=".35"/><circle cx="10.94" cy="17.34" r=".35"/><circle cx="12" cy="16.9" r=".35"/><circle cx="13.06" cy="17.34" r=".35"/></g><circle cx="12" cy="9.3" r="3.6" fill="#ffdbac"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#d4a017"/></svg>',
                 },
             },
             'asian-history': {
@@ -243,7 +319,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Mei Tang',
                     personality: 'calm and thoughtful, patient with big timelines',
                     interests: ['tea ceremonies', 'ink painting', 'regional cooking'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#b91c1c"/><g fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7-3 7 3M7.5 13l4.5-2 4.5 2M10 18h4M12 6v12"/></g></svg>',
+                    colors: {
+                        background: '#facc15',
+                        foreground: '#b91c1c',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#1f2937"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#b91c1c"/><path d="M9.6 17.4l2.4-1 2.4 1M10.2 18.8l1.8-.9 1.8.9M12 17.4v2.6M10.6 20h2.8" stroke="#fff" fill="none" stroke-width=".45" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
             'african-history': {
@@ -254,7 +334,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Amara Okafor',
                     personality: 'vibrant and proud, an energetic storyteller',
                     interests: ['music', 'textiles', 'oral history recordings'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#d97706"/><g fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 5v2M12 17v2M5 12h2M17 12h2M7 7l1.4 1.4M15.6 15.6L17 17M7 17l1.4-1.4M15.6 8.4L17 7"/></g></svg>',
+                    colors: {
+                        background: '#facc15',
+                        foreground: '#15803d',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#15803d"/><path d="M12 20v-3.2M12 16.8c-1.6-.1-2.6.6-2.8 1.4M12 16.8c1.6-.1 2.6.6 2.8 1.4M12 17.6c-1.2.2-1.8.9-1.9 1.6M12 17.6c1.2.2 1.8.9 1.9 1.6" stroke="#fff" fill="none" stroke-width=".45" stroke-linecap="round"/><circle cx="12" cy="5.1" r="1.6" fill="#1f2937"/><circle cx="12" cy="9.3" r="3.6" fill="#8d5524"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
             geography: {
@@ -265,7 +349,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Terra Landry',
                     personality: 'adventurous and upbeat, always has a place she wants to show you',
                     interests: ['hiking trails', 'globes', 'travel vlogs'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#15803d"/><g fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19s5-4.5 5-9a5 5 0 0 0-10 0c0 4.5 5 9 5 9z"/><circle cx="12" cy="10" r="1.8"/></g></svg>',
+                    colors: {
+                        background: '#facc15',
+                        foreground: '#2563eb',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#5b3a29"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#2563eb"/><circle cx="12" cy="18.3" r="1.7" fill="none" stroke="#fff" stroke-width=".5"/><path d="M10.3 18.3h3.4M12 16.6c-.9 1-.9 2.4 0 3.4M12 16.6c.9 1 .9 2.4 0 3.4" fill="none" stroke="#fff" stroke-width=".4"/><circle cx="12" cy="9.3" r="3.6" fill="#c68642"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#5b3a29"/></svg>',
                 },
             },
             'american-civics': {
@@ -276,7 +364,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Jordan Madison',
                     personality: 'fair-minded and clear, explains how things work without taking sides',
                     interests: ['local council meetings', 'debate club', 'political cartoons'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#1e3a8a"/><g fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 18h14M7 18v-6M12 18v-6M17 18v-6M5 11h14L12 6z"/></g></svg>',
+                    colors: {
+                        background: '#facc15',
+                        foreground: '#cbd5e1',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#cbd5e1"/><path d="M9.8 20h4.4M10.6 17.8v2.2M12 17.8v2.2M13.4 17.8v2.2M9.8 17.8l2.2-1.2 2.2 1.2z" stroke="#1e3a8a" stroke-width=".45" fill="none" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#3b2f2f"/></svg>',
                 },
             },
             'world-civics': {
@@ -287,7 +379,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Noor Haddad',
                     personality: 'diplomatic and curious, enjoys comparing how different countries run things',
                     interests: ['model UN', 'world news', 'language exchange'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#0e7490"/><g fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 19V5M7 6h10l-2 3 2 3H7"/></g></svg>',
+                    colors: {
+                        background: '#facc15',
+                        foreground: '#0ea5e9',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#1f2937"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#0ea5e9"/><circle cx="12" cy="18.3" r="1.7" fill="none" stroke="#fff" stroke-width=".5"/><path d="M10.3 18.3h3.4M12 16.6c-.9 1-.9 2.4 0 3.4M12 16.6c.9 1 .9 2.4 0 3.4" fill="none" stroke="#fff" stroke-width=".4"/><circle cx="12" cy="9.3" r="3.6" fill="#c68642"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
         },
@@ -304,7 +400,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Biz Ventura',
                     personality: 'quick and friendly, turns big ideas into simple steps',
                     interests: ['startup stories', 'coffee shops', 'pitch decks'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#0369a1"/><g fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9h12v9H6zM9.5 9V7h5v2M6 13h12"/></g></svg>',
+                    colors: {
+                        background: '#14b8a6',
+                        foreground: '#92400e',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#14b8a6"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#92400e"/><path d="M10 17.6h4v2.4h-4zM11.2 17.6v-.8h1.6v.8" fill="none" stroke="#fff" stroke-width=".5" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#2b2b2b"/></svg>',
                 },
             },
             economics: {
@@ -316,7 +416,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Cass Keynes',
                     personality: 'witty and observant, finds trade-offs in everyday choices',
                     interests: ['thrift stores', 'farmers markets', 'strategy games'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#0f766e"/><g fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="6.5"/><path d="M14 10c0-1.3-4-1.3-4 0s4 1.3 4 3-4 1.7-4 0M12 8v8"/></g></svg>',
+                    colors: {
+                        background: '#14b8a6',
+                        foreground: '#c8a165',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#14b8a6"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#c8a165"/><path d="M12.9 17.2c-.2-.5-.8-.6-1.2-.5-.9.2-.9 1.1-.1 1.4l.8.3c.8.3.8 1.2-.1 1.4-.5.1-1-.1-1.3-.5M12 16.4v.4M12 20v.4" stroke="#5b3a29" fill="none" stroke-width=".45" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#5b3a29"/></svg>',
                 },
             },
             finance: {
@@ -328,7 +432,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Penelope Graham',
                     personality: 'steady and encouraging, makes money topics feel less scary',
                     interests: ['budgeting apps', 'tidy planners', 'saving for trips'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#047857"/><g fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17l5-5 3 3 6-7M15 8h4v4"/></g></svg>',
+                    colors: {
+                        background: '#14b8a6',
+                        foreground: '#15803d',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#14b8a6"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v3.2H7.9z" fill="#8b4513"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#15803d"/><path d="M9.6 19.8l1.8-1.8 1.2 1 2-2.4M13.2 16.6h1.4v1.4" stroke="#fff" fill="none" stroke-width=".5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#ffdbac"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#8b4513"/></svg>',
                 },
             },
         },
@@ -345,7 +453,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Gear Rollins',
                     personality: 'hands-on and cheerful, loves anything that moves',
                     interests: ['bike repair', '3D printing', 'model engines'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#475569"/><g fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.5"/><path d="M12 5v2.5M12 16.5V19M5 12h2.5M16.5 12H19M7 7l1.8 1.8M15.2 15.2L17 17M7 17l1.8-1.8M15.2 8.8L17 7"/></g></svg>',
+                    colors: {
+                        background: '#9ca3af',
+                        foreground: '#475569',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#9ca3af"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#475569"/><circle cx="12" cy="18.3" r="1" fill="none" stroke="#fff" stroke-width=".5"/><path d="M12 16.4v.8M12 19.4v.8M10.1 18.3h.8M13.1 18.3h.8M10.7 17l.6.6M12.7 19l.6.6M10.7 19.6l.6-.6M12.7 17.6l.6-.6" stroke="#fff" stroke-width=".5" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#c68642"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
             electrical: {
@@ -356,7 +468,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Watt Faraday',
                     personality: 'bright and a bit zappy, great at making circuits feel simple',
                     interests: ['soldering projects', 'synths', 'string lights'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ca8a04"/><path fill="#fff" d="M13 5l-5 8h4l-1 6 5-8h-4z"/></svg>',
+                    colors: {
+                        background: '#9ca3af',
+                        foreground: '#facc15',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#9ca3af"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#facc15"/><path d="M12.6 16.5l-2 2.5h1.6l-.6 1.8 2-2.6h-1.6z" fill="#1f2937"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#5b3a29"/></svg>',
                 },
             },
             civil: {
@@ -367,7 +483,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Bridget Brooks',
                     personality: 'dependable and practical, loves things built to last',
                     interests: ['bridge photography', 'LEGO cities', 'skyline walks'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#57534e"/><g fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14h16M6 14v4M18 14v4M6 14c2-6 10-6 12 0"/></g></svg>',
+                    colors: {
+                        background: '#9ca3af',
+                        foreground: '#f97316',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#9ca3af"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#3b2f2f"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#f97316"/><path d="M9.4 19.6h5.2M10.2 19.6v-1M13.8 19.6v-1M9.6 18.6c1-2 4.8-2 5.6 0" stroke="#fff" fill="none" stroke-width=".5" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><path d="M8.2 8.6a3.8 3.8 0 0 1 7.6 0z" fill="#facc15"/><path d="M7.8 8.6h8.4" stroke="#facc15" stroke-width=".8" stroke-linecap="round"/></svg>',
                 },
             },
             chemical: {
@@ -378,7 +498,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Flo Haber',
                     personality: 'methodical and warm, good at following a process step by step',
                     interests: ['cooking from scratch', 'brewing', 'plant-based recipes'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#6d28d9"/><g fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5l6 3.5v7L12 19l-6-3.5v-7z"/></g></svg>',
+                    colors: {
+                        background: '#9ca3af',
+                        foreground: '#0891b2',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#9ca3af"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#0891b2"/><path d="M11.1 16.6h1.8M11.4 16.6v1.5l-1 1.7a.5.5 0 0 0 .4.8h2.4a.5.5 0 0 0 .4-.8l-1-1.7v-1.5" fill="none" stroke="#fff" stroke-width=".5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#ffdbac"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#c2410c"/></svg>',
                 },
             },
             computer: {
@@ -389,7 +513,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Chip Moore',
                     personality: 'friendly and nerdy, bridges hardware and software',
                     interests: ['building PCs', 'microcontroller kits', 'gadget reviews'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#334155"/><g fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8h8v8H8zM10.5 5v3M13.5 5v3M10.5 16v3M13.5 16v3M5 10.5h3M5 13.5h3M16 10.5h3M16 13.5h3"/></g></svg>',
+                    colors: {
+                        background: '#9ca3af',
+                        foreground: '#1d4ed8',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#9ca3af"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#1d4ed8"/><path d="M10.6 17.2h2.8v2.8h-2.8zM11.4 16.6v.6M12.6 16.6v.6M11.4 20v.6M12.6 20v.6M10 17.8h.6M10 19.4h.6M13.4 17.8h.6M13.4 19.4h.6" stroke="#fff" fill="none" stroke-width=".45" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#2b2b2b"/><g fill="none" stroke="#111827" stroke-width=".35"><circle cx="10.6" cy="9.4" r="1"/><circle cx="13.4" cy="9.4" r="1"/><path d="M11.6 9.4h.8"/></g></svg>',
                 },
             },
             industrial: {
@@ -400,7 +528,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Flow Taylor',
                     personality: 'organized and upbeat, always looking for a smoother way',
                     interests: ['planners', 'factory tour videos', 'puzzle games'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#c2410c"/><g fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17 9a6 6 0 0 0-10-1.5M7 15a6 6 0 0 0 10 1.5M7 5v3.5h3.5M17 19v-3.5h-3.5"/></g></svg>',
+                    colors: {
+                        background: '#9ca3af',
+                        foreground: '#7c2d12',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#9ca3af"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#7c2d12"/><path d="M9.6 20v-2.2l1.6 1v-1l1.6 1v-1l1.6 1V20zM13.6 17.6v-1.2h.8v1.2" fill="#fff"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#5b3a29"/></svg>',
                 },
             },
         },
@@ -417,7 +549,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Quill Penn',
                     personality: 'kind and thoughtful, loves words and helping people say what they mean',
                     interests: ['journaling', 'bookstores', 'poetry nights'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#db2777"/><g fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12v8H11l-3 3v-3H6z"/></g></svg>',
+                    colors: {
+                        background: '#3b82f6',
+                        foreground: '#fde68a',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#3b82f6"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#fde68a"/><path d="M10.2 19.8l.4-1.4 3-3 1 1-3 3z" fill="none" stroke="#92400e" stroke-width=".5" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#b45309"/></svg>',
                 },
             },
             literature: {
@@ -428,7 +564,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Austen Shelley',
                     personality: 'dreamy but sharp, loves digging into themes and characters',
                     interests: ['book clubs', 'rainy day reading', 'annotated paperbacks'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#be185d"/><g fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7c3-1 5 0 7 1.5C14 7 16 6 19 7v10c-3-1-5 0-7 1.5C10 17 8 16 5 17zM12 8.5V18"/></g></svg>',
+                    colors: {
+                        background: '#3b82f6',
+                        foreground: '#9f1239',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#3b82f6"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#3b2f2f"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#9f1239"/><path d="M9.6 17c1-.4 1.8-.2 2.4.4.6-.6 1.4-.8 2.4-.4v3c-1-.4-1.8-.2-2.4.4-.6-.6-1.4-.8-2.4-.4zM12 17.4v3" stroke="#fff" fill="none" stroke-width=".45" stroke-linejoin="round"/><circle cx="12" cy="9.3" r="3.6" fill="#ffdbac"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#3b2f2f"/></svg>',
                 },
             },
             grammar: {
@@ -439,7 +579,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Comma White',
                     personality: 'gentle and a little cheeky, never makes you feel bad about a mistake',
                     interests: ['crosswords', 'proofreading menus for fun', 'tea'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#e11d48"/><g fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18l1-4 8-8 3 3-8 8zM14 7l3 3"/></g></svg>',
+                    colors: {
+                        background: '#3b82f6',
+                        foreground: '#facc15',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#3b82f6"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#facc15"/><circle cx="12" cy="17.6" r=".7" fill="#1f2937"/><path d="M12 18.3c.2 1-.3 1.6-1 2" stroke="#1f2937" fill="none" stroke-width=".6" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#f3f4f6"/></svg>',
                 },
             },
             vocabulary: {
@@ -450,7 +594,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Lexi Webster',
                     personality: 'playful and quick, collects new words like trading cards',
                     interests: ['word games', 'etymology threads', 'flashcard doodles'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#c026d3"/><g fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18l5-12 5 12M9 14h6"/></g></svg>',
+                    colors: {
+                        background: '#3b82f6',
+                        foreground: '#fef3c7',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#3b82f6"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#fef3c7"/><path d="M9.6 20l1.2-3.4 1.2 3.4M10.1 19h1.4" stroke="#1f2937" fill="none" stroke-width=".5" stroke-linecap="round"/><circle cx="13.3" cy="19" r=".8" fill="none" stroke="#1f2937" stroke-width=".5"/><circle cx="12" cy="5.1" r="1.6" fill="#1f2937"/><circle cx="12" cy="9.3" r="3.6" fill="#c68642"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
             'reading-and-writing': {
@@ -461,7 +609,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Paige Turnbull',
                     personality: 'supportive and patient, great with blank pages',
                     interests: ['short stories', 'library corners', 'fountain pens'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#a21caf"/><g fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5l4 7-4 7-4-7zM12 12v3"/></g></svg>',
+                    colors: {
+                        background: '#3b82f6',
+                        foreground: '#1e293b',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#3b82f6"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v3.2H7.9z" fill="#5b3a29"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#1e293b"/><path d="M12 16.4l1.6 2.6-1.6 1.8-1.6-1.8zM12 18.2v1.2" stroke="#fff" fill="none" stroke-width=".5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#5b3a29"/></svg>',
                 },
             },
             'speaking-and-listening': {
@@ -472,7 +624,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Echo Carnegie',
                     personality: 'confident and encouraging, a good listener first',
                     interests: ['podcasts', 'open mic nights', 'improv'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#9d174d"/><g fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 5h4v7a2 2 0 0 1-4 0zM7.5 11a4.5 4.5 0 0 0 9 0M12 15.5V19M9.5 19h5"/></g></svg>',
+                    colors: {
+                        background: '#3b82f6',
+                        foreground: '#dc2626',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#3b82f6"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#dc2626"/><path d="M11.4 16.6h1.2v2a.6.6 0 0 1-1.2 0zM10.4 18.4a1.6 1.6 0 0 0 3.2 0M12 20v.4" stroke="#fff" fill="none" stroke-width=".45" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#8d5524"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
         },
@@ -489,7 +645,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Sol Herrera',
                     personality: 'sunny and encouraging, celebrates every small win',
                     interests: ['salsa classes', 'telenovelas', 'street tacos'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#dc2626"/><g fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M12 7v.1M12 10.5V17"/></g></svg>',
+                    colors: {
+                        background: '#f97316',
+                        foreground: '#dc2626',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><clipPath id="es-body"><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z"/></clipPath></defs><circle cx="12" cy="12" r="12" fill="#f97316"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#1f2937"/><g clip-path="url(#es-body)"><rect x="0" y="15" width="24" height="9" fill="#dc2626"/><rect x="0" y="17" width="24" height="4.5" fill="#facc15"/></g><circle cx="12" cy="9.3" r="3.6" fill="#c68642"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
             french: {
@@ -500,7 +660,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Margaux Laurent',
                     personality: 'charming and relaxed, patient with tricky pronunciation',
                     interests: ['bakeries', 'indie films', 'sketching cafes'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#2563eb"/><g fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 10h9v4a4 4 0 0 1-4 4h-1a4 4 0 0 1-4-4zM15 11h1.5a1.8 1.8 0 0 1 0 3.6H15M9 5v2M12 5v2"/></g></svg>',
+                    colors: {
+                        background: '#f97316',
+                        foreground: '#1d4ed8',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><clipPath id="fr-body"><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z"/></clipPath></defs><circle cx="12" cy="12" r="12" fill="#f97316"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#5b3a29"/><g clip-path="url(#fr-body)"><rect x="0" y="15" width="8" height="9" fill="#1d4ed8"/><rect x="8" y="15" width="8" height="9" fill="#fff"/><rect x="16" y="15" width="8" height="9" fill="#dc2626"/></g><circle cx="12" cy="9.3" r="3.6" fill="#ffdbac"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#5b3a29"/></svg>',
                 },
             },
             german: {
@@ -511,7 +675,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Finn Becker',
                     personality: 'dry-humored and clear, makes long words feel manageable',
                     interests: ['board games', 'hiking', 'bike trails'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#b45309"/><g fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h9v10H6zM15 10h2.5a1.5 1.5 0 0 1 1.5 1.5v2a1.5 1.5 0 0 1-1.5 1.5H15M6 8c0-2 3-2 4-1 1-1.5 5-1 5 1"/></g></svg>',
+                    colors: {
+                        background: '#f97316',
+                        foreground: '#dc2626',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><clipPath id="de-body"><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z"/></clipPath></defs><circle cx="12" cy="12" r="12" fill="#f97316"/><g clip-path="url(#de-body)"><rect x="0" y="15" width="24" height="2.4" fill="#1f2937"/><rect x="0" y="17.4" width="24" height="2.4" fill="#dc2626"/><rect x="0" y="19.8" width="24" height="4.2" fill="#facc15"/></g><circle cx="12" cy="9.3" r="3.6" fill="#ffdbac"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#d4a017"/></svg>',
                 },
             },
             italian: {
@@ -522,7 +690,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Gia Rossi',
                     personality: 'expressive and warm, believes language is best learned with good food',
                     interests: ['pasta nights', 'opera clips', 'coastal travel videos'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#15803d"/><g fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18L6 8c4-3 8-3 12 0zM10 11v.1M13.5 12.5v.1"/></g></svg>',
+                    colors: {
+                        background: '#f97316',
+                        foreground: '#16a34a',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><clipPath id="it-body"><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z"/></clipPath></defs><circle cx="12" cy="12" r="12" fill="#f97316"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#1f2937"/><g clip-path="url(#it-body)"><rect x="0" y="15" width="8" height="9" fill="#16a34a"/><rect x="8" y="15" width="8" height="9" fill="#fff"/><rect x="16" y="15" width="8" height="9" fill="#dc2626"/></g><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
         },
@@ -539,7 +711,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Hue Sargent',
                     personality: 'creative and gentle, encourages trying things and making a mess',
                     interests: ['sketchbooks', 'gallery visits', 'watercolor'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ea580c"/><g fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a7 7 0 1 0 0 14c1.5 0 1.8-1 1.2-2-.7-1.2.2-2.5 1.6-2.5H17a2 2 0 0 0 2-2c0-4-3-7.5-7-7.5zM8.5 11v.1M11 8.5v.1M14.5 9v.1"/></g></svg>',
+                    colors: {
+                        background: '#a855f7',
+                        foreground: '#f3f4f6',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#a855f7"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#f3f4f6"/><g><circle cx="9.6" cy="18" r=".8" fill="#ef4444"/><circle cx="13.2" cy="19.6" r=".9" fill="#3b82f6"/><circle cx="15.4" cy="17.6" r=".7" fill="#facc15"/><circle cx="11.2" cy="20.8" r=".6" fill="#22c55e"/></g><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#5b3a29"/><ellipse cx="12.6" cy="6.3" rx="4.2" ry="1.5" fill="#ef4444"/></svg>',
                 },
             },
             music: {
@@ -550,7 +726,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Melody Strauss',
                     personality: 'cheerful and rhythmic, hums while she thinks',
                     interests: ['vinyl records', 'live shows', 'writing songs'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#9333ea"/><g fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17V7l8-2v10M10 17a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM18 15a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/></g></svg>',
+                    colors: {
+                        background: '#a855f7',
+                        foreground: '#8b4513',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#a855f7"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#1f2937"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#8b4513"/><path d="M11 20v-3.4l2.6-.6v3.4M11 20a.8.7 0 1 1-1.6 0 .8.7 0 0 1 1.6 0zM13.6 19.4a.8.7 0 1 1-1.6 0 .8.7 0 0 1 1.6 0z" stroke="#111827" fill="none" stroke-width=".45"/><circle cx="12" cy="9.3" r="3.6" fill="#c68642"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
         },
@@ -567,7 +747,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Willow Brook',
                     personality: 'calm and caring, never preachy',
                     interests: ['yoga', 'herbal tea', 'long walks'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#059669"/><g fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18s-6-3.8-6-8a3.2 3.2 0 0 1 6-1.6A3.2 3.2 0 0 1 18 10c0 4.2-6 8-6 8z"/></g></svg>',
+                    colors: {
+                        background: '#ec4899',
+                        foreground: '#ef4444',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ec4899"/><path d="M7.9 9.4a4.1 4.1 0 0 1 8.2 0v5.2H7.9z" fill="#3b2f2f"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#ef4444"/><path d="M12 20.2s-2.2-1.4-2.2-3a1.1 1.1 0 0 1 2.2-.5 1.1 1.1 0 0 1 2.2.5c0 1.6-2.2 3-2.2 3z" fill="#fff"/><circle cx="12" cy="9.3" r="3.6" fill="#e0ac69"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#3b2f2f"/></svg>',
                 },
             },
             'fitness-and-strength': {
@@ -578,7 +762,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Rex Sandow',
                     personality: 'motivating and upbeat, big on form and rest days',
                     interests: ['lifting', 'trail runs', 'meal prep'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#dc2626"/><g fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9v6M10 7v10M14 7v10M17 9v6M10 12h4M5 11v2M19 11v2"/></g></svg>',
+                    colors: {
+                        background: '#ec4899',
+                        foreground: '#eab308',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ec4899"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#eab308"/><path d="M9.6 17.6v1.6M10.8 17v2.8M13.2 17v2.8M14.4 17.6v1.6M10.8 18.4h2.4" stroke="#1f2937" stroke-width=".5" stroke-linecap="round"/><circle cx="12" cy="9.3" r="3.6" fill="#c68642"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#1f2937"/></svg>',
                 },
             },
         },
@@ -595,7 +783,11 @@ const modeDefinitions: Record<string, Category> = {
                     name: 'Stu Bennett',
                     personality: 'friendly and adaptable, ready to help with any subject',
                     interests: ['planners', 'highlighters', 'good playlists'],
-                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#1d8aff"/><g fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10l8-4 8 4-8 4zM7.5 12v4c2.5 2 6.5 2 9 0v-4"/></g></svg>',
+                    colors: {
+                        background: '#ff8e1c',
+                        foreground: '#92400e',
+                    },
+                    svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ff8e1c"/><path d="M2.6 19.4C4 16.4 8 15.4 12 15.4s8 1 9.4 4A12 12 0 0 1 2.6 19.4z" fill="#92400e"/><path d="M10.4 16.8h3.2v3.4h-3.2zM11.2 16.4h1.6v.8h-1.6zM11 18h2M11 19h2" stroke="#fff" fill="none" stroke-width=".4"/><circle cx="12" cy="9.3" r="3.6" fill="#f1c27d"/><path d="M8.4 9.2a3.6 3.6 0 0 1 7.2 0c-1.4-1.3-2.6-1.9-3.6-1.9s-2.2.6-3.6 1.9z" fill="#3b2f2f"/></svg>',
                 },
             },
         },
