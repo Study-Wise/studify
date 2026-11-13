@@ -141,7 +141,7 @@ export const inNav = 'hide';
                             ? <img src={modeObj.character.pfp} alt={`${modeObj.character.name} profile picture`} class="empty-state__pfp" />
                             : <Fragment set:html={generateAvatar({ ...modeObj.character.appearance, ...modeObj.character.colors })} />
                         )}
-                        {modeObj.icon && <div class="empty-state__icon" aria-hidden="true">{modeObj.icon}</div>}
+                        {modeObj.character && <div class="empty-state__name">{modeObj.character.name}</div>}
                         <h3>Let's study {modeName}!</h3>
                         <p>{modeObj.description}. Ask a question below to get started.</p>
                         <div class="empty-state__prompts">
