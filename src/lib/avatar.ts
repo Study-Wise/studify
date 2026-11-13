@@ -49,8 +49,13 @@ export function generateAvatar({
         case 'oval':
             face = `<ellipse cx="12" cy="${cy}" rx="${Math.round(r * 0.88 * 100) / 100}" ry="${Math.round(r * 1.1 * 100) / 100}" fill="${skin}"/>`;
             break;
-        case 'square':
-            face = `<rect x="${Math.round((12 - r * 0.92) * 100) / 100}" y="${Math.round((cy - r * 0.85) * 100) / 100}" width="${Math.round(1.84 * r * 100) / 100}" height="${Math.round(2 * r * 100) / 100}" rx="${Math.round(r * 0.3 * 100) / 100}" fill="${skin}"/>`;
+        case 'square': {
+            const jawLeft = Math.round((12 - r * 0.95) * 100) / 100;
+            const jawRight = Math.round((12 + r * 0.95) * 100) / 100;
+            const jawTop = Math.round((cy + r * 0.7) * 100) / 100;
+            const chin = Math.round((cy + r * 1.1) * 100) / 100;
+
+            face = `<path d="M${Math.round((12 - r * 0.88) * 100) / 100} ${cy}A${Math.round(r * 0.88 * 100) / 100} ${Math.round(r * 1.1 * 100) / 100} 0 0 1 ${Math.round((12 + r * 0.88) * 100) / 100} ${cy}L${jawRight} ${jawTop}Q${jawRight} ${chin} ${Math.round((12 + r * 0.6) * 100) / 100} ${chin}L${Math.round((12 - r * 0.6) * 100) / 100} ${chin}Q${jawLeft} ${chin} ${jawLeft} ${jawTop}z" fill="${skin}"/>`;
             break;
         case 'heart': {
             const heartDepth = Math.round(1.45 * r * 100) / 100;
