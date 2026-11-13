@@ -92,7 +92,7 @@ export function generateAvatar({
             break;
     }
 
-    const mouthCenterY = Math.round(cy + r * 0.62 * 100) / 100;
+    const mouthCenterY = Math.round((cy + r * 0.62) * 100) / 100;
 
     let mouthMarkup = '';
 
