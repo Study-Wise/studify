@@ -27,8 +27,8 @@ export function generateAvatar({
     faceSize,
     accessory = 'none',
 }: AvatarOptions): string {
-    const cy = 10.4;
-    const r = 5.2 * faceSize;
+    const cy = 9.5;
+    const r = 6 * faceSize;
     const left = 12 - r;
     const eyeOffset = r * 0.42;
     const eyeY = cy - r * 0.05;
