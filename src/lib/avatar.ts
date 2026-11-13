@@ -44,7 +44,7 @@ export function generateAvatar({
 
     switch (faceShape) {
         case 'round':
-            face = `<circle cx="12" cy="${cy}" r="${faceRadius}" fill="${skin}"/>`;
+            face = `<ellipse cx="12" cy="${Math.round((cy + 0.5) * 100) / 100}" rx="${faceRadius}" ry="${Math.round(r * 1.05 * 100) / 100}" fill="${skin}"/>`;
             break;
         case 'oval':
             face = `<ellipse cx="12" cy="${cy}" rx="${Math.round(r * 0.88 * 100) / 100}" ry="${Math.round(r * 1.1 * 100) / 100}" fill="${skin}"/>`;
