@@ -56,7 +56,7 @@ export function generateAvatar({
             const heartDepth = Math.round(1.45 * r * 100) / 100;
             const negativeRadius = Math.round(-r * 100) / 100;
 
-            face = `<path d="M${faceLeft} ${cy}a${faceRadius} ${faceRadius} 0 0 1 ${faceWidth} 0c0 ${Math.round(0.9 * r * 100) / 100} ${Math.round(-0.55 * r * 100) / 100} ${heartDepth} ${negativeRadius} ${heartDepth}s${Math.round(-0.5 * r * 100) / 100} ${Math.round(-0.2 * r * 100) / 100} ${negativeRadius} ${Math.round(-1.45 * r * 100) / 100}z" fill="${skin}"/>`;
+            face = `<path d="M${faceLeft} ${cy}a${faceRadius} ${faceRadius} 0 0 1 ${faceWidth} 0c0 ${Math.round(0.9 * r * 100) / 100} ${Math.round(-0.55 * r * 100) / 100} ${heartDepth} ${negativeRadius} ${heartDepth}c${Math.round(-0.45 * r * 100) / 100} 0 ${negativeRadius} ${Math.round(-0.55 * r * 100) / 100} ${negativeRadius} ${Math.round(-1.45 * r * 100) / 100}z" fill="${skin}"/>`;
             break;
         }
     }
