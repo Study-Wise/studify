@@ -50,12 +50,10 @@ export function generateAvatar({
             face = `<ellipse cx="12" cy="${cy}" rx="${Math.round(r * 0.88 * 100) / 100}" ry="${Math.round(r * 1.1 * 100) / 100}" fill="${skin}"/>`;
             break;
         case 'square': {
-            const jawLeft = Math.round((12 - r * 0.9) * 100) / 100;
-            const jawRight = Math.round((12 + r * 0.9) * 100) / 100;
-            const jawTop = Math.round((cy + r * 0.7) * 100) / 100;
-            const chin = Math.round((cy + r * 1.1) * 100) / 100;
+            const jawTop = Math.round((cy + r * 0.65) * 100) / 100;
+            const chin = Math.round((cy + r * 1.05) * 100) / 100;
 
-            face = `<path d="M${jawLeft} ${cy}A${Math.round(r * 0.9 * 100) / 100} ${Math.round(r * 1.1 * 100) / 100} 0 0 1 ${jawRight} ${cy}L${jawRight} ${jawTop}Q${jawRight} ${chin} ${Math.round((12 + r * 0.6) * 100) / 100} ${chin}L${Math.round((12 - r * 0.6) * 100) / 100} ${chin}Q${jawLeft} ${chin} ${jawLeft} ${jawTop}z" fill="${skin}"/>`;
+            face = `<path d="M${faceLeft} ${cy}A${faceRadius} ${Math.round(r * 1.05 * 100) / 100} 0 0 1 ${Math.round((12 + r) * 100) / 100} ${cy}L${Math.round((12 + r) * 100) / 100} ${jawTop}Q${Math.round((12 + r) * 100) / 100} ${chin} ${Math.round((12 + r * 0.7) * 100) / 100} ${chin}L${Math.round((12 - r * 0.7) * 100) / 100} ${chin}Q${faceLeft} ${chin} ${faceLeft} ${jawTop}z" fill="${skin}"/>`;
             break;
         }
         case 'heart': {
