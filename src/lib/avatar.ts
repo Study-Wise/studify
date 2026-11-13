@@ -163,7 +163,7 @@ export function generateAvatar({
             clothingMarkup = `<path d="M9.8 17.7L12 21.6 14.2 17.7Q12 18.6 9.8 17.7z" fill="#fff"/><path d="M9.4 17.5L12 22.6 9.8 24 7.6 20.4z" fill="rgba(0,0,0,0.22)" stroke="rgba(0,0,0,0.35)" stroke-width="0.4" stroke-linejoin="round"/><path d="M14.6 17.5L12 22.6 14.2 24 16.4 20.4z" fill="rgba(0,0,0,0.22)" stroke="rgba(0,0,0,0.35)" stroke-width="0.4" stroke-linejoin="round"/>`;
             break;
         case 'turtleneck':
-            clothingMarkup = `<rect x="10.1" y="15.8" width="3.8" height="3.1" rx="1.1" fill="${foreground}"/>`;
+            clothingMarkup = `<rect x="9.7" y="15.4" width="4.6" height="3.8" rx="1.3" fill="${foreground}"/><rect x="9.7" y="15.4" width="4.6" height="3.8" rx="1.3" fill="none" stroke="rgba(0,0,0,0.35)" stroke-width="0.4"/><path d="M9.9 17Q12 18 14.1 17" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="0.5" stroke-linecap="round"/><ellipse cx="12" cy="16.5" rx="2.6" ry="0.9" fill="rgba(0,0,0,0.28)"/>`;
             break;
     }
 
