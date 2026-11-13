@@ -137,7 +137,7 @@ export function generateAvatar({
         case 'beret': {
             const beretX = Math.round((12 + r * 0.15) * 100) / 100;
 
-            accessoryMarkup = `<ellipse cx="${beretX}" cy="${Math.round((cy - r * 0.92) * 100) / 100}" rx="${Math.round(r * 0.95 * 100) / 100}" ry="${Math.round(r * 0.3 * 100) / 100}" fill="#ef4444"/><circle cx="${beretX}" cy="${Math.round((cy - r * 1.22) * 100) / 100}" r="${Math.round(r * 0.08 * 100) / 100}" fill="#ef4444"/>`;
+            accessoryMarkup = `<ellipse cx="${beretX}" cy="${Math.round((cy - r * 0.78) * 100) / 100}" rx="${Math.round(r * 1.02 * 100) / 100}" ry="${Math.round(r * 0.42 * 100) / 100}" fill="#ef4444"/><ellipse cx="${beretX}" cy="${Math.round((cy - r * 0.6) * 100) / 100}" rx="${Math.round(r * 0.9 * 100) / 100}" ry="${Math.round(r * 0.13 * 100) / 100}" fill="rgba(0,0,0,0.25)"/><circle cx="${beretX}" cy="${Math.round((cy - r * 1.18) * 100) / 100}" r="${Math.round(r * 0.09 * 100) / 100}" fill="#ef4444"/>`;
             break;
         }
         case 'hardhat': {
