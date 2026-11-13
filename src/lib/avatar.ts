@@ -50,7 +50,7 @@ export function generateAvatar({
             face = `<ellipse cx="12" cy="${cy}" rx="${Math.round(r * 0.88 * 100) / 100}" ry="${Math.round(r * 1.1 * 100) / 100}" fill="${skin}"/>`;
             break;
         case 'square':
-            face = `<rect x="${faceLeft}" y="${Math.round((cy - r * 0.85) * 100) / 100}" width="${faceWidth}" height="${Math.round(2 * r * 100) / 100}" rx="${Math.round(r * 0.5 * 100) / 100}" fill="${skin}"/>`;
+            face = `<rect x="${Math.round((12 - r * 0.92) * 100) / 100}" y="${Math.round((cy - r * 0.85) * 100) / 100}" width="${Math.round(1.84 * r * 100) / 100}" height="${Math.round(2 * r * 100) / 100}" rx="${Math.round(r * 0.3 * 100) / 100}" fill="${skin}"/>`;
             break;
         case 'heart': {
             const heartDepth = Math.round(1.45 * r * 100) / 100;
