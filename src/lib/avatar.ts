@@ -161,7 +161,7 @@ export function generateAvatar({
 
     switch (clothing) {
         case 'tee':
-            clothingMarkup = `<path d="M9.25 17.8Q12 20.4 14.75 17.8" fill="${skin}"/>`;
+            clothingMarkup = `<path d="M9.25 17.8Q12 20.4 14.75 17.8" fill="${skin}" stroke="color-mix(in srgb, ${skin} 72%, #000)" stroke-width="0.4" stroke-linecap="round" stroke-linejoin="round"/>`;
             break;
         case 'collar':
             clothingMarkup = `<path d="M9 17.8L12 22 15 17.8Q12 18.9 9 17.8z" fill="#fff" stroke="rgba(0,0,0,0.3)" stroke-width="0.4" stroke-linejoin="round"/><path d="M9.75 17.8L12 20.4 14.25 17.8Q12 18.7 9.75 17.8z" fill="${skin}"/><path d="M9 17.8L6.75 20.4 11.5 21.2z" fill="#fff" stroke="rgba(0,0,0,0.3)" stroke-width="0.4" stroke-linejoin="round"/><path d="M15 17.8L17.25 20.4 12.5 21.2z" fill="#fff" stroke="rgba(0,0,0,0.3)" stroke-width="0.4" stroke-linejoin="round"/>`;
