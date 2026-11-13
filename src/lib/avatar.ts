@@ -154,7 +154,7 @@ export function generateAvatar({
             clothingMarkup = `<path d="M9.8 17.9Q12 20.4 14.2 17.9" fill="${skin}"/>`;
             break;
         case 'collar':
-            clothingMarkup = `<path d="M9.9 17.8L12 20.6 14.1 17.8Q12 18.7 9.9 17.8z" fill="${skin}"/><path d="M9.5 17.3L12 20.9 8.5 19.8z" fill="#fff" stroke="rgba(0,0,0,0.25)" stroke-width="0.35" stroke-linejoin="round"/><path d="M14.5 17.3L12 20.9 15.5 19.8z" fill="#fff" stroke="rgba(0,0,0,0.25)" stroke-width="0.35" stroke-linejoin="round"/>`;
+            clothingMarkup = `<path d="M9.6 17.4L12 22 14.4 17.4Q12 18.5 9.6 17.4z" fill="#fff"/><path d="M10.2 17.9L12 20.4 13.8 17.9Q12 18.7 10.2 17.9z" fill="${skin}"/><path d="M9.6 17.3L7.8 20.4 11.6 21.2z" fill="#fff" stroke="rgba(0,0,0,0.3)" stroke-width="0.4" stroke-linejoin="round"/><path d="M14.4 17.3L16.2 20.4 12.4 21.2z" fill="#fff" stroke="rgba(0,0,0,0.3)" stroke-width="0.4" stroke-linejoin="round"/>`;
             break;
         case 'hoodie':
             clothingMarkup = `<path d="M5.8 21.4C5.4 16.4 8.4 14.6 12 14.6s6.6 1.8 6.2 6.8z" fill="${foreground}"/><path d="M5.8 21.4C5.4 16.4 8.4 14.6 12 14.6s6.6 1.8 6.2 6.8" fill="none" stroke="rgba(0,0,0,0.5)" stroke-width="0.7" stroke-linecap="round"/><ellipse cx="12" cy="16.8" rx="4.2" ry="2.6" fill="rgba(0,0,0,0.3)"/><path d="M11 19.8v2.6M13 19.8v2.6" stroke="#fff" stroke-width="0.35" stroke-linecap="round"/>`;
