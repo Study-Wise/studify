@@ -107,7 +107,7 @@ export function generateAvatar({
             mouthMarkup = `<path d="M${Math.round((12 - r * 0.2) * 100) / 100} ${mouthCenterY}h${Math.round(r * 0.4 * 100) / 100}" stroke="#7f1d1d" stroke-width="${Math.round(r * 0.07 * 100) / 100}" stroke-linecap="round"/>`;
             break;
         case 'open':
-            mouthMarkup = `<ellipse cx="12" cy="${mouthCenterY}" rx="${Math.round(r * 0.18 * 100) / 100}" ry="${Math.round(r * 0.14 * 100) / 100}" fill="#7f1d1d"/>`;
+            mouthMarkup = `<ellipse cx="12" cy="${mouthCenterY}" rx="${Math.round(r * 0.26 * 100) / 100}" ry="${Math.round(r * 0.22 * 100) / 100}" fill="#7f1d1d"/><ellipse cx="12" cy="${Math.round((cy + r * 0.62 + r * 0.1) * 100) / 100}" rx="${Math.round(r * 0.14 * 100) / 100}" ry="${Math.round(r * 0.08 * 100) / 100}" fill="#f87171"/>`;
             break;
     }
 
