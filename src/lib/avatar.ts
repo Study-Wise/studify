@@ -35,6 +35,7 @@ export function generateAvatar({
     const noseY = cy + r * 0.28;
     const halfWidth = gender === 'female' ? 7.4 : 10.8;
     const feature = 'rgba(0,0,0,0.35)';
+    const outline = `color-mix(in srgb, ${foreground} 76%, #000)`;
 
     const faceLeft = Math.round(left * 100) / 100;
     const faceRadius = Math.round(r * 100) / 100;
@@ -149,7 +150,9 @@ export function generateAvatar({
     const bodyLeft = Math.round((12 - halfWidth) * 100) / 100;
     const bodyRight = Math.round((12 + halfWidth) * 100) / 100;
 
-    const body = clothing === 'hoodie' ? '' : `<path d="M${bodyLeft} 24V21.2C${bodyLeft} 18.8 8.4 17.8 12 17.8S${bodyRight} 18.8 ${bodyRight} 21.2V24z" fill="${foreground}" stroke="color-mix(in srgb, ${foreground} 76%, #000)" stroke-width="0.4" stroke-linejoin="round"/>`;
+    const bodyShape = `M${bodyLeft} 24V21.2C${bodyLeft} 18.8 8.4 17.8 12 17.8S${bodyRight} 18.8 ${bodyRight} 21.2V24z`;
+    const outlineStyle = `fill="color-mix(in srgb, ${skin} 60%, #000)" stroke="color-mix(in srgb, ${skin} 60%, #000)" stroke-width="0.8" stroke-linejoin="round"`;
+    const body = clothing === 'hoodie' ? '' : `<path d="${bodyShape}" fill="${foreground}"/>`;
 
     let clothingMarkup = '';
 
@@ -161,9 +164,7 @@ export function generateAvatar({
             clothingMarkup = `<path d="M9 17.8L12 22 15 17.8Q12 18.9 9 17.8z" fill="#fff" stroke="rgba(0,0,0,0.3)" stroke-width="0.4" stroke-linejoin="round"/><path d="M9.75 17.8L12 20.4 14.25 17.8Q12 18.7 9.75 17.8z" fill="${skin}"/><path d="M9 17.8L6.75 20.4 11.5 21.2z" fill="#fff" stroke="rgba(0,0,0,0.3)" stroke-width="0.4" stroke-linejoin="round"/><path d="M15 17.8L17.25 20.4 12.5 21.2z" fill="#fff" stroke="rgba(0,0,0,0.3)" stroke-width="0.4" stroke-linejoin="round"/>`;
             break;
         case 'hoodie': {
-            const hoodLine = `color-mix(in srgb, ${foreground} 76%, #000)`;
-
-            clothingMarkup = `<g transform="translate(0 13.19) scale(0.046875)" stroke-width="8" stroke-linejoin="round"><path d="M 140 51 Q 143 62 147 70 Q 151 79 157 85 Q 163 91 173 101 Q 185 113 198 123 Q 209 132 220 139 Q 232 146 240 148 Q 248 150 256 152 Q 264 150 272 148 Q 280 146 292 139 Q 303 132 314 123 Q 327 113 339 101 Q 349 91 355 85 Q 361 79 365 70 Q 369 62 372 51 Q 371 48 370 47 Q 363 34 352 26 Q 340 15 327 9 Q 313 3 297 1 Q 277 -2 256 -2 Q 235 -2 215 1 Q 199 3 185 9 Q 172 15 160 26 Q 149 34 142 47 Q 141 48 140 51 Z" fill="color-mix(in srgb, ${foreground} 88%, #000)" stroke="${hoodLine}"/><rect x="203" y="17" width="106" height="135" fill="${skin}"/><path d="M 105 106 Q 108 100 110 95 Q 115 87 120 80 Q 132 63 140 51 Q 143 62 147 70 Q 151 79 157 85 Q 163 91 173 101 Q 185 113 198 123 Q 209 132 220 139 Q 232 146 240 148 Q 248 150 256 152 Q 264 150 272 148 Q 280 146 292 139 Q 303 132 314 123 Q 327 113 339 101 Q 349 91 355 85 Q 361 79 365 70 Q 369 62 372 51 Q 380 63 392 80 Q 397 87 402 95 Q 405 100 407 106 Q 397 112 387 119 Q 374 126 362 133 Q 349 141 337 148 Q 327 153 318 157 Q 312 160 305 163 Q 281 172 256 172 Q 232 172 207 163 Q 200 160 194 157 Q 184 153 175 148 Q 162 141 150 133 Q 137 126 125 119 Q 115 112 105 106 Z" fill="color-mix(in srgb, ${foreground} 94%, #000)" stroke="${hoodLine}"/><path d="M 0 274 L 0 250 Q 10 230 20 210 Q 35 180 50 150 Q 68 132 85 118 Q 95 111 105 106 Q 115 112 125 119 Q 137 126 150 133 Q 162 141 175 148 Q 184 153 194 157 Q 200 160 207 163 Q 232 172 256 172 Q 281 172 305 163 Q 312 160 318 157 Q 327 153 337 148 Q 349 141 362 133 Q 374 126 387 119 Q 397 112 407 106 Q 417 111 427 118 Q 445 132 462 150 Q 477 180 492 210 Q 502 230 512 250 L 512 274 Z" fill="${foreground}" stroke="${hoodLine}"/><path d="M 50 150 Q 54 200 68 250 Q 82 264 106 272 M 462 150 Q 458 200 444 250 Q 430 264 406 272" fill="none" stroke="${hoodLine}" stroke-linecap="round"/></g>`;
+            clothingMarkup = `<g transform="translate(0 13.19) scale(0.046875)" stroke-width="8" stroke-linejoin="round"><path d="M 140 51 Q 143 62 147 70 Q 151 79 157 85 Q 163 91 173 101 Q 185 113 198 123 Q 209 132 220 139 Q 232 146 240 148 Q 248 150 256 152 Q 264 150 272 148 Q 280 146 292 139 Q 303 132 314 123 Q 327 113 339 101 Q 349 91 355 85 Q 361 79 365 70 Q 369 62 372 51 Q 371 48 370 47 Q 363 34 352 26 Q 340 15 327 9 Q 313 3 297 1 Q 277 -2 256 -2 Q 235 -2 215 1 Q 199 3 185 9 Q 172 15 160 26 Q 149 34 142 47 Q 141 48 140 51 Z" fill="color-mix(in srgb, ${foreground} 88%, #000)" stroke="${outline}"/><rect x="203" y="17" width="106" height="135" fill="${skin}"/><path d="M 105 106 Q 108 100 110 95 Q 115 87 120 80 Q 132 63 140 51 Q 143 62 147 70 Q 151 79 157 85 Q 163 91 173 101 Q 185 113 198 123 Q 209 132 220 139 Q 232 146 240 148 Q 248 150 256 152 Q 264 150 272 148 Q 280 146 292 139 Q 303 132 314 123 Q 327 113 339 101 Q 349 91 355 85 Q 361 79 365 70 Q 369 62 372 51 Q 380 63 392 80 Q 397 87 402 95 Q 405 100 407 106 Q 397 112 387 119 Q 374 126 362 133 Q 349 141 337 148 Q 327 153 318 157 Q 312 160 305 163 Q 281 172 256 172 Q 232 172 207 163 Q 200 160 194 157 Q 184 153 175 148 Q 162 141 150 133 Q 137 126 125 119 Q 115 112 105 106 Z" fill="color-mix(in srgb, ${foreground} 94%, #000)" stroke="${outline}"/><path d="M 0 274 L 0 250 Q 10 230 20 210 Q 35 180 50 150 Q 68 132 85 118 Q 95 111 105 106 Q 115 112 125 119 Q 137 126 150 133 Q 162 141 175 148 Q 184 153 194 157 Q 200 160 207 163 Q 232 172 256 172 Q 281 172 305 163 Q 312 160 318 157 Q 327 153 337 148 Q 349 141 362 133 Q 374 126 387 119 Q 397 112 407 106 Q 417 111 427 118 Q 445 132 462 150 Q 477 180 492 210 Q 502 230 512 250 L 512 274 Z" fill="${foreground}" stroke="${outline}"/><path d="M 50 150 Q 54 200 68 250 Q 82 264 106 272 M 462 150 Q 458 200 444 250 Q 430 264 406 272" fill="none" stroke="${outline}" stroke-linecap="round"/></g>`;
             break;
         }
         case 'blazer':
@@ -174,5 +175,5 @@ export function generateAvatar({
             break;
     }
 
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><clipPath id="avatar-clip"><circle cx="12" cy="12" r="12"/></clipPath></defs><g clip-path="url(#avatar-clip)"><rect width="24" height="24" fill="${background}"/>${hairBack}<rect x="9.5" y="14" width="5" height="6.5" fill="${skin}"/>${body}${clothingMarkup}${face}${noseMarkup}${eyeMarkup}${mouthMarkup}${hairFront}${accessoryMarkup}</g></svg>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><clipPath id="avatar-clip"><circle cx="12" cy="12" r="12"/></clipPath></defs><g clip-path="url(#avatar-clip)"><rect width="24" height="24" fill="${background}"/>${hairBack}${face.replace(`fill="${skin}"`, outlineStyle)}<rect x="9.5" y="14" width="5" height="6.5" ${outlineStyle}/>${clothing === 'hoodie' ? '' : `<path d="${bodyShape}" fill="${outline}" stroke="${outline}" stroke-width="0.8" stroke-linejoin="round"/>`}<rect x="9.5" y="14" width="5" height="6.5" fill="${skin}"/>${body}${clothingMarkup}${face}${noseMarkup}${eyeMarkup}${mouthMarkup}${hairFront}${accessoryMarkup}</g></svg>`;
 }
