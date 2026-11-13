@@ -160,7 +160,7 @@ export function generateAvatar({
             clothingMarkup = `<path d="M5.8 21.4C5.4 16.4 8.4 14.6 12 14.6s6.6 1.8 6.2 6.8z" fill="${foreground}"/><path d="M5.8 21.4C5.4 16.4 8.4 14.6 12 14.6s6.6 1.8 6.2 6.8" fill="none" stroke="rgba(0,0,0,0.5)" stroke-width="0.7" stroke-linecap="round"/><ellipse cx="12" cy="16.8" rx="4.2" ry="2.6" fill="rgba(0,0,0,0.3)"/><path d="M11 19.8v2.6M13 19.8v2.6" stroke="#fff" stroke-width="0.35" stroke-linecap="round"/>`;
             break;
         case 'blazer':
-            clothingMarkup = `<path d="M12 18.2L9.6 24h4.8z" fill="#fff"/><path d="M12 18.2L9.2 22.4M12 18.2l2.8 4.2" stroke="rgba(0,0,0,0.3)" stroke-width="0.4" stroke-linecap="round"/>`;
+            clothingMarkup = `<path d="M9.8 17.7L12 21.6 14.2 17.7Q12 18.6 9.8 17.7z" fill="#fff"/><path d="M9.4 17.5L12 22.6 9.8 24 7.6 20.4z" fill="rgba(0,0,0,0.22)" stroke="rgba(0,0,0,0.35)" stroke-width="0.4" stroke-linejoin="round"/><path d="M14.6 17.5L12 22.6 14.2 24 16.4 20.4z" fill="rgba(0,0,0,0.22)" stroke="rgba(0,0,0,0.35)" stroke-width="0.4" stroke-linejoin="round"/>`;
             break;
         case 'turtleneck':
             clothingMarkup = `<rect x="10.1" y="15.8" width="3.8" height="3.1" rx="1.1" fill="${foreground}"/>`;
