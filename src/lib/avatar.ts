@@ -133,7 +133,7 @@ export function generateAvatar({
             break;
         }
         case 'beret': {
-            const beretX = Math.round((12 + r * 0.15) * 100) / 100;
+            const beretX = 12;
 
             accessoryMarkup = `<ellipse cx="${beretX}" cy="${Math.round((cy - r * 0.9) * 100) / 100}" rx="${Math.round(r * 1.2 * 100) / 100}" ry="${Math.round(r * 0.65 * 100) / 100}" fill="#ef4444"/><path d="M${Math.round((12 - r * 1.05) * 100) / 100} ${Math.round((cy - r * 0.42) * 100) / 100}Q12 ${Math.round((cy - r * 0.22) * 100) / 100} ${Math.round((12 + r * 1.05) * 100) / 100} ${Math.round((cy - r * 0.42) * 100) / 100}" fill="none" stroke="#b91c1c" stroke-width="${Math.round(r * 0.14 * 100) / 100}" stroke-linecap="round"/><circle cx="${beretX}" cy="${Math.round((cy - r * 1.5) * 100) / 100}" r="${Math.round(r * 0.09 * 100) / 100}" fill="#ef4444"/>`;
             break;
