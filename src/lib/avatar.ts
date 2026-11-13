@@ -116,7 +116,7 @@ export function generateAvatar({
             break;
     }
 
-    const hairOutline = `stroke="color-mix(in srgb, ${hairColor} 55%, #000)" stroke-width="0.5" stroke-linejoin="round"`;
+    const hairOutline = `stroke="color-mix(in srgb, ${hairColor} 72%, #000)" stroke-width="0.4" stroke-linejoin="round"`;
 
     const hairBack = gender === 'female'
         ? `<path d="M${Math.round((left - r * 0.1) * 100) / 100} ${cy}a${Math.round(r * 1.1 * 100) / 100} ${Math.round(r * 1.1 * 100) / 100} 0 0 1 ${Math.round(2.2 * r * 100) / 100} 0v${Math.round(r * 1.7 * 100) / 100}h${Math.round(-2.2 * r * 100) / 100}z" fill="${hairColor}" ${hairOutline}/>`
@@ -153,7 +153,7 @@ export function generateAvatar({
     const bodyRight = Math.round((12 + halfWidth) * 100) / 100;
 
     const bodyShape = `M${bodyLeft} 24V21.2C${bodyLeft} 18.8 8.4 17.8 12 17.8S${bodyRight} 18.8 ${bodyRight} 21.2V24z`;
-    const outlineStyle = `fill="color-mix(in srgb, ${skin} 60%, #000)" stroke="color-mix(in srgb, ${skin} 60%, #000)" stroke-width="0.8" stroke-linejoin="round"`;
+    const outlineStyle = `fill="color-mix(in srgb, ${skin} 72%, #000)" stroke="color-mix(in srgb, ${skin} 72%, #000)" stroke-width="0.8" stroke-linejoin="round"`;
     const hoodBody = 'M 0 274 L 0 250 Q 10 230 20 210 Q 35 180 50 150 Q 68 132 85 118 Q 95 111 105 106 Q 115 112 125 119 Q 137 126 150 133 Q 162 141 175 148 Q 184 153 194 157 Q 200 160 207 163 Q 232 172 256 172 Q 281 172 305 163 Q 312 160 318 157 Q 327 153 337 148 Q 349 141 362 133 Q 374 126 387 119 Q 397 112 407 106 Q 417 111 427 118 Q 445 132 462 150 Q 477 180 492 210 Q 502 230 512 250 L 512 274 Z';
     const body = clothing === 'hoodie' ? '' : `<path d="${bodyShape}" fill="${foreground}"/>`;
 
