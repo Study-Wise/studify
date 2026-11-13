@@ -155,10 +155,10 @@ export function generateAvatar({
 
     switch (clothing) {
         case 'tee':
-            clothingMarkup = `<path d="M9.25 17.9Q12 20.4 14.75 17.9" fill="${skin}"/>`;
+            clothingMarkup = `<path d="M9.25 17.8Q12 20.4 14.75 17.8" fill="${skin}"/>`;
             break;
         case 'collar':
-            clothingMarkup = `<path d="M9 17.4L12 22 15 17.4Q12 18.5 9 17.4z" fill="#fff"/><path d="M9.75 17.9L12 20.4 14.25 17.9Q12 18.7 9.75 17.9z" fill="${skin}"/><path d="M9 17.3L6.75 20.4 11.5 21.2z" fill="#fff" stroke="rgba(0,0,0,0.3)" stroke-width="0.4" stroke-linejoin="round"/><path d="M15 17.3L17.25 20.4 12.5 21.2z" fill="#fff" stroke="rgba(0,0,0,0.3)" stroke-width="0.4" stroke-linejoin="round"/>`;
+            clothingMarkup = `<path d="M9 17.8L12 22 15 17.8Q12 18.9 9 17.8z" fill="#fff"/><path d="M9.75 17.8L12 20.4 14.25 17.8Q12 18.7 9.75 17.8z" fill="${skin}"/><path d="M9 17.8L6.75 20.4 11.5 21.2z" fill="#fff" stroke="rgba(0,0,0,0.3)" stroke-width="0.4" stroke-linejoin="round"/><path d="M15 17.8L17.25 20.4 12.5 21.2z" fill="#fff" stroke="rgba(0,0,0,0.3)" stroke-width="0.4" stroke-linejoin="round"/>`;
             break;
         case 'hoodie': {
             const hoodLine = `color-mix(in srgb, ${foreground} 76%, #000)`;
@@ -167,7 +167,7 @@ export function generateAvatar({
             break;
         }
         case 'blazer':
-            clothingMarkup = `<path d="M9.25 17.7L12 21.6 14.75 17.7Q12 18.6 9.25 17.7z" fill="#fff"/><path d="M8.75 17.5L12 22.6 9.25 24 6.5 20.4z" fill="rgba(0,0,0,0.22)" stroke="rgba(0,0,0,0.35)" stroke-width="0.4" stroke-linejoin="round"/><path d="M15.25 17.5L12 22.6 14.75 24 17.5 20.4z" fill="rgba(0,0,0,0.22)" stroke="rgba(0,0,0,0.35)" stroke-width="0.4" stroke-linejoin="round"/>`;
+            clothingMarkup = `<path d="M9.25 17.8L12 21.6 14.75 17.8Q12 18.7 9.25 17.8z" fill="#fff"/><path d="M8.75 17.8L12 22.6 9.25 24 6.5 20.4z" fill="rgba(0,0,0,0.22)" stroke="rgba(0,0,0,0.35)" stroke-width="0.4" stroke-linejoin="round"/><path d="M15.25 17.8L12 22.6 14.75 24 17.5 20.4z" fill="rgba(0,0,0,0.22)" stroke="rgba(0,0,0,0.35)" stroke-width="0.4" stroke-linejoin="round"/>`;
             break;
         case 'turtleneck':
             clothingMarkup = `<rect x="9.1" y="15.4" width="5.8" height="3.8" rx="1.3" fill="${foreground}"/><rect x="9.1" y="15.4" width="5.8" height="3.8" rx="1.3" fill="none" stroke="rgba(0,0,0,0.35)" stroke-width="0.4"/><path d="M9.35 17Q12 18 14.65 17" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="0.5" stroke-linecap="round"/><ellipse cx="12" cy="16.5" rx="3.3" ry="0.9" fill="rgba(0,0,0,0.28)"/>`;
