@@ -170,7 +170,7 @@ export function generateAvatar({
             clothingMarkup = `<path d="M9.25 17.8L12 21.6 14.75 17.8Q12 18.7 9.25 17.8z" fill="#fff"/><path d="M8.75 17.8L12 22.6 9.25 24 6.5 20.4z" fill="rgba(0,0,0,0.22)" stroke="rgba(0,0,0,0.35)" stroke-width="0.4" stroke-linejoin="round"/><path d="M15.25 17.8L12 22.6 14.75 24 17.5 20.4z" fill="rgba(0,0,0,0.22)" stroke="rgba(0,0,0,0.35)" stroke-width="0.4" stroke-linejoin="round"/>`;
             break;
         case 'turtleneck':
-            clothingMarkup = `<rect x="9.1" y="15.4" width="5.8" height="3.8" rx="1.3" fill="${foreground}"/><rect x="9.1" y="15.4" width="5.8" height="3.8" rx="1.3" fill="none" stroke="rgba(0,0,0,0.35)" stroke-width="0.4"/><path d="M9.35 17Q12 18 14.65 17" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="0.5" stroke-linecap="round"/><ellipse cx="12" cy="16.5" rx="3.3" ry="0.9" fill="rgba(0,0,0,0.28)"/>`;
+            clothingMarkup = `<rect x="9.1" y="17.8" width="5.8" height="3.8" rx="1.3" fill="${foreground}"/><rect x="9.1" y="17.8" width="5.8" height="3.8" rx="1.3" fill="none" stroke="rgba(0,0,0,0.35)" stroke-width="0.4"/><path d="M9.35 19.4Q12 20.4 14.65 19.4" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="0.5" stroke-linecap="round"/><ellipse cx="12" cy="18.9" rx="3.3" ry="0.9" fill="rgba(0,0,0,0.28)"/>`;
             break;
     }
 
