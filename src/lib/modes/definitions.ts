@@ -1285,6 +1285,7 @@ const modeDefinitions: Record<string, Category> = {
                 name: 'Margo Page',
                 description: 'Chat with Margo Page, our Support Lead, about the app, issues, and feedback',
                 icon: '🎧',
+                hook: 'Get help from Margo!',
                 character: {
                     name: 'Margo Page',
                     personality: 'warm and efficient, the Support Lead who knows the app inside out',

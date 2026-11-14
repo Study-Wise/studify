@@ -17,6 +17,7 @@ export interface Mode {
         pfp?: string;
     };
     icon?: string;
+    hook?: string;
     prompt?: Promise<string>;
     excludedTools?: string[];
     show?: boolean;
