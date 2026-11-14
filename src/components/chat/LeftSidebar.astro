@@ -1,6 +1,6 @@
 ---
-import type { UploadedFile } from '@/lib/threads';
 import config from '@/lib/ai.config';
+import type { UploadedFile } from '@/lib/threads';
 
 import SidebarSection from '@/components/chat/SidebarSection.astro';
 import '@/styles/components/chat/left-sidebar.scss';
@@ -121,7 +121,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
     </div>
 </section>
 
-<script is:inline define:vars={{ threadId, email, category, mode, defaultProvider: config.provider, defaultTier: config.tier }}>
+<script is:inline define:vars={{ threadId, email, category, mode, config }}>
     let currentThreadId = threadId;
 
     let uploadQueue = [];
@@ -316,7 +316,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                     const response = await fetch('/api/thread/initialize', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ category, mode, provider: settings.provider || defaultProvider, tier: settings.tier || defaultTier, isPublic: publicToggle?.checked === true })
+                        body: JSON.stringify({ category, mode, provider: settings.provider || config.provider, tier: settings.tier || config.tier, isPublic: publicToggle?.checked === true })
                     });
 
                     const data = await response.json();
