@@ -9,18 +9,7 @@ import { eq, sql } from 'drizzle-orm';
 
 import { getContentTypesList } from '../get-types';
 
-export interface ThreadContentStatus {
-    hasReferenceSheet: boolean;
-    hasStudyGuide: boolean;
-    hasInfographic: boolean;
-    hasWebpage: boolean;
-    hasMindMap: boolean;
-    hasAdditionalResources: boolean;
-    hasFlashcards: boolean;
-    hasPracticeQuestions: boolean;
-    hasSlideshow: boolean;
-    hasSummary: boolean;
-}
+export type ThreadContentStatus = Record<string, boolean>;
 
 export interface ThreadContent {
     [key: string]: string | InfographicData | FlashcardData | SlideshowData | undefined | JSONValue;
@@ -40,55 +29,27 @@ function toCamelCase(str: string): string {
     return str.replace(/-([a-z])/g, (_, p1) => p1.toUpperCase());
 }
 
-// Mapping between content type IDs (kebab-case) and their status keys (camelCase)
-const CONTENT_TYPE_KEYS: Record<string, keyof ThreadContentStatus> = {
-    'reference-sheet': 'hasReferenceSheet',
-    'study-guide': 'hasStudyGuide',
-    infographic: 'hasInfographic',
-    webpage: 'hasWebpage',
-    'mind-map': 'hasMindMap',
-    'additional-resources': 'hasAdditionalResources',
-    flashcards: 'hasFlashcards',
-    'practice-questions': 'hasPracticeQuestions',
-    slideshow: 'hasSlideshow',
-    summary: 'hasSummary',
-};
+const CONTENT_TYPE_KEYS: Record<string, string> = Object.fromEntries(
+    getContentTypesList()
+        .filter(type => type !== 'index')
+        .map(type => [type, `has${toCamelCase(type).charAt(0).toUpperCase()}${toCamelCase(type).slice(1)}`]),
+);
 
 export async function getThreadContentStatus(
     threadId: string,
     isAuthorized: boolean,
     isPublic: boolean
 ): Promise<ThreadContentStatus> {
-    // Default status with all known types set to false
-    const status: ThreadContentStatus = {
-        hasReferenceSheet: false,
-        hasStudyGuide: false,
-        hasInfographic: false,
-        hasWebpage: false,
-        hasMindMap: false,
-        hasAdditionalResources: false,
-        hasFlashcards: false,
-        hasPracticeQuestions: false,
-        hasSlideshow: false,
-        hasSummary: false,
-    };
+    const status: ThreadContentStatus = Object.fromEntries(Object.values(CONTENT_TYPE_KEYS).map(statusKey => [statusKey, false]));
 
     if (threadId !== 'new' && (isAuthorized || isPublic) && threadId) {
         try {
             const threads = await db.select({ content: threadsTable.content }).from(threadsTable).where(eq(threadsTable.id, threadId));
 
             if (threads.length > 0) {
-                const content = threads[0].content || {};
-                const contentTypes = getContentTypesList();
-
-                contentTypes.forEach(type => {
-                    const statusKey = CONTENT_TYPE_KEYS[type] ?? 'hasSummary';
-                    const contentKey = toCamelCase(type);
-
-                    // Check if content exists for this type in the JSON column
-                    const contentValue = content[contentKey];
+                Object.entries(CONTENT_TYPE_KEYS).forEach(([type, statusKey]) => {
+                    const contentValue = (threads[0].content || {})[toCamelCase(type)];
                     if (contentValue) {
-                        // For special types like infographic or flashcards that might be objects
                         if (typeof contentValue === 'object' && contentValue !== null) {
                             if (type === 'infographic') status[statusKey] = 'imageUrl' in contentValue && typeof contentValue.imageUrl === 'string' && !!contentValue.imageUrl;
                             else if (type === 'flashcards') status[statusKey] = 'questions' in contentValue && Array.isArray(contentValue.questions) && contentValue.questions.length > 0;
@@ -107,7 +68,6 @@ export async function getThreadContentStatus(
     return status;
 }
 
-// Gets the latest content for a specific type from the thread's content JSON column.
 export async function getLatestContent(threadId: string, type: string): Promise<ThreadContent[keyof ThreadContent] | null> {
     try {
         const threads = await db.select({ content: threadsTable.content }).from(threadsTable).where(eq(threadsTable.id, threadId));
@@ -122,15 +82,11 @@ export async function getLatestContent(threadId: string, type: string): Promise<
     return null;
 }
 
-// Saves content for a specific type into the thread's content JSON column.
 export async function saveContent<T>(threadId: string, type: string, data: T): Promise<void> {
     try {
-        const contentKey = toCamelCase(type);
-        // Use JSONB concatenation/update to update only the specific key
-        // This is more efficient than fetching, updating in JS, and saving back
         await db.update(threadsTable)
             .set({
-                content: sql`${threadsTable.content} || jsonb_build_object(${sql.raw(`'${contentKey}'`)}, ${JSON.stringify(data)}::jsonb)`,
+                content: sql`${threadsTable.content} || jsonb_build_object(${sql.raw(`'${toCamelCase(type)}'`)}, ${JSON.stringify(data)}::jsonb)`,
                 updatedAt: new Date()
             })
             .where(eq(threadsTable.id, threadId));
