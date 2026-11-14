@@ -125,10 +125,16 @@
         margin-top: $spacing-large;
     }
 
-    &__mode-title {
-        margin-bottom: $spacing-medium;
+    &__mode-character {
+        margin-bottom: $spacing-extra-small;
         font-size: $font-size-large;
         font-weight: $font-weight-medium;
+    }
+
+    &__mode-title {
+        margin: 0 0 $spacing-medium;
+        font-size: $font-size-small;
+        opacity: 0.7;
     }
 
     &__threads {

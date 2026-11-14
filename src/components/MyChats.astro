@@ -58,10 +58,12 @@ const threadsByCategory = threads.reduce<Record<string, Record<string, typeof th
                         <h2 class="my-chats__category-title">{category.name}</h2>
                         {Object.entries(threadsByMode).map(([modeKey, modeThreads]) => {
                             const mode = category.modes[modeKey];
+                            const ModeName = mode?.character ? 'p' : 'h3';
 
                             return (
                                 <div class="my-chats__mode">
-                                    <h3 class="my-chats__mode-title">{mode ? mode.name : modeKey}</h3>
+                                    {mode?.character && <h3 class="my-chats__mode-character">{mode.character.name}</h3>}
+                                    <ModeName class={`my-chats__mode-${mode?.character ? 'title' : 'character'}`}>{mode ? mode.name : modeKey}</ModeName>
                                     <div class="my-chats__threads">
                                         {modeThreads.map(thread => {
                                             const displayTitle = thread.title.replace(/\\[()[\]]|(?<!\\)\$/g, '').replace(/\\([a-zA-Z]+|[{}$])/g, '$1').trim() || (mode ? mode.name : thread.mode);

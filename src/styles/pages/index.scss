@@ -218,6 +218,12 @@
         transition: scale $transition-slow $ease-spring;
     }
 
+    &__mode {
+        margin: 0;
+        font-size: $font-size-small;
+        opacity: 0.7;
+    }
+
     &__icon {
         margin-bottom: $spacing-small;
         width: 3.5rem;
