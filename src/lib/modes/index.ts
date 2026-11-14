@@ -18,6 +18,7 @@ export interface Mode {
     };
     icon?: string;
     hook?: string;
+    examplePrompts?: string[];
     prompt?: Promise<string>;
     excludedTools?: string[];
     show?: boolean;
@@ -41,6 +42,16 @@ for (const topicKey of Object.keys(modeDefinitions)) {
         if (!modeDefinitions[topicKey].modes[modeKey].prompt) modeDefinitions[topicKey].modes[modeKey].prompt = Promise.resolve(generateModePrompt(modeDefinitions[topicKey].modes[modeKey], topicKey));
 
         modeDefinitions[topicKey].modes[modeKey].show ??= true;
+
+        modeDefinitions[topicKey].modes[modeKey].examplePrompts ??= [
+            `Explain the basics of ${modeDefinitions[topicKey].modes[modeKey].name}`,
+            `Quiz me on ${modeDefinitions[topicKey].modes[modeKey].name}`,
+            `What are common mistakes students make in ${modeDefinitions[topicKey].modes[modeKey].name}?`,
+            `Give me a practice problem on ${modeDefinitions[topicKey].modes[modeKey].name}`,
+            `Where would I use ${modeDefinitions[topicKey].modes[modeKey].name} in real life?`,
+            `Help me understand a tricky idea in ${modeDefinitions[topicKey].modes[modeKey].name}`,
+            `Summarize the key ideas of ${modeDefinitions[topicKey].modes[modeKey].name}`,
+        ];
 
         modeDefinitions[topicKey].modes[modeKey].sidebarSections = {
             shareSettings: true,

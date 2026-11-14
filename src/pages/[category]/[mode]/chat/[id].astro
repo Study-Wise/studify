@@ -28,12 +28,6 @@ if (!categoryObj || !modeObj) return Astro.redirect('/404');
 const categoryName = categoryObj?.name || category;
 const modeName = modeObj?.name || mode;
 
-const examplePrompts = [
-    `Explain the basics of ${modeName}`,
-    `Quiz me on ${modeName}`,
-    `What are common mistakes students make in ${modeName}?`,
-];
-
 const user = Astro.locals.user;
 const user_email = user?.email || null;
 
@@ -142,7 +136,7 @@ export const inNav = 'hide';
                         <h3 class="empty-state__hook">{modeObj.hook ?? `Let's study ${modeName}!`}</h3>
                         <p>{modeObj.description}. Ask a question below to get started.</p>
                         <div class="empty-state__prompts">
-                            {examplePrompts.map(prompt => (
+                            {modeObj.examplePrompts?.slice().sort(() => Math.random() - 0.5).slice(0, 3).map(prompt => (
                                 <button type="button" class="empty-state__prompt">{prompt}</button>
                             ))}
                         </div>
