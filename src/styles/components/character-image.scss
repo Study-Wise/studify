@@ -1,0 +1,22 @@
+@use '../variables/tokens' as *;
+@use 'sass:math';
+
+.character-image-wrapper {
+    aspect-ratio: 1;
+    border-radius: $border-radius-full;
+    overflow: clip;
+
+    > svg, > img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+    }
+
+    &[data-crop="head"] > img {
+        $_scale: 1.35;
+
+        scale: #{$_scale * 100%};
+        translate: 0 #{math.div($_scale - 1, 8) * 3 * 100%};
+    }
+}

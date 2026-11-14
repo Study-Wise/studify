@@ -20,12 +20,9 @@
     text-align: center;
     display: flex;
 
-    &__pfp,
-    > svg {
+    .character-image-wrapper {
         width: 96px;
         aspect-ratio: 1;
-        object-fit: cover;
-        border-radius: 50%;
     }
 
     &__name {
