@@ -1,12 +1,8 @@
 export function getContentTypesList() {
-    const files = import.meta.glob('./latest/**.ts', { eager: true });
-    return Object.keys(files).map(filePath => {
-        const match = filePath.match(/\/latest\/(.*)\.ts$/);
-        return match ? match[1] : null;
-    }).filter(type => type !== null);
+    return Object.keys(import.meta.glob('./latest/**.ts', { eager: true })).map(filePath => filePath.match(/\/latest\/(.*)\.ts$/)?.[1] || null).filter(type => type !== null);
 }
 
-export default function getContentTypes() {
+export function getContentTypes() {
     const contentTypes = getContentTypesList();
     const types = JSON.stringify(contentTypes, null, 2);
     return types;
