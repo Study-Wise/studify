@@ -109,13 +109,15 @@ export const inNav = 'hide';
             <span class="material-symbols-outlined" aria-hidden="true">folder_shared</span>
             <span>Files &amp; Sharing</span>
         </label>
-        <label class="sidebar-drawer__toggle" data-side="right" for="sidebar-drawer-right">
-            <span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span>
-            <span>Study Materials</span>
-        </label>
+        {modeObj.sidebarSections?.studyMaterials && (
+            <label class="sidebar-drawer__toggle" data-side="right" for="sidebar-drawer-right">
+                <span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span>
+                <span>Study Materials</span>
+            </label>
+        )}
     </div>
     <label class="sidebar-drawer__backdrop" for="sidebar-drawer-closed"></label>
-    <section class="chat-container">
+    <section class="chat-container" data-sidebars={modeObj.sidebarSections?.studyMaterials ? 'both' : 'left'}>
         <input type="radio" name="sidebar-drawer" id="sidebar-drawer-left" class="sidebar-drawer__input sr-only" data-side="left" />
         <LeftSidebar
             isPublic={isPublicThread}
@@ -178,15 +180,18 @@ export const inNav = 'hide';
             {isAuthorized && <Toolbar />}
             <Footer hideCopyright={true} />
         </section>
-        <input type="radio" name="sidebar-drawer" id="sidebar-drawer-right" class="sidebar-drawer__input sr-only" data-side="right" />
-        <RightSidebar
-            threadId={id || ''}
-            category={category || ''}
-            mode={mode || ''}
-            isAuthorized={isAuthorized}
-            isPublic={isPublic}
-            sidebarSections={modeObj.sidebarSections}
-        />
+        {modeObj.sidebarSections?.studyMaterials && (
+            <>
+                <input type="radio" name="sidebar-drawer" id="sidebar-drawer-right" class="sidebar-drawer__input sr-only" data-side="right" />
+                <RightSidebar
+                    threadId={id || ''}
+                    category={category || ''}
+                    mode={mode || ''}
+                    isAuthorized={isAuthorized}
+                    isPublic={isPublic}
+                />
+            </>
+        )}
     </section>
     <script is:inline>
         const clientMessages = []
