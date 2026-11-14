@@ -1,0 +1,15 @@
+---
+import { generateAvatar } from '@/lib/avatar';
+import type { Mode } from '@/lib/modes';
+
+interface Props {
+    character: NonNullable<Mode['character']>;
+    alt?: string;
+    class?: string;
+}
+
+const { character, alt = '', class: className = '' } = Astro.props;
+---
+{character.pfp
+    ? <img src={character.pfp} alt={alt} class={className} />
+    : <Fragment set:html={generateAvatar({ ...character.appearance, ...character.colors }).replace('<svg ', `<svg class="${className}" `)} />}

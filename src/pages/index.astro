@@ -3,6 +3,7 @@ import appConfig from '@/lib/app.config';
 import { auth } from '@/lib/auth';
 import categories from '@/lib/modes';
 
+import CharacterImage from '@/components/CharacterImage.astro';
 import Layout from '@/layouts/Layout.astro';
 import '@/styles/pages/index.scss';
 import '@/styles/components/step-by-step.scss';
@@ -98,7 +99,9 @@ const visibleCategories = Object.entries(categories).filter(([_, category]) =>
                                 const href = isLoggedIn ? chatUrl : `/user/sign-in?returnBackUrl=${encodeURIComponent(chatUrl)}`;
                                 return (
                                     <a href={href} class="mode-card" data-search={`${mode.name} ${mode.description} ${category.name}`.toLowerCase()}>
-                                        <div class="mode-card__icon">{mode.icon}</div>
+                                        <div class="mode-card__icon" aria-hidden="true">
+                                            {mode.character ? <CharacterImage character={mode.character} /> : mode.icon}
+                                        </div>
                                         <h4>{mode.name}</h4>
                                         <p>{mode.description}</p>
                                     </a>

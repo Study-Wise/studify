@@ -1,12 +1,12 @@
 ---
 import { marked, Marked } from 'marked';
-import { generateAvatar } from '@/lib/avatar';
 import { checkForOneMessage } from '@/lib/check-for-one-message';
 import categories from '@/lib/modes';
 import { getMessages, getMessagesLength, getThreadByToken, type Message } from '@/lib/threads';
 import { labels } from '@/lib/tools';
 import { checkThreadAccess } from '@/lib/auth/check-thread-access';
 
+import CharacterImage from '@/components/CharacterImage.astro';
 import Footer from '@/components/Footer.astro';
 import ChatTitle from '@/components/chat/ChatTitle.astro';
 import Header from '@/components/chat/Header.astro';
@@ -137,10 +137,7 @@ export const inNav = 'hide';
             <div class="chat-messages">
                 {isAuthorized && processedMessages.length === 0 ? (
                     <div class="empty-state">
-                        {modeObj.character && (modeObj.character.pfp
-                            ? <img src={modeObj.character.pfp} alt={`${modeObj.character.name} profile picture`} class="empty-state__pfp" />
-                            : <Fragment set:html={generateAvatar({ ...modeObj.character.appearance, ...modeObj.character.colors })} />
-                        )}
+                        {modeObj.character && <CharacterImage character={modeObj.character} alt={`${modeObj.character.name} profile picture`} class="empty-state__pfp" />}
                         {modeObj.character && <div class="empty-state__name">{modeObj.character.name}</div>}
                         <h3>Let's study {modeName}!</h3>
                         <p>{modeObj.description}. Ask a question below to get started.</p>

@@ -2,6 +2,7 @@
 import categories from '@/lib/modes';
 import { getUserThreads } from '@/lib/threads';
 
+import CharacterImage from '@/components/CharacterImage.astro';
 import LocalTime from '@/components/LocalTime.astro';
 import '@/styles/components/my-chats.scss';
 
@@ -71,7 +72,11 @@ const threadsByCategory = threads.reduce<Record<string, Record<string, typeof th
                                                     <a href={chatUrl} class="my-chats__thread-card">
                                                         <div class="my-chats__thread-header">
                                                             <div class="my-chats__thread-info">
-                                                                {mode && <span class="my-chats__thread-icon">{mode.icon}</span>}
+                                                                {mode?.character && (
+                                                                    <span class="my-chats__thread-icon" aria-hidden="true">
+                                                                        <CharacterImage character={mode.character} />
+                                                                    </span>
+                                                                )}
                                                                 <div class="my-chats__thread-text">
                                                                     <h3 class="my-chats__thread-title">{displayTitle}</h3>
                                                                     <p class="my-chats__thread-mode">
