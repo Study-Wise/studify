@@ -11,7 +11,7 @@ const { mode, class: className = '' } = Astro.props;
 ---
 {mode.character ? (<>
     {mode.character?.pfp ? (
-        <img src={mode.character.pfp} alt={`${mode.character.name} profile picture`} class={className} />
+        <img src={mode.character.pfp} alt={`${mode.character.name} profile picture`} class:list={['character-image', ...className]} />
     ) : (
         <Fragment set:html={generateAvatar({ ...mode.character.appearance, ...mode.character.colors }).replace('<svg ', `<svg class="${className}" `)} />
     )}
