@@ -137,7 +137,7 @@ export const inNav = 'hide';
             <div class="chat-messages">
                 {isAuthorized && processedMessages.length === 0 ? (
                     <div class="empty-state">
-                        {modeObj.character && <CharacterImage character={modeObj.character} alt={`${modeObj.character.name} profile picture`} class="empty-state__pfp" />}
+                        <CharacterImage mode={modeObj} class="empty-state__pfp" />
                         {modeObj.character && <div class="empty-state__name">{modeObj.character.name}</div>}
                         <h3>Let's study {modeName}!</h3>
                         <p>{modeObj.description}. Ask a question below to get started.</p>

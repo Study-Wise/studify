@@ -72,9 +72,9 @@ const threadsByCategory = threads.reduce<Record<string, Record<string, typeof th
                                                     <a href={chatUrl} class="my-chats__thread-card">
                                                         <div class="my-chats__thread-header">
                                                             <div class="my-chats__thread-info">
-                                                                {mode?.character && (
+                                                                {mode && (
                                                                     <span class="my-chats__thread-icon" aria-hidden="true">
-                                                                        <CharacterImage character={mode.character} />
+                                                                        <CharacterImage mode={mode} />
                                                                     </span>
                                                                 )}
                                                                 <div class="my-chats__thread-text">
