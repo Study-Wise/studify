@@ -1,5 +1,6 @@
 ---
 import type { UploadedFile } from '@/lib/threads';
+import config from '@/lib/ai.config';
 
 import SidebarSection from '@/components/chat/SidebarSection.astro';
 import '@/styles/components/chat/left-sidebar.scss';
@@ -120,7 +121,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
     </div>
 </section>
 
-<script is:inline define:vars={{ threadId, email, category, mode }}>
+<script is:inline define:vars={{ threadId, email, category, mode, defaultProvider: config.provider, defaultTier: config.tier }}>
     let currentThreadId = threadId;
 
     let uploadQueue = [];
@@ -136,9 +137,8 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
     function updateShareLink() {
         if (!shareLink || !shareLinkInput) return;
 
-        const hasSavedThread = Boolean(currentThreadId) && currentThreadId !== 'new';
-        if (hasSavedThread) shareLinkInput.value = `${window.location.origin}/${category}/${mode}/chat/${currentThreadId}`;
-        shareLink.hidden = !(hasSavedThread && publicToggle?.checked);
+        if (currentThreadId !== 'new') shareLinkInput.value = `${window.location.origin}/${category}/${mode}/chat/${currentThreadId}`;
+        shareLink.hidden = !(currentThreadId !== 'new' && publicToggle?.checked);
     }
 
     shareLinkInput?.addEventListener('focus', () => shareLinkInput.select());
@@ -169,15 +169,13 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
 
     if (publicToggle) {
         publicToggle.addEventListener('change', async () => {
-            const isPublic = publicToggle.checked;
-
             // Unsaved thread: only update the label; the first message saves the visibility
             if (!currentThreadId || currentThreadId === 'new') {
-                if (shareStatusText) shareStatusText.textContent = isPublic ? 'Public' : 'Private';
+                if (shareStatusText) shareStatusText.textContent = publicToggle.checked ? 'Public' : 'Private';
 
                 const shareDescription = document.querySelector('.share-settings__description');
                 if (shareDescription) {
-                    shareDescription.textContent = isPublic
+                    shareDescription.textContent = publicToggle.checked
                         ? 'This thread is visible to anyone signed in with the link.'
                         : 'This thread is private and only visible to you.';
                 }
@@ -192,17 +190,17 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ threadId: currentThreadId, isPublic }),
+                    body: JSON.stringify({ threadId: currentThreadId, isPublic: publicToggle.checked }),
                 });
 
                 const data = await response.json();
 
                 if (data.status === 'success') {
-                    if (shareStatusText) shareStatusText.textContent = isPublic ? 'Public' : 'Private';
+                    if (shareStatusText) shareStatusText.textContent = publicToggle.checked ? 'Public' : 'Private';
 
                     const shareDescription = document.querySelector('.share-settings__description');
                     if (shareDescription) {
-                        shareDescription.textContent = isPublic
+                        shareDescription.textContent = publicToggle.checked
                             ? 'This thread is visible to anyone signed in with the link.'
                             : 'This thread is private and only visible to you.';
                     }
@@ -210,7 +208,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                     updateShareLink();
 
                     window.showSuccess?.(
-                        isPublic
+                        publicToggle.checked
                             ? 'Thread is now public. Anyone signed in with the link can view it.'
                             : 'Thread is now private. Only you can view it.'
                     );
@@ -222,7 +220,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                     error instanceof Error ? error.message : 'Failed to update sharing settings. Please try again.'
                 );
 
-                publicToggle.checked = !isPublic;
+                publicToggle.checked = !publicToggle.checked;
                 updateShareLink();
             } finally {
                 publicToggle.disabled = false;
@@ -232,9 +230,8 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
 
     // Adopt a thread created by the chat script (e.g. first message sent before uploading)
     window.addEventListener('thread-created', e => {
-        const { id: createdId, source } = e.detail || {};
-        if (source !== 'sidebar' && createdId && currentThreadId === 'new') {
-            currentThreadId = createdId;
+        if (e.detail?.source !== 'sidebar' && e.detail?.id && currentThreadId === 'new') {
+            currentThreadId = e.detail?.id;
             updateShareLink();
         }
     });
@@ -252,10 +249,9 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                 return;
             }
 
-            const chatTitle = document.querySelector('.chat-title__text')?.textContent?.trim() || 'this chat';
             const confirmed = await window.showConfirm(
                 'This cannot be undone.',
-                { title: `Delete "${chatTitle}"?`, confirmLabel: 'Delete', icon: 'delete' },
+                { title: `Delete "${document.querySelector('.chat-title__text')?.textContent?.trim() || 'this chat'}"?`, confirmLabel: 'Delete', icon: 'delete' },
             );
             if (!confirmed) return;
 
@@ -293,16 +289,12 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
 
     if (fileUpload && fileList) {
         fileUpload.addEventListener('change', async e => {
-            const target = e.target;
-            const files = target.files;
-
-            if (!files || files.length === 0) return;
+            if (!e.target.files || e.target.files.length === 0) return;
             if (!email) return;
 
-            for (let i = 0; i < files.length; i++) uploadQueue.push(files[i]);
+            for (let i = 0; i < e.target.files.length; i++) uploadQueue.push(e.target.files[i]);
 
-            const totalFiles = uploadQueue.length;
-            if (totalFiles > 1) window.showInfo?.(`Queued ${totalFiles} files for upload...`);
+            if (uploadQueue.length > 1) window.showInfo?.(`Queued ${uploadQueue.length} files for upload...`);
 
             if (isUploading || uploadQueue.length === 0) return;
 
@@ -318,16 +310,13 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
                 } catch {
                     settings = {};
                 }
-                const provider = settings.provider || 'openai';
-                const tier = settings.tier || 'default';
-
                 window.showInfo?.('Creating new chat...');
 
                 try {
                     const response = await fetch('/api/thread/initialize', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ category, mode, provider, tier, isPublic: publicToggle?.checked === true })
+                        body: JSON.stringify({ category, mode, provider: settings.provider || defaultProvider, tier: settings.tier || defaultTier, isPublic: publicToggle?.checked === true })
                     });
 
                     const data = await response.json();
@@ -490,8 +479,7 @@ const shareUrl = hasSavedThread ? new URL(`/${category}/${mode}/chat/${threadId}
     }
 
     fileList?.addEventListener('click', async e => {
-        const target = e.target;
-        const deleteButton = target.closest('.file-list__delete');
+        const deleteButton = e.target.closest('.file-list__delete');
 
         if (!deleteButton) return;
 
