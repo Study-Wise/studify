@@ -1,3 +1,7 @@
+---
+author: margo-page
+---
+
 # Upload class materials
 
 You can attach files to a chat to give our app context from your homework, notes, or other class materials. Upload them from the **Uploaded Files** section in the left-hand chat sidebar.

@@ -1,3 +1,7 @@
+---
+author: adarshrkumar
+---
+
 # A chat or page will not open
 
 If a chat or study material page won't open, start with the checks below.

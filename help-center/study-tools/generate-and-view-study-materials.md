@@ -1,3 +1,7 @@
+---
+author: margo-page
+---
+
 # Generate and view study materials
 
 Our app can turn a chat into several kinds of study materials. Open the chat where you've been discussing a topic and send at least one message first. The right-hand sidebar has sections for study guides, reference sheets, summaries, flashcards, practice questions, infographics, webpages, mind maps, slideshows, and additional resources.

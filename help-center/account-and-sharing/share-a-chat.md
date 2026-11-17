@@ -1,3 +1,7 @@
+---
+author: adarshrkumar
+---
+
 # Share a chat
 
 You can make a chat public so other people with its link can view it and its study materials. Signed-in users can view public chats. Only the chat owner can change the sharing settings.

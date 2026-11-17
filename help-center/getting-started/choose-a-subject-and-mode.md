@@ -1,3 +1,7 @@
+---
+author: margo-page
+---
+
 # Choose a subject and mode
 
 On the home page, we group study modes by subject. Pick the subject and mode that best fit your question to start a focused chat. For example, choose Math, then Algebra for algebra questions, or Science, then Biology for biology questions.

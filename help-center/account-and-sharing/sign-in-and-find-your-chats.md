@@ -1,3 +1,7 @@
+---
+author: adarshrkumar
+---
+
 # Sign in and find your chats
 
 Sign in to keep your chats saved to your account and to return to them later. Our app may take you to the sign-in page when you choose a study mode or open a private chat.

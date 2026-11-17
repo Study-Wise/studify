@@ -1,3 +1,7 @@
+---
+author: adarshrkumar
+---
+
 # A generated material is missing
 
 Each study material belongs to the chat it was generated from. If you can't find one, these checks should help.

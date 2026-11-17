@@ -1,3 +1,7 @@
+---
+author: margo-page
+---
+
 # Start a study chat
 
 Our app can turn your questions and class materials into a focused conversation and study resources. Here's how to get started.
