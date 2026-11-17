@@ -10,8 +10,6 @@ We don't have a native iPhone or Android app yet. You can still use our app on y
 
 Go to our website in your phone's browser and sign in the same way you would on a computer. Your chats and study materials are tied to your account, so they're there on any device.
 
-Our app isn't fully designed for small screens yet, so some pages may feel tighter on a phone than on a laptop. A mobile-friendly layout is something we plan to add, but we can't say when.
-
 ## Install it to your home screen
 
 **On iPhone or iPad (Safari):**
