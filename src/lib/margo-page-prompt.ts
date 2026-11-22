@@ -1,4 +1,3 @@
-// System prompt for the hidden Margo Page support chat (category "support", mode "margo"), sliced from the agent definition in .claude/agents/margo-page.md at the heading where the coding-agent workflow begins, then extended with live app details
 import aiConfig from '@/lib/ai.config';
 import appConfig from '@/lib/app.config';
 import { contentTypes } from '@/lib/content';
