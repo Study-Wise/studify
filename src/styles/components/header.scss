@@ -70,21 +70,9 @@ header {
         display: flex;
     }
 
-    &__content:not([data-mode="lite"]) {
+    &__content {
         flex: 1;
         margin-inline: auto;
-    }
-
-    &__content[data-mode="lite"] {
-        padding: $spacing-extra-small $spacing-medium;
-        width: fit-content;
-        color: var(--card-text);
-        background-color: var(--card-bg);
-        box-shadow: $box-shadow-medium;
-        border: 1px solid var(--card-border);
-        border-radius: $border-radius-large;
-        grid-template-columns: 1fr auto;
-        display: grid;
     }
 
     &__content &__text {

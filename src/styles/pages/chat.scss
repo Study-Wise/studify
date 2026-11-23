@@ -82,7 +82,7 @@ footer, .chat-toolbar {
 
 .chat-page {
     position: relative;
-    height: 100dvh;
+    min-height: 0;
     flex-direction: column;
     display: flex;
 }
@@ -237,10 +237,6 @@ footer, .chat-toolbar {
 
     &__share-text {
         font-weight: $font-weight-medium;
-    }
-
-    .header__text {
-        color: $section-title-light;
     }
 }
 
