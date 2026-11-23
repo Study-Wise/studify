@@ -42,9 +42,9 @@ body:
           label: Area
           description: Which part of the app does this relate to?
           options:
-              - Overall Site
+              - Overall site
               - Chat / AI responses
-              - Generated Content
+              - Generated content
               - Authentication / sign-in
               - Settings / profile
               - PWA / offline
