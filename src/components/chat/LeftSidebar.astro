@@ -67,10 +67,13 @@ const sidebarConfig = Object.fromEntries(
                                 <span class="share-settings__link-copy-text">Copy</span>
                             </button>
                         </div>
-                        <button type="button" class="share-settings__delete" id="delete-chat-button">
+                        <button type="button" class="share-settings__delete" id="delete-chat-button" disabled={!hasSavedThread} aria-describedby={hasSavedThread ? undefined : 'delete-chat-hint'}>
                             <span class="material-symbols-outlined" aria-hidden="true">delete</span>
                             <span>Delete Chat</span>
                         </button>
+                        {!hasSavedThread && (
+                            <p class="share-settings__delete-hint" id="delete-chat-hint">Send a message first.</p>
+                        )}
                     </div>
                 </div>
             </div>
@@ -244,26 +247,32 @@ const sidebarConfig = Object.fromEntries(
         });
     }
 
+    const deleteChatButton = document.getElementById('delete-chat-button');
+
+    // Delete Chat stays disabled until the thread has been saved
+    function enableDeleteChat() {
+        if (!deleteChatButton) return;
+
+        deleteChatButton.disabled = false;
+        deleteChatButton.removeAttribute('aria-describedby');
+        document.getElementById('delete-chat-hint')?.remove();
+    }
+
     // Adopt a thread created by the chat script (e.g. first message sent before uploading)
     window.addEventListener('thread-created', e => {
         if (e.detail?.source !== 'sidebar' && e.detail?.id && currentThreadId === 'new') {
             currentThreadId = e.detail?.id;
             updateShareLink();
+            enableDeleteChat();
         }
     });
 
-    const deleteChatButton = document.getElementById('delete-chat-button');
-
     if (deleteChatButton) {
         deleteChatButton.addEventListener('click', async () => {
-            const newChatUrl = `/${category}/${mode}/chat/new`;
+            // Nothing to delete until the thread has been saved
+            if (!currentThreadId || currentThreadId === 'new') return;
 
-            // Nothing persisted yet for an unsaved chat, so just start over
-            if (!currentThreadId || currentThreadId === 'new') {
-                window.showSuccessAfterNavigation?.('Chat deleted');
-                window.location.href = newChatUrl;
-                return;
-            }
+            const newChatUrl = `/${category}/${mode}/chat/new`;
 
             const confirmed = await window.showConfirm(
                 'This cannot be undone.',
@@ -341,6 +350,7 @@ const sidebarConfig = Object.fromEntries(
                         currentThreadId = data.id;
                         activeThreadId = data.id;
                         updateShareLink();
+                        enableDeleteChat();
 
                         // Let the chat script use this thread instead of creating another one
                         window.dispatchEvent(new CustomEvent('thread-created', {
