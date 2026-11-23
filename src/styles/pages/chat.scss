@@ -80,7 +80,9 @@ footer, .chat-toolbar {
     inset-block-end: 0;
 }
 
+// Fill the space left under the site header; min-height: 0 lets the messages scroll inside instead of growing the page
 .chat-page {
+    flex: 1;
     position: relative;
     min-height: 0;
     flex-direction: column;
