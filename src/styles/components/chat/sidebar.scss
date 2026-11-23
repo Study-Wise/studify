@@ -374,7 +374,7 @@
             font-size: $font-size-large;
         }
 
-        &:hover {
+        &:hover:not(:disabled) {
             background-color: rgb(from #{$color-error} r g b / 10%);
         }
 
@@ -382,6 +382,14 @@
             opacity: $opacity-disabled;
             cursor: not-allowed;
         }
+    }
+
+    &__delete-hint {
+        margin: 0;
+        color: var(--card-text);
+        font-size: 0.8125rem;
+        text-align: center;
+        opacity: 0.6;
     }
 
     &__spinner {
