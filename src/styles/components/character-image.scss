@@ -14,9 +14,9 @@
     }
 
     &[data-crop="head"] > img {
-        $head-crop-scale: 1.35;
+        $head-scale: 1.35;
 
-        translate: 0 #{math.div($head-crop-scale - 1, 8) * 3 * 100%};
-        scale: #{$head-crop-scale * 100%};
+        translate: 0 #{math.div($head-scale - 1, 8) * 3 * 100%};
+        scale: #{$head-scale * 100%};
     }
 }
