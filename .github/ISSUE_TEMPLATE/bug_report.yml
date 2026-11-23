@@ -42,15 +42,9 @@ body:
           label: Area
           description: Which part of the app is affected?
           options:
+              - Overall site
               - Chat / AI responses
-              - Study guide
-              - Reference sheet
-              - Infographic
-              - Webpage
-              - Mind map
-              - Flashcards
-              - Practice questions
-              - Additional resources
+              - Content generation
               - Authentication / sign-in
               - Settings / profile
               - PWA / offline
