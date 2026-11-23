@@ -29,7 +29,8 @@ env:
 jobs:
     test-browsers:
         name: All Browsers
-        runs-on: ubuntu-latest
+        # Pinned: ubuntu-latest is now 26.04, which Playwright does not support yet.
+        runs-on: ubuntu-24.04
         timeout-minutes: 20
         steps:
             - uses: actions/checkout@v4
