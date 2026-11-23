@@ -52,9 +52,13 @@ const sidebarConfig = Object.fromEntries(
                             </label>
                         </div>
                         <p class="share-settings__description" id="public-toggle-description">
-                            {isPublic
-                                ? 'This thread is visible to anyone signed in with the link.'
-                                : 'This thread is private and only visible to you.'}
+                            {hasSavedThread
+                                ? isPublic
+                                    ? 'This thread is visible to anyone signed in with the link.'
+                                    : 'This thread is private and only visible to you.'
+                                : isPublic
+                                    ? 'This thread will be public once you send the first message. Anyone signed in with the link will be able to view it.'
+                                    : 'This thread will be private once you send the first message. Only you will be able to view it.'}
                         </p>
                         <div class="share-settings__link" id="share-link" hidden={!(isPublic && hasSavedThread)}>
                             <input type="text" id="share-link-input" class="share-settings__link-input" aria-label="Share link" value={shareUrl} readonly />
@@ -138,8 +142,29 @@ const sidebarConfig = Object.fromEntries(
     const shareLinkInput = document.getElementById('share-link-input');
     const shareLinkCopy = document.getElementById('share-link-copy');
 
+    // Describe the visibility; on an unsaved chat it applies once the first message is sent
+    function updateShareDescription() {
+        const shareDescription = document.getElementById('public-toggle-description');
+        if (!shareDescription || !publicToggle) return;
+
+        const isSaved = Boolean(currentThreadId) && currentThreadId !== 'new';
+
+        if (isSaved) {
+            shareDescription.textContent = publicToggle.checked
+                ? 'This thread is visible to anyone signed in with the link.'
+                : 'This thread is private and only visible to you.';
+        }
+        else {
+            shareDescription.textContent = publicToggle.checked
+                ? 'This thread will be public once you send the first message. Anyone signed in with the link will be able to view it.'
+                : 'This thread will be private once you send the first message. Only you will be able to view it.';
+        }
+    }
+
     // Show the share URL only for a saved, public thread
     function updateShareLink() {
+        updateShareDescription();
+
         if (!shareLink || !shareLinkInput) return;
 
         if (currentThreadId !== 'new') shareLinkInput.value = `${window.location.origin}/${category}/${mode}/chat/${currentThreadId}`;
@@ -177,13 +202,7 @@ const sidebarConfig = Object.fromEntries(
             // Unsaved thread: only update the label; the first message saves the visibility
             if (!currentThreadId || currentThreadId === 'new') {
                 if (shareStatusText) shareStatusText.textContent = publicToggle.checked ? 'Public' : 'Private';
-
-                const shareDescription = document.querySelector('.share-settings__description');
-                if (shareDescription) {
-                    shareDescription.textContent = publicToggle.checked
-                        ? 'This thread is visible to anyone signed in with the link.'
-                        : 'This thread is private and only visible to you.';
-                }
+                updateShareDescription();
                 return;
             }
 
@@ -202,14 +221,6 @@ const sidebarConfig = Object.fromEntries(
 
                 if (data.status === 'success') {
                     if (shareStatusText) shareStatusText.textContent = publicToggle.checked ? 'Public' : 'Private';
-
-                    const shareDescription = document.querySelector('.share-settings__description');
-                    if (shareDescription) {
-                        shareDescription.textContent = publicToggle.checked
-                            ? 'This thread is visible to anyone signed in with the link.'
-                            : 'This thread is private and only visible to you.';
-                    }
-
                     updateShareLink();
 
                     window.showSuccess?.(
