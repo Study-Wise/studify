@@ -97,9 +97,10 @@ const regenerateButtonId = `regenerate-${id}-btn`;
             const data = await response.json();
 
             if (data.status === 'success') {
-                if (generateBtn?.closest('.sidebar-section') || regenerateBtn?.closest('.sidebar-section')) {
-                    const sectionBody = generateBtn?.closest('.sidebar-section') || regenerateBtn?.closest('.sidebar-section').querySelector('.sidebar-section__body');
-                    const sectionHeader = generateBtn?.closest('.sidebar-section') || regenerateBtn?.closest('.sidebar-section').querySelector('.sidebar-section__header');
+                const section = generateBtn?.closest('.sidebar-section') || regenerateBtn?.closest('.sidebar-section');
+                if (section) {
+                    const sectionBody = section.querySelector('.sidebar-section__body');
+                    const sectionHeader = section.querySelector('.sidebar-section__header');
 
                     if (sectionBody) {
                         sectionBody.innerHTML = `
@@ -110,7 +111,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
                         `;
                     }
 
-                    if (canRegenerate && sectionHeader && !generateBtn?.closest('.sidebar-section') || regenerateBtn?.closest('.sidebar-section').querySelector('.sidebar-section__regenerate')) {
+                    if (canRegenerate && sectionHeader && !sectionHeader.querySelector('.sidebar-section__regenerate')) {
                         const newRegenerateBtn = document.createElement('button');
                         newRegenerateBtn.type = 'button';
                         newRegenerateBtn.className = 'sidebar-section__regenerate';
