@@ -120,7 +120,7 @@ if (container) classList.push('container');
         <ThemeSwitcher />
         <Dialog />
         {!Astro.routePattern.startsWith('/[category]/[mode]') && <TawkTo />}
-        {!isChatArea ? <Header /> : ''}
+        <Header />
         <main class:list={['main-content', ...classList]} id="main-content">
             <slot />
         </main>

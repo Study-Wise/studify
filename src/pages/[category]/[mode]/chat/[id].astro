@@ -8,7 +8,6 @@ import { checkThreadAccess } from '@/lib/auth/check-thread-access';
 
 import CharacterImage from '@/components/CharacterImage.astro';
 import Footer from '@/components/Footer.astro';
-import Header from '@/components/chat/Header.astro';
 import LeftSidebar from '@/components/chat/LeftSidebar.astro';
 import RightSidebar from '@/components/chat/RightSidebar.astro';
 import ChatTitle from '@/components/chat/Title.astro';
@@ -101,7 +100,6 @@ export const inNav = 'hide';
                 </ol>
             </nav>
         </div>
-        <Header pTitle={threadTitle || (id === 'new' ? 'New Chat' : 'Chat')} />
     </header>
     <input type="radio" name="sidebar-drawer" id="sidebar-drawer-closed" class="sidebar-drawer__input sr-only" checked />
     <div class="sidebar-drawer__toggles">
