@@ -1,5 +1,6 @@
 ---
-import { isUserAdmin } from '@/lib/auth/admin';
+import appConfig from '@/lib/app.config';
+import { getUserRole } from '@/lib/auth/admin';
 
 import LocalTime from '@/components/LocalTime.astro';
 import Layout from '@/layouts/Layout.astro';
@@ -9,7 +10,7 @@ const user = Astro.locals.user;
 
 if (!user) return Astro.redirect('/user/sign-in');
 
-if (!(await isUserAdmin(user.email))) return Astro.redirect('/');
+if ((await getUserRole(user.email)) !== appConfig.adminRole) return Astro.redirect('/');
 ---
 <Layout title="Admin Dashboard" className="admin-page">
     <div class="admin">

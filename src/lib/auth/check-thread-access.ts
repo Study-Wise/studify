@@ -1,8 +1,9 @@
 import type { User } from 'better-auth';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
-import { isUserAdmin as checkIsUserAdmin } from '@/lib/auth/admin';
-import { isDev, getDevUser, isDevUserAdmin } from '@/lib/auth/dev';
+import appConfig from '@/lib/app.config';
+import { getUserRole } from '@/lib/auth/admin';
+import { isDev, getDevUser } from '@/lib/auth/dev';
 
 import { eq } from 'drizzle-orm';
 
@@ -32,7 +33,7 @@ export async function checkThreadAccess(
 
     if (userEmail) {
         try {
-            isUserAdminFlag = await checkIsUserAdmin(userEmail);
+            isUserAdminFlag = (await getUserRole(userEmail)) === appConfig.adminRole;
         } catch (error) {
             console.error('Error checking admin status:', error);
         }
@@ -40,7 +41,7 @@ export async function checkThreadAccess(
     else if (isDev()) {
         // In dev mode without a user email, check dev user admin status directly
         try {
-            isUserAdminFlag = await isDevUserAdmin();
+            isUserAdminFlag = (await getDevUser())?.role === appConfig.adminRole;
         } catch (error) {
             console.error('Error checking dev admin status:', error);
         }

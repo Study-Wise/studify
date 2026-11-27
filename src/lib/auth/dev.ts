@@ -3,8 +3,9 @@
 import { account, user as userTable } from '@/db/auth-schema';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
+import appConfig from '@/lib/app.config';
 import type { ThreadAccessResult } from '@/lib/auth/check-thread-access';
-import type { UserRole, User } from '@/lib/auth/types';
+import type { User } from '@/lib/auth/types';
 
 import { eq } from 'drizzle-orm';
 
@@ -44,14 +45,8 @@ export async function getDevUser(): Promise<User | null> {
         if (!user) return null;
 
         return {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            emailVerified: user.emailVerified,
-            image: user.image,
-            role: user.role === 'admin' || user.role === 'moderator' ? user.role : 'user',
-            createdAt: user.createdAt,
-            updatedAt: user.updatedAt,
+            ...user,
+            role: user.role === appConfig.adminRole || user.role === appConfig.moderatorRole ? user.role : 'user',
         };
     } catch (error) {
         console.error('Error fetching dev user:', error);
@@ -59,20 +54,12 @@ export async function getDevUser(): Promise<User | null> {
     }
 }
 
-export async function getDevUserRole(): Promise<UserRole | ''> {
-    return (await getDevUser())?.role || '';
-}
-
-export async function isDevUserAdmin(): Promise<boolean> {
-    return (await getDevUserRole()) === 'admin';
-}
-
 export async function isDevUserModerator(): Promise<boolean> {
-    return ['moderator', 'admin'].includes(await getDevUserRole());
+    return [appConfig.moderatorRole, appConfig.adminRole].includes((await getDevUser())?.role || '');
 }
 
 export async function isDevUserPremium(): Promise<boolean> {
-    return ['premium', 'moderator', 'admin'].includes(await getDevUserRole());
+    return [appConfig.premiumRole, appConfig.moderatorRole, appConfig.adminRole].includes((await getDevUser())?.role || '');
 }
 
 // Similar to checkThreadAccess but uses the dev access token
@@ -152,16 +139,9 @@ export async function checkDevThreadAccess(
         }
     }
 
-    const isAuthorized = Boolean(
-        threadId &&
-            ((threadOwner && threadOwner === userEmail) ||
-                !threadOwner ||
-                devUser?.role === 'admin')
-    );
-
     return {
-        isAuthorized: isAuthorized,
-        isPublic: !isAuthorized && isPublicThread,
+        isAuthorized: !!threadId && (!threadOwner || threadOwner === userEmail || devUser?.role === appConfig.adminRole),
+        isPublic: isPublicThread && !(threadId && (!threadOwner || threadOwner === userEmail || devUser?.role === appConfig.adminRole)),
         isPublicThread: isPublicThread,
         threadOwner,
         threadExists,

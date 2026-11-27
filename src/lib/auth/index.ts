@@ -3,6 +3,7 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { magicLink } from 'better-auth/plugins';
 import { user, session, account, verification } from '@/db/auth-schema';
 import { db } from '@/db/initialize';
+import appConfig from '@/lib/app.config';
 import type { SocialProviderConfig } from '@/lib/auth/types';
 
 const ADMIN_EMAILS = [
@@ -89,8 +90,8 @@ export const auth = betterAuth({
                         data: {
                             ...user,
                             role: ADMIN_EMAILS.map(e => e.toLowerCase()).includes(user.email.toLowerCase()) || ADMIN_DOMAINS.some(domain => user.email.toLowerCase().endsWith(domain))
-                                ? 'admin'
-                                : (MODERATOR_DOMAINS.some(domain => user.email.toLowerCase().endsWith(domain)) ? 'moderator' : 'user'),
+                                ? appConfig.adminRole
+                                : (MODERATOR_DOMAINS.some(domain => user.email.toLowerCase().endsWith(domain)) ? appConfig.moderatorRole : 'user'),
                         },
                     };
                 },

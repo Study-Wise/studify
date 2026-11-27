@@ -1,7 +1,7 @@
-import { userRoleEnum } from '@/lib/auth/types';
+import { userRoleSchema } from '@/lib/auth/types';
+import type { UserDiscord } from '@/lib/auth/types';
 
-import { relations } from 'drizzle-orm';
-import { pgTable, text, timestamp, boolean, index } from 'drizzle-orm/pg-core';
+import { pgTable, pgEnum, text, timestamp, boolean, index, jsonb } from 'drizzle-orm/pg-core';
 
 export const user = pgTable(
     'user',
@@ -11,7 +11,8 @@ export const user = pgTable(
         email: text('email').notNull().unique(),
         emailVerified: boolean('email_verified').default(false).notNull(),
         image: text('image'),
-        role: userRoleEnum('role').default('user').notNull(),
+        role: pgEnum('user_role', userRoleSchema.options)('role').default('user').notNull(),
+        discord: jsonb('discord').$type<UserDiscord>(),
         createdAt: timestamp('created_at').defaultNow().notNull(),
         updatedAt: timestamp('updated_at')
             .defaultNow()
@@ -78,22 +79,3 @@ export const verification = pgTable(
     },
     table => [index('verification_identifier_idx').on(table.identifier)],
 );
-
-export const userRelations = relations(user, ({ many }) => ({
-    sessions: many(session),
-    accounts: many(account),
-}));
-
-export const sessionRelations = relations(session, ({ one }) => ({
-    user: one(user, {
-        fields: [session.userId],
-        references: [user.id],
-    }),
-}));
-
-export const accountRelations = relations(account, ({ one }) => ({
-    user: one(user, {
-        fields: [account.userId],
-        references: [user.id],
-    }),
-}));

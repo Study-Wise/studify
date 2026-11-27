@@ -3,6 +3,7 @@ import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 import { streamText, extractToolData, generateTitle } from '@/lib/ai-service';
 import config from '@/lib/ai.config';
+import appConfig from '@/lib/app.config';
 import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
 import { getValidModelAndProvider, providers } from '@/lib/models';
 import categories from '@/lib/modes';
@@ -12,7 +13,7 @@ import { modules } from '@/lib/tools';
 import type { ToolContext } from '@/lib/tools';
 import { VendorError, getUserErrorMessage } from '@/lib/user-errors';
 import isValidEmail from '@/lib/validation';
-import { isUserAdmin } from '@/lib/auth/admin';
+import { getUserRole } from '@/lib/auth/admin';
 
 import { and, eq, type InferSelectModel } from 'drizzle-orm';
 
@@ -42,7 +43,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        const isAdmin = await isUserAdmin(locals.user.email);
+        const role = await getUserRole(locals.user.email);
 
         if (!isValidEmail(locals.user.email)) {
             console.error(`❌ [${requestId}] Invalid email format:`, locals.user.email);
@@ -57,9 +58,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
         if (!current_thread_id) {
             try {
-
                 if (locals.user.email) {
-                    if (!isAdmin) {
+                    if (role !== appConfig.adminRole) {
                         if ((await db.select().from(threadsTable).where(eq(threadsTable.email, locals.user.email))).length >= config.maxThreadsPerUser) {
                             console.error(`❌ [${requestId}] Thread limit exceeded for user:`, locals.user.email);
                             return new Response(
@@ -181,7 +181,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
             }
         }
 
-        if (!isAdmin) {
+        if (role !== appConfig.adminRole) {
             if (convoHistory.filter(msg => msg.role === 'user').length + 1 > config.maxMessagesPerThread) {
                 console.error(`❌ [${requestId}] User message limit exceeded for thread:`, current_thread_id);
                 return new Response(

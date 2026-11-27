@@ -2,8 +2,9 @@ import { nanoid } from 'nanoid';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 import config from '@/lib/ai.config';
+import appConfig from '@/lib/app.config';
 import { getValidModelAndProvider } from '@/lib/models';
-import { isUserAdmin } from '@/lib/auth/admin';
+import { getUserRole } from '@/lib/auth/admin';
 
 import { eq } from 'drizzle-orm';
 
@@ -23,7 +24,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             );
         }
 
-        if (!(await isUserAdmin(locals.user.email))) {
+        if ((await getUserRole(locals.user.email)) !== appConfig.adminRole) {
             if (
                 (await db.select().from(threadsTable).where(eq(threadsTable.email, locals.user.email))).length
                 >= config.maxThreadsPerUser

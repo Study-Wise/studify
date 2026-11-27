@@ -9,5 +9,8 @@ export default {
     creators: 'Adarsh R. Kumar and Rien Gupta',
     description: `${name} is your AI-powered study partner. Paste your homework and instantly generate study guides, reference sheets, flashcards, practice questions, mind maps, and more across subjects like Math, Science, and English.`,
     copyrightStart: 2025,
+    adminRole: 'admin',
+    moderatorRole: 'moderator',
+    premiumRole: 'premium',
     hiddenPages: ['chat', 'settings', 'admin', '404'],
 };
