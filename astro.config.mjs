@@ -45,6 +45,12 @@ export default defineConfig({
     adapter: vercel(),
     security: {
         checkOrigin: false,
+        allowedDomains: [
+            {
+                hostname: 'studywise.adarshrkumar.app',
+                protocol: 'https',
+            },
+        ],
     },
     integrations: [
         AstroPWA({
