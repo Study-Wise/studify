@@ -30,7 +30,7 @@ const providers: Providers = {
     google: {
         name: 'Google',
         tiers: {
-            default: { name: 'Default', model: 'gemini-3-pro-preview' },
+            default: { name: 'Default', model: 'gemini-3.1-pro-preview' },
             mini: { name: 'Mini', model: 'gemini-2.5-flash' },
             nano: { name: 'Nano', model: 'gemini-2.5-flash-lite' },
         },
