@@ -50,13 +50,6 @@ export async function generateText(
 
     convoHistory = convoHistory.filter(msg => msg.role !== 'system' && msg.content !== '');
 
-    if (convoHistory[0]?.role !== 'system') {
-        convoHistory.unshift({
-            role: 'system',
-            content: systemPrompt
-        });
-    }
-
     if (convoHistory[convoHistory.length - 1]?.role !== 'user' || convoHistory[convoHistory.length - 1]?.content !== userPrompt) {
         convoHistory.push({
             role: 'user',
@@ -72,6 +65,7 @@ export async function generateText(
     try {
         const result = await ai.generateText({
             model: aiModel,
+            system: systemPrompt,
             messages: convoHistory,
             tools: resolvedTools,
             stopWhen: stepCountIs(maxSteps),
@@ -219,8 +213,6 @@ export async function streamText(
 
     convoHistory = convoHistory.filter(msg => msg.role !== 'system' && msg.content !== '');
 
-    if (convoHistory[0]?.role !== 'system') convoHistory.unshift({ role: 'system', content: systemPrompt });
-
     if (convoHistory[convoHistory.length - 1]?.role !== 'user' || convoHistory[convoHistory.length - 1]?.content !== userPrompt) convoHistory.push({ role: 'user', content: userPrompt });
 
     const aiModel = `${provider}/${userModel}`;
@@ -228,6 +220,7 @@ export async function streamText(
 
     return ai.streamText({
         model: aiModel,
+        system: systemPrompt,
         messages: convoHistory,
         tools: resolvedTools,
         stopWhen: stepCountIs(maxSteps),
@@ -305,12 +298,9 @@ export async function generateTitle(options: TitleGenerationOptions): Promise<st
         const titleStartTime = Date.now();
         const { text: generatedText } = await ai.generateText({
             model: `${provider}/${userModel}`,
+            system: 'You are a helpful assistant that generates concise, descriptive titles for conversations.',
             messages: [
-                {
-                    role: 'system',
-                    content: 'You are a helpful assistant that generates concise, descriptive titles for conversations.',
-                },
-                ...convoHistory,
+                ...convoHistory.filter(msg => msg.role !== 'system'),
                 {
                     role: 'user',
                     content: 'Please generate a concise title for this conversation.',
@@ -340,14 +330,11 @@ export async function paraphraseQuestion(question: string, category: string, mod
         const paraphraseStartTime = Date.now();
         const { text } = await ai.generateText({
             model: `${config.provider}/${config.model}`,
-            messages: [
-                {
-                    role: 'system',
-                    content:
+            system:
 `You are a helpful assistant that paraphrases student questions to make them clearer and more concise while preserving their original meaning. The question is in the context of ${category} - ${mode}.
 
 IMPORTANT: Only output the paraphrased question, nothing else. Do not add any explanations, quotation marks, or additional text.`,
-                },
+            messages: [
                 {
                     role: 'user',
                     content: question,
@@ -382,13 +369,6 @@ export async function generateObject<T>(
 ): Promise<T> {
     convoHistory = convoHistory.filter(msg => msg.role !== 'system' && msg.content !== '');
 
-    if (convoHistory[0]?.role !== 'system') {
-        convoHistory.unshift({
-            role: 'system',
-            content: systemPrompt
-        });
-    }
-
     if (convoHistory[convoHistory.length - 1]?.role !== 'user' || convoHistory[convoHistory.length - 1]?.content !== userPrompt) {
         convoHistory.push({
             role: 'user',
@@ -403,6 +383,7 @@ export async function generateObject<T>(
     try {
         const result = await ai.generateObject({
             model: aiModel,
+            system: systemPrompt,
             messages: convoHistory,
             schema,
         });
