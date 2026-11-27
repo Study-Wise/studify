@@ -109,7 +109,13 @@ export const POST: APIRoute = async ({ request, locals }) => {
             { status: 200 }
         );
     } catch (error) {
-        console.error('Chunk upload error:', error);
+        console.error('Chunk upload error:', {
+            error,
+            email: locals.user?.email,
+            origin: request.headers.get('origin'),
+            host: request.headers.get('host'),
+            contentLength: request.headers.get('content-length'),
+        });
         return new Response(
             JSON.stringify({
                 status: 'error',
