@@ -90,7 +90,7 @@ footer, .chat-toolbar {
     position: relative;
     inset-block-start: 0;
     box-sizing: border-box;
-    padding: $spacing-small $spacing-medium;
+    padding: $spacing-extra-small $spacing-medium;
     box-shadow: 0 0 20px rgb(from var(--card-shadow) r g b / 10%);
     -webkit-backdrop-filter: var(--bd);
     backdrop-filter: var(--bd);
