@@ -72,15 +72,10 @@ body:has(.chat-page) {
     height: 100dvh;
 }
 
-.chat-header {
-    inset-block-start: 0;
-}
-
 footer, .chat-toolbar {
     inset-block-end: 0;
 }
 
-// Fill the space left under the site header; min-height: 0 lets the messages scroll inside instead of growing the page
 .chat-page {
     flex: 1;
     position: relative;
@@ -93,8 +88,9 @@ footer, .chat-toolbar {
     --bd: blur(10px);
 
     position: relative;
+    inset-block-start: 0;
     box-sizing: border-box;
-    padding: $spacing-medium + 0.25rem $spacing-large;
+    padding: $spacing-small $spacing-medium;
     box-shadow: 0 0 20px rgb(from var(--card-shadow) r g b / 10%);
     -webkit-backdrop-filter: var(--bd);
     backdrop-filter: var(--bd);
@@ -111,9 +107,9 @@ footer, .chat-toolbar {
         display: flex;
     }
 
-    h2 {
+    .chat-title {
         margin: 0;
-        padding: $spacing-small + 0.25rem $spacing-large;
+        padding: $spacing-small $spacing-medium;
         width: fit-content;
         min-width: 0;
         max-width: 100%;
