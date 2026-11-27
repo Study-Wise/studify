@@ -43,6 +43,9 @@ export default defineConfig({
     site: 'https://studywise.adarshrkumar.app',
     output: 'server',
     adapter: vercel(),
+    security: {
+        checkOrigin: false,
+    },
     integrations: [
         AstroPWA({
             registerType: 'autoUpdate',

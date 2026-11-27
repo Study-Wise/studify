@@ -24,6 +24,8 @@ const authRoutes = [
     /^\/user\/sign-up.*/,
 ];
 
+const formContentTypes = ['application/x-www-form-urlencoded', 'multipart/form-data', 'text/plain'];
+
 export const onRequest: MiddlewareHandler = async function onRequest(context, next) {
     if (context.request.method === 'HEAD') {
         return new Response(null, {
@@ -32,6 +34,23 @@ export const onRequest: MiddlewareHandler = async function onRequest(context, ne
                 'Content-Type': 'text/html',
             },
         });
+    }
+
+    if (!['GET', 'OPTIONS'].includes(context.request.method)) {
+        const origin = context.request.headers.get('origin');
+        const contentType = context.request.headers.get('content-type');
+        if (origin !== context.url.origin && (!contentType || formContentTypes.some(type => contentType.toLowerCase().includes(type)))) {
+            if (context.url.pathname.startsWith('/api/files/')) {
+                console.error('🚫 File upload rejected as cross-site', {
+                    path: context.url.pathname,
+                    origin,
+                    expectedOrigin: context.url.origin,
+                    host: context.request.headers.get('host'),
+                    contentLength: context.request.headers.get('content-length'),
+                });
+            }
+            return new Response(`Cross-site ${context.request.method} form submissions are forbidden`, { status: 403 });
+        }
     }
 
     // Error reports don't need a session, and must still go through when the database is down
