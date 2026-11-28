@@ -74,7 +74,7 @@ export const onRequest: MiddlewareHandler = async function onRequest(context, ne
 
         if (context.locals.user.discord === undefined && context.locals.user.email) context.locals.user.discord = await getUserDiscord(context.locals.user.email);
     }
-    else if (isDev()) {
+    else if (isDev) {
         // In dev mode, try to authenticate using USER_ACCESS_TOKEN
         const devUser = await getDevUser();
         context.locals.session = null; // No actual session, but user is authenticated via token

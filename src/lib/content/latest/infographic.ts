@@ -1,5 +1,5 @@
 import type { User } from 'better-auth';
-import { checkThreadAccess } from '@/lib/auth/check-thread-access';
+import { checkThreadAccess } from '@/lib/auth/thread-access';
 import { getLatestContent } from '@/lib/content/latest/';
 
 export interface InfographicData {

@@ -1,6 +1,6 @@
 import type { User } from 'better-auth';
 import { z } from 'zod';
-import { checkThreadAccess } from '@/lib/auth/check-thread-access';
+import { checkThreadAccess } from '@/lib/auth/thread-access';
 import { getLatestContent } from '@/lib/content/latest/';
 
 const stepSchema = z.object({

@@ -10,9 +10,6 @@ import { eq } from 'drizzle-orm';
 export interface ThreadAccessResult {
     isAuthorized: boolean;
     isPublic: boolean;
-    isPublicThread: boolean;
-    threadOwner: string | null;
-    threadExists: boolean;
 }
 
 export async function getThreadAccess(
@@ -23,10 +20,9 @@ export async function getThreadAccess(
 ): Promise<ThreadAccessResult> {
     let threadOwner: string | null = null;
     let isPublicThread = false;
-    let threadExists = false;
     let isUserAdminFlag = false;
 
-    const userEmail = (user ?? (isDev() ? await getDevUser() : null))?.email;
+    const userEmail = (user ?? (isDev ? await getDevUser() : null))?.email;
 
     if (userEmail) {
         try {
@@ -35,7 +31,7 @@ export async function getThreadAccess(
             console.error('Error checking admin status:', error);
         }
     }
-    else if (isDev()) {
+    else if (isDev) {
         try {
             isUserAdminFlag = (await getDevUser())?.role === appConfig.adminRole;
         } catch (error) {
@@ -47,7 +43,6 @@ export async function getThreadAccess(
         try {
             const [thread] = await db.select().from(threadsTable).where(eq(threadsTable.id, threadId));
             if (thread) {
-                threadExists = true;
                 threadOwner = thread.email;
                 isPublicThread = thread.isPublic;
 
@@ -55,20 +50,14 @@ export async function getThreadAccess(
                     console.error(`Category mismatch: URL has '${urlCategory}' but thread has '${thread.category}'`);
                     return {
                         isAuthorized: false,
-                        isPublic: false,
-                        isPublicThread: false,
-                        threadOwner: null,
-                        threadExists
+                        isPublic: false
                     };
                 }
                 if (urlMode && thread.mode !== urlMode) {
                     console.error(`Mode mismatch: URL has '${urlMode}' but thread has '${thread.mode}'`);
                     return {
                         isAuthorized: false,
-                        isPublic: false,
-                        isPublicThread: false,
-                        threadOwner: null,
-                        threadExists
+                        isPublic: false
                     };
                 }
 
@@ -95,10 +84,7 @@ export async function getThreadAccess(
 
     return {
         isAuthorized: isAuthorized,
-        isPublic: !isAuthorized && isPublicThread,
-        isPublicThread: isPublicThread,
-        threadOwner,
-        threadExists
+        isPublic: !isAuthorized && isPublicThread
     };
 }
 

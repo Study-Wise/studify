@@ -4,19 +4,17 @@ import { account, user as userTable } from '@/db/auth-schema';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 import appConfig from '@/lib/app.config';
-import type { ThreadAccessResult } from '@/lib/auth/check-thread-access';
+import type { ThreadAccessResult } from '@/lib/auth/thread-access';
 import type { User } from '@/lib/auth/types';
 
 import { eq } from 'drizzle-orm';
 
-export function isDev(): boolean {
-    return (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development';
-}
+export const isDev = (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development';
 
 const DEV_ACCESS_TOKEN = import.meta.env.USER_ACCESS_TOKEN || process.env.USER_ACCESS_TOKEN || null;
 
 export async function getDevUserId(): Promise<string | null> {
-    if (!isDev()) return null;
+    if (!isDev) return null;
     if (!DEV_ACCESS_TOKEN) return null;
 
     try {
@@ -68,20 +66,16 @@ export async function checkDevThreadAccess(
     urlCategory?: string,
     urlMode?: string
 ): Promise<ThreadAccessResult> {
-    if (!isDev()) {
+    if (!isDev) {
         return {
             isAuthorized: false,
             isPublic: false,
-            isPublicThread: false,
-            threadOwner: null,
-            threadExists: false,
         };
     }
 
     const devUser = await getDevUser();
     let threadOwner: string | null = null;
     let isPublicThread = false;
-    let threadExists = false;
 
     const userEmail = devUser?.email || null;
 
@@ -93,7 +87,6 @@ export async function checkDevThreadAccess(
                 .where(eq(threadsTable.id, threadId));
 
             if (thread) {
-                threadExists = true;
                 threadOwner = thread.email;
                 isPublicThread = thread.isPublic;
 
@@ -104,9 +97,6 @@ export async function checkDevThreadAccess(
                     return {
                         isAuthorized: false,
                         isPublic: false,
-                        isPublicThread: false,
-                        threadOwner: null,
-                        threadExists,
                     };
                 }
                 if (urlMode && thread.mode !== urlMode) {
@@ -116,9 +106,6 @@ export async function checkDevThreadAccess(
                     return {
                         isAuthorized: false,
                         isPublic: false,
-                        isPublicThread: false,
-                        threadOwner: null,
-                        threadExists,
                     };
                 }
 
@@ -142,8 +129,5 @@ export async function checkDevThreadAccess(
     return {
         isAuthorized: !!threadId && (!threadOwner || threadOwner === userEmail || devUser?.role === appConfig.adminRole),
         isPublic: isPublicThread && !(threadId && (!threadOwner || threadOwner === userEmail || devUser?.role === appConfig.adminRole)),
-        isPublicThread: isPublicThread,
-        threadOwner,
-        threadExists,
     };
 }

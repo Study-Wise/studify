@@ -4,7 +4,7 @@ import { checkForOneMessage } from '@/lib/check-for-one-message';
 import categories from '@/lib/modes';
 import { getMessages, getMessagesLength, getThreadByToken, type Message } from '@/lib/threads';
 import { labels } from '@/lib/tools';
-import { getThreadAccess } from '@/lib/auth/check-thread-access';
+import { getThreadAccess } from '@/lib/auth/thread-access';
 
 import CharacterImage from '@/components/CharacterImage.astro';
 import Footer from '@/components/Footer.astro';
@@ -33,25 +33,16 @@ const user_email = user?.email || null;
 let isAuthorized = id === 'new';
 let isPublic = false;
 
-// Admins are authorized to view other users' threads but only the owner can rename them
-let isOwner = false;
-let isPublicThread = false;
-
 if (id !== 'new') {
     const accessCheck = await getThreadAccess(id || '', user, category, mode);
     isAuthorized = accessCheck.isAuthorized;
     isPublic = accessCheck.isPublic;
-    isOwner = !!user_email && accessCheck.threadOwner === user_email;
-    isPublicThread = accessCheck.isPublicThread;
-
 }
 
 const thread = id !== 'new' ? await getThreadByToken(id ?? '', (isAuthorized || isPublic)) : null;
 
-// Unknown thread IDs pass the access check as unclaimed, so start a fresh chat instead of rendering an empty one
 if (id !== 'new' && isAuthorized && !thread) return Astro.redirect(`/${category}/${mode}/chat/new`);
 
-// For new chats, user must be authenticated
 if ((id === 'new' && !user) || (!user && !isPublic)) return Astro.redirect(`/user/sign-in?returnBackUrl=${encodeURIComponent(`/${category}/${mode}/chat/${id}`)}`);
 
 const threadTitle = thread?.title || null;
@@ -71,7 +62,6 @@ if (id !== 'new') {
     });
 }
 
-// Pre-process messages to convert markdown to HTML (server-side)
 marked.setOptions({ breaks: true, gfm: true });
 const userMarked = new Marked({ breaks: true, gfm: true, renderer: { html: ({ text }) => text.replace(/</g, '&lt;') } });
 const processedMessages = await Promise.all(
@@ -84,7 +74,6 @@ const processedMessages = await Promise.all(
         }))
 );
 
-// Matches the MathJax delimiters configured in Layout.astro ($…$, $$…$$, \(…\), \[…\])
 const mathDelimiterPattern = /\$|\\\(|\\\[/;
 
 export const inNav = 'hide';
@@ -92,7 +81,7 @@ export const inNav = 'hide';
 <Layout title={`${threadTitle?.replace(/\\[()[\]]|(?<!\\)\$/g, '').replace(/\\([a-zA-Z]+|[{}$])/g, '$1') || (id === 'new' ? 'New Chat' : 'Chat')} | ${modeName} | ${categoryName}`} container={false} isChatArea={true} className="chat-page" hideCopyright={true} mathjax={true} desmos={modeObj.desmos === true}>
     <header class="chat-header">
         <div class="chat-header__title-container">
-            <ChatTitle title={threadTitle || (id === 'new' ? 'New Chat' : 'Chat')} threadId={id || ''} canRename={isOwner} />
+            <ChatTitle title={threadTitle || (id === 'new' ? 'New Chat' : 'Chat')} threadId={id || ''} canRename={!!user_email && thread?.email === user_email} />
             <nav class="chat-header__breadcrumb" aria-label="Subject">
                 <ol>
                     <li>{categoryName}</li>
@@ -118,12 +107,12 @@ export const inNav = 'hide';
     <section class="chat-container" data-sidebars={modeObj.sidebarSections?.studyMaterials ? 'both' : 'left'}>
         <input type="radio" name="sidebar-drawer" id="sidebar-drawer-left" class="sidebar-drawer__input sr-only" data-side="left" />
         <LeftSidebar
-            isPublic={isPublicThread}
-            isAuthorized={isAuthorized}
+            isPublic={thread?.isPublic}
+            {isAuthorized}
             threadId={id || ''}
-            uploadedFiles={uploadedFiles}
+            {uploadedFiles}
             email={user_email || ''}
-            category={category || ''}
+            {category}
             mode={mode || ''}
             sidebarSections={modeObj.sidebarSections}
         />
@@ -183,10 +172,10 @@ export const inNav = 'hide';
                 <input type="radio" name="sidebar-drawer" id="sidebar-drawer-right" class="sidebar-drawer__input sr-only" data-side="right" />
                 <RightSidebar
                     threadId={id || ''}
-                    category={category || ''}
-                    mode={mode || ''}
-                    isAuthorized={isAuthorized}
-                    isPublic={isPublic}
+                    {category}
+                    {mode}
+                    {isAuthorized}
+                    {isPublic}
                 />
             </>
         )}
