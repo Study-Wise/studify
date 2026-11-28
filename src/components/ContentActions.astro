@@ -1,15 +1,17 @@
 ---
+import { getThreadAccess } from '@/lib/auth/check-thread-access';
+
 import '@/styles/components/content-actions.scss';
 
 const {
     threadId,
     hasContent,
-    isAuthorized,
     generateVerb = 'Generate',
     regenerateVerb = 'Regenerate',
 } = Astro.props;
 
 const { category, mode } = Astro.params;
+const { isAuthorized } = await getThreadAccess(threadId, Astro.locals.user, category, mode);
 const contentType = Astro.routePattern.split('/')[3];
 const chatUrl = `/${category}/${mode}/chat/${threadId}`;
 

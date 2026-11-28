@@ -17,11 +17,11 @@ const modeObj = categoryObj?.modes?.[mode || ''];
 
 if (!categoryObj || !modeObj) return Astro.redirect('/404');
 
-const { isAuthorized, isPublic, threadExists } = await getThreadAccess(id || '', Astro.locals.user, category, mode);
+const { threadExists } = await getThreadAccess(id || '', Astro.locals.user, category, mode);
 
 if (!threadExists) return new Response(null, { status: 404 });
 
-if (!Astro.locals.user && !isPublic) return Astro.redirect('/user/sign-in');
+if (!Astro.locals.user) return Astro.redirect('/user/sign-in');
 
 const latestResources = await getLatestResources(id || '', Astro.locals.user);
 
@@ -39,7 +39,7 @@ if (latestResources?.content) {
         <AccessDenied />
     ) : (
         <>
-            <ContentActions threadId={id || ''} hasContent={!!resourcesData} {isAuthorized} />
+            <ContentActions threadId={id || ''} hasContent={!!resourcesData} />
             {resourcesData ? (
                 <div class="content-container">
                     <div class="resources-page__header">

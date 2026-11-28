@@ -31,11 +31,11 @@ const modeObj = categoryObj?.modes?.[mode || ''];
 
 if (!categoryObj || !modeObj) return Astro.redirect('/404');
 
-const { isAuthorized, isPublic, threadExists } = await getThreadAccess(id || '', Astro.locals.user, category, mode);
+const { threadExists } = await getThreadAccess(id || '', Astro.locals.user, category, mode);
 
 if (!threadExists) return new Response(null, { status: 404 });
 
-if (!Astro.locals.user && !isPublic) return Astro.redirect('/user/sign-in');
+if (!Astro.locals.user) return Astro.redirect('/user/sign-in');
 
 const latestFlashcards = await getLatestFlashcards(id || '', Astro.locals.user);
 
@@ -53,7 +53,7 @@ const hasContent = !!(flashcardData !== null ? (typeof flashcardData !== 'string
         <AccessDenied />
     ) : (
         <>
-            <ContentActions threadId={id || ''} {hasContent} {isAuthorized} />
+            <ContentActions threadId={id || ''} {hasContent} />
             {typeof flashcardData !== 'string' && flashcardData && flashcardData.questions.length > 0 ? (
                 <div class="content-container flashcards">
                     {flashcardData.text && (

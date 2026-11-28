@@ -18,12 +18,12 @@ const modeObj = categoryObj?.modes?.[mode || ''];
 
 if (!categoryObj || !modeObj) return Astro.redirect('/404');
 
-const { isAuthorized, isPublic, threadExists } = await getThreadAccess(id || '', Astro.locals.user, category, mode);
+const { threadExists } = await getThreadAccess(id || '', Astro.locals.user, category, mode);
 
 // A deleted or unknown chat has no materials, so show the 404 page (#344)
 if (!threadExists) return new Response(null, { status: 404 });
 
-if (!Astro.locals.user && !isPublic) return Astro.redirect('/user/sign-in');
+if (!Astro.locals.user) return Astro.redirect('/user/sign-in');
 
 const latestReferenceSheet = await getLatestReferenceSheet(id || '', Astro.locals.user);
 
@@ -34,7 +34,7 @@ const parsedContent = latestReferenceSheet?.content ? await marked.parse(latestR
         <AccessDenied />
     ) : (
         <>
-            <ContentActions threadId={id || ''} hasContent={!!parsedContent} {isAuthorized} />
+            <ContentActions threadId={id || ''} hasContent={!!parsedContent} />
             {parsedContent ? (
                 <div class="content-container reference-sheet-content" set:html={parsedContent} />
             ) : (
