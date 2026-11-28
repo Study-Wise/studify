@@ -21,10 +21,8 @@ export async function generateReferenceSheet(threadId: string, userPrompt?: stri
 
     if (messages.length === 0) throw new Error('No messages found in thread');
 
-    const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
-
     const referenceSheetPrompt =
-`${buildContentSystemPrompt('Reference Sheet', uploadedFilesContext)}
+`${buildContentSystemPrompt('Reference Sheet', buildUploadedFilesContext(uploadedFiles))}
 
 Output the content directly without any wrapping HTML tags or dialog elements.
 

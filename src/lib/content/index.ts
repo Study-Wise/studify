@@ -1,4 +1,3 @@
-// Content types that can be generated - used for exclusion lists in prompts
 export const contentTypes: [string, ...string[]] = [
     'Study Guide',
     'Reference Sheet',
@@ -17,7 +16,6 @@ export function getExclusionList(currentType: string): string {
     return exclusions.map(type => `- ${type}`).join('\n');
 }
 
-// Maps content type name to its specific "Generate ONLY ..." instruction
 const contentTypeDescriptions: Record<string, string> = {
     'Study Guide': 'the Study Guide sections listed below',
     'Reference Sheet': 'a Reference Sheet',
@@ -30,8 +28,6 @@ const contentTypeDescriptions: Record<string, string> = {
     'Chat Summary': 'a Summary of the current Chat',
 };
 
-// Generates the common system prompt header for content generation.
-// Each content generator should prepend this to its specific instructions.
 export function buildContentSystemPrompt(contentTypeName: string, uploadedFilesContext: string): string {
     const description = contentTypeDescriptions[contentTypeName] || contentTypeName.toLowerCase();
 

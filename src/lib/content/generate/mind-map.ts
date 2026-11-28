@@ -23,10 +23,8 @@ export async function generateMindMap(threadId: string, userPrompt?: string) {
 
     if (messages.length === 0) throw new Error('No messages found in thread');
 
-    const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
-
     const mindMapPrompt =
-`${buildContentSystemPrompt('Mind Map', uploadedFilesContext)}
+`${buildContentSystemPrompt('Mind Map', buildUploadedFilesContext(uploadedFiles))}
 
 Create a comprehensive visual representation of the concepts, relationships, and key ideas discussed.
 
@@ -95,7 +93,6 @@ You may remove or modify sections as you see fit based on relevance to the topic
         }
     ];
 
-    // Generate the mind map with Claude Haiku via the AI Gateway, falling back to GPT-5.3 Codex
     const result = await generateText({
         model: 'anthropic/claude-haiku-4.5',
         messages: messagesForAI,

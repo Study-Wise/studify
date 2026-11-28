@@ -23,13 +23,10 @@ export async function generateStudyGuide(threadId: string, userPrompt?: string) 
 
     if (messages.length === 0) throw new Error('No messages found in thread');
 
-    const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
-
-    // Only include Desmos section for modes with desmos: true
     const desmosContent = categories[threads[0].category]?.modes?.[threads[0].mode]?.desmos === true ? `\n${desmosSection}\n` : '';
 
     const studyGuidePrompt =
-`${buildContentSystemPrompt('Study Guide', uploadedFilesContext)}
+`${buildContentSystemPrompt('Study Guide', buildUploadedFilesContext(uploadedFiles))}
 You should also not generate any if these things as well:
     - Interactive Mock Quiz
    - Practice Problems

@@ -10,14 +10,11 @@ import { eq } from 'drizzle-orm';
 
 const exa = new Exa(import.meta.env.EXA_SEARCH_API_KEY || process.env.EXA_SEARCH_API_KEY);
 
-// Categories that get PhET simulations, and modes within them that PhET doesn't cover
 const SIMULATION_CATEGORIES = ['science'];
 const SIMULATION_EXCLUDED_MODES = ['computer-science'];
 
-// Sites that hand over the exact homework answer, which conflicts with the "no direct answers" policy
 const ANSWER_DUMP_DOMAINS = ['bartleby.com', 'brainly.com', 'studyx.com', 'askfilo.com', 'chegg.com', 'coursehero.com', 'numerade.com'];
 
-// Domains each search leaves out or is limited to
 const EXCLUDED_DOMAINS = ['youtube.com', 'youtu.be', ...ANSWER_DUMP_DOMAINS];
 const DOCUMENTATION_DOMAINS = ['wikipedia.org', 'docs.python.org', 'developer.mozilla.org', 'mathworld.wolfram.com', 'britannica.com', 'scholar.google.com', 'openstax.org', 'ocw.mit.edu'];
 
@@ -76,7 +73,6 @@ export async function generateResources(threadId: string, userPrompt?: string): 
     };
 
     try {
-        // Science threads also get interactive PhET simulations
         if (SIMULATION_CATEGORIES.includes(threads[0].category) && !SIMULATION_EXCLUDED_MODES.includes(threads[0].mode)) {
             const simulations = await findSimulations(topicSummary);
             resourceCollection.simulations = simulations.map<Resource>(simulation => ({
@@ -88,7 +84,6 @@ export async function generateResources(threadId: string, userPrompt?: string): 
             }));
         }
 
-        // Search for YouTube educational videos
         const videoResults = await exa.searchAndContents(
             `${topicSummary} educational video tutorial explanation`,
             {
@@ -106,7 +101,6 @@ export async function generateResources(threadId: string, userPrompt?: string): 
             source: new URL(result.url).hostname
         }));
 
-        // Search for articles and explanations
         const articleResults = await exa.searchAndContents(
             `${topicSummary} explanation guide article`,
             {
@@ -124,7 +118,6 @@ export async function generateResources(threadId: string, userPrompt?: string): 
             source: new URL(result.url).hostname
         }));
 
-        // Search for tutorials and step-by-step guides
         const tutorialResults = await exa.searchAndContents(
             `${topicSummary} tutorial step by step how to`,
             {
@@ -142,7 +135,6 @@ export async function generateResources(threadId: string, userPrompt?: string): 
             source: new URL(result.url).hostname
         }));
 
-        // Search for official documentation and reference materials
         const docResults = await exa.searchAndContents(
             `${topicSummary} documentation reference official`,
             {
@@ -165,7 +157,6 @@ export async function generateResources(threadId: string, userPrompt?: string): 
         throw new VendorError('Exa', 'Failed to search for educational resources', { cause: error });
     }
 
-    // Use https, and drop links already listed in an earlier section. URLs are compared ignoring protocol, "www.", case and trailing slashes.
     const seenUrls = new Set<string>();
     const sections: (keyof Pick<ResourceCollection, 'simulations' | 'videos' | 'articles' | 'tutorials' | 'documentation'>)[] = ['simulations', 'videos', 'articles', 'tutorials', 'documentation'];
     for (const section of sections) {

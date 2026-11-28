@@ -22,7 +22,6 @@ export interface MarkedToken {
     [key: string]: string | number | boolean | undefined | object | JSONValue;
 }
 
-// Use createRequire for certain ones only - project has marked v15 but slideshow-generator needs v0.3
 const node_require = createRequire(import.meta.url);
 const marked = node_require('slideshow-generator/node_modules/marked');
 const jade = node_require('jade');
@@ -39,11 +38,8 @@ export async function generateSlideshow(threadId: string, userPrompt?: string) {
 
     if (messages.length === 0) throw new Error('No messages found in thread');
 
-    const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
-
-    // Create a slideshow specific prompt - uses standard markdown with headings as slide separators
     const slideshowPrompt =
-`${buildContentSystemPrompt('Slideshow', uploadedFilesContext)}
+`${buildContentSystemPrompt('Slideshow', buildUploadedFilesContext(uploadedFiles))}
 
 OUTPUT FORMAT - Markdown Slideshow:
 

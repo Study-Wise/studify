@@ -23,10 +23,8 @@ export async function generateWebpage(threadId: string, userPrompt?: string) {
 
     if (messages.length === 0) throw new Error('No messages found in thread');
 
-    const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
-
     const webpagePrompt =
-`${buildContentSystemPrompt('Webpage', uploadedFilesContext)}
+`${buildContentSystemPrompt('Webpage', buildUploadedFilesContext(uploadedFiles))}
 
 This should be a comprehensive resource that presents the concepts discussed in an engaging, visual format.
 
@@ -71,7 +69,6 @@ ONLY INCLUDE THE HTML CONTENT IN YOUR RESPONSE. DO NOT RESPOND WITH ANYTHING ELS
         }
     ];
 
-    // Generate the webpage with Claude Haiku via the AI Gateway, falling back to GPT-5.3 Codex
     const result = await generateText({
         model: 'anthropic/claude-haiku-4.5',
         messages: messagesForAI,
@@ -89,12 +86,11 @@ ONLY INCLUDE THE HTML CONTENT IN YOUR RESPONSE. DO NOT RESPOND WITH ANYTHING ELS
 
     if (!result.text || result.text.length === 0) throw new Error('Generated webpage is empty');
 
-    // Strip away any text before and after the HTML
     const htmlStart = result.text.indexOf('<!DOCTYPE html>');
     const htmlEnd = result.text.lastIndexOf('</html>');
 
     const content = (htmlStart !== -1 && htmlEnd !== -1)
-        ? result.text.substring(htmlStart, htmlEnd + 7) // +7 for '</html>' length
+        ? result.text.substring(htmlStart, htmlEnd + 7)
         : result.text;
 
     await saveContent(threadId, 'webpage', content);

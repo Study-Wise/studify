@@ -31,11 +31,8 @@ export async function generateInfographic(
 
     if (messages.length === 0) throw new Error('No messages found in thread');
 
-    const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
-
-    // Step 1: Generate a description of what the infographic should show
     const systemPrompt =
-`${buildContentSystemPrompt('Infographic', uploadedFilesContext)}
+`${buildContentSystemPrompt('Infographic', buildUploadedFilesContext(uploadedFiles))}
 
 Your description should be clear, visual, and specific about:
 - Main topic/title at the top
@@ -57,7 +54,6 @@ You may remove or modify elements as you see fit based on relevance to the topic
         config.contentGenerationExcludeTools,
     );
 
-    // Step 2: Generate the actual image using Google GenAI
     const imagePrompt =
 `Create an educational infographic image with the following specifications:
 

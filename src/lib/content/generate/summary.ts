@@ -21,10 +21,8 @@ export async function generateSummary(threadId: string, userPrompt?: string) {
 
     if (messages.length === 0) throw new Error('No messages found in thread');
 
-    const uploadedFilesContext = buildUploadedFilesContext(uploadedFiles);
-
     const summaryPrompt =
-`${buildContentSystemPrompt('Chat Summary', uploadedFilesContext)}
+`${buildContentSystemPrompt('Chat Summary', buildUploadedFilesContext(uploadedFiles))}
 
 FAITHFULNESS RULES:
 - Summarize ONLY what was actually said in the conversation. Every fact, step, formula, number and result in the summary must appear in the conversation itself.
