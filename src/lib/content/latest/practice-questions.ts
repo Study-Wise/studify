@@ -41,11 +41,7 @@ export const practiceQuestionSchema = z.object({
 
 export type PracticeQuestionData = z.infer<typeof practiceQuestionSchema>;
 
-export interface PracticeQuestionsResult {
-    content: PracticeQuestionData | null;
-}
-
-export async function getLatestPracticeQuestions(threadId: string): Promise<PracticeQuestionsResult> {
+export async function getLatestPracticeQuestions(threadId: string): Promise<{ content: PracticeQuestionData | null }> {
     const parsed = practiceQuestionSchema.safeParse(await getLatestContent(threadId, 'practice-questions'));
 
     return { content: parsed.success ? parsed.data : null };

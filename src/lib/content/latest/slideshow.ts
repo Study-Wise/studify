@@ -5,12 +5,7 @@ export interface SlideshowData {
     html: string;
 }
 
-export interface SlideshowResult {
-    content: string | null;
-    html: string | null;
-}
-
-export async function getLatestSlideshow(threadId: string): Promise<SlideshowResult> {
+export async function getLatestSlideshow(threadId: string): Promise<{ content: string | null; html: string | null }> {
     const content = await getLatestContent(threadId, 'slideshow');
 
     if (typeof content === 'object' && content !== null && 'content' in content && typeof content.content === 'string') {

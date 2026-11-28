@@ -12,11 +12,7 @@ export interface FlashcardData {
     questions: Flashcard[];
 }
 
-export interface FlashcardResult {
-    content: FlashcardData | string | null;
-}
-
-export async function getLatestFlashcards(threadId: string): Promise<FlashcardResult> {
+export async function getLatestFlashcards(threadId: string): Promise<{ content: FlashcardData | string | null }> {
     const content = await getLatestContent(threadId, 'flashcards');
 
     if (content) {

@@ -1,10 +1,6 @@
 import { getLatestContent } from '@/lib/content/latest/';
 
-export interface SummaryResult {
-    content: string | null;
-}
-
-export async function getLatestSummary(threadId: string): Promise<SummaryResult> {
+export async function getLatestSummary(threadId: string): Promise<{ content: string | null }> {
     const content = await getLatestContent(threadId, 'summary');
     return { content: typeof content === 'string' ? content : content === null ? null : JSON.stringify(content) ?? null };
 }
