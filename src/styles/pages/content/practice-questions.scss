@@ -115,6 +115,21 @@
             }
         }
 
+        .reveals {
+            margin-block-end: $spacing-medium;
+            flex-wrap: wrap;
+            gap: $spacing-small;
+            display: flex;
+
+            .reveal {
+                margin-block-end: 0;
+
+                &[open] {
+                    flex-basis: 100%;
+                }
+            }
+        }
+
         .reveal {
             margin-block-end: $spacing-medium;
 
@@ -140,7 +155,7 @@
             }
 
             &[open] > summary {
-                margin-block-end: $spacing-small;
+                display: none;
             }
 
             > :not(summary) {

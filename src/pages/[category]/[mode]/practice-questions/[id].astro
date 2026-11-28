@@ -128,16 +128,18 @@ const { content: practiceData } = (isAuthorized || isPublic)
                             {practiceData.challenges.map((item, index) => (
                                 <>
                                     <p><strong>Challenge {index + 1}:</strong> <span set:html={marked.parseInline(item.question)} /></p>
-                                    {item.hints.map((hint, hintIndex) => (
+                                    <div class="reveals">
                                         <details class="reveal">
-                                            <summary>Reveal hint {hintIndex + 1}</summary>
-                                            <p set:html={marked.parseInline(hint)} />
+                                            <summary>Reveal {item.hints.length > 1 ? 'hints' : 'hint'}</summary>
+                                            <ul>
+                                                {item.hints.map(hint => <li set:html={marked.parseInline(hint)} />)}
+                                            </ul>
                                         </details>
-                                    ))}
-                                    <details class="reveal">
-                                        <summary>Reveal answer</summary>
-                                        <p><em>Solution Approach:</em> <span set:html={marked.parseInline(item.solutionApproach)} /></p>
-                                    </details>
+                                        <details class="reveal">
+                                            <summary>Reveal answer</summary>
+                                            <p><em>Solution Approach:</em> <span set:html={marked.parseInline(item.solutionApproach)} /></p>
+                                        </details>
+                                    </div>
                                 </>
                             ))}
                             <hr />
