@@ -4,6 +4,7 @@ import { checkThreadAccess } from '@/lib/auth/check-thread-access';
 import { getLatestSlideshow } from '@/lib/content/latest/slideshow';
 
 import ContentActions from '@/components/ContentActions.astro';
+import AccessDenied from '@/components/content/AccessDenied.astro';
 import Layout from '@/layouts/Layout.astro';
 import '@/styles/pages/content/slideshow.scss';
 import '@/styles/pages/content/globals.scss';
@@ -28,12 +29,7 @@ const { html: slideshowHtml } = (isAuthorized || isPublic)
 ---
 <Layout title={`Slideshow | ${modeObj.name} | ${categoryObj.name}`} className="slideshow-page" container={false}>
     {!isAuthorized && !isPublic ? (
-        <div class="empty-state">
-            <span class="material-symbols-outlined" aria-hidden="true">lock</span>
-            <h2>Access Denied</h2>
-            <p>You don't have permission to view this slideshow.</p>
-            <a href="/" class="btn" data-variant="primary">Go Home</a>
-        </div>
+        <AccessDenied />
     ) : (
         <>
             <ContentActions threadId={id || ''} hasContent={!!slideshowHtml} {isAuthorized} />

@@ -5,6 +5,7 @@ import { checkThreadAccess } from '@/lib/auth/check-thread-access';
 import { getLatestPracticeQuestions } from '@/lib/content/latest/practice-questions';
 
 import ContentActions from '@/components/ContentActions.astro';
+import AccessDenied from '@/components/content/AccessDenied.astro';
 import StepByStep from '@/components/content/StepByStep.astro';
 import Layout from '@/layouts/Layout.astro';
 import StepByStepScript from '@/scripts/step-by-step.astro';
@@ -32,12 +33,7 @@ const { content: practiceData } = (isAuthorized || isPublic)
 ---
 <Layout title={`Practice Questions | ${modeObj.name} | ${categoryObj.name}`} className="practice-questions-page content-page" mathjax={true}>
     {!isAuthorized && !isPublic ? (
-        <div class="empty-state">
-            <span class="material-symbols-outlined" aria-hidden="true">lock</span>
-            <h2>Access Denied</h2>
-            <p>You don't have permission to view these practice questions.</p>
-            <a href="/" class="btn" data-variant="primary">Go Home</a>
-        </div>
+        <AccessDenied />
     ) : (
         <>
             <ContentActions threadId={id || ''} hasContent={!!practiceData} {isAuthorized} />

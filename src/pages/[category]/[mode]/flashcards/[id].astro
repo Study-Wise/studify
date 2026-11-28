@@ -5,6 +5,7 @@ import { checkThreadAccess } from '@/lib/auth/check-thread-access';
 import { getLatestFlashcards, type FlashcardData } from '@/lib/content/latest/flashcards';
 
 import ContentActions from '@/components/ContentActions.astro';
+import AccessDenied from '@/components/content/AccessDenied.astro';
 import Layout from '@/layouts/Layout.astro';
 import '@/styles/pages/content/flashcards.scss';
 import '@/styles/pages/content/globals.scss';
@@ -51,12 +52,7 @@ const hasContent = !!(flashcardData !== null ? (typeof flashcardData !== 'string
 ---
 <Layout title={`Flashcards | ${modeObj.name} | ${categoryObj.name}`} className="flashcard-page content-page" mathjax={true}>
     {!isAuthorized && !isPublic ? (
-        <div class="empty-state">
-            <span class="material-symbols-outlined" aria-hidden="true">lock</span>
-            <h2>Access Denied</h2>
-            <p>You don't have permission to view these flashcards.</p>
-            <a href="/" class="btn" data-variant="primary">Go Home</a>
-        </div>
+        <AccessDenied />
     ) : (
         <>
             <ContentActions threadId={id || ''} {hasContent} {isAuthorized} />

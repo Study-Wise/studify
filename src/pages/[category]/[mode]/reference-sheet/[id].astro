@@ -5,6 +5,7 @@ import { checkThreadAccess } from '@/lib/auth/check-thread-access';
 import { getLatestReferenceSheet } from '@/lib/content/latest/reference-sheet';
 
 import ContentActions from '@/components/ContentActions.astro';
+import AccessDenied from '@/components/content/AccessDenied.astro';
 import Layout from '@/layouts/Layout.astro';
 import StepByStepScript from '@/scripts/step-by-step.astro';
 import '@/styles/pages/content/globals.scss';
@@ -32,12 +33,7 @@ const parsedContent = latestReferenceSheet ? await marked.parse(latestReferenceS
 ---
 <Layout title={`Reference Sheet | ${modeObj.name} | ${categoryObj.name}`} className="reference-sheet-page content-page" mathjax={true}>
     {!isAuthorized && !isPublic ? (
-        <div class="empty-state">
-            <span class="material-symbols-outlined" aria-hidden="true">lock</span>
-            <h2>Access Denied</h2>
-            <p>You don't have permission to view this reference sheet.</p>
-            <a href="/" class="btn" data-variant="primary">Go Home</a>
-        </div>
+        <AccessDenied />
     ) : (
         <>
             <ContentActions threadId={id || ''} hasContent={!!parsedContent} {isAuthorized} />
