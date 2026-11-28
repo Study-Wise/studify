@@ -1,6 +1,7 @@
 import { generateText, tool } from 'ai';
 import { z } from 'zod';
 import config from '@/lib/ai.config';
+import { resolveModel } from '@/lib/models';
 
 const gradeExplanationTool = tool({
     description: 'Grade a student\'s explanation of a concept in their own words (explain it back, or Feynman mode). Call it with the concept and the student\'s explanation. It returns what they got right, plus any gaps and misconceptions, which you then share with the student.',
@@ -11,7 +12,7 @@ const gradeExplanationTool = tool({
     execute: async ({ concept, explanation }) => {
         try {
             const { text } = await generateText({
-                model: `${config.provider}/${config.model}`,
+                model: await resolveModel(config.provider, config.model),
                 messages: [
                     {
                         role: 'system',
@@ -26,8 +27,7 @@ const gradeExplanationTool = tool({
 
             return JSON.stringify({ grading: text }, null, 2);
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : String(error);
-            return JSON.stringify({ error: true, message: `Could not grade the explanation: ${errorMessage}` }, null, 2);
+            return JSON.stringify({ error: true, message: `Could not grade the explanation: ${error instanceof Error ? error.message : error}` }, null, 2);
         }
     },
 });

@@ -1,7 +1,7 @@
 import * as ai from 'ai';
 import { stepCountIs } from 'ai';
 import config from '@/lib/ai.config';
-import { providers, resolveModel } from '@/lib/models';
+import { resolveModel } from '@/lib/models';
 import type { Message, ToolCallLogEntry } from '@/lib/threads';
 import type { ToolContext, ToolRecord } from '@/lib/tools';
 import { VendorError } from '@/lib/user-errors';
@@ -184,10 +184,10 @@ export async function generateText(
         console.error(`❌ [${requestId}] AI generation failed after ${Date.now() - aiStartTime}ms:`, error);
         console.error(`❌ [${requestId}] AI error details:`, {
             errorName: error instanceof Error ? error.name : 'Unknown',
-            errorMessage: error instanceof Error ? error.message : String(error),
+            errorMessage: error instanceof Error ? error.message : error,
             errorStack: error instanceof Error ? error.stack : 'No stack trace'
         });
-        throw new VendorError(providers[provider]?.name ?? provider, 'AI generation failed', { cause: error });
+        throw new VendorError(provider, 'AI generation failed', { cause: error });
     }
 }
 
@@ -314,7 +314,7 @@ export async function generateTitle(options: TitleGenerationOptions): Promise<st
         console.error(`❌ [${titleRequestId}] Error in generateTitle:`, error);
         console.error(`❌ [${titleRequestId}] Title generation error details:`, {
             errorName: error instanceof Error ? error.name : 'Unknown',
-            errorMessage: error instanceof Error ? error.message : String(error),
+            errorMessage: error instanceof Error ? error.message : error,
             conversationLength: convoHistory.length,
             model: userModel,
             provider: provider
@@ -329,7 +329,7 @@ export async function paraphraseQuestion(question: string, category: string, mod
     try {
         const paraphraseStartTime = Date.now();
         const { text } = await ai.generateText({
-            model: `${config.provider}/${config.model}`,
+            model: await resolveModel(config.provider, config.model),
             system:
 `You are a helpful assistant that paraphrases student questions to make them clearer and more concise while preserving their original meaning. The question is in the context of ${category} - ${mode}.
 
@@ -348,7 +348,7 @@ IMPORTANT: Only output the paraphrased question, nothing else. Do not add any ex
         console.error(`❌ [${requestId}] Error in paraphraseQuestion:`, error);
         console.error(`❌ [${requestId}] Paraphrase error details:`, {
             errorName: error instanceof Error ? error.name : 'Unknown',
-            errorMessage: error instanceof Error ? error.message : String(error),
+            errorMessage: error instanceof Error ? error.message : error,
             originalQuestion: question,
             category,
             mode

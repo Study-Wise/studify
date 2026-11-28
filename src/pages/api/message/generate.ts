@@ -5,7 +5,7 @@ import { streamText, extractToolData, generateTitle } from '@/lib/ai-service';
 import config from '@/lib/ai.config';
 import appConfig from '@/lib/app.config';
 import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
-import { getValidModelAndProvider, providers } from '@/lib/models';
+import { getValidModelAndProvider } from '@/lib/models';
 import categories from '@/lib/modes';
 import generateModePrompt from '@/lib/prompt-generator';
 import { parseThreadData, type Message } from '@/lib/threads';
@@ -335,9 +335,8 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
             );
         } catch (error) {
             console.error(`❌ [${requestId}] Failed to start AI stream:`, error);
-            const vendorError = new VendorError(providers[selectedProvider]?.name ?? selectedProvider, 'Failed to start AI stream', { cause: error });
             return new Response(
-                JSON.stringify({ error: getUserErrorMessage(vendorError, 'get a response', requestId) }),
+                JSON.stringify({ error: getUserErrorMessage(new VendorError(selectedProvider, 'Failed to start AI stream', { cause: error }), 'get a response', requestId) }),
                 { status: 500, headers: { 'Content-Type': 'application/json' } }
             );
         }
@@ -388,7 +387,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                                 controller.enqueue(sendEvent({ type: 'tool-result', toolCallId: streamPart.toolCallId || '', toolName: streamPart.toolName || '', status: 'success' }));
                             }
                         }
-                        else if (streamPart.type === 'error') throw new VendorError(providers[selectedProvider]?.name ?? selectedProvider, 'AI stream failed', { cause: streamPart.error });
+                        else if (streamPart.type === 'error') throw new VendorError(selectedProvider,'AI stream failed', { cause: streamPart.error });
                     }
 
                     const [fullText, steps] = await Promise.all([streamResult.text, streamResult.steps]);
@@ -461,7 +460,7 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
         console.error(`💥 [${requestId}] Fatal error in generate.ts after ${totalDuration}ms:`, error);
         console.error(`💥 [${requestId}] Error details:`, {
             errorName: error instanceof Error ? error.name : 'Unknown',
-            errorMessage: error instanceof Error ? error.message : String(error),
+            errorMessage: error instanceof Error ? error.message : error,
             errorStack: error instanceof Error ? error.stack : 'No stack trace',
             errorType: typeof error
         });

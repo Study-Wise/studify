@@ -21,8 +21,7 @@ const searchTool = tool({
 
             return JSON.stringify(searchResult, null, 2);
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : String(error);
-            return JSON.stringify({ error: true, message: `Search failed for query "${query}": ${errorMessage}` }, null, 2);
+            return JSON.stringify({ error: true, message: `Search failed for query "${query}": ${error instanceof Error ? error.message : error}` }, null, 2);
         }
     },
 });

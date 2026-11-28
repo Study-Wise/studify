@@ -5,6 +5,7 @@ export interface Config {
     provider: string;
     tier: string;
     model: string;
+    tiers: Record<string, string>;
     imageModel: string;
     imageSize: ImageSize;
     gatewayModelsUrl: string;
@@ -21,7 +22,12 @@ export interface Config {
 export default {
     provider: 'google',
     tier: 'default',
-    model: 'gemini-3.8-flash',
+    model: 'gemini/flash',
+    tiers: {
+        default: 'gemini/pro',
+        mini: 'gemini/flash',
+        nano: 'gemini/flash-lite',
+    },
     imageModel: 'gpt-image-1.5',
     imageSize: '1024x1536', // portrait
     gatewayModelsUrl: 'https://ai-gateway.vercel.sh/v1/models',

@@ -1,6 +1,7 @@
 import { generateText, tool } from 'ai';
 import { z } from 'zod';
 import config from '@/lib/ai.config';
+import { resolveModel } from '@/lib/models';
 
 const levels: Record<1 | 2 | 3, string> = {
     1: 'a nudge: point the student toward where to look, without naming the method or any part of the answer',
@@ -18,7 +19,7 @@ const hintLadderTool = tool({
     execute: async ({ problem, studentWork, level }) => {
         try {
             const { text } = await generateText({
-                model: `${config.provider}/${config.model}`,
+                model: await resolveModel(config.provider, config.model),
                 messages: [
                     {
                         role: 'system',
@@ -33,8 +34,7 @@ const hintLadderTool = tool({
 
             return JSON.stringify({ hint: text, count: `Hint ${level} of 3` }, null, 2);
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : String(error);
-            return JSON.stringify({ error: true, message: `Could not generate a hint: ${errorMessage}` }, null, 2);
+            return JSON.stringify({ error: true, message: `Could not generate a hint: ${error instanceof Error ? error.message : error}` }, null, 2);
         }
     },
 });

@@ -1,6 +1,7 @@
 import { generateText, tool } from 'ai';
 import { z } from 'zod';
 import config from '@/lib/ai.config';
+import { resolveModel } from '@/lib/models';
 
 const stepCheckerTool = tool({
     description: 'Check a student\'s own working line by line when they type it out in a math or science problem. Call it with the problem and the student\'s working. It returns the first line with an error and what went wrong on that line, without solving or checking the remaining steps, or says every line is correct. Share the result with the student.',
@@ -11,7 +12,7 @@ const stepCheckerTool = tool({
     execute: async ({ problem, studentWork }) => {
         try {
             const { text } = await generateText({
-                model: `${config.provider}/${config.model}`,
+                model: await resolveModel(config.provider, config.model),
                 messages: [
                     {
                         role: 'system',
@@ -26,8 +27,7 @@ const stepCheckerTool = tool({
 
             return JSON.stringify({ result: text }, null, 2);
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : String(error);
-            return JSON.stringify({ error: true, message: `Could not check the working: ${errorMessage}` }, null, 2);
+            return JSON.stringify({ error: true, message: `Could not check the working: ${error instanceof Error ? error.message : error}` }, null, 2);
         }
     },
 });

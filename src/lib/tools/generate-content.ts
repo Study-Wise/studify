@@ -127,7 +127,7 @@ const getContentTool = tool({
 
             return {
                 status: 'error',
-                message: `Failed while ${stage}: ${error instanceof Error ? error.message : String(error)}`,
+                message: `Failed while ${stage}: ${error instanceof Error ? error.message : error}`,
                 cause: error instanceof Error && error.cause ? error.cause : undefined,
                 content: null
             };

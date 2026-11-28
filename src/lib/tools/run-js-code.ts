@@ -42,8 +42,7 @@ const runJSCodeTool = tool({
 
             return JSON.stringify({ codeResult, ranCode }, null, 2);
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : String(error);
-            return JSON.stringify({ error: true, message: `Code execution failed: ${errorMessage}` }, null, 2);
+            return JSON.stringify({ error: true, message: `Code execution failed: ${error instanceof Error ? error.message : error}` }, null, 2);
         }
     },
 });
