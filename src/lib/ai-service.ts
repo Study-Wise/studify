@@ -57,7 +57,7 @@ export async function generateText(
         });
     }
 
-    const aiModel = `${provider}/${resolveModel(userModel)}`;
+    const aiModel = await resolveModel(provider, userModel);
 
     const aiStartTime = Date.now();
     console.log(`[${requestId}] AI request: model=${aiModel}, messages=${convoHistory.length}, tools=${Object.keys(resolvedTools).length}`);
@@ -215,7 +215,7 @@ export async function streamText(
 
     if (convoHistory[convoHistory.length - 1]?.role !== 'user' || convoHistory[convoHistory.length - 1]?.content !== userPrompt) convoHistory.push({ role: 'user', content: userPrompt });
 
-    const aiModel = `${provider}/${resolveModel(userModel)}`;
+    const aiModel = await resolveModel(provider, userModel);
     console.log(`[${requestId}] AI stream request: model=${aiModel}, messages=${convoHistory.length}, tools=${Object.keys(resolvedTools).length}`);
 
     return ai.streamText({
@@ -297,7 +297,7 @@ export async function generateTitle(options: TitleGenerationOptions): Promise<st
     try {
         const titleStartTime = Date.now();
         const { text: generatedText } = await ai.generateText({
-            model: `${provider}/${resolveModel(userModel)}`,
+            model: await resolveModel(provider, userModel),
             system: 'You are a helpful assistant that generates concise, descriptive titles for conversations.',
             messages: [
                 ...convoHistory.filter(msg => msg.role !== 'system'),
@@ -376,7 +376,7 @@ export async function generateObject<T>(
         });
     }
 
-    const aiModel = `${provider}/${resolveModel(userModel)}`;
+    const aiModel = await resolveModel(provider, userModel);
     const aiStartTime = Date.now();
     console.log(`[${requestId}] AI generateObject request: model=${aiModel}, messages=${convoHistory.length}`);
 

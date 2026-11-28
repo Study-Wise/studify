@@ -7,6 +7,8 @@ export interface Config {
     model: string;
     imageModel: string;
     imageSize: ImageSize;
+    gatewayModelsUrl: string;
+    latestModelsTtl: number;
     welcomeMessagePrompt: string;
     maxThreadsPerUser: number;
     maxMessagesPerThread: number;
@@ -22,6 +24,8 @@ export default {
     model: 'gemini-3.8-flash',
     imageModel: 'gpt-image-1.5',
     imageSize: '1024x1536', // portrait
+    gatewayModelsUrl: 'https://ai-gateway.vercel.sh/v1/models',
+    latestModelsTtl: 60 * 60 * 1000,
     welcomeMessagePrompt: 'Based on the user\'s question or homework, ask them what specifically they want to study. Be friendly and encouraging.',
     maxThreadsPerUser: 5,
     maxMessagesPerThread: 10,
