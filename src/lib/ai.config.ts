@@ -28,7 +28,7 @@ export default {
         mini: 'gemini/flash',
         nano: 'gemini/flash-lite',
     },
-    imageModel: 'openai/gpt-image-1.5',
+    imageModel: 'openai/gpt-image-2',
     imageSize: '1024x1536', // portrait
     gatewayModelsUrl: 'https://ai-gateway.vercel.sh/v1/models',
     latestModelsTtl: 60 * 60 * 1000,
