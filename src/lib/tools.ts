@@ -4,29 +4,24 @@ export interface ToolModule {
     default: Tool & { ready?: boolean; label?: string };
 }
 
-export type ToolRecord = Record<string, Tool>;
-
 export interface ToolContext {
     threadId: string;
     email: string;
 }
 
 export function getToolContext<T>(options: { experimental_context?: T }): ToolContext | null {
-    const { experimental_context } = options;
     if (
-        experimental_context && typeof experimental_context === 'object' &&
-        'threadId' in experimental_context && typeof experimental_context.threadId === 'string' && experimental_context.threadId &&
-        'email' in experimental_context && typeof experimental_context.email === 'string' && experimental_context.email
-    ) return { threadId: experimental_context.threadId, email: experimental_context.email };
+        options.experimental_context && typeof options.experimental_context === 'object' &&
+        'threadId' in options.experimental_context && typeof options.experimental_context.threadId === 'string' && options.experimental_context.threadId &&
+        'email' in options.experimental_context && typeof options.experimental_context.email === 'string' && options.experimental_context.email
+    ) return { threadId: options.experimental_context.threadId, email: options.experimental_context.email };
     return null;
 }
 
 export const modules: Record<string, Tool> = {};
 export const labels: Record<string, string> = {};
 
-const toolModules = import.meta.glob<ToolModule>('./tools/*.ts', { eager: true });
-
-for (const [path, module] of Object.entries(toolModules)) {
+for (const [path, module] of Object.entries(import.meta.glob<ToolModule>('./tools/*.ts', { eager: true }))) {
     if (module.default.ready) {
         const toolName = path.replace('./tools/', '').replace('.ts', '');
         modules[toolName] = module.default;

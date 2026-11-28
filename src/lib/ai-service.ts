@@ -3,7 +3,7 @@ import { stepCountIs, type GenerateTextResult, type ModelMessage, type StepResul
 import config from '@/lib/ai.config';
 import { resolveModel } from '@/lib/models';
 import type { ToolCallLogEntry, UploadedFile } from '@/lib/threads';
-import type { ToolContext, ToolRecord } from '@/lib/tools';
+import type { ToolContext } from '@/lib/tools';
 import { VendorError } from '@/lib/user-errors';
 import 'dotenv/config';
 import { nanoid } from 'nanoid';
@@ -42,7 +42,7 @@ export async function generateText(
     convoHistory: ModelMessage[],
     userModel: string,
     provider: string,
-    tools: ToolRecord = {},
+    tools: ToolSet = {},
     excludeTools?: string[],
     maxSteps: number = 25,
     requestId: string = nanoid(),
@@ -201,7 +201,7 @@ export async function streamText(
     convoHistory: ModelMessage[],
     userModel: string,
     provider: string,
-    tools: ToolRecord = {},
+    tools: ToolSet = {},
     excludeTools?: string[],
     maxSteps: number = 25,
     requestId: string = nanoid(),
