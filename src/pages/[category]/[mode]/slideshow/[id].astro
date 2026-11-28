@@ -1,6 +1,6 @@
 ---
 import categories from '@/lib/modes';
-import { getThreadAccess } from '@/lib/auth/check-thread-access';
+import { getThreadByToken } from '@/lib/threads';
 import { getLatestSlideshow } from '@/lib/content/latest/slideshow';
 
 import ContentActions from '@/components/ContentActions.astro';
@@ -16,10 +16,8 @@ const modeObj = categoryObj?.modes?.[mode || ''];
 
 if (!categoryObj || !modeObj) return Astro.redirect('/404');
 
-const { threadExists } = await getThreadAccess(id || '', Astro.locals.user, category, mode);
-
 // A deleted or unknown chat has no materials, so show the 404 page (#344)
-if (!threadExists) return new Response(null, { status: 404 });
+if (!await getThreadByToken(id || '', true)) return new Response(null, { status: 404 });
 
 if (!Astro.locals.user) return Astro.redirect('/user/sign-in');
 

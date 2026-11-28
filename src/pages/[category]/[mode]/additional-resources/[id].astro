@@ -1,6 +1,6 @@
 ---
 import categories from '@/lib/modes';
-import { getThreadAccess } from '@/lib/auth/check-thread-access';
+import { getThreadByToken } from '@/lib/threads';
 import type { Resource } from '@/lib/content/generate/additional-resources';
 import { getLatestResources } from '@/lib/content/latest/additional-resources';
 
@@ -17,9 +17,7 @@ const modeObj = categoryObj?.modes?.[mode || ''];
 
 if (!categoryObj || !modeObj) return Astro.redirect('/404');
 
-const { threadExists } = await getThreadAccess(id || '', Astro.locals.user, category, mode);
-
-if (!threadExists) return new Response(null, { status: 404 });
+if (!await getThreadByToken(id || '', true)) return new Response(null, { status: 404 });
 
 if (!Astro.locals.user) return Astro.redirect('/user/sign-in');
 
