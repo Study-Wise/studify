@@ -4,7 +4,7 @@ import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 import config from '@/lib/ai.config';
 import { buildContentSystemPrompt } from '@/lib/content';
-import { parseThreadData, type Message } from '@/lib/threads';
+import { parseThreadData } from '@/lib/threads';
 import { modules } from '@/lib/tools';
 import { saveContent } from '@/lib/content/latest';
 import { buildUploadedFilesContext } from '@/lib/content/uploaded-files-context';
@@ -16,15 +16,12 @@ export async function generateWebpage(threadId: string, userPrompt?: string) {
 
     if (threads.length === 0) throw new Error('Thread not found');
 
-    const threadData = parseThreadData(threads[0].thread);
-    const messages = threadData?.messages ?? [];
-
-    const uploadedFiles = threads[0].uploadedFiles ?? [];
+    const messages = parseThreadData(threads[0].thread)?.messages ?? [];
 
     if (messages.length === 0) throw new Error('No messages found in thread');
 
     const webpagePrompt =
-`${buildContentSystemPrompt('Webpage', buildUploadedFilesContext(uploadedFiles))}
+`${buildContentSystemPrompt('Webpage', buildUploadedFilesContext(threads[0].uploadedFiles ?? []))}
 
 This should be a comprehensive resource that presents the concepts discussed in an engaging, visual format.
 
@@ -56,22 +53,19 @@ You may remove or modify sections as you see fit based on relevance to the topic
 
 ONLY INCLUDE THE HTML CONTENT IN YOUR RESPONSE. DO NOT RESPOND WITH ANYTHING ELSE BEFORE OR AFTER THE HTML.${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`;
 
-    const conversationMessages = messages.filter(msg => msg.role !== 'system' && msg.content !== '');
-    const messagesForAI: Message[] = [
-        {
-            role: 'system',
-            content: webpagePrompt
-        },
-        ...conversationMessages,
-        {
-            role: 'user',
-            content: 'Now generate the webpage based on the above conversation. Output ONLY the complete HTML document starting with <!DOCTYPE html>. Do not include any explanations, commentary, or conversation - just the HTML content.'
-        }
-    ];
-
     const result = await generateText({
         model: 'anthropic/claude-haiku-4.5',
-        messages: messagesForAI,
+        messages: [
+            {
+                role: 'system',
+                content: webpagePrompt
+            },
+            ...messages.filter(msg => msg.role !== 'system' && msg.content !== ''),
+            {
+                role: 'user',
+                content: 'Now generate the webpage based on the above conversation. Output ONLY the complete HTML document starting with <!DOCTYPE html>. Do not include any explanations, commentary, or conversation - just the HTML content.'
+            }
+        ],
         tools: Object.fromEntries(
             Object.entries(modules).filter(([key]) => !config.contentGenerationExcludeTools.includes(key))
         ),

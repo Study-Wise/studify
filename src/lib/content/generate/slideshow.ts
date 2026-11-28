@@ -31,15 +31,12 @@ export async function generateSlideshow(threadId: string, userPrompt?: string) {
 
     if (threads.length === 0) throw new Error('Thread not found');
 
-    const threadData = parseThreadData(threads[0].thread);
-    const messages = threadData?.messages ?? [];
-
-    const uploadedFiles = threads[0].uploadedFiles ?? [];
+    const messages = parseThreadData(threads[0].thread)?.messages ?? [];
 
     if (messages.length === 0) throw new Error('No messages found in thread');
 
     const slideshowPrompt =
-`${buildContentSystemPrompt('Slideshow', buildUploadedFilesContext(uploadedFiles))}
+`${buildContentSystemPrompt('Slideshow', buildUploadedFilesContext(threads[0].uploadedFiles ?? []))}
 
 OUTPUT FORMAT - Markdown Slideshow:
 

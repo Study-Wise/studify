@@ -24,15 +24,12 @@ export async function generateInfographic(
 
     if (threads.length === 0) throw new Error('Thread not found');
 
-    const threadData = parseThreadData(threads[0].thread);
-    const messages = threadData?.messages ?? [];
-
-    const uploadedFiles = threads[0].uploadedFiles ?? [];
+    const messages = parseThreadData(threads[0].thread)?.messages ?? [];
 
     if (messages.length === 0) throw new Error('No messages found in thread');
 
     const systemPrompt =
-`${buildContentSystemPrompt('Infographic', buildUploadedFilesContext(uploadedFiles))}
+`${buildContentSystemPrompt('Infographic', buildUploadedFilesContext(threads[0].uploadedFiles ?? []))}
 
 Your description should be clear, visual, and specific about:
 - Main topic/title at the top

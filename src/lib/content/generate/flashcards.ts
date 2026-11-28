@@ -24,14 +24,11 @@ export async function generateFlashcards(threadId: string, userPrompt?: string):
 
     if (threads.length === 0) throw new Error('Thread not found');
 
-    const threadData = parseThreadData(threads[0].thread);
-    const messages = threadData?.messages ?? [];
-
-    const uploadedFiles = threads[0].uploadedFiles ?? [];
+    const messages = parseThreadData(threads[0].thread)?.messages ?? [];
 
     if (messages.length === 0) throw new Error('No messages found in thread');
 
-    const flashcardPrompt = `${buildContentSystemPrompt('Flashcards', buildUploadedFilesContext(uploadedFiles))}
+    const flashcardPrompt = `${buildContentSystemPrompt('Flashcards', buildUploadedFilesContext(threads[0].uploadedFiles ?? []))}
 
 The flashcards should help the student review and memorize key concepts, formulas, definitions, and problem-solving techniques.
 

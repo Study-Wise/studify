@@ -15,15 +15,12 @@ export async function generatePracticeQuestions(threadId: string, userPrompt?: s
 
     if (threads.length === 0) throw new Error('Thread not found');
 
-    const threadData = parseThreadData(threads[0].thread);
-    const messages = threadData?.messages ?? [];
-
-    const uploadedFiles = threads[0].uploadedFiles ?? [];
+    const messages = parseThreadData(threads[0].thread)?.messages ?? [];
 
     if (messages.length === 0) throw new Error('No messages found in thread');
 
     const practiceQuestionsPrompt =
-`${buildContentSystemPrompt('Practice Questions', buildUploadedFilesContext(uploadedFiles))}
+`${buildContentSystemPrompt('Practice Questions', buildUploadedFilesContext(threads[0].uploadedFiles ?? []))}
 
 Generate a comprehensive set of practice questions to help reinforce the concepts discussed in this conversation. Include multiple question types to support different learning styles. Return them as structured data only; do not write any HTML or layout markup.
 

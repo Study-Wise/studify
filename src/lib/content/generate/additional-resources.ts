@@ -41,10 +41,7 @@ export async function generateResources(threadId: string, userPrompt?: string): 
 
     if (threads.length === 0) throw new Error('Thread not found');
 
-    const threadData = parseThreadData(threads[0].thread);
-    const messages = threadData?.messages ?? [];
-
-    const uploadedFiles = threads[0].uploadedFiles ?? [];
+    const messages = parseThreadData(threads[0].thread)?.messages ?? [];
 
     if (messages.length === 0) throw new Error('No messages found in thread');
 
@@ -53,7 +50,7 @@ export async function generateResources(threadId: string, userPrompt?: string): 
         .map(msg => msg.content)
         .join(' ');
 
-    const uploadedFilesText = uploadedFiles
+    const uploadedFilesText = (threads[0].uploadedFiles ?? [])
         .filter(f => f.extractedText)
         .map(f => f.extractedText)
         .join(' ');
