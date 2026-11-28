@@ -18,7 +18,7 @@ export interface ThreadAccessResult {
     threadExists: boolean;
 }
 
-export async function checkThreadAccess(
+export async function getThreadAccess(
     threadId: string,
     user: User | null,
     urlCategory?: string,
@@ -104,4 +104,9 @@ export async function checkThreadAccess(
         threadOwner,
         threadExists
     };
+}
+
+export async function checkThreadAccess(threadId: string, user: User | null): Promise<boolean> {
+    const access = await getThreadAccess(threadId, user);
+    return access.isAuthorized || access.isPublic;
 }

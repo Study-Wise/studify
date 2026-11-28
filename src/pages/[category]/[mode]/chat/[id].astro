@@ -4,7 +4,7 @@ import { checkForOneMessage } from '@/lib/check-for-one-message';
 import categories from '@/lib/modes';
 import { getMessages, getMessagesLength, getThreadByToken, type Message } from '@/lib/threads';
 import { labels } from '@/lib/tools';
-import { checkThreadAccess } from '@/lib/auth/check-thread-access';
+import { getThreadAccess } from '@/lib/auth/check-thread-access';
 
 import CharacterImage from '@/components/CharacterImage.astro';
 import Footer from '@/components/Footer.astro';
@@ -38,7 +38,7 @@ let isOwner = false;
 let isPublicThread = false;
 
 if (id !== 'new') {
-    const accessCheck = await checkThreadAccess(id || '', user, category, mode);
+    const accessCheck = await getThreadAccess(id || '', user, category, mode);
     isAuthorized = accessCheck.isAuthorized;
     isPublic = accessCheck.isPublic;
     isOwner = !!user_email && accessCheck.threadOwner === user_email;

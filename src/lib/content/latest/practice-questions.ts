@@ -44,8 +44,7 @@ export const practiceQuestionSchema = z.object({
 export type PracticeQuestionData = z.infer<typeof practiceQuestionSchema>;
 
 export async function getLatestPracticeQuestions(threadId: string, user: User | null): Promise<{ content: PracticeQuestionData | null } | null> {
-    const access = await checkThreadAccess(threadId, user);
-    if (!access.isAuthorized && !access.isPublic) return null;
+    if (!await checkThreadAccess(threadId, user)) return null;
 
     const parsed = practiceQuestionSchema.safeParse(await getLatestContent(threadId, 'practice-questions'));
 

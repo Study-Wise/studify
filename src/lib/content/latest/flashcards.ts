@@ -8,8 +8,7 @@ export interface FlashcardData {
 }
 
 export async function getLatestFlashcards(threadId: string, user: User | null): Promise<{ content: FlashcardData | string | null } | null> {
-    const access = await checkThreadAccess(threadId, user);
-    if (!access.isAuthorized && !access.isPublic) return null;
+    if (!await checkThreadAccess(threadId, user)) return null;
 
     const content = await getLatestContent(threadId, 'flashcards');
 

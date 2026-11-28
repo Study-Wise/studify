@@ -10,8 +10,7 @@ export interface InfographicData {
 }
 
 export async function getLatestInfographic(threadId: string, user: User | null): Promise<{ content: InfographicData | null } | null> {
-    const access = await checkThreadAccess(threadId, user);
-    if (!access.isAuthorized && !access.isPublic) return null;
+    if (!await checkThreadAccess(threadId, user)) return null;
 
     const content = await getLatestContent(threadId, 'infographic');
     if (typeof content === 'object' && content !== null && 'imageUrl' in content && typeof content.imageUrl === 'string' && 'description' in content && typeof content.description === 'string' && 'generatedAt' in content && typeof content.generatedAt === 'string' && 'fileKey' in content && typeof content.fileKey === 'string') {

@@ -6,8 +6,7 @@ export async function getLatestResources(
     threadId: string,
     user: User | null,
 ): Promise<{ content: string | null } | null> {
-    const access = await checkThreadAccess(threadId, user);
-    if (!access.isAuthorized && !access.isPublic) return null;
+    if (!await checkThreadAccess(threadId, user)) return null;
 
     const content = await getLatestContent(threadId, 'additional-resources');
     return { content: typeof content === 'string' ? content : content === null ? null : JSON.stringify(content) ?? null };

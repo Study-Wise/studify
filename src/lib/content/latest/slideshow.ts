@@ -8,8 +8,7 @@ export interface SlideshowData {
 }
 
 export async function getLatestSlideshow(threadId: string, user: User | null): Promise<{ content: string | null; html: string | null } | null> {
-    const access = await checkThreadAccess(threadId, user);
-    if (!access.isAuthorized && !access.isPublic) return null;
+    if (!await checkThreadAccess(threadId, user)) return null;
 
     const content = await getLatestContent(threadId, 'slideshow');
 
