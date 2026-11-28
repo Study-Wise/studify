@@ -93,16 +93,17 @@ const practiceData = latestPracticeQuestions?.content;
                     {practiceData.trueFalse.length > 0 && (
                         <>
                             <h4>True/False with Justification</h4>
-                            {practiceData.trueFalse.map((item, index) => (
-                                <>
-                                    <p><strong>Statement {index + 1}:</strong> <span set:html={marked.parseInline(item.statement)} /></p>
-                                    <details class="reveal">
-                                        <summary>Reveal answer</summary>
-                                        <p><em>Answer:</em> {item.answer ? 'True' : 'False'}</p>
-                                        <p><em>Justification:</em> <span set:html={marked.parseInline(item.justification)} /></p>
-                                    </details>
-                                </>
-                            ))}
+                            <StepByStep
+                                name="true-false"
+                                steps={practiceData.trueFalse.map((item, index) => ({
+                                    description: `Statement ${index + 1}`,
+                                    question: item.statement,
+                                    choices: [
+                                        { text: 'True', explanation: `${item.answer ? 'Correct!' : 'Incorrect.'} ${item.justification}`, correct: item.answer },
+                                        { text: 'False', explanation: `${item.answer ? 'Incorrect.' : 'Correct!'} ${item.justification}`, correct: !item.answer },
+                                    ],
+                                }))}
+                            />
                             <hr />
                         </>
                     )}
