@@ -6,7 +6,7 @@ import '@/styles/components/dialog.scss';
 
     type DialogContent = {
         title: string;
-        message: string;
+        message: string | HTMLElement;
         type?: DialogType;
         icon?: string;
         buttons?: { label: string; variant?: 'primary' | 'secondary'; onClick?: () => void | boolean }[];
@@ -94,7 +94,8 @@ import '@/styles/components/dialog.scss';
             content.dataset.type = type;
             icon.textContent = iconName ?? defaultIcons[type];
             title.textContent = titleText;
-            message.textContent = messageText;
+            if (typeof messageText === 'string') message.textContent = messageText;
+            else message.replaceChildren(messageText);
             footer.replaceChildren(...buttons.map(({ label, variant = 'primary', onClick }) => {
                 const button = document.createElement('button');
                 button.type = 'button';
@@ -161,7 +162,7 @@ import '@/styles/components/dialog.scss';
     }
 
     interface DialogEntry {
-        message: string;
+        message: string | HTMLElement;
         title: string;
         icon?: string;
         type: DialogType;
@@ -204,7 +205,7 @@ import '@/styles/components/dialog.scss';
         appDialog.open();
     }
 
-    function showDialog(message: string, options: { title?: string; icon?: string; type?: DialogType } = {}) {
+    function showDialog(message: string | HTMLElement, options: { title?: string; icon?: string; type?: DialogType } = {}) {
         const { title = 'Alert', icon, type = 'info' } = options;
         const entry: DialogEntry = { message, title, icon, type };
 

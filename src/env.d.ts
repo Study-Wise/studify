@@ -13,7 +13,7 @@ interface WindowEventMap {
 
 interface Window {
     keyboardNavigation: object;
-    showDialog: (message: string, options?: { title?: string; icon?: string }) => void;
+    showDialog: (message: string | typeof document.body, options?: { title?: string; icon?: string }) => void;
     showToast: (message: string, options?: { title?: string; icon?: string }) => void;
     showConfirm: (message: string, options?: { title?: string; confirmLabel?: string; cancelLabel?: string; icon?: string }) => Promise<boolean>;
     showPrompt: (message: string, options?: { title?: string; confirmLabel?: string; cancelLabel?: string; icon?: string; inputLabel?: string; placeholder?: string; maxLength?: number }) => Promise<string | null>;

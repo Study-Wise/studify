@@ -98,7 +98,7 @@ const sidebarConfig = Object.fromEntries(
                             <p class="file-list__empty">No files uploaded yet. Upload files to see them here.</p>
                         ) : (
                             uploadedFiles.map((file: UploadedFile) => (
-                            <div class="file-list__item" data-file-key={file.key}>
+                            <div class="file-list__item" data-file-key={file.key} data-file-url={file.url} data-file-type={file.type}>
                                 <div class="file-list__icon">
                                     {file.type.startsWith('image/') ? (
                                         <span class="material-symbols-outlined" aria-hidden="true">image</span>
@@ -464,7 +464,9 @@ const sidebarConfig = Object.fromEntries(
 
                         const fileItem = document.createElement('div');
                         fileItem.className = 'file-list__item';
-                        fileItem.setAttribute('data-file-key', data.file.key);
+                        fileItem.dataset.fileKey = data.file.key;
+                        fileItem.dataset.fileUrl = data.file.url;
+                        fileItem.dataset.fileType = data.file.type;
 
                         let iconName = 'insert_drive_file';
                         if (data.file.type.startsWith('image/')) iconName = 'image';
@@ -507,11 +509,30 @@ const sidebarConfig = Object.fromEntries(
     fileList?.addEventListener('click', async e => {
         const deleteButton = e.target.closest('.file-list__delete');
 
-        if (!deleteButton) return;
+        if (!deleteButton) {
+            const fileItem = e.target.closest('.file-list__item');
+            if (!fileItem?.dataset.fileUrl) return;
 
-        const fileKey = deleteButton.getAttribute('data-file-key');
+            const title = fileItem.querySelector('.file-list__name')?.textContent?.trim() || 'File preview';
+            const officeTypes = ['word', 'spreadsheet', 'excel', 'presentation', 'powerpoint'];
 
-        if (!fileKey || !currentThreadId || currentThreadId === 'new' || !email) return;
+            if (!fileItem.dataset.fileType.startsWith('image/') && fileItem.dataset.fileType !== 'application/pdf' && !fileItem.dataset.fileType.startsWith('text/') && !officeTypes.some(keyword => fileItem.dataset.fileType.includes(keyword))) {
+                window.open(fileItem.dataset.fileUrl, '_blank');
+                return;
+            }
+
+            const preview = document.createElement(fileItem.dataset.fileType.startsWith('image/') ? 'img' : 'iframe');
+            preview.className = 'dialog__preview';
+            preview.src = officeTypes.some(keyword => fileItem.dataset.fileType.includes(keyword)) ?`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(fileItem.dataset.fileUrl)}` : fileItem.dataset.fileUrl;
+            if (fileItem.dataset.fileType.startsWith('image/')) preview.alt = title;
+            else preview.title = title;
+            if (fileItem.dataset.fileType.startsWith('text/')) preview.sandbox = '';
+
+            window.showDialog(preview, { title, icon: 'visibility' });
+            return;
+        }
+
+        if (!deleteButton.dataset.fileKey || !currentThreadId || currentThreadId === 'new' || !email) return;
 
         const fileName = deleteButton.closest('.file-list__item')?.querySelector('.file-list__name')?.textContent?.trim() || 'this file';
         const confirmed = await window.showConfirm(
@@ -530,7 +551,7 @@ const sidebarConfig = Object.fromEntries(
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ threadId: currentThreadId, fileKey })
+                body: JSON.stringify({ threadId: currentThreadId, fileKey: deleteButton.dataset.fileKey })
             });
 
             const data = await response.json();
