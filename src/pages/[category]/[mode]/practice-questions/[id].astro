@@ -14,29 +14,23 @@ import '@/styles/pages/content/practice-questions.scss';
 marked.setOptions({ breaks: true });
 
 const { category, mode, id } = Astro.params;
-const chatUrl = `/${category}/${mode}/chat/${id}`;
 
 const categoryObj = category ? categories[category] : null;
 const modeObj = categoryObj?.modes?.[mode || ''];
 
 if (!categoryObj || !modeObj) return Astro.redirect('/404');
 
-const categoryName = categoryObj?.name || category;
-const modeName = modeObj?.name || mode;
-
-const user = Astro.locals.user;
-
-const { isAuthorized, isPublic, threadExists } = await checkThreadAccess(id || '', user, category, mode);
+const { isAuthorized, isPublic, threadExists } = await checkThreadAccess(id || '', Astro.locals.user, category, mode);
 
 if (!threadExists) return new Response(null, { status: 404 });
 
-if (!user && !isPublic) return Astro.redirect('/user/sign-in');
+if (!Astro.locals.user && !isPublic) return Astro.redirect('/user/sign-in');
 
 const { content: practiceData } = (isAuthorized || isPublic)
     ? await getLatestPracticeQuestions(id || '')
     : { content: null };
 ---
-<Layout title={`Practice Questions | ${modeName} | ${categoryName}`} className="practice-questions-page content-page" mathjax={true}>
+<Layout title={`Practice Questions | ${modeObj.name} | ${categoryObj.name}`} className="practice-questions-page content-page" mathjax={true}>
     {!isAuthorized && !isPublic ? (
         <div class="empty-state">
             <span class="material-symbols-outlined" aria-hidden="true">lock</span>
@@ -46,13 +40,7 @@ const { content: practiceData } = (isAuthorized || isPublic)
         </div>
     ) : (
         <>
-            <ContentActions
-                contentType="practice-questions"
-                threadId={id || ''}
-                hasContent={!!practiceData}
-                isAuthorized={isAuthorized}
-                chatUrl={chatUrl}
-            />
+            <ContentActions threadId={id || ''} hasContent={!!practiceData} {isAuthorized} />
             {practiceData ? (
                 <div class="content-container practice-questions-page__content">
                     {practiceData.quiz.length > 0 && (

@@ -10,23 +10,17 @@ import '@/styles/pages/content/additional-resources.scss';
 import '@/styles/pages/content/globals.scss';
 
 const { category, mode, id } = Astro.params;
-const chatUrl = `/${category}/${mode}/chat/${id}`;
 
 const categoryObj = category ? categories[category] : null;
 const modeObj = categoryObj?.modes?.[mode || ''];
 
 if (!categoryObj || !modeObj) return Astro.redirect('/404');
 
-const categoryName = categoryObj?.name || category;
-const modeName = modeObj?.name || mode;
-
-const user = Astro.locals.user;
-
-const { isAuthorized, isPublic, threadExists } = await checkThreadAccess(id || '', user, category, mode);
+const { isAuthorized, isPublic, threadExists } = await checkThreadAccess(id || '', Astro.locals.user, category, mode);
 
 if (!threadExists) return new Response(null, { status: 404 });
 
-if (!user && !isPublic) return Astro.redirect('/user/sign-in');
+if (!Astro.locals.user && !isPublic) return Astro.redirect('/user/sign-in');
 
 const { content: latestResourcesJSON } = (isAuthorized || isPublic)
     ? await getLatestResources(id || '')
@@ -41,7 +35,7 @@ if (latestResourcesJSON) {
     }
 }
 ---
-<Layout title={`Resources | ${modeName} | ${categoryName}`} className="resources-page content-page">
+<Layout title={`Resources | ${modeObj.name} | ${categoryObj.name}`} className="resources-page content-page">
     {!isAuthorized && !isPublic ? (
         <div class="empty-state">
             <span class="material-symbols-outlined" aria-hidden="true">lock</span>
@@ -51,13 +45,7 @@ if (latestResourcesJSON) {
         </div>
     ) : (
         <>
-            <ContentActions
-                contentType="additional-resources"
-                threadId={id || ''}
-                hasContent={!!resourcesData}
-                isAuthorized={isAuthorized}
-                chatUrl={chatUrl}
-            />
+            <ContentActions threadId={id || ''} hasContent={!!resourcesData} {isAuthorized} />
             {resourcesData ? (
                 <div class="content-container">
                     <div class="resources-page__header">

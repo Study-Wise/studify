@@ -24,23 +24,17 @@ const mathExtension: TokenizerAndRendererExtension = {
 const marked = new Marked({ extensions: [mathExtension] });
 
 const { category, mode, id } = Astro.params;
-const chatUrl = `/${category}/${mode}/chat/${id}`;
 
 const categoryObj = category ? categories[category] : null;
 const modeObj = categoryObj?.modes?.[mode || ''];
 
 if (!categoryObj || !modeObj) return Astro.redirect('/404');
 
-const categoryName = categoryObj?.name || category;
-const modeName = modeObj?.name || mode;
-
-const user = Astro.locals.user;
-
-const { isAuthorized, isPublic, threadExists } = await checkThreadAccess(id || '', user, category, mode);
+const { isAuthorized, isPublic, threadExists } = await checkThreadAccess(id || '', Astro.locals.user, category, mode);
 
 if (!threadExists) return new Response(null, { status: 404 });
 
-if (!user && !isPublic) return Astro.redirect('/user/sign-in');
+if (!Astro.locals.user && !isPublic) return Astro.redirect('/user/sign-in');
 
 const { content: latestFlashcards } = (isAuthorized || isPublic)
     ? await getLatestFlashcards(id || '')
@@ -55,7 +49,7 @@ const parsedContent = (typeof flashcardData === 'string')
 
 const hasContent = !!(flashcardData !== null ? (typeof flashcardData !== 'string' && flashcardData.questions.length > 0) : parsedContent);
 ---
-<Layout title={`Flashcards | ${modeName} | ${categoryName}`} className="flashcard-page content-page" mathjax={true}>
+<Layout title={`Flashcards | ${modeObj.name} | ${categoryObj.name}`} className="flashcard-page content-page" mathjax={true}>
     {!isAuthorized && !isPublic ? (
         <div class="empty-state">
             <span class="material-symbols-outlined" aria-hidden="true">lock</span>
@@ -65,13 +59,7 @@ const hasContent = !!(flashcardData !== null ? (typeof flashcardData !== 'string
         </div>
     ) : (
         <>
-            <ContentActions
-                contentType="flashcards"
-                threadId={id || ''}
-                hasContent={hasContent}
-                isAuthorized={isAuthorized}
-                chatUrl={chatUrl}
-            />
+            <ContentActions threadId={id || ''} {hasContent} {isAuthorized} />
             {typeof flashcardData !== 'string' && flashcardData && flashcardData.questions.length > 0 ? (
                 <div class="content-container flashcards">
                     {flashcardData.text && (

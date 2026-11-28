@@ -9,23 +9,17 @@ import '@/styles/pages/content/globals.scss';
 import '@/styles/pages/content/infographic.scss';
 
 const { category, mode, id } = Astro.params;
-const chatUrl = `/${category}/${mode}/chat/${id}`;
 
 const categoryObj = category ? categories[category] : null;
 const modeObj = categoryObj?.modes?.[mode || ''];
 
 if (!categoryObj || !modeObj) return Astro.redirect('/404');
 
-const categoryName = categoryObj?.name || category;
-const modeName = modeObj?.name || mode;
-
-const user = Astro.locals.user;
-
-const { isAuthorized, isPublic, threadExists } = await checkThreadAccess(id || '', user, category, mode);
+const { isAuthorized, isPublic, threadExists } = await checkThreadAccess(id || '', Astro.locals.user, category, mode);
 
 if (!threadExists) return new Response(null, { status: 404 });
 
-if (!user && !isPublic) return Astro.redirect('/user/sign-in');
+if (!Astro.locals.user && !isPublic) return Astro.redirect('/user/sign-in');
 
 const infographic = (isAuthorized || isPublic) && id
     ? await getLatestInfographic(id)
@@ -33,7 +27,7 @@ const infographic = (isAuthorized || isPublic) && id
 
 const infographicUrl = infographic?.imageUrl || null;
 ---
-<Layout title={`Infographic | ${modeName} | ${categoryName}`} className="infographic-page content-page">
+<Layout title={`Infographic | ${modeObj.name} | ${categoryObj.name}`} className="infographic-page content-page">
     {!isAuthorized && !isPublic ? (
         <div class="empty-state">
             <span class="material-symbols-outlined" aria-hidden="true">lock</span>
@@ -43,13 +37,7 @@ const infographicUrl = infographic?.imageUrl || null;
         </div>
     ) : (
         <>
-            <ContentActions
-                contentType="infographic"
-                threadId={id || ''}
-                hasContent={!!infographicUrl}
-                isAuthorized={isAuthorized}
-                chatUrl={chatUrl}
-            />
+            <ContentActions threadId={id || ''} hasContent={!!infographicUrl} {isAuthorized} />
             {infographicUrl ? (
                 <div class="content-container">
                     <img src={infographicUrl} alt="Generated Infographic" class="infographic-page__image" />
