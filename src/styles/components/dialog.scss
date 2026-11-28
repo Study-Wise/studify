@@ -37,8 +37,8 @@
         pointer-events: auto;
 
         .dialog__content {
-            padding: $spacing-medium;
-            gap: $spacing-small;
+            padding: $spacing-small;
+            gap: $spacing-extra-small;
         }
 
         .dialog__header {
