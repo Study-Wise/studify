@@ -38,7 +38,6 @@ const characterName = categories[category]?.modes?.[mode]?.character?.name.split
     let isGenerating = false;
     let isRedirecting = false;
 
-    // Leave the page locked while the browser navigates to the new chat
     function redirectToChat(chatId) {
         isRedirecting = true;
         window.location.href = `/${category}/${mode}/chat/${chatId}`;
@@ -73,7 +72,6 @@ const characterName = categories[category]?.modes?.[mode]?.character?.name.split
             return;
         }
 
-        // The file sidebar may have created this chat's thread (uploading on /chat/new rewrites the URL), so pick up that ID to send messages to the same thread
         if (page === 'chat' && !threadId) threadId = getThreadIdFromUrl();
 
         const { provider, tier } = getProviderAndTier();
@@ -84,8 +82,6 @@ const characterName = categories[category]?.modes?.[mode]?.character?.name.split
 
         const userMessage = messageInput.value;
 
-        // On the chat page the message moves into the conversation, so clear the input.
-        // The landing page keeps it until the redirect, so a failed attempt can be retried
         if (page === 'chat') {
             messageInput.value = '';
             messageInput.style.height = 'auto';
@@ -128,7 +124,6 @@ const characterName = categories[category]?.modes?.[mode]?.character?.name.split
             }
         }
         try {
-            // Visibility chosen in the sidebar, used when this message creates the thread
             const publicToggle = document.getElementById('public-toggle');
             const isPublic = publicToggle ? publicToggle.checked : false;
 
@@ -167,7 +162,6 @@ const characterName = categories[category]?.modes?.[mode]?.character?.name.split
             const contentType = response.headers.get('Content-Type') || '';
             if (contentType.includes('text/event-stream')) {
                 if (page === 'home') {
-                    // Landing page: wait for the reply to be saved, then open the new chat
                     const reader = response.body.getReader();
                     const decoder = new window.TextDecoder();
                     let buffer = '';
@@ -261,7 +255,6 @@ const characterName = categories[category]?.modes?.[mode]?.character?.name.split
                                     if (!toolCallLogDiv) {
                                         toolCallLogDiv = document.createElement('div');
                                         toolCallLogDiv.className = 'tool-call-log';
-                                        // Keep the typing indicator below the tool calls until the reply text arrives
                                         chatMessages.insertBefore(toolCallLogDiv, messageDiv || document.getElementById('typing-indicator'));
                                     }
                                     const entry = document.createElement('div');
@@ -440,7 +433,6 @@ const characterName = categories[category]?.modes?.[mode]?.character?.name.split
         }
     }
 
-    // Matches the MathJax delimiters configured in Layout.astro ($…$, $$…$$, \(…\), \[…\])
     const mathDelimiterPattern = /\$|\\\(|\\\[/;
     const mathJaxTimeout = 10000;
 
@@ -448,7 +440,6 @@ const characterName = categories[category]?.modes?.[mode]?.character?.name.split
         const validElements = (Array.isArray(elements) || elements instanceof NodeList || elements ? [...elements] : []).filter(element => element != null);
         if (validElements.length === 0) return;
 
-        // Hide messages that contain math until they are typeset so raw LaTeX never shows
         validElements
             .filter(element => mathDelimiterPattern.test(element.textContent || ''))
             .forEach(element => element.dataset.mathjaxPending = '');
@@ -458,11 +449,9 @@ const characterName = categories[category]?.modes?.[mode]?.character?.name.split
             // Loading, startup and typesetting can each stall on a hung request, so limit the whole wait
             await Promise.race([
                 (async () => {
-                    // MathJax loads async, so wait for its script if it hasn't run yet
                     if (!window.MathJax?.startup?.promise) {
                         const script = document.getElementById('MathJax-script');
                         if (!script) throw new Error('MathJax script not found.');
-                        // The error event may have fired before these listeners were attached
                         if (script.dataset.failed === 'true') throw new Error('MathJax failed to load.');
                         await new Promise((resolve, reject) => {
                             script.addEventListener('load', resolve, { once: true });
@@ -533,7 +522,6 @@ const characterName = categories[category]?.modes?.[mode]?.character?.name.split
                         }
                     }
 
-                    // Open in new tab; if popup blocked, sidebar is already updated
                     window.open(url, '_blank');
                 }
             }
@@ -580,7 +568,6 @@ const characterName = categories[category]?.modes?.[mode]?.character?.name.split
                     chatMessages.appendChild(logDiv);
                 }
 
-                // Skip empty assistant messages (e.g. those that only made tool calls)
                 if (!data.generatedText || !data.generatedText.trim()) {
                     chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
                     return;
@@ -688,7 +675,6 @@ const characterName = categories[category]?.modes?.[mode]?.character?.name.split
         if (typeof window.generateOutput !== 'function') displayError('Error: Core function generateOutput failed to initialize.');
     }
 
-    // Extract thread id from the chat page URL; null for "new" so the API creates a thread
     function getThreadIdFromUrl() {
         let pathSegments = window.location.pathname;
         if (pathSegments.endsWith('/')) pathSegments = pathSegments.slice(0, -1);
@@ -754,6 +740,5 @@ const characterName = categories[category]?.modes?.[mode]?.character?.name.split
 
     document.addEventListener('DOMContentLoaded', initializePage);
 
-    // Also call appropriate handler immediately in case DOM is already loaded
     if (document.readyState === 'complete' || document.readyState === 'interactive') initializePage();
 </script>
