@@ -1,45 +1,53 @@
 import * as ai from 'ai';
-import { stepCountIs } from 'ai';
+import { stepCountIs, type GenerateTextResult, type ModelMessage, type StepResult, type ToolCallPart, type ToolSet } from 'ai';
 import config from '@/lib/ai.config';
 import { resolveModel } from '@/lib/models';
-import type { Message, ToolCallLogEntry } from '@/lib/threads';
+import type { ToolCallLogEntry, UploadedFile } from '@/lib/threads';
 import type { ToolContext, ToolRecord } from '@/lib/tools';
 import { VendorError } from '@/lib/user-errors';
 import 'dotenv/config';
 import { nanoid } from 'nanoid';
 import type { ZodSchema } from 'zod';
 
-// Client-side tool call that needs to be executed in the browser
-export interface ClientToolCall {
-    toolName: string;
-    toolCallId: string;
+export interface ClientToolCall extends Pick<ToolCallPart, 'toolName' | 'toolCallId'> {
     args: Record<string, string | number | boolean | undefined>;
 }
 
-// AI generation result with potential client-side tool calls
-export interface AIGenerationResult {
-    text: string;
+export interface AIGenerationResult extends Pick<GenerateTextResult<ToolSet, never>, 'text'> {
     clientToolCalls: ClientToolCall[];
     toolCallLog: ToolCallLogEntry[];
 }
 
 export interface TitleGenerationOptions {
-    convoHistory: Message[];
+    convoHistory: ModelMessage[];
     userModel: string;
     provider: string;
+}
+
+function withFiles(convoHistory: ModelMessage[], files: UploadedFile[]): ModelMessage[] {
+    return [
+        ...files.map((file): ModelMessage => ({
+            role: 'user',
+            content: [file.type.startsWith('image/')
+                ? { type: 'image', image: new URL(file.url), mediaType: file.type }
+                : { type: 'file', data: new URL(file.url), mediaType: file.type }],
+        })),
+        ...convoHistory,
+    ];
 }
 
 export async function generateText(
     systemPrompt: string,
     userPrompt: string,
-    convoHistory: Message[],
+    convoHistory: ModelMessage[],
     userModel: string,
     provider: string,
     tools: ToolRecord = {},
     excludeTools?: string[],
     maxSteps: number = 25,
     requestId: string = nanoid(),
-    toolContext?: ToolContext
+    toolContext?: ToolContext,
+    files: UploadedFile[] = []
 ): Promise<AIGenerationResult> {
 
     const resolvedTools = excludeTools
@@ -48,7 +56,7 @@ export async function generateText(
         )
         : tools;
 
-    convoHistory = convoHistory.filter(msg => msg.role !== 'system' && msg.content !== '');
+    convoHistory = withFiles(convoHistory.filter(msg => msg.role !== 'system' && msg.content !== ''), files);
 
     if (convoHistory[convoHistory.length - 1]?.role !== 'user' || convoHistory[convoHistory.length - 1]?.content !== userPrompt) {
         convoHistory.push({
@@ -58,7 +66,6 @@ export async function generateText(
     }
 
     const aiModel = await resolveModel(provider, userModel);
-
     const aiStartTime = Date.now();
     console.log(`[${requestId}] AI request: model=${aiModel}, messages=${convoHistory.length}, tools=${Object.keys(resolvedTools).length}`);
 
@@ -112,8 +119,6 @@ export async function generateText(
         if (result.toolResults && result.toolResults.length > 0) {
             for (const toolResult of result.toolResults) {
                 try {
-                    // Tool results are JSON strings, so we need to parse them
-                    // Cast to access the result property which varies by type
                     let parsed = null;
                     try {
                         parsed = typeof toolResult.output === 'string' ? JSON.parse(toolResult.output) : toolResult.output;
@@ -140,7 +145,6 @@ export async function generateText(
             }
         }
 
-        // Also check steps for tool results (multi-step scenarios)
         if (result.steps && result.steps.length > 0) {
             for (const step of result.steps) {
                 if (step.toolResults && step.toolResults.length > 0) {
@@ -191,18 +195,18 @@ export async function generateText(
     }
 }
 
-// Streams AI response for a conversation, returning the streamText result for the caller to pipe
 export async function streamText(
     systemPrompt: string,
     userPrompt: string,
-    convoHistory: Message[],
+    convoHistory: ModelMessage[],
     userModel: string,
     provider: string,
     tools: ToolRecord = {},
     excludeTools?: string[],
     maxSteps: number = 25,
     requestId: string = nanoid(),
-    toolContext?: ToolContext
+    toolContext?: ToolContext,
+    files: UploadedFile[] = []
 ): Promise<ReturnType<typeof ai.streamText>> {
 
     const resolvedTools = excludeTools
@@ -211,7 +215,7 @@ export async function streamText(
         )
         : tools;
 
-    convoHistory = convoHistory.filter(msg => msg.role !== 'system' && msg.content !== '');
+    convoHistory = withFiles(convoHistory.filter(msg => msg.role !== 'system' && msg.content !== ''), files);
 
     if (convoHistory[convoHistory.length - 1]?.role !== 'user' || convoHistory[convoHistory.length - 1]?.content !== userPrompt) convoHistory.push({ role: 'user', content: userPrompt });
 
@@ -228,8 +232,7 @@ export async function streamText(
     });
 }
 
-// Extracts clientToolCalls and toolCallLog from a completed streamText result's steps
-export function extractToolData(steps: Awaited<Awaited<ReturnType<typeof ai.streamText>>['steps']>): {
+export function extractToolData(steps: StepResult<ToolSet>[]): {
     clientToolCalls: ClientToolCall[];
     toolCallLog: ToolCallLogEntry[];
 } {
@@ -361,7 +364,7 @@ IMPORTANT: Only output the paraphrased question, nothing else. Do not add any ex
 export async function generateObject<T>(
     systemPrompt: string,
     userPrompt: string,
-    convoHistory: Message[],
+    convoHistory: ModelMessage[],
     userModel: string,
     provider: string,
     schema: ZodSchema<T>,

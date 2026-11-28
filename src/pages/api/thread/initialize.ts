@@ -44,7 +44,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
         const newThreadId = nanoid();
 
-        const { model: initialModel, provider: initialProvider } = await getValidModelAndProvider(provider, tier);
+        const resolved = await getValidModelAndProvider(provider, tier);
 
         await db.insert(threadsTable).values({
             id: newThreadId,
@@ -53,8 +53,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
             email: locals.user.email,
             category: category || config.defaultCategory,
             mode: mode || config.defaultMode,
-            model: initialModel,
-            provider: initialProvider,
+            model: resolved.model,
+            provider: resolved.provider,
             isPublic: isPublic === true,
             isDev: (import.meta.env.NODE_ENV || process.env.NODE_ENV) === 'development'
         });

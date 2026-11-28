@@ -1,10 +1,9 @@
 import { nanoid } from 'nanoid';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
-import { streamText, extractToolData, generateTitle } from '@/lib/ai-service';
+import { generateText, streamText, extractToolData, generateTitle } from '@/lib/ai-service';
 import config from '@/lib/ai.config';
 import appConfig from '@/lib/app.config';
-import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
 import { getValidModelAndProvider } from '@/lib/models';
 import categories from '@/lib/modes';
 import generateModePrompt from '@/lib/prompt-generator';
@@ -197,40 +196,29 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
             }
         }
 
+        const visualFiles = (userData?.uploadedFiles ?? []).filter(file => file.type.startsWith('image/') || file.type === 'application/pdf');
+
         let userModel: string;
         let selectedProvider: string;
 
         if (userData && userData.model && userData.provider) {
-            // Use stored model and provider directly (already resolved at thread creation)
             userModel = userData.model;
             selectedProvider = userData.provider;
         }
         else {
-            const { model: resolvedModel, provider: resolvedProvider } = await getValidModelAndProvider(provider, tier);
-
-            userModel = resolvedModel;
-            selectedProvider = resolvedProvider;
+            userModel = (await getValidModelAndProvider(provider, tier)).model;
+            selectedProvider = (await getValidModelAndProvider(provider, tier)).provider;
         }
 
-        // Server-verified context for tools: thread ownership was checked above, so tools must use this rather than any thread ID chosen by the model
         const toolContext: ToolContext = { threadId: current_thread_id!, email: locals.user.email };
 
-        // --- Special handling for first message: Generate AI welcome response ---
         if (convoHistory.length === 1) {
             const firstMessageState = { created: !thread_id, saved: false };
             try {
                 convoHistory.push({ id: nanoid(), role: 'user', content: userPrompt });
 
                 const tools = Object.fromEntries(Object.entries(modules).filter(([key]) => !modeObj.excludedTools?.includes(key)));
-                const welcomeMessage = await generateWelcomeMessage({
-                    systemPrompt,
-                    convoHistory,
-                    userModel,
-                    provider: selectedProvider,
-                    tools,
-                    requestId,
-                    toolContext
-                });
+                const welcomeMessage = (await generateText(systemPrompt, config.welcomeMessagePrompt, convoHistory, userModel, selectedProvider, tools, undefined, 25, requestId, toolContext, visualFiles)).text;
 
                 convoHistory.push({ id: nanoid(), role: 'assistant', content: welcomeMessage });
 
@@ -302,7 +290,6 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
             } catch (error) {
                 console.error(`❌ [${requestId}] Error handling first message:`, error);
 
-                // The thread was created for this message, so remove it rather than leave an empty, untitled chat behind when the first reply fails
                 if (firstMessageState.created && !firstMessageState.saved) {
                     try {
                         await db.delete(threadsTable)
@@ -315,7 +302,6 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
             }
         }
 
-        // Add the user message to the history that gets saved. streamText works on a filtered copy, so a user message it appends never reaches this array
         convoHistory.push({ id: nanoid(), role: 'user', content: userPrompt });
 
         const tools = Object.fromEntries(Object.entries(modules).filter(([key]) => !modeObj.excludedTools?.includes(key)));
@@ -331,7 +317,8 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                 undefined,
                 25,
                 requestId,
-                toolContext
+                toolContext,
+                visualFiles
             );
         } catch (error) {
             console.error(`❌ [${requestId}] Failed to start AI stream:`, error);
@@ -361,7 +348,6 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                             streamedText += streamPart.text || '';
                             if (Date.now() - htmlThrottle.lastAt >= config.streamHtmlInterval) {
                                 htmlThrottle.lastAt = Date.now();
-                                // Leave out a formula that is still being written, so half a formula never shows
                                 let open: RegExpMatchArray | undefined;
                                 for (const match of streamedText.matchAll(/\$\$|\$|\\[()[\]]/g)) {
                                     if (!open && MATH_CLOSERS[match[0]]) open = match;
@@ -383,7 +369,6 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                                     status: typeof parsed === 'object' && parsed !== null && 'status' in parsed && parsed.status === 'error' ? 'error' : 'success'
                                 }));
                             } catch {
-                                // JSON parse error ignored, status stays as success
                                 controller.enqueue(sendEvent({ type: 'tool-result', toolCallId: streamPart.toolCallId || '', toolName: streamPart.toolName || '', status: 'success' }));
                             }
                         }
@@ -398,7 +383,6 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                     convoHistory.push(assistantMessage);
                     const convoHistoryWithoutSystem = convoHistory.filter(msg => msg.role !== 'system');
                     if (current_thread_id && userData) {
-                        // Leave the title out: the user may have renamed the chat while this response streamed
                         await db.update(threadsTable)
                             .set({ thread: { messages: convoHistoryWithoutSystem }, updatedAt: new Date(), isDev })
                             .where(eq(threadsTable.id, current_thread_id!));
@@ -435,7 +419,6 @@ IMPORTANT: When the user asks you to search, look up information, or use a tool,
                             const title = await generateTitle({ convoHistory, userModel, provider: selectedProvider });
                             await db.update(threadsTable)
                                 .set({ title, updatedAt: new Date() })
-                                // Skip if the chat was renamed while the title was generated
                                 .where(and(eq(threadsTable.id, current_thread_id!), eq(threadsTable.title, userData?.title ?? 'Untitled Conversation')));
                         } catch (error) {
                             console.error(`❌ [${requestId}] Title generation failed:`, error);

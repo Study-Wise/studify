@@ -1,8 +1,8 @@
 import { nanoid } from 'nanoid';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
+import { generateText } from '@/lib/ai-service';
 import config from '@/lib/ai.config';
-import { generateWelcomeMessage } from '@/lib/generate-welcome-message';
 import categories from '@/lib/modes';
 import type { Message } from '@/lib/threads';
 import { modules } from '@/lib/tools';
@@ -40,14 +40,7 @@ export async function checkForOneMessage({
                 ];
 
                 // Generate welcome message (pass a copy of convoHistory to avoid mutation)
-                const welcomeMessage = await generateWelcomeMessage({
-                    systemPrompt,
-                    convoHistory: [...convoHistory],
-                    userModel: threads[0].model || config.model,
-                    provider: threads[0].provider || 'openai',
-                    tools: Object.fromEntries(Object.entries(modules).filter(([key]) => !categories[category || '']?.modes?.[mode || '']?.excludedTools?.includes(key))),
-                    requestId: `page-load-${threadId}`
-                });
+                const welcomeMessage = (await generateText(systemPrompt, config.welcomeMessagePrompt, convoHistory, threads[0].model || config.model, threads[0].provider || 'openai', Object.fromEntries(Object.entries(modules).filter(([key]) => !categories[category || '']?.modes?.[mode || '']?.excludedTools?.includes(key))), undefined, 25, `page-load-${threadId}`)).text;
 
                 const updatedMessages: Message[] = [
                     ...nonSystemMessages,
