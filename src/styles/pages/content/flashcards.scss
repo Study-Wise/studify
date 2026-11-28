@@ -63,7 +63,7 @@
             transform-style: preserve-3d;
         }
 
-        &__card[data-flipped="true"] &__card-inner {
+        &__card[data-flipped="true"] .flashcards__card-inner {
             transform: rotateY(180deg);
         }
 
