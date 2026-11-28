@@ -5,6 +5,7 @@ import { checkThreadAccess } from '@/lib/auth/check-thread-access';
 import { getLatestPracticeQuestions } from '@/lib/content/latest/practice-questions';
 
 import ContentActions from '@/components/ContentActions.astro';
+import StepByStep from '@/components/content/StepByStep.astro';
 import Layout from '@/layouts/Layout.astro';
 import StepByStepScript from '@/scripts/step-by-step.astro';
 import '@/styles/pages/content/globals.scss';
@@ -29,11 +30,9 @@ if (!threadExists) return new Response(null, { status: 404 });
 
 if (!user && !isPublic) return Astro.redirect('/user/sign-in');
 
-const { content: latestPracticeQuestions } = (isAuthorized || isPublic)
+const { content: practiceData } = (isAuthorized || isPublic)
     ? await getLatestPracticeQuestions(id || '')
     : { content: null };
-
-const parsedContent = latestPracticeQuestions ? await marked.parse(latestPracticeQuestions) : null;
 ---
 <Layout title={`Practice Questions | ${modeName} | ${categoryName}`} className="practice-questions-page content-page" mathjax={true}>
     {!isAuthorized && !isPublic ? (
@@ -48,12 +47,109 @@ const parsedContent = latestPracticeQuestions ? await marked.parse(latestPractic
             <ContentActions
                 contentType="practice-questions"
                 threadId={id || ''}
-                hasContent={!!parsedContent}
+                hasContent={!!practiceData}
                 isAuthorized={isAuthorized}
                 chatUrl={chatUrl}
             />
-            {parsedContent ? (
-                <div class="content-container practice-questions-page__content" set:html={parsedContent} />
+            {practiceData ? (
+                <div class="content-container practice-questions-page__content">
+                    {practiceData.quiz.length > 0 && (
+                        <>
+                            <h4>Interactive Mock Quiz</h4>
+                            <StepByStep steps={practiceData.quiz} name="quiz" />
+                            <hr />
+                        </>
+                    )}
+                    {practiceData.multipleChoice.length > 0 && (
+                        <>
+                            <h4>Multiple Choice Questions</h4>
+                            {practiceData.multipleChoice.map((item, index) => (
+                                <>
+                                    <p><strong>Question {index + 1}:</strong> <span set:html={marked.parseInline(item.question)} /></p>
+                                    <ol type="A">
+                                        {item.options.map(option => <li set:html={marked.parseInline(option)} />)}
+                                    </ol>
+                                    <details class="reveal">
+                                        <summary>Reveal answer</summary>
+                                        <p><em>Correct Answer: {String.fromCharCode(65 + item.correctIndex)}</em></p>
+                                        <p><em>Explanation:</em> <span set:html={marked.parseInline(item.explanation)} /></p>
+                                    </details>
+                                </>
+                            ))}
+                            <hr />
+                        </>
+                    )}
+                    {practiceData.shortAnswer.length > 0 && (
+                        <>
+                            <h4>Short Answer Questions</h4>
+                            {practiceData.shortAnswer.map((item, index) => (
+                                <>
+                                    <p><strong>Question {index + 1}:</strong> <span set:html={marked.parseInline(item.question)} /></p>
+                                    <details class="reveal">
+                                        <summary>Reveal answer</summary>
+                                        <p><em>Sample Answer:</em> <span set:html={marked.parseInline(item.sampleAnswer)} /></p>
+                                    </details>
+                                </>
+                            ))}
+                            <hr />
+                        </>
+                    )}
+                    {practiceData.problems.length > 0 && (
+                        <>
+                            <h4>Problem-Solving Questions</h4>
+                            {practiceData.problems.map((item, index) => (
+                                <>
+                                    <p><strong>Problem {index + 1}:</strong> <span set:html={marked.parseInline(item.problem)} /></p>
+                                    <StepByStep steps={item.steps} name={`problem-${index}`} />
+                                </>
+                            ))}
+                            <hr />
+                        </>
+                    )}
+                    {practiceData.trueFalse.length > 0 && (
+                        <>
+                            <h4>True/False with Justification</h4>
+                            {practiceData.trueFalse.map((item, index) => (
+                                <>
+                                    <p><strong>Statement {index + 1}:</strong> <span set:html={marked.parseInline(item.statement)} /></p>
+                                    <details class="reveal">
+                                        <summary>Reveal answer</summary>
+                                        <p><em>Answer:</em> {item.answer ? 'True' : 'False'}</p>
+                                        <p><em>Justification:</em> <span set:html={marked.parseInline(item.justification)} /></p>
+                                    </details>
+                                </>
+                            ))}
+                            <hr />
+                        </>
+                    )}
+                    {practiceData.challenges.length > 0 && (
+                        <>
+                            <h4>Challenge Questions</h4>
+                            {practiceData.challenges.map((item, index) => (
+                                <>
+                                    <p><strong>Challenge {index + 1}:</strong> <span set:html={marked.parseInline(item.question)} /></p>
+                                    {item.hints.map((hint, hintIndex) => (
+                                        <details class="reveal">
+                                            <summary>Reveal hint {hintIndex + 1}</summary>
+                                            <p set:html={marked.parseInline(hint)} />
+                                        </details>
+                                    ))}
+                                    <details class="reveal">
+                                        <summary>Reveal answer</summary>
+                                        <p><em>Solution Approach:</em> <span set:html={marked.parseInline(item.solutionApproach)} /></p>
+                                    </details>
+                                </>
+                            ))}
+                            <hr />
+                        </>
+                    )}
+                    {practiceData.multipleChoice.length > 0 && (
+                        <>
+                            <h4>Answer Key Summary</h4>
+                            <p><strong>Multiple Choice:</strong> {practiceData.multipleChoice.map((item, index) => `${index + 1}-${String.fromCharCode(65 + item.correctIndex)}`).join(', ')}</p>
+                        </>
+                    )}
+                </div>
             ) : (
                 <div class="empty-state">
                     <span class="material-symbols-outlined" aria-hidden="true">quiz</span>

@@ -3,6 +3,7 @@ import { threadsTable } from '@/db/schema';
 import type { JSONValue } from '@/lib/threads';
 import type { FlashcardData } from '@/lib/content/latest/flashcards';
 import type { InfographicData } from '@/lib/content/latest/infographic';
+import type { PracticeQuestionData } from '@/lib/content/latest/practice-questions';
 import type { SlideshowData } from '@/lib/content/latest/slideshow';
 
 import { eq, sql } from 'drizzle-orm';
@@ -12,7 +13,7 @@ import { getContentTypesList } from '../get-types';
 export type ThreadContentStatus = Record<string, boolean>;
 
 export interface ThreadContent {
-    [key: string]: string | InfographicData | FlashcardData | SlideshowData | undefined | JSONValue;
+    [key: string]: string | InfographicData | FlashcardData | PracticeQuestionData | SlideshowData | undefined | JSONValue;
     studyGuide?: string;
     referenceSheet?: string;
     infographic?: InfographicData;
@@ -20,7 +21,7 @@ export interface ThreadContent {
     mindMap?: string;
     additionalResources?: string;
     flashcards?: FlashcardData | string;
-    practiceQuestions?: string;
+    practiceQuestions?: PracticeQuestionData;
     slideshow?: SlideshowData;
     summary?: string;
 }

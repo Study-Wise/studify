@@ -1,0 +1,34 @@
+---
+import { marked } from 'marked';
+import type { PracticeQuestionData } from '@/lib/content/latest/practice-questions';
+
+interface Props {
+    steps: PracticeQuestionData['quiz'];
+    name: string;
+}
+
+const { steps, name } = Astro.props;
+---
+<section class="step-by-step">
+    {steps.map((step, stepIndex) => (
+        <>
+            <div class="step">
+                <p class="step-description" set:html={marked.parseInline(step.description)} />
+                <p class="step-question" set:html={marked.parseInline(step.question)} />
+                <div class="step-question-choices">
+                    {step.choices.map((choice, choiceIndex) => (
+                        <>
+                            <label for={`${name}-${stepIndex}-${choiceIndex}`} class="step-question-choice" data-type={choice.correct ? 'correct' : undefined}>
+                                <input id={`${name}-${stepIndex}-${choiceIndex}`} name={`${name}-${stepIndex}`} type="radio" class="step-question-radio" />
+                                <div class="step-question-choice-content" set:html={marked.parseInline(choice.text)} />
+                                <p class="answer-explanation" set:html={marked.parseInline(choice.explanation)} />
+                            </label>
+                            {choiceIndex < step.choices.length - 1 && <hr class="divider" />}
+                        </>
+                    ))}
+                </div>
+            </div>
+            {stepIndex < steps.length - 1 && <hr class="divider" />}
+        </>
+    ))}
+</section>

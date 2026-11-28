@@ -114,5 +114,39 @@
                 margin: 2rem 0;
             }
         }
+
+        .reveal {
+            margin-block-end: $spacing-medium;
+
+            summary {
+                list-style: none;
+                padding: $spacing-small $spacing-medium;
+                color: var(--body-text);
+                background-color: var(--card-bg);
+                border: 1px solid var(--card-border);
+                border-radius: $border-radius-medium;
+                font: inherit;
+                transition: background-color $transition-fast $ease;
+                cursor: pointer;
+                display: inline-block;
+
+                &::-webkit-details-marker {
+                    display: none;
+                }
+
+                &:hover, &:focus-visible {
+                    background-color: var(--message-bg);
+                }
+            }
+
+            &[open] > summary {
+                margin-block-end: $spacing-small;
+            }
+
+            > :not(summary) {
+                padding-inline-start: $spacing-medium;
+                border-inline-start: 4px solid var(--card-border);
+            }
+        }
     }
 }
