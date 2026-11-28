@@ -58,7 +58,7 @@
         "ai": "^5.0.107",
         "better-auth": "^1.4.11",
         "dotenv": "^16.6.1",
-        "drizzle-orm": "^0.44.7",
+        "drizzle-orm": "^0.45.4",
         "exa-js": "^1.9.3",
         "front-matter": "^4.0.2",
         "fs-extra": "^11.4.1",
