@@ -306,11 +306,11 @@ const characterName = categories[category]?.modes?.[mode]?.character?.name.split
                                 console.warn('Desmos error:', error);
                             }
                         }
-                        if (typeof window.initializeStepByStep === 'function') {
+                        if (typeof window.initializeSelectableQuestions === 'function') {
                             try {
-                                window.initializeStepByStep();
+                                window.initializeSelectableQuestions();
                             } catch (error) {
-                                console.warn('Step-by-step error:', error);
+                                console.warn('Selectable questions error:', error);
                             }
                         }
                     }
@@ -595,11 +595,11 @@ const characterName = categories[category]?.modes?.[mode]?.character?.name.split
                     }
                 }
 
-                if (typeof window.initializeStepByStep === 'function') {
+                if (typeof window.initializeSelectableQuestions === 'function') {
                     try {
-                        window.initializeStepByStep();
+                        window.initializeSelectableQuestions();
                     } catch (error) {
-                        console.warn('Error initializing step-by-step:', error);
+                        console.warn('Error initializing selectable questions:', error);
                     }
                 }
 
@@ -645,11 +645,11 @@ const characterName = categories[category]?.modes?.[mode]?.character?.name.split
                     }
                 }
 
-                if (typeof window.initializeStepByStep === 'function') {
+                if (typeof window.initializeSelectableQuestions === 'function') {
                     try {
-                        window.initializeStepByStep();
+                        window.initializeSelectableQuestions();
                     } catch (error) {
-                        console.warn('Error initializing step-by-step:', error);
+                        console.warn('Error initializing selectable questions:', error);
                     }
                 }
 

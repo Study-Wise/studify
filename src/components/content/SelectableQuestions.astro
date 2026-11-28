@@ -2,6 +2,8 @@
 import { marked } from 'marked';
 import type { PracticeQuestionData } from '@/lib/content/latest/practice-questions';
 
+import SelectableQuestionsScript from '@/scripts/selectable-questions.astro';
+
 interface Props {
     steps: PracticeQuestionData['quiz'];
     name: string;
@@ -34,3 +36,4 @@ const { steps, name } = Astro.props;
         </>
     ))}
 </section>
+<SelectableQuestionsScript />

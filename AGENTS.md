@@ -168,7 +168,7 @@ Dynamic routing in `src/pages/`:
   - `src/components/chat/` - Chat UI components (Header, LeftSidebar, RightSidebar, Toolbar)
   - `src/components/fancy/` - Reusable UI components (Button, Select, Tab)
   - `src/accessibility/` - Accessibility features (KeyboardNavigation, ThemeSwitcher, TouchGestures)
-- **Scripts**: Client-side scripts in `src/scripts/` (messages.astro, settings.astro, step-by-step.astro)
+- **Scripts**: Client-side scripts in `src/scripts/` (messages.astro, settings.astro, selectable-questions.astro)
 - **Styles**: SCSS organized in `src/styles/` with variables, utilities, components, and page styles
 
 ### Content Generation

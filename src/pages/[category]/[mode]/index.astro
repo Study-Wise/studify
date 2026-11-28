@@ -5,7 +5,7 @@ import categories from '@/lib/modes';
 import FancyButton from '@/components/fancy/Button.astro';
 import Layout from '@/layouts/Layout.astro';
 import MessagesScript from '@/scripts/messages.astro';
-import StepByStepScript from '@/scripts/step-by-step.astro';
+import SelectableQuestionsScript from '@/scripts/selectable-questions.astro';
 import '@/styles/pages/index.scss';
 import '@/styles/pages/mode.scss';
 import '@/styles/components/step-by-step.scss';
@@ -89,5 +89,5 @@ const modeName = modeObj?.name || mode;
         </div>
     </section>
     <MessagesScript page="home" category={category} mode={mode} />
-    <StepByStepScript />
+    <SelectableQuestionsScript />
 </Layout>

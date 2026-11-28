@@ -14,7 +14,7 @@ import ChatTitle from '@/components/chat/Title.astro';
 import Toolbar from '@/components/chat/Toolbar.astro';
 import Layout from '@/layouts/Layout.astro';
 import MessagesScript from '@/scripts/messages.astro';
-import StepByStepScript from '@/scripts/step-by-step.astro';
+import SelectableQuestionsScript from '@/scripts/selectable-questions.astro';
 import '@/styles/pages/chat.scss';
 
 let { category, mode, id } = Astro.params || { category: '', mode: '', id: '' };
@@ -216,5 +216,5 @@ export const inNav = 'hide';
     </script>
     <script is:inline src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js"></script>
     <MessagesScript page="chat" category={category} mode={mode} id={id} />
-    <StepByStepScript />
+    <SelectableQuestionsScript />
 </Layout>

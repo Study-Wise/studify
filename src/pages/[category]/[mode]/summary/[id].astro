@@ -7,7 +7,7 @@ import { getLatestSummary } from '@/lib/content/latest/summary';
 import ContentActions from '@/components/ContentActions.astro';
 import AccessDenied from '@/components/content/AccessDenied.astro';
 import Layout from '@/layouts/Layout.astro';
-import StepByStepScript from '@/scripts/step-by-step.astro';
+import SelectableQuestionsScript from '@/scripts/selectable-questions.astro';
 import '@/styles/pages/content/globals.scss';
 import '@/styles/pages/content/summary.scss';
 
@@ -44,5 +44,5 @@ const parsedContent = latestSummary?.content ? await marked.parse(latestSummary.
             )}
         </>
     )}
-    <StepByStepScript />
+    <SelectableQuestionsScript />
 </Layout>
