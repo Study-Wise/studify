@@ -44,7 +44,7 @@ ul, ol {
 
 .content-container,
 .message[data-role="assistant"] .message__content {
-    :not(.step-by-step, .step-by-step *, pre, code, a) {
+    :not(.step-by-step, .step-by-step *, .flashcards__deck, pre, code, a) {
         &, &::before, &::after {
             margin: revert;
         }
