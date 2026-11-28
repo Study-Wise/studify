@@ -24,7 +24,7 @@ export default {
                     const start = bytes.subarray(0, node.position.start.offset).toString().length;
                     const tag = context.sourceCode.getText().slice(start).match(/^<[a-zA-Z](?:[^<>{}"']|"[^"]*"|'[^']*'|\{(?:[^{}]|\{(?:[^{}]|\{[^{}]*\})*\})*\})*>/)?.[0];
 
-                    if (tag?.includes('\n') && !(node.type === 'component' && (node.attributes.filter(attribute => attribute.kind === 'expression').length > 4 || (node.attributes.filter(attribute => attribute.kind === 'quoted').length <= 2 && node.attributes.filter(attribute => attribute.kind === 'expression' || attribute.kind === 'quoted').length > 4)))) {
+                    if (tag?.includes('\n') && !(node.type === 'component' && (node.attributes.filter(attribute => attribute.kind === 'expression' || attribute.kind === 'shorthand').length > 4 || (node.attributes.filter(attribute => attribute.kind === 'quoted').length <= 2 && node.attributes.filter(attribute => attribute.kind === 'expression' || attribute.kind === 'shorthand' || attribute.kind === 'quoted').length > 4)))) {
                         context.report({
                             loc: context.sourceCode.getLocFromIndex(start),
                             message: 'Tag attributes split across lines found.',

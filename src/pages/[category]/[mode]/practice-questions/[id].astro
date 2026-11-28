@@ -11,6 +11,8 @@ import StepByStepScript from '@/scripts/step-by-step.astro';
 import '@/styles/pages/content/globals.scss';
 import '@/styles/pages/content/practice-questions.scss';
 
+marked.setOptions({ breaks: true });
+
 const { category, mode, id } = Astro.params;
 const chatUrl = `/${category}/${mode}/chat/${id}`;
 
