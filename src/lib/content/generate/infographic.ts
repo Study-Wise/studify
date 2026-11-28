@@ -1,10 +1,11 @@
+import { experimental_generateImage as generateGatewayImage } from 'ai';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
 import { generateText } from '@/lib/ai-service';
 import config from '@/lib/ai.config';
 import { buildContentSystemPrompt } from '@/lib/content';
-import { generateImage } from '@/lib/genai-image';
 import { parseThreadData } from '@/lib/threads';
+import { uploadFile } from '@/lib/uploadthing';
 import { VendorError } from '@/lib/user-errors';
 import { saveContent } from '@/lib/content/latest';
 import { buildUploadedFilesContext } from '@/lib/content/uploaded-files-context';
@@ -58,21 +59,31 @@ ${descriptionResult.text}
 
 Style: Clean, modern, professional educational infographic. Use a white background with colorful accents. Include clear typography, simple icons, and visual hierarchy. Make it suitable for students and educators.`;
 
-    const imageResult = await generateImage(imagePrompt, `${threadId}-infographic.png`);
+    let image;
 
-    if (!imageResult) throw new Error('Failed to generate image - No result from image generation API');
+    try {
+        image = (await generateGatewayImage({ model: config.imageModel, prompt: imagePrompt, size: config.imageSize })).image;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? `AI Gateway image error: ${error.message}` : 'AI Gateway image generation error';
+        const status = error instanceof Error && 'statusCode' in error ? error.statusCode : null;
 
-    if (!imageResult.imageUrl) throw new Error('Failed to generate image - No image URL returned from image generation API');
+        if (status === 402) throw new VendorError('Vercel AI Gateway', errorMessage, { cause: error }, 'our Vercel AI Gateway account has run out of credits');
+        if (status === 429) throw new VendorError('Vercel AI Gateway', errorMessage, { cause: error }, 'the AI Gateway is getting too many requests right now');
+        if (status === 401) throw new VendorError('Vercel AI Gateway', errorMessage, { cause: error }, 'our AI Gateway API key isn\'t valid');
+        if (status === 403) throw new VendorError('Vercel AI Gateway', errorMessage, { cause: error }, 'the AI Gateway denied access to its image service');
 
-    if (!imageResult.uploadResult) throw new VendorError('UploadThing', 'Failed to upload image - No upload result');
+        throw new VendorError('Vercel AI Gateway', errorMessage, { cause: error });
+    }
 
-    if (!imageResult.uploadResult.data) throw new VendorError('UploadThing', 'Failed to upload image - No data in upload result');
+    const uploadResult = await uploadFile(new File([Buffer.from(image.uint8Array)], `${threadId}-infographic.png`, { type: 'image/png' }));
+
+    if (!uploadResult.data) throw new VendorError('UploadThing', 'Failed to upload image - No data in upload result');
 
     const infographic = {
-        imageUrl: imageResult.imageUrl,
+        imageUrl: uploadResult.data.ufsUrl,
         description: descriptionResult.text,
         generatedAt: new Date().toISOString(),
-        fileKey: imageResult.uploadResult.data.key
+        fileKey: uploadResult.data.key
     };
 
     await saveContent(threadId, 'infographic', infographic);
