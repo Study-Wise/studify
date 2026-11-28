@@ -69,7 +69,7 @@
     display: flex;
 
     &__header {
-        padding: $spacing-medium $spacing-medium + 0.25rem;
+        padding: $spacing-medium;
         background-color: rgb(from var(--card-bg) h s calc(l - 1%));
         border-bottom: 1px solid rgb(from var(--card-border) r g b / 20%);
         justify-content: space-between;
@@ -123,7 +123,7 @@
     }
 
     &__body {
-        padding: $spacing-medium + 0.25rem;
+        padding: $spacing-medium;
     }
 
     &__empty-message {
@@ -135,7 +135,7 @@
     }
 
     &__view {
-        padding: 0.875rem $spacing-medium + 0.25rem;
+        padding: 0.875rem $spacing-medium;
         color: var(--body-text);
         background-color: var(--card-bg);
         border: 1px solid var(--card-border);

@@ -1,7 +1,7 @@
 @use './tokens.scss' as *;
 
 // Container
-$container-padding: $spacing-medium + 0.25rem;
+$container-padding: $spacing-medium;
 
 // Card
 $card-spacing: #{$container-padding * 1.5};

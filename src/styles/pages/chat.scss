@@ -282,7 +282,7 @@ footer, .chat-toolbar {
         radial-gradient(circle at 20% 50%, rgb(from var(--section-title) r g b / 1.5%) 0%, transparent 50%),
         radial-gradient(circle at 80% 80%, rgb(from var(--section-title) r g b / 1.5%) 0%, transparent 50%);
     flex-direction: column;
-    gap: $spacing-medium + 0.25rem;
+    gap: $spacing-medium;
     overflow-y: auto;
     display: flex;
 
@@ -314,7 +314,7 @@ footer, .chat-toolbar {
 }
 
 .message {
-    $message-space: $spacing-medium + 0.25rem;
+    $message-space: $spacing-medium;
 
     position: relative;
     width: fit-content;
@@ -491,7 +491,7 @@ footer, .chat-toolbar {
 }
 
 .tool-call-log {
-    max-width: min(calc(600px + 4 * ($spacing-medium + 0.25rem)), 100%);
+    max-width: min(calc(600px + 4 * $spacing-medium), 100%);
     flex-direction: column;
     gap: $spacing-tiny;
     display: flex;

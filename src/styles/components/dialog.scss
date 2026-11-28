@@ -145,8 +145,8 @@
         }
 
         @media (width <= $breakpoint-small) {
-            padding: $spacing-medium + 0.25rem;
-            gap: $spacing-medium + 0.25rem;
+            padding: $spacing-medium;
+            gap: $spacing-medium;
         }
     }
 

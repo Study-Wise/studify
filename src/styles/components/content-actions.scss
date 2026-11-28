@@ -9,7 +9,7 @@ $color: list.nth(map.get($accent-colors, primary), 1);
 .content-actions {
     position: sticky;
     top: $spacing-medium;
-    margin-block: $spacing-medium;
+    margin: $spacing-medium #{-1 * $spacing-medium};
     padding: $spacing-medium;
     background-color: var(--card-bg);
     box-shadow: 0 0 $spacing-medium rgb(from var(--body-text) r g b / 25%);
