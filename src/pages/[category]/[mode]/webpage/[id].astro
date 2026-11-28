@@ -22,23 +22,21 @@ if (!threadExists) return new Response(null, { status: 404 });
 
 if (!Astro.locals.user && !isPublic) return Astro.redirect('/user/sign-in');
 
-const { content: latestWebpage } = (isAuthorized || isPublic)
-    ? await getLatestWebpage(id || '')
-    : { content: null };
+const latestWebpage = await getLatestWebpage(id || '', Astro.locals.user);
 
 // Convert to data URL to avoid attribute escaping
 let webpageDataUrl = '';
-if (latestWebpage) {
-    const base64 = Buffer.from(latestWebpage).toString('base64');
+if (latestWebpage?.content) {
+    const base64 = Buffer.from(latestWebpage.content).toString('base64');
     webpageDataUrl = `data:text/html;base64,${base64}`;
 }
 ---
 <Layout title={`Webpage | ${modeObj.name} | ${categoryObj.name}`} className="webpage-page content-page" container={false}>
-    {!isAuthorized && !isPublic ? (
+    {!latestWebpage ? (
         <AccessDenied />
     ) : (
         <>
-            <ContentActions threadId={id || ''} hasContent={!!latestWebpage} {isAuthorized} />
+            <ContentActions threadId={id || ''} hasContent={!!latestWebpage.content} {isAuthorized} />
             {webpageDataUrl ? (
                 <div class="content-container webpage-page__container">
                     <iframe src={webpageDataUrl} title="Generated Webpage" sandbox="allow-scripts" />

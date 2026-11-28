@@ -23,21 +23,19 @@ if (!threadExists) return new Response(null, { status: 404 });
 
 if (!Astro.locals.user && !isPublic) return Astro.redirect('/user/sign-in');
 
-const { content: latestResourcesJSON } = (isAuthorized || isPublic)
-    ? await getLatestResources(id || '')
-    : { content: null };
+const latestResources = await getLatestResources(id || '', Astro.locals.user);
 
 let resourcesData = null;
-if (latestResourcesJSON) {
+if (latestResources?.content) {
     try {
-        resourcesData = JSON.parse(latestResourcesJSON);
+        resourcesData = JSON.parse(latestResources.content);
     } catch (error) {
         console.error('Error parsing resources JSON:', error);
     }
 }
 ---
 <Layout title={`Resources | ${modeObj.name} | ${categoryObj.name}`} className="resources-page content-page">
-    {!isAuthorized && !isPublic ? (
+    {!latestResources ? (
         <AccessDenied />
     ) : (
         <>

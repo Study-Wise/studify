@@ -22,22 +22,20 @@ if (!threadExists) return new Response(null, { status: 404 });
 
 if (!Astro.locals.user && !isPublic) return Astro.redirect('/user/sign-in');
 
-const { content: latestMindMap } = (isAuthorized || isPublic)
-    ? await getLatestMindMap(id || '')
-    : { content: null };
+const latestMindMap = await getLatestMindMap(id || '', Astro.locals.user);
 
 let mindMapDataUrl = '';
-if (latestMindMap) {
-    const base64 = Buffer.from(latestMindMap).toString('base64');
+if (latestMindMap?.content) {
+    const base64 = Buffer.from(latestMindMap.content).toString('base64');
     mindMapDataUrl = `data:text/html;base64,${base64}`;
 }
 ---
 <Layout title={`Mind Map | ${modeObj.name} | ${categoryObj.name}`} className="mind-map-page content-page" container={false}>
-    {!isAuthorized && !isPublic ? (
+    {!latestMindMap ? (
         <AccessDenied />
     ) : (
         <>
-            <ContentActions threadId={id || ''} hasContent={!!latestMindMap} {isAuthorized} />
+            <ContentActions threadId={id || ''} hasContent={!!latestMindMap.content} {isAuthorized} />
             {mindMapDataUrl ? (
                 <div class="content-container mind-map-page__container">
                     <iframe src={mindMapDataUrl} title="Mind Map" class="mind-map-page__iframe" sandbox="allow-scripts" />

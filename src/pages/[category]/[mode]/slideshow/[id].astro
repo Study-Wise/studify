@@ -23,19 +23,17 @@ if (!threadExists) return new Response(null, { status: 404 });
 
 if (!Astro.locals.user && !isPublic) return Astro.redirect('/user/sign-in');
 
-const { html: slideshowHtml } = (isAuthorized || isPublic)
-    ? await getLatestSlideshow(id || '')
-    : { html: null };
+const latestSlideshow = await getLatestSlideshow(id || '', Astro.locals.user);
 ---
 <Layout title={`Slideshow | ${modeObj.name} | ${categoryObj.name}`} className="slideshow-page" container={false}>
-    {!isAuthorized && !isPublic ? (
+    {!latestSlideshow ? (
         <AccessDenied />
     ) : (
         <>
-            <ContentActions threadId={id || ''} hasContent={!!slideshowHtml} {isAuthorized} />
-            {slideshowHtml ? (
+            <ContentActions threadId={id || ''} hasContent={!!latestSlideshow.html} {isAuthorized} />
+            {latestSlideshow.html ? (
                 <div class="slideshow-page__container">
-                    <iframe srcdoc={slideshowHtml} title="Generated Slideshow" sandbox="allow-scripts" />
+                    <iframe srcdoc={latestSlideshow.html} title="Generated Slideshow" sandbox="allow-scripts" />
                 </div>
             ) : (
                 <div class="empty-state">

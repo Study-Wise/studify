@@ -22,14 +22,12 @@ if (!threadExists) return new Response(null, { status: 404 });
 
 if (!Astro.locals.user && !isPublic) return Astro.redirect('/user/sign-in');
 
-const infographic = (isAuthorized || isPublic) && id
-    ? await getLatestInfographic(id)
-    : null;
+const infographic = await getLatestInfographic(id || '', Astro.locals.user);
 
-const infographicUrl = infographic?.imageUrl || null;
+const infographicUrl = infographic?.content?.imageUrl || null;
 ---
 <Layout title={`Infographic | ${modeObj.name} | ${categoryObj.name}`} className="infographic-page content-page">
-    {!isAuthorized && !isPublic ? (
+    {!infographic ? (
         <AccessDenied />
     ) : (
         <>

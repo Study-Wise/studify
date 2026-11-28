@@ -1,4 +1,6 @@
+import type { User } from 'better-auth';
 import { z } from 'zod';
+import { checkThreadAccess } from '@/lib/auth/check-thread-access';
 import { getLatestContent } from '@/lib/content/latest/';
 
 const stepSchema = z.object({
@@ -41,7 +43,10 @@ export const practiceQuestionSchema = z.object({
 
 export type PracticeQuestionData = z.infer<typeof practiceQuestionSchema>;
 
-export async function getLatestPracticeQuestions(threadId: string): Promise<{ content: PracticeQuestionData | null }> {
+export async function getLatestPracticeQuestions(threadId: string, user: User | null): Promise<{ content: PracticeQuestionData | null } | null> {
+    const access = await checkThreadAccess(threadId, user);
+    if (!access.isAuthorized && !access.isPublic) return null;
+
     const parsed = practiceQuestionSchema.safeParse(await getLatestContent(threadId, 'practice-questions'));
 
     return { content: parsed.success ? parsed.data : null };

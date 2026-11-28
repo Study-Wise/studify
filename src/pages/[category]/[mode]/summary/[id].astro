@@ -25,14 +25,12 @@ if (!threadExists) return new Response(null, { status: 404 });
 
 if (!Astro.locals.user && !isPublic) return Astro.redirect('/user/sign-in');
 
-const { content: latestSummary } = (isAuthorized || isPublic)
-    ? await getLatestSummary(id || '')
-    : { content: null };
+const latestSummary = await getLatestSummary(id || '', Astro.locals.user);
 
-const parsedContent = latestSummary ? await marked.parse(latestSummary) : null;
+const parsedContent = latestSummary?.content ? await marked.parse(latestSummary.content) : null;
 ---
 <Layout title={`Chat Summary | ${modeObj.name} | ${categoryObj.name}`} className="summary-page content-page" mathjax={true}>
-    {!isAuthorized && !isPublic ? (
+    {!latestSummary ? (
         <AccessDenied />
     ) : (
         <>

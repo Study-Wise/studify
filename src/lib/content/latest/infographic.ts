@@ -1,3 +1,5 @@
+import type { User } from 'better-auth';
+import { checkThreadAccess } from '@/lib/auth/check-thread-access';
 import { getLatestContent } from '@/lib/content/latest/';
 
 export interface InfographicData {
@@ -7,15 +9,20 @@ export interface InfographicData {
     fileKey: string;
 }
 
-export async function getLatestInfographic(threadId: string): Promise<InfographicData | null> {
+export async function getLatestInfographic(threadId: string, user: User | null): Promise<{ content: InfographicData | null } | null> {
+    const access = await checkThreadAccess(threadId, user);
+    if (!access.isAuthorized && !access.isPublic) return null;
+
     const content = await getLatestContent(threadId, 'infographic');
     if (typeof content === 'object' && content !== null && 'imageUrl' in content && typeof content.imageUrl === 'string' && 'description' in content && typeof content.description === 'string' && 'generatedAt' in content && typeof content.generatedAt === 'string' && 'fileKey' in content && typeof content.fileKey === 'string') {
         return {
-            imageUrl: content.imageUrl,
-            description: content.description,
-            generatedAt: content.generatedAt,
-            fileKey: content.fileKey,
+            content: {
+                imageUrl: content.imageUrl,
+                description: content.description,
+                generatedAt: content.generatedAt,
+                fileKey: content.fileKey,
+            },
         };
     }
-    return null;
+    return { content: null };
 }

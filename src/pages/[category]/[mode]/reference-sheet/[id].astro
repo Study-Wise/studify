@@ -25,14 +25,12 @@ if (!threadExists) return new Response(null, { status: 404 });
 
 if (!Astro.locals.user && !isPublic) return Astro.redirect('/user/sign-in');
 
-const { content: latestReferenceSheet } = (isAuthorized || isPublic)
-    ? await getLatestReferenceSheet(id || '')
-    : { content: null };
+const latestReferenceSheet = await getLatestReferenceSheet(id || '', Astro.locals.user);
 
-const parsedContent = latestReferenceSheet ? await marked.parse(latestReferenceSheet) : null;
+const parsedContent = latestReferenceSheet?.content ? await marked.parse(latestReferenceSheet.content) : null;
 ---
 <Layout title={`Reference Sheet | ${modeObj.name} | ${categoryObj.name}`} className="reference-sheet-page content-page" mathjax={true}>
-    {!isAuthorized && !isPublic ? (
+    {!latestReferenceSheet ? (
         <AccessDenied />
     ) : (
         <>

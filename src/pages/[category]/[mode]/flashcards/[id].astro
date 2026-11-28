@@ -37,12 +37,10 @@ if (!threadExists) return new Response(null, { status: 404 });
 
 if (!Astro.locals.user && !isPublic) return Astro.redirect('/user/sign-in');
 
-const { content: latestFlashcards } = (isAuthorized || isPublic)
-    ? await getLatestFlashcards(id || '')
-    : { content: null };
+const latestFlashcards = await getLatestFlashcards(id || '', Astro.locals.user);
 
 // Determine if content is structured (object with text/questions) or legacy (string)
-const flashcardData: FlashcardData | string | null = latestFlashcards ?? null;
+const flashcardData: FlashcardData | string | null = latestFlashcards?.content ?? null;
 
 const parsedContent = (typeof flashcardData === 'string')
     ? await marked.parse(flashcardData)
@@ -51,7 +49,7 @@ const parsedContent = (typeof flashcardData === 'string')
 const hasContent = !!(flashcardData !== null ? (typeof flashcardData !== 'string' && flashcardData.questions.length > 0) : parsedContent);
 ---
 <Layout title={`Flashcards | ${modeObj.name} | ${categoryObj.name}`} className="flashcard-page content-page" mathjax={true}>
-    {!isAuthorized && !isPublic ? (
+    {!latestFlashcards ? (
         <AccessDenied />
     ) : (
         <>

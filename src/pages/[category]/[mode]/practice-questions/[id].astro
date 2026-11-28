@@ -27,12 +27,12 @@ if (!threadExists) return new Response(null, { status: 404 });
 
 if (!Astro.locals.user && !isPublic) return Astro.redirect('/user/sign-in');
 
-const { content: practiceData } = (isAuthorized || isPublic)
-    ? await getLatestPracticeQuestions(id || '')
-    : { content: null };
+const latestPracticeQuestions = await getLatestPracticeQuestions(id || '', Astro.locals.user);
+
+const practiceData = latestPracticeQuestions?.content;
 ---
 <Layout title={`Practice Questions | ${modeObj.name} | ${categoryObj.name}`} className="practice-questions-page content-page" mathjax={true}>
-    {!isAuthorized && !isPublic ? (
+    {!latestPracticeQuestions ? (
         <AccessDenied />
     ) : (
         <>

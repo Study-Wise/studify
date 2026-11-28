@@ -1,3 +1,5 @@
+import type { User } from 'better-auth';
+import { checkThreadAccess } from '@/lib/auth/check-thread-access';
 import { getLatestContent } from '@/lib/content/latest/';
 
 export interface FlashcardData {
@@ -5,7 +7,10 @@ export interface FlashcardData {
     questions: { front: string; back: string }[];
 }
 
-export async function getLatestFlashcards(threadId: string): Promise<{ content: FlashcardData | string | null }> {
+export async function getLatestFlashcards(threadId: string, user: User | null): Promise<{ content: FlashcardData | string | null } | null> {
+    const access = await checkThreadAccess(threadId, user);
+    if (!access.isAuthorized && !access.isPublic) return null;
+
     const content = await getLatestContent(threadId, 'flashcards');
 
     if (content) {
