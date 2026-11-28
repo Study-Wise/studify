@@ -8,8 +8,6 @@ const [firstContentType, ...remainingContentTypes] = getContentTypesList();
 if (!firstContentType) throw new Error('No content types are available');
 const contentTypes: [string, ...string[]] = [firstContentType, ...remainingContentTypes];
 
-// Tool for opening content in a new browser tab.
-// Checks if content exists before signaling the client to open the URL.
 const openContentTool = tool({
     description: 'Open existing study content (study guide, reference sheet, flashcards, etc.) in a new browser tab. Only opens content that has already been generated — does not generate anything. If no content exists, returns an error. Use after \'generate-content\' has successfully generated content, or when the user asks to open/view their existing content.',
     inputSchema: z.object({
@@ -18,7 +16,6 @@ const openContentTool = tool({
         mode: z.string().describe('The mode (e.g., algebra, physics)'),
     }),
     execute: async ({ type, category, mode }, options) => {
-        // Always use the server-verified thread, never a model-supplied ID
         const toolContext = getToolContext(options);
         if (!toolContext) {
             return JSON.stringify({
@@ -39,7 +36,6 @@ const openContentTool = tool({
 
         const url = `/${category}/${mode}/${type}/${threadId}`;
 
-        // Return a special response that signals the client to open this URL
         return JSON.stringify({
             action: 'open-content',
             url,

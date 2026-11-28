@@ -60,10 +60,8 @@ async function getMessages(id: string, isAuthorized?: boolean | null) {
 
         if (!isAuthorized) return []
 
-        // Handle case where thread data is stored as string instead of object
         const rawThread = dbResponse[0]?.thread;
         if (typeof rawThread === 'string') {
-            // Remove trailing commas before ] or } (invalid JSON but sometimes stored)
             const cleanedJson = rawThread.replace(/,\s*([\]}])/g, '$1');
             await db.update(threadsTable).set({ thread: parseThreadData(cleanedJson) }).where(eq(threadsTable.id, id));
             return parseThreadData(cleanedJson)?.messages ?? [];
@@ -81,10 +79,8 @@ async function getMessagesLength(id: string) {
 
         if (dbResponse.length === 0) return 0;
 
-        // Handle case where thread data is stored as string instead of object
         const rawThread = dbResponse[0]?.thread;
         if (typeof rawThread === 'string') {
-            // Remove trailing commas before ] or } (invalid JSON but sometimes stored)
             const cleanedJson = rawThread.replace(/,\s*([\]}])/g, '$1');
             await db.update(threadsTable).set({ thread: parseThreadData(cleanedJson) }).where(eq(threadsTable.id, id));
             return parseThreadData(cleanedJson)?.messages?.length ?? 0;

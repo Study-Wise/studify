@@ -9,12 +9,9 @@ import { eq } from 'drizzle-orm';
 
 export interface ThreadAccessResult {
     isAuthorized: boolean;
-    // Viewer has access only because the thread is public
     isPublic: boolean;
-    // Thread is marked public, regardless of who is viewing
     isPublicThread: boolean;
     threadOwner: string | null;
-    // A thread with this ID is in the database. Unknown IDs still count as authorized (unclaimed), so pages that only show an existing thread must check this too.
     threadExists: boolean;
 }
 
@@ -39,7 +36,6 @@ export async function getThreadAccess(
         }
     }
     else if (isDev()) {
-        // In dev mode without a user email, check dev user admin status directly
         try {
             isUserAdminFlag = (await getDevUser())?.role === appConfig.adminRole;
         } catch (error) {

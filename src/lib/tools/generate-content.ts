@@ -20,7 +20,6 @@ const specialCases: Record<string, { latestFn?: string; generateFn?: string }> =
     },
 };
 
-// Types that require model/provider for generation
 const getContentTool = tool({
     description: 'Generate or retrieve study materials for the current thread. Returns existing content if available; otherwise automatically generates new content based on the conversation history and uploaded files. Use regenerate=true to force regeneration even if content already exists. After successfully generating content, call the \'open-content\' tool to open it in a new tab for the user.',
     inputSchema: z.object({
@@ -31,7 +30,6 @@ const getContentTool = tool({
     execute: async ({ type, regenerate = false, userPrompt }, options) => {
         let stage = 'initializing';
 
-        // Always use the server-verified thread, never a model-supplied ID, so content (including uploaded files) from other users' threads can never be read
         const toolContext = getToolContext(options);
         if (!toolContext) {
             return {
@@ -46,12 +44,10 @@ const getContentTool = tool({
             const camel = type.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
             const pascalCase = camel.charAt(0).toUpperCase() + camel.slice(1);
 
-            // Derive function names (with special case handling)
             const special = specialCases[type] || {};
             const latestFnName = special.latestFn || `getLatest${pascalCase}`;
             const generateFnName = special.generateFn || `generate${pascalCase}`;
 
-            // Skip checking for existing content if regenerate is true
             if (!regenerate) {
                 stage = `loading retrieval module for "${type}"`;
                 const getLatestFn = (await import(`../content/latest/${type}.ts`))[latestFnName];
@@ -67,7 +63,6 @@ const getContentTool = tool({
                 stage = `retrieving existing "${type}" for thread "${threadId}"`;
                 const existingContent = await getLatestFn(threadId, { email: toolContext.email });
 
-                // Check if content exists (handle different return types)
                 if (
                     typeof existingContent === 'object' &&
                     existingContent !== null
@@ -102,7 +97,6 @@ const getContentTool = tool({
 
             stage = `generating "${type}" for thread "${threadId}"`;
 
-            // Handle types that require model/provider (always use default for reliability)
             generatedContent = await generateFn(threadId, promptToPass || null);
 
             if (generatedContent === null || generatedContent === undefined) {
@@ -113,7 +107,6 @@ const getContentTool = tool({
                 };
             }
 
-            // Each generate function saves to DB on its own
             return {
                 status: 'success',
                 message: regenerate ? `Regenerated ${type}` : `Generated new ${type}`,

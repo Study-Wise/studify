@@ -6,14 +6,11 @@ export interface ToolModule {
 
 export type ToolRecord = Record<string, Tool>;
 
-// Server-verified request context passed to tool executions via `experimental_context`.
-// Tools that touch thread data must use this instead of model-supplied IDs.
 export interface ToolContext {
     threadId: string;
     email: string;
 }
 
-// Reads the server-verified tool context, or null if the call has none
 export function getToolContext<T>(options: { experimental_context?: T }): ToolContext | null {
     const { experimental_context } = options;
     if (
