@@ -1,10 +1,14 @@
 import Exa from 'exa-js';
+import { z } from 'zod';
 import { db } from '@/db/initialize';
 import { threadsTable } from '@/db/schema';
+import { generateObject } from '@/lib/ai-service';
+import config from '@/lib/ai.config';
 import findSimulations from '@/lib/phet';
 import { parseThreadData } from '@/lib/threads';
 import { VendorError } from '@/lib/user-errors';
 import { saveContent } from '@/lib/content/latest';
+import { buildUploadedFilesContext } from '@/lib/content/uploaded-files-context';
 
 import { eq } from 'drizzle-orm';
 
@@ -45,19 +49,14 @@ export async function generateResources(threadId: string, userPrompt?: string): 
 
     if (messages.length === 0) throw new Error('No messages found in thread');
 
-    const conversationText = messages
-        .filter(msg => msg.role === 'user')
-        .map(msg => msg.content)
-        .join(' ');
-
-    const uploadedFilesText = (threads[0].uploadedFiles ?? [])
-        .filter(f => f.extractedText)
-        .map(f => f.extractedText)
-        .join(' ');
-
-    const combinedText = `${conversationText} ${uploadedFilesText}`.trim();
-    let topicSummary = combinedText.slice(0, 500);
-    if (userPrompt) topicSummary += ` ${userPrompt}`;
+    const topicSummary = (await generateObject(
+        `You decide what to search the web for to find educational resources (simulations, videos, articles, tutorials and documentation) that help a student with this conversation. Return one concise search topic: a short phrase of at most 12 words naming the concept or subject the student is studying. Do not return the student's exact homework question or any answer to it.${buildUploadedFilesContext(threads[0].uploadedFiles ?? [])}${userPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these but do NOT include them in your output):\n${userPrompt}` : ''}`,
+        'Return ONLY the search topic.',
+        messages,
+        config.model,
+        config.provider,
+        z.object({ topic: z.string().describe('A short search phrase naming the concept the student is studying') }),
+    )).topic;
 
     const resourceCollection: ResourceCollection = {
         topic: threads[0].title || 'Study Resources',
