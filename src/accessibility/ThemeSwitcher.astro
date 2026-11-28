@@ -41,7 +41,7 @@ const themes = [
         const label = selectedItem.querySelector('.theme-switcher__menu-label')?.textContent ?? value;
         if (switcherIcon) switcherIcon.textContent = selectedItem.dataset.themeIcon ?? '';
         themeSwitcher?.setAttribute('aria-label', `Theme: ${label}`);
-        document.documentElement.setAttribute('data-theme', value);
+        document.documentElement.dataset.theme = value;
         localStorage.setItem('user-theme', value);
     }
 

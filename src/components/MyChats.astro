@@ -137,13 +137,11 @@ const threadsByCategory = threads.reduce<Record<string, Record<string, typeof th
         const deleteButton = e.target.closest('.my-chats__thread-delete');
         if (!deleteButton) return;
 
-        const threadId = deleteButton.getAttribute('data-thread-id');
-        if (!threadId) return;
+        if (!deleteButton.dataset.threadId) return;
 
-        const threadTitle = deleteButton.getAttribute('data-thread-title');
         const confirmed = await window.showConfirm(
             'This cannot be undone.',
-            { title: `Delete "${threadTitle}"?`, confirmLabel: 'Delete', icon: 'delete' },
+            { title: `Delete "${deleteButton.dataset.threadTitle}"?`, confirmLabel: 'Delete', icon: 'delete' },
         );
         if (!confirmed) return;
 
@@ -155,7 +153,7 @@ const threadsByCategory = threads.reduce<Record<string, Record<string, typeof th
             const response = await fetch('/api/thread/delete', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ threadId }),
+                body: JSON.stringify({ threadId: deleteButton.dataset.threadId }),
             });
 
             const data = await response.json();

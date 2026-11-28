@@ -35,7 +35,7 @@ if (container) classList.push('container');
         <script is:inline>
             const userTheme = localStorage.getItem('user-theme');
             if (userTheme === 'light' || userTheme === 'dark' || userTheme === 'system') {
-                document.documentElement.setAttribute('data-theme', userTheme);
+                document.documentElement.dataset.theme = userTheme;
             }
         </script>
         <link rel="stylesheet" href="/view-transitions.css" />

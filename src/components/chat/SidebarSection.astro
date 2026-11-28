@@ -118,7 +118,7 @@ const regenerateButtonId = `regenerate-${id}-btn`;
                         newRegenerateBtn.id = regenerateButtonId;
                         newRegenerateBtn.title = `Regenerate ${title}`;
                         newRegenerateBtn.setAttribute('aria-label', `Regenerate ${title}`);
-                        newRegenerateBtn.setAttribute('data-thread-id', threadId);
+                        newRegenerateBtn.dataset.threadId = threadId;
                         newRegenerateBtn.innerHTML = '<span class="material-symbols-outlined" aria-hidden="true">refresh</span>';
                         sectionHeader.appendChild(newRegenerateBtn);
 
@@ -152,18 +152,16 @@ const regenerateButtonId = `regenerate-${id}-btn`;
 
     if (generateBtn) {
         generateBtn.addEventListener('click', () => {
-            const tid = generateBtn.getAttribute('data-thread-id');
-            if (tid) generateContent(tid, false);
+            if (generateBtn.dataset.threadId) generateContent(generateBtn.dataset.threadId, false);
         });
     }
 
     if (regenerateBtn) {
         regenerateBtn.addEventListener('click', async () => {
-            const tid = regenerateBtn.getAttribute('data-thread-id');
-            if (tid) {
+            if (regenerateBtn.dataset.threadId) {
                 const confirmMessage = `Are you sure you want to ${regenerateVerb.toLowerCase()} the ${title.toLowerCase()}? This will replace the existing one.`;
                 const userPrompt = await window.showPrompt(confirmMessage, { title: `${regenerateVerb} ${title}?`, confirmLabel: regenerateVerb, icon: 'refresh', inputLabel: 'What should change? (optional)', placeholder: 'For example: make it shorter, or add more examples', maxLength: 500 });
-                if (userPrompt !== null) generateContent(tid, true, null, userPrompt);
+                if (userPrompt !== null) generateContent(regenerateBtn.dataset.threadId, true, null, userPrompt);
             }
         });
     }

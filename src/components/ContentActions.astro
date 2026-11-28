@@ -35,10 +35,8 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, (c: stri
 
     if (actionBtn) {
         actionBtn.addEventListener('click', async () => {
-            const isRegenerate = actionBtn.getAttribute('data-has-content') === 'true';
-
             let userPrompt = '';
-            if (isRegenerate) {
+            if (actionBtn.dataset.hasContent === 'true') {
                 const confirmMessage = `Are you sure you want to ${regenerateVerb.toLowerCase()} the ${contentTypeName.toLowerCase()}? This will replace the existing one.`;
                 const answer = await window.showPrompt(confirmMessage, { title: `${regenerateVerb} ${contentTypeName}?`, confirmLabel: regenerateVerb, icon: 'refresh', inputLabel: 'What should change? (optional)', placeholder: 'For example: make it shorter, or add more examples', maxLength: 500 });
                 if (answer === null) return;
@@ -47,7 +45,7 @@ const contentTypeName = contentType.replace(/-/g, ' ').replace(/\b\w/g, (c: stri
 
             actionBtn.setAttribute('disabled', 'true');
             const originalContent = actionBtn.innerHTML;
-            const loadingText = `${(isRegenerate ? regenerateVerb : generateVerb).replace(/^(\w+?)e?\b/, '$1ing')}…`;
+            const loadingText = `${(actionBtn.dataset.hasContent === 'true' ? regenerateVerb : generateVerb).replace(/^(\w+?)e?\b/, '$1ing')}…`;
             actionBtn.innerHTML = `<span class="material-symbols-outlined content-actions__spinner" aria-hidden="true">progress_activity</span><span>${loadingText}</span>`;
 
             const startedAt = Date.now();
