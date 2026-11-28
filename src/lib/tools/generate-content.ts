@@ -65,7 +65,7 @@ const getContentTool = tool({
                 }
 
                 stage = `retrieving existing "${type}" for thread "${threadId}"`;
-                const existingContent = await getLatestFn(threadId);
+                const existingContent = await getLatestFn(threadId, { email: toolContext.email });
 
                 // Check if content exists (handle different return types)
                 if (
